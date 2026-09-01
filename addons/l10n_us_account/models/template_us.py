@@ -10,6 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_us_template_data(self):
         return {
             'code_digits': '0',
+            'version': '2.0',
         }
 
     @template('us', 'res.company')

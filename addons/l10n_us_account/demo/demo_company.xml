@@ -7,5 +7,9 @@
             <value model="res.company" eval="obj().env.ref('l10n_us.demo_company_us')"/>
             <value name="install_demo" eval="True"/>
         </function>
+
+        <record id="l10n_us.demo_company_us" model="res.company">
+            <field name="coa_version">1.0</field>
+        </record>
     </data>
 </odoo>
