@@ -17,4 +17,18 @@ patch(ChatWindow.prototype, {
         this.props.chatWindow.actionsDisabled = false;
         this.props.chatWindow.livechatStep = CW_LIVECHAT_STEP.NONE;
     },
+    get editingDescriptionTextAttClass() {
+        return {
+            ...super.editingDescriptionTextAttClass,
+            "text-warning":
+                this.channel.livechat_status === "need_help" && this.channel.description,
+        };
+    },
+    get editingDescriptionTextareaAttClass() {
+        return {
+            ...super.editingDescriptionTextareaAttClass,
+            "text-warning":
+                this.channel.livechat_status === "need_help" && this.channel.description,
+        };
+    },
 });
