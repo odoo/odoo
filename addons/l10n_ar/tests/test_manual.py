@@ -486,3 +486,18 @@ class TestArManual(common.TestArCommon):
             invoice.l10n_latam_document_type_id, self.document_type['invoice_b'],
             'Document type should default to Invoice B when no export journal is available',
         )
+
+    def test_get_vat_aliquot_cancelled_out_by_down_payment(self):
+        """ An aliquot whose base and tax cancel out (final invoice deducting a 100% down
+        payment) must not be reported: both amounts sent to ARCA would be 0.00 """
+        invoice = self._create_invoice_ar(
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=self.product_iva_21, price_unit=1565963.28, tax_ids=self.tax_21),
+                self._prepare_invoice_line(product_id=self.product_iva_21, price_unit=2540664.0, tax_ids=self.tax_21),
+                # down payment deduction: cancels the lines above, but summing the rounded
+                # amounts leaves a floating point residual (~4.66e-10) that is not exactly zero
+                self._prepare_invoice_line(product_id=self.product_iva_21, price_unit=4106627.28, quantity=-1, tax_ids=self.tax_21),
+            ],
+        )
+        self.assertEqual(invoice.amount_total, 0.0)
+        self.assertEqual(invoice._get_vat(), [])
