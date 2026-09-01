@@ -7,7 +7,7 @@ patch(DiscussApp.prototype, {
     setup(env) {
         super.setup(...arguments);
         this.livechats = fields.Many("discuss.channel", { inverse: "appAsLivechats" });
-        this.isLivechatInfoPanelOpenByDefault = fields.Attr(true, { localStorage: true });
+        this.isLivechatInfoPanelOpenByDefault = this.localStorage(true);
     },
     shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
         if (nextActiveAction?.id === "livechat-info") {

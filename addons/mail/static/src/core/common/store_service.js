@@ -157,7 +157,7 @@ export class Store extends BaseStore {
         },
     ];
 
-    isNotificationPermissionDismissed = fields.Attr(false, { localStorage: true });
+    isNotificationPermissionDismissed = this.localStorage(false);
 
     messagePostMutex = new Mutex();
 

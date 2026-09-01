@@ -36,8 +36,6 @@ export class ModelInternal {
     fieldsOnUpdate = new Map();
     /** @type {Map<string, string>} */
     fieldsType = new Map();
-    /** @type {Set<string>} */
-    fieldsLocalStorage = new Set();
     /**
      * Fields whose value is mutated in place, so a read returns it as a proxy.
      *
@@ -77,47 +75,6 @@ export class ModelInternal {
         }
         if (data[MANY_SYM]) {
             this.fieldsMany.set(fieldName, true);
-        }
-        if (data.localStorage) {
-            if (data.compute) {
-                throw new Error(
-                    `The field "${fieldName}" cannot have "localStorage" and "compute" at the same time. "localStorage" is implicitly a computed field`
-                );
-            }
-            this.fieldsLocalStorage.add(fieldName);
-            this.fieldsCompute.set(
-                fieldName,
-                /** @this {import("./record").Record}*/
-                function fieldLocalStorageCompute() {
-                    const record = this._raw;
-                    const lse = record._.fieldsLocalStorage.get(fieldName);
-                    const value = lse.get();
-                    if (value === undefined) {
-                        if (!this._rawStore._.isUpdatingFromStorageEvent) {
-                            lse.remove();
-                        }
-                        return this[fieldName];
-                    }
-                    return value;
-                }
-            );
-
-            this.registerOnUpdate(
-                fieldName,
-                /** @this {import("./record").Record}*/
-                function fieldLocalStorageOnChange(value) {
-                    const record = this._raw;
-                    if (this._rawStore._.isUpdatingFromStorageEvent) {
-                        return;
-                    }
-                    const lse = record._.fieldsLocalStorage.get(fieldName);
-                    if (value === record._.fieldsDefault.get(fieldName)) {
-                        lse.remove();
-                    } else {
-                        lse.set(value);
-                    }
-                }
-            );
         }
         for (const key in data) {
             const value = data[key];

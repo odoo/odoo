@@ -20,6 +20,7 @@ import {
     technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
+import { localStorageField } from "@mail/model/local_storage_field";
 import { RecordInternal } from "./record_internal";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
@@ -332,6 +333,19 @@ export class Record {
      */
     computedUntilStale(compute, msUntilStale) {
         return { ...this.computed(compute), msUntilStale };
+    }
+
+    /**
+     * Declares a field whose value lives in the browser local storage: it is
+     * restored when the record is made, written back on change, and follows the
+     * storage events of the other tabs.
+     *
+     * @template T
+     * @param {T} [defaultValue]
+     * @returns {T}
+     */
+    localStorage(defaultValue) {
+        return localStorageField(this, defaultValue);
     }
 
     /**
