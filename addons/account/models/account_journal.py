@@ -381,11 +381,16 @@ class AccountJournal(models.Model):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
             if journal.type in ('bank', 'cash'):
+                existing_method_lines = journal.inbound_payment_method_line_ids
                 default_methods = journal._default_inbound_payment_methods()
+                pay_method_line_ids_commands += [Command.create({
+                    'name': pay_method_line.name,
+                    'payment_method_id': pay_method_line.payment_method_id.id,
+                }) for pay_method_line in existing_method_lines]
                 pay_method_line_ids_commands += [Command.create({
                     'name': pay_method.name,
                     'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
+                }) for pay_method in default_methods.filtered(lambda m: m not in existing_method_lines.mapped('payment_method_id'))]
             journal.inbound_payment_method_line_ids = pay_method_line_ids_commands
 
     @api.depends('type', 'currency_id')
@@ -393,11 +398,16 @@ class AccountJournal(models.Model):
         for journal in self:
             pay_method_line_ids_commands = [Command.clear()]
             if journal.type in ('bank', 'cash'):
+                existing_method_lines = journal.outbound_payment_method_line_ids
                 default_methods = journal._default_outbound_payment_methods()
+                pay_method_line_ids_commands += [Command.create({
+                    'name': pay_method_line.name,
+                    'payment_method_id': pay_method_line.payment_method_id.id,
+                }) for pay_method_line in existing_method_lines]
                 pay_method_line_ids_commands += [Command.create({
                     'name': pay_method.name,
                     'payment_method_id': pay_method.id,
-                }) for pay_method in default_methods]
+                }) for pay_method in default_methods.filtered(lambda m: m not in existing_method_lines.mapped('payment_method_id'))]
             journal.outbound_payment_method_line_ids = pay_method_line_ids_commands
 
     @api.depends('outbound_payment_method_line_ids', 'inbound_payment_method_line_ids')
