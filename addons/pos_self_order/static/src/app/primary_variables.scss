@@ -41,6 +41,10 @@ $o-btns-bs-override: map-merge((
         active-background: darken($o-brand-primary, 15%),
         active-border: darken($o-brand-primary, 20%),
         active-color: $o-white,
+
+        disabled-background: $o-brand-primary,
+        disabled-border: $o-brand-primary,
+        disabled-color: $o-white,
     ),
     "light": (
         background: $o-white,
@@ -54,6 +58,10 @@ $o-btns-bs-override: map-merge((
         active-background:  $o-white,
         active-border: var(--companyColor),
         active-color: $o-gray-900,
+
+        disabled-background: $o-white,
+        disabled-border: $o-gray-300,
+        disabled-color: $o-gray-700,
     ),
     "secondary": (
         background: $o-gray-200,
@@ -67,6 +75,10 @@ $o-btns-bs-override: map-merge((
         active-background: $o-gray-300,
         active-border: $o-gray-300,
         active-color: $o-gray-800,
+
+        disabled-background: $o-gray-200,
+        disabled-border: $o-gray-200,
+        disabled-color: $o-gray-700,
     ),
 ), $o-btns-bs-override);
 
