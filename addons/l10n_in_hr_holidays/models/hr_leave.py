@@ -82,8 +82,8 @@ class HrLeave(models.Model):
         if self.work_entry_type_id.l10n_in_sandwich_policy == "public_holiday":
             return on_date not in public_holiday_dates
         elif self.work_entry_type_id.l10n_in_sandwich_policy == "weekend":
-            return resource_calendar._works_on_date(on_date)
-        return on_date not in public_holiday_dates and resource_calendar._works_on_date(on_date)
+            return not resource_calendar or resource_calendar._works_on_date(on_date)
+        return on_date not in public_holiday_dates and (not resource_calendar or resource_calendar._works_on_date(on_date))
 
     def _l10n_in_count_adjacent_non_working(self, start_date, public_holiday_dates, resource_calendar, reverse=False, include_start=False):
         step = -1 if reverse else 1
@@ -188,7 +188,7 @@ class HrLeave(models.Model):
         current_date = date_from
 
         while current_date <= date_to:
-            is_weekend = not calendar._works_on_date(current_date)
+            is_weekend = calendar and not calendar._works_on_date(current_date)
             is_public_holiday = current_date in public_holiday_dates
             if (
                 policy == "full"
