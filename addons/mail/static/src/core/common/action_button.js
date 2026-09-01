@@ -9,6 +9,25 @@ export class ActionButton extends ActionBase {
         style: t.string().optional(),
     });
 
+    /**
+     * Whether the action's icon should be rendered larger, with matching padding:
+     * the call button bar shown over the fullscreen meeting view.
+     */
+    get hasLargeIcon() {
+        return Boolean(
+            this.env.inMeetingView &&
+                !this.env.inComposer &&
+                !this.env.inDiscussActionPanel &&
+                this.store.rtc.isFullscreen
+        );
+    }
+
+    get meetingFullscreenPaddingClass() {
+        return {
+            "px-1 py-2": this.hasLargeIcon,
+        };
+    }
+
     get alignmentClass() {
         return {
             "d-flex align-items-center": this.props.isInlineCircleButton,
@@ -58,6 +77,7 @@ export class ActionButton extends ActionBase {
     get classObj() {
         return {
             ...super.classObj,
+            ...this.meetingFullscreenPaddingClass,
             ...this.alignmentClass,
             ...this.borderClass,
             ...this.roundnessClass,

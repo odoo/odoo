@@ -14,7 +14,6 @@ export class ActionBase extends Component {
         action: t.instanceOf(ActionModel),
         attrs: t.object(),
         isInlineCircleButton: t.boolean(),
-        inMeetingViewCallButtonsFullscreen: t.boolean(),
         fw: t.boolean().optional(),
         isFirstInGroup: t.boolean().optional(),
         isLastInGroup: t.boolean().optional(),
@@ -69,12 +68,6 @@ export class ActionBase extends Component {
         };
     }
 
-    get meetingFullscreenPaddingClass() {
-        return {
-            "px-1 py-2": this.props.inMeetingViewCallButtonsFullscreen,
-        };
-    }
-
     get darkThemeClass() {
         return {
             "o-text-white o-simulateDarkTheme": this.store.shouldSimulateDarkTheme(this),
@@ -104,7 +97,6 @@ export class ActionBase extends Component {
         return {
             ...this.positionClass,
             ...this.colorClass,
-            ...this.meetingFullscreenPaddingClass,
             ...this.darkThemeClass,
             ...this.actionSpecificClass,
             [this.btnRootClass]: Boolean(this.btnRootClass),
