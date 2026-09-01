@@ -3,11 +3,9 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_plugin";
-import { uuid } from "@web/core/utils/strings";
-import { ComboConfiguratorDialog } from "./combo_configurator_dialog/combo_configurator_dialog";
-import { ProductCombo } from "./models/product_combo";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
-import { getLinkedSaleOrderLines, serializeComboItem, getSelectedCustomPtav } from "./sale_utils";
+import { getCustomPtavs, getNoVariantPtavIds, getSelectedComboItems, getSelectedCustomPtav } from "./sale_utils";
+import { openComboConfigurator } from "./combo_configurator_utils";
 
 async function applyProduct(record, product) {
     // handle custom values & no variants
@@ -82,7 +80,7 @@ export const saleProductMixin = () => ({
         let productUOMId;
         if (edit) {
             // no_variant attributes don't need to be given to the configurator for new products.
-            ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
+            ptavIds.push(...getNoVariantPtavIds(saleOrderLine));
             productUOMId = saleOrderLine.product_uom_id.id;
         }
         return rpc('/sale/product_configurator/get_values',
@@ -156,7 +154,7 @@ export const saleProductMixin = () => ({
 
         if (edit) {
             // custom attributes don't need to be given to the configurator for new products.
-            customPtavs = await this._getCustomPtavs(saleOrderLine);
+            customPtavs = await getCustomPtavs(this.orm, saleOrderLine);
         }
         const { products, optional_products } = data;
         this.dialog.add(ProductConfiguratorDialog, {
@@ -205,81 +203,28 @@ export const saleProductMixin = () => ({
     },
 
     async _openComboConfigurator({ edit = false, data } = {}) {
-        const saleOrder = this.props.record.model.root.data;
         const comboLineRecord = this.props.record;
-        const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord).filter(record => !!record.data.combo_item_id);
-        const selectedComboItems = await Promise.all(comboItemLineRecords.map(async record => ({
-            id: record.data.combo_item_id.id,
-            no_variant_ptav_ids: edit ? this._getNoVariantPtavIds(record.data) : [],
-            custom_ptavs: edit ? await this._getCustomPtavs(record.data) : [],
-        })));
-        const { combos, ...remainingData } = await rpc('/sale/combo_configurator/get_data', {
-            product_tmpl_id: comboLineRecord.data.product_template_id.id,
-            currency_id: comboLineRecord.data.currency_id.id,
-            quantity: comboLineRecord.data.product_uom_qty,
-            date: serializeDateTime(saleOrder.date_order),
-            company_id: saleOrder.company_id.id,
-            pricelist_id: saleOrder.pricelist_id.id,
-            selected_combo_items: selectedComboItems,
-            ...this._getAdditionalRpcParams(),
-        });
+        const selectedComboItems = await getSelectedComboItems(this.orm, comboLineRecord, edit);
 
-        const comboChoices = combos.map(combo => new ProductCombo(combo));
-        const preselectedComboItems = comboChoices
-            .map(combo => combo.preselectedComboItem)
-            .filter(Boolean);
-        if (preselectedComboItems.length === comboChoices.length) {
-            return this.handleComboSave(
-                { 'quantity': remainingData.quantity },
-                preselectedComboItems,
-                edit,
-                data
-            );
-        }
-        this.dialog.add(ComboConfiguratorDialog, {
-            combos: comboChoices,
-            ...remainingData,
-            company_id: saleOrder.company_id.id,
-            pricelist_id: saleOrder.pricelist_id.id,
-            date: serializeDateTime(saleOrder.date_order),
-            edit: edit,
-            save: async (comboProductData, selectedComboItems) => {
-                this.handleComboSave(
-                    comboProductData,
-                    selectedComboItems,
-                    edit,
-                    data,
-                );
+        await openComboConfigurator({
+            dialog: this.dialog,
+            comboLineRecord,
+            edit,
+            selectedComboItems,
+            additionalRpcParams: this._getAdditionalRpcParams(),
+            additionalDialogProps: this._getAdditionalDialogProps(),
+            onSave: async (comboProductData, selectedItems) => {
+                if (!edit && data.has_optional_products) {
+                    const selectedComboProducts = selectedItems.map(
+                        item => ({ name: item.product.display_name })
+                    );
+                    await this._openProductConfigurator({
+                        selectedComboItems: selectedComboProducts,
+                        data,
+                    });
+                }
             },
-            discard: () => saleOrder.order_line.delete(comboLineRecord),
-            ...this._getAdditionalDialogProps(),
         });
-    },
-
-    async handleComboSave(comboProductData, selectedComboItems, edit, data ) {
-        const saleOrder = this.props.record.model.root.data;
-        const comboLineRecord = this.props.record;
-        saleOrder.order_line.leaveEditMode();
-        const comboLineValues = {
-            product_uom_qty: comboProductData.quantity,
-            selected_combo_items: JSON.stringify(selectedComboItems.map(serializeComboItem)),
-        };
-        if (!edit) {
-            comboLineValues.virtual_id = uuid();
-        }
-        await comboLineRecord.update(comboLineValues);
-        // Ensure that the order lines are sorted according to their sequence.
-        await saleOrder.order_line._sort();
-
-        if (!edit && data.has_optional_products) {
-            const selectedComboProducts = selectedComboItems.map(
-                item => ({ name: item.product.display_name })
-            );
-            await this._openProductConfigurator({
-                selectedComboItems: selectedComboProducts,
-                data: data,
-            });
-        }
     },
 
     /**
@@ -329,49 +274,5 @@ export const saleProductMixin = () => ({
      */
     _getVariantPtavIds(saleOrderLine) {
         return saleOrderLine.product_template_attribute_value_ids.currentIds;
-    },
-
-    /**
-     * Return the `no_variant` PTAV ids of the provided sale order line.
-     *
-     * @param saleOrderLine The sale order line
-     * @return {Number[]} The sale order line's `no_variant` PTAV ids.
-     */
-    _getNoVariantPtavIds(saleOrderLine) {
-        return saleOrderLine.product_no_variant_attribute_value_ids.currentIds;
-    },
-
-    /**
-     * Return the custom PTAVs of the provided sale order line.
-     *
-     * @param saleOrderLine The sale order line
-     * @return {Promise<CustomPtav[]>} The sale order line's custom PTAVs.
-     */
-    async _getCustomPtavs(saleOrderLine) {
-        // `product.attribute.custom.value` records are not loaded in the view because sub templates
-        // are not loaded in list views. Therefore, we fetch them from the server if the record was
-        // saved. Otherwise, we use the value stored on the line.
-        const customPtavIds = saleOrderLine.product_custom_attribute_value_ids;
-        let customPtavs = [];
-        if (customPtavIds.records[0]?.isNew) {
-            customPtavs = customPtavIds.records.map(record => record.data);
-        } else if (customPtavIds.currentIds.length) {
-            const specification = {
-                custom_product_template_attribute_value_id: {
-                    fields: { id: {} },
-                },
-                custom_value: {},
-            };
-            customPtavs = await this.orm.webRead(
-                'product.attribute.custom.value',
-                customPtavIds.currentIds,
-                { specification },
-            );
-        }
-        return customPtavs.map(customPtav => ({
-            id: customPtav.custom_product_template_attribute_value_id &&
-                customPtav.custom_product_template_attribute_value_id.id,
-            value: customPtav.custom_value || "",
-        }));
     },
 });

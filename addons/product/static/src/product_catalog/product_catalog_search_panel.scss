@@ -1,0 +1,41 @@
+.o_catalog_search_panel_mobile {
+
+    .o_catalog_search_panel_drawer_wrapper {
+        position: fixed;
+        inset: 0;
+        z-index: 1050;
+        pointer-events: none;
+
+        .o_catalog_search_panel_backdrop {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .o_catalog_search_panel_drawer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 80%;
+            max-width: 320px;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+        }
+
+        &.o_open {
+            pointer-events: auto;
+
+            .o_catalog_search_panel_backdrop {
+                opacity: 1;
+            }
+
+            .o_catalog_search_panel_drawer {
+                transform: translateX(0);
+            }
+        }
+    }
+}

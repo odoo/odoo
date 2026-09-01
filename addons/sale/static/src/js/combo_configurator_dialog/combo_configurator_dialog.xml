@@ -73,13 +73,22 @@
                         >
                             Add to order
                         </button>
-                        <button
-                            name="sale_combo_configurator_cancel_button"
-                            class="btn btn-secondary w-100 w-lg-auto"
-                            t-on-click="this.cancel"
-                        >
-                            Discard
-                        </button>
+                        <div class="d-flex gap-1">
+                            <button
+                                name="sale_combo_configurator_cancel_button"
+                                class="btn btn-secondary flex-fill flex-lg-grow-0 w-lg-auto"
+                                t-on-click="this.cancel"
+                            >
+                                Discard
+                            </button>
+                            <button
+                                t-if="this.props.edit"
+                                class="btn btn-danger flex-fill d-md-none"
+                                t-on-click="this.deleteRecord"
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </div>
                     <div class="d-flex gap-3 align-items-center">
                         <div t-if="this.props.options?.showQuantity ?? true" class="combo_configurator_quantity ps-lg-3">

@@ -21,10 +21,21 @@
                 />
             </button>
             <div name="so_button_below_order_lines" position="inside">
+                <div
+                    class="flex-grow-1 d-md-none"
+                    invisible="is_all_service or not order_line or delivery_set"
+                >
+                    <button
+                        string="Shipping"
+                        name="action_open_delivery_wizard"
+                        type="object"
+                        class="btn btn-secondary w-100"/>
+                </div>
                 <button
-                    string="Add shipping"
+                    string="Shipping"
                     name="action_open_delivery_wizard"
                     type="object"
+                    class="btn btn-secondary d-none d-md-block"
                     invisible="is_all_service or not order_line or delivery_set"/>
                 <button
                     string="Update shipping cost"

@@ -30,32 +30,6 @@
         <div class="o_search_panel_empty_state me-3" position="replace"/>
     </t>
 
-    <t
-        t-name="account.ProductCatalogSearchPanel.Small"
-        t-inherit="web.SearchPanel.Small"
-        t-inherit-mode="primary"
-    >
-        <i position="replace"/>
-
-        <Dropdown position="before">
-            <Dropdown t-if="this.showSections">
-                <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
-                    <i
-                        class="oi o_search_panel_section_icon text-primary me-2"
-                        data-icon="view_list"
-                    />
-                    <b class="pe-2">Sections</b>
-                </span>
-                <t t-set-slot="content">
-                    <div class="o_search_panel_section o_search_panel_sections">
-                        <t t-call="account.ProductCatalog.Sections"/>
-                    </div>
-                </t>
-            </Dropdown>
-        </Dropdown>
-
-    </t>
-
     <t t-name="account.ProductCatalog.Sections">
         <header class="d-flex align-items-center cursor-default mb-3">
             <b class="me-2" t-out="this.orderName"/>
@@ -68,7 +42,7 @@
             </button>
         </header>
         <ul class="list-group d-block" t-ref="this.sectionTreeRef">
-            <t t-foreach="this.state.sections" t-as="section" t-key="section.id">
+            <t t-foreach="this.state.sections" t-as="section" t-key="section.id === false and section.editing ? 'o_new_section' : section.id">
                 <SectionRow t-props="section"/>
             </t>
         </ul>
@@ -80,13 +54,15 @@
         </div>
     </t>
 
-    <t t-name="account.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
-        <t t-call="web.SearchPanel.Small" position="attributes">
-            <attribute name="t-call">account.ProductCatalogSearchPanel.Small</attribute>
-        </t>
-
+    <t t-name="account.ProductCatalogSearchPanel" t-inherit="product.ProductCatalogSearchPanel" t-inherit-mode="primary">
         <t t-call="web.SearchPanel.Regular" position="attributes">
             <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
         </t>
+    </t>
+
+    <t t-name="account.SearchPanel.MobileDrawer" t-inherit="product.SearchPanel.MobileDrawer" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_catalog_search_panel_content')]/t" position="attributes">
+            <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+        </xpath>
     </t>
 </templates>

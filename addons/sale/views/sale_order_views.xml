@@ -573,6 +573,7 @@
                                                 widget="many2one_barcode"
                                             />
                                         </div>
+                                        <field name="name"/>
                                         <label for="product_uom_qty"/>
                                         <div class="o_row" name="ordered_qty">
                                             <field name="product_uom_qty"/>
@@ -618,25 +619,25 @@
                                            options="{'product_field': 'product_id', 'business_domain': 'sale_order'}"/>
                                     </group>
                                 </group>
-                                <label for="name" string="Description" invisible="display_type"/>
                                 <label for="name" string="Section Name (eg. Products, Services)" invisible="display_type != 'line_section'"/>
                                 <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                 <label for="name" string="Note" invisible="display_type != 'line_note'"/>
-                                <field name="name"/>
+                                <field name="name" invisible="not display_type"/>
                                 <group>
                                     <field
                                         name="collapse_composition"
+                                        string="Hide Composition"
                                         invisible="display_type not in ['line_section', 'line_subsection']"
-                                        readonly="1"
+
                                     />
                                     <field
                                         name="collapse_prices"
+                                        string="Hide Prices"
                                         invisible="display_type not in ['line_section', 'line_subsection']"
-                                        readonly="1"
+
                                     />
                                 </group>
-                                <div name="invoice_lines" groups="base.group_no_one" invisible="display_type">
-                                    <label for="invoice_lines"/>
+                                <div name="invoice_lines" invisible="1">
                                     <field name="invoice_lines"/>
                                 </div>
                             </form>
@@ -890,34 +891,27 @@
                                 </column>
                                 <widget name="section_state"/>
                             </list>
-                            <kanban class="o_kanban_mobile">
+                            <kanban class="o_kanban_mobile" create="0">
+                                <field name="product_custom_attribute_value_ids" column_invisible="1" />
+                                <field name="product_template_id" column_invisible="1"/>
+                                <field name="combo_item_id" column_invisible="1"/>
+                                <field name="linked_line_id" column_invisible="1"/>
+                                <field name="selected_combo_items" column_invisible="1"/>
+                                <field name="virtual_id" column_invisible="1"/>
+                                <field name="linked_virtual_id" column_invisible="1"/>
+                                <field name="collapse_composition" column_invisible="1"/>
+                                <field name="collapse_prices" column_invisible="1"/>
+                                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
+                                <field name="technical_price_unit" column_invisible="1"/>
                                 <field name="display_type"/>
                                 <field name="currency_id"/>
-                                <control>
-                                    <create string="Add Line" name="add_product_control"/>
-                                    <create
-                                        string="Add Section"
-                                        name="add_section_control"
-                                        context="{'default_display_type': 'line_section'}"
-                                    />
-                                    <create
-                                        string="Add Note"
-                                        name="add_note_control"
-                                        context="{'default_display_type': 'line_note'}"
-                                    />
-                                    <button
-                                        string="Catalog"
-                                        name="action_add_from_catalog"
-                                        type="object"
-                                        class="btn-secondary"
-                                        context="{'order_id': parent.id}"/>
-                                </control>
+                                <field name="sequence" invisible="combo_item_id" widget="handle"/>
                                 <templates>
                                     <t t-name="card" class="row g-0 ps-0 pe-0">
                                         <t t-if="!record.display_type.raw_value">
-                                            <aside t-if="record.product_id.value" class="col-2 p-1">
-                                                <span t-att-title="record.product_id.value">
-                                                    <field name="product_id" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain w-100'}"/>
+                                            <aside t-if="record.product_id.value" class="col-auto p-1 pe-2 d-flex align-items-start">
+                                                <span t-att-title="record.product_id.value" class="d-inline-block flex-shrink-0">
+                                                    <field name="product_id" widget="image" options="{'size': [38, 38], 'preview_image': 'image_128', 'img_class': 'object-fit-contain rounded'}"/>
                                                 </span>
                                             </aside>
                                             <main class="col">
@@ -937,10 +931,6 @@
                                                 <div class="text-muted">
                                                     Quantity:
                                                     <field name="product_uom_qty"/> <field name="product_uom_id"/>
-                                                </div>
-                                                <div class="text-muted">
-                                                    Unit Price:
-                                                    <field name="price_unit"/>
                                                 </div>
                                                 <t t-if="record.discount?.raw_value">
                                                     <div class="text-muted">
@@ -963,13 +953,21 @@
                                 </templates>
                             </kanban>
                         </field>
-                        <div class="float-end d-flex d-print-none gap-1 mb-2"
-                             name="so_button_below_order_lines">
+                        <button
+                            string="Add"
+                            name="action_add_from_catalog"
+                            type="object"
+                            class="btn btn-primary w-100 d-md-none"
+                            context="{'order_id': id, 'child_field': 'order_line'}"/>
+                        <div
+                            class="d-flex flex-fill d-print-none gap-1 my-2"
+                            name="so_button_below_order_lines"
+                        >
                             <button
                                 string="Discount"
                                 name="action_open_discount_wizard"
                                 type="object"
-                                class="btn btn-secondary"
+                                class="btn btn-secondary d-none d-md-block"
                                 groups="sale.group_discount_per_so_line"
                                 invisible="locked or state == 'cancel'"
                             />
@@ -977,17 +975,22 @@
                                 string="Discounts"
                                 name="action_open_discount_wizard"
                                 type="object"
-                                class="btn btn-secondary"
+                                class="btn btn-secondary d-none d-md-block"
                                 groups="sale.group_discount_per_so_line"
                                 disabled="1"
                                 invisible="not (locked or state == 'cancel')"
                             />
+                            <widget name="combo_menu"
+                                class="mb-0 flex-grow-1 d-md-none"/>
+                            <widget name="discount_menu"
+                                invisible="locked or state == 'cancel'"
+                                class="mb-0 flex-grow-1 d-md-none"/>
                         </div>
                         <group name="note_group" col="6" class="mt-2 mt-md-0">
                             <group colspan="4" class="order-1 order-lg-0">
                                 <field  colspan="2" name="note" nolabel="1" placeholder="Terms and conditions..."/>
                             </group>
-                            <group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-0 gap-sm-3" colspan="2" name="sale_total">
+                            <group class="oe_subtotal_footer border-top-0 d-flex order-0 order-lg-1 flex-column gap-2 gap-sm-3" colspan="2" name="sale_total">
                                 <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" readonly="1"/>
                                 <field name="extra_total_fields" widget="sale-extra-totals" nolabel="1" readonly="1"/>
                             </group>
