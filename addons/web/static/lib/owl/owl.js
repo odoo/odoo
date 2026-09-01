@@ -1708,15 +1708,33 @@ ${issueStrings}`);
       useEffect(() => {
         const el = target();
         if (el) {
-          el.addEventListener(eventName, handler, eventParams);
-          return () => el.removeEventListener(eventName, handler, eventParams);
+          const listener = makeListener(handler);
+          el.addEventListener(eventName, listener, eventParams);
+          return () => el.removeEventListener(eventName, listener, eventParams);
         }
         return;
       });
     } else {
-      target.addEventListener(eventName, handler, eventParams);
-      onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
+      const listener = makeListener(handler);
+      target.addEventListener(eventName, listener, eventParams);
+      onWillDestroy(() => target.removeEventListener(eventName, listener, eventParams));
     }
+  }
+  var currentEvent = null;
+  function setCurrentEvent(ev) {
+    if (currentEvent?.deref() !== ev) {
+      currentEvent = new WeakRef(ev);
+    }
+  }
+  function makeListener(handler) {
+    const attachedDuring = currentEvent?.deref();
+    return function(ev) {
+      if (ev === attachedDuring) {
+        return;
+      }
+      setCurrentEvent(ev);
+      handler.call(this, ev);
+    };
   }
   function useApp() {
     return useScope().app;
@@ -1749,7 +1767,7 @@ ${issueStrings}`);
   var config = useConfig;
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.47";
+  var version = "3.0.0-alpha.48";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -4489,9 +4507,14 @@ ${issueStrings}`);
       }
       let fiber = null;
       let preparedPromise = null;
+      let resolvePrepared = null;
+      let destroyed = false;
       const prepare = () => {
         if (preparedPromise) {
           return preparedPromise;
+        }
+        if (destroyed) {
+          return preparedPromise = Promise.resolve();
         }
         if (error) {
           return Promise.reject(error);
@@ -4507,6 +4530,7 @@ ${issueStrings}`);
           reject(finalError);
         });
         const ready = new Promise((res) => {
+          resolvePrepared = res;
           fiber.onPrepared = () => res();
         });
         preparedPromise = ready;
@@ -4534,6 +4558,9 @@ ${issueStrings}`);
         return preparedPromise;
       };
       const mount3 = (target, options) => {
+        if (destroyed) {
+          return promise;
+        }
         if (error) {
           return promise;
         }
@@ -4546,12 +4573,20 @@ ${issueStrings}`);
         get prepared() {
           return fiber ? fiber.counter === 0 : false;
         },
+        get destroyed() {
+          return destroyed;
+        },
         promise,
         prepare,
         mount: mount3,
         destroy: () => {
+          if (destroyed) {
+            return;
+          }
+          destroyed = true;
           this.roots.delete(root);
           node?.destroy();
+          resolvePrepared?.();
         }
       };
       this.roots.add(root);
@@ -4580,6 +4615,7 @@ ${issueStrings}`);
     return root.mount(target, config3);
   }
   var mainEventHandler = (data, ev, currentTarget) => {
+    setCurrentEvent(ev);
     const { data: _data, modifiers } = filterOutModifiersFromData(data);
     data = _data;
     let stopped = false;
@@ -4921,8 +4957,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-08-24T09:17:57.949Z",
-    hash: "738b81a7",
+    date: "2026-09-01T15:18:08.148Z",
+    hash: "b22aa413",
     url: "https://github.com/odoo/owl"
   };
 
