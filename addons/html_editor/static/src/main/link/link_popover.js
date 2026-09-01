@@ -370,6 +370,13 @@ export class LinkPopover extends Component {
             this.state.previewIcon.value = "help_outline";
             return;
         }
+        if (this.isLogoutUrl()) {
+            // The session ends if we fetch this url, so the preview is hardcoded
+            this.resetPreview();
+            this.state.urlTitle = _t("Logout");
+            this.state.previewIcon.value = "logout";
+            return;
+        }
         if (this.isAttachmentUrl()) {
             const { mimetype } = await this.props.getAttachmentMetadata(this.state.url);
             this.resetPreview();
@@ -515,6 +522,14 @@ export class LinkPopover extends Component {
         this.state.label ||= attachment.name;
         this.state.attachmentId = attachment.id;
         this.onChange();
+    }
+
+    isLogoutUrl() {
+        return (
+            !!this.state.url.match(/\/hr_attendance\/kiosk_mode_menu\/\d+/) ||
+            !!this.state.url.match(/\/hr_attendance\/[0-9a-f]{32}/) ||
+            !!this.state.url.match(/\/hr_attendance\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}/)
+        );
     }
 
     isAttachmentUrl() {
