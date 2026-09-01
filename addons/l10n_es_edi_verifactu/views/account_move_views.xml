@@ -28,6 +28,19 @@
             </field>
         </record>
 
+        <record id="view_account_move_filter_vf_rejected" model="ir.ui.view">
+            <field name="name">account.invoice.vf.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='late']" position="after">
+                    <filter string="Veri*Factu Rejected"
+                            name="l10n_es_edi_verifactu_state_rejected"
+                            domain="[('l10n_es_edi_verifactu_state', '=', 'rejected')]"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
