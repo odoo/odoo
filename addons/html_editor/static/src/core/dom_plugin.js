@@ -49,16 +49,32 @@ import { SPLIT_OPERATION_TYPES } from "./split_plugin";
 
 const IS_MARKER = Symbol("isMarker");
 /**
- * Creates and returns an empty text node that may be needed to mark the
- * position of insertion. It is flagged as a marker so its mutations can be
- * ignored.
+ * Create, position and return an empty text node before which to insert. It
+ * will be moved into the document so we can always insert before it. It is
+ * flagged as a marker so its mutations can be ignored.
  *
- * @param {HTMLDocument} doc
+ * @see insertNodes
+ *
+ * @param {Node} node
+ * @param {number} offset
  * @returns { Node & { isMarker: true }}
  */
-const createMarkerNode = (doc) => {
-    const marker = doc.createTextNode("");
+const createMarkerNode = (node, offset) => {
+    const marker = node.ownerDocument.createTextNode("");
     marker[IS_MARKER] = true;
+    if (isTextNode(node)) {
+        if (offset === 0) {
+            node.before(marker);
+        } else if (offset === node.length) {
+            node.after(marker);
+        } else {
+            node.splitText(offset).before(marker);
+        }
+    } else if (isSelfClosingElement(node)) {
+        node.before(marker);
+    } else {
+        node.insertBefore(marker, node.childNodes[offset] || null);
+    }
     return marker;
 };
 const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NODE;
@@ -276,31 +292,58 @@ export class DomPlugin extends Plugin {
      * @returns {Node[]} the inserted nodes
      */
     insert(content, { verbatim = false } = {}) {
-        // 1. Process the content to insert.
-        // =================================
-
+        // Pre-process
         let fragment = this.makeFragment(content);
         if (!verbatim) {
             fragment = this.processThrough("fragment_to_insert_processors", fragment);
         }
         this.dependencies.delete.deleteSelection();
+        const nodes = this.processFragmentToInsert(fragment);
+        if (!nodes.length) {
+            return [];
+        }
+
+        // Insert
+        const targetNode = this.dependencies.selection.getEditableSelection().focusNode;
+        const preserveInlineContext = !isBlock(closestElement(targetNode));
+        const children = nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item));
+        this.trigger("on_will_insert_handlers", children);
+        const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
+        const position = [focusNode, focusOffset];
+        let insertedContent = this.insertNodesAt(nodes, ...position, { preserveInlineContext });
+        insertedContent = this.processThrough("inserted_content_processors", insertedContent);
+
+        // Move selection
+        this.moveSelectionAfterInsertion(insertedContent);
+        return insertedContent;
+    }
+
+    /**
+     * Process a fragment before insertion, unwrapping what needs unwrapping,
+     * then return a list of nodes to insert (fragments in the case of unwrapped
+     * nodes).
+     *
+     * @see insert
+     * @param {DocumentFragment} fragment
+     * @returns {(Node|DocumentFragment)[]}
+     */
+    processFragmentToInsert(fragment) {
         const sel = this.dependencies.selection.getEditableSelection();
-        const refBlock = closestBlock(sel.anchorNode);
-        const preserveInlineContext = closestElement(sel.anchorNode) !== refBlock;
+        const targetBlock = closestBlock(sel.anchorNode);
         const editableContext = closestElement(sel.focusNode, "[contenteditable=true]");
         const isEditableBlock = isBlock(editableContext);
         const isInEmpty = !isTextNode(sel.focusNode) && isEmpty(sel.focusNode);
         const isSelectionAtStart =
-            isInEmpty || (firstLeaf(refBlock) === sel.anchorNode && sel.anchorOffset === 0);
+            isInEmpty || (firstLeaf(targetBlock) === sel.anchorNode && sel.anchorOffset === 0);
         const isSelectionAtEnd =
             isInEmpty ||
-            (lastLeaf(refBlock) === sel.focusNode && sel.focusOffset === nodeSize(sel.focusNode));
+            (lastLeaf(targetBlock) === sel.focusNode &&
+                sel.focusOffset === nodeSize(sel.focusNode));
 
         const nodes = [];
         const numberOfNodes = fragment.childNodes.length;
         for (const [index, node] of childNodes(fragment).entries()) {
             const wasBlock = isBlock(node);
-            const isSelectionAtEdge = index === 0 ? isSelectionAtStart : isSelectionAtEnd;
 
             // A. Unwrap the first and last blocks if needed.
             const isFirstOrLastBlock = wasBlock && (index === 0 || index === numberOfNodes - 1);
@@ -308,58 +351,13 @@ export class DomPlugin extends Plugin {
             let shouldSkip = false;
             // Empty blocks would disappear if unwrapped.
             if (isFirstOrLastBlock && !isEmptyBlock(node)) {
-                if (
-                    numberOfNodes === 1 &&
-                    this.dependencies.baseContainer.isCandidateForBaseContainer(node)
-                ) {
-                    // Inline content may arrive wrapped in a single base
-                    // container (see `wrapInlinesInBlocks` call in
-                    // `prepareClipboardData`). In that case the wrapper is
-                    // not meaningful structure.
-                    // eg, `p(a[]c) + p(b) = p(ab[]c) ≠ p(a)p(b)p(c)`
-                    shouldUnwrap = true;
-                } else if (numberOfNodes > 1 && isSelectionAtEdge) {
-                    // At the edge of a block, the first inserted block has
-                    // no left-side content to merge with.
-                    // eg, `h1([]c) + p(a)p(b) = p(a)h1(bc) ≠ h1(abc)`
-                    // eg, `h1(a[]) + p(b)p(c) = h1(ab)p(c) ≠ h1(abc)`
-                    // Both these cases would end up as `h1(a)h1(b)h1(c)`
-                    // after line break restoration.
-                    shouldUnwrap = false;
-                } else if (isEditionBoundary(refBlock, this.editable)) {
-                    // A root-anchored selection expresses insertion between
-                    // top-level children. Using its normalized deep
-                    // position would invent a reference block and
-                    // incorrectly merge into that child.
-                    // eg, `p(a)[] + p(b) = p(a)p(b) ≠ p(ab)`
-                    shouldUnwrap = false;
-                } else if (this.dependencies.split.isUnsplittable(node)) {
-                    // Don't unwrap an unsplittable block.
-                    shouldUnwrap = false;
-                } else if (isEmptyBlock(refBlock)) {
-                    // There is no surrounding content to absorb the edge
-                    // block in an empty reference block, so unwrapping
-                    // would only erase the pasted block boundary.
-                    shouldUnwrap = false;
-                } else if (node.nodeName === refBlock.nodeName) {
-                    // Same-tag blocks can merge at the cursor.
-                    // eg, `p(a[]d) + p(b)div(c) = p(ab)div(c)p(d) ≠ p(a)p(b)div(c)p(d)`
-                    shouldUnwrap = true;
-                } else if (
-                    refBlock.nodeName === "DIV" &&
-                    this.dependencies.split.isUnsplittable(refBlock)
-                ) {
-                    // An unsplittable DIV cannot be split around the
-                    // inserted block. Unwrapping inserts the edge contents
-                    // without creating a nested block boundary inside the
-                    // atomic container.
-                    shouldUnwrap = true;
-                } else if (
-                    this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
-                    this.dependencies.baseContainer.isCandidateForBaseContainer(refBlock)
-                ) {
-                    shouldUnwrap = true;
-                }
+                const isSelectionAtEdge = index === 0 ? isSelectionAtStart : isSelectionAtEnd;
+                shouldUnwrap = this.shouldUnwrapNodeBeforeInsertion(
+                    node,
+                    targetBlock,
+                    numberOfNodes,
+                    isSelectionAtEdge
+                );
             }
             if (shouldUnwrap) {
                 this.processThrough("edge_block_to_unwrap_processors", node, index === 0);
@@ -386,38 +384,93 @@ export class DomPlugin extends Plugin {
                 nodes.push(node);
             }
         }
-        if (!nodes.length) {
-            return [];
+        return nodes;
+    }
+
+    /**
+     * Return true if the given node should be unwrapped before insertion at the
+     * given target block, false otherwise.
+     *
+     * @param {Node} node
+     * @param {HTMLElement} targetBlock
+     * @param {number} numberOfNodes
+     * @param {boolean} isSelectionAtEdge
+     * @returns {boolean}
+     */
+    shouldUnwrapNodeBeforeInsertion(node, targetBlock, numberOfNodes, isSelectionAtEdge) {
+        if (
+            numberOfNodes === 1 &&
+            this.dependencies.baseContainer.isCandidateForBaseContainer(node)
+        ) {
+            // Inline content may arrive wrapped in a single base container (see
+            // `wrapInlinesInBlocks` call in `prepareClipboardData`). In that
+            // case the wrapper is not meaningful structure.
+            // eg, `p(a[]c) + p(b) = p(ab[]c) ≠ p(a)p(b)p(c)`
+            return true;
         }
-
-        // 2. Insert the content.
-        // ======================
-
-        this.trigger(
-            "on_will_insert_handlers",
-            nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item))
-        );
-
-        // An empty text node may be needed to mark the position of insertion.
-        const marker = createMarkerNode(this.document);
-        // Find the first insertion reference (the node before which to insert).
-        const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
-        if (isTextNode(focusNode)) {
-            if (focusOffset === 0) {
-                focusNode.before(marker);
-            } else if (focusOffset === focusNode.length) {
-                focusNode.after(marker);
-            } else {
-                focusNode.splitText(focusOffset).before(marker);
-            }
-        } else if (isSelfClosingElement(focusNode)) {
-            focusNode.before(marker);
-        } else {
-            focusNode.insertBefore(marker, focusNode.childNodes[focusOffset] || null);
+        if (numberOfNodes > 1 && isSelectionAtEdge) {
+            // At the edge of a block, the first inserted block has no left-side
+            // content to merge with.
+            // eg, `h1([]c) + p(a)p(b) = p(a)h1(bc) ≠ h1(abc)`
+            // eg, `h1(a[]) + p(b)p(c) = h1(ab)p(c) ≠ h1(abc)`
+            // Both these cases would end up as `h1(a)h1(b)h1(c)` after line
+            // break restoration.
+            return false;
         }
+        if (isEditionBoundary(targetBlock, this.editable)) {
+            // A root-anchored selection expresses insertion between top-level
+            // children. Using its normalized deep position would invent a
+            // reference block and incorrectly merge into that child.
+            // eg, `p(a)[] + p(b) = p(a)p(b) ≠ p(ab)`
+            return false;
+        }
+        if (this.dependencies.split.isUnsplittable(node)) {
+            // Don't unwrap an unsplittable block.
+            return false;
+        }
+        if (isEmptyBlock(targetBlock)) {
+            // There is no surrounding content to absorb the edge block in an
+            // empty reference block, so unwrapping would only erase the pasted
+            // block boundary.
+            return false;
+        }
+        if (node.nodeName === targetBlock.nodeName) {
+            // Same-tag blocks can merge at the cursor.
+            // eg, `p(a[]d) + p(b)div(c) = p(ab)div(c)p(d) ≠ p(a)p(b)div(c)p(d)`
+            return true;
+        }
+        if (targetBlock.nodeName === "DIV" && this.dependencies.split.isUnsplittable(targetBlock)) {
+            // An unsplittable DIV cannot be split around the inserted block.
+            // Unwrapping inserts the edge contents without creating a nested
+            // block boundary inside the atomic container.
+            return true;
+        }
+        if (
+            this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
+            this.dependencies.baseContainer.isCandidateForBaseContainer(targetBlock)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Insert a list of nodes at the given position and return what was
+     * inserted.
+     *
+     * @see insert
+     * @param {Node[]} nodes
+     * @param {Node} targetNode
+     * @param {number} targetOffset
+     * @param {Object} [options]
+     * @param {boolean} [options.preserveInlineContext = false]
+     * @returns {Node[]}
+     */
+    insertNodesAt(nodes, targetNode, targetOffset, { preserveInlineContext = false } = {}) {
+        const marker = createMarkerNode(targetNode, targetOffset);
 
         // Insert the nodes.
-        let insertedContent = [];
+        const insertedContent = [];
         const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
         for (const [index, item] of nodes.entries()) {
             const insertedNodes = [];
@@ -426,15 +479,11 @@ export class DomPlugin extends Plugin {
             for (const [nodeIndex, node] of itemNodes.entries()) {
                 // A root marker may still point into the block on its right.
                 const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
-                if (
-                    nodeIndex === 0 &&
-                    isFragment(previousItem) &&
-                    !isBlock(item) &&
-                    isVisible(item)
-                ) {
-                    insertedNodes.push(...this.splitBeforeInsertion(marker, preserveInlineContext));
+                if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
+                    const addedNodes = this.splitBeforeInsertion(marker, { preserveInlineContext });
+                    insertedNodes.push(...addedNodes);
                 }
-                if (this.moveMarkerToNextInsertionPosition(node, marker, preserveInlineContext)) {
+                if (this.moveMarkerToNextPosition(node, marker, { preserveInlineContext })) {
                     const shouldReplaceEmptyBlock =
                         node === firstNode &&
                         isEmptyBlock(referenceBlock) &&
@@ -463,40 +512,19 @@ export class DomPlugin extends Plugin {
         }
         marker.remove();
 
-        insertedContent = this.processThrough("inserted_content_processors", insertedContent);
-
-        // 3. Move the selection after the insertion.
-        // ==========================================
-
-        const lastNode = insertedContent.at(-1);
-        const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
-        if (elementToEnter) {
-            this.dependencies.selection.setCursorEnd(elementToEnter);
-        } else if (lastNode) {
-            // Set the selection after the last inserted node.
-            let position = rightPos(lastNode);
-            position = normalizeCursorPosition(position[0], position[1], "right");
-            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
-                // Correct the position if it happens to be in the editable root.
-                position = getDeepestEditablePosition(...position);
-            }
-            this.dependencies.selection.setSelection(
-                { anchorNode: position[0], anchorOffset: position[1] },
-                { normalize: false }
-            );
-        }
-
         return insertedContent;
     }
 
     /**
      * Restore a lost split before an item that was unwrapped.
      *
+     * @see insert
      * @param {Node} marker
-     * @param {boolean} preserveInlineContext
+     * @param {Object} [options]
+     * @param {boolean} [options.preserveInlineContext = false]
      * @returns {HTMLBRElement[]} line breaks that were inserted if any
      */
-    splitBeforeInsertion(marker, preserveInlineContext) {
+    splitBeforeInsertion(marker, { preserveInlineContext = false } = {}) {
         const [targetNode, targetOffset] = leftPos(marker);
         const split = this.dependencies.split.splitBlockNode({
             targetNode,
@@ -526,12 +554,14 @@ export class DomPlugin extends Plugin {
     /**
      * Move the marker to the position where the given node should be inserted.
      *
+     * @see insert
      * @param {Node} node
      * @param {Node} marker
-     * @param {boolean} preserveInlineContext
+     * @param {Object} [options]
+     * @param {boolean} [options.preserveInlineContext = false]
      * @returns {Node | undefined}
      */
-    moveMarkerToNextInsertionPosition(node, marker, preserveInlineContext) {
+    moveMarkerToNextPosition(node, marker, { preserveInlineContext = false } = {}) {
         // Move to the next deepest position after inserting a block.
         if (node.nextSibling === marker) {
             let next = marker.nextSibling;
@@ -560,18 +590,44 @@ export class DomPlugin extends Plugin {
         }
         if (this.isAtBlockEdge(marker, "start")) {
             parent.before(marker);
-            return this.moveMarkerToNextInsertionPosition(node, marker);
+            return this.moveMarkerToNextPosition(node, marker);
         }
         if (this.isAtBlockEdge(marker, "end")) {
             parent.after(marker);
-            return this.moveMarkerToNextInsertionPosition(node, marker);
+            return this.moveMarkerToNextPosition(node, marker);
         }
         if (!this.dependencies.split.isUnsplittable(parent)) {
             const [, after] = this.dependencies.split.splitElement(parent, childNodeIndex(marker));
             // `splitElement` moved the marker into `after`. Place it between
             // the two sides.
             after.before(marker);
-            return this.moveMarkerToNextInsertionPosition(node, marker);
+            return this.moveMarkerToNextPosition(node, marker);
+        }
+    }
+
+    /**
+     * Move the selection after insertion.
+     *
+     * @see insert
+     * @param {Node[]} insertedNodes
+     */
+    moveSelectionAfterInsertion(insertedNodes) {
+        const lastNode = insertedNodes.at(-1);
+        const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
+        if (elementToEnter) {
+            this.dependencies.selection.setCursorEnd(elementToEnter);
+        } else if (lastNode) {
+            // Set the selection after the last inserted node.
+            let position = rightPos(lastNode);
+            position = normalizeCursorPosition(position[0], position[1], "right");
+            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
+                // Correct the position if it happens to be in the editable root.
+                position = getDeepestEditablePosition(...position);
+            }
+            this.dependencies.selection.setSelection(
+                { anchorNode: position[0], anchorOffset: position[1] },
+                { normalize: false }
+            );
         }
     }
 
