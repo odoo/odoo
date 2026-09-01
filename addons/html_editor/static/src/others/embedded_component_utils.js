@@ -49,6 +49,7 @@ import { effect, onMounted, onPatched, onWillDestroy, toRaw, proxy } from "@odoo
  * @param {function(): boolean|undefined} [options.onBeforeComplete] called
  *   before clearing host children; return `false` to abort the complete call
  *   entirely (skips both `replaceChildren` and the original `fiberComplete`).
+ *   Not called if the root was destroyed before it was prepared.
  * @param {function()} [options.onAfterComplete] called after the original
  *   `fiber.complete`.
  * @returns {{ root: object, mountPromise: Promise }}
@@ -63,7 +64,7 @@ export function mountComponent(
 ) {
     const root = app.createRoot(Component, { props, env });
     const mountPromise = root.prepare().then(() => {
-        if (onBeforeComplete?.() === false) {
+        if (root.destroyed || onBeforeComplete?.() === false) {
             return;
         }
         host.replaceChildren();
