@@ -11,6 +11,10 @@ import { post } from "@web/core/network/http_service";
 import { redirect } from "@web/core/utils/urls";
 import { useService } from "@web/core/utils/hooks";
 import { ORM } from "@web/core/orm_plugin";
+import {
+    getAppsSidebarState,
+    toggleAppsSidebar,
+} from "@web/webclient/apps_sidebar/apps_sidebar_state";
 
 function supportItem() {
     const url = session.support_url;
@@ -53,6 +57,20 @@ function shortCutsItem() {
             command.openMainPalette({ FooterComponent: ShortcutsFooterComponent });
         },
         sequence: 30,
+    };
+}
+
+function appsSidebarItem() {
+    const ui = useService("ui");
+    return {
+        type: "item",
+        id: "apps_sidebar",
+        hide: ui.isSmall,
+        description: getAppsSidebarState().isVisible
+            ? _t("Hide the apps sidebar")
+            : _t("Show the apps sidebar"),
+        callback: toggleAppsSidebar,
+        sequence: 35,
     };
 }
 
@@ -169,6 +187,7 @@ registry
     .category("user_menuitems")
     .add("support", supportItem)
     .add("shortcuts", shortCutsItem)
+    .add("apps_sidebar", appsSidebarItem)
     .add("separator", separator)
     .add("preferences", preferencesItem)
     .add("odoo_account", odooAccountItem)

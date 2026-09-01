@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.AppsSidebar">
+    <nav t-if="this.isDisplayed" class="o_apps_sidebar d-flex flex-column d-print-none"
+         t-att-class="{ o_apps_sidebar_expanded: this.state.isExpanded }"
+         aria-label="Applications">
+      <div class="o_apps_sidebar_apps d-flex flex-column flex-grow-1 overflow-y-auto overflow-x-hidden">
+        <t t-foreach="this.apps" t-as="app" t-key="app.id">
+          <t t-set="icon" t-value="this.getAppIcon(app)"/>
+          <a class="o_apps_sidebar_app d-flex align-items-center text-decoration-none"
+             t-att-class="{ o_apps_sidebar_app_active: app === this.currentApp }"
+             t-att-href="this.getMenuItemHref(app)"
+             t-att-data-menu-xmlid="app.xmlid"
+             t-att-data-section="app.id"
+             t-att-data-tooltip="this.state.isExpanded ? undefined : app.name"
+             data-tooltip-position="right"
+             t-on-click.prevent="() => this.onAppClicked(app)">
+            <span class="o_apps_sidebar_app_icon d-flex align-items-center justify-content-center flex-shrink-0">
+              <img t-if="app.webIconData" t-attf-src="{{app.webIconData}}" alt=""/>
+              <i t-elif="icon.webIconClass" class="oi oi-2x" t-att-data-icon="icon.webIconClass"
+                 t-att-style="icon.webIconColor and ('color: ' + icon.webIconColor)"/>
+            </span>
+            <span class="o_apps_sidebar_app_name text-truncate" t-out="app.name"/>
+          </a>
+        </t>
+      </div>
+      <div class="o_apps_sidebar_footer d-flex flex-column flex-shrink-0">
+        <Dropdown position="'right-end'" menuClass="'o_apps_sidebar_pin_menu'">
+          <button class="o_apps_sidebar_btn d-flex align-items-center" title="Choose the apps to display"
+                  data-tooltip="Choose the apps to display" data-tooltip-position="right">
+            <span class="o_apps_sidebar_app_icon d-flex align-items-center justify-content-center flex-shrink-0">
+              <i class="oi" data-icon="tune"/>
+            </span>
+            <span class="o_apps_sidebar_app_name text-truncate">Choose apps</span>
+          </button>
+          <t t-set-slot="content">
+            <DropdownItem t-foreach="this.allApps" t-as="app" t-key="app.id"
+                          class="'o_apps_sidebar_pin_item d-flex align-items-center'"
+                          closingMode="'none'"
+                          onSelected="() => this.onPinToggled(app)"
+                          attrs="{ 'data-menu-xmlid': app.xmlid }">
+              <i class="oi me-2" data-icon="check" t-att-class="{ invisible: !this.isPinned(app) }"/>
+              <t t-out="app.name"/>
+            </DropdownItem>
+          </t>
+        </Dropdown>
+        <button class="o_apps_sidebar_btn o_apps_sidebar_toggle d-flex align-items-center"
+                t-att-title="this.toggleTitle"
+                t-on-click="() => this.onToggleExpanded()">
+          <span class="o_apps_sidebar_app_icon d-flex align-items-center justify-content-center flex-shrink-0">
+            <i class="oi" t-att-data-icon="this.state.isExpanded ? 'chevron_backward' : 'chevron_forward'"/>
+          </span>
+          <span class="o_apps_sidebar_app_name text-truncate">Collapse</span>
+        </button>
+      </div>
+    </nav>
+  </t>
+
+</templates>
