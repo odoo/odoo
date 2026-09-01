@@ -91,7 +91,11 @@ export class Dialog extends Component {
             { bypassEditableProtection: true }
         );
         this.id = `dialog_${this.data.id}`;
-        useSubEnv({ inDialog: true, dialogId: this.id });
+        useSubEnv({
+            inDialog: true,
+            dialogId: this.id,
+            dialogRef: this.modalRef,
+        });
         this.isMovable = this.props.header;
         if (this.isMovable) {
             this.position = proxy({ left: 0, top: 0 });

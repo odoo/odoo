@@ -6,7 +6,7 @@
             class="spinner-border spinner-border-sm me-1"
         />
         <t t-out="this.state.message"/>
-        <t t-custom-portal="'#o_w_slide_upload_btns'">
+        <Portal target="this.slideUploadBtnsRef">
             <button
                 class="btn btn-primary"
                 t-att-disabled="this.state.status === 'installing'"
@@ -15,6 +15,6 @@
                 <span t-if="this.state.status === 'failure'">Retry</span>
                 <span t-else="">Install</span>
             </button>
-        </t>
+        </Portal>
     </t>
 </templates>

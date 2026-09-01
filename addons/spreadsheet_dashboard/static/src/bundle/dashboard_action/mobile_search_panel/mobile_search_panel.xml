@@ -2,7 +2,7 @@
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardMobileSearchPanel" class="btn flex-grow-1 ps-0">
         <t t-if="this.state.isOpen">
-            <t t-custom-portal="'body'">
+            <Portal target="'body'">
                 <div class="o_spreadsheet_dashboard_search_panel o_search_panel o_searchview o_mobile_search">
                     <div class="o_mobile_search_header">
                         <button type="button" class="o_mobile_search_button btn w-100 d-flex justify-content-start align-items-center" t-on-click="() => this.state.isOpen = false">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                 </div>
-            </t>
+            </Portal>
         </t>
         <div t-elif="this.props.groups.length" t-on-click="this.openDashboardSelection" class="d-flex align-items-center">
             <i class="oi oi-lg" data-icon="dock_to_right"/>

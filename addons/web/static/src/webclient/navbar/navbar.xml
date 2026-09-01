@@ -96,7 +96,7 @@
 
   <t t-name="web.NavBar.AppsMenu.Sidebar">
     <i class="oi" data-icon="menu" aria-hidden="true"/>
-    <t t-custom-portal="'body'">
+    <Portal target="'body'">
       <Transition name="'o-app-menu-sidebar'" visible="this.state.isAppMenuSidebarOpened" leaveDuration="200" t-slot-scope="transition">
         <div class="o_app_menu_sidebar position-fixed top-0 bottom-0 end-100 d-flex flex-column flex-nowrap" t-att-class="transition.className" t-on-touchstart.stop="this._onSwipeStart" t-on-touchend.stop="this._onSwipeEnd">
           <div class="o_sidebar_topbar d-flex align-items-center justify-content-between flex-shrink-0 py-0 fs-4">
@@ -134,7 +134,7 @@
         </div>
       </Transition>
       <div t-if="this.state.isAppMenuSidebarOpened" class="modal-backdrop show d-block d-md-none" t-on-click.stop="this._closeAppMenuSidebar" t-on-touchstart.stop="this._onSwipeStart" t-on-touchend.stop="this._onSwipeEnd" />
-    </t>
+    </Portal>
   </t>
 
   <t t-name="web.NavBar.SectionsMenu">
