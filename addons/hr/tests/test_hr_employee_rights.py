@@ -32,6 +32,7 @@ class TestHrEmployeeRights(TestHrCommon):
 
             with Form(self.env['hr.employee'].with_user(self.res_users_hr_officer)) as employee_form:
                 employee_form.name = f'Employee {country.name}'
+                employee_form.date_version = '2020-01-01'
                 employee_form.contract_date_start = '2020-01-01'
                 employee_form.company_id = company
                 employee_form.work_location_id = self.work_location
