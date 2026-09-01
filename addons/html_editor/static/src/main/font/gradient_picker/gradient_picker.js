@@ -97,7 +97,7 @@ export class GradientPicker extends Component {
         }
         if (isLinear || isConic) {
             const angle = gradient.match(/(-?[0-9]+)deg/);
-            this.state.angle = angle ? parseInt(angle[1]) : 0;
+            this.state.angle = angle ? parseInt(angle[1]) : 180;
         }
         if (isRadial || isConic) {
             const position = gradient.match(/ at (-?[0-9]+)% (-?[0-9]+)%/) || ["", "50", "50"];
