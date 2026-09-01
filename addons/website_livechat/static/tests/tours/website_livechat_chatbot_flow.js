@@ -9,6 +9,7 @@ import {
 } from "@im_livechat/../tests/tours/livechat_tour_utils";
 
 let chatbotDelayProcessingDef;
+let firstTypingDef;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     steps: () => {
@@ -19,14 +20,29 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 chatbotDelayProcessingDef?.resolve();
                 return await super._delayThenProcessAnswerAgain(message);
             },
+            // Hold the first typing message, as MESSAGE_DELAY is 0 and the message never renders.
+            async _simulateTyping(duration) {
+                if (firstTypingDef) {
+                    this.isTyping = true;
+                    await firstTypingDef.promise;
+                    firstTypingDef = null;
+                }
+                return await super._simulateTyping(duration);
+            },
         });
         patch(Chatbot, {
             MESSAGE_DELAY: 0,
             MULTILINE_STEP_DEBOUNCE_DELAY: 2000,
             TYPING_DELAY: 0,
         });
+        firstTypingDef = Promise.withResolvers();
         return [
             waitForMessage("Hello! I'm a bot!"),
+            {
+                trigger:
+                    ".o-livechat-root:shadow .o-mail-Message img[src$='chatbot_is_typing.gif']",
+                run: () => firstTypingDef.resolve(),
+            },
             waitForMessage("I help lost visitors find their way."),
             waitForMessage("How can I help you?"),
             {
