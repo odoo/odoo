@@ -46,9 +46,9 @@
                     </table>
                 </div>
 
-                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}"
-                     t-att-data-oe-model="o and o._name"
-                     t-att-data-oe-id="o and o.id">
+                <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''} #{'snailmail' if snailmail else ''}"
+                    t-att-data-oe-model="o and o._name"
+                    t-att-data-oe-id="o and o.id">
                     <table class="din_company_info table-borderless">
                         <tr>
                             <td>
