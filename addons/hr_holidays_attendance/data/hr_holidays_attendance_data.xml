@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <function model="hr.work.entry.type" name="write">
-            <value model="hr.work.entry.type" eval="obj().sudo().search([('code', '=', 'OVERTIME')]).ids"/>
+            <value model="hr.work.entry.type" eval="obj().sudo().search([('code', '=', '040.00')]).ids"/>
             <value eval="{
                 'overtime_deductible': True,
             }"/>

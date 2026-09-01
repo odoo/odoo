@@ -18,7 +18,7 @@ class HrVersion(models.Model):
     def _get_default_work_entry_type_id(self):
         country_code = self.country_code
         country_attendance = self.env['hr.work.entry.type'].search([
-            ('code', '=', 'WORK100'),
+            ('code', '=', '002.00'),
             ('country_code', '=', country_code),
         ], limit=1)
         attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
