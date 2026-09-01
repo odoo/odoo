@@ -71,7 +71,7 @@ class ResourceCalendarLeaves(models.Model):
         leaves.sudo().write({
             'state': 'confirm',
         })
-        sick_time_status = self.env['hr.work.entry.type'].search([('code', '=', 'LEAVE110')])
+        sick_time_status = self.env['hr.work.entry.type'].search([('code', '=', '013.00')])
         leaves_to_recreate = self.env['hr.leave']
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days
@@ -169,7 +169,7 @@ class ResourceCalendarLeaves(models.Model):
                 companies_without_country |= company
                 continue
 
-            if not self.sudo().env['hr.work.entry.type'].search([('code', '=', 'LEAVE500'), ('country_code', '!=', company.country_code)], limit=1):
+            if not self.sudo().env['hr.work.entry.type'].search([('code', '=', '006.00'), ('country_code', '!=', company.country_code)], limit=1):
                 continue
             try:
                 csv_file_path = file_path(f"hr_holidays/data/public_holidays/public_holidays_{company.country_code.lower()}.csv")
