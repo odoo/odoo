@@ -4,6 +4,7 @@ import { roundDecimals, roundPrecision, floatIsZero } from "@web/core/utils/numb
 import { _t } from "@web/core/l10n/translation";
 import { loyaltyIdsGenerator } from "./pos_store";
 import { compute_price_force_price_include } from "@point_of_sale/app/models/utils/tax_utils";
+import { omit } from "@web/core/utils/objects";
 const { DateTime } = luxon;
 
 function _newRandomRewardCode() {
@@ -61,6 +62,11 @@ patch(PosOrder, {
             type: "one2many",
             local: true,
         },
+        coupon_updates_cache: {
+            model: "pos.order",
+            name: "coupon_updates_cache",
+            local: true,
+        },
     },
 });
 
@@ -107,6 +113,76 @@ patch(PosOrder.prototype, {
         const state = super.serializeState(...arguments);
         state.disabledRewards = [...(this.uiState.disabledRewards || [])];
         return state;
+    },
+    serialize(options = {}) {
+        const json = super.serialize(...arguments);
+        if (options.orm) {
+            json.coupon_point_changes = this.getCouponPointChanges();
+        }
+        return json;
+    },
+    getCouponPointChanges() {
+        const ProgramModel = this.models["loyalty.program"];
+        const rewardLines = this._get_reward_lines();
+        const partner = this.get_partner();
+        let couponData = Object.values(this.uiState.couponPointChanges || {}).reduce((agg, pe) => {
+            const earnedPoints =
+                pe.points - this._getPointsCorrection(ProgramModel.get(pe.program_id));
+            agg[pe.coupon_id] = Object.assign({}, pe, {
+                points: earnedPoints,
+                points_earned: earnedPoints,
+                points_spent: 0,
+            });
+            const program = ProgramModel.get(pe.program_id);
+            if (
+                (program.is_nominative || program.program_type == "next_order_coupons") &&
+                partner
+            ) {
+                agg[pe.coupon_id].partner_id = partner.id;
+            }
+            if (program.program_type != "loyalty") {
+                agg[pe.coupon_id].expiration_date = program.date_to || pe.expiration_date;
+            }
+            return agg;
+        }, {});
+        for (const line of rewardLines) {
+            if (!line.coupon_id) {
+                continue;
+            }
+            const reward = line.reward_id;
+            const couponId = line.coupon_id.id;
+            if (!couponData[couponId]) {
+                couponData[couponId] = {
+                    points: 0,
+                    points_earned: 0,
+                    points_spent: 0,
+                    program_id: reward.program_id.id,
+                    coupon_id: couponId,
+                    barcode: false,
+                };
+                if (reward.program_type != "loyalty") {
+                    couponData[couponId].expiration_date = reward.program_id.date_to;
+                }
+            }
+            couponData[couponId].line_codes ||= [];
+            if (!couponData[couponId].line_codes.includes(line.reward_identifier_code)) {
+                couponData[couponId].line_codes.push(line.reward_identifier_code);
+            }
+            couponData[couponId].points -= line.points_cost;
+            couponData[couponId].points_spent += line.points_cost;
+        }
+        couponData = Object.fromEntries(
+            Object.entries(couponData)
+                .filter(([key, value]) => {
+                    const program = ProgramModel.get(value.program_id);
+                    if (program.applies_on === "current") {
+                        return value.line_codes && value.line_codes.length;
+                    }
+                    return true;
+                })
+                .map(([key, value]) => [key, omit(value, "appliedRules")])
+        );
+        return couponData;
     },
     /** @override */
     getEmailItems() {
