@@ -211,8 +211,11 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        if (this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ?? false) {
-            this.pasteText(ev.clipboardData.getData("text/plain"));
+        if (
+            this.checkPredicates("should_paste_as_text_predicates", selection, ev.clipboardData) ??
+            false
+        ) {
+            this.pasteText(ev.clipboardData.getData("text/plain"), { verbatim: true });
         } else {
             this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
                 this.handlePasteOdooEditorHtml(selection, ev.clipboardData) ||
@@ -318,8 +321,10 @@ export class ClipboardPlugin extends Plugin {
     }
     /**
      * @param {string} text
+     * @param {object} [options]
+     * @param {boolean} [options.verbatim = false] if true, insert without processing.
      */
-    pasteText(text) {
+    pasteText(text, { verbatim = false } = {}) {
         const textFragments = text.split(/\r?\n/);
         let selection = this.dependencies.selection.getEditableSelection();
         const preEl = closestElement(selection.anchorNode, "PRE");
@@ -339,7 +344,9 @@ export class ClipboardPlugin extends Plugin {
                     });
                 });
             }
-            this.dependencies.dom.insert(modifiedTextFragment);
+            // TODO AGE: if we're inserting verbatim all the rest should also
+            // not be done. But I'll move that to insert anyway.
+            this.dependencies.dom.insert(modifiedTextFragment, { verbatim });
             if (textIndex < textFragments.length) {
                 selection = this.dependencies.selection.getEditableSelection();
                 // Break line by inserting new paragraph and

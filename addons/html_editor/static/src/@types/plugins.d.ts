@@ -34,7 +34,6 @@ declare module "plugins" {
     import { fragment_to_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
-    import { paste_url_overrides } from "@html_editor/main/link/link_paste_plugin";
     import { on_link_created_handlers, immutable_link_selectors, is_link_editable_predicates, is_empty_link_legit_predicates, is_link_allowed_on_selection_predicates, link_popovers, LinkShared, advanced_popover_options } from "@html_editor/main/link/link_plugin";
     import { is_link_eligible_for_visual_indication_predicates, is_link_eligible_for_zwnbsp_predicates, LinkSelectionShared } from "@html_editor/main/link/link_selection_plugin";
     import { paste_media_url_command_providers } from "@html_editor/main/link/powerbox_url_paste_plugin";
@@ -202,7 +201,6 @@ declare module "plugins" {
         fix_selection_on_editable_root_overrides: fix_selection_on_editable_root_overrides;
         insert_line_break_element_overrides: insert_line_break_element_overrides;
         paste_text_overrides: paste_text_overrides;
-        paste_url_overrides: paste_url_overrides;
         set_attribute_overrides: set_attribute_overrides;
         shift_tab_overrides: shift_tab_overrides;
         split_element_block_overrides: split_element_block_overrides;
