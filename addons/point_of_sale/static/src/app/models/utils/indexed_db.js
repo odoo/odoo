@@ -17,6 +17,7 @@ export default class IndexedDB {
         this.dialog = dialog;
         this._isReconnecting = false;
         this._reloadDialogShown = false;
+        this._isClosing = false;
         this.databaseEventListener(whenReady);
     }
 
@@ -80,6 +81,7 @@ export default class IndexedDB {
             if (needsUpgrade) {
                 const newVersion = this.db.version + 1;
                 this.db.close();
+                this.db = null;
                 this.dbVersion = newVersion;
 
                 logPosMessage(
@@ -93,6 +95,7 @@ export default class IndexedDB {
                 return;
             }
 
+            this._isClosing = false;
             this._setupVisibilityProbe();
             logPosMessage(
                 "IndexedDB",
@@ -118,7 +121,6 @@ export default class IndexedDB {
 
         // Batch processing for large arrays to avoid performance issues
         // or transaction failures due to large data sets
-        const results = [];
         for (let i = 0; i < arrData.length; i += BATCH_SIZE) {
             let timeoutId;
             let finished = false;
@@ -127,8 +129,7 @@ export default class IndexedDB {
             const transaction = this.getNewTransaction([storeName], "readwrite");
 
             if (!transaction) {
-                results.push(Promise.reject("Transaction could not be created"));
-                continue;
+                return;
             }
 
             const doneMethod = () => {
@@ -214,17 +215,23 @@ export default class IndexedDB {
                 }
             });
 
-            const result = await batchPromise
-                .then(() => ({ status: "fulfilled" }))
-                .catch((err) => ({ status: "rejected", reason: err }));
-            results.push(result);
+            // Batch failures are already logged, keep processing the next ones
+            await batchPromise.catch(() => {});
         }
-
-        return results;
     }
 
     getNewTransaction(dbStore) {
         try {
+            if (this._isClosing) {
+                logPosMessage(
+                    "IndexedDB",
+                    "getNewTransaction.closing",
+                    "db is closing, transaction skipped",
+                    CONSOLE_COLOR
+                );
+                return false;
+            }
+
             if (!this.db) {
                 logPosMessage(
                     "IndexedDB",
@@ -322,8 +329,10 @@ export default class IndexedDB {
 
     reset() {
         return new Promise((resolve) => {
+            this._isClosing = true;
             if (this.db) {
                 this.db.close();
+                this.db = null;
             }
 
             if (!this.dbInstance) {
@@ -344,7 +353,6 @@ export default class IndexedDB {
 
             request.onsuccess = () => {
                 logPosMessage("IndexedDB", "reset", "Database deleted successfully", CONSOLE_COLOR);
-                this.db = null;
                 clearTimeout(timeout);
                 resolve(true);
             };
