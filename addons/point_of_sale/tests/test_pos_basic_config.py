@@ -1146,6 +1146,31 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.env['pos.order'].sync_from_ui([self.create_ui_order_data([(self.product3, 1)])])
         self.assertEqual(get_top_product_ids(3), [self.product1.id, self.product2.id, self.product3.id])
 
+    def test_ticket_screen_order_data_includes_products(self):
+        """The ticket screen payload must include the orderlines' products
+        and the order's partner."""
+        self.open_new_session(0)
+        self.env['pos.order'].sync_from_ui([
+            self.create_ui_order_data([(self.product1, 1), (self.product2, 1)], customer=self.customer),
+        ])
+        order = self.pos_session.order_ids
+        # Archived products must be sent too.
+        self.product2.action_archive()
+
+        data = order.get_ticket_screen_order_data()
+        line_product_ids = {line['product_id'] for line in data['pos.order.line']}
+        sent_product_ids = {product['id'] for product in data.get('product.product', [])}
+        self.assertEqual(line_product_ids, {self.product1.id, self.product2.id})
+        self.assertTrue(
+            line_product_ids <= sent_product_ids,
+            "The products of the orderlines must be sent with the ticket screen data",
+        )
+        sent_partner_ids = {partner['id'] for partner in data.get('res.partner', [])}
+        self.assertIn(
+            self.customer.id, sent_partner_ids,
+            "The partner of the order must be sent with the ticket screen data",
+        )
+
     def test_closing_entry_by_product(self):
         # set the Group by Product at Closing Entry
         self.config.is_closing_entry_by_product = True

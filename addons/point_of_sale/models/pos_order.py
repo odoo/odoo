@@ -1441,6 +1441,31 @@ class PosOrder(models.Model):
         totalCount = self.search_count(real_domain)
         return {'ordersInfo': list(orders_info.items())[::-1], 'totalCount': totalCount}
 
+<<<<<<< 7d5eaa419f0c0c7f24d76b1a8b762b7911b80ecd
+||||||| 0ddb990ba5e69e20b74214f4e6f47c904290a22d
+    def get_ticket_screen_order_data(self):
+        return self.read_pos_data([], self.config_id[:1].id)
+
+=======
+    def get_ticket_screen_order_data(self):
+        config = self.config_id[:1]
+        data = self.read_pos_data([], config.id)
+        # The frontend drops orderlines whose product it has not loaded.
+        if config and self.lines.product_id:
+            product_model = self.env['product.product']
+            products = product_model._load_product_with_domain(
+                [('id', 'in', self.lines.product_id.ids)], config.id, load_archived=True,
+            )
+            product_model._process_pos_ui_product_product(products, config)
+            data['product.product'] = products
+        # Same for the partners (limited loading).
+        if config and self.partner_id:
+            data['res.partner'] = self.partner_id.read(
+                self.env['res.partner']._load_pos_data_fields(config.id), load=False,
+            )
+        return data
+
+>>>>>>> 5bbec02c755871451083c733e4a28de4059a7a49
     def _send_order(self):
         # This function is made to be overriden by pos_self_order_preparation_display
         pass
