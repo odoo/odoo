@@ -11,8 +11,9 @@
         <div t-else="" class="confirmation-page o_pos_status_shell d-flex flex-column align-items-center h-100 p-3 text-center bg-100">
             <!-- Brand -->
             <div class="o_pos_status_brand flex-shrink-0">
-                <img t-if="this.selfOrder.config.logo"
-                     t-attf-src="data:image/png;base64,{{this.selfOrder.config.logo}}"
+                <t t-set="logo" t-value="this.logoUrl"/>
+                <img t-if="logo"
+                     t-attf-src="{{logo}}"
                      class="o_pos_status_logo object-fit-contain" t-att-alt="this.selfOrder.company.name"/>
             </div>
             <!-- Stage -->

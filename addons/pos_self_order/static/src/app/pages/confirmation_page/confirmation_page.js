@@ -4,6 +4,7 @@ import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
+import { imageDataUri } from "@point_of_sale/utils";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -197,5 +198,10 @@ export class ConfirmationPage extends Component {
     }
     get orderTimeStr() {
         return this.confirmedOrder.preset_time.toFormat("h:mm a");
+    }
+    get logoUrl() {
+        return this.selfOrder.config.logo
+            ? imageDataUri(this.selfOrder.config.logo.content)
+            : false;
     }
 }
