@@ -49,16 +49,32 @@ import { SPLIT_OPERATION_TYPES } from "./split_plugin";
 
 const IS_MARKER = Symbol("isMarker");
 /**
- * Creates and returns an empty text node that may be needed to mark the
- * position of insertion. It is flagged as a marker so its mutations can be
- * ignored.
+ * Create, position and return an empty text node before which to insert. It
+ * will be moved into the document so we can always insert before it. It is
+ * flagged as a marker so its mutations can be ignored.
  *
- * @param {HTMLDocument} doc
+ * @see insertNodes
+ *
+ * @param {Node} node
+ * @param {number} offset
  * @returns { Node & { isMarker: true }}
  */
-const createMarkerNode = (doc) => {
-    const marker = doc.createTextNode("");
+const createMarkerNode = (node, offset) => {
+    const marker = node.ownerDocument.createTextNode("");
     marker[IS_MARKER] = true;
+    if (isTextNode(node)) {
+        if (offset === 0) {
+            node.before(marker);
+        } else if (offset === node.length) {
+            node.after(marker);
+        } else {
+            node.splitText(offset).before(marker);
+        }
+    } else if (isSelfClosingElement(node)) {
+        node.before(marker);
+    } else {
+        node.insertBefore(marker, node.childNodes[offset] || null);
+    }
     return marker;
 };
 const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NODE;
@@ -289,84 +305,17 @@ export class DomPlugin extends Plugin {
             return [];
         }
 
-        // Insert the content.
-        // ======================
-
         this.trigger(
             "on_will_insert_handlers",
             nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item))
         );
-
-        // An empty text node may be needed to mark the position of insertion.
-        const marker = createMarkerNode(this.document);
-        // Find the first insertion reference (the node before which to insert).
         const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
-        if (isTextNode(focusNode)) {
-            if (focusOffset === 0) {
-                focusNode.before(marker);
-            } else if (focusOffset === focusNode.length) {
-                focusNode.after(marker);
-            } else {
-                focusNode.splitText(focusOffset).before(marker);
-            }
-        } else if (isSelfClosingElement(focusNode)) {
-            focusNode.before(marker);
-        } else {
-            focusNode.insertBefore(marker, focusNode.childNodes[focusOffset] || null);
-        }
+        const insertedContent = this.processThrough(
+            "inserted_content_processors",
+            this.insertNodesAt(nodes, focusNode, focusOffset, { preserveInlineContext: !isInBlock })
+        );
 
-        // Insert the nodes.
-        let insertedContent = [];
-        const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
-        for (const [index, item] of nodes.entries()) {
-            const insertedNodes = [];
-            const previousItem = index > 0 && nodes[index - 1];
-            const itemNodes = isFragment(item) ? childNodes(item) : [item];
-            for (const [nodeIndex, node] of itemNodes.entries()) {
-                // A root marker may still point into the block on its right.
-                const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
-                if (
-                    nodeIndex === 0 &&
-                    isFragment(previousItem) &&
-                    !isBlock(item) &&
-                    isVisible(item)
-                ) {
-                    insertedNodes.push(...this.splitBeforeInsertion(marker, !isInBlock));
-                }
-                if (this.moveMarkerToNextInsertionPosition(node, marker, !isInBlock)) {
-                    const shouldReplaceEmptyBlock =
-                        node === firstNode &&
-                        isEmptyBlock(referenceBlock) &&
-                        findDownTo(node, isPhrasingContainer);
-                    const next = marker.nextSibling;
-                    const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
-                    marker.before(node);
-                    insertedNodes.push(node);
-                    const didInsertBlock = isBlock(node);
-                    if (wasBeforeFakeLineBreak && !didInsertBlock) {
-                        // Inserting inline content before a fake line break
-                        // will make it real. Remove it.
-                        next.remove();
-                    }
-                    if (shouldReplaceEmptyBlock && !referenceBlock.contains(node)) {
-                        // A block was inserted outside the original empty block.
-                        // The original empty block has been replaced entirely.
-                        referenceBlock.before(marker);
-                        referenceBlock.remove();
-                    } else if (didInsertBlock) {
-                        this.moveMarkerToNextPosition(node, marker, !isInBlock);
-                    }
-                }
-            }
-            insertedContent.push(...insertedNodes);
-        }
-        marker.remove();
-
-        insertedContent = this.processThrough("inserted_content_processors", insertedContent);
-
-        // 3. Move the selection after the insertion.
-        // ==========================================
-
+        // Move the selection after the insertion.
         const lastNode = insertedContent.at(-1);
         const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
         if (elementToEnter) {
@@ -392,6 +341,8 @@ export class DomPlugin extends Plugin {
      * Process a fragment before insertion, unwrapping what needs unwrapping,
      * then return a list of nodes to insert (fragments in the case of unwrapped
      * nodes).
+     *
+     * @see insert
      *
      * @param {DocumentFragment} fragment
      * @returns {(Node|DocumentFragment)[]}
@@ -502,13 +453,83 @@ export class DomPlugin extends Plugin {
     }
 
     /**
+     * Insert a list of nodes at the given position and return what was
+     * inserted.
+     *
+     * @see insert
+     *
+     * @param {Node[]} nodes
+     * @param {Node} targetNode
+     * @param {number} targetOffset
+     * @param {Object} [options]
+     * @param {boolean} [options.preserveInlineContext = false]
+     * @returns {Node[]}
+     */
+    insertNodesAt(nodes, targetNode, targetOffset, { preserveInlineContext = false } = {}) {
+        const marker = createMarkerNode(targetNode, targetOffset);
+
+        // Insert the nodes.
+        const insertedContent = [];
+        const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
+        for (const [index, item] of nodes.entries()) {
+            const insertedNodes = [];
+            const previousItem = index > 0 && nodes[index - 1];
+            const itemNodes = isFragment(item) ? childNodes(item) : [item];
+            for (const [nodeIndex, node] of itemNodes.entries()) {
+                // A root marker may still point into the block on its right.
+                const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
+                if (
+                    nodeIndex === 0 &&
+                    isFragment(previousItem) &&
+                    !isBlock(item) &&
+                    isVisible(item)
+                ) {
+                    const addedNodes = this.splitBeforeInsertion(marker, { preserveInlineContext });
+                    insertedNodes.push(...addedNodes);
+                }
+                if (this.moveMarkerToNextPosition(node, marker, { preserveInlineContext })) {
+                    const shouldReplaceEmptyBlock =
+                        node === firstNode &&
+                        isEmptyBlock(referenceBlock) &&
+                        findDownTo(node, isPhrasingContainer);
+                    const next = marker.nextSibling;
+                    const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
+                    marker.before(node);
+                    insertedNodes.push(node);
+                    const didInsertBlock = isBlock(node);
+                    if (wasBeforeFakeLineBreak && !didInsertBlock) {
+                        // Inserting inline content before a fake line break
+                        // will make it real. Remove it.
+                        next.remove();
+                    }
+                    if (shouldReplaceEmptyBlock && !referenceBlock.contains(node)) {
+                        // A block was inserted outside the original empty block.
+                        // The original empty block has been replaced entirely.
+                        referenceBlock.before(marker);
+                        referenceBlock.remove();
+                    } else if (didInsertBlock) {
+                        this.moveMarkerToNextPosition(node, marker, { preserveInlineContext });
+                    }
+                }
+            }
+            insertedContent.push(...insertedNodes);
+        }
+        marker.remove();
+
+        return insertedContent;
+    }
+
+    /**
      * Restore a lost split before an item that was unwrapped.
      *
+     * @see insert
+     *
      * @param {Node} marker
-     * @param {boolean} preserveInlineContext
+     * @param {Object} [options]
+     * @param {boolean} [options.preserveInlineContext = false]
      * @returns {HTMLBRElement[]} line breaks that were inserted if any
      */
-    splitBeforeInsertion(marker, preserveInlineContext) {
+    splitBeforeInsertion(marker, { preserveInlineContext = false } = {}) {
         const [targetNode, targetOffset] = leftPos(marker);
         const split = this.dependencies.split.splitBlockNode({
             targetNode,
@@ -540,10 +561,11 @@ export class DomPlugin extends Plugin {
      *
      * @param {Node} node
      * @param {Node} marker
-     * @param {boolean} preserveInlineContext
+     * @param {Object} [options]
+     * @param {boolean} [options.preserveInlineContext = false]
      * @returns {Node | undefined}
      */
-    moveMarkerToNextInsertionPosition(node, marker, preserveInlineContext) {
+    moveMarkerToNextPosition(node, marker, { preserveInlineContext = false } = {}) {
         // Move to the next deepest position after inserting a block.
         if (node.nextSibling === marker) {
             let next = marker.nextSibling;
@@ -572,18 +594,18 @@ export class DomPlugin extends Plugin {
         }
         if (this.isAtBlockEdge(marker, "start")) {
             parent.before(marker);
-            return this.moveMarkerToNextInsertionPosition(node, marker);
+            return this.moveMarkerToNextPosition(node, marker);
         }
         if (this.isAtBlockEdge(marker, "end")) {
             parent.after(marker);
-            return this.moveMarkerToNextInsertionPosition(node, marker);
+            return this.moveMarkerToNextPosition(node, marker);
         }
         if (!this.dependencies.split.isUnsplittable(parent)) {
             const [, after] = this.dependencies.split.splitElement(parent, childNodeIndex(marker));
             // `splitElement` moved the marker into `after`. Place it between
             // the two sides.
             after.before(marker);
-            return this.moveMarkerToNextInsertionPosition(node, marker);
+            return this.moveMarkerToNextPosition(node, marker);
         }
     }
 
