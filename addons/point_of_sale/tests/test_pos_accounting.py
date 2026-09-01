@@ -2044,3 +2044,38 @@ class TestPosAccounting(AccountTestInvoicingCommon):
         self.assertTrue(order_move.reversal_move_ids)
         other_orders = session.order_ids - order
         self.assertFalse(other_orders.account_move.reversal_move_ids)
+
+    def test_pos_closing_journal_set(self):
+        """ With a Closing Journal, the closing entries go there while the customer invoices
+        stay in the Orders journal.
+        """
+        closing_journal = self.env['account.journal'].create({
+            'name': 'PoS Closing',
+            'type': 'sale',
+            'code': 'POSCL',
+            'company_id': self.main_company.id,
+        })
+        self.pos_config.closing_journal_id = closing_journal
+
+        session = self.open_pos_session()
+        invoiced_order = self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+            extra_data={
+                'partner_id': self.partner_1.id,
+                'to_invoice': True,
+            },
+        )
+        self.create_pos_order(
+            payment_method=[[self.cash_pm, {'amount': 10.6}]],
+            products=[[self.product_6, {}]],
+        )
+        self.close_session()
+
+        self.assertEqual(
+            invoiced_order.account_move.journal_id, self.pos_config.journal_id,
+            "the customer invoices stay in the Orders journal",
+        )
+        self.assertEqual(session.sale_move_ids.journal_id, closing_journal)
+        self.assertEqual(session.sale_move_ids.move_type, 'out_invoice')
+        self.assertEqual(session.sale_move_ids.amount_total, 10.6)

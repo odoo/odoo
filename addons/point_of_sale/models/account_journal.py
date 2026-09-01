@@ -45,15 +45,23 @@ class AccountJournal(models.Model):
 
     @api.model
     def _ensure_company_account_journal(self):
+        return self._ensure_pos_journal('POSS', _('Point of Sale'))
+
+    @api.model
+    def _ensure_company_closing_journal(self):
+        return self._ensure_pos_journal('POSC', _('Point of Sale Closing'))
+
+    @api.model
+    def _ensure_pos_journal(self, code, name):
         journal = self.search([
-            ('code', '=', 'POSS'),
+            ('code', '=', code),
             ('type', '=', 'sale'),
             ('company_id', '=', self.env.company.id),
         ], limit=1)
         if not journal:
             journal = self.create({
-                'name': _('Point of Sale'),
-                'code': 'POSS',
+                'name': name,
+                'code': code,
                 'type': 'sale',
                 'company_id': self.env.company.id,
             })

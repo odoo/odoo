@@ -691,7 +691,9 @@ class TestMyInvoisPoS(TestPoSCommon, HttpCase):
         """
         def _make_accounting_conso_invoice():
             self.init_invoice('out_invoice', taxes=self.company_data['default_tax_sale'], products=self.product_a, post=True, invoice_date=fields.Date.today())
-            myinvois_document_action = self.env['myinvois.consolidate.invoice.wizard'].create({
+            myinvois_document_action = self.env['myinvois.consolidate.invoice.wizard'].with_context(
+                journal_id=self.company_data['default_journal_sale'].id,
+            ).create({
                 'date_from': '2025-01-01',
                 'date_to': '2025-01-31',
                 'consolidation_type': 'invoice',
