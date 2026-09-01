@@ -28,7 +28,7 @@ TEMPLATE_MODELS = (
     'account.reconcile.model',
 )
 
-TEMPLATE_DATA_KEYS = frozenset({'name', 'country', 'code_digits', 'parent', 'sequence', 'visible'})
+TEMPLATE_DATA_KEYS = frozenset({'name', 'country', 'code_digits', 'parent', 'sequence', 'version', 'visible'})
 
 TAX_TAG_DELIMITER = '||'
 
@@ -238,7 +238,7 @@ class AccountChartTemplate(models.AbstractModel):
             data = {
                 'res.company': data['res.company'],
             }
-
+        company.coa_version = template_data.get('version', '1.0')
         if reload_template:
             self._pre_reload_data(company, template_data, data, force_create)
             install_demo = False
@@ -256,13 +256,6 @@ class AccountChartTemplate(models.AbstractModel):
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
-
-        module_name = chart_template_mapping.get('module')
-        module = self.env['ir.module.module'].search([('name', '=', module_name)], limit=1)
-        if module:
-            # due to Odoo's legacy naming, installed_version contains the module version on disk (latest)
-            company.coa_version = module.installed_version
-
         for subsidiary in company.child_ids:
             self._load(template_code, subsidiary, install_demo, force_create)
 
