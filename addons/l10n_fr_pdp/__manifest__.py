@@ -25,6 +25,7 @@
         'views/pdp_send_wizard_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
+        'wizard/pdp_disconnect_wizard_views.xml',
         'wizard/pdp_registration_views.xml',
         'wizard/pdp_response_wizard_views.xml',
     ],

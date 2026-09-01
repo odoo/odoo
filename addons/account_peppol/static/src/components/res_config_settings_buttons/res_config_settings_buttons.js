@@ -80,7 +80,7 @@ class PeppolSettingsButtons extends Component {
             return _t("Discard");
         }
         if (this.isPdpEdiIdentification) {
-            return _t("Remove from Approved Platform");
+            return _t("Disconnect");
         }
         return _t("Remove from Peppol");
     }
@@ -114,6 +114,11 @@ class PeppolSettingsButtons extends Component {
     }
 
     async deregister() {
+        if (this.isPdpEdiIdentification) {
+            await this._callConfigMethod("action_open_pdp_disconnect_wizard");
+            return;
+        }
+
         if (this.ediMode === 'demo' || !['sender', 'smp_registration', 'receiver'].includes(this.proxyState)) {
             await this._callConfigMethod("button_deregister_peppol_participant");
             // Discard any changes

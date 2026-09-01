@@ -47,6 +47,17 @@ class ResConfigSettings(models.TransientModel):
             return super().action_open_peppol_form()
         return self.action_open_pdp_form()
 
+    def action_open_pdp_disconnect_wizard(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('Disconnect'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'pdp.disconnect.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_company_id': self.company_id.id},
+        }
+
     @api.depends('company_id.l10n_fr_pdp_pilot_phase')
     def _compute_l10n_fr_pdp_pilot_phase(self):
         for record in self:
