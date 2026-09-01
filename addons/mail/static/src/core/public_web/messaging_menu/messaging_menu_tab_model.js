@@ -106,7 +106,7 @@ export class MessagingMenuTab extends Record {
      */
     filters = [];
     /** Hide the tab from the devtools if really bothered. */
-    hidden = fields.Attr(false, { localStorage: true, eager: true });
+    hidden = this.localStorage(false);
     hideWhenZeroCounter = false;
     /**
      * Whether this tab contains items that need the user's attention (unread messages,

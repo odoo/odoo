@@ -53,7 +53,7 @@ export class ChatHub extends Record {
         );
     }
 
-    compact = fields.Attr(false, { localStorage: true });
+    compact = this.localStorage(false);
     canShowOpened = fields.Many("ChatWindow");
     canShowFolded = fields.Many("ChatWindow");
     /** From left to right. Right-most will actually be folded */

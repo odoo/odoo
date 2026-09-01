@@ -131,15 +131,6 @@ export class Store extends Record {
                         }
                         recordList._.data().length = 0;
                     }
-                    for (const lsFieldName of record.Model._.fieldsLocalStorage) {
-                        const { localStorageKeyToRecordFields } = record.store._;
-                        const key = record._.fieldsLocalStorage.get(lsFieldName).key;
-                        const lsKeyMap = localStorageKeyToRecordFields.get(key);
-                        lsKeyMap.delete(record);
-                        if (lsKeyMap.size === 0) {
-                            localStorageKeyToRecordFields.delete(key);
-                        }
-                    }
                     record._runDisposeFns();
                 }
             }

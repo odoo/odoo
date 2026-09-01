@@ -7,7 +7,6 @@ import {
     isFieldDefinition,
     isMany,
     isRelation,
-    makeRecordFieldLocalId,
     technicalKeysOnRecords,
     untrackFunctions,
 } from "./misc";
@@ -15,7 +14,6 @@ import { computedUntilStale } from "@mail/utils/common/signal";
 import { RecordList } from "./record_list";
 import { Scope, computed, immediateEffect, markRaw, proxy, signal, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
-import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 
 /**
  * Observe one field of a record, without running the callback on the initial
@@ -148,8 +146,6 @@ export class RecordInternal {
      * @type {Map<string, Function>}
      */
     fieldsOnUpdateStop = new Map();
-    /** @type {Map<string, any>} */
-    fieldsDefault = new Map();
     /**
      * Value of each attr field of this record, declared or not, one signal per
      * field: the sole storage, and the only thing a read of that field observes.
@@ -171,15 +167,6 @@ export class RecordInternal {
     record;
     /** @type {Map<string, import("@mail/model/field_version").SingleFieldVersion|import("@mail/model/field_version").ManyFieldVersion>} */
     fieldsVersion = new Map();
-
-    /**
-     * For fields that use local storage, this map contains the "ls" object that eases interactions on the related
-     * local storage entry. For instance, instead of having to write `browser.localStorage.setItem(EXACT_LOCAL_STORAGE_ENTRY_OF_FIELD, value)`,
-     * this "ls" object allow to just write the equivalent expression with `ls.set(value)`
-     *
-     * @type {Map<string, LocalStorageEntry>}
-     */
-    fieldsLocalStorage = new Map();
 
     constructor() {
         markRaw(this);
@@ -301,17 +288,6 @@ export class RecordInternal {
         } else {
             const value = isFieldDefinition(definition) ? definition.default : definition;
             this.ensureFieldSignal(fieldName, value);
-        }
-        this.fieldsDefault.set(fieldName, record[fieldName]);
-        // register local storage fields
-        for (const lsFieldName of Model._.fieldsLocalStorage) {
-            const { localStorageKeyToRecordFields } = record.store._;
-            const localStorageKey = makeRecordFieldLocalId(record.localId, lsFieldName);
-            if (!localStorageKeyToRecordFields.has(localStorageKey)) {
-                localStorageKeyToRecordFields.set(localStorageKey, new Map());
-            }
-            localStorageKeyToRecordFields.get(localStorageKey).set(record, lsFieldName);
-            this.fieldsLocalStorage.set(lsFieldName, new LocalStorageEntry(localStorageKey));
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {

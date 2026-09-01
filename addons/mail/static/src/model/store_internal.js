@@ -4,17 +4,14 @@
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
 import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
-import { parseRawValue } from "@mail/utils/common/local_storage";
 import { incrementFn } from "@mail/utils/common/signal";
 
 import { computed, htmlEscape, markup, signal } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
 const Markup = markup().constructor;
 
-/** @typedef {string} LocalStorageKey */
 /** @typedef {string} FieldName */
 
 export class StoreInternal extends RecordInternal {
@@ -63,47 +60,10 @@ export class StoreInternal extends RecordInternal {
      * }}
      */
     currentInsertVersion = null;
-    /**
-     * Map of local storage keys of fields synced with local storage to the record and field name.
-     *
-     * @type {Map<LocalStorageKey, Map<Record, FieldName>>}
-     */
-    localStorageKeyToRecordFields = new Map();
 
     constructor() {
         super(...arguments);
         untrackFunctions(this, ["lowerUpdateDepth", "raiseUpdateDepth"]);
-        this.onStorage = this.onStorage.bind(this);
-        browser.addEventListener("storage", this.onStorage);
-    }
-    /**
-     * Indicates whether the current update cycle was triggered by a
-     * `storage` event. Used to prevent writing back to the local
-     * storage and creating a feedback loop.
-     */
-    isUpdatingFromStorageEvent = false;
-    onStorage(ev) {
-        const entryMap = this.localStorageKeyToRecordFields.get(ev.key);
-        if (!entryMap) {
-            return;
-        }
-        this.isUpdatingFromStorageEvent = true;
-        try {
-            for (const [record, fieldName] of entryMap.entries()) {
-                if (ev.newValue === null) {
-                    record._proxy[fieldName] = record._.fieldsDefault.get(fieldName);
-                } else {
-                    const parsed = parseRawValue(ev.newValue);
-                    if (!parsed) {
-                        record._proxy[fieldName] = record._.fieldsDefault.get(fieldName);
-                    } else {
-                        record._proxy[fieldName] = parsed.value;
-                    }
-                }
-            }
-        } finally {
-            this.isUpdatingFromStorageEvent = false;
-        }
     }
 
     /**
@@ -290,17 +250,6 @@ export class StoreInternal extends RecordInternal {
             });
             if (toApply === SKIP_REVISION) {
                 continue;
-            }
-            if (record.Model._.fieldsLocalStorage.has(fieldName)) {
-                // should immediately write in local storage, for immediately correct next compute
-                if (!this.isUpdatingFromStorageEvent) {
-                    const lse = record._.fieldsLocalStorage.get(fieldName);
-                    if (value === record._.fieldsDefault.get(fieldName)) {
-                        lse.remove();
-                    } else {
-                        lse.set(value);
-                    }
-                }
             }
             if (!record.Model._.fields.get(fieldName) || record.Model._.fieldsAttr.get(fieldName)) {
                 this.updateAttr(record, fieldName, toApply);

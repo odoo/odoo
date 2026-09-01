@@ -1452,11 +1452,11 @@ test("accessing fields through empty _inherits parent returns empty values", asy
     expect(user.partners).toHaveLength(0);
 });
 
-test("Fields with { localStorage: true } are saved in local storage", async () => {
+test("A field declared with localStorage() is saved in local storage", async () => {
     (class Message extends Record {
         static id = "id";
         id;
-        body = fields.Attr("", { localStorage: true });
+        body = this.localStorage("");
     }).register(localRegistry);
     const store = await start();
     const message = store.Message.insert(1);
@@ -1468,11 +1468,11 @@ test("Fields with { localStorage: true } are saved in local storage", async () =
     expect(localStorage.getItem(bodyLocalId)).toBe(toRawValue("test2"));
 });
 
-test("Fields with { localStorage: true } are restored from local storage", async () => {
+test("A field declared with localStorage() is restored from local storage", async () => {
     class Message extends Record {
         static id = "id";
         id;
-        body = fields.Attr("", { localStorage: true });
+        body = this.localStorage("");
     }
     Message.register(localRegistry);
     const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");
@@ -1486,7 +1486,7 @@ test("Fields updated from the local storage do not trigger another storage event
     class Message extends Record {
         static id = "id";
         id;
-        body = fields.Attr("", { localStorage: true });
+        body = this.localStorage("");
     }
     Message.register(localRegistry);
     const bodyLocalId = makeRecordFieldLocalId(Message.localId(1), "body");

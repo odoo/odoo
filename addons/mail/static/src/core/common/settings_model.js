@@ -1,6 +1,6 @@
 import { hasHardwareAcceleration } from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
-import { fields, Record } from "@mail/model/export";
+import { Record } from "@mail/model/export";
 import { rpc } from "@web/core/network/rpc";
 
 export class Settings extends Record {
@@ -8,33 +8,35 @@ export class Settings extends Record {
 
     setup() {
         super.setup();
+        this.onChange(
+            () => [this.cameraInputDeviceId],
+            function onChangeCameraInputDeviceId() {
+                this.cameraFacingMode = undefined;
+            },
+            { immediate: true }
+        );
         this.hasCanvasFilterSupport =
             typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
     }
 
-    messageSound = fields.Attr(true, { localStorage: true });
-    useCallAutoFocus = fields.Attr(true, { localStorage: true });
+    messageSound = this.localStorage(true);
+    useCallAutoFocus = this.localStorage(true);
 
     // Voice settings
     // DeviceId of the audio input selected by the user
-    audioInputDeviceId = fields.Attr("", { localStorage: true });
-    audioOutputDeviceId = fields.Attr("", { localStorage: true });
-    cameraInputDeviceId = fields.Attr("", {
-        localStorage: true,
-        onUpdate() {
-            this.cameraFacingMode = undefined;
-        },
-    });
-    usePushToTalk = fields.Attr(false, { localStorage: true });
-    voiceActiveDuration = fields.Attr(200, { localStorage: true });
+    audioInputDeviceId = this.localStorage("");
+    audioOutputDeviceId = this.localStorage("");
+    cameraInputDeviceId = this.localStorage("");
+    usePushToTalk = this.localStorage(false);
+    voiceActiveDuration = this.localStorage(200);
     // Normalized [0, 1] volume at which the voice activation system must consider the user as "talking".
-    voiceActivationThreshold = fields.Attr(0.05, { localStorage: true });
+    voiceActivationThreshold = this.localStorage(0.05);
     // true if listening to keyboard input to register the push to talk key.
     isRegisteringKey = false;
-    pushToTalkKey = fields.Attr("", { localStorage: true });
+    pushToTalkKey = this.localStorage("");
 
     // Video settings
-    backgroundBlurAmount = fields.Attr(10, { localStorage: true });
+    backgroundBlurAmount = this.localStorage(10);
     /**
      * Chosen meeting grid layout, persisted across meetings. Holds every
      * {@link import("@mail/discuss/call/common/call_layout").CallLayout} except "discuss" (which
@@ -42,10 +44,10 @@ export class Settings extends Record {
      *
      * @type {import("@mail/discuss/call/common/call_layout").CallLayout}
      */
-    callLayout = fields.Attr("auto", { localStorage: true });
-    edgeBlurAmount = fields.Attr(10, { localStorage: true });
-    showOnlyVideo = fields.Attr(false, { localStorage: true });
-    useBlur = fields.Attr(false, { localStorage: true });
+    callLayout = this.localStorage("auto");
+    edgeBlurAmount = this.localStorage(10);
+    showOnlyVideo = this.localStorage(false);
+    useBlur = this.localStorage(false);
     /**
      * Manual dismissal of the blur performance warning, until the page
      * reloads. Seeing the warning once is enough.

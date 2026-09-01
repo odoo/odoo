@@ -18,8 +18,8 @@ export class DiscussApp extends Record {
             })
     );
     isActive = false;
-    isMemberPanelOpenByDefault = fields.Attr(true, { localStorage: true });
-    lastActiveId = fields.Attr(undefined, { localStorage: true });
+    isMemberPanelOpenByDefault = this.localStorage(true);
+    lastActiveId = this.localStorage(undefined);
     thread = fields.One("mail.thread", {
         inverse: "discussAppAsThread",
         /** @this {import("models").DiscussApp} */
@@ -36,7 +36,7 @@ export class DiscussApp extends Record {
         },
     });
     hasRestoredThread = false;
-    sidebarWidth = fields.Attr(SIDEBAR_WIDTH, { localStorage: true });
+    sidebarWidth = this.localStorage(SIDEBAR_WIDTH);
 
     /**
      * Write the current discuss selection to the URL and action context so it survives
