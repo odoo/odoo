@@ -27,5 +27,5 @@ class AccountMove(models.Model):
         self.ensure_one()
         return super(
             AccountMove,
-            self.with_context(l10n_sk_qr_due_date=self.invoice_date_due),
+            self.with_context(invoice_date_due=self.invoice_date_due),
         )._generate_qr_code(silent_errors)

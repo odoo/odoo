@@ -54,14 +54,16 @@ class ResPartnerBank(models.Model):
             variable_symbol = re.sub(r'\D', '', communication)[-L10N_SK_QR_MAX_VARIABLE_SYMBOL:]
             # The due date is not part of the generic QR-code signature; invoices
             # pass it along through the context (see l10n_sk/models/account_move.py).
-            due_date = self.env.context.get('l10n_sk_qr_due_date') or fields.Date.context_today(self)
+            # PaymentDueDate is an optional field of the data model (specification,
+            # appendix B, 2.4), so it stays empty when no due date is known.
+            due_date = self.env.context.get('invoice_date_due')
             payment_data = '\t'.join([
                 '',                                                             # InvoiceID
                 '1',                                                            # Payments: a single one
                 '1',                                                            # PaymentOptions: pay order
                 float_repr(currency.round(amount), currency.decimal_places),    # Amount
                 currency.name,                                                  # CurrencyCode
-                fields.Date.to_date(due_date).strftime('%Y%m%d'),               # PaymentDueDate
+                fields.Date.to_date(due_date).strftime('%Y%m%d') if due_date else '',   # PaymentDueDate
                 variable_symbol,                                                # VariableSymbol
                 '',                                                             # ConstantSymbol
                 '',                                                             # SpecificSymbol
