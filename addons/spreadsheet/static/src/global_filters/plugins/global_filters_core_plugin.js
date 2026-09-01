@@ -119,7 +119,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
                         switch (change.changeType) {
                             case "RESIZE":
                             case "MOVE":
-                            case "CHANGE": {
+                            case "RENAME": {
                                 return change.range;
                             }
                         }
