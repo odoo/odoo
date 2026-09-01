@@ -79,7 +79,7 @@ class TestWebsiteDigest(TestDigestCommon):
                     f'{digest.name}, period {period_idx}')
 
     def test_send_digest_mail_without_website(self):
-        company = self.env['res.company'].create({'name': 'Test Company'})
+        company = self.env.ref('base.test_company')
         self.digest_1.write({
             'kpi_website_visitor_count': True,
             'company_id': company.id,

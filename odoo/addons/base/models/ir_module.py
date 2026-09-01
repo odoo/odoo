@@ -308,6 +308,7 @@ class IrModuleModule(models.Model):
                                         'If the module has no dependency, it is always installed.')
     state = fields.Selection(STATES, string='Status', default='uninstallable', readonly=True, index=True)
     demo = fields.Boolean('Demo Data', default=False, readonly=True)
+    test_data = fields.Boolean('Test Data', default=False, readonly=True)
     license = fields.Selection([
         ('GPL-2', 'GPL Version 2'),
         ('GPL-2 or any later version', 'GPL-2 or later version'),

@@ -9,12 +9,11 @@ class TestResourceSkills(TransactionCase):
         """ Ensure that all the infos related to skill needed to display the avatar
             popover card are available on the model resource.resource.
         """
-        user = self.env['res.users'].create([{
-            'name': 'Test user',
-            'login': 'test',
+        user = self.env.ref('base.test_user')
+        user.write({
             'email': 'test@odoo.perso',
             'phone': '+32488990011',
-        }])
+        })
         resource = self.env['resource.resource'].create([{
             'name': 'Test resource',
             'user_id': user.id,

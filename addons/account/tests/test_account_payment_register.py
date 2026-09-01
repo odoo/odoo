@@ -153,7 +153,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         })
         (cls.in_refund_1 + cls.in_refund_2).action_post()
 
-        cls.branch = cls._create_company(name="Branch", parent_id=cls.env.company.id)
+        cls.branch = cls.env.ref('base.test_company_branch_a')
         cls.user_branch = cls.env['res.users'].create({
             'name': 'Branch User',
             'login': 'user_branch',
@@ -1987,12 +1987,12 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
                         self.assertEqual(payments.company_id, expected_pmnt_comp)
                         invoices.line_ids.filtered(lambda l: l.display_type == 'payment_term').remove_move_reconcile()
 
-        # create a new branch and other company
-        self._create_company(name='New Branch', parent_id=self.env.company.id)
-        branches = self.env.company.child_ids
+        self.env.company.write({'child_ids': [Command.create({'name': 'Branch B'})]})
+        self.cr.precommit.run()
+        branches = self.branch + (self.env.company.child_ids - self.branch)
         self.user_branch.company_ids = branches
-        company_2 = self._create_company(name='New Company')
-
+        company_2 = self.env.ref('base.test_company_be')
+        self.env.user.company_ids = self.env.company + branches + company_2
         # PART 1: Basic cases
         # create invoices on branches
         branch_invoices = self.env['account.move']

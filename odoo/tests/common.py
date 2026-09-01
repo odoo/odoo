@@ -9,6 +9,7 @@ import base64
 import binascii
 import concurrent.futures
 import contextlib
+import contextvars
 import difflib
 import importlib
 import inspect
@@ -69,6 +70,7 @@ from odoo.http.session import (
 )
 from odoo.http.session import Session as OdooHttpSession
 from odoo.orm.environments import CacheLayer
+from odoo.orm.model_classes import is_model_definition
 from odoo.modules.registry import Registry
 from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
@@ -114,6 +116,8 @@ DEFAULT_SUCCESS_SIGNAL = 'test successful'
 TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
 DISABLE_TIMEOUTS = str2bool(os.getenv('ODOO_TEST_DISABLE_TIMEOUT', '0'))
+
+_allowed_create_models = contextvars.ContextVar('allowed_create_models', default=frozenset())
 
 IGNORED_MSGS = re.compile(r"""
     failed\ to\ fetch  # base error
@@ -591,6 +595,7 @@ class BaseCase(case.TestCase):
 
     _registry_patched = False
     _registry_readonly_enabled = True
+    _monitored_create_models = ()  # (('res.company', 'stats'),)
     test_cursor_lock_timeout: int = 3600 if DISABLE_TIMEOUTS else 20
 
     @classmethod
@@ -672,6 +677,19 @@ class BaseCase(case.TestCase):
 
     def cursor(self):
         return self.registry.cursor()
+
+    @classmethod
+    @contextmanager
+    def allow_model_create(cls, *model_names: str):
+        """Temporarily allow creates on models guarded as expensive in tests."""
+        unknown = set(model_names) - {model for model, action in cls._monitored_create_models if action == 'raise'}
+        if unknown:
+            raise ValueError(f"Models are not guarded against create: {', '.join(sorted(unknown))}")
+        token = _allowed_create_models.set(_allowed_create_models.get() | frozenset(model_names))
+        try:
+            yield
+        finally:
+            _allowed_create_models.reset(token)
 
     @property
     def uid(self):
@@ -1393,6 +1411,48 @@ class TransactionCase(BaseCase):
 
         cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
         cls.env.transaction._wrote__ = True  # isolate tests: avoid propagating cache on rollback
+
+        def guard_create(original_create, model_name, action):
+            if action == 'raise':
+                @wraps(original_create)
+                def guarded_create(self, vals_list):
+                    if self._name != model_name:
+                        return original_create(self, vals_list)
+                    if model_name not in _allowed_create_models.get():
+                        raise AssertionError(
+                            f"Creating {model_name} records is disabled during tests because it is expensive. "
+                            "Reuse test data, or use allow_model_create() around the smallest necessary block."
+                        )
+                    records = original_create(self, vals_list)
+                    return records
+            elif action == 'stats':
+                @wraps(original_create)
+                def guarded_create(self, vals_list):
+                    if self._name != model_name:
+                        return original_create(self, vals_list)
+                    start = time.time()
+                    records = original_create(self, vals_list)
+                    caller = inspect.stack()[1]
+                    formated_caller = f"{caller.filename}:{caller.lineno} in {caller.function}"
+                    _logger.info('Create of %s took %s in %s', model_name, time.time() - start, formated_caller)
+                    return records
+            return guarded_create
+
+        for model_name, action in cls._monitored_create_models:
+            if model_name not in cls.registry:
+                raise ValueError(f"Unknown model guarded against create: {model_name}")
+            model_class = type(cls.env[model_name])
+            # Registry model classes can be rebuilt during tests, so walk up the MRO to patch
+            # the stable model definition which actually owns `create`.
+            create_owner = next(
+                base for base in model_class.__mro__
+                if is_model_definition(base) and 'create' in base.__dict__
+            )
+            cls.startClassPatcher(patch.object(
+                create_owner,
+                'create',
+                guard_create(create_owner.create, model_name, action),
+            ))
 
         # speedup CryptContext. Many user an password are done during tests, avoid spending time hasing password with many rounds
         def _crypt_context(self):  # noqa: ARG001

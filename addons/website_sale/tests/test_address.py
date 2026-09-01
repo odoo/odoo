@@ -525,7 +525,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
 
     def test_09_shop_update_address(self):
         self.env["ir.config_parameter"].sudo().set_int("auth_password_policy.minlength", 4)
-        user = self.env["res.users"].sudo().create({"name": "test", "login": "test", "password": "test"})
+        user = self.env.ref('base.test_user')
         user_partner = user.partner_id
         partner_company = self.env["res.partner"].sudo().create({
             "name": "My company",

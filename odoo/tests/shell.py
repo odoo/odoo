@@ -67,7 +67,7 @@ def _run_tests(db_name, modules):
             at_install_suite = make_suite(modules, 'at_install')
             if at_install_suite.countTestCases():
                 _logger.info("Starting at_install tests")
-                report.update(run_suite(at_install_suite, report))
+                report.update(run_suite(at_install_suite, report, db_name=db_name))
         finally:
             registry.loaded = True
             registry.ready = True
@@ -76,7 +76,7 @@ def _run_tests(db_name, modules):
     post_install_suite = make_suite(modules, 'post_install')
     if post_install_suite.countTestCases():
         _logger.info("Starting post_install tests")
-        report.update(run_suite(post_install_suite, report))
+        report.update(run_suite(post_install_suite, report, db_name=db_name))
 
     return report
 

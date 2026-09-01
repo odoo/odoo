@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from contextlib import contextmanager
 from unittest.mock import patch, Mock
@@ -6,6 +7,10 @@ from unittest.mock import patch, Mock
 from odoo import Command, models
 from odoo.tests.common import new_test_user, TransactionCase, HttpCase
 from odoo.tools.mail import email_split_and_format
+
+
+_logger = logging.getLogger(__name__)
+
 
 DISABLED_MAIL_CREATE_CONTEXT = {
     'mail_create_nolog': True,
@@ -28,26 +33,28 @@ class BaseCommon(TransactionCase):
         # Hack to use with_context and avoid manual context dict modification
         cls.env = cls.env['base'].with_context(**cls.default_env_context()).env
 
-        # setup_independent_user() must run before setup_independent_company():
-        # some overrides (e.g. account) create the independent company using
-        # cls.env, so cls.env must already point to the independent user by
-        # then. Otherwise, the company ends up being assigned to the shared
-        # superuser instead of the test user.
+        # setup_independent_company() must run before setup_independent_user():
+        # some overrides (e.g. account) create the independent user with
+        # company_id=cls.company.id, so cls.company must already be set by
+        # then. Note that cls.env still points to the shared admin user at
+        # this point: don't pin allowed_company_ids on it here, or later
+        # multi-company checks (e.g. setup_other_company()) will keep
+        # evaluating against this stale snapshot instead of the test user's
+        # live company_ids.
+        cls.company = company = cls.setup_independent_company()
         independent_user = cls.setup_independent_user()
         if independent_user:
             cls.env = cls.env(user=independent_user)
             cls.user = cls.env.user
+            # company was bound to the shared admin env before the switch
+            # above; rebind it (and cls.company below) so writes through
+            # cls.company (e.g. `self.company.some_field = ...` in tests)
+            # run as the test user, not as the admin.
+            company = company.with_env(cls.env)
         else:
             cls.env.user.group_ids += cls.get_default_groups()
-
-        company = cls.setup_independent_company() or cls.env.company
-        if company is not cls.env.company:
-            # avoid using the context to assign companies
-            cls.env.user.company_id = company
-            cls.env.user.company_ids = [Command.set(company.ids)]
-        else:
-            cls.setup_main_company()
-
+        cls.env.user.company_ids = [Command.link(company.id)]
+        cls.env.user.company_id = company
         if cls._test_user_groups:
             cls._test_user = new_test_user(
                 cls.env,
@@ -127,8 +134,8 @@ class BaseCommon(TransactionCase):
         return currency
 
     @classmethod
-    def setup_independent_company(cls, **kwargs):
-        return None
+    def setup_independent_company(cls):
+        return cls.env.company
 
     @classmethod
     def setup_independent_user(cls):
@@ -137,10 +144,6 @@ class BaseCommon(TransactionCase):
     @classmethod
     def get_default_groups(cls):
         return cls.env.ref('base.group_user_regular')
-
-    @classmethod
-    def setup_main_company(cls, currency_code='USD'):
-        cls._use_currency(cls.env.company, currency_code)
 
     @classmethod
     def _enable_currency(cls, currency_code):
@@ -173,7 +176,7 @@ class BaseCommon(TransactionCase):
     @classmethod
     def _create_company(cls, **create_values):
         company = cls.env['res.company'].create({
-            'name': "Test Company",
+            'name': "Secondary Test Company",
             **create_values,
         })
         cls.env.user.company_ids = [Command.link(company.id)]

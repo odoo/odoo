@@ -32,7 +32,8 @@
             "name": "Install all",
             "db_name": "all",
             "job_type": "odoo",
-            "install_modules": "{{module_filter}}"
+            "install_modules": "{{module_filter}}",
+            "extra_params": "--with-test-data"
         },
         {
             "name": "Create post install",

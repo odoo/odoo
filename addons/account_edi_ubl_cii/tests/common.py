@@ -20,6 +20,14 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         cls.partner_au = cls._create_partner_au()
 
     @classmethod
+    def setup_independent_company(cls):
+        # EXTENDS 'account': this suite's country-specific subclasses (BE/FR/NO/...) rely on
+        # their own _create_company() override (EUR currency, country-specific partner/VAT/bank
+        # details) always running, which the shared base.test_company/test_company_be fixtures
+        # don't provide, so always create a dedicated company here instead.
+        return cls._create_company()
+
+    @classmethod
     def _create_company(cls, **create_values):
         # EXTENDS 'account'
         create_values.setdefault('currency_id', cls.env.ref('base.EUR').id)

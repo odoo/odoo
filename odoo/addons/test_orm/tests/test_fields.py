@@ -4644,7 +4644,7 @@ class TestSelectionOndelete(TransactionCase):
 
     def test_ondelete_company_dependent_null_implicit_with_multicompany(self):
         Model = self.env[self.MODEL_COMPANY_DEPENDENT]
-        company_2 = self.env['res.company'].create({'name': 'Test Company'})
+        company_2 = self.env.ref('base.test_company')
 
         # create records with the extended selection option
         records = r1, r2, r3 = Model.create([

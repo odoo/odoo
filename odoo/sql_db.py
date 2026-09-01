@@ -381,10 +381,10 @@ class Cursor(_CursorProtocol):
             # (being) collected at this time.
             self._cnx.give_back(keep_in_pool=False)
 
-    def _format(self, query, params=None) -> str:
+    def _format(self, query, params=None, allow_colors=True) -> str:
         encoding = psycopg2.extensions.encodings[self.connection.encoding]
         formatted = self.mogrify(query, params).decode(encoding, 'replace')
-        if config.colors['sql']:
+        if allow_colors and config.colors['sql']:
             return highlight_sql(formatted)
         return formatted
 

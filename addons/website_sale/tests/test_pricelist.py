@@ -830,7 +830,7 @@ class TestWebsitePriceListHttp(HttpCaseWithUserPortal):
         from another company and the code would raise an access error when
         reading that `property_product_pricelist`.
         """
-        test_company = self.env["res.company"].create({"name": "Test Company"})
+        test_company = self.env.ref('base.test_company')
         test_company.flush_recordset()
         self.env["product.pricelist"].create({
             "name": 'Backend Pricelist For "Test Company"',
@@ -865,7 +865,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
 
         # Create and add demo user to 2 companies
         self.company1 = self.demo_user.company_id
-        self.company2 = self.env["res.company"].create({"name": "Test Company"})
+        self.company2 = self.env.ref('base.test_company_be')
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
         Website = self.env["website"]

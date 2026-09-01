@@ -152,6 +152,7 @@ class ModuleNode:
         self.id: int = 0                            # id
         self.state: STATES = 'uninstalled'          # state
         self.demo: bool = False                     # demo
+        self.test_data: bool = False                # test_data
         self.installed_version: str | None = None   # latest_version (attention: Incorrect field names !! in ir_module.py)
 
         # info for upgrade
@@ -254,6 +255,10 @@ class ModuleGraph:
             result += [m[0] for m in self._cr.fetchall()]
         return OrderedSet(result)
 
+    @functools.cached_property
+    def _test_data_column(self) -> str:
+        return 'test_data' if column_exists(self._cr, 'ir_module_module', 'test_data') else 'FALSE'
+
     def _update_depends(self, names: Iterable[str]) -> None:
         for name in names:
             if module := self._modules.get(name):
@@ -282,13 +287,13 @@ class ModuleGraph:
         if not names:
             return
         # update modules with values from the database (if exist)
-        query = '''
-            SELECT name, id, state, demo, latest_version AS installed_version
+        query = f'''
+            SELECT name, id, state, demo, {self._test_data_column}, latest_version AS installed_version
             FROM ir_module_module
             WHERE name IN %s
         '''
         self._cr.execute(query, [names])
-        for name, id_, state, demo, installed_version in self._cr.fetchall():
+        for name, id_, state, demo, test_data, installed_version in self._cr.fetchall():
             if state == 'uninstallable':
                 _logger.warning('module %s: not installable, skipped', name)
                 self._remove(name)
@@ -304,6 +309,7 @@ class ModuleGraph:
             module.id = id_
             module.state = state
             module.demo = demo
+            module.test_data = test_data
             module.installed_version = installed_version
             module.load_version = installed_version
             module.load_state = state

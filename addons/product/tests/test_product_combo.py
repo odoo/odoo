@@ -33,7 +33,7 @@ class TestProductCombo(ProductCommon):
         self.assertEqual(combo.combo_item_count, 3)
 
     def test_currency_without_company_set(self):
-        self.setup_main_company(currency_code='GBP')
+        self._use_currency(self.env.company, 'GBP')
 
         combo = self.env['product.combo'].create({
             'name': "Test combo",
@@ -65,7 +65,7 @@ class TestProductCombo(ProductCommon):
 
     @freeze_time('2000-01-01')
     def test_base_price_multiple_currencies(self):
-        self.setup_main_company(currency_code='GBP')
+        self._use_currency(self.env.company, 'GBP')
         currency_eur = self._enable_currency('EUR')
         company = self._create_company(currency_id=currency_eur.id)
         self.env.user.company_ids = [Command.link(company.id)]

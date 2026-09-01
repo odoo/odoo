@@ -18,10 +18,11 @@ import odoo.tools.sql
 from odoo import api, tools
 from odoo.tools import OrderedSet
 from odoo.tools.convert import convert_file, IdRef, ConvertMode as LoadMode
+from odoo.tools.misc import str2bool
 
 from . import db as modules_db
 from .migration import MigrationManager
-from .module import adapt_version, initialize_sys_path, load_openerp_module
+from .module import adapt_version, initialize_sys_path, load_openerp_module, TEST_DATA_ENABLED_PARAM
 from .module_graph import ModuleGraph
 from .registry import Registry
 
@@ -32,12 +33,20 @@ if typing.TYPE_CHECKING:
     from odoo.tests.result import OdooTestResult
     from .module_graph import ModuleNode
 
-    LoadKind = typing.Literal['data', 'demo']
+    LoadKind = typing.Literal['data', 'demo', 'test']
 
 _logger = logging.getLogger(__name__)
 
 
 _FORCED_MODULES = ('base',)
+
+
+def _database_has_test_data(cr: BaseCursor) -> bool:
+    if not odoo.tools.sql.table_exists(cr, 'ir_config_parameter'):
+        return False
+    cr.execute('SELECT value FROM ir_config_parameter WHERE key = %s', [TEST_DATA_ENABLED_PARAM])
+    row = cr.fetchone()
+    return bool(row and str2bool(row[0]))
 
 
 def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, package: ModuleNode) -> bool:
@@ -46,13 +55,18 @@ def load_data(env: Environment, idref: IdRef, mode: LoadMode, kind: LoadKind, pa
 
     :returns: Whether a file was loaded
     """
-    keys = ('init_xml', 'data') if kind == 'data' else ('demo',)
+    if kind == 'data':
+        keys = ('init_xml', 'data')
+    elif kind == 'test':
+        keys = ('test_data',)
+    else:
+        keys = ('demo',)
 
     files: set[str] = set()
     for k in keys:
         if k == 'init_xml' and package.manifest[k]:
             _logger.warning("module %s: key 'init_xml' is deprecated in Odoo 19.", package.name)
-        for filename in package.manifest[k]:
+        for filename in package.manifest.get(k, []):
             if filename in files:
                 _logger.warning("File %s is imported twice in module %s %s", filename, package.name, kind)
             files.add(filename)
@@ -121,6 +135,7 @@ def load_module_graph(
     update_module: bool = False,
     report: OdooTestResult | None = None,
     install_demo: bool = True,
+    install_test_data: bool = False,
 ) -> None:
     """ Load, upgrade and install not loaded module nodes in the ``graph`` for ``env.registry``
 
@@ -129,6 +144,7 @@ def load_module_graph(
        :param update_module: whether to update modules or not
        :param report:
        :param install_demo: whether to attempt installing demo data for newly installed modules
+       :param install_test_data: whether to load test data for installed or updated modules
     """
     registry = env.registry
     assert isinstance(env.cr, odoo.sql_db.Cursor), "Need for a real Cursor to load modules"
@@ -215,6 +231,7 @@ def load_module_graph(
                 load_data(env, idref, 'init', kind='data', package=package)
                 if install_demo and package.demo_installable:
                     package.demo = load_demo(env, package, idref, 'init')
+                mode = 'init'
             else:  # 'upgrade' or 'reinit'
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.manifest))
@@ -222,8 +239,18 @@ def load_module_graph(
                 load_data(env, idref, mode, kind='data', package=package)
                 if package.demo:
                     package.demo = load_demo(env, package, idref, mode)
-            env.cr.execute('UPDATE ir_module_module SET demo = %s WHERE id = %s', (package.demo, module_id))
-            module.invalidate_model(['demo'])
+
+            if install_test_data:
+                load_data(env, idref, mode, kind='test', package=package)
+            package.test_data = install_test_data
+            env.cr.execute(
+                'UPDATE ir_module_module SET demo = %s, test_data = %s WHERE id = %s',
+                (package.demo, package.test_data, module_id),
+            )
+            module.invalidate_model(['demo', 'test_data'])
+
+            if package.name == 'base' and update_operation == 'install':
+                env['ir.config_parameter'].sudo().set_bool(TEST_DATA_ENABLED_PARAM, install_test_data)
 
             migrations.migrate_module(package, 'post')
 
@@ -267,7 +294,7 @@ def load_module_graph(
                 registry.check_null_constraints(env.cr)
                 # Python tests
                 tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
-                test_results = loader.run_suite(suite, global_report=report)
+                test_results = loader.run_suite(suite, global_report=report, db_name=env.cr.dbname)
                 assert report is not None, "Missing report during tests"
                 report.update(test_results)
                 test_time = time.time() - tests_t0
@@ -346,13 +373,24 @@ def load_modules(
     # connection settings are automatically reset when the connection is
     # borrowed from the pool
     cr.execute("SET SESSION lock_timeout = '15s'")
-    if not modules_db.is_initialized(cr):
+    database_initialized = modules_db.is_initialized(cr)
+    if not database_initialized:
         if not update_module:
             raise ImportError(f"Database {cr.dbname} not initialized, you can force it with `-i base`")
         _logger.info("Initializing database %s", cr.dbname)
         modules_db.initialize(cr)
     elif 'base' in reinit_modules:
         registry._reinit_modules.add('base')
+
+    if database_initialized:
+        install_test_data = _database_has_test_data(cr)
+        if tools.config['with_test_data'] and not install_test_data:
+            raise RuntimeError(
+                "Test data cannot be enabled on an existing database. "
+                "Create a new database with --with-test-data instead."
+            )
+    else:
+        install_test_data = tools.config['with_test_data']
 
     if 'base' in upgrade_modules:
         cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -386,6 +424,7 @@ def load_modules(
         update_module=update_module,
         report=report,
         install_demo=new_db_demo,
+        install_test_data=install_test_data,
     )
 
     load_lang = tools.config._cli_options.pop('load_language', None)
@@ -449,7 +488,7 @@ def load_modules(
         updated_modules_count = len(registry.updated_modules)
         load_module_graph(
             env, graph, update_module=update_module,
-            report=report)
+            report=report, install_test_data=install_test_data)
         if len(registry.updated_modules) == updated_modules_count:
             break
 
