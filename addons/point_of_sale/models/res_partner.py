@@ -51,6 +51,15 @@ class ResPartner(models.Model):
         partner_ids = limited_partner_ids.union(loaded_order_partner_ids)
         return [('id', 'in', list(partner_ids))]
 
+    @api.model
+    def _load_pos_metadata(self, data, search_params={}):
+        if search_params.get('offset') and not search_params.get('domain'):
+            # Load the next partners of the ones loaded at startup (see `_load_pos_data_domain`)
+            config = data['pos.config']['records']
+            partner_ids = [partner[0] for partner in config.get_limited_partners_loading(search_params['offset'])]
+            search_params = {'domain': [('id', 'in', partner_ids)]}
+        return super()._load_pos_metadata(data, search_params)
+
     def _compute_fiscal_position_id(self):
         for partner in self:
             partner.fiscal_position_id = self.env['account.fiscal.position'].with_company(self.env.company)._get_fiscal_position(partner)
