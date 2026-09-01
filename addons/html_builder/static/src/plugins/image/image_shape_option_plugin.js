@@ -113,11 +113,6 @@ export class ImageShapeOptionPlugin extends Plugin {
     setup() {
         this.shapeSvgTextCache = {};
         this.imageShapes = this.makeImageShapes();
-        // Compatibility with old shapes.
-        for (const shapeId of Object.keys(this.imageShapes)) {
-            const oldShapeId = shapeId.replace("html_builder", "web_editor");
-            this.imageShapes[oldShapeId] = this.imageShapes[shapeId];
-        }
     }
     async onWillSaveMediaDialogHandlers(elements, { node }) {
         const callback = async function (toProcessEl, nodeEl) {
@@ -182,9 +177,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         }
         return isImageSupportedForProcessing(await getMimetype(img, dataset));
     }
-    async getShapeSvgText(shapeName) {
-        // Compatibility with old shapes.
-        const shape = shapeName.replace("web_editor", "html_builder");
+    async getShapeSvgText(shape) {
         let shapeSvgText = this.shapeSvgTextCache[shape];
         if (shapeSvgText) {
             return shapeSvgText;
@@ -602,13 +595,7 @@ export class SetImageShapeAction extends BuilderAction {
         }
     }
     isApplied({ editingElement: img, value }) {
-        const datasetShape = img.dataset.shape;
-        if (!datasetShape) {
-            return false;
-        }
-        // Compatibility with old shapes.
-        const currentShape = datasetShape.replace("web_editor", "html_builder");
-        return currentShape === value;
+        return img.dataset.shape === value;
     }
 }
 export class SetImgShapeColorAction extends BuilderAction {
