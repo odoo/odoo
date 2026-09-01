@@ -693,20 +693,21 @@ class IrModuleModule(models.Model):
                     dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
                     configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
 
-        theme = self.env['website'].get_current_website().theme_id
-        if theme and theme.name == self.name:
+        if self.name.startswith('theme_'):
             # The theme itself is being installed. Its manifest may add
             # snippets for already installed modules such as `website_sale`.
             addons = manifest.get('configurator_snippets_addons', {})
             add_addons_snippets(addons)
-        elif theme:
-            # Another module is being installed after the theme was selected.
-            # Only include the theme addon snippets targeting this module.
-            theme_manifest = Manifest.for_addon(theme.name)
-            if theme_manifest:
-                theme_addons = theme_manifest.get('configurator_snippets_addons', {})
-                addons = {self.name: theme_addons.get(self.name, {})}
-                add_addons_snippets(addons)
+        else:
+            # Another module is being installed by the configurator after
+            # the theme was selected. We don't have a way to identify which
+            # website should receive the new snippets, so we iterate over all
+            # websites as it's quite light and should not impact other websites.
+            for theme in self.env['website'].search([]).theme_id:
+                if theme_manifest := Manifest.for_addon(theme.name):
+                    theme_addons = theme_manifest.get('configurator_snippets_addons', {})
+                    addons = {self.name: theme_addons.get(self.name, {})}
+                    add_addons_snippets(addons)
 
         # Generate general configurator snippet templates
         create_values = []
