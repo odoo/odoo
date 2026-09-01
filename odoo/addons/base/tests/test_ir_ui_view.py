@@ -4973,7 +4973,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_co_dian',
             'l10n_co_edi',
             'l10n_cz_reports',
-            'l10n_de_pos_cert',
             'l10n_ec',
             'l10n_ec_edi',
             'l10n_ec_edi_pos',

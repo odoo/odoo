@@ -442,10 +442,14 @@
                                 </setting>
                             </block>
 
-                            <block id="pos_localization_section" title="Fiscalization" help="Those settings are used to comply with legal requirements in specific countries." invisible="country_code not in ('AT')">
+                            <block id="pos_localization_section" title="Fiscalization" help="Those settings are used to comply with legal requirements in specific countries." invisible="country_code not in ('AT', 'DE')">
                                 <setting id="austria_pos_localization" string="Austria Fiskaly" documentation="/applications/finance/fiscal_localizations/austria.html#point-of-sale" company_dependent="1" invisible="country_code != 'AT'"
                                     help="Configure Fiskaly credentials required for Austrian RKSV fiscalization">
                                     <field name="module_l10n_at_pos"/>
+                                </setting>
+                                <setting id="german_pos_localization" string="Germany Fiskaly" documentation="/applications/finance/fiscal_localizations/germany.html#point-of-sale" company_dependent="1" invisible="country_code != 'DE'"
+                                    help="Ensure fiscal compliance for your POS transactions">
+                                    <field name="module_l10n_de_pos_cert"/>
                                 </setting>
                             </block>
 
