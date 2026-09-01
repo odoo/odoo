@@ -616,9 +616,18 @@ export class DomPlugin extends Plugin {
     }
 
     getBlocksToSet() {
-        const targetedBlocks = [...this.dependencies.selection.getTargetedBlocks()];
+        const isCollapsed =
+            this.dependencies.selection.getEditableSelection().isCollapsed;
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
+        const lastTargetedNode = targetedNodes.slice(-1)[0];
+        const targetedBlocks = [
+            ...new Set(targetedNodes.map(closestBlock).filter(Boolean)),
+        ];
         return targetedBlocks.filter(
             (block) =>
+                // If the selection ends in a block, the block is not visibly
+                // selected so exclude it.
+                (isCollapsed || block !== lastTargetedNode) &&
                 this.isRetaggingSafe(block) &&
                 !descendants(block).some((descendant) =>
                     targetedBlocks.includes(descendant),
@@ -637,17 +646,27 @@ export class DomPlugin extends Plugin {
      * @param {string} [param0.extraClass]
      */
     setBlock({ tagName, extraClass = "" }) {
-        let newCandidate = this.document.createElement(tagName.toUpperCase());
-        if (extraClass) {
-            newCandidate.classList.add(extraClass);
-        }
-        if (this.dependencies.baseContainer.isCandidateForBaseContainer(newCandidate)) {
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer(
-                newCandidate.nodeName,
-            );
-            this.copyAttributes(newCandidate, baseContainer);
-            newCandidate = baseContainer;
-        }
+        const createNewCandidate = () => {
+            let newCandidate = this.document.createElement(tagName.toUpperCase());
+            if (extraClass) {
+                newCandidate.classList.add(extraClass);
+            }
+            if (
+                this.dependencies.baseContainer.isCandidateForBaseContainer(
+                    newCandidate,
+                )
+            ) {
+                const baseContainer =
+                    this.dependencies.baseContainer.createBaseContainer(
+                        newCandidate.nodeName,
+                    );
+                this.copyAttributes(newCandidate, baseContainer);
+                newCandidate = baseContainer;
+            }
+            return newCandidate;
+        };
+        let newCandidate = createNewCandidate();
+        this.dependencies.split.splitBlockSegments();
         const cursors = this.dependencies.selection.preserveSelection();
         const newEls = [];
         for (const block of this.getBlocksToSet()) {
@@ -682,6 +701,7 @@ export class DomPlugin extends Plugin {
                 newCandidate.append(...childNodes(block));
                 block.append(newCandidate);
                 cursors.remapNode(block, newCandidate);
+                newCandidate = createNewCandidate();
             }
         }
         cursors.restore();
