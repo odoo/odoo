@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { Message } from "@mail/core/common/message";
 import { onWillUnmount } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 patch(Message.prototype, {
     setup() {
@@ -8,7 +9,7 @@ patch(Message.prototype, {
         this.state.lastReadMoreIndex = 0;
         this.state.isReadMoreByIndex = new Map();
         onWillUnmount(() => {
-            this.messageBody.el?.querySelector(".o-mail-ellipsis")?.remove();
+            this.messageBody.el?.querySelector(".o-mail-read-more-less")?.remove();
         });
     },
 
@@ -21,20 +22,20 @@ patch(Message.prototype, {
             return;
         }
         super.prepareMessageBody(...arguments);
-        Array.from(bodyEl.querySelectorAll(".o-mail-ellipsis")).forEach((el) => el.remove());
-        this.insertEllipsisbtn(bodyEl);
+        Array.from(bodyEl.querySelectorAll(".o-mail-read-more-less")).forEach((el) => el.remove());
+        this.insertReadMoreLess(bodyEl);
     },
 
     /**
-     * Modifies the message to add the 'ellipsis button' functionality
+     * Modifies the message to add the 'read more/read less' functionality
      * All element nodes with 'data-o-mail-quote' attribute are concerned.
      * All text nodes after a ``#stopSpelling`` element are concerned.
      * Those text nodes need to be wrapped in a span (toggle functionality).
-     * All consecutive elements are joined in one 'ellipsis button'.
+     * All consecutive elements are joined in one 'read more/read less'.
      *
      * @param {HTMLElement} bodyEl
      */
-    insertEllipsisbtn(bodyEl) {
+    insertReadMoreLess(bodyEl) {
         /**
          * @param {HTMLElement} e
          * @param {string} selector
@@ -122,18 +123,18 @@ patch(Message.prototype, {
                 ellipsisNodes.push(childEl);
             } else {
                 ellipsisNodes = undefined;
-                this.insertEllipsisbtn(childEl);
+                this.insertReadMoreLess(childEl);
             }
         }
 
         for (const group of groups) {
             const index = this.state.lastReadMoreIndex++;
-            const ellipsisbtnEl = document.createElement("button");
-            ellipsisbtnEl.className = "o-mail-ellipsis badge rounded-pill border-0 py-0 px-1";
-            const iconellipsisEl = document.createElement("i");
-            iconellipsisEl.className = "oi oi-ellipsis-h oi-large";
-            ellipsisbtnEl.append(iconellipsisEl);
-            group[0].parentNode.insertBefore(ellipsisbtnEl, group[0]);
+            const readMoreLessEl = document.createElement("a");
+            readMoreLessEl.style.display = "block";
+            readMoreLessEl.className = "o-mail-read-more-less";
+            readMoreLessEl.href = "#";
+            readMoreLessEl.textContent = _t("Read More");
+            group[0].parentNode.insertBefore(readMoreLessEl, group[0]);
             // Toggle All next nodes
             if (!this.state.isReadMoreByIndex.has(index)) {
                 this.state.isReadMoreByIndex.set(index, true);
@@ -144,8 +145,11 @@ patch(Message.prototype, {
                     hide(childEl);
                     toggle(childEl, !isReadMore);
                 }
+                readMoreLessEl.textContent = isReadMore
+                    ? _t("Read More").toString()
+                    : _t("Read Less").toString();
             };
-            ellipsisbtnEl.addEventListener("click", (e) => {
+            readMoreLessEl.addEventListener("click", (e) => {
                 e.preventDefault();
                 this.state.isReadMoreByIndex.set(index, !this.state.isReadMoreByIndex.get(index));
                 updateFromState();
