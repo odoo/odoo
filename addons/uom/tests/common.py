@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.base.tests.common import BaseCommon
 
 
@@ -23,8 +23,12 @@ class UomCommon(BaseCommon):
 
     @classmethod
     def _enable_uom(cls):
-        cls.env.user.group_ids += cls.group_uom
+        cls.env.ref('base.group_user').write({'implied_ids': [
+            Command.link(cls.group_uom.id),
+        ]})
 
     @classmethod
     def _disable_uom(cls):
-        cls.env.user.group_ids -= cls.group_uom
+        cls.env.ref('base.group_user').write({'implied_ids': [
+            Command.unlink(cls.group_uom.id),
+        ]})
