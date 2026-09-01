@@ -35,6 +35,7 @@ from . import (
     test_product_public_category,
     test_product_ribbon,
     test_product_template,
+    test_product_template_rating,
     test_property_field_res_partner,
     test_reorder_from_portal,
     test_sale_order,
