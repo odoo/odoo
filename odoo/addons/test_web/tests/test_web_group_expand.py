@@ -244,6 +244,135 @@ class TestGroupExpand(common.TransactionCase):
             ],
         )
 
+    def test_multi_level_group_expand(self):
+        # 'state' and 'static_expand' are group_expand-flagged, 'no_expand' is not:
+        # every 'state' group should appear (even empty ones), for each 'state'
+        # group only the real 'no_expand' groups should appear, and for each real
+        # (state, no_expand) pair every 'static_expand' group should appear.
+        self.Model.create([
+            {'state': 'a', 'no_expand': 'b', 'static_expand': 'a', 'value': 1},
+            {'state': 'a', 'no_expand': 'b', 'static_expand': 'c', 'value': 2},
+            {'state': 'a', 'no_expand': 'a', 'static_expand': 'a', 'value': 3},
+            # no record at all for state == 'b'
+        ])
+
+        groups = self.Model.formatted_read_group(
+            [], ['state', 'no_expand', 'static_expand'], ['__count', 'value:sum'],
+        )
+        self.assertEqual(
+            [(g['state'], g['no_expand'], g['static_expand'], g['__count'], g['value:sum']) for g in groups],
+            [
+                ('a', 'b', 'c', 1, 2),
+                ('a', 'b', 'b', 0, False),
+                ('a', 'b', 'a', 1, 1),
+                ('a', 'a', 'c', 0, False),
+                ('a', 'a', 'b', 0, False),
+                ('a', 'a', 'a', 1, 3),
+                # state == 'b' has no data at all: a single placeholder row, no
+                # sub-groups for 'no_expand'/'static_expand'
+                ('b', False, False, 0, False),
+            ],
+        )
+
+    def test_multi_level_group_expand_desc_order(self):
+        self.Model.create([
+            {'state': 'a', 'no_expand': 'b', 'static_expand': 'a', 'value': 1},
+            {'state': 'a', 'no_expand': 'b', 'static_expand': 'c', 'value': 2},
+        ])
+
+        groups = self.Model.formatted_read_group(
+            [], ['state', 'no_expand', 'static_expand'], ['__count'],
+            order='state, no_expand, static_expand desc',
+        )
+        self.assertEqual(
+            [(g['state'], g['no_expand'], g['static_expand']) for g in groups],
+            [
+                ('a', 'b', 'a'),
+                ('a', 'b', 'b'),
+                ('a', 'b', 'c'),
+                ('b', False, False),
+            ],
+        )
+
+    def test_multi_level_group_expand_having(self):
+        # group_expand still shows every candidate group even though 'having'
+        # filters out some of the real underlying SQL groups.
+        self.Model.create([
+            {'state': 'a', 'static_expand': 'a', 'value': 1},
+            {'state': 'a', 'static_expand': 'c', 'value': 20},
+        ])
+
+        groups = self.Model.formatted_read_group(
+            [], ['state', 'static_expand'], ['__count', 'value:sum'],
+            having=[('value:sum', '>', 5)],
+        )
+        self.assertEqual(
+            [(g['state'], g['static_expand'], g['__count'], g['value:sum']) for g in groups],
+            [
+                ('a', 'c', 1, 20),
+                ('a', 'b', 0, False),
+                ('a', 'a', 0, False),
+                ('b', False, 0, False),
+            ],
+        )
+
+    def test_multi_level_group_expand_relational(self):
+        # A relational group_expand field used at a level beyond the first: real
+        # groups from the (non-expand) first level, then a full expansion for the
+        # second (relational) level, with correctly batched display names.
+        order_1, order_2, order_3 = self.env['test_read_group.order'].create([
+            {'name': 'O1'}, {'name': 'O2'}, {'name': 'O3 unused'},
+        ])
+        Line = self.env['test_read_group.order.line']
+        Line.create([
+            {'order_id': order_1.id, 'order_expand_id': order_1.id, 'value': 1},
+            {'order_id': order_1.id, 'order_expand_id': order_2.id, 'value': 2},
+        ])
+
+        # read_group + group_expand candidates + 1 batched display_name fetch per
+        # relational column (order_id, order_expand_id) -- each column's display
+        # names are still fetched in a single query, not once per group.
+        with self.assertQueryCount(4):
+            self.env.invalidate_all()
+            groups = Line.formatted_read_group([], ['order_id', 'order_expand_id'], ['value:sum'])
+
+        self.assertEqual(
+            [(g['order_id'], g['order_expand_id'], g['value:sum']) for g in groups],
+            [
+                ((order_1.id, 'O1'), (order_1.id, 'O1'), 1),
+                ((order_1.id, 'O1'), (order_2.id, 'O2'), 2),
+                ((order_1.id, 'O1'), (order_3.id, 'O3 unused'), False),
+            ],
+        )
+
+    def test_multi_level_group_expand_shared_prefix_cache(self):
+        # Within one formatted_read_grouping_sets call, an expand-flagged level
+        # shared by several grouping sets is only resolved once.
+        self.Model.create({'state': 'a', 'no_expand': 'b', 'value': 1})
+        self.Model.create({'state': 'b', 'no_expand': 'a', 'value': 2})
+
+        calls = []
+        origin = type(self.Model)._expand_states
+
+        def _expand_states_spy(self, values, domain):
+            calls.append(domain)
+            return origin(self, values, domain)
+
+        with patch.object(type(self.Model), '_expand_states', _expand_states_spy):
+            groups_list = self.Model.formatted_read_grouping_sets(
+                [], [['state'], ['state', 'no_expand']], ['__count'],
+            )
+
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(
+            [(g['state'], g['__count']) for g in groups_list[0]],
+            [('a', 1), ('b', 1)],
+        )
+        self.assertEqual(
+            [(g['state'], g['no_expand'], g['__count']) for g in groups_list[1]],
+            [('a', 'b', 1), ('b', 'a', 1)],
+        )
+
     def test_with_limit_offset_performance(self):
         order_1, order_2, order_3, order_4 = self.env['test_read_group.order'].create(
             [

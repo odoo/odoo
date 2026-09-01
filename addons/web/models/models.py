@@ -946,9 +946,12 @@ class Base(models.AbstractModel):
             domain, grouping_sets, aggregates, order=order,
         )
 
+        expand_cache = {}
         for groups_index, groupby in enumerate(grouping_sets):
-            if self._web_read_group_field_expand(groupby):
-                groups_list[groups_index] = self._web_read_group_expand(domain, groups_list[groups_index], groupby[0], aggregates, order)
+            if any(self._web_read_group_expand_mask(groupby)):
+                groups_list[groups_index] = self._web_read_group_expand_groups(
+                    domain, groupby, groups_list[groups_index], aggregates, order, cache=expand_cache,
+                )
 
         for groups_index, groupby in enumerate(grouping_sets):
             fill_temporal = self.env.context.get('fill_temporal')
@@ -1059,10 +1062,10 @@ class Base(models.AbstractModel):
         # be used only when there are few groups (or without limit for the kanban view).
         if (
             not offset and (not limit or len(groups) < limit)
-            and self._web_read_group_field_expand(groupby)
+            and any(self._web_read_group_expand_mask(groupby))
         ):
             # It doesn't respect the order with aggregates inside
-            expand_groups = self._web_read_group_expand(domain, groups, groupby[0], aggregates, order)
+            expand_groups = self._web_read_group_expand_groups(domain, groupby, groups, aggregates, order)
             if not limit or len(expand_groups) <= limit:
                 # Ditch the result of expand_groups because the limit is reached and to avoid
                 # returning inconsistent result inside length of web_read_group
@@ -1079,58 +1082,170 @@ class Base(models.AbstractModel):
 
         return self._web_read_group_format(groupby, aggregates, groups)
 
-    def _web_read_group_field_expand(self, groupby):
-        """ Return the field that should be expand """
-        if (
-            len(groupby) == 1
-            and self.env.context.get('read_group_expand')
-            and '.' not in groupby[0]
-            and (field := self._fields[groupby[0].split(':')[0]])
-            and field.group_expand
-        ):
-            return field
-        return None
+    def _web_read_group_expand_mask(self, groupby):
+        """ Return, for each groupby spec, the field that should be expanded on that
+        level (or ``None`` if that level shouldn't be expanded). """
+        if not self.env.context.get('read_group_expand'):
+            return (None,) * len(groupby)
+        return tuple(
+            field if '.' not in spec and (field := self._fields.get(spec.split(':')[0])) and field.group_expand else None
+            for spec in groupby
+        )
 
-    def _web_read_group_expand(self, domain, groups, groupby_spec, aggregates, order):
-        """ Expand the result of _read_group for the webclient to show empty groups
-        for some view types (e.g. empty column for kanban view). See `Field.group_expand` attribute.
+    def _web_read_group_groupby_domain_fragments(self, groupby, groups):
+        """ Return, for each spec in ``groupby``, the domain fragment representing
+        each row's value on that groupby column. Unlike
+        :meth:`_web_read_group_groupby_formatter`, this never needs to compute a
+        display label, so e.g. a many2one/many2many column doesn't trigger a
+        (possibly premature, wrongly-batched) ``display_name`` computation.
+
+        :return: list (indexed like ``groupby``) of lists (indexed like ``groups``)
+            of domain fragments.
         """
-        field_name = groupby_spec.split('.')[0].split(':')[0]
-        field = self._fields[field_name]
+        if not groups:
+            return [[] for __ in groupby]
+        columns = list(zip(*groups))
+        result = []
+        for index, groupby_spec in enumerate(groupby):
+            field_path = groupby_spec.split(':')[0]
+            field_name = field_path.split('.')[0]
+            field = self._fields[field_name]
+            if '.' not in field_path and field_name != 'id' and field.type == 'many2one':
+                result.append([
+                    Domain(field_name, '=', value.id) if value else Domain(field_name, '=', False)
+                    for value in columns[index]
+                ])
+            elif '.' not in field_path and field.type == 'many2many':
+                result.append([
+                    Domain(field_name, '=', value.id) if value else Domain(field_name, 'not any', [])
+                    for value in columns[index]
+                ])
+            else:
+                # Other types (date/datetime, selection, dotted many2one paths,
+                # properties, ...): reuse the shared formatter. For dotted paths
+                # and properties this may compute an unused display label; this
+                # is only paid when such a field precedes an expanded level.
+                formatter = self._web_read_group_groupby_formatter(groupby_spec, columns[index])
+                result.append([formatter(value)[1] for value in columns[index]])
+        return result
 
-        # determine all groups that should be returned
-        values = [group_value for group_value, *__ in groups if group_value]
+    def _web_read_group_expand_groups(self, domain, groupby, groups, aggregates, order, *, cache=None):
+        """ Expand the result of _read_group/_read_grouping_sets for the webclient to
+        show empty groups for some view types (e.g. empty column for kanban view),
+        at any level of a (possibly multi-field) groupby. See `Field.group_expand`.
 
-        # field.group_expand is a callable or the name of a method, that returns
-        # the groups that we want to display for this field, in the form of a
-        # recordset or a list of values (depending on the type of the field).
-        # This is useful to implement kanban views for instance, where some
-        # columns should be displayed even if they don't contain any record.
-        if field.relational:
-            # groups is a recordset; determine order on groups's model
-            values = self.env[field.comodel_name].browse(value.id for value in values)
-            expand_values = field.determine_group_expand(self, values, domain)
-            all_record_ids = tuple(unique(expand_values._ids + values._ids))
+        :param cache: optional dict shared across several calls (e.g. the various
+            grouping sets of a single :meth:`formatted_read_grouping_sets` call) so
+            that a group_expand call for a given field and parent group values is
+            only ever performed once.
+        """
+        mask = self._web_read_group_expand_mask(groupby)
+        if not any(mask):
+            return groups
+        if cache is None:
+            cache = {}
+        if any(mask[1:]):
+            # Domain fragments (for building scoped prefix domains) are only ever
+            # needed by a level beyond the first; skip building them entirely
+            # otherwise, to keep the single-level case exactly as cheap as before.
+            fragments = self._web_read_group_groupby_domain_fragments(groupby, groups)
+            frag_rows = list(zip(*fragments))
         else:
-            # groups is a list of values
-            expand_values = field.determine_group_expand(self, values, domain)
-
-        if (groupby_spec + ' desc') in order.lower():
-            expand_values = reversed(expand_values)
-
+            frag_rows = [() for __ in groups]
         empty_aggregates = tuple(self._read_group_empty_value(spec) for spec in aggregates)
-        result = dict.fromkeys(expand_values, empty_aggregates)
-        result.update({
-            group_value: aggregate_values
-            for group_value, *aggregate_values in groups
-        })
+        empty_groupby_values = [self._read_group_empty_value(spec) for spec in groupby]
+        result = self._web_read_group_expand_level(
+            domain, groupby, mask, list(zip(groups, frag_rows)),
+            empty_aggregates, empty_groupby_values, order, 0, cache,
+        )
+        return self._web_read_group_rebatch_relational_prefetch(mask, result)
 
-        if field.relational:
+    def _web_read_group_expand_level(self, domain, groupby, mask, rows, empty_aggregates, empty_groupby_values, order, level, cache):
+        """ Recursively expand ``rows`` (list of ``(row, frag_row)`` pairs sharing the
+        same values for ``groupby[:level]``) from ``level`` onward.
+
+        For a level flagged in ``mask``, all candidate groups returned by
+        ``field.determine_group_expand`` are shown (even ones without any real row);
+        for a level not flagged, only the real, non-empty groups already present in
+        ``rows`` are kept, exactly as today. A real group found only through
+        expansion (no matching rows) is emitted as a single placeholder row and is
+        not recursed into: it has, by construction, no sub-groups at deeper levels.
+        """
+        if level == len(groupby):
+            return [row for row, __ in rows]
+
+        if not rows:
+            # No real data at all (only possible at level 0, the initial call): if this
+            # level is expanded, every candidate becomes a standalone empty placeholder;
+            # otherwise there is nothing to show.
+            field = mask[level]
+            if not field:
+                return []
+            spec = groupby[level]
+            existing_values = self.env[field.comodel_name].browse() if field.relational else []
+            expand_values = field.determine_group_expand(self, existing_values, domain)
+            if (spec + ' desc') in order.lower():
+                expand_values = reversed(expand_values)
             return [
-                (value.with_prefetch(all_record_ids), *aggregate_values)
-                for value, aggregate_values in result.items()
+                (key, *empty_groupby_values[level + 1:], *empty_aggregates)
+                for key in dict.fromkeys(expand_values)
             ]
-        return [(value, *aggregate_values) for value, aggregate_values in result.items()]
+
+        partitions = {}
+        for row, frag_row in rows:
+            partitions.setdefault(row[level], []).append((row, frag_row))
+        key_order = list(partitions)
+        prefix = rows[0][0][:level]
+
+        field = mask[level]
+        if field:
+            spec = groupby[level]
+            real_keys = tuple(key for key in key_order if key)
+            # The cache key includes the real values found (not just the field/prefix),
+            # since some group_expand implementations return candidates depending on the
+            # groups already found (e.g. unioning them with a fixed set of candidates).
+            cache_key = (spec, prefix, tuple(key.id for key in real_keys) if field.relational else real_keys)
+            if cache_key in cache:
+                expand_values = cache[cache_key]
+            else:
+                prefix_domain = Domain.AND((domain, *rows[0][1][:level]))
+                existing_values = self.env[field.comodel_name].browse(key.id for key in real_keys) if field.relational else list(real_keys)
+                expand_values = field.determine_group_expand(self, existing_values, prefix_domain)
+                cache[cache_key] = expand_values
+            if (spec + ' desc') in order.lower():
+                expand_values = reversed(expand_values)
+            expanded_keys = list(dict.fromkeys(expand_values))
+            key_order = expanded_keys + [key for key in key_order if key not in expanded_keys]
+
+        result = []
+        for key in key_order:
+            sub_rows = partitions.get(key)
+            if sub_rows is None:
+                # group found only through expansion: no data, hence no sub-groups
+                result.append((*prefix, key, *empty_groupby_values[level + 1:], *empty_aggregates))
+            else:
+                result.extend(self._web_read_group_expand_level(
+                    domain, groupby, mask, sub_rows, empty_aggregates, empty_groupby_values, order, level + 1, cache,
+                ))
+        return result
+
+    def _web_read_group_rebatch_relational_prefetch(self, mask, rows):
+        """ Ensure every relational value of an expanded groupby column shares one
+        prefetch set, so that reading e.g. ``display_name`` on the whole column
+        (done later by :meth:`_web_read_group_format`) is batched in one query,
+        regardless of the fact that groups may have been discovered independently
+        (one `determine_group_expand` call per parent group). """
+        for level, field in enumerate(mask):
+            if not field or not field.relational or not rows:
+                continue
+            record_ids = tuple(unique(row[level].id for row in rows if row[level]))
+            if not record_ids:
+                continue
+            rows = [
+                (*row[:level], row[level].with_prefetch(record_ids), *row[level + 1:]) if row[level] else row
+                for row in rows
+            ]
+        return rows
 
     @api.model
     def _web_read_group_fill_temporal(self, groups, groupby, aggregates, fill_from=False, fill_to=False, min_groups=False):
@@ -1305,15 +1420,17 @@ class Base(models.AbstractModel):
         if not groups:
             return result
         column_iterator = zip(*groups)
+        expand_mask = self._web_read_group_expand_mask(groupby)
 
-        for groupby_spec, values in zip(groupby, column_iterator):
+        for index, (groupby_spec, values) in enumerate(zip(groupby, column_iterator)):
             formatter = self._web_read_group_groupby_formatter(groupby_spec, values)
             for value, dict_group in zip(values, result, strict=True):
                 dict_group[groupby_spec], additional_domain = formatter(value)
                 dict_group['__extra_domains'].append(additional_domain)
 
-            # Add fold information only if read_group_expand is activated (for kanban/list)
-            if ((field := self._web_read_group_field_expand(groupby)) and field.relational):
+            # Add fold information only for the first level, and only if
+            # read_group_expand is activated on it (for kanban/list columns)
+            if index == 0 and (field := expand_mask[0]) and field.relational:
                 model = self.env[field.comodel_name]
                 fold_name = model._fold_name
                 if fold_name not in model._fields:
