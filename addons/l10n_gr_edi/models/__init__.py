@@ -1,3 +1,4 @@
+from . import account_edi_proxy_user
 from . import account_edi_xml_ubl_gr
 from . import account_fiscal_position
 from . import account_move

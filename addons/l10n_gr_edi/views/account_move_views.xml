@@ -103,6 +103,7 @@
                     <field name="l10n_gr_edi_document_ids">
                         <list create="false" delete="false" edit="false" no_open="1"
                               decoration-danger="state in ('invoice_error', 'bill_error')"
+                              decoration-warning="state == 'invoice_pending'"
                               decoration-success="state in ('invoice_sent', 'bill_sent')">
                             <field name="message" column_invisible="1"/>
                             <field name="attachment_id" column_invisible="1"/>
