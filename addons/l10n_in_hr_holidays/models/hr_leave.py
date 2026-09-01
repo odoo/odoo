@@ -79,7 +79,7 @@ class HrLeave(models.Model):
             )
 
     def _l10n_in_is_working(self, on_date, public_holiday_dates, resource_calendar):
-        return on_date not in public_holiday_dates and resource_calendar._works_on_date(on_date)
+        return on_date not in public_holiday_dates and (not resource_calendar or resource_calendar._works_on_date(on_date))
 
     def _l10n_in_count_adjacent_non_working(self, start_date, public_holiday_dates, resource_calendar, reverse=False, include_start=False):
         step = -1 if reverse else 1
