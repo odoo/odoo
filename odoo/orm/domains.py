@@ -1457,6 +1457,11 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
     except KeyError:
         condition._raise("Cannot determine the comodel relation")
 
+    if field.type in ('many2many', 'one2many'):
+        comodel = comodel.with_context(**field.context)
+    else:
+        comodel = comodel.with_context(active_test=False)
+
     if isinstance(search_domain := model.env.context.get('search_domain'), Domain):
         # model with search_domain like (field, 'any', comodel_domain)
         # => comodel with comodel_domain
