@@ -6,6 +6,13 @@ from .test_core import (
     test_monkeypatch_zoneinfo,
 )
 
+from .test_modules import (
+    test_loading,
+    test_manifest,
+    test_module_graph,
+    test_neutralize,
+)
+
 from .test_orm import (
     common,
     test_access,
