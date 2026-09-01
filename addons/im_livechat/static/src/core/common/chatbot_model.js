@@ -33,7 +33,7 @@ export class Chatbot extends Record {
     });
     tmpAnswer = "";
     typingMessage = this.computed(() => {
-        if (this.isTypingUi && this.channel_id) {
+        if (this.isTyping && this.channel_id) {
             return this.store["mail.message"].insert({
                 id: -0.1 - this.channel_id.id,
                 thread: this.channel_id.thread,
