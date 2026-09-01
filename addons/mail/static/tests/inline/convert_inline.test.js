@@ -761,6 +761,47 @@ describe("Convert snippets and mailing bodies to tables", () => {
         editable = document.createElement("div");
     });
 
+    test.tags("desktop");
+    test("keep the vertical alignment of a row when stacking its columns", async () => {
+        const wrappersAlignment = async (rowClasses, columnClasses = []) => {
+            editable = document.createElement("div");
+            editable.style.setProperty("width", TEST_WIDTH + "px");
+            getFixture().append(editable);
+            editable.innerHTML = `<div class="container o_mail_wrapper"><div class="row"><div class="col-3"><p>Issue<br><strong>#42</strong></p></div><div class="col-9"><p style="height: 100px">Logo</p></div></div></div>`;
+            editable.querySelector(".row").classList.add(...rowClasses);
+            editable.querySelector(".col-3").classList.add(...columnClasses);
+            await toInline(editable, getCSSRules(document));
+            return {
+                wrappers: [...editable.querySelectorAll("div.o_stacking_wrapper")].map(
+                    (wrapper) => wrapper.style.verticalAlign
+                ),
+                mso: [...editable.innerHTML.matchAll(/valign="(\w+)"/g)].map((match) => match[1]),
+            };
+        };
+        expect(await wrappersAlignment(["align-items-center"])).toEqual(
+            { wrappers: ["middle", "middle"], mso: ["middle", "middle"] },
+            { message: "should have kept the columns vertically centered" }
+        );
+        expect(await wrappersAlignment(["align-items-end"])).toEqual(
+            { wrappers: ["bottom", "bottom"], mso: ["bottom", "bottom"] },
+            { message: "should have kept the columns aligned to the bottom" }
+        );
+        expect(await wrappersAlignment(["align-items-center"], ["align-self-end"])).toEqual(
+            { wrappers: ["bottom", "middle"], mso: ["bottom", "middle"] },
+            { message: "should have aligned a column on its own alignment over the row's" }
+        );
+        expect(
+            await wrappersAlignment(["flex-column", "flex-md-row", "align-items-center"])
+        ).toEqual(
+            { wrappers: ["middle", "middle"], mso: ["middle", "middle"] },
+            { message: "should have kept the columns centered when the row is horizontal" }
+        );
+        expect(await wrappersAlignment(["flex-column", "align-items-center"])).toEqual(
+            { wrappers: ["top", "top"], mso: ["top", "top"] },
+            { message: "should not have read a horizontal alignment as a vertical one" }
+        );
+    });
+
     test("convert snippets to tables", async () => {
         editable.innerHTML = `<div class="o_mail_snippet_general"><div>Snippet</div></div>`;
         addTables(editable);
