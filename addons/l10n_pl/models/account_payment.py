@@ -19,10 +19,10 @@ class L10nPlAccountPayment(models.Model):
     l10n_pl_verification_timestamp = fields.Datetime(related='l10n_pl_verification_id.verification_timestamp')
     l10n_pl_verification_request_id = fields.Char(related='l10n_pl_verification_id.verification_request_id')
 
-    def init(self):
-        super().init()
+    def _auto_init(self):
         if not column_exists(self.env.cr, 'account_payment', 'l10n_pl_verification_id'):
             create_column(self.env.cr, 'account_payment', 'l10n_pl_verification_id', 'integer')
+        super()._auto_init()
 
     @api.model
     def _payment_need_check(self, partner, payment_type, amounts, currency):
