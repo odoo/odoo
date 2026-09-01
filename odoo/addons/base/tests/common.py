@@ -46,10 +46,17 @@ class BaseCommon(TransactionCase):
         else:
             cls.env.user.group_ids += cls.get_default_groups()
         company = cls.setup_independent_company()
+<<<<<<< HEAD
         if company not in cls.env.company:
             cls.env.user.write({
                 'company_id': company.id,
                 'company_ids': [Command.set((company | company.child_ids).ids)]
+=======
+        if company is not cls.env.company:
+            cls.env.user.write({
+                'company_id': company.id,
+                'company_ids': [Command.set(company.ids)]
+>>>>>>> 8ae6acf0df2a ([wip: don't add all company to user by default)
             })
         if cls._test_user_groups:
             cls._test_user = new_test_user(
