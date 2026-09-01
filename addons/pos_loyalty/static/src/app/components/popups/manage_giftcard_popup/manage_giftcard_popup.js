@@ -6,7 +6,7 @@ import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { debounce } from "@bus/workers/bus_worker_utils";
+import { useDebounced } from "@web/core/utils/timing";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 
@@ -42,7 +42,7 @@ export class ManageGiftCardPopup extends Component {
         });
         this.inputRef = useRef("input");
         this.amountInputRef = useRef("amountInput");
-        this.batchedGiftcardCodeKeydown = debounce(this.checkGiftCard.bind(this), 500);
+        this.batchedGiftcardCodeKeydown = useDebounced(this.checkGiftCard, 500);
         onMounted(this.onMounted);
     }
 
