@@ -1,10 +1,16 @@
 from datetime import timedelta
+from unittest import SkipTest
 
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
 
 class TestTotalAverageCostCommon(TransactionCase):
+    @classmethod
+    def ensure_installed(cls, module_name):
+        if cls.env['ir.module.module']._get(module_name).state != 'installed':
+            raise SkipTest(f"Module required for the test is not installed ({module_name})")
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -22,8 +28,9 @@ class TestTotalAverageCostCommon(TransactionCase):
             'location_id': src_loc.id,
             'location_dest_id': dest_loc.id,
             'price_unit': price,
-            'purchase_line_id': purchase_line_id,
             'date': date,
+            # purchase_stock is not a dependency, so the field may not be there
+            **({'purchase_line_id': purchase_line_id} if purchase_line_id else {}),
         })
         move._action_confirm()
         move._action_assign()

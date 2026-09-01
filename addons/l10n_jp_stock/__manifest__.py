@@ -6,7 +6,6 @@
     'depends': [
         'l10n_jp',
         'stock_account',
-        'purchase_stock',
     ],
     'data': [
         'security/ir.access.csv',

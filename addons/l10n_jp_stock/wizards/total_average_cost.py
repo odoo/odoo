@@ -24,8 +24,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
     )
 
     def action_apply_total_average_cost(self):
-        """Recompute the 総平均法 total average cost over the period and write
-        it to the product's standard price, so later sales are costed at it."""
+        """
+        Recompute the 総平均法 total average cost over the period and write
+        it to the product's standard price, so later sales are costed at it.
+        """
         self.ensure_one()
         if self.date_from > self.date_to:
             raise UserError(self.env._("The start date must not be after the end date."))
@@ -77,7 +79,6 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 'location_id',
                 'location_dest_id',
                 'origin_returned_move_id',
-                'purchase_line_id',
                 'price_unit',
                 'is_dropship',
                 'restrict_partner_id',
@@ -112,7 +113,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                         purchases_val += self._get_acquisition_value(move, qty)
                     elif returned_move and self._move_date_local(returned_move) >= self.date_from:
                         returns_qty += qty
-                        returns_val += qty * self._get_purchase_unit_price(returned_move)
+                        returns_val += self._get_acquisition_value(returned_move, qty)
                 elif (origin_usage in ('supplier', 'transit') and dest_usage == 'internal'):
                     if origin_usage == 'transit' and any(
                         m.company_id == move.company_id and m.location_id.usage == 'internal'
@@ -125,7 +126,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     returned_move = move.origin_returned_move_id
                     if (not returned_move or self._move_date_local(returned_move) >= self.date_from):
                         returns_qty += qty
-                        returns_val += qty * (self._get_purchase_unit_price(move) or product.standard_price)
+                        returns_val += (
+                            self._get_acquisition_value(returned_move, qty) if returned_move
+                            else qty * (move.price_unit or product.standard_price)
+                        )
                 elif (origin_usage == 'production' and dest_usage == 'internal'):
                     purchases_qty += qty
                     purchases_val += production_values.get(move.id, 0.0)
@@ -134,11 +138,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     returned_move = move.origin_returned_move_id
                     if (not returned_move or self._move_date_local(returned_move) < self.date_from):
                         purchases_qty += qty
-                        if returned_move and returned_move.value and returned_move.quantity_product_uom:
-                            # the sale is outgoing, so core stores its value negatively
-                            purchases_val += qty * abs(returned_move.value) / returned_move.quantity_product_uom
-                        else:
-                            purchases_val += qty * self._get_purchase_unit_price(move)
+                        returned = move._get_value_from_returns(qty)
+                        purchases_val += returned['value']
+                        if (remaining := qty - returned['quantity']) > 0:
+                            purchases_val += self._get_acquisition_value(move, remaining)
 
             opening_cost = opening_values[product].value if product in opening_values else product.standard_price
             init_val = init_qty * opening_cost
@@ -205,7 +208,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         it consumed instead (法人税法施行令 28条1項1号ハ).
         """
         return {
-            move.id: move.quantity_product_uom * self._get_purchase_unit_price(move)
+            move.id: self._get_acquisition_value(move, move.quantity_product_uom)
             for move in moves
         }
 
@@ -220,24 +223,24 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         ]
 
     def _get_acquisition_value(self, move, qty):
-        """Return what the acquisition cost, from the bill wherever one is posted.
+        """
+        Return what a quantity of an incoming move cost to acquire.
 
-        法人税法施行令 32条1項1号 makes the 購入代価 the acquisition cost, and a posted
-        bill evidences it where the order only promised it, so anything still unbilled
-        falls back to the order the way core resolves the two.
+        法人税法施行令 32条1項1号 makes the 購入代価 the acquisition cost, so the
+        resolution follows core's own: whatever a posted bill evidences, then what
+        the order priced, then the price the move itself carries. The stored value
+        of the move is not used, as core falls back from it to the standard price,
+        which is the very cost being evaluated.
         """
         billed = move._get_value_from_account_move(qty)
         value = billed['value']
-        if (unbilled := qty - billed['quantity']) > 0:
-            value += self._get_purchase_unit_price(move) * move._get_cost_ratio(unbilled)
+        remaining_qty = qty - billed['quantity']
+        if remaining_qty and 'purchase_line_id' in move._fields and (line := move.purchase_line_id):
+            value += line._get_stock_move_price_unit(self._move_date_local(move)) * move._get_cost_ratio(remaining_qty)
+            remaining_qty = 0
+        if remaining_qty:
+            value += remaining_qty * move.price_unit
         return value
 
     def _move_date_local(self, move):
         return fields.Datetime.context_timestamp(self, move.date).date()
-
-    def _get_purchase_unit_price(self, move):
-        if m := move.origin_returned_move_id:
-            return self._get_purchase_unit_price(m)
-        if m := move.purchase_line_id:
-            return m._get_stock_move_price_unit(self._move_date_local(move))
-        return move.price_unit

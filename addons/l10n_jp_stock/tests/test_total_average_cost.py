@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_jp_stock.tests.common import TestTotalAverageCostCommon
+from odoo.addons.stock_account.models.res_company import ResCompany
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -83,11 +84,12 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
         closing_date = fields.Datetime.to_datetime(self.today)
         with patch.object(
-            type(self.env.company), '_get_last_closing_date', return_value=closing_date,
+            ResCompany, '_get_last_closing_date', return_value=closing_date,
         ), self.assertRaises(UserError):
             self._run_category_wizard()
 
     def test_bill_price_beats_the_order_price(self):
+        self.ensure_installed('purchase_stock')
         line = self._create_po_line(self.env.company.currency_id, 10, 100)
         self._add_opening_stock()
         self._create_move(10, 100, self.today, self.supplier_loc, self.stock_loc, line.id)
@@ -217,7 +219,10 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         )
         # the evaluated cost takes effect at the start of the period it covers, so
         # the period's own issues leave at it, not on the day the wizard was run
-        self.assertEqual(product_value.date.date(), self.today - timedelta(days=2))
+        self.assertEqual(
+            fields.Datetime.context_timestamp(self, product_value.date).date(),
+            self.today - timedelta(days=2),
+        )
         self.assertEqual(product_value.value, self.product.standard_price)
         self.assertIn('Total average cost evaluation', product_value.description)
 
@@ -317,6 +322,7 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self.assertEqual(other_product.standard_price, 50)
 
     def test_purchase_fx_at_move_date(self):
+        self.ensure_installed('purchase_stock')
         foreign_currency = self.env.ref('base.EUR')
         company_currency = self.env.company.currency_id
         self.assertNotEqual(foreign_currency, company_currency)
