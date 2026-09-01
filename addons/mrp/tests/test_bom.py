@@ -2126,6 +2126,24 @@ class TestBoM(TestMrpCommon):
         with self.assertRaises(exceptions.ValidationError):
             self.bom_1.active = True
 
+    def test_search_archived_bom_by_archived_product_name(self):
+        """An archived BoM must still be found when searching by the name of its
+        (also archived) product
+        """
+        self.product_4.action_archive()
+        self.assertFalse(self.bom_1.active, "archiving the product should cascade-archive its BoM")
+
+        found = self.env['mrp.bom'].search([
+            ('active', '=', False),
+            ('product_tmpl_id', 'ilike', self.product_4.name),
+        ])
+        self.assertIn(self.bom_1.id, found.ids)
+
+        still_hidden = self.env['product.template'].search([
+            ('display_name', 'ilike', self.product_4.name),
+        ])
+        self.assertFalse(still_hidden)
+
     def test_cycle_on_bom_creation(self):
         finished_product = self.bom_4.product_id
         component = self.bom_4.bom_line_ids.product_id
