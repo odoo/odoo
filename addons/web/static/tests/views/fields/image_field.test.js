@@ -353,6 +353,33 @@ test("ImageField preview is updated when an image is uploaded", async () => {
     });
 });
 
+test("ImageField preview_image is updated when an image is uploaded", async () => {
+    Partner._records[0].document = PRODUCT_IMAGE;
+
+    const imageFile = new File(
+        [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+        "fake_file.png",
+        { type: "image/png" }
+    );
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="document" widget="image" options="{'preview_image': 'document_preview'}" />
+            </form>
+        `,
+    });
+
+    await click(".o_select_file_button");
+    await setInputFiles([imageFile]);
+    await waitFor(`div[name=document] img[data-src="data:image/png;base64,${MY_IMAGE}"]`, {
+        timeout: 1000,
+    });
+});
+
 test("clicking save manually after uploading new image should change the unique of the image src", async () => {
     Partner._onChanges.foo = () => {};
 
