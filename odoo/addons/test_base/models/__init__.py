@@ -1,5 +1,6 @@
 from . import (
     common,
+    ir_qweb,
     models_translation,
     test_access_rights,
     test_acl,
