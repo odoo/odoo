@@ -129,14 +129,25 @@ class DeliveryCarrier(models.Model):
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
         order_commodities = self._get_commodities_from_order(order)
 
-        # Split the commodities value uniformly as well
+        # Spread each commodity's quantity over the packages, keeping the per-unit
+        # monetary_value, so the manifest totals still match the order.
+        package_count = len(package_weights)
+        package_commodities = [[] for _ in package_weights]
         for commodity in order_commodities:
-            commodity.monetary_value /= len(package_weights)
-            commodity.qty = max(1, commodity.qty // len(package_weights))
+            base_qty, extra = divmod(int(commodity.qty), package_count)
+            for index in range(package_count):
+                qty = base_qty + (1 if index < extra else 0)
+                if qty:
+                    package_commodities[index].append(DeliveryCommodity(
+                        commodity.product_id,
+                        amount=qty,
+                        monetary_value=commodity.monetary_value,
+                        country_of_origin=commodity.country_of_origin,
+                    ))
 
-        for weight in package_weights:
+        for weight, commodities in zip(package_weights, package_commodities):
             packages.append(DeliveryPackage(
-                order_commodities,
+                commodities,
                 weight,
                 default_package_type,
                 total_cost=partial_cost,
