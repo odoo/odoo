@@ -206,7 +206,7 @@ export function isShown() {
 
 const LINK_DND_DELAY = 500;
 
-export function linkTables(child, parent) {
+export function linkTables(child, parent, checkAlert = true) {
     async function drag_multiple_and_then_drop(helpers, ...drags) {
         const dragEffectDelay = async () => {
             await new Promise((resolve) => requestAnimationFrame(resolve));
@@ -232,8 +232,22 @@ export function linkTables(child, parent) {
             await moveTo(target, options);
             await dragEffectDelay();
         }
+        if (checkAlert) {
+            await helpers.waitFor(
+                `.alert:has(strong:contains("Link Table ${child} with ${parent}"))`,
+                {
+                    visible: true,
+                    timeout: 500,
+                }
+            );
+        }
         await drop();
         await dragEffectDelay();
+        if (checkAlert) {
+            await helpers.waitUntil(() => !helpers.queryAll(".alert").length, {
+                timeout: 500,
+            });
+        }
     }
     return {
         content: `Drag table ${child} onto table ${parent} in order to link them`,
