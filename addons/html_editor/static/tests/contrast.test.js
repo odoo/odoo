@@ -199,7 +199,7 @@ describe("Dark background", () => {
 beforeEach(() => {
     defineStyle(`
         :root {
-            --o-control-panel-background-color: rgb(248, 249, 250);
+            --o-html-editor-background-contrast: rgb(255, 255, 255);
         }
     `);
 });
