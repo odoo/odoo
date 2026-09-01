@@ -216,7 +216,7 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertNotEqual(default_lang_code, 'fr_FR')  # should not be the case, just to ease test
 
         # default is installed lang
-        partner = self.env['res.partner'].create({'name': "Test Company"})
+        partner = self.env['res.partner'].create({'name': "Test Partner"})
         self.assertEqual(partner.lang, default_lang_code)
 
         # check propagation of parent to child
@@ -228,7 +228,7 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.env['res.lang']._activate_lang('fr_FR')
 
         # default from context > default from installed
-        partner = self.env['res.partner'].with_context(default_lang='de_DE').create({'name': "Test Company"})
+        partner = self.env['res.partner'].with_context(default_lang='de_DE').create({'name': "Test Partner"})
         self.assertEqual(partner.lang, 'de_DE')
         first_child = self.env['res.partner'].create({'name': 'First Child', 'parent_id': partner.id})
         partner.write({'lang': 'fr_FR'})
@@ -1070,13 +1070,13 @@ class TestPartnerAddressCompany(TransactionCase):
 
         Fix: update fetch() in res_partner.py _fields_sync() around L773.
         """
-        company = self.env['res.partner'].create({
+        partner = self.env['res.partner'].create({
             'is_company': True,
-            'name': 'Test Company',
+            'name': 'Test Parnter',
             **self.test_address_values,
         })
         contacts = self.env['res.partner'].create([
-            {'name': f'Contact {i}', 'parent_id': company.id}
+            {'name': f'Contact {i}', 'parent_id': partner.id}
             for i in range(5)
         ])
         self.env.invalidate_all()
@@ -1223,7 +1223,7 @@ class TestPartnerForm(TransactionCase):
 
         # default is installed lang
         partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
-        partner_form.name = "Test Company"
+        partner_form.name = "Test Partner"
         self.assertEqual(partner_form.lang, default_lang_code, "New partner's lang should be default one")
         partner = partner_form.save()
         self.assertEqual(partner.lang, default_lang_code)
@@ -1244,7 +1244,7 @@ class TestPartnerForm(TransactionCase):
             self.env['res.partner'].with_context(default_lang='de_DE'),
             'base.view_partner_form'
         )
-        partner_form.name = "Test Company"
+        partner_form.name = "Test Partner"
         self.assertEqual(partner_form.lang, 'de_DE', "New partner's lang should take default from context")
         with partner_form.child_ids.new() as child:
             child.name = "First Child"
