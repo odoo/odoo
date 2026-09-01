@@ -374,7 +374,6 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         })
         self.main_pos_config.write({
             'preparation_printer_ids': [(4, printer.id)],
-            'module_pos_restaurant': True,
         })
 
         order, _ = self.create_backend_pos_order({
