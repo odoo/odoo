@@ -357,6 +357,18 @@ class TestDomain(TransactionExpressionCase):
             self.assertEqual(u_domain.operator, 'any!')
             self.assertIs(u_domain.value, sub_domain.value, "The query should be used as-is")
 
+    def test_condition_optimize_any_active_test(self):
+        """An 'any' domain on a many2one field must let the comodel's own
+        custom search methods see archived records.
+        """
+        model = self.env['test_orm.related']
+        message = self.env['test_orm.message'].create({'body': 'hello archived world'})
+        message.active = False
+        related = model.create({'name': 'rel', 'message': message.id})
+
+        res_search = self._search(model, [('message', 'any', [('body_search', 'like', 'hello archived')])])
+        self.assertEqual(res_search, related, "the archived message should still be found")
+
 
 class TestDomainComplement(TransactionExpressionCase):
 
