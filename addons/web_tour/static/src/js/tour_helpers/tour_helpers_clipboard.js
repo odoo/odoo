@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { TourHelpers } from "./tour_helpers";
 
-const originalClipboardWriteText = window.navigator.clipboard.writeText;
+const originalClipboardWriteText = window.navigator.clipboard?.writeText;
 
 patch(TourHelpers.prototype, {
     /**
@@ -16,7 +16,9 @@ patch(TourHelpers.prototype, {
      *  run: "allowClipboardWrite",
      */
     allowClipboardWrite() {
-        window.navigator.clipboard.writeText = () => Promise.resolve();
+        if (window.navigator.clipboard) {
+            window.navigator.clipboard.writeText = () => Promise.resolve();
+        }
     },
 
     /**
@@ -25,6 +27,8 @@ patch(TourHelpers.prototype, {
      *  run: "restoreClipboardWrite",
      */
     restoreClipboardWrite() {
-        window.navigator.clipboard.writeText = originalClipboardWriteText;
+        if (window.navigator.clipboard) {
+            window.navigator.clipboard.writeText = originalClipboardWriteText;
+        }
     },
 });
