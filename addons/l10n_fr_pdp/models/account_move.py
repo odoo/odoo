@@ -173,6 +173,15 @@ class AccountMove(models.Model):
                 and move.partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
             )
 
+    @api.depends('pdp_can_send_response')
+    def _compute_peppol_can_send_response(self):
+        super()._compute_peppol_can_send_response()
+        for move in self:
+            move.peppol_can_send_response = (
+                move.peppol_can_send_response
+                and not move.pdp_can_send_response
+            )
+
     @api.depends('company_id')
     def _compute_pdp_uses_pdp(self):
         for move in self:

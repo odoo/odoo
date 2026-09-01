@@ -261,10 +261,39 @@ class AccountEdiProxyClientUser(models.Model):
         if need_retrigger:
             self.env.ref('l10n_fr_pdp.ir_cron_pdp_get_regulatory_documents')._trigger()
 
+    def _pdp_process_error_status(self, content, record):
+        """ Process the eventual errors sent by IAP.
+        Returns True if the error is final, False if it has to be fetched again.
+        """
+        if content['error'].get('code') == 702:
+            # "Peppol request not ready" error: thrown when the IAP is still processing the message
+            return False
+        if content['error'].get('code') == 207:
+            record.peppol_state = 'not_serviced'
+        else:
+            record.peppol_state = 'error'
+            self._pdp_log_einvoicing_chatter(
+                record._get_linked_record(),
+                pa_status='error',
+                errors=[self._pdp_proxy_error_message(content['error'])],
+                error_source=self.env._("PA Lifecycle"),
+            )
+        return True
+
+    @api.model
+    def _pdp_update_state_records(self, peppol_response, state):
+        """ Helper method to update the state of a response and return the record on which to log the change, if needed """
+        previous_state = peppol_response.peppol_state
+        peppol_response.peppol_state = state
+
+        if previous_state != peppol_response.peppol_state:
+            return peppol_response._get_linked_record()
+        return False
+
     def _peppol_process_messages_status(self, messages, uuid_to_record):
         self.ensure_one()
         processed_message_uuids = []
-        updated_moves = self.env['account.move']
+        updated_state_records = set()
         other_messages = {}
         for uid, content in messages.items():
             record = uuid_to_record[uid]
@@ -275,31 +304,16 @@ class AccountEdiProxyClientUser(models.Model):
 
             peppol_response = record
             if content.get('error'):
-                if content['error'].get('code') == 702:
-                    # "Peppol request not ready" error: thrown when the IAP is still processing the message
-                    continue
-                if content['error'].get('code') == 207:
-                    peppol_response.peppol_state = 'not_serviced'
-                else:
-                    peppol_response.peppol_state = 'error'
-                    self._pdp_log_einvoicing_chatter(
-                        peppol_response.move_id,
-                        pa_status='error',
-                        errors=[self._pdp_proxy_error_message(content['error'])],
-                        error_source=self.env._("PA Lifecycle"),
-                    )
-                processed_message_uuids.append(uid)
+                if self._pdp_process_error_status(content, peppol_response):
+                    processed_message_uuids.append(uid)
                 continue
 
-            previous_state = peppol_response.peppol_state
-            peppol_response.peppol_state = content['state']
+            if updated_state_record := self._pdp_update_state_records(peppol_response, content['state']):
+                updated_state_records.add(updated_state_record)
             processed_message_uuids.append(uid)
-
-            if previous_state != peppol_response.peppol_state:
-                updated_moves |= peppol_response.move_id
         processed_message_uuids += super()._peppol_process_messages_status(other_messages, uuid_to_record)
-        for move in updated_moves:
-            self._pdp_log_einvoicing_chatter(move)
+        for record in updated_state_records:
+            self._pdp_log_einvoicing_chatter(record)
         return processed_message_uuids
 
     def _peppol_get_message_status_error_body(self, move, error):
@@ -320,6 +334,16 @@ class AccountEdiProxyClientUser(models.Model):
                 ppf_status=self._pdp_selection_label(move, 'pdp_ppf_move_state', move.pdp_ppf_move_state),
             )
         return super()._peppol_get_message_status_update_body(move, content)
+
+    def _pdp_get_new_response_vals(self, record, uuid, status, **kwargs):
+        return {
+            'peppol_message_uuid': uuid,
+            'response_code': status,
+            'peppol_state': 'processing',
+            'move_id': record.id,
+            'pdp_flow_number': '2',
+            **kwargs,
+        }
 
     def _pdp_send_response(self, reference_moves, status, additional_info=None):
         self.ensure_one()
@@ -370,25 +394,22 @@ class AccountEdiProxyClientUser(models.Model):
             )
             return
         responses = self.env['account.peppol.response'].create([
-            {
-                'peppol_message_uuid': message['message_uuid'],
-                'response_code': status,
-                'peppol_state': 'processing',
-                'move_id': move.id,
-                'pdp_status_info': "\n\n".join([
+            self._pdp_get_new_response_vals(
+                move,
+                message['message_uuid'],
+                status,
+                pdp_status_info="\n\n".join([
                     # We only put the note since we have all other info
-                    self._format_status_info({'note': additional_info.get(move.peppol_message_uuid, {}).get('note')})
+                    self._format_status_info({'note': additional_info.get(move.peppol_message_uuid, {}).get('note')}),
                 ]),
-                'pdp_payment_info': additional_info.get(move.peppol_message_uuid, {}).get('payments'),
-                'pdp_issue_date': issue_time,
-                'pdp_flow_number': '2',
-            }
+                pdp_payment_info=additional_info.get(move.peppol_message_uuid, {}).get('payments'),
+                pdp_issue_date=issue_time,
+            )
             for message, move in zip(response.get('messages'), reference_moves)
             if message.get('message_uuid')
         ])
 
-        sent_moves = responses.move_id
-        unsent_moves = reference_moves - sent_moves
+        unsent_records_ids = set(reference_moves.ids).difference({resp._get_linked_record().id for resp in responses})
 
         sent_message = self.env._(
             "A French e-invoicing response with Response Code '%(status)s' was sent to the Approved Platform.",
@@ -398,41 +419,41 @@ class AccountEdiProxyClientUser(models.Model):
             "A French e-invoicing response with Response Code '%(status)s' could not be sent to the Approved Platform.",
             status=status_string,
         )
-        message_bodies = {
-            **{move.id: sent_message for move in sent_moves},
-            **{move.id: unsent_message for move in unsent_moves},
-        }
-        reference_moves._message_log_batch(bodies=message_bodies)
+        responses._log_message(sent_message)
+        reference_moves._message_log_batch(bodies={record_id: unsent_message for record_id in unsent_records_ids})
+
+    def _peppol_get_uuid_to_records(self, origin_message_uuids):
+        relevant_moves_domain = [
+            ('peppol_message_uuid', 'in', origin_message_uuids),
+            ('company_id', '=', self.company_id.id),
+        ]
+        return self.env['account.move'].search(relevant_moves_domain).grouped('peppol_message_uuid')
 
     def _peppol_process_new_messages(self, messages):
         self.ensure_one()
         # Note: We process the invoices first to avoid importing a response before its origin move
         response_uuids = {uuid for uuid in messages if messages[uuid]['document_type'] == 'CrossDomainAcknowledgementAndResponse'}
         other_messages = {uuid: content for uuid, content in messages.items() if uuid not in response_uuids}
-        other_uuids, moves = super()._peppol_process_new_messages(other_messages)
+        other_uuids, records = super()._peppol_process_new_messages(other_messages)
 
         processed_uuids = []
 
         origin_message_uuids = [messages[uuid]['origin_message_uuid'] for uuid in response_uuids]
-        relevant_moves_domain = [
-            ('peppol_message_uuid', 'in', origin_message_uuids),
-            ('company_id', '=', self.company_id.id),
-        ]
-        uuid_to_move_map = self.env['account.move'].search(relevant_moves_domain).grouped('peppol_message_uuid')
+        uuid_to_record_map = self._peppol_get_uuid_to_records(origin_message_uuids)
         for uid in response_uuids:
             content = messages[uid]
             origin_uuid = content['origin_message_uuid']
-            origin_move = uuid_to_move_map.get(origin_uuid)
-            if not origin_move:
+            origin_record = uuid_to_record_map.get(origin_uuid)
+            if not origin_record:
                 _logger.warning('The French e-invoicing response with UUID %s could not be imported: Original journal entry (UUID %s) not found.', uid, origin_uuid)
                 continue
             try:
-                self._pdp_import_incoming_response(uid, content, origin_move[:1])
+                self._pdp_import_incoming_response(uid, content, origin_record[:1])
             except Exception:  # noqa: BLE001
                 _logger.exception('Error while processing the PDP Response with uid %s', uid)
             processed_uuids.append(uid)
 
-        return other_uuids + processed_uuids, moves
+        return other_uuids + processed_uuids, records
 
     def _pdp_process_regulatory_messages(self, messages):
         self.ensure_one()
@@ -563,6 +584,60 @@ class AccountEdiProxyClientUser(models.Model):
         if not origin_move:
             return response
 
+        extracted_vals = self._pdp_extract_incoming_response_vals(content)
+
+        if not extracted_vals['response_code_description'] or not extracted_vals['issue_date'] or (extracted_vals['flow_number'] == '6' and not extracted_vals['ref_status_code_description']):
+            if extracted_vals['origin_ref_status_code']:
+                main_message = self.env._(
+                    "Failed to process incoming response for status %(ref_status_info)s with Response Code '%(response_code)s' issued on %(issue_date)s.",
+                    ref_status_info=(extracted_vals['ref_status_code_description'] or extracted_vals['origin_ref_status_code']),
+                    response_code=extracted_vals['response_code_description'],
+                    issue_date=format_date(self.env, extracted_vals['issue_date']),
+                )
+            else:
+                main_message = self.env._(
+                    "Failed to process incoming response with Response Code '%(response_code)s' issued on %(issue_date)s.",
+                    response_code=extracted_vals['response_code_description'],
+                    issue_date=format_date(self.env, extracted_vals['issue_date']),
+                )
+            self._pdp_log_einvoicing_chatter(
+                origin_move,
+                pa_status='error' if extracted_vals['flow_number'] == '2' else None,
+                ppf_status='error' if extracted_vals['flow_number'] in ('1', '6') else None,
+                errors=[main_message] + extracted_vals['status_details'],
+                error_source=self.env._("PA Lifecycle") if extracted_vals['flow_number'] == '2' else self.env._("PPF Lifecycle"),
+            )
+            return response
+
+        response = self.env['account.peppol.response'].create(
+            self._pdp_get_new_response_vals(
+                origin_move,
+                uuid,
+                extracted_vals['response_code'],
+                pdp_ref_uuid=extracted_vals['origin_peppol_lifecycle_uuid'],
+                peppol_state=content['state'],
+                pdp_ref_response_code=PROCESS_CONDITION_CODE_TO_RESPONSE_CODE.get(extracted_vals['origin_ref_status_code']),
+                pdp_status_info='\n\n'.join([self._format_status_info(status, separator=Markup('\n')) for status in extracted_vals['status_infos']]),
+                pdp_issue_date=extracted_vals['issue_date'],
+                pdp_flow_number=extracted_vals['flow_number'],
+                pdp_payment_info=[payment_info for status in extracted_vals['status_infos'] for payment_info in status.get('payment_infos', [])],
+            ),
+        )
+        if content['state'] == 'done':
+            self._pdp_log_einvoicing_chatter(
+                origin_move,
+                details=extracted_vals['status_details'] if extracted_vals['response_code'] != 'RE' else None,
+                errors=extracted_vals['status_details'] if extracted_vals['response_code'] == 'RE' else None,
+                pa_status='error' if extracted_vals['response_code'] == 'RE' and extracted_vals['flow_number'] == '2' else None,
+                ppf_status='error' if extracted_vals['response_code'] == 'RE' and extracted_vals['flow_number'] in ('1', '6') else None,
+                error_source=(
+                    self.env._("PA Lifecycle") if extracted_vals['flow_number'] == '2' else self.env._("PPF Lifecycle")
+                ) if extracted_vals['response_code'] == 'RE' else None,
+            )
+        return response
+
+    @api.model
+    def _pdp_extract_incoming_response_vals(self, content):
         # The endpoint for PDP / Peppol does not return the 'flow_number'; they are always flow 2.
         # The PPF endpoint always puts the 'flow_number'.
         flow_number = content.get('flow_number') or '2'
@@ -577,54 +652,17 @@ class AccountEdiProxyClientUser(models.Model):
         status_details = self._pdp_status_infos_to_details(status_infos)
         response_code_description = PDP_STATUSES.get(response_code)
         ref_status_code_description = PDP_STATUSES.get(origin_ref_status)
-
-        if not response_code_description or not issue_date or (flow_number == '6' and not ref_status_code_description):
-            if origin_ref_status_code:
-                main_message = self.env._(
-                    "Failed to process incoming response for status %(ref_status_info)s with Response Code '%(response_code)s' issued on %(issue_date)s.",
-                    ref_status_info=(ref_status_code_description or origin_ref_status_code),
-                    response_code=response_code_description,
-                    issue_date=format_date(self.env, issue_date),
-                )
-            else:
-                main_message = self.env._(
-                    "Failed to process incoming response with Response Code '%(response_code)s' issued on %(issue_date)s.",
-                    response_code=response_code_description,
-                    issue_date=format_date(self.env, issue_date),
-                )
-            self._pdp_log_einvoicing_chatter(
-                origin_move,
-                pa_status='error' if flow_number == '2' else None,
-                ppf_status='error' if flow_number in ('1', '6') else None,
-                errors=[main_message] + status_details,
-                error_source=self.env._("PA Lifecycle") if flow_number == '2' else self.env._("PPF Lifecycle"),
-            )
-            return response
-
-        response = self.env['account.peppol.response'].create({
-            'peppol_message_uuid': uuid,
-            'pdp_ref_uuid': origin_peppol_lifecycle_uuid,
+        return {
+            'flow_number': flow_number,
             'response_code': response_code,
-            'peppol_state': content['state'],
-            'move_id': origin_move.id,
-            'pdp_ref_response_code': PROCESS_CONDITION_CODE_TO_RESPONSE_CODE.get(origin_ref_status_code),
-            'pdp_status_info': '\n\n'.join([self._format_status_info(status, separator=Markup('\n')) for status in status_infos]),
-            'pdp_issue_date': issue_date,
-            'pdp_flow_number': flow_number,
-            'pdp_payment_info': [payment_info for status in status_infos for payment_info in status.get('payment_infos', [])],
-        })
-        if content['state'] == 'done':
-            self._pdp_log_einvoicing_chatter(
-                origin_move,
-                details=status_details if response_code != 'RE' else None,
-                errors=status_details if response_code == 'RE' else None,
-                pa_status='error' if response_code == 'RE' and flow_number == '2' else None,
-                ppf_status='error' if response_code == 'RE' and flow_number in ('1', '6') else None,
-                error_source=(
-                    self.env._("PA Lifecycle") if flow_number == '2' else self.env._("PPF Lifecycle")
-                ) if response_code == 'RE' else None,
-            )
-        return response
+            'issue_date': issue_date,
+            'status_infos': status_infos,
+            'origin_ref_status_code': origin_ref_status_code,
+            'origin_peppol_lifecycle_uuid': origin_peppol_lifecycle_uuid,
+            'status_details': status_details,
+            'response_code_description': response_code_description,
+            'ref_status_code_description': ref_status_code_description,
+        }
 
     @api.model
     def _pdp_parse_included_note(self, note_node):
