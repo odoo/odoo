@@ -344,6 +344,8 @@ class ResourceCalendar(models.Model):
         ])
 
         attendances = self.env['resource.calendar.attendance'].search(domain)
+        if not lunch:
+            attendances = attendances.sudo().filtered(lambda attendance: attendance._is_work_period())
         # Since we only have one calendar to take in account
         # Group resources per tz they will all have the same result
         resources_per_tz = defaultdict(list)

@@ -7,6 +7,7 @@ from freezegun import freeze_time
 from lxml import etree
 import pytz
 
+from odoo import Command
 from odoo.fields import Date
 from odoo.tests.common import tagged
 from odoo.addons.hr_work_entry.tests.common import TestWorkEntryBase
@@ -210,6 +211,19 @@ class TestWorkEntry(TestWorkEntryBase):
         vals_list = self.env['hr.version']._generate_work_entries_postprocess(vals_list)
         work_entry = self.env['hr.work.entry'].create(vals_list)
         self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")
+
+    def test_working_schedule_leave_is_not_counted_as_work(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Calendar',
+            'tz': 'UTC',
+            'attendance_ids': [
+                Command.create({'name': 'Monday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                Command.create({'name': 'Monday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon', 'work_entry_type_id': self.work_entry_type_leave.id}),
+            ],
+        })
+        start = datetime(2024, 9, 2, 0, 0, 0)
+        end = datetime(2024, 9, 2, 23, 59, 59)
+        self.assertEqual(calendar.get_work_hours_count(start, end), 4.0)
 
     def test_work_entry_different_calendars(self):
         """ Test work entries are correctly created for employees with versions that have different calendar types. """
