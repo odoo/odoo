@@ -340,7 +340,9 @@ registerWebsitePreviewTour(
                 trigger: ".o_popover iframe.o_angle_iframe",
                 content: "Change angle",
                 async run({ waitUntil }) {
-                    await setIframeInput(this.anchor, "input[name='angle_input']", 50, waitUntil);
+                    await setIframeInput(this.anchor, "input[name='angle_input']", 50, waitUntil, {
+                        eventType: "input",
+                    });
                     document.querySelector(".o_color_picker_inputs").click();
                 },
             },
