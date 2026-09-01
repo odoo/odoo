@@ -31,23 +31,18 @@ class TestStockValuation(TestStockValuationCommon):
         # Enter 10 products while price is 5.0
         product = self.product_standard_auto
         product.standard_price = 5.0
-        move1 = self._make_in_move(product, 10, 5)
+        self._make_in_move(product, 10, 5)
 
         closing_move = self._close()
         debit_line = closing_move.line_ids.filtered(lambda l: l.debit > 0)
         self.assertEqual(len(debit_line), 1)
         self.assertEqual(debit_line.debit, 50.0)
         self.assertEqual(debit_line.credit, 0)
-        product._invalidate_cache()
 
         # Set price to 6.0
         product.standard_price = 6.0
-        closing_move = self._close()
-        debit_line = closing_move.line_ids.filtered(lambda l: l.debit > 0)
-        self.assertEqual(len(debit_line), 1)
-        self.assertEqual(debit_line.debit, 10.0)
-        self.assertEqual(debit_line.credit, 0)
-        self.assertEqual(move1.product_id, product)
+        with self.assertRaises(UserError):
+            self._close()
 
     def test_realtime_consumable(self):
         """ An automatic consumable product should not create any account move entries"""

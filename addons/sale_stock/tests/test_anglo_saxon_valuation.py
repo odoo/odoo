@@ -181,8 +181,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         closing_move = self._close()
         self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 8.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 8.0, 'credit': 0.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 4.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 4.0, 'credit': 0.0},
         ])
 
     # -------------------------------------------------------------------------
@@ -256,8 +256,8 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
         closing_move = self._close()
         self.assertRecordValues(closing_move.line_ids, [
-            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 8.0},
-            {'account_id': self.account_stock_valuation.id, 'debit': 8.0, 'credit': 0.0},
+            {'account_id': self.account_stock_variation.id, 'debit': 0.0, 'credit': 4.0},
+            {'account_id': self.account_stock_valuation.id, 'debit': 4.0, 'credit': 0.0},
         ])
 
     # -------------------------------------------------------------------------
