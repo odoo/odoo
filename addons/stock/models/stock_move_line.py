@@ -1126,14 +1126,12 @@ class StockMoveLine(models.Model):
 
     def _post_put_in_pack_hook(self, package):
         if package and self.picking_type_id.auto_print_package_label:
-            if self.picking_type_id.package_label_to_print == 'pdf':
-                action = self.env.ref("stock.action_report_package_barcode_small").report_action(package.id, config=False)
-            elif self.picking_type_id.package_label_to_print == 'zpl':
-                action = self.env.ref("stock.label_package_template").report_action(package.id, config=False)
-            if action:
-                action.update({'close_on_report_download': True})
-                clean_action(action, self.env)
-                return action
+            print_format = self.picking_type_id.package_label_to_print
+            if print_format in ('pdf', 'zpl'):
+                action = self.env['stock.package.label.layout']._process_package_labels(package, print_format)
+                if action:
+                    clean_action(action, self.env)
+                    return action
         return package
 
     def action_put_in_pack(self, *, package_id=False, package_type_id=False, package_name=False, package_capacity=None):

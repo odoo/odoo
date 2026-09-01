@@ -1909,18 +1909,18 @@ class StockPicking(models.Model):
 
         pickings_print_product_label = self.filtered(lambda p: p.picking_type_id.auto_print_product_labels)
         pickings_by_print_formats = pickings_print_product_label.grouped(lambda p: p.picking_type_id.product_label_format)
-        for print_format in pickings_print_product_label.picking_type_id.mapped("product_label_format"):
-            pickings = pickings_by_print_formats.get(print_format)
+        for product_label_format in pickings_print_product_label.picking_type_id.mapped("product_label_format"):
+            pickings = pickings_by_print_formats.get(product_label_format)
+            label_options = self.env['stock.picking.type']._get_product_label_format_options(product_label_format)
             wizard = self.env['product.label.layout'].create({
                 'product_ids': pickings.move_ids.product_id.ids,
                 'move_ids': pickings.move_ids.ids,
                 'move_quantity': 'move',
-                'print_format': pickings.picking_type_id.product_label_format,
+                **label_options,
             })
             action = wizard.process()
             if action:
-                clean_action(action, self.env)
-                report_actions.append(action)
+                report_actions.append(clean_action(action, self.env))
         if self.env.user.has_group('stock.group_production_lot'):
             pickings_print_lot_label = self.filtered(lambda p: p.picking_type_id.auto_print_lot_labels and p.move_line_ids.lot_id)
             pickings_by_print_formats = pickings_print_lot_label.grouped(lambda p: p.picking_type_id.lot_label_format)

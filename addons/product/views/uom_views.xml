@@ -51,6 +51,19 @@
         <field name="view_id" ref="product.product_uom_list_view"/>
     </record>
 
+    <record id="action_product_uom_print_labels" model="ir.actions.server">
+        <field name="name">Print Labels</field>
+        <field name="model_id" ref="product.model_product_uom"/>
+        <field name="binding_model_id" ref="product.model_product_uom"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_open_label_layout()
+        </field>
+    </record>
+
     <record id="uom_uom_view_form" model="ir.ui.view">
         <field name="name">uom.uom.view.form.inherit.product</field>
         <field name="model">uom.uom</field>

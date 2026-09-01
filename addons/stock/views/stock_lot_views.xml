@@ -185,6 +185,26 @@
         </field>
     </record>
 
+    <record id="action_print_lot_label_pdf" model="ir.actions.server">
+        <field name="name">Lot/Serial Number (PDF)</field>
+        <field name="model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['lot.label.layout']._process_lot_labels(records, '4x12')</field>
+    </record>
+
+    <record id="action_print_lot_label_zpl" model="ir.actions.server">
+        <field name="name">Lot/Serial Number (ZPL)</field>
+        <field name="model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['lot.label.layout']._process_lot_labels(records, 'zpl')</field>
+    </record>
+
     <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
         parent="menu_stock_inventory_control" groups="stock.group_production_lot"
         sequence="101"/>

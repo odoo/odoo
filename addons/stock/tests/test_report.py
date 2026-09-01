@@ -84,24 +84,70 @@ class TestReports(TestReportsCommon):
         wrong_xz_count = findall(r'\^XZ[^\\]+[^n]', str(zpl_rendered_template))
         self.assertFalse(wrong_xz_count, "invalid closure command")
 
+    def _assert_zpl_contains(self, rendering, expected_fragments, message):
+        rendering = rendering.replace(b' ', b'')
+        for fragment, count in expected_fragments:
+            with self.subTest(fragment=fragment):
+                self.assertEqual(
+                    rendering.count(fragment),
+                    count,
+                    message,
+                )
+        return rendering
+
+    def _prepare_product_label_data(self, product, barcode_quantities):
+        wizard = self.env['product.label.layout'].create({
+            'product_tmpl_ids': product.product_tmpl_id.ids,
+            'print_format': 'zpl',
+        })
+        _xml_id, data = wizard._prepare_report_data()
+        data['labels'] = [
+            wizard._prepare_label_values(
+                product.product_tmpl_id,
+                barcode,
+                quantity,
+                wizard.packaging_id,
+            )
+            for barcode, quantity in barcode_quantities
+        ]
+        return data
+
     def test_product_label_reports(self):
         """ Test that all the special characters are correctly rendered for the product name, the default code and the barcode.
             In this test we test that the double quote is rendered correctly.
         """
         report = self.env.ref('product.report_product_template_label_zpl')
-        target = b'\n\n^XA^CI28\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n^FO35,77^BY2^BCN,100,Y,N,N^FDscan""me^FS\n^XZ\n\n\n^XA^CI28\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n^FO35,77^BY2^BCN,100,Y,N,N^FDscan""me^FS\n^XZ\n'
-        rendering, qweb_type = report._render_qweb_text('product.report_product_template_label_zpl', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 2}, 'active_model': 'product.template', 'zpl_template': 'normal'})
+        data = self._prepare_product_label_data(self.product1, [(self.product1.barcode, 2)])
+        rendering, qweb_type = report._render_qweb_text(
+            'product.report_product_template_label_zpl', self.product1.product_tmpl_id.id, data,
+        )
         self._check_closure_commands(rendering)
-        self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
+        self._assert_zpl_contains(rendering, [
+            (b'^XA^CI28', 2),
+            (b'Mellohi"', 2),
+            (b'C4181234""154654654654', 2),
+            (b'scan""me', 2),
+        ], 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
     def test_product_label_custom_barcode_reports(self):
         """ Test that the custom barcodes are correctly rendered with special characters."""
         report = self.env.ref('product.report_product_template_label_zpl')
-        target = b'\n\n^XA^CI28\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n^FO35,77^BY2^BCN,100,Y,N,N^FD123"barcode^FS\n^XZ\n\n\n^XA^CI28\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n^FO35,77^BY2^BCN,100,Y,N,N^FD123"barcode^FS\n^XZ\n\n\n^XA^CI28\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n^FO35,77^BY2^BCN,100,Y,N,N^FDbarcode"456^FS\n^XZ\n\n\n^XA^CI28\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n^FO35,77^BY2^BCN,100,Y,N,N^FDbarcode"456^FS\n^XZ\n'
-        rendering, qweb_type = report._render_qweb_text('product.report_product_template_label_zpl', self.product1.product_tmpl_id.id, {'custom_barcodes': {self.product1.product_tmpl_id.id: [('123"barcode', 2), ('barcode"456', 2)]}, 'quantity_by_product': {}, 'active_model': 'product.template', 'zpl_template': 'normal'})
+        data = self._prepare_product_label_data(
+            self.product1,
+            [('123"barcode', 2), ('barcode"456', 2)],
+        )
+        rendering, qweb_type = report._render_qweb_text(
+            'product.report_product_template_label_zpl', self.product1.product_tmpl_id.id, data,
+        )
         self._check_closure_commands(rendering)
-        self.assertEqual(target, rendering.replace(b' ', b''), 'Custom barcodes are most likely not corretly rendered, make sure the quotes are escaped correctly')
+        self._assert_zpl_contains(rendering, [
+            (b'^XA^CI28', 4),
+            (b'Mellohi"', 4),
+            (b'C4181234""154654654654', 4),
+            (b'123"barcode', 2),
+            (b'barcode"456', 2),
+        ], 'Custom barcodes are most likely not correctly rendered, make sure the quotes are escaped correctly')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
     def test_reports_with_special_characters(self):
@@ -117,14 +163,23 @@ class TestReports(TestReportsCommon):
             'name': 'Volume-Beta"',
             'product_id': product_test.id,
         })
-        #add group to the user
-        self.env.user.group_ids += self.env.ref('stock.group_stock_lot_print_gs1')
-        report = self.env.ref('stock.label_lot_template')
-        target = b'\n\n^XA^CI28\n^FO100,50\n^A0N,44,33^FD[C4181234""154654654654]Mellohi"^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta"^FS\n\n^FO425,150^BY3\n^BXN,8,200\n^FD010974521379614210Volume-Beta"^FS\n^XZ\n'
-
-        rendering, qweb_type = report._render_qweb_text('stock.label_lot_template', lot1.id)
+        wizard = self.env['lot.label.layout'].create({
+            'lot_ids': lot1.ids,
+            'print_format': 'zpl',
+        })
+        report_xml_id, data = wizard._prepare_report_data()
+        report = self.env.ref(report_xml_id)
+        rendering, qweb_type = report._render_qweb_text(
+            report_xml_id, None, data=data,
+        )
         self._check_closure_commands(rendering)
-        self.assertEqual(target, rendering.replace(b' ', b''), 'The rendering is not good, make sure quotes are correctly escaped')
+        self._assert_zpl_contains(rendering, [
+            (b'^XA^CI28', 1),
+            (b'Mellohi"', 1),
+            (b'C4181234""154654654654', 1),
+            (b'Volume-Beta"', 2),
+            (b'^BCN', 1),
+        ], 'The rendering is not good, make sure quotes are correctly escaped')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
     def test_reports_product_no_barcode(self):
@@ -132,9 +187,16 @@ class TestReports(TestReportsCommon):
         """
         report = self.env.ref('product.report_product_template_label_zpl')
         self.product1.barcode = False
-        target = b'\n\n^XA^CI28\n\n^FT35,40^A0N,25^FD[C4181234""154654654654]Mellohi"^FS\n^XZ\n'
-        rendering, qweb_type = report._render_qweb_text('product.report_product_template_label_zpl', self.product1.product_tmpl_id.id, {'quantity_by_product': {self.product1.product_tmpl_id.id: 1}, 'active_model': 'product.template', 'zpl_template': 'normal'})
-        self.assertEqual(target, rendering.replace(b' ', b''), 'Product name, default code or barcode is not correctly rendered, make sure the quotes are escaped correctly')
+        data = self._prepare_product_label_data(self.product1, [(False, 1)])
+        rendering, qweb_type = report._render_qweb_text(
+            'product.report_product_template_label_zpl', self.product1.product_tmpl_id.id, data,
+        )
+        rendering = self._assert_zpl_contains(rendering, [
+            (b'^XA^CI28', 1),
+            (b'Mellohi"', 1),
+            (b'C4181234""154654654654', 1),
+        ], 'Product name or default code is not correctly rendered, make sure the quotes are escaped correctly')
+        self.assertNotIn(b'^BCN', rendering, 'Barcode command should not be rendered for a product without barcode')
         self.assertEqual(qweb_type, 'text', 'the report type is not good')
 
     def test_report_quantity_1(self):

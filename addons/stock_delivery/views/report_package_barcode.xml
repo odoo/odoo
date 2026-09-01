@@ -1,27 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="label_package_template_view_delivery" inherit_id="stock.label_package_template_view">
-        <xpath expr="//t[@name='datamatrix_pack_date']" position="after">
-            <t t-if="package.shipping_weight or package.weight">
-                <t t-if="package.shipping_weight" t-set="weight_str" t-value="str(int(package.shipping_weight/package.weight_uom_rounding))"/>
-                <t t-else="" t-set="weight_str" t-value="str(int(package.weight/package.weight_uom_rounding))"/>
-                <t t-if="len(weight_str) &lt;= 6">
-                    <t t-if="package.weight_is_kg" t-set="barcode" t-value="barcode + '310'"/>
-                    <t t-else="" t-set="barcode" t-value="barcode + '320'"/>
-                    <t t-set="barcode" t-value="barcode + str(len(str(package.weight_uom_rounding).split('.')[1]))"/>
-                    <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(weight_str))) + weight_str"/>
-                </t>
-^FO310,200
-                <t t-if="package.shipping_weight">
-^A0N,44,33^FDShipping Weight: <t t-out="package.shipping_weight"/> <t t-out="package.weight_uom_name"/>^FS
-                </t>
-                <t t-else="">
-^A0N,44,33^FDWeight: <t t-out="package.weight"/> <t t-out="package.weight_uom_name"/>^FS
-                </t>
-            </t>
-        </xpath>
-    </template>
-
     <template id="report_package_barcode_delivery" inherit_id="stock.report_package_barcode">
         <xpath expr="//div[@name='datamatrix_barcode']" position="before">
             <t t-if="o.shipping_weight or o.weight">
@@ -52,27 +30,20 @@
         </xpath>
     </template>
 
-    <template id="report_package_barcode_small_delivery" inherit_id="stock.report_package_barcode_small">
-        <xpath expr="//div[@name='datamatrix_barcode']" position="before">
-            <t t-if="o.shipping_weight or o.weight">
-                <t t-if="o.shipping_weight" t-set="weight_str" t-value="str(int(o.shipping_weight/o.weight_uom_rounding))"/>
-                <t t-else="" t-set="weight_str" t-value="str(int(o.weight/o.weight_uom_rounding))"/>
-                <t t-if="len(weight_str) &lt;= 6">
-                    <t t-if="o.weight_is_kg" t-set="barcode" t-value="barcode + '310'"/>
-                    <t t-else="" t-set="barcode" t-value="barcode + '320'"/>
-                    <t t-set="barcode" t-value="barcode + str(len(str(o.weight_uom_rounding).split('.')[1]))"/>
-                    <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(weight_str))) + weight_str"/>
-                </t>
+    <template id="package_zpl_label_delivery" inherit_id="stock.package_zpl_label">
+        <xpath expr="//t[@t-if=&quot;label['package_type']&quot;]" position="after">
+            <t t-if="label.get('weight_text')">
+^FO310,200^A0N,44,33^FD<t t-out="label['weight_text']"/>^FS
             </t>
         </xpath>
-        <xpath expr="//div[@name='datamatrix_pack_type']" position="after">
-            <div t-if="o.shipping_weight" class="row">Shipping Weight: <span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
-            <div t-elif="o.weight" class="row">Weight: <span t-field="o.weight"/> <t t-out="o.weight_uom_name"/></div>
+    </template>
+
+    <template id="package_pdf_label_delivery" inherit_id="stock.package_pdf_label">
+        <xpath expr="(//div[@t-if=&quot;label['package_type']&quot;])[1]" position="after">
+            <div t-if="label.get('weight_text')" t-out="label['weight_text']"/>
         </xpath>
-        <xpath expr="//div[hasclass('o_packaging_type')]" position="after">
-            <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
-                <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Shipping Weight: </span><span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
-            </div>
+        <xpath expr="(//div[@t-if=&quot;label['package_type']&quot;])[2]" position="after">
+            <div t-if="label.get('weight_text')" style="font-size: 24px; font-weight: bold;" t-out="label['weight_text']"/>
         </xpath>
     </template>
 </odoo>

@@ -1,45 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <template id="label_lot_template_view">
-            <t t-foreach="docs" t-as="lot">
-                <t t-translation="off">
-^XA^CI28
-^FO100,50
-^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
-^FO100,100
-^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
-                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
-                        <t t-set="final_barcode" t-value="''" />
-                        <t t-if="lot['lot_record'].product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(lot['lot_record'].product_id.barcode)) + lot['lot_record'].product_id.barcode"/>
-                        <!-- TODO: must keep lot/sn as last value in barcode because we cannot pad '0's without changing lot/sn name until we can scan in FNC1. -->
-                        <t t-if="lot['lot_record'].product_id.tracking == 'lot'" name="datamatrix_lot" t-set="final_barcode" t-value="(final_barcode or '') + '10' + lot['name']"/>
-                        <t t-elif="lot['lot_record'].product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + lot['name']"/>
-^FO425,150^BY3
-^BXN,8,200
-^FD<t t-out="final_barcode"/>^FS
-                    </t>
-                    <t t-else="" name="code128_barcode">
-^FO100,150^BY3
-^BCN,100,Y,N,N
-^FD<t t-out="lot['name']"/>^FS
-                    </t>
-^XZ
+        <template id="lot_barcode_alternative_label">
+            <t t-translation="off">
+^PW406
+^LL203
+^FO14,23^A0N,23^FB235,1,0,L^FD<t t-out="name"/>^FS
+                <t t-if="barcode_value">
+^FO24,67^BY2^BCN,74,N^FD<t t-out="barcode_value"/>^FS
+^FO14,159^A0N,21,16^FB170,1,0,L^FD<t t-out="barcode_value"/>^FS
+                </t>
+                <t t-else="">
+^FO14,90^A0N,22^FB378,1,0,C^FDNo barcode available^FS
+                </t>
+                <t t-if="reference">
+^FO222,159^A0N,21,16^FB170,1,0,R^FD<t t-out="reference"/>^FS
                 </t>
             </t>
         </template>
-        <template id="label_location_template_view">
-            <t t-foreach="docs" t-as="location">
-                <t t-translation="off">
-^XA^CI28
-^FO100,50
-^A0N,44,33^FD<t t-out="location.display_name"/>^FS
-^FO100,150^BY3
-^BCN,100,Y,N,N
-^FD<t t-out="location.barcode or location.name"/>^FS
-^XZ
+
+        <template id="lot_qr_alternative_label">
+            <t t-translation="off">
+^PW406
+^LL203
+                <t t-if="barcode_value">
+^FO5,17^BXN,4,200,36,36^FD<t t-out="barcode_value"/>^FS
+^FO5,165^A0N,16^FB140,1,0,C^FD<t t-out="label['barcode_text'][:18]"/>^FS
+                </t>
+                <t name="label_name">
+^FO155,21^A0N,22^TBN,246,23^FD<t t-out="name"/>^FS
+                </t>
+                <t t-if="reference">
+^FO155,44,0^A0N,16,13^TBN,246,17^FD<t t-out="reference"/>^FS
                 </t>
             </t>
         </template>
+
     </data>
 </odoo>

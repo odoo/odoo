@@ -35,4 +35,23 @@
             </list>
         </field>
     </record>
+    <record id="action_print_package_history_label_pdf" model="ir.actions.server">
+        <field name="name">Package Barcode (PDF)</field>
+        <field name="model_id" ref="stock.model_stock_package_history"/>
+        <field name="binding_model_id" ref="stock.model_stock_package_history"/>
+        <field name="binding_view_types">list</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['stock.package.label.layout']._process_package_labels(records.package_id, 'pdf')</field>
+    </record>
+
+    <record id="action_print_package_history_label_zpl" model="ir.actions.server">
+        <field name="name">Package Barcode (ZPL)</field>
+        <field name="model_id" ref="stock.model_stock_package_history"/>
+        <field name="binding_model_id" ref="stock.model_stock_package_history"/>
+        <field name="binding_view_types">list</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['stock.package.label.layout']._process_package_labels(records.package_id, 'zpl')</field>
+    </record>
 </odoo>

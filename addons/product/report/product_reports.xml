@@ -15,45 +15,14 @@
             <field name="disable_shrinking" eval="True"/>
             <field name="dpi">96</field>
         </record>
-        <record id="report_product_template_label_2x7" model="ir.actions.report">
-            <field name="name">Product Label 2x7 (PDF)</field>
+        <record id="action_report_product_label_pdf" model="ir.actions.report">
+            <field name="name">Product Labels (PDF)</field>
             <field name="model">product.template</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">product.report_producttemplatelabel2x7</field>
+            <field name="report_name">product.report_product_label_pdf</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
             <field name="binding_model_id" eval="False"/>
-            <field name="binding_type">report</field>
-        </record>
-        <record id="report_product_template_label_4x7" model="ir.actions.report">
-            <field name="name">Product Label 4x7 (PDF)</field>
-            <field name="model">product.template</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">product.report_producttemplatelabel4x7</field>
-            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
-            <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
-            <field name="binding_model_id" eval="False"/>
-            <field name="binding_type">report</field>
-        </record>
-        <record id="report_product_template_label_4x12" model="ir.actions.report">
-            <field name="name">Product Label 4x12 (PDF)</field>
-            <field name="model">product.template</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">product.report_producttemplatelabel4x12</field>
-            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
-            <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
-            <field name="binding_model_id" eval="False"/>
-            <field name="binding_type">report</field>
-        </record>
-
-        <record id="report_product_packaging" model="ir.actions.report">
-            <field name="name">Packaging Barcodes (PDF)</field>
-            <field name="model">product.uom</field>
-            <field name="report_type">qweb-pdf</field>
-            <field name="report_name">product.report_packagingbarcode</field>
-            <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
-            <field name="print_report_name">'Products packaging - %s' % (object.uom_id.name)</field>
-            <field name="binding_model_id" ref="product.model_product_uom"/>
             <field name="binding_type">report</field>
         </record>
 
@@ -79,13 +48,14 @@
             <field name="dpi">96</field>
         </record>
 
-        <record id="report_product_template_label_dymo" model="ir.actions.report">
-            <field name="name">Product Label (PDF)</field>
+        <record id="action_report_product_label_dymo" model="ir.actions.report">
+            <field name="name">Product Labels (Dymo)</field>
             <field name="model">product.template</field>
             <field name="report_type">qweb-pdf</field>
-            <field name="report_name">product.report_producttemplatelabel_dymo</field>
+            <field name="report_name">product.report_product_label_dymo</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet_dymo"/>
             <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
+            <field name="binding_model_id" eval="False"/>
             <field name="binding_type">report</field>
         </record>
 
@@ -93,7 +63,7 @@
             <field name="name">Product Label (ZPL)</field>
             <field name="model">product.product</field>
             <field name="report_type">qweb-text</field>
-            <field name="report_name">product.report_producttemplatelabel_zpl</field>
+            <field name="report_name">product.report_product_label_zpl</field>
             <field name="binding_model_id" eval="False"/>
             <field name="binding_type">report</field>
         </record>
