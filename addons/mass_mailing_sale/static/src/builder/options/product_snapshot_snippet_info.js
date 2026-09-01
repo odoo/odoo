@@ -3,15 +3,7 @@ import { registry } from "@web/core/registry";
 import { formatMonetary } from "@web/views/fields/formatters";
 
 export const productSnapshotSnippetInfo = {
-    fields: [
-        "id",
-        "display_name",
-        "name",
-        "description_sale",
-        "list_price",
-        "currency_id",
-        "standard_price",
-    ],
+    fields: ["id", "display_name", "name", "description_sale", "list_price", "currency_id"],
     get modelDisplayName() {
         return _t("Product");
     },
@@ -26,10 +18,6 @@ export const productSnapshotSnippetInfo = {
         }
     },
     additionalRenderingContext: async (record) => ({
-        standardPrice: formatMonetary(record.standard_price, {
-            currencyId: record.currency_id[0],
-            trailingZeros: false,
-        }),
         listPrice: formatMonetary(record.list_price, {
             currencyId: record.currency_id[0],
             trailingZeros: false,
