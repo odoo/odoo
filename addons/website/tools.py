@@ -236,3 +236,27 @@ def create_image_attachment(env, image_path, image_name):
         'url': Attachments.get_base_url() + image_path,
     })
     return img
+
+
+def add_seo_rels_to_links(html_template):
+    """
+    Add 'nofollow', 'noopener', 'noreferrer', and 'ugc' to anchor tags.
+    This is useful to prevent users from harming SEO.
+
+    :param html_template: the html code to edit
+    :return: the updated html template
+    """
+    try:
+        tree = html.fragment_fromstring(str(html_template), create_parent="template")
+    except etree.ParserError:
+        return html_template
+    links = list(tree.iter('a'))
+    if not links:
+        return html_template
+    for link in links:
+        old_values = set(link.get("rel", "").split())
+        old_values.update(('nofollow', 'noopener', 'noreferrer', 'ugc'))
+        link.set("rel", " ".join(sorted(old_values)))
+    result = html.tostring(tree, encoding="unicode")
+    result = result[10:-11]
+    return type(html_template)(result)

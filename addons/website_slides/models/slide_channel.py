@@ -36,6 +36,7 @@ class SlideChannel(models.Model):
     _website_track_field = 'slide_channel_id'
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
+    _add_seo_rels = True
 
     _CUSTOMER_HEADERS_LIMIT_COUNT = 0  # never use X-Msg-To headers
 

@@ -11,6 +11,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.fields import Domain
 from odoo.tools import sql, SQL
 from odoo.tools.mail import email_normalize, formataddr
+from odoo.addons.website.tools import add_seo_rels_to_links
 
 _logger = logging.getLogger(__name__)
 
@@ -499,12 +500,8 @@ class ForumPost(models.Model):
 
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
-        if content and self.env.user.karma < forum.karma_dofollow:
-            for match in re.findall(r'<a\s.*href=".*?">', content):
-                escaped_match = re.escape(match)  # replace parenthesis or special char in regex
-                url_match = re.match(r'^.*href="(.*)".*', match) # extracting the link allows to rebuild a clean link tag
-                url = url_match.group(1)
-                content = re.sub(escaped_match, f'<a rel="nofollow" href="{url}">', content)
+        if content:
+            content = add_seo_rels_to_links(content)
 
         if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'
