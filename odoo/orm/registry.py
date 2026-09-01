@@ -202,6 +202,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                             _logger.info("Force module updates, some modules must be installed/uninstalled/upgraded")
                             update_module = True
                 if update_module:
+                    cr.execute("SELECT pg_advisory_unlock_shared(hashtext('registry_loading'))", log_exceptions=False)
                     try:
                         logger_level = logging.WARNING
                         cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))", log_exceptions=False)
