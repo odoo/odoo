@@ -3476,7 +3476,14 @@ class MailThread(models.AbstractModel):
             ]
             # sudo: mail.notification - creating notifications is the purpose of notify methods
             self.env["mail.notification"].sudo().create(notif_create_values)
-            users = self.env["res.users"].browse(i[1] for i in inbox_pids_uids if i[1])
+            # sudo: res.users - can read users of recipients to notify them
+            users = (
+                self.env["res.partner"]
+                .browse(pid for pid, _uid in inbox_pids_uids)
+                .sudo()
+                .with_context(active_test=True)
+                .user_ids
+            )
             followers = Store.LazyValue(
                 lambda: (
                     self.env["mail.followers"]
