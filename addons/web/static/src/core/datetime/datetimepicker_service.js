@@ -245,6 +245,10 @@ export const datetimePickerService = {
                     switch (ev.key) {
                         case "Enter":
                         case "Escape": {
+                            const abort = updateValueFromInputs();
+                            if (abort) {
+                                return;
+                            }
                             return saveAndClose();
                         }
                         case "Tab": {
