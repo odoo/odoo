@@ -406,6 +406,7 @@ class ProductProduct(models.Model):
         value_by_product_id = {}
         quantity_by_product_id = {}
         date_by_product_id = {}
+        batch_size = 50000
 
         if not at_date and not force_recompute:
             std_price_by_product_id = {p.id: p.standard_price for p in self}
@@ -428,20 +429,53 @@ class ProductProduct(models.Model):
 
         last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
         oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
-        if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
+        manual_value_products = self.env['product.product'].concat(*last_manual_value_by_product.keys())
+        if oldest_manual_value and manual_value_products == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
-        product_ids_by_manual_value_date = defaultdict(list)
-        if not lot:
-            for manual_value in last_manual_value_by_product.values():
-                product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
+        manual_value_quantity_by_product = defaultdict(float)
+        if manual_value_products and not lot:
+            domain_quant_loc, domain_move_in_loc, domain_move_out_loc = manual_value_products._get_domain_locations()
+            domain_quant = [('product_id', 'in', manual_value_products.ids), ('owner_id', '=', False)] + domain_quant_loc
+            domain_move = [
+                ('product_id', 'in', manual_value_products.ids), ('move_line_ids.owner_id', '=', False),
+                ('state', '=', 'done'), ('date', '>', oldest_manual_value)
+            ]
+            domain_move_in_done = domain_move_in_loc + domain_move
+            domain_move_out_done = domain_move_out_loc + domain_move
+            quants = self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum'])
+            in_moves = self.env['stock.move'].search_fetch(domain_move_in_done, field_names=['id'], order='product_id, date, id')
+            out_moves = self.env['stock.move'].search_fetch(domain_move_out_done, field_names=['id'], order='product_id, date, id')
+
+            for product, quantity in quants:
+                manual_value_quantity_by_product[product.id] = quantity
+
+            product = False
+            mult = -1.0
+            out_id = out_moves.ids[0] if out_moves else False
+            for moves_batch in split_every(batch_size, in_moves.ids + out_moves.ids):
+                moves_batch = self.env['stock.move'].browse(moves_batch)
+                moves_batch.fetch(['product_id', 'product_uom', 'date', 'quantity'])
+
+                for move in moves_batch:
+                    if out_id and move.id == out_id:
+                        mult = 1.0
+                    if move.product_id != product:
+                        product = move.product_id
+                        valuation_from_date = last_manual_value_by_product[product].date
+                    if valuation_from_date and move.date <= valuation_from_date:
+                        continue
+                    else:
+                        manual_value_quantity_by_product[product.id] += move.product_uom._compute_quantity(move.quantity, product.uom_id) * mult
+
+                self.env['stock.move'].invalidate_model()
 
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
             if lot:
                 quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
             else:
-                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
+                quantity = manual_value_quantity_by_product[product.id]
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
@@ -461,7 +495,6 @@ class ProductProduct(models.Model):
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
 
         product, valuation_from_date = False, False
-        batch_size = 50000
 
         product_move_ids = []
         # Limit the memory usage since it's possible to have millions of stock.move
