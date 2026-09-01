@@ -12,7 +12,7 @@
                     </div>
                     <div t-if="this.pos.accessRight.canEditDetails" class="d-flex justify-content-between align-items-center">
                         <div class="partner-line-balance-mobile" t-if="this.props.isBalanceDisplayed" />
-                        <Dropdown>
+                        <Dropdown t-if="this.dropdown.isOpen" state="this.dropdown">
                             <button class="btn btn-ligth oi" data-icon="menu"/>
                             <t t-set-slot="content">
                                 <DropdownItem onSelected="() => this.props.onClickEdit(this.props.partner)">
@@ -23,6 +23,7 @@
                                 </DropdownItem>
                             </t>
                         </Dropdown>
+                        <button t-else="" class="btn btn-ligth oi dropdown o-dropdown dropdown-toggle" data-icon="menu" t-on-click.stop="() => this.dropdown.open()"/>
                     </div>
                 </div>
                 <div class="partner-line-adress p-1" t-if="this.props.partner.address" t-out="this.props.partner.address" />
@@ -68,7 +69,7 @@
                     </button>
                 </td>
                 <td t-if="this.pos.accessRight.canEditDetails" class="edit-partner-button-cell align-middle">
-                    <Dropdown>
+                    <Dropdown t-if="this.dropdown.isOpen" state="this.dropdown">
                         <button class="btn btn-light btn-lg lh-lg border float-end">
                             <i class="oi oi-fw" data-icon="menu"/>
                         </button>
@@ -81,6 +82,9 @@
                             </DropdownItem>
                         </t>
                     </Dropdown>
+                    <button t-else="" class="btn btn-light btn-lg lh-lg border float-end dropdown o-dropdown dropdown-toggle" t-on-click.stop="() => this.dropdown.open()">
+                        <i class="oi oi-fw" data-icon="menu"/>
+                    </button>
                 </td>
             </tr>
         </t>
