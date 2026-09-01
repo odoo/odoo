@@ -623,7 +623,6 @@ $o-bg-shapes-discontinued: (
 // Combines current and old bg shapes in a single map
 // format: (module_name: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
 $o-bg-shapes: (
-    'web_editor': (map-merge($o-bg-shapes-current, $o-bg-shapes-discontinued)),
     'html_builder': (map-merge($o-bg-shapes-current, $o-bg-shapes-discontinued)),
 );
 

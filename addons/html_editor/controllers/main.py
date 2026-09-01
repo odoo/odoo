@@ -566,7 +566,7 @@ class HTML_Editor(Controller):
 
         return attachments
 
-    @route(['/web_editor/shape/<module>/<path:filename>', '/html_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
+    @route(['/html_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
     def shape(self, module, filename, **kwargs):
         """
         Returns a color-customized svg (background shape or illustration).
@@ -597,9 +597,6 @@ class HTML_Editor(Controller):
 
             svg = attachment.raw.decode('utf-8')
         else:
-            # Used for compatibility
-            if module == 'web_editor':
-                module = 'html_builder'
             svg = get_shape_svg(module, 'shapes', filename)
 
         svg, options = update_svg_colors(request.env, kwargs, svg)
@@ -622,11 +619,8 @@ class HTML_Editor(Controller):
             ('Cache-control', 'max-age=%s' % STATIC_CACHE_LONG),
         ])
 
-    @route(['/web_editor/image_shape/<string:img_key>/<module>/<path:filename>', '/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
+    @route(['/html_editor/image_shape/<string:img_key>/<module>/<path:filename>'], type='http', auth="public", website=True)
     def image_shape(self, module, filename, img_key, **kwargs):
-        # Used for compatibility
-        if module == 'web_editor':
-            module = 'html_builder'
         svg = get_shape_svg(module, 'image_shapes', filename)
 
         record = request.env['ir.binary']._find_record(img_key)

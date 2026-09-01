@@ -500,21 +500,6 @@ test("change background size", async () => {
     expect(section).toHaveStyle("background-size: 1px");
 });
 
-test("background shape detection is compatible with previous ones (web_editor)", async () => {
-    await setupWebsiteBuilder(`
-        <section data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
-            <div class="o_we_shape o_html_builder_Connections_01"></div>
-            AAAA
-        </section>`);
-    await contains(":iframe section").click();
-    expect("div[data-label='Shape'] .btn-group button:first-of-type").toHaveText("Connections 01");
-    await contains("div[data-label='Shape'] .btn-group button:first-of-type").click();
-    expect("button.active[data-action-id='setBackgroundShape']").toHaveAttribute(
-        "data-action-value",
-        "html_builder/Connections/01"
-    );
-});
-
 test("can customize background shape groups", async () => {
     class CustomBackgroundShapeGroupsPlugin extends Plugin {
         static id = "customBackgroundShapeGroups";
