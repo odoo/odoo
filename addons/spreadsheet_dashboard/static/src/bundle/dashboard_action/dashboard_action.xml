@@ -75,7 +75,7 @@
     </t>
 
     <t t-name="spreadsheet_dashboard.DashboardAction.Expanded">
-        <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative pt-3 d-print-none">
+        <div class="o_spreadsheet_dashboard_search_panel o_search_panel flex-grow-0 flex-shrink-0 pe-2 pb-5 ps-4 h-100 overflow-auto position-relative pt-3 d-print-none">
             <button title="Close sidebar" aria-label="Close sidebar" t-if="!this.uiService.isSmall and this.loader.getActiveDashboard()" class="btn btn-light btn-sm d-flex end-0 m-1 mb-2 ms-auto position-absolute p-2 py-1 top-0 z-1" t-on-click="this.toggleSidebar">
                 <i class="oi oi-lg oi-filled" data-icon="left_panel_close"/>
             </button>
