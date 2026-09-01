@@ -74,11 +74,11 @@ export class FormViewDialog extends Component {
                 } else {
                     saved = await record.save({ reload: false });
                     if (saved) {
-                        this.currentResId = record.resId;
                         await this.props.onRecordSaved(record);
                     }
                 }
                 if (saved) {
+                    this.currentResId = record.resId;
                     await this.onRecordSaved(record, params);
                 }
                 return saved;

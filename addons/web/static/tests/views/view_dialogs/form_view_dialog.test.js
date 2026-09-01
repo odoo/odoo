@@ -416,6 +416,34 @@ test("new record has an expand button", async () => {
     expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
 });
 
+test("new record has an expand button with an onRecordSave prop", async () => {
+    Partner._views.form = /* xml */ `<form><field name="foo"/></form>`;
+    Partner._records = [];
+    onRpc("web_save", () => {
+        expect.step("save");
+    });
+    mockService("action", {
+        doAction(actionRequest) {
+            expect.step([
+                actionRequest.res_id,
+                actionRequest.res_model,
+                actionRequest.type,
+                actionRequest.views,
+            ]);
+        },
+    });
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        onRecordSave: (record) => record.save({ reload: false }),
+    });
+    await animationFrame();
+    await fieldInput("foo").edit("new");
+    await click(".o_dialog .modal-header .o_expand_button");
+    await animationFrame();
+    expect.verifySteps(["save", [1, "partner", "ir.actions.act_window", [[false, "form"]]]]);
+});
+
 test("existing record has an expand button", async () => {
     Partner._views.form = /* xml */ `<form><field name="foo"/></form>`;
     onRpc("web_save", () => {
