@@ -418,14 +418,12 @@ class ResourceCalendar(models.Model):
                     result_per_resource_id[resource.id] = Intervals([(start_datetime, end_datetime, dummy_attendance)], keep_distinct=True)
                 elif self.flexible_hours or (resource and resource_calendars[resource].flexible_hours):
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
-                    # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
-                    # and weekly range for time offs and overtime calculations and work entry generation
-                    start_date = start_datetime
-                    end_datetime_adjusted = end_datetime - relativedelta(seconds=1)
-                    end_date = end_datetime_adjusted
+                    # until the full time required hours are met.
+                    
+                    start_date = start_datetime.date()
+                    end_date = (end_datetime - relativedelta(seconds=1)).date()
 
                     calendar = resource_calendars[resource] if resource else self
-
                     max_hours_per_week = calendar.hours_per_week
                     max_hours_per_day = calendar.hours_per_day
 
@@ -434,7 +432,6 @@ class ResourceCalendar(models.Model):
 
                     while current_start_day <= end_date:
                         current_end_of_week = current_start_day + timedelta(days=6)
-
                         week_start = max(current_start_day, start_date)
                         week_end = min(current_end_of_week, end_date)
 
@@ -446,35 +443,35 @@ class ResourceCalendar(models.Model):
 
                         remaining_hours = max(0, max_hours_per_week - prior_hours)
                         remaining_hours = min(remaining_hours, (end_dt - start_dt).total_seconds() / 3600)
-
                         current_day = week_start
                         while current_day <= week_end:
                             if remaining_hours > 0:
-                                day_start = tz.localize(datetime.combine(current_day, time.min))
-                                day_end = tz.localize(datetime.combine(current_day, time.max))
-                                day_period_start = max(start_datetime, day_start)
-                                day_period_end = min(end_datetime, day_end)
-                                allocate_hours = min(max_hours_per_day, remaining_hours, (day_period_end - day_period_start).total_seconds() / 3600)
+                                allocate_hours = min(max_hours_per_day, remaining_hours)
                                 remaining_hours -= allocate_hours
 
-                                # Create interval centered at 12:00 PM (or as close as possible)
+                                day_start = tz.localize(datetime.combine(current_day, time.min))
+                                day_end = tz.localize(datetime.combine(current_day, time.max))
+
                                 midpoint = tz.localize(datetime.combine(current_day, time(12, 0)))
                                 start_time = midpoint - timedelta(hours=allocate_hours / 2)
                                 end_time = midpoint + timedelta(hours=allocate_hours / 2)
 
-                                if start_time < day_period_start:
-                                    start_time = day_period_start
+                                if start_time < day_start:
+                                    start_time = day_start
                                     end_time = start_time + timedelta(hours=allocate_hours)
-                                elif end_time > day_period_end:
-                                    end_time = day_period_end
+                                elif end_time > day_end:
+                                    end_time = day_end
                                     start_time = end_time - timedelta(hours=allocate_hours)
 
-                                dummy_attendance = self.env['resource.calendar.attendance'].new({
-                                    'duration_hours': allocate_hours,
-                                    'duration_days': 1,
-                                })
+                                clipped_start = max(start_time, start_datetime)
+                                clipped_end = min(end_time, end_datetime)
 
-                                intervals.append((start_time, end_time, dummy_attendance))
+                                if clipped_start < clipped_end:
+                                    dummy_attendance = self.env['resource.calendar.attendance'].new({
+                                        'duration_hours': (clipped_end - clipped_start).total_seconds() / 3600,
+                                        'duration_days': 1,
+                                    })
+                                    intervals.append((clipped_start, clipped_end, dummy_attendance))
 
                             current_day += timedelta(days=1)
 
