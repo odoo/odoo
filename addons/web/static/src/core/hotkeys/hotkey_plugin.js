@@ -118,8 +118,9 @@ export class HotkeyPlugin extends Plugin {
 
         // Special case: open hotkey overlays
         if (!this.overlaysVisible && hotkey === this.overlayModifier) {
-            this.addHotkeyOverlays(activeElement);
-            event.preventDefault();
+            if (this.addHotkeyOverlays(activeElement)) {
+                event.preventDefault();
+            }
             return;
         }
 
@@ -258,6 +259,7 @@ export class HotkeyPlugin extends Plugin {
     /**
      * Add the hotkey overlays respecting the ui active element.
      * @param {HTMLElement} activeElement
+     * @returns {boolean} true if overlays were actually displayed
      * @private
      */
     addHotkeyOverlays(activeElement) {
@@ -280,6 +282,9 @@ export class HotkeyPlugin extends Plugin {
         ).map((el) => ({ hotkey: el.dataset.hotkey, el }));
 
         const items = [...hotkeysFromDomToHighlight, ...hotkeysFromHookToHighlight];
+        if (!items.length) {
+            return false;
+        }
         for (const item of items) {
             const hotkey = item.hotkey;
             const overlay = document.createElement("div");
@@ -321,6 +326,7 @@ export class HotkeyPlugin extends Plugin {
             overlayParent.appendChild(overlay);
         }
         this.overlaysVisible = true;
+        return true;
     }
 
     /**
