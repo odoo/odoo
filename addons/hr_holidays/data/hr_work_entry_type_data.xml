@@ -831,6 +831,14 @@
         <field name="country_id" ref="base.hk"/>
     </record>
 
+    <record id="hr_work_entry.l10n_hk_work_entry_type_work_injury_sick_leave_80" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="support_document">True</field>
+        <field name="country_id" ref="base.hk"/>
+    </record>
+
     <record id="hr_work_entry.hk_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
         <field name="request_unit">half_day</field>
