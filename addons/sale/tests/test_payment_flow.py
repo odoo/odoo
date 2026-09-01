@@ -278,7 +278,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             reference="First partial payment",
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            self._run_post_processing(first_tx)
+            self._run_post_processing()
         self.assertEqual(first_tx.invoice_ids.amount_total, 200.0)
 
         second_tx = self._create_transaction(
@@ -289,7 +289,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             reference="Second partial payment",
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            self._run_post_processing(second_tx)
+            self._run_post_processing()
         self.assertEqual(second_tx.invoice_ids.amount_total, 300.0)
 
         third_tx = self._create_transaction(
@@ -300,7 +300,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             reference="Third partial payment",
         )
         with mute_logger("odoo.addons.sale.models.payment_transaction"):
-            self._run_post_processing(third_tx)
+            self._run_post_processing()
         self.assertEqual(third_tx.invoice_ids.amount_total, 225.0)
 
         self.assertEqual(sum(self.sale_order.invoice_ids.mapped("amount_total")), 725.0)
