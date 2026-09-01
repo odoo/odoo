@@ -565,3 +565,109 @@ class TestTransferWizard(AccountTestInvoicingCommon):
             {'balance': 2000, 'analytic_distribution': {str(self.analytic_account_1.id): 50, str(self.analytic_account_2.id): 50}},
             {'balance': 1000, 'analytic_distribution': False},
         ])
+
+    def test_change_period_two_customer_invoices(self):
+        """Test _do_action_change_period with customer invoices selecting their receivable
+        lines. Two adjusting entries should be created. Each selected receivable line and its
+        reversal should be reconciled together (2 by 2), while the original invoice receivable
+        lines must remain unreconciled."""
+        accrual_account = self.env['account.account'].create({
+            'name': 'Test Accrual Account',
+            'code': 'TESTACC001',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+
+        invoice_1, invoice_2, invoice_3 = self.env['account.move'].create([
+            {
+                'name': 'inv/001',
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2024-01-15',
+                'invoice_line_ids': [Command.create({
+                    'quantity': 1,
+                    'price_unit': 1000.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [],
+                })],
+            },
+            {
+                'name': 'inv/002',
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2024-01-15',
+                'invoice_line_ids': [Command.create({
+                    'quantity': 1,
+                    'price_unit': 1000.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [],
+                })],
+            },
+            {
+                'name': 'inv/003',
+                'move_type': 'out_invoice',
+                'partner_id': self.partner_b.id,
+                'invoice_date': '2024-01-15',
+                'invoice_payment_term_id': False,
+                'invoice_line_ids': [Command.create({
+                    'quantity': 1,
+                    'price_unit': 2000.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [],
+                })],
+            },
+        ])
+        (invoice_1 + invoice_2 + invoice_3).action_post()
+
+        receivable_lines = (invoice_1 + invoice_2 + invoice_3).line_ids.filtered(
+            lambda l: l.account_id.account_type == 'asset_receivable'
+        )
+
+        wizard = self.env['account.automatic.entry.wizard'].with_context(
+            active_model='account.move.line',
+            active_ids=receivable_lines.ids,
+        ).create({
+            'action': 'change_period',
+            'date': '2024-01-31',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'expense_accrual_account': accrual_account.id,
+        })
+
+        wizard_res = wizard.do_action()
+
+        # Original invoice receivable lines must remain unreconciled (customer still owes)
+        self.assertFalse(any(line.reconciled for line in receivable_lines))
+
+        created_moves = self.env['account.move'].browse(wizard_res['domain'][0][2])
+        self.assertEqual(len(created_moves), 2)
+
+        destination_move = created_moves[0]
+        # one receivable + accrual pair per invoice
+        self.assertRecordValues(destination_move.line_ids, [
+            {'balance':  1000.0, 'account_id': self.receivable_account.id},
+            {'balance': -1000.0, 'account_id': accrual_account.id},
+            {'balance':  1000.0, 'account_id': self.receivable_account.id},
+            {'balance': -1000.0, 'account_id': accrual_account.id},
+            {'balance':  2000.0, 'account_id': self.partner_b.property_account_receivable_id.id},
+            {'balance': -2000.0, 'account_id': accrual_account.id},
+        ])
+
+        accrual_move = created_moves[1]
+        # reversals of the same pairs
+        self.assertRecordValues(accrual_move.line_ids, [
+            {'balance': -1000.0, 'account_id': self.receivable_account.id},
+            {'balance':  1000.0, 'account_id': accrual_account.id},
+            {'balance': -1000.0, 'account_id': self.receivable_account.id},
+            {'balance':  1000.0, 'account_id': accrual_account.id},
+            {'balance': -2000.0, 'account_id': self.partner_b.property_account_receivable_id.id},
+            {'balance':  2000.0, 'account_id': accrual_account.id},
+        ])
+
+        # Each receivable line in the adjusting entries must be reconciled with its reversal
+        # (2 by 2, one pair per selected line), not cross-reconciled altogether
+        for invoice_name in (invoice_1 + invoice_2 + invoice_3).mapped('name'):
+            l1 = accrual_move.line_ids.filtered(lambda l: invoice_name in l.name)
+            l2 = destination_move.line_ids.filtered(lambda l: invoice_name in l.name)
+            self.assertTrue(all((l1+l2).mapped('reconciled')))
+            self.assertTrue(l1.full_reconcile_id == l2.full_reconcile_id)
+            self.assertEqual(l1.full_reconcile_id.reconciled_line_ids, l1 + l2)

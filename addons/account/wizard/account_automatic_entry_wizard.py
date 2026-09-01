@@ -410,20 +410,23 @@ class AccountAutomaticEntryWizard(models.TransientModel):
         created_moves._post()
 
         destination_move = created_moves[0]
-        destination_move_offset = 0
         destination_messages = []
         accrual_move_messages = defaultdict(lambda: [])
-        accrual_move_offsets = defaultdict(int)
+
+        # Reconcile lines that are exact mirrors of each other: same name, same reconcilable account.
+        # _get_move_dict_vals_change_period names each line after its source move (e.g. "Cut-off inv/001"),
+        # so grouping by (name, account) naturally pairs each destination line with its reversal
+        lines_by_key = defaultdict(lambda: self.env['account.move.line'])
+        for line in created_moves.line_ids:
+            if line.account_id.reconcile and not line.currency_id.is_zero(line.balance):
+                lines_by_key[(line.name, line.account_id)] += line
+        for lines in lines_by_key.values():
+            if len(lines) >= 2:
+                lines.reconcile()
+
         for move in self.move_line_ids.move_id:
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
             accrual_move = created_moves[1:].filtered(lambda m: m.date == self._get_lock_safe_date(move.date))
-
-            if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
-                destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
-                destination_move_offset += 2
-                accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
-                accrual_move_offsets[accrual_move] += 2
-                (accrual_move_lines + destination_move_lines).filtered(lambda line: not line.currency_id.is_zero(line.balance)).reconcile()
             body = Markup("%(title)s<ul><li>%(link1)s %(second)s</li><li>%(link2)s %(third)s</li></ul>") % {
                 'title': _("Adjusting Entries have been created for this invoice:"),
                 'link1': self._format_move_link(accrual_move),
