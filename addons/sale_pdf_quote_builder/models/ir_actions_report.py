@@ -6,6 +6,7 @@ import json
 from odoo import api, models
 from odoo.tools import format_amount, format_date, format_datetime, pdf
 from odoo.tools.pdf import (
+    DictionaryObject,
     NameObject,
     NumberObject,
     PdfFileReader,
@@ -243,6 +244,7 @@ class IrActionsReport(models.Model):
         :return: None
         """
         reader = PdfFileReader(io.BytesIO(document), strict=False)
+        INHERITABLE_TEXT_FIELD_KEYS = {"/FT", "/DA", "/Q"}
 
         field_names = set()
         if prefix:
@@ -252,27 +254,34 @@ class IrActionsReport(models.Model):
             if prefix and page.get("/Annots"):
                 # Modifying the annots that hold every information about the form fields
                 for j in range(len(page["/Annots"])):
-                    reader_annot = page["/Annots"][j].get_object()
+                    field = page["/Annots"][j].get_object()
+                    parent_field = field.get("/Parent", DictionaryObject()).get_object()
                     # Check parent object for '/T' if missing.
-                    if "/T" not in reader_annot and "/Parent" in reader_annot:
-                        reader_annot = reader_annot["/Parent"].get_object()
-                    if reader_annot.get("/T") in field_names:
+                    field_name = field.get("/T") or parent_field.get("/T")
+                    if field_name in field_names:
                         # Prefix all form fields in the document with the document identifier.
                         # This is necessary to know which value needs to be taken when filling the
                         # forms.
-                        form_key = reader_annot.get("/T")
-                        new_key = prefix + form_key
+                        new_name = prefix + field_name
 
                         # Modifying the form flags to force some characteristics
                         # 1. make all text fields read-only
                         # 2. make all text fields support multiline
-                        form_flags = reader_annot.get("/Ff", 0)
+                        form_flags = parent_field.get("/Ff", 0)
                         readonly_flag = 1  # 1st bit sets readonly
                         multiline_flag = 1 << 12  # 13th bit sets multiline text
                         new_flags = form_flags | readonly_flag | multiline_flag
 
-                        reader_annot.update({
-                            NameObject("/T"): create_string_object(new_key),
+                        field.update({
+                            NameObject("/T"): create_string_object(new_name),
                             NameObject("/Ff"): NumberObject(new_flags),
+                            # pypdf's writer keeps a deep clone of the page and excludes `/Parent`
+                            # keys which drops inherited information -> flatten inheritance first.
+                            **{
+                                NameObject(key): parent_field[key]
+                                for key in INHERITABLE_TEXT_FIELD_KEYS
+                                & parent_field.keys() - field.keys()
+                            },
                         })
+                        field.pop("/Parent", None)
             writer.add_page(page)
