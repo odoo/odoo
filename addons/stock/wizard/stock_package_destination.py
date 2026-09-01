@@ -7,7 +7,7 @@ class StockPackageDestination(models.TransientModel):
     _name = 'stock.package.destination'
     _description = 'Stock Package Destination'
 
-    move_line_ids = fields.Many2many('stock.move.line', 'Products', required=True)
+    move_line_ids = fields.Many2many('stock.move.line', string='Products', required=True)
     location_dest_id = fields.Many2one('stock.location', 'Destination location', required=True)
     filtered_location = fields.One2many(comodel_name='stock.location', compute='_compute_filtered_location')
 
