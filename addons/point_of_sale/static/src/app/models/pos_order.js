@@ -83,7 +83,6 @@ export class PosOrder extends PosOrderAccounting {
                 inputTipAmount: "",
             },
             requiredPartnerDetails: {},
-            isReprinting: false,
         };
     }
 

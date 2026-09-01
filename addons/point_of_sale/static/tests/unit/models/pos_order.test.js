@@ -13,7 +13,6 @@ test("uiState", async () => {
         lastPrints: [],
         lineToRefund: {},
         displayed: true,
-        isReprinting: false,
         booked: false,
         screen_data: {},
         selected_orderline_uuid: undefined,
