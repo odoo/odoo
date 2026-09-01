@@ -10,10 +10,19 @@
                     <group>
                         <field name="product_ids" invisible="1"/>
                         <field name="product_tmpl_ids" invisible="1"/>
+                        <field name="product_uom_ids" invisible="1"/>
+                        <field name="barcode_format" widget="radio"/>
                         <field name="custom_quantity"/>
                         <field name="print_format" widget="radio"/>
                     </group>
                     <group>
+                        <field name="available_packaging_ids" invisible="1"/>
+                        <field
+                            name="packaging_id"
+                            groups="uom.group_uom"
+                            invisible="not available_packaging_ids"
+                            options="{'no_create': True}"
+                        />
                         <field name="with_price"/>
                         <field name="pricelist_id" invisible="not with_price" placeholder="Sales Price" groups="product.group_product_pricelist"/>
                         <field name="zpl_template" invisible="print_format != 'zpl'"/>
