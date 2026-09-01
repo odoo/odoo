@@ -5,7 +5,7 @@ from datetime import timedelta
 from odoo import exceptions, fields
 from odoo.exceptions import UserError
 from odoo.fields import Command
-from odoo.tests import Form, HttpCase, freeze_time
+from odoo.tests import Form, HttpCase, freeze_time, new_test_user
 from odoo.tools import float_compare, float_repr, float_round, format_date
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
@@ -3125,3 +3125,42 @@ class TestTourBoM(HttpCase):
                     Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
             ],
         })
+
+
+class TestMrpMobileTour(HttpCase):
+    browser_size = '375x667'
+    touch_enabled = True
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_mrp_user = new_test_user(
+            cls.env,
+            login='mrp_mobile',
+            password='mrp_mobile',
+            groups='mrp.group_mrp_user,mrp.group_mrp_routings',
+        )
+        cls.product, cls.component = cls.env['product.product'].create([
+            {'name': 'final product', 'is_storable': True},
+            {'name': 'component', 'is_storable': True},
+        ])
+        cls.stock_location = cls.env.ref('stock.warehouse0').lot_stock_id
+        cls.workcenter = cls.env['mrp.workcenter'].create({'name': 'Assembly'})
+        cls.bom = cls.env['mrp.bom'].create({
+            'product_tmpl_id': cls.product.product_tmpl_id.id,
+            'bom_line_ids': [Command.create({'product_id': cls.component.id, 'product_qty': 1})],
+            'operation_ids': [Command.create({'name': 'Assemble', 'workcenter_id': cls.workcenter.id})],
+        })
+
+    def test_basic_mo_process_on_mobile(self):
+        """ Check that a manufacturing order can be created, confirmed and produced on mobile. """
+        self.env['stock.quant']._update_available_quantity(self.component, self.stock_location, 1)
+        self.start_tour('/odoo/action-mrp.mrp_production_action/new', 'test_basic_mo_process_on_mobile', login=self.user_mrp_user.login)
+        mo = self.env['mrp.production'].search([('product_id', '=', self.product.id)], limit=1)
+        self.assertEqual(mo.state, 'done')
+        self.assertRecordValues(mo.workorder_ids, [
+            {'operation_id': self.bom.operation_ids.id, 'state': 'done'},
+        ])
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': self.component.id, 'quantity': 1, 'state': 'done'},
+        ])
