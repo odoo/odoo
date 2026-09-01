@@ -36,6 +36,44 @@ describe("insert tabulation", () => {
         });
     });
 
+    test("should keep selection and insert a tab character at the beginning of the lines", async () => {
+        await testTabulation({
+            contentBefore: `<p>a<br>b<br>[x<br>x<br>x]c<br>d<br>e</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>a<br>b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}[x</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}x</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}x]c</p>` +
+                `<p>d<br>e</p>`,
+            contentAfter:
+                `<p>a<br>b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}[x</p>` +
+                `<p>${oeTab(TAB_WIDTH)}x</p>` +
+                `<p>${oeTab(TAB_WIDTH)}x]c</p>` +
+                `<p>d<br>e</p>`,
+        });
+    });
+
+    test("should keep selection and insert a tab character at the beginning of the lines (reversed selection)", async () => {
+        await testTabulation({
+            contentBefore: `<p>a<br>b<br>]x<br>x<br>x[c<br>d<br>e</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>a<br>b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}]x</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}x</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}x[c</p>` +
+                `<p>d<br>e</p>`,
+            contentAfter:
+                `<p>a<br>b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}]x</p>` +
+                `<p>${oeTab(TAB_WIDTH)}x</p>` +
+                `<p>${oeTab(TAB_WIDTH)}x[c</p>` +
+                `<p>d<br>e</p>`,
+        });
+    });
+
     test("should insert two tab characters", async () => {
         const expectedTabWidth = TAB_WIDTH - (await getCharWidth("p", "a"));
         await testTabulation({
@@ -175,6 +213,40 @@ describe("insert tabulation", () => {
         });
     });
 
+    test("should insert tab characters at the beginning of four lines over two separate paragraphs", async () => {
+        await testTabulation({
+            contentBefore: `<p>a[b<br>c</p>` + `<p>d<br>e]f</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}e]f</p>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH)}e]f</p>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of four lines over two separate paragraphs (reversed selection)", async () => {
+        await testTabulation({
+            contentBefore: `<p>a]b<br>c</p>` + `<p>d<br>e[f</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}e[f</p>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH)}e[f</p>`,
+        });
+    });
+
     test("should insert tab characters at the beginning of two separate indented paragraphs", async () => {
         await testTabulation({
             contentBefore: `<p>${oeTab()}a[b</p>` + `<p>${oeTab()}c]d</p>`,
@@ -214,6 +286,68 @@ describe("insert tabulation", () => {
         });
     });
 
+    test("should insert tab characters at the beginning of two separate paragraphs (one indented, the other not), with line breaks", async () => {
+        await testTabulation({
+            contentBefore: `<p>${oeTab()}a[b<br>c</p>` + `<p>d<br>e]f</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}e]f</p>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH)}e]f</p>`,
+        });
+        await testTabulation({
+            contentBefore: `<p>a[b<br>c</p>` + `<p>${oeTab()}d<br>e]f</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}e]f</p>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH)}e]f</p>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of two separate paragraphs (one indented, the other not), with line breaks (reversed selection)", async () => {
+        await testTabulation({
+            contentBefore: `<p>${oeTab()}a]b<br>c</p>` + `<p>d<br>e[f</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}e[f</p>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH)}e[f</p>`,
+        });
+        await testTabulation({
+            contentBefore: `<p>a]b<br>c</p>` + `<p>${oeTab()}d<br>e[f</p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}e[f</p>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}d</p>` +
+                `<p>${oeTab(TAB_WIDTH)}e[f</p>`,
+        });
+    });
+
     test("should insert tab characters at the beginning of two separate paragraphs with tabs in them", async () => {
         const tabAfterA = TAB_WIDTH - (await getCharWidth("p", "a"));
         const tabAfterB = TAB_WIDTH - (await getCharWidth("p", "b"));
@@ -230,6 +364,44 @@ describe("insert tabulation", () => {
                     tabAfterB,
                 )}</p>` +
                 `<p>${oeTab(TAB_WIDTH)}c${oeTab(tabAfterC)}]d${oeTab(tabAfterD)}</p>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of two separate paragraphs with tabs in them, with line breaks", async () => {
+        const tabAfterA = TAB_WIDTH - (await getCharWidth("p", "a"));
+        const tabAfterB = TAB_WIDTH - (await getCharWidth("p", "b"));
+        const tabAfterC = TAB_WIDTH - (await getCharWidth("p", "c"));
+        const tabAfterD = TAB_WIDTH - (await getCharWidth("p", "d"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>${oeTab()}a[${oeTab()}<br>b${oeTab()}</p>` +
+                `<p>c${oeTab()}<br>]d${oeTab()}</p>`,
+            stepFunction: keydownTab,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a[${oeTab(tabAfterA)}</p>` +
+                `<p>${oeTab(TAB_WIDTH)}b${oeTab(tabAfterB)}</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c${oeTab(tabAfterC)}</p>` +
+                `<p>${oeTab(TAB_WIDTH)}]d${oeTab(tabAfterD)}</p>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of two separate paragraphs with tabs in them, with line breaks (reversed selection)", async () => {
+        const tabAfterA = TAB_WIDTH - (await getCharWidth("p", "a"));
+        const tabAfterB = TAB_WIDTH - (await getCharWidth("p", "b"));
+        const tabAfterC = TAB_WIDTH - (await getCharWidth("p", "c"));
+        const tabAfterD = TAB_WIDTH - (await getCharWidth("p", "d"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>${oeTab()}a]${oeTab()}<br>b${oeTab()}</p>` +
+                `<p>c${oeTab()}<br>[d${oeTab()}</p>`,
+            stepFunction: keydownTab,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a]${oeTab(tabAfterA)}</p>` +
+                `<p>${oeTab(TAB_WIDTH)}b${oeTab(tabAfterB)}</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c${oeTab(tabAfterC)}</p>` +
+                `<p>${oeTab(TAB_WIDTH)}[d${oeTab(tabAfterD)}</p>`,
         });
     });
 
@@ -255,6 +427,70 @@ describe("insert tabulation", () => {
                 `<p>${oeTab(TAB_WIDTH)}a[b</p>` +
                 `<h1>${oeTab(TAB_WIDTH)}cd</h1>` +
                 `<blockquote>${oeTab(tabInBlockquote)}e]f</blockquote>` +
+                `<h4>zzz</h4>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of three separate blocks, with line breaks", async () => {
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>xxx</p>` +
+                `<p>a[b<br>c</p>` +
+                `<h1>d<br>e</h1>` +
+                `<blockquote>f]<br>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}f]</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            contentAfter:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}f]</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>zzz</h4>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of three separate blocks, with line breaks (reversed selection)", async () => {
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>xxx</p>` +
+                `<p>a]b<br>c</p>` +
+                `<h1>d<br>e</h1>` +
+                `<blockquote>f[<br>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}f[</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            contentAfter:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}f[</blockquote>` +
+                `<blockquote>g</blockquote>` +
                 `<h4>zzz</h4>`,
         });
     });
@@ -288,6 +524,76 @@ describe("insert tabulation", () => {
         });
     });
 
+    test("should insert tab characters at the beginning of three separate indented blocks, with line breaks", async () => {
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>${oeTab()}xxx</p>` +
+                `<p>${oeTab()}a[b<br>c</p>` +
+                `<h1>${oeTab()}d<br>e</h1>` +
+                `<blockquote>${oeTab()}f]<br>g</blockquote>` +
+                `<h4>${oeTab()}zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}${oeTab(
+                    TAB_WIDTH,
+                    false,
+                )}f]</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>${oeTab(TAB_WIDTH, false)}zzz</h4>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}${oeTab(TAB_WIDTH)}f]</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>${oeTab(TAB_WIDTH)}zzz</h4>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of three separate indented blocks, with line breaks (reversed selection)", async () => {
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>${oeTab()}xxx</p>` +
+                `<p>${oeTab()}a]b<br>c</p>` +
+                `<h1>${oeTab()}d<br>e</h1>` +
+                `<blockquote>${oeTab()}f[<br>g</blockquote>` +
+                `<h4>${oeTab()}zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}${oeTab(
+                    TAB_WIDTH,
+                    false,
+                )}f[</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>${oeTab(TAB_WIDTH, false)}zzz</h4>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}${oeTab(TAB_WIDTH)}f[</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>${oeTab(TAB_WIDTH)}zzz</h4>`,
+        });
+    });
+
     test("should insert tab characters at the beginning of three separate blocks of mixed indentation", async () => {
         const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
 
@@ -313,6 +619,76 @@ describe("insert tabulation", () => {
                 `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a[b</p>` +
                 `<h1>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}cd</h1>` +
                 `<blockquote>${oeTab(tabInBlockquote)}e]f</blockquote>` +
+                `<h4>zzz</h4>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of three separate blocks of mixed indentation, with line breaks", async () => {
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>xxx</p>` +
+                `<p>${oeTab()}${oeTab()}a[b<br>c</p>` +
+                `<h1>${oeTab()}d<br>e</h1>` +
+                `<blockquote>f]<br>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}${oeTab(
+                    TAB_WIDTH,
+                    false,
+                )}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}f]</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            contentAfter:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a[b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}f]</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>zzz</h4>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of three separate blocks of mixed indentation, with line breaks (reversed selection)", async () => {
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+
+        await testTabulation({
+            contentBefore:
+                `<p>xxx</p>` +
+                `<p>${oeTab()}${oeTab()}a]b<br>c</p>` +
+                `<h1>${oeTab()}d<br>e</h1>` +
+                `<blockquote>f[<br>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}${oeTab(
+                    TAB_WIDTH,
+                    false,
+                )}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}f[</blockquote>` +
+                `<blockquote>g</blockquote>` +
+                `<h4>zzz</h4>`,
+            contentAfter:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a]b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}c</p>` +
+                `<h1>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}d</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}e</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}f[</blockquote>` +
+                `<blockquote>g</blockquote>` +
                 `<h4>zzz</h4>`,
         });
     });
@@ -358,6 +734,92 @@ describe("insert tabulation", () => {
                 `<blockquote>${oeTab(tabInBlockquote)}e${oeTab(
                     tabAfterEinBlockquote,
                 )}]f</blockquote>` +
+                `<h4>zzz</h4>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of three separate blocks with tabs in them, with line breaks", async () => {
+        const tabAfterA = TAB_WIDTH - (await getCharWidth("p", "a"));
+        const tabAfterCinH1 = TAB_WIDTH - (await getCharWidth("h1", "c"));
+        const tabAfterDinH1 = TAB_WIDTH - (await getCharWidth("h1", "d"));
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+        const tabAfterEinBlockquote =
+            TAB_WIDTH - (await getCharWidth("blockquote", "e")); // in bloquote, after a tab
+
+        await testTabulation({
+            contentBefore:
+                `<p>xxx</p>` +
+                `<p>${oeTab()}a[${oeTab()}b<br>${oeTab()}</p>` +
+                `<h1>c${oeTab()}<br>d${oeTab()}</h1>` +
+                `<blockquote>e${oeTab()}]f</blockquote>` +
+                `<h4>zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}a[${oeTab(
+                    tabAfterA,
+                    false,
+                )}b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}c${oeTab(tabAfterCinH1, false)}</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}d${oeTab(tabAfterDinH1, false)}</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}e${oeTab(
+                    tabAfterEinBlockquote,
+                    false,
+                )}]f</blockquote>` +
+                `<h4>zzz</h4>`,
+            contentAfter:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a[${oeTab(tabAfterA)}b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<h1>${oeTab(TAB_WIDTH)}c${oeTab(tabAfterCinH1)}</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}d${oeTab(tabAfterDinH1)}</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}e${oeTab(
+                    tabAfterEinBlockquote,
+                )}]f</blockquote>` +
+                `<h4>zzz</h4>`,
+        });
+    });
+
+    test("should insert tab characters at the beginning of three separate blocks with tabs in them, with line breaks (reversed selection)", async () => {
+        const tabAfterA = TAB_WIDTH - (await getCharWidth("p", "a"));
+        const tabAfterCinH1 = TAB_WIDTH - (await getCharWidth("h1", "c"));
+        const tabAfterDinH1 = TAB_WIDTH - (await getCharWidth("h1", "d"));
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+        const tabAfterEinBlockquote =
+            TAB_WIDTH - (await getCharWidth("blockquote", "e")); // in bloquote, after a tab
+
+        await testTabulation({
+            contentBefore:
+                `<p>xxx</p>` +
+                `<p>${oeTab()}a]${oeTab()}b<br>${oeTab()}</p>` +
+                `<h1>c${oeTab()}<br>d${oeTab()}</h1>` +
+                `<blockquote>e${oeTab()}[f</blockquote>` +
+                `<h4>zzz</h4>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}a]${oeTab(
+                    tabAfterA,
+                    false,
+                )}b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}c${oeTab(tabAfterCinH1, false)}</h1>` +
+                `<h1>${oeTab(TAB_WIDTH, false)}d${oeTab(tabAfterDinH1, false)}</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}e${oeTab(
+                    tabAfterEinBlockquote,
+                    false,
+                )}[f</blockquote>` +
+                `<h4>zzz</h4>`,
+            contentAfter:
+                `<p>xxx</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}a]${oeTab(tabAfterA)}b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<h1>${oeTab(TAB_WIDTH)}c${oeTab(tabAfterCinH1)}</h1>` +
+                `<h1>${oeTab(TAB_WIDTH)}d${oeTab(tabAfterDinH1)}</h1>` +
+                `<blockquote>${oeTab(tabInBlockquote)}e${oeTab(
+                    tabAfterEinBlockquote,
+                )}[f</blockquote>` +
                 `<h4>zzz</h4>`,
         });
     });
@@ -444,6 +906,136 @@ describe("insert tabulation", () => {
                 `<div contenteditable="false">cd</div>` +
                 `<h1>${oeTab(TAB_WIDTH)}ef</h1>` +
                 `<blockquote>${oeTab(tabInBlockquote)}gh]</blockquote>`,
+        });
+    });
+
+    test("should insert tab characters in blocks and indent lists, with line breaks", async () => {
+        const tabAfterCinNestedLI =
+            TAB_WIDTH -
+            ((2 * (await getIndentWidth("li")) + (await getCharWidth("li", "c"))) %
+                TAB_WIDTH);
+        const tabAfterDinNestedLI =
+            TAB_WIDTH - ((await getCharWidth("li", "d")) % TAB_WIDTH); // in LI, after a tab
+        const tabInDoubleNestedList =
+            TAB_WIDTH - ((3 * (await getIndentWidth("li"))) % TAB_WIDTH);
+        const tabAfterE = TAB_WIDTH - (await getCharWidth("li", "e")); // in LI, after a tab
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+        const tabAfterFinBlockquote =
+            TAB_WIDTH - (await getCharWidth("blockquote", "f")); // in blockquote, after a tab
+
+        // prettier-ignore
+        await testTabulation({
+            // Obs: cannot use `unformat` for tests with tabs (as it removes the \t chars)
+            contentBefore:
+                `<p>${oeTab()}a<br>[${oeTab()}b<br>${oeTab()}</p>` +
+                `<ul>` +
+                    `<li><p>c${oeTab()}d${oeTab()}</p>` +
+                        `<ul>` +
+                            `<li>${oeTab()}e${oeTab()}</li>` +
+                        `</ul>` +
+                    `</li>` +
+                `</ul>` +
+                `<blockquote>f${oeTab()}<br>]g</blockquote>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}a</p>` +
+                `<p>[${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<ul>` +
+                    `<li class="oe-nested">` +
+                        `<ul>` +
+                            `<li><p>c${oeTab(tabAfterCinNestedLI, false)}d${oeTab(tabAfterDinNestedLI, false)}</p>` +
+                                `<ul>` +
+                                    `<li>${oeTab(tabInDoubleNestedList, false)}e${oeTab(tabAfterE, false)}</li>` +
+                                `</ul>` +
+                            `</li>` +
+                        `</ul>` +
+                    `</li>` +
+                `</ul>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}f${oeTab(tabAfterFinBlockquote, false)}</blockquote>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}]g</blockquote>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}a</p>` +
+                `<p>[${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<ul>` +
+                    `<li class="oe-nested">` +
+                        `<ul>` +
+                            `<li><p>c${oeTab(tabAfterCinNestedLI)}d${oeTab(tabAfterDinNestedLI)}</p>` +
+                                `<ul>` +
+                                    `<li>${oeTab(tabInDoubleNestedList)}e${oeTab(tabAfterE)}</li>` +
+                                `</ul>` +
+                            `</li>` +
+                        `</ul>` +
+                    `</li>` +
+                `</ul>` +
+                `<blockquote>${oeTab(tabInBlockquote)}f${oeTab(tabAfterFinBlockquote)}</blockquote>` +
+                `<blockquote>${oeTab(tabInBlockquote)}]g</blockquote>`,
+        });
+    });
+
+    test("should insert tab characters in blocks and indent lists, with line breaks (reversed selection)", async () => {
+        const tabAfterCinNestedLI =
+            TAB_WIDTH -
+            ((2 * (await getIndentWidth("li")) + (await getCharWidth("li", "c"))) %
+                TAB_WIDTH);
+        const tabAfterDinNestedLI =
+            TAB_WIDTH - ((await getCharWidth("li", "d")) % TAB_WIDTH); // in LI, after a tab
+        const tabInDoubleNestedList =
+            TAB_WIDTH - ((3 * (await getIndentWidth("li"))) % TAB_WIDTH);
+        const tabAfterE = TAB_WIDTH - (await getCharWidth("li", "e")); // in LI, after a tab
+        const tabInBlockquote = TAB_WIDTH - (await getIndentWidth("blockquote"));
+        const tabAfterFinBlockquote =
+            TAB_WIDTH - (await getCharWidth("blockquote", "f")); // in blockquote, after a tab
+
+        // prettier-ignore
+        await testTabulation({
+            // Obs: cannot use `unformat` for tests with tabs (as it removes the \t chars)
+            contentBefore:
+                `<p>${oeTab()}a<br>]${oeTab()}b<br>${oeTab()}</p>` +
+                `<ul>` +
+                    `<li><p>c${oeTab()}d${oeTab()}</p>` +
+                        `<ul>` +
+                            `<li>${oeTab()}e${oeTab()}</li>` +
+                        `</ul>` +
+                    `</li>` +
+                `</ul>` +
+                `<blockquote>f${oeTab()}<br>[g</blockquote>`,
+            stepFunction: keydownTab,
+            contentAfterEdit:
+                `<p>${oeTab(TAB_WIDTH, false)}a</p>` +
+                `<p>]${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}b</p>` +
+                `<p>${oeTab(TAB_WIDTH, false)}${oeTab(TAB_WIDTH, false)}<br></p>` +
+                `<ul>` +
+                    `<li class="oe-nested">` +
+                        `<ul>` +
+                            `<li><p>c${oeTab(tabAfterCinNestedLI, false)}d${oeTab(tabAfterDinNestedLI, false)}</p>` +
+                                `<ul>` +
+                                    `<li>${oeTab(tabInDoubleNestedList, false)}e${oeTab(tabAfterE, false)}</li>` +
+                                `</ul>` +
+                            `</li>` +
+                        `</ul>` +
+                    `</li>` +
+                `</ul>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}f${oeTab(tabAfterFinBlockquote, false)}</blockquote>` +
+                `<blockquote>${oeTab(tabInBlockquote, false)}[g</blockquote>`,
+            contentAfter:
+                `<p>${oeTab(TAB_WIDTH)}a</p>` +
+                `<p>]${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}b</p>` +
+                `<p>${oeTab(TAB_WIDTH)}${oeTab(TAB_WIDTH)}<br></p>` +
+                `<ul>` +
+                    `<li class="oe-nested">` +
+                        `<ul>` +
+                            `<li><p>c${oeTab(tabAfterCinNestedLI)}d${oeTab(tabAfterDinNestedLI)}</p>` +
+                                `<ul>` +
+                                    `<li>${oeTab(tabInDoubleNestedList)}e${oeTab(tabAfterE)}</li>` +
+                                `</ul>` +
+                            `</li>` +
+                        `</ul>` +
+                    `</li>` +
+                `</ul>` +
+                `<blockquote>${oeTab(tabInBlockquote)}f${oeTab(tabAfterFinBlockquote)}</blockquote>` +
+                `<blockquote>${oeTab(tabInBlockquote)}[g</blockquote>`,
         });
     });
 });

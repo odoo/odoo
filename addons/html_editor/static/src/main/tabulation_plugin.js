@@ -45,7 +45,7 @@ function isIndentationTab(tab) {
 
 export class TabulationPlugin extends Plugin {
     static id = "tabulation";
-    static dependencies = ["dom", "selection", "history", "delete"];
+    static dependencies = ["dom", "selection", "history", "delete", "split"];
     static shared = ["indentBlocks", "outdentBlocks"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -86,6 +86,7 @@ export class TabulationPlugin extends Plugin {
         if (selection.isCollapsed) {
             this.insertTab();
         } else {
+            this.dependencies.split.splitBlockSegments();
             const targetedBlocks = this.dependencies.selection.getTargetedBlocks();
             this.indentBlocks(targetedBlocks);
         }
