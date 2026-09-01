@@ -34,19 +34,6 @@ class AccountMoveSend(models.AbstractModel):
             "Please retry Send & Print later."
         )
 
-        if not self.env['res.company']._with_locked_records(document, allow_raising=False):
-            invoice_data['error'] = {
-                'error_title': self.env._("Electronic invoicing is already in progress for this invoice."),
-                'errors': [error_message],
-                'retry': True,
-            }
-            return
-
-        # Another worker may have completed the upload before we acquired the lock
-        document.invalidate_recordset(['provider_pdf_state', 'provider_pdf_error'])
-        if document.provider_pdf_state == 'sent':
-            return
-
         upload_succeeded = False
         if pdf_content and parent_token:
             try:
@@ -78,10 +65,6 @@ class AccountMoveSend(models.AbstractModel):
                 'error_title': self.env._("Error when completing electronic invoicing"),
                 'errors': [error_message],
             }
-
-        # Preserve the PDF upload status if a later send step fails
-        if self._can_commit():
-            self.env.cr.commit()
 
     @api.model
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
