@@ -63,6 +63,7 @@ class IrModuleModule(models.Model):
                                         'sequence': template_values.get('sequence', 1),
                                         'country': country,
                                         'country_code': country_code,
+                                        'version': template_values.get('version', '1.0'),
                                         'visible': template_values.get('visible', True),
                                         'module': self.name,
                                     })
