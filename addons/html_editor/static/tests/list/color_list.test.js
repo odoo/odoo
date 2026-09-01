@@ -320,7 +320,7 @@ test("should remove color from partially selected text inside list item", async 
 test("should remove data-original-color attribute with color on removeFormat", async () => {
     defineStyle(`
         :root {
-            --o-control-panel-background-color: rgb(248, 249, 250);
+            --o-html-editor-background-contrast: rgb(255, 255, 255);
         }
     `);
     await testEditor({
