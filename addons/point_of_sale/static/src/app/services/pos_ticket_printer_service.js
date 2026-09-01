@@ -250,6 +250,9 @@ export class PosTicketPrinterService {
 
             for (const ticket of changes) {
                 rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
+                if (ticket.extra_data.reprint && !opts.explicitReprint) {
+                    continue;
+                }
 
                 if (!printer?._instance) {
                     unsuccessfulPrints.push(printer.name + " is not connected");

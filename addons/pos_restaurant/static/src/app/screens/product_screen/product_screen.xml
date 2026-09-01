@@ -6,7 +6,7 @@
             <t t-if="!this.pos.scanning">
                 <t t-if="this.swapButton">
                     <button
-                        t-if="!this.currentOrder.isDirectSale and this.nbrOfChanges and !this.currentOrder.uiState.isReprinting"
+                        t-if="!this.currentOrder.isDirectSale and this.nbrOfChanges"
                         class="btn-switchpane order-button btn btn-lg flex-grow-1 position-relative lh-sm overflow-hidden"
                         t-on-click="() => this.doSubmitOrder.call()"
                         t-att-disabled="this.doSubmitOrder.status === 'loading'"
