@@ -28,6 +28,9 @@ class PosConfig(models.Model):
     def _default_sale_journal(self):
         return self.env['account.journal']._ensure_company_account_journal()
 
+    def _default_closing_journal(self):
+        return self.env['account.journal']._ensure_company_closing_journal()
+
     def _default_invoice_journal(self):
         return self.env['account.journal'].search([
             *self.env['account.journal']._check_company_domain(self.env.company),
@@ -77,8 +80,16 @@ class PosConfig(models.Model):
         'account.journal', string='Point of Sale Journal',
         domain=[('type', '=', 'sale')],
         check_company=True,
-        help="Accounting journal used to post POS session receipts and invoices.",
+        help="Journal used for customer invoices and refunds credit notes. ",
         default=_default_sale_journal,
+        ondelete='restrict')
+    closing_journal_id = fields.Many2one(
+        'account.journal', string='Closing Journal',
+        domain=[('type', '=', 'sale')],
+        required=True,
+        check_company=True,
+        help="Journal used specifically for PoS session closing and reverse entries",
+        compute='_compute_closing_journal_id', store=True, readonly=False, precompute=True,
         ondelete='restrict')
     default_partner_id = fields.Many2one(
         'res.partner',
@@ -372,6 +383,14 @@ class PosConfig(models.Model):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
         for pos_config in self:
             pos_config.is_installed_account_accountant = account_accountant and account_accountant.id
+
+    @api.depends('company_id')
+    def _compute_closing_journal_id(self):
+        for config in self:
+            if not config.closing_journal_id:
+                config.closing_journal_id = config.with_company(
+                    config.company_id,
+                )._default_closing_journal()
 
     @api.depends('journal_id.currency_id', 'journal_id.company_id.currency_id', 'company_id', 'company_id.currency_id')
     def _compute_currency(self):
