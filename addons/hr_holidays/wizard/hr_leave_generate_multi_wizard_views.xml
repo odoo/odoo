@@ -28,7 +28,6 @@
                     <field name="work_entry_type_id" widget="many2one_work_entry_type" class="w-100"
                         domain="[
                             ('id', 'in', allowed_work_entry_type_ids),
-                            ('time_off_selectable', '=', True),
                             '|',
                                 ('requires_allocation', '=', False),
                                 '&amp;',
