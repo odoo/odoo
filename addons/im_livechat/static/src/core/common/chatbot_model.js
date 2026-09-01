@@ -26,7 +26,7 @@ export class Chatbot extends Record {
     tmpAnswer = "";
     typingMessage = fields.One("mail.message", {
         compute() {
-            if (this.isTypingUi && this.channel_id) {
+            if (this.isTyping && this.channel_id) {
                 return {
                     id: -0.1 - this.channel_id.id,
                     thread: this.channel_id.thread,
