@@ -72,31 +72,11 @@
 
     <!-- crm.team views (& actions) -->
 
-    <record id="crm_team_salesteams_view_form" model="ir.ui.view">
-        <field name="name">crm.team.form</field>
-        <field name="model">crm.team</field>
-        <field name="priority">9</field>
-        <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
-        <field name="arch" type="xml">
-            <field name="company_id" position="after">
-                <label for="invoiced_target"/>
-                <div class="o_row" id="invoiced_target">
-                    <field name="invoiced_target" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_inline"/>
-                    <span class="flex-grow-1">/ Month</span>
-                </div>
-            </field>
-        </field>
-    </record>
-
     <record id="crm_team_view_kanban_dashboard" model="ir.ui.view">
         <field name="name">crm.team.view.kanban.dashboard.inherit.sale</field>
         <field name="model">crm.team</field>
         <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard"/>
         <field name="arch" type="xml">
-            <xpath expr="//templates" position="before">
-                <field name="invoiced_target"/>
-            </xpath>
-
             <xpath expr="//div[@name='manage_view']" position="inside">
                 <div>
                     <a name="%(action_orders_salesteams)d" type="action">Sales Orders</a>
