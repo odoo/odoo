@@ -5,6 +5,7 @@ import {
     click,
     edit,
     fill,
+    pointerDown,
     press,
     queryAll,
     queryAllTexts,
@@ -1158,6 +1159,34 @@ test("command palette dialog can be rendered and closed on outside click", async
 
     // Close on outside click
     await contains(getFixture()).click();
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("outside mousedown while command palette is mounting does not crash", async () => {
+    const provideDef = Promise.withResolvers();
+    await mountWithCleanup(MainComponentsContainer);
+    getService("dialog").add(CommandPalette, {
+        config: {
+            providers: [
+                {
+                    provide: async () => {
+                        await provideDef.promise;
+                        return [];
+                    },
+                },
+            ],
+        },
+    });
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(0);
+
+    await pointerDown(getFixture());
+    await animationFrame();
+    expect(".o_command_palette").toHaveCount(0);
+
+    provideDef.resolve();
     await animationFrame();
     expect(".o_command_palette").toHaveCount(0);
 });
