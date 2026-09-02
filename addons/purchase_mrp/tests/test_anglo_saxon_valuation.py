@@ -1011,3 +1011,77 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
             {'account_id': self.account_stock_valuation.id, 'debit': 0.02, 'credit': 0},
             {'account_id': self.account_stock_variation.id, 'debit': 0, 'credit': 0.02},
         ])
+
+    def test_component_purchase_for_kit_sale_keeps_bill_value(self):
+        """
+        A component bought for a sold kit should keep its own vendor bill value.
+
+        The purchase line is for the component, but sale_purchase_stock links it to
+        the originating kit sale line and purchase_mrp sets the matching kit BoM line
+        on the receipt move. That BoM link must not make bill valuation multiply the
+        component bill value by the kit cost share.
+        """
+        if self.env['ir.module.module']._get('sale_purchase_stock').state != 'installed':
+            self.skipTest("sale_purchase_stock is required to link purchase lines to sale lines")
+
+        kit, component, other_component = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+            'categ_id': self.category_fifo_auto.id,
+        } for name in ('Kit', 'Component', 'Other Component')])
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component.id, 'product_qty': 1}),
+                Command.create({'product_id': other_component.id, 'product_qty': 1}),
+            ],
+        })
+        self.assertEqual(bom.bom_line_ids.mapped('cost_share'), [0, 0])
+        self.assertEqual(bom.bom_line_ids[0].with_context(bom_variant_id=kit)._get_cost_share(), 0.5)
+
+        customer = self.env['res.partner'].create({
+            'name': 'Test Customer',
+            'company_id': self.company.id,
+        })
+        sale_order = self.env['sale.order'].create({  # noqa: OLS03001
+            'partner_id': customer.id,
+            'order_line': [
+                Command.create({
+                    'product_id': kit.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 100,
+                }),
+            ],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
+            'order_line': [
+                Command.create({
+                    'product_id': component.id,
+                    'product_qty': 1,
+                    'price_unit': 100,
+                    'sale_line_id': sale_order.order_line.id,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        move = po.order_line.move_ids
+        self.assertEqual(move.product_id, component)
+        self.assertEqual(move.purchase_line_id.product_id, component)
+        self.assertEqual(move.purchase_line_id.sale_line_id.product_id, kit)
+        self.assertEqual(move.bom_line_id.product_id, component)
+        self.assertEqual(move.cost_share, 0)
+
+        po.picking_ids.button_validate()
+        self.assertEqual(move.value, 100)
+
+        action = po.action_create_invoice()
+        bill = self.env['account.move'].browse(action['res_id'])
+        bill.invoice_date = Date.today()
+        bill.action_post()
+
+        bill_line = bill.invoice_line_ids.filtered(lambda line: line.product_id == component)
+        self.assertEqual(bill_line.balance, 100)
+        self.assertEqual(move.value, 100)
