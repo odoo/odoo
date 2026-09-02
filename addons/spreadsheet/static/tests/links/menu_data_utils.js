@@ -37,6 +37,7 @@ export function getMenuServerData() {
                 [false, "list"],
                 [false, "form"],
             ],
+            help: "<p class='o_view_nocontent_smiling_face'>No data to display</p>",
         },
         action2: {
             id: 199,
