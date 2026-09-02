@@ -28,7 +28,11 @@
                                 <list>
                                     <field name="description"/>
                                     <field name="order_id"/>
-                                    <field name="create_date" string="Date"/>
+                                    <field name="points_changed_date"/>
+                                    <field
+                                        name="expiration_date"
+                                        column_invisible="parent.program_type != 'loyalty'"
+                                    />
                                     <field name="issued"/>
                                     <field name="used"/>
                                 </list>

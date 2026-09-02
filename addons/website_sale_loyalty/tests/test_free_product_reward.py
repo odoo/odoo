@@ -12,12 +12,12 @@ from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 @tagged("post_install", "-at_install")
 class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
     _test_user_groups = (
-        'base.group_user',
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "base.group_user",
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -102,10 +102,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
         self.program.write({
             "program_type": "next_order_coupons",
             "applies_on": "future",
-            "coupon_ids": [
-                Command.clear(),
-                Command.create({"partner_id": cart.partner_id.id, "points": 100}),
-            ],
+            "coupon_ids": [Command.clear(), Command.create({"partner_id": cart.partner_id.id})],
             "reward_ids": [
                 Command.update(
                     self.program.reward_ids.id,
@@ -113,6 +110,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
                 )
             ],
         })
+        self.program.coupon_ids._adjust_points(100, "Initial balance")
         coupon = self.program.coupon_ids
 
         with self.mock_request(sale_order_id=cart.id):
@@ -133,9 +131,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
         order = self._create_so(order_line=[])
         with self.mock_request(sale_order_id=order.id):
             self.WebsiteSaleCartController.add_to_cart(
-                product_template_id=self.sofa.product_tmpl_id,
-                product_id=self.sofa.id,
-                quantity=1,
+                product_template_id=self.sofa.product_tmpl_id, product_id=self.sofa.id, quantity=1
             )
             self.WebsiteSaleController.claim_reward(self.program.reward_ids[0].id)
             free_product_line = order.order_line.filtered(

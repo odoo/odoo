@@ -45,8 +45,8 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         cls.loyalty_card = cls.env["loyalty.card"].create({
             "program_id": cls.loyalty_program.id,
             "partner_id": cls.partner_a.id,
-            "points": 2,
         })
+        cls.loyalty_card._adjust_points(2, "Initial balance")
 
     def test_add_loyalty_history_line_with_reward(self):
         order = self._create_so(
@@ -69,7 +69,11 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
             coupon_applied.history_ids.filtered(lambda history: history.order_id == order.id)
         )
         self.assertEqual(
-            history_records, 1, "A history line should be created on confirmation of order"
+            history_records,
+            2,
+            "One issuing and one consuming history line should be created on confirmation of"
+            " order, since this order both earns and immediately redeems a point in the same"
+            " confirmation",
         )
 
     def test_add_loyalty_history_line_without_reward(self):
@@ -84,9 +88,9 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
             lambda history: history.order_id == order.id
         )
         self.assertEqual(
-            history_records.used,
+            sum(history_records.mapped("used")),
             1.0,
-            "The history line should be updated on change of order lines in a confirmed order",
+            "A new history line should be created on change of order lines in a confirmed order",
         )
 
     def test_delete_loyalty_history_line_on_cancel(self):
@@ -97,17 +101,24 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         self._claim_reward(order, self.loyalty_program)
         order.action_confirm()
+        order_history_count = len(
+            self.loyalty_card.history_ids.filtered(lambda h: h.order_id == order.id)
+        )
+        self.assertTrue(order_history_count, "Order confirmation should create history line(s)")
         lines_before_cancel = len(self.loyalty_card.history_ids)
         order._action_cancel()
         self.assertEqual(
-            lines_before_cancel - 1,
+            lines_before_cancel - order_history_count,
             len(self.loyalty_card.history_ids),
-            "History line should be deleted after order cancel",
+            "History line(s) tied to the cancelled order should be deleted after order cancel",
         )
 
     def test_loyalty_history_multi_reward(self):
         """Verify that applying multiple rewards sums up the total points cost."""
-        self.loyalty_card.points = initial_points = 4
+        initial_points = 4
+        self.loyalty_card._adjust_points(
+            initial_points - self.loyalty_card.points, description="Top up for test"
+        )
         self.loyalty_program.with_context(active_test=False).reward_ids.active = True
         order = self._create_so(
             partner_id=self.partner_a.id,
@@ -119,61 +130,81 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         self.assertEqual(order.order_line.mapped("points_cost"), [0, 1, 2])
 
         order.action_confirm()
-        loyalty_history = self.loyalty_card.history_ids
-        self.assertEqual(loyalty_history.issued, 1, "1 point should be rewarded")
-        self.assertEqual(loyalty_history.used, 3, "A total of 3 points should be used")
+        order_history = self.loyalty_card.history_ids.filtered(lambda h: h.order_id == order.id)
+        issued = sum(order_history.mapped("issued"))
+        used = sum(order_history.mapped("used"))
+        self.assertEqual(issued, 1, "1 point should be rewarded")
+        self.assertEqual(used, 3, "A total of 3 points should be used")
         self.assertEqual(
             self.loyalty_card.points,
-            initial_points + loyalty_history.issued - loyalty_history.used,
+            initial_points + issued - used,
             "Loyalty points should equal initial points + points issued - points used",
         )
 
     def test_loyalty_history_created_on_post_confirm_reward(self):
-        """ History line must be created when a reward is claimed on a confirmed
-            sale order where the card was not used on the order before confirmation.
+        """History line must be created when a reward is claimed on a confirmed
+        sale order where the card was not used on the order before confirmation.
         """
-        order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': self.product_A.id,
-                'tax_ids': False,
-            })],
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create({"product_id": self.product_A.id, "tax_ids": False})],
         })
         order.action_confirm()
         order._update_programs_and_rewards()
-        coupon = order.coupon_point_ids.coupon_id.filtered(lambda c: c.program_id == self.immediate_promotion_program)
+        coupon = order.coupon_point_ids.coupon_id.filtered(
+            lambda c: c.program_id == self.immediate_promotion_program
+        )
+        history_before_claim = coupon.history_ids.filtered(
+            lambda h: h.order_id == order.id and h.order_model == "sale.order"
+        )
         self.assertFalse(
-            coupon.history_ids.filtered(lambda h: h.order_id == order.id and h.order_model == 'sale.order'),
-            "No history should exist before claiming reward",
+            history_before_claim.filtered(lambda h: h.used),
+            "No points should be used before claiming reward",
         )
         self._claim_reward(order, self.immediate_promotion_program, coupon)
-        history = coupon.history_ids.filtered(lambda h: h.order_id == order.id and h.order_model == 'sale.order')
-        self.assertEqual(len(history), 1, "History line must be created when reward is claimed on confirmed order")
-        self.assertEqual(history.used, 1.0, "History used should reflect the reward points cost")
+        history = coupon.history_ids.filtered(
+            lambda h: h.order_id == order.id and h.order_model == "sale.order"
+        )
+        self.assertEqual(
+            sum(history.mapped("used")),
+            1.0,
+            "History used should reflect the reward points cost after claiming the reward",
+        )
 
     def test_loyalty_history_updated_on_points_cost_write(self):
-        """ write() on sale.order.line must update history.used by the delta
-            when points_cost changes on a confirmed order.
+        """write() on sale.order.line must update history.used by the delta
+        when points_cost changes on a confirmed order.
         """
-        self.loyalty_card.points = 10
+        self.loyalty_card._adjust_points(10 - self.loyalty_card.points, description="test setup")
         self.loyalty_program.with_context(active_test=False).reward_ids.active = True
         product_reward = self.loyalty_program.reward_ids.filtered(
-            lambda r: r.reward_type == 'product'
+            lambda r: r.reward_type == "product"
         )
-        order = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
-            'order_line': [Command.create({
-                'product_id': self.product_A.id,
-                'product_uom_qty': 2,
-                'tax_ids': False,
-            })],
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "product_uom_qty": 2,
+                    "tax_ids": False,
+                })
+            ],
         })
         order._update_programs_and_rewards()
         order._apply_program_reward(product_reward, self.loyalty_card)
         order.action_confirm()
-        history = self.loyalty_card.history_ids.filtered(lambda h: h.order_id == order.id and h.order_model == 'sale.order')
-        self.assertEqual(len(history), 1, "A history line should exist after confirmation")
-        used_after_confirm = history.used
-        reward_line = order.order_line.filtered('reward_id')
-        reward_line.write({'points_cost': reward_line.points_cost + 1})
-        self.assertEqual(history.used, used_after_confirm + 1, "history.used must increase by delta when points_cost is written on confirmed order")
+        history = self.loyalty_card.history_ids.filtered(
+            lambda h: h.order_id == order.id and h.order_model == "sale.order"
+        )
+        used_after_confirm = sum(history.mapped("used"))
+        self.assertTrue(history, "A history line should exist after confirmation")
+        reward_line = order.order_line.filtered("reward_id")
+        reward_line.write({"points_cost": reward_line.points_cost + 1})
+        history = self.loyalty_card.history_ids.filtered(
+            lambda h: h.order_id == order.id and h.order_model == "sale.order"
+        )
+        self.assertEqual(
+            sum(history.mapped("used")),
+            used_after_confirm + 1,
+            "history.used must increase by delta when points_cost is written on confirmed order",
+        )

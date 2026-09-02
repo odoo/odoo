@@ -112,25 +112,24 @@ class TestLoyalty(TransactionCase):
             coupon = self.env["loyalty.card"].create({
                 "program_id": self.program.id,
                 "partner_id": partner.id,
-                "points": 0,
             })
             self.assertEqual(sent_mails, create_tmpl)
             sent_mails = self.env["mail.template"]
             # 50 points mail
-            coupon.points = 50
+            coupon._adjust_points(50, description="test grant")
             self.assertEqual(sent_mails, fifty_tmpl)
             sent_mails = self.env["mail.template"]
             # Check that it does not get sent again
-            coupon.points = 99
+            coupon._adjust_points(49, description="test grant")
             self.assertFalse(sent_mails)
             # 100 points mail
-            coupon.points = 100
+            coupon._adjust_points(1, description="test grant")
             self.assertEqual(sent_mails, hundred_tmpl)
             sent_mails = self.env["mail.template"]
             # Reset and go straight to 100 points
-            coupon.points = 0
+            coupon._adjust_points(-100, description="test grant")
             self.assertFalse(sent_mails)
-            coupon.points = 100
+            coupon._adjust_points(100, description="test grant")
             self.assertEqual(sent_mails, hundred_tmpl)
 
     def test_loyalty_program_preserve_reward_upon_writing(self):
@@ -237,11 +236,13 @@ class TestLoyalty(TransactionCase):
             {"name": "Source Partner 2"},
             {"name": "Destination Partner"},
         ])
-        self.env["loyalty.card"].create([
-            {"partner_id": partner_1.id, "program_id": program.id, "points": 10},
-            {"partner_id": partner_2.id, "program_id": program.id, "points": 20},
-            {"partner_id": dest_partner.id, "program_id": program.id, "points": 30},
+        cards = self.env["loyalty.card"].create([
+            {"partner_id": partner_1.id, "program_id": program.id},
+            {"partner_id": partner_2.id, "program_id": program.id},
+            {"partner_id": dest_partner.id, "program_id": program.id},
         ])
+        for card, points in zip(cards, (10, 20, 30)):
+            card._adjust_points(points, "Initial balance")
 
         self.env["base.partner.merge.automatic.wizard"]._merge(
             [partner_1.id, partner_2.id, dest_partner.id], dest_partner
@@ -316,31 +317,35 @@ class TestLoyalty(TransactionCase):
         card = self.env["loyalty.card"].create({
             "program_id": self.program.id,
             "partner_id": partner.id,
-            "points": 10,
         })
         past_date = fields.Date.today() - timedelta(days=1)
         with self.assertRaises(ValidationError):
             card.write({"expiration_date": past_date})
 
     def test_discount_description_translation(self):
-        """A discount product's name field should automatically update for all languages for which changes
-        are made on the reward's description"""
-        self.env['res.lang']._activate_lang('fr_FR')
-        program = self.env['loyalty.program'].create({
-            'name': 'Test Program',
-            'reward_ids': [(0, 0, {})],
+        """A discount product's name field should automatically update for all languages for
+        which changes are made on the reward's description."""
+        self.env["res.lang"]._activate_lang("fr_FR")
+        program = self.env["loyalty.program"].create({
+            "name": "Test Program",
+            "reward_ids": [(0, 0, {})],
         })
-        reward = self.env['loyalty.reward'].with_context(lang='en_US').create({
-            'program_id': program.id,
-            'reward_type': 'discount',
-            'description': 'My Discount'
-        })
+        reward = (
+            self
+            .env["loyalty.reward"]
+            .with_context(lang="en_US")
+            .create({
+                "program_id": program.id,
+                "reward_type": "discount",
+                "description": "My Discount",
+            })
+        )
         product = reward.discount_line_product_id
-        translations = {'en_US': 'Test Discount EN', 'fr_FR': 'Test Discount FR'}
-        reward.update_field_translations('description', translations)
-        product.invalidate_recordset(['name'])
-        self.assertEqual(product.with_context(lang='en_US').name, 'Test Discount EN')
-        self.assertEqual(product.with_context(lang='fr_FR').name, 'Test Discount FR')
+        translations = {"en_US": "Test Discount EN", "fr_FR": "Test Discount FR"}
+        reward.update_field_translations("description", translations)
+        product.invalidate_recordset(["name"])
+        self.assertEqual(product.with_context(lang="en_US").name, "Test Discount EN")
+        self.assertEqual(product.with_context(lang="fr_FR").name, "Test Discount FR")
 
     def test_loyalty_program_reward_update(self):
         """Updating a reward from an already saved loyalty program should work."""
