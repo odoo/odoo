@@ -52,7 +52,7 @@ class PosOrderLine(models.Model):
         readonly=True,
     )
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
-    product_uom_id = fields.Many2one('uom.uom', string='Product Unit', related='product_id.uom_id')
+    product_uom_id = fields.Many2one('uom.uom', string='Product Unit')
     currency_id = fields.Many2one('res.currency', related='order_id.currency_id')
     full_product_name = fields.Char('Full Product Name')
     customer_note = fields.Char('Customer Note')
@@ -90,7 +90,7 @@ class PosOrderLine(models.Model):
             'product_id', 'discount', 'tax_ids', 'customer_note',
             'refunded_qty', 'price_extra', 'full_product_name', 'refunded_orderline_id',
             'combo_parent_id', 'combo_line_ids', 'combo_item_id', 'refund_orderline_ids',
-            'extra_tax_data', 'write_date', 'prep_line_ids',
+            'extra_tax_data', 'write_date', 'prep_line_ids', 'product_uom_id',
         ]
 
     @api.depends('refund_orderline_ids', 'refund_orderline_ids.order_id.state')
@@ -135,6 +135,10 @@ class PosOrderLine(models.Model):
             if not vals.get('name'):
                 # fallback on any pos.order sequence
                 vals['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
+            if not vals.get('product_uom_id') and vals.get('product_id'):
+                product = self.env['product.product'].browse(vals['product_id']).exists()
+                if product.uom_id:
+                    vals['product_uom_id'] = product.uom_id.id
         return super().create(vals_list)
 
     def write(self, vals):
@@ -206,6 +210,10 @@ class PosOrderLine(models.Model):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
 
+    def _get_qty_based_on_product_uom(self):
+        self.ensure_one()
+        return self.qty * self.product_uom_id.relative_factor if self.product_id.uom_id != self.product_uom_id else self.qty
+
     def _prepare_reference_vals(self):
         return {
             'name': self.order_id.name,
@@ -220,7 +228,7 @@ class PosOrderLine(models.Model):
             product = line.product_id
             cost_currency = product.sudo().cost_currency_id
             product_cost = line._get_product_cost(at_closing)
-            line.total_cost = line.qty * cost_currency._convert(
+            line.total_cost = line._get_qty_based_on_product_uom() * cost_currency._convert(
                 from_amount=product_cost,
                 to_currency=line.currency_id,
                 company=line.company_id or self.env.company,

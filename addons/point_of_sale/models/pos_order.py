@@ -1196,7 +1196,7 @@ class PosOrder(models.Model):
             return
         for line in self.lines:
             if line.product_id.is_storable:
-                line.product_id.sudo().qty_available -= line.qty
+                line.product_id.sudo().qty_available -= line._get_qty_based_on_product_uom()
 
     @api.model
     def _should_update_quantity_on_product(self):

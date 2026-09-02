@@ -14,3 +14,9 @@ class StockRule(models.Model):
     @api.model
     def _get_scheduler_tasks_to_do(self):
         return super()._get_scheduler_tasks_to_do() + 1
+
+    def _get_custom_move_fields(self):
+        fields = super()._get_custom_move_fields()
+        if self.env.user.has_group('point_of_sale.group_pos_user'):
+            fields += ['pos_order_line_ids']
+        return fields

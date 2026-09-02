@@ -120,7 +120,7 @@ class PosOrderReceipt(models.AbstractModel):
 
             data['qty'] = int(line.qty) if float(line.qty).is_integer() else line.qty
             data['product_data'] = product_by_id[data['product_id']]
-            data['product_uom_name'] = line.product_id.uom_id.name
+            data['product_uom_name'] = line.product_uom_id.name
             data['price_subtotal_incl'] = self._order_receipt_format_currency(data['price_subtotal_incl'])
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))
 

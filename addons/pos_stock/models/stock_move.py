@@ -1,9 +1,26 @@
-from odoo import api, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import groupby
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
+
+    pos_order_line_ids = fields.Many2many('pos.order.line', string="PoS order lines", groups="point_of_sale.group_pos_user", copy=False)
+
+    @api.depends('pos_order_line_ids', 'pos_order_line_ids.product_uom_id')
+    def _compute_packaging_uom_id(self):
+        super()._compute_packaging_uom_id()
+        for move in self:
+            if self.env.user.has_group('point_of_sale.group_pos_user') and move.pos_order_line_ids:
+                move.packaging_uom_id = move.pos_order_line_ids[0].product_uom_id
+
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        # to pass sale_line_id fom SO to MO in mto
+        if self.env.user.has_group('point_of_sale.group_pos_user') and self.pos_order_line_ids:
+            res['pos_order_line_ids'] = self.pos_order_line_ids.ids
+        return res
 
     def _get_new_picking_values(self):
         vals = super()._get_new_picking_values()
@@ -21,8 +38,9 @@ class StockMove(models.Model):
     @api.model
     def _prepare_lines_data_dict(self, order_lines):
         return {
-            product.id: {'order_lines': lines}
-            for product, lines in order_lines.grouped('product_id').items()
+            move.id: {'order_lines': lines}
+            for move_ids, lines in order_lines.grouped('move_ids').items()
+            for move in move_ids
         }
 
     def _create_production_lots_for_pos_order(self, lines):
@@ -63,8 +81,7 @@ class StockMove(models.Model):
     def _add_mls_related_to_order(self, related_order_lines, are_qties_done=True):
         lines_data = self._prepare_lines_data_dict(related_order_lines)
         # Moves with product_id not in related_order_lines. This can happend e.g. when product_id has a phantom-type bom.
-        moves_to_assign = self.filtered(lambda m: m.product_id.id not in lines_data or m.product_id.tracking not in ['lot', 'serial']
-                                                  or (not m.picking_type_id.use_existing_lots and not m.picking_type_id.use_create_lots))
+        moves_to_assign = self.filtered(lambda m: m.id not in lines_data or m.product_id.tracking not in ['lot', 'serial'] or (not m.picking_type_id.use_existing_lots and not m.picking_type_id.use_create_lots))
 
         # Check for any conversion issues in the moves before setting quantities
         uoms_with_issues = set()
@@ -102,44 +119,49 @@ class StockMove(models.Model):
         if are_qties_done:
             for move in moves_remaining:
                 move.move_line_ids.unlink()
-                for line in lines_data[move.product_id.id]['order_lines']:
-                    for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                for line in lines_data[move.id]['order_lines']:
+                    if line.pack_lot_ids:
+                        for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                            qty = self._get_lot_line_qty(line, move, lines_data)
+                            if existing_lots:
+                                existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
+                                quants = self.env['stock.quant']
+                                if existing_lot:
+                                    quants = self.env['stock.quant'].search(
+                                        [('lot_id', '=', existing_lot.id), ('quantity', '>', '0.0'), ('location_id', 'child_of', move.location_id.id)],
+                                        order='id desc',
+                                    )
+                                qty_left_to_assign = qty
+                                for quant in quants:
+                                    if qty_left_to_assign <= 0:
+                                        break
+                                    qty_chg = min(qty_left_to_assign, quant.quantity)
+                                    ml_vals = dict(move._prepare_move_line_vals(qty_chg))
+                                    qty_left_to_assign -= qty_chg
+                                    ml_vals.update({
+                                        'quant_id': quant.id,
+                                    })
+                                    move_lines_to_create.append(ml_vals)
+                                if qty_left_to_assign > 0:
+                                    ml_vals = dict(move._prepare_move_line_vals(qty_left_to_assign))
+                                    ml_vals.update({
+                                        'lot_name': existing_lot.name,
+                                        'lot_id': existing_lot.id,
+                                    })
+                                    move_lines_to_create.append(ml_vals)
+                            else:
+                                ml_vals = dict(move._prepare_move_line_vals(qty))
+                                ml_vals.update({'lot_name': lot.lot_name})
+                                move_lines_to_create.append(ml_vals)
+                    elif line.product_id.tracking == "none":
                         qty = self._get_lot_line_qty(line, move, lines_data)
-                        if existing_lots:
-                            existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
-                            quants = self.env['stock.quant']
-                            if existing_lot:
-                                quants = self.env['stock.quant'].search(
-                                    [('lot_id', '=', existing_lot.id), ('quantity', '>', '0.0'), ('location_id', 'child_of', move.location_id.id)],
-                                    order='id desc',
-                                )
-                            qty_left_to_assign = qty
-                            for quant in quants:
-                                if qty_left_to_assign <= 0:
-                                    break
-                                qty_chg = min(qty_left_to_assign, quant.quantity)
-                                ml_vals = dict(move._prepare_move_line_vals(qty_chg))
-                                qty_left_to_assign -= qty_chg
-                                ml_vals.update({
-                                    'quant_id': quant.id,
-                                })
-                                move_lines_to_create.append(ml_vals)
-                            if qty_left_to_assign > 0:
-                                ml_vals = dict(move._prepare_move_line_vals(qty_left_to_assign))
-                                ml_vals.update({
-                                    'lot_name': existing_lot.name,
-                                    'lot_id': existing_lot.id,
-                                })
-                                move_lines_to_create.append(ml_vals)
-                        else:
-                            ml_vals = dict(move._prepare_move_line_vals(qty))
-                            ml_vals.update({'lot_name': lot.lot_name})
-                            move_lines_to_create.append(ml_vals)
+                        ml_vals = dict(move._prepare_move_line_vals(qty))
+                        move_lines_to_create.append(ml_vals)
 
             self.env['stock.move.line'].create(move_lines_to_create)
         else:
             for move in moves_remaining:
-                for line in lines_data[move.product_id.id]['order_lines']:
+                for line in lines_data[move.id]['order_lines']:
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
                         qty = self._get_lot_line_qty(line, move, lines_data)
                         if existing_lots:
@@ -148,7 +170,7 @@ class StockMove(models.Model):
                                 move._update_reserved_quantity(qty, move.location_id, lot_id=existing_lot)
 
     def _get_lot_line_qty(self, line, move, lines_data):
-        return 1 if line.product_id.tracking == 'serial' else abs(line.qty)
+        return 1 if line.product_id.tracking == 'serial' else abs(line._get_qty_based_on_product_uom())
 
     @api.depends("product_id")
     def _compute_description_picking(self):
@@ -175,3 +197,67 @@ class StockMove(models.Model):
 
                 move.description_picking = "\n".join(descriptions) if descriptions else ""
                 seen.add(line.id)
+
+    def _get_group_by_for_merge_move(self, candidate_moves, key):
+        """
+        Group stock moves for merging with POS-specific logic.
+
+        For POS users, groups moves by their associated POS order lines.
+        Products without packaging keep POS order lines in the grouping key.
+        Products with packaging are additionally grouped by the POS order line UoM.
+
+        :param candidate_moves: stock moves to group
+        :param key: grouping key from parent method
+        :return: dict items of grouped moves
+        """
+        if (
+            not self.env.user.has_group('point_of_sale.group_pos_user')
+            or not any(candidate_moves.mapped('pos_order_line_ids'))
+        ):
+            return super()._get_group_by_for_merge_move(candidate_moves, key)
+
+        moves_without_pack = candidate_moves.filtered(
+            lambda move: not move.product_id.uom_ids
+        )
+        moves_with_pack = candidate_moves - moves_without_pack
+
+        grouped_moves = {}
+
+        # Products without packaging: keep POS order lines in the grouping key.
+        for group_key, moves in super()._get_group_by_for_merge_move(
+            moves_without_pack, key
+        ):
+            merged_moves = self.env['stock.move']
+            for move in moves:
+                merged_moves |= move
+            grouped_moves[group_key + (merged_moves.pos_order_line_ids,)] = moves
+
+        # Products with packaging: additionally group by the POS order line UoM.
+        for group_key, moves in super()._get_group_by_for_merge_move(
+            moves_with_pack, key
+        ):
+            for uom, uom_moves in groupby(
+                moves,
+                key=lambda move: move.pos_order_line_ids.product_uom_id,
+            ):
+                merged_moves = self.env['stock.move']
+                for move in uom_moves:
+                    merged_moves |= move
+                grouped_moves[group_key + (merged_moves.pos_order_line_ids,)] = uom_moves
+
+        return grouped_moves.items()
+
+    def _merge_moves_fields(self):
+        res = super()._merge_moves_fields()
+        if self.env.user.has_group('point_of_sale.group_pos_user'):
+            res['pos_order_line_ids'] = self.pos_order_line_ids.ids
+        return res
+
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default)
+        # `pos_order_line_ids` is not copied by default due to access restrictions.
+        # Add it explicitly when the current user has access to POS order lines.
+        if self.env.user.has_group('point_of_sale.group_pos_user'):
+            for move, vals in zip(self, vals_list):
+                vals['pos_order_line_ids'] = move.pos_order_line_ids.ids
+        return vals_list
