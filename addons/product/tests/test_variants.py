@@ -306,6 +306,25 @@ class TestVariants(ProductVariantsCommon):
         self.assertTrue(variant_1.active)
         self.assertTrue(template.active)
 
+    def test_create_archived_attribute_value(self):
+        template = self.env['product.template'].create({
+            'name': 'template',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.link(self.size_attribute_s.id)],
+            })],
+        })
+        ptav = template.attribute_line_ids.product_template_value_ids
+        ptav.ptav_active = False
+        recreated = self.env['product.template.attribute.value'].create({
+            'attribute_line_id': template.attribute_line_ids.id,
+            'product_attribute_value_id': self.size_attribute_s.id,
+            'price_extra': 7.5,
+        })
+        self.assertEqual(recreated.id, ptav.id)
+        self.assertTrue(recreated.ptav_active)
+        self.assertEqual(recreated.price_extra, 7.5)
+
     @mute_logger('odoo.models.unlink')
     def test_template_barcode(self):
         template = self.env['product.template'].create({
