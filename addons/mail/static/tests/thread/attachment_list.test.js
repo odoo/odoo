@@ -12,7 +12,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { mockFetch, mockUserAgent } from "@odoo/hoot-mock";
 import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
-import { download } from "@web/core/network/download";
+import { downloadFile } from "@web/core/network/download";
 import { getOrigin } from "@web/core/utils/urls";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
@@ -463,9 +463,9 @@ test("download url of non-viewable binary file", async () => {
     await openDiscuss(channelId);
     await contains("[data-icon='download']");
 
-    patchWithCleanup(download, {
-        _download: (options) => {
-            expect(options.url).toBe(
+    patchWithCleanup(downloadFile, {
+        _download: (data) => {
+            expect(data).toBe(
                 `${getOrigin()}/web/content/${attachmentId}?access_token=${attachmentId}&filename=test.o&download=true`
             );
         },
