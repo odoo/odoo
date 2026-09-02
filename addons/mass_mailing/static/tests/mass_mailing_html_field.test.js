@@ -518,6 +518,27 @@ describe("field HTML", () => {
         expect(getPagerValue()).toEqual([3]);
         expect(htmlField.state.activeTheme).toBe("empty");
         expect(".o_mass_mailing-builder_sidebar").toHaveCount(1);
+        // editable basic after switching back from builder
+        await contains(`.o_pager_previous`).click();
+        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_basic_theme:only-child", {
+            timeout: 3000,
+        });
+        expect(getPagerValue()).toEqual([2]);
+        expect(htmlField.state.activeTheme).toBe("basic");
+        expect(htmlField.withBuilder).toBe(false);
+        expect(":iframe .o_layout.o_basic_theme p:contains(Basic)").toHaveProperty(
+            "isContentEditable",
+            true
+        );
+        expect(".o_mass_mailing-builder_sidebar").toHaveCount(0);
+        // editable builder
+        await contains(`.o_pager_next`).click();
+        await waitFor(".o_mass_mailing_iframe_wrapper :iframe .o_layout.o_empty_theme:only-child", {
+            timeout: 3000,
+        });
+        expect(getPagerValue()).toEqual([3]);
+        expect(htmlField.state.activeTheme).toBe("empty");
+        expect(".o_mass_mailing-builder_sidebar").toHaveCount(1);
         // readonly default
         await contains(`.o_pager_next`).click();
         await waitFor(

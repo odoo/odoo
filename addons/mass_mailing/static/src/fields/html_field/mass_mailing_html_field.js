@@ -6,7 +6,6 @@ import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
 import {
-    onWillUpdateProps,
     useProps,
     signal,
     status,
@@ -23,7 +22,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { useRecordObserver } from "@web/model/relational_model/utils";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class MassMailingHtmlField extends HtmlField {
@@ -49,16 +47,6 @@ export class MassMailingHtmlField extends HtmlField {
     codeViewButtonRef = signal.ref();
 
     setup() {
-        // Keep track of the next props before other `onWillUpdateProps`
-        // callbacks in super can be executed, to be able to compute the next
-        // activeTheme and next themeSelector display status just before the
-        // Component is patched.
-        let props = this.props;
-        onWillUpdateProps((nextProps) => {
-            if (nextProps !== this.props) {
-                props = nextProps;
-            }
-        });
         super.setup();
         this.converter = useEmailHtmlConverter({
             bundles: ["mass_mailing.assets_iframe_style"],
@@ -78,10 +66,10 @@ export class MassMailingHtmlField extends HtmlField {
             loadBundle("mass_mailing.assets_builder");
         }
         let resId = this.props.record.resId;
-        useRecordObserver((record) => {
-            if (record.resId !== resId) {
+        useEffect(() => {
+            if (this.props.record.resId !== resId) {
                 this.state.isNewlySelectedTheme = false;
-                resId = record.resId;
+                resId = this.props.record.resId;
             }
         });
 
@@ -97,18 +85,21 @@ export class MassMailingHtmlField extends HtmlField {
         this.iframeRef = signal.ref();
         this.iframeWrapperRef = signal.ref();
 
-        onWillUpdateProps((nextProps) => {
-            if (
-                this.props.readonly !== nextProps.readonly &&
-                (this.props.readonly || nextProps.readonly)
-            ) {
-                // Force a full reload for MassMailingIframe on readonly change
-                this.state.key++;
-            }
-            if (nextProps.readonly) {
-                toRaw(this.state).showThemeSelector = false;
-            }
-        });
+        let currentReadonly = this.props.readonly;
+        useOnChange(
+            () => [this.props.readonly],
+            (nextReadonly) => {
+                if (currentReadonly !== nextReadonly && (currentReadonly || nextReadonly)) {
+                    // Force a full reload for MassMailingIframe on readonly change
+                    this.state.key++;
+                }
+                if (nextReadonly) {
+                    toRaw(this.state).showThemeSelector = false;
+                }
+                currentReadonly = nextReadonly;
+            },
+            { initialRun: false }
+        );
 
         let currentKey = this.state.key;
         useEffect(() => {
@@ -119,10 +110,10 @@ export class MassMailingHtmlField extends HtmlField {
                 // html value may have been reset from the server:
                 // - ensure that the activeTheme is up to date with the next
                 //   record.
-                this.updateActiveTheme(props.record);
+                this.updateActiveTheme(this.props);
                 // - ensure that the themeSelector is displayed if necessary
                 //   for the next props.
-                this.updateThemeSelector(props);
+                this.updateThemeSelector(this.props);
                 currentKey = this.state.key;
             }
         });
@@ -145,14 +136,14 @@ export class MassMailingHtmlField extends HtmlField {
         return this.state.activeTheme !== "basic" && !this.props.readonly;
     }
 
-    updateActiveTheme(record = this.props.record) {
+    updateActiveTheme(props = this.props) {
         // This function is called in an `effect` with a dependency on
         // `state.key` which already guarantees that the Component will be
         // re-rendered. All further reads on the state should not add
         // dependencies to that effect, so it is used raw.
         const state = toRaw(this.state);
         const getThemeName = () => {
-            const value = record.data[this.props.name];
+            const value = props.record.data[props.name];
             if (!value || !value.toString()) {
                 return;
             }
