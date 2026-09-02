@@ -17,7 +17,7 @@
                 Mega Menu
             </label>
             <div class="col-md-9 d-flex align-items-center">
-                <input type="checkbox" t-custom-model="this.state.isMegaMenu" class="form-switch"/>
+                <input type="checkbox" t-model.proxy="this.state.isMegaMenu" class="form-switch"/>
             </div>
         </div>
         <div t-if="!this.state.isMegaMenu and !this.props.hasChildren" class="mb-3 row">
