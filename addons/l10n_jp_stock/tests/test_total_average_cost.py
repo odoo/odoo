@@ -89,7 +89,6 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
             self._run_category_wizard()
 
     def test_bill_price_beats_the_order_price(self):
-        self.ensure_installed('purchase_stock')
         line = self._create_po_line(self.env.company.currency_id, 10, 100)
         self._add_opening_stock()
         self._create_move(10, 100, self.today, self.supplier_loc, self.stock_loc, line.id)
@@ -336,7 +335,6 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self.assertEqual(other_product.standard_price, 50)
 
     def test_purchase_fx_at_move_date(self):
-        self.ensure_installed('purchase_stock')
         foreign_currency = self.env.ref('base.EUR')
         company_currency = self.env.company.currency_id
         self.assertNotEqual(foreign_currency, company_currency)

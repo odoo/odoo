@@ -55,11 +55,12 @@ class TestTotalAverageCostCommon(TransactionCase):
         product._change_standard_price({product: old_price}, valuation_date=fields.Datetime.to_datetime(date))
 
     def _create_po_line(self, currency, qty, price_unit):
-        order = self.env['purchase.order'].create({
+        self.ensure_installed('purchase_stock')
+        order = self.env['purchase.order'].create({  # noqa: OLS03001
             'partner_id': self.env['res.partner'].create({'name': 'JP Foreign Supplier'}).id,
             'currency_id': currency.id,
         })
-        return self.env['purchase.order.line'].create({
+        return self.env['purchase.order.line'].create({  # noqa: OLS03001
             'order_id': order.id,
             'product_id': self.product.id,
             'product_qty': qty,
