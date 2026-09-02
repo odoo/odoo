@@ -54,7 +54,7 @@
                     </div>
                 </t>
                 <t t-else="">
-                    <button type="button" t-attf-class="o_select_menu_toggler d-flex border btn btn-light w-100 bg-light {{ this.props.togglerClass }}" t-att-disabled="this.props.disabled">
+                    <button type="button" t-attf-class="o_select_menu_toggler d-flex border btn btn-light w-100 bg-light {{ this.props.togglerClass }}" t-att-disabled="this.props.disabled" t-att-id="this.props.id" t-att-name="this.props.name">
                         <span class="o_select_menu_toggler_slot text-start text-truncate">
                             <span t-if="this.props.placeholder and !this.props.value" class="text-muted" t-out="this.props.placeholder"/>
                             <t t-call-slot="default" />
