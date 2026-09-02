@@ -372,7 +372,7 @@ been taken for this time off type. Changing it now would affect existing employe
     def requested_display_name(self):
         return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
 
-    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
+    @api.depends('requires_allocation', 'time_off_selectable', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
     @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
         display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
@@ -385,7 +385,7 @@ been taken for this time off type. Changing it now would affect existing employe
                     record.display_name = record.name
                 continue
             name = record.name
-            if record.requires_allocation:
+            if record.requires_allocation and record.time_off_selectable:
                 remaining_time = float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0
                 maximum = float_round(record.max_leaves, precision_digits=2) or 0.0
 
