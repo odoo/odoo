@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tools import discuss
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import HttpCase, new_test_user, tagged, users
 from odoo.tools.misc import mute_logger
@@ -13,6 +14,12 @@ from odoo.tools.misc import mute_logger
 
 @tagged("RTC", "post_install", "-at_install")
 class TestChannelRTC(MailCommon, HttpCase):
+
+    @users("employee")
+    def test_00_get_derived_sfu_key(self):
+        channel_key = discuss.get_derived_sfu_key(self.env, 42)
+        self.assertEqual(channel_key, discuss.get_derived_sfu_key(self.env, 42))
+        self.assertNotEqual(channel_key, discuss.get_derived_sfu_key(self.env, 43))
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
