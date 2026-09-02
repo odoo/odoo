@@ -247,14 +247,4 @@ export const stepUtils = {
             },
         ];
     },
-
-    goToUrl(url) {
-        return {
-            isActive: ["auto"],
-            content: `Navigate to ${url}`,
-            trigger: "body",
-            run: `goToUrl ${url}`,
-            expectUnloadPage: true,
-        };
-    },
 };

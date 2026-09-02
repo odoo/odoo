@@ -10,11 +10,19 @@ import {
     switchToLang,
     testSwitchWebsite,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
 import { registry } from "@web/core/registry";
 
+function goToUrl(url) {
+    return {
+        content: `Navigate to ${url}`,
+        trigger: "body",
+        run: `goToUrl ${url}`,
+        expectUnloadPage: true,
+    };
+}
+
 registerWebsitePreviewTour("snippet_translation", {}, () => [
-    stepUtils.goToUrl(getClientActionUrl()),
+    goToUrl(getClientActionUrl()),
     {
         content: "Wait for website preview and check language",
         trigger: ":iframe html:has(body:contains(welcome to your)):has(.o_top_fixed_element)",
@@ -40,7 +48,7 @@ registerWebsitePreviewTour("snippet_translation", {}, () => [
 
 registry.category("web_tour.tours").add("snippet_translation_changing_lang", {
     steps: () => [
-        stepUtils.goToUrl(getClientActionUrl()),
+        goToUrl(getClientActionUrl()),
         {
             content: "Open dropdown language selector",
             trigger: ":iframe .js_language_selector button",
@@ -80,7 +88,7 @@ registry.category("web_tour.tours").add("snippet_translation_changing_lang", {
 });
 
 registerWebsitePreviewTour("snippet_translation_switching_website", {}, () => [
-    stepUtils.goToUrl(getClientActionUrl()),
+    goToUrl(getClientActionUrl()),
     ...clickOnEditAndWaitEditModeInTranslatedPage(),
     ...insertSnippet({ id: "s_cover", name: "Cover", groupName: "Intro" }),
     {
@@ -97,7 +105,7 @@ registerWebsitePreviewTour("snippet_translation_switching_website", {}, () => [
     },
 ]);
 registerWebsitePreviewTour("snippet_dialog_rtl", {}, () => [
-    stepUtils.goToUrl(getClientActionUrl()),
+    goToUrl(getClientActionUrl()),
     ...clickOnEditAndWaitEditMode(),
     {
         trigger: ".o_builder_sidebar_open",
