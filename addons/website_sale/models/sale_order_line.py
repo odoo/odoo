@@ -260,3 +260,17 @@ class SaleOrderLine(models.Model):
     def _show_line_in_cart(self):
         self.ensure_one()
         return self._is_product_line() and not self.combo_item_id
+
+    def _must_drop_from_cart(self):
+        """Whether the line must be removed when verifying the cart content.
+
+        Only lines holding a product bought through the shop are dropped, once that product can
+        no longer be bought. Combo choices and the lines of custom flows (donations, event
+        tickets, appointments, rewards, ...) rely on products deliberately not sold on the shop.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        if not self.product_id or not self._is_product_line() or self.combo_item_id:
+            return False
+        return not self.product_id._is_add_to_cart_allowed()

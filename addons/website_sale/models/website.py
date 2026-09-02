@@ -841,6 +841,9 @@ class Website(models.Model):
             )
             if abandoned_cart_sudo:
                 if not self.env.cr.readonly:
+                    # The checks below end up reading `request.cart`, which is only filled in
+                    # once this method returns, so set it now to avoid looping back into it.
+                    request.cart = abandoned_cart_sudo
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
                     # an abandoned cart
                     abandoned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
