@@ -21,12 +21,6 @@
                         type="object"
                         invisible="not l10n_es_tbai_is_required or move_type not in ('in_invoice', 'in_refund') or state != 'posted' or l10n_es_tbai_state != 'sent'"
                     />
-                    <button
-                        string="TicketBAI Cancel"
-                        name="l10n_es_tbai_cancel"
-                        type="object"
-                        invisible="l10n_es_tbai_state != 'sent'"
-                    />
                 </xpath>
                 <xpath expr="//group[@id='header_right_group']" position='inside'>
                     <field
@@ -61,6 +55,19 @@
                        position="inside">
                     <field name="l10n_es_tbai_original_invoice_date" invisible="reversed_entry_id or move_type not in ['out_refund', 'in_refund']"/>
                 </xpath>
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_request_cancel">
+            <field name="name">Request TicketBAI Cancellation</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="binding_view_types">form</field>
+            <field name="code">
+if records:
+    records.l10n_es_tbai_cancel()
             </field>
         </record>
     </data>
