@@ -291,8 +291,8 @@ class L10nEsEdiSiiDocument(models.Model):
                             'name': doc._get_attachment_name(),
                             'raw': json.dumps(full_payload, indent=4, ensure_ascii=False).encode('utf-8'),
                             'mimetype': 'application/json',
-                            'res_model': 'account.move',
-                            'res_id': doc.move_id.id,
+                            'res_model': doc._name,
+                            'res_id': doc.id,
                         })
                     doc.sudo().write({'attachment_id': attachment.id})
             else:
