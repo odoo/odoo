@@ -251,11 +251,10 @@ class IrAttachment(models.Model):
         # GC_GRACE_PERIOD is set to a sensible default, if the DB is configured
         # with a larger value respect it.
         [[grace_db]] = self.env.execute_query(SQL("""
-            SELECT MAX(setting::int) / 1000
-            FROM pg_settings
-            WHERE vartype = 'integer' AND unit = 'ms'
-            AND name IN ('idle_in_transaction_session_timeout', 'transaction_timeout')
-            AND setting <> '0'
+            SELECT EXTRACT(epoch FROM GREATEST(
+                NULLIF(current_setting('idle_in_transaction_session_timeout', true), '0')::interval,
+                NULLIF(current_setting('transaction_timeout', true), '0')::interval
+            ))::int
         """))
         self._gc_file_store_unsafe(grace_period=max(GC_GRACE_PERIOD, min((grace_db or 0) * 2, GC_GRACE_PERIOD_MAX)))
 
