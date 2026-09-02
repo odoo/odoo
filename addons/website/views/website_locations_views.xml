@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="location_list_view" model="ir.ui.view">
+            <field name="name">res.partner.list.location</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="create_date"/>
+                    <field name="name"/>
+                    <field name="street"/>
+                    <field name="city"/>
+                    <field name="zip"/>
+                    <field name="country_id"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <field name="website"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="location_form_view" model="ir.ui.view">
+            <field name="name">res.partner.form.location</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="street" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <field name="city" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <field name="zip" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <field name="country_id" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="location_action" model="ir.actions.act_window">
+            <field name="name">Locations</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_ids" eval="[
+                (0, 0, { 'view_mode': 'list', 'view_id': ref('location_list_view') }),
+                (0, 0, { 'view_mode': 'form', 'view_id': ref('location_form_view') })
+            ]"/>
+            <field name="domain">[('is_company', '=', True)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No locations are available. Only contacts with a full address are considered potential locations for the Store Locator snippet.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
