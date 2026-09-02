@@ -11,6 +11,7 @@ from odoo.tools.misc import mute_logger
 
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tools import discuss
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -75,6 +76,12 @@ class TestChannelRTC(MailCommon, HttpCase):
             )
         )
         cls.member_of_employee_in_group_b = cls.channel_group_b.self_member_id
+
+    @users("employee")
+    def test_00_get_derived_sfu_key(self):
+        channel_key = discuss.get_derived_sfu_key(self.env, 42)
+        self.assertEqual(channel_key, discuss.get_derived_sfu_key(self.env, 42))
+        self.assertNotEqual(channel_key, discuss.get_derived_sfu_key(self.env, 43))
 
     @users("employee")
     @mute_logger("odoo.models.unlink")
