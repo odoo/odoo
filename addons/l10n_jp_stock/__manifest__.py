@@ -13,4 +13,5 @@
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'auto_install': True,
 }
