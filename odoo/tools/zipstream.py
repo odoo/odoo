@@ -178,16 +178,16 @@ def generate_zip(
         local_file.offset = offset
         directory.append(local_file)
 
-        filename = attach['name'].strip('/').encode()
+        filename = attach['name'].strip('/')
 
         need_zip64 = attach['raw'].size > MAX_INT32
         flags = Flags.DATA_DESCRIPTOR
         try:
-            filename.decode('ascii')
+            filename.encode('ascii')
         except UnicodeDecodeError:
-            flags |= Flags.UNICODE_FILENAME
+            flags |= Flags.LANGUAGE_ENCODING
         version_needed = (
-                 Version.UNICODE_FILENAME if flags & Flags.UNICODE_FILENAME
+                 Version.UNICODE_FILENAME if flags & Flags.LANGUAGE_ENCODING
             else Version.ZIP64 if need_zip64
             else Version.DEFAULT
         )
@@ -220,7 +220,7 @@ def generate_zip(
             version=version_needed,
             flags=flags,
             compression=compression,
-            modification=attach['write_date'],
+            modification=modification,
             crc32=0,  # found in data descriptor
             compressed_size=0,  # found in data descriptor
             uncompressed_size=0,  # found in data descriptor
@@ -279,7 +279,7 @@ def generate_zip(
             local_header_offset=MAX_INT32 if need_zip64 else local_file.offset,
             filename=local_file.header.filename,
             extra_fields=local_file.header.extra_fields,
-            comment=b'',
+            comment='',
         ).pack())
 
     central_directory_size = offset - central_directory_offset
@@ -650,7 +650,7 @@ class LocalFileHeader:
 
     def pack(self, *, encoding='ascii'):
         filename = self.filename.encode(
-            'utf-8' if self.flags & Flags.UNICODE_FILENAME else encoding)
+            'utf-8' if self.flags & Flags.LANGUAGE_ENCODING else encoding)
         extra_fields = _serialize_extra_fields(self.extra_fields)
         return LocalFileHeaderBytes(
             struct.pack(self._struct,
@@ -701,7 +701,7 @@ class LocalFileHeader:
             compressed_size=compressed_size,
             uncompressed_size=uncompressed_size,
             filename=buffer.read(filename_len).decode(
-                'utf-8' if flags & Flags.UNICODE_FILENAME else encoding),
+                'utf-8' if flags & Flags.LANGUAGE_ENCODING else encoding),
             extra_fields=_parse_extra_fields(buffer.read(extra_fields_len)),
         )
 
@@ -735,9 +735,9 @@ class CentralDirectoryFileHeader:
 
     def pack(self, *, encoding='ascii'):
         filename = self.filename.encode(
-            'utf-8' if self.flags & Flags.UNICODE_FILENAME else encoding)
+            'utf-8' if self.flags & Flags.LANGUAGE_ENCODING else encoding)
         comment = self.comment.encode(
-            'utf-8' if self.flags & Flags.UNICODE_FILENAME else encoding)
+            'utf-8' if self.flags & Flags.LANGUAGE_ENCODING else encoding)
         extra_fields = _serialize_extra_fields(self.extra_fields)
         return CentralDirectoryFileHeaderBytes(
             struct.pack(self._struct,
@@ -808,10 +808,10 @@ class CentralDirectoryFileHeader:
             external_attribute=external_attribute,
             local_header_offset=local_header_offset,
             filename=buffer.read(filename_len).decode(
-                'utf-8' if flags & Flags.UNICODE_FILENAME else encoding),
+                'utf-8' if flags & Flags.LANGUAGE_ENCODING else encoding),
             extra_fields=_parse_extra_fields(buffer.read(extra_fields_len)),
             comment=buffer.read(comment_len).decode(
-                'utf-8' if flags & Flags.UNICODE_FILENAME else encoding),
+                'utf-8' if flags & Flags.LANGUAGE_ENCODING else encoding),
         )
 
 
