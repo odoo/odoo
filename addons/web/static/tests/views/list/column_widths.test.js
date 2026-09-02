@@ -499,6 +499,22 @@ test(`width computation: list with width attribute in arch (fixed widths)`, asyn
     expect(getColumnWidths()).toEqual([40, 61, 72, 102, 524]);
 });
 
+test(`width computation: list with width attribute in arch (smaller than min width)`, async () => {
+    // columns have a hardcoded minimal width, but a width set in the arch
+    // always takes precedence, even if it is smaller than that minimum
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="int_field" width="40px"/>
+                <field name="qux" width="[30px,60px]"/>
+                <field name="foo"/>
+            </list>`,
+    });
+    expectedColumnWidthsToBeCloseTo([40, 49, 69, 642]);
+});
+
 test(`width computation: list with width attribute in arch (min/max widths)`, async () => {
     await mountView({
         type: "list",
