@@ -10,18 +10,8 @@ export class WebsiteEventTrackReminder extends Interaction {
     static selector = ".o_wetrack_js_reminder";
 
     dynamicContent = {
-        ".o_wetrack_js_reminder_bell": {
+        ".o_wetrack_js_reminder_on, .o_wetrack_js_reminder_off": {
             "t-on-click.prevent.stop": this.debounced(this.onReminderToggleClick, 500, true),
-            "t-on-mouseover": (ev) => {
-                if (!this.reminderOn){
-                    ev.currentTarget.classList.add("oi-filled");
-                }
-            },
-            "t-on-mouseout": (ev) => {
-                if (!this.reminderOn){
-                    ev.currentTarget.classList.remove("oi-filled")
-                }
-            },
         },
     };
 
@@ -30,7 +20,6 @@ export class WebsiteEventTrackReminder extends Interaction {
         this.orm = this.services.orm;
         this.trackId = parseInt(this.el.dataset.trackId);
         this.reminderOn = this.el.dataset.reminderOn;
-        this.bellSelectorEl = this.el.querySelector(".o_wetrack_js_reminder_bell");
     }
 
     async onReminderToggleClick() {
@@ -63,14 +52,13 @@ export class WebsiteEventTrackReminder extends Interaction {
                         title: _t("Allow push notifications?"),
                         body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
                     });
-                    this.bellSelectorEl.classList.add("oi-filled");
-                    this.bellSelectorEl.setAttribute("title", _t("Favorite On"));
                 } else {
-
                     this.favoriteAddedConfirmation = "";
-                    this.bellSelectorEl.classList.remove("oi-filled");
-                    this.bellSelectorEl.setAttribute("title", _t("Set Favorite"));
                 }
+                this.el.classList.toggle("reminder_on", reminderOnValue);
+                this.el.classList.toggle("reminder_off", !reminderOnValue);
+
+                this.env.bus.trigger("WEBSITE_EVENT_TRACK:ADD_ONE_TO_WISHLIST", { reminderOn: reminderOnValue });
             }
         });
     }
