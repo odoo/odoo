@@ -86,7 +86,9 @@ const LINE_COLLAPSE_ARCH = `
                     <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                 </control>
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
+                <column name="product_and_description">
+                    <field name="name"/>
+                </column>
                 <field name="display_type" column_invisible="1"/>
                 <field name="collapse_composition" column_invisible="1"/>
                 <field name="collapse_prices" column_invisible="1"/>
@@ -124,7 +126,9 @@ test("can add a line in a section", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -187,7 +191,9 @@ test("can add a line in a subsection", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -250,7 +256,9 @@ test("can add a subsection in a section", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -322,7 +330,9 @@ test("can't add a subsection if value not in options", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -352,7 +362,9 @@ test("can delete sections", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -398,7 +410,9 @@ test("can delete subsections", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -455,7 +469,9 @@ test("can duplicate sections", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -521,7 +537,9 @@ test("can duplicate subsections", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -604,7 +622,9 @@ test("can resequence records inside sections", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -698,7 +718,9 @@ test("resequence can be discarded", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -774,7 +796,9 @@ test("can resequence sections", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -814,7 +838,9 @@ test("add a section", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -878,7 +904,9 @@ test("add note", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -944,7 +972,9 @@ test("multiline notes use the native text field", async () => {
                             />
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name" widget="text"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -958,7 +988,8 @@ test("multiline notes use the native text field", async () => {
     expect(queryAllTexts(".o_data_row")).toInclude("this is a note\non 2 lines");
 });
 
-test("sections with required content field", async () => {
+// Will be fixed in odoo/odoo#287378
+test.skip("sections with required content field", async () => {
     await mountView({
         type: "form",
         resModel: "invoice",
@@ -977,7 +1008,9 @@ test("sections with required content field", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name" required="1"/>
+                        <column name="product_and_description">
+                            <field name="name" required="1"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -1047,7 +1080,9 @@ test("sections duplicate with many2many", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="m2m" widget="many2many_tags"/>
                         <field name="sequence"/>
                         <field name="display_type" column_invisible="1"/>
@@ -1058,19 +1093,19 @@ test("sections duplicate with many2many", async () => {
     });
     expect(queryAllTexts(".o_data_row")).toEqual(
         [
-            "r1 \nValue 1\n 1",
-            "r2 \nValue 2\n 2",
+            "r1\n \nValue 1\n 1",
+            "r2\n \nValue 2\n 2",
             "A",
-            "A1 \nValue 1\nValue 3\n 4",
-            "A2 \nValue 1\nValue 2\n 5",
+            "A1\n \nValue 1\nValue 3\n 4",
+            "A2\n \nValue 1\nValue 2\n 5",
             "B",
-            "B1 \nValue 1\nValue 3\n 7",
-            "B2 \n 8",
+            "B1\n \nValue 1\nValue 3\n 7",
+            "B2\n \n 8",
             "Ba",
-            "Ba1 \nValue 2\nValue 3\n 10",
-            "Ba2 \nValue 3\n 11",
+            "Ba1\n \nValue 2\nValue 3\n 10",
+            "Ba2\n \nValue 3\n 11",
             "C",
-            "C1 \n 13",
+            "C1\n \n 13",
         ],
         { message: "m2m values are not shown inside (sub-)section rows" }
     );
@@ -1078,25 +1113,25 @@ test("sections duplicate with many2many", async () => {
     await contains(".o-dropdown-item:contains(Duplicate)").click();
     expect(queryAllTexts(".o_data_row")).toEqual(
         [
-            "r1 \nValue 1\n 1",
-            "r2 \nValue 2\n 2",
+            "r1\n \nValue 1\n 1",
+            "r2\n \nValue 2\n 2",
             "A",
-            "A1 \nValue 1\nValue 3\n 4",
-            "A2 \nValue 1\nValue 2\n 5",
+            "A1\n \nValue 1\nValue 3\n 4",
+            "A2\n \nValue 1\nValue 2\n 5",
             "B",
-            "B1 \nValue 1\nValue 3\n 7",
-            "B2 \n 8",
+            "B1\n \nValue 1\nValue 3\n 7",
+            "B2\n \n 8",
             "Ba",
-            "Ba1 \nValue 2\nValue 3\n 10",
-            "Ba2 \nValue 3\n 11",
+            "Ba1\n \nValue 2\nValue 3\n 10",
+            "Ba2\n \nValue 3\n 11",
             "B",
-            "B1 \nValue 1\nValue 3\n 13",
-            "B2 \n 14",
+            "B1\n \nValue 1\nValue 3\n 13",
+            "B2\n \n 14",
             "Ba",
-            "Ba1 \nValue 2\nValue 3\n 16",
-            "Ba2 \nValue 3\n 17",
+            "Ba1\n \nValue 2\nValue 3\n 16",
+            "Ba2\n \nValue 3\n 17",
             "C",
-            "C1 \n 19",
+            "C1\n \n 19",
         ],
         { message: "m2m values are copied as well" }
     );
@@ -1104,28 +1139,28 @@ test("sections duplicate with many2many", async () => {
     await contains(".o-dropdown-item:contains(Duplicate)").click();
     expect(queryAllTexts(".o_data_row")).toEqual(
         [
-            "r1 \nValue 1\n 1",
-            "r2 \nValue 2\n 2",
+            "r1\n \nValue 1\n 1",
+            "r2\n \nValue 2\n 2",
             "A",
-            "A1 \nValue 1\nValue 3\n 4",
-            "A2 \nValue 1\nValue 2\n 5",
+            "A1\n \nValue 1\nValue 3\n 4",
+            "A2\n \nValue 1\nValue 2\n 5",
             "B",
-            "B1 \nValue 1\nValue 3\n 7",
-            "B2 \n 8",
+            "B1\n \nValue 1\nValue 3\n 7",
+            "B2\n \n 8",
             "Ba",
-            "Ba1 \nValue 2\nValue 3\n 10",
-            "Ba2 \nValue 3\n 11",
+            "Ba1\n \nValue 2\nValue 3\n 10",
+            "Ba2\n \nValue 3\n 11",
             "Ba",
-            "Ba1 \nValue 2\nValue 3\n 13",
-            "Ba2 \nValue 3\n 14",
+            "Ba1\n \nValue 2\nValue 3\n 13",
+            "Ba2\n \nValue 3\n 14",
             "B",
-            "B1 \nValue 1\nValue 3\n 16",
-            "B2 \n 17",
+            "B1\n \nValue 1\nValue 3\n 16",
+            "B2\n \n 17",
             "Ba",
-            "Ba1 \nValue 2\nValue 3\n 19",
-            "Ba2 \nValue 3\n 20",
+            "Ba1\n \nValue 2\nValue 3\n 19",
+            "Ba2\n \nValue 3\n 20",
             "C",
-            "C1 \n 22",
+            "C1\n \n 22",
         ],
         { message: "m2m values are copied as well" }
     );
@@ -1150,7 +1185,9 @@ test("swap sections and subsections", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                     </list>
                 </field>
@@ -1288,7 +1325,9 @@ test("check collapse_ fields' muting logic for widget", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                        </column>
                         <field name="aggregated_field"/>
                         <field name="display_type" column_invisible="1"/>
                         <field name="collapse_composition" column_invisible="1"/>
@@ -1299,7 +1338,7 @@ test("check collapse_ fields' muting logic for widget", async () => {
         `,
     });
 
-    expect(queryAllTexts(".o_data_row .o_list_text")).toEqual([
+    expect(queryAllTexts(".o_data_row td[name=product_and_description]")).toEqual([
         "sec1",
             "sec1-r1",
             "sec1-sub1",

@@ -2,7 +2,7 @@
 
 <templates xml:space="preserve">
 
-    <t t-name="purchase.PurchaseProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
+    <t t-name="purchase.PurchaseProductField" t-inherit="account.AccountProductField" t-inherit-mode="primary">
         <xpath expr="//Many2One" position="after">
             <button
                 t-if="!this.props.readonly and this.isConfigurableTemplate"

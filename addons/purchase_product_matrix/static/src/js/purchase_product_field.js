@@ -1,14 +1,14 @@
 import {
-    productLabelSectionAndNoteField,
-    ProductLabelSectionAndNoteField
-} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
+    accountProductField,
+    AccountProductField,
+} from "@account/components/account_product_field/account_product_field";
 import { useEffect } from "@odoo/owl";
 import { useMatrixConfigurator } from "@product_matrix/js/matrix_configurator_hook";
 import { _t } from "@web/core/l10n/translation";
-import { registry } from '@web/core/registry';
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
-export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteField {
+export class PurchaseOrderLineProductField extends AccountProductField {
     static template = "purchase.PurchaseProductField";
     setup() {
         super.setup();
@@ -62,6 +62,6 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
 }
 
 registry.category("fields").add("pol_product_many2one", {
-    ...productLabelSectionAndNoteField,
+    ...accountProductField,
     component: PurchaseOrderLineProductField,
 });

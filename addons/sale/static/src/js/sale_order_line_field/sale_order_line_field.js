@@ -3,7 +3,7 @@ import {
     ProductLabelSectionAndNoteListRender,
     productLabelSectionAndNoteOne2Many,
     ProductLabelSectionAndNoteOne2Many,
-} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field_o2m";
+} from "@account/components/product_label_section_and_note_o2m/product_label_section_and_note_field_o2m";
 import {
     getSectionRecords,
     sectionAndNoteFieldOne2Many,
@@ -81,7 +81,12 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
      * while accessing comboColumns
      */
     get comboColumns() {
-        return [this.titleField, ...this.props.aggregatedFields, 'product_uom_qty', 'discount'];
+        return [
+            this.productAndDescriptionColumn,
+            ...this.props.aggregatedFields,
+            "product_uom_qty",
+            "discount",
+        ];
     }
 
     get sectionColumns() {
@@ -90,14 +95,6 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
     getActiveColumns() {
         let activeColumns = super.getActiveColumns();
-        const productTmplCol = activeColumns.find((col) => col.name === 'product_template_id');
-        const productCol = activeColumns.find((col) => col.name === 'product_id');
-
-        if (productCol && productTmplCol) {
-            // Hide the template column if the variant one is enabled.
-            activeColumns = activeColumns.filter((col) => col.name != 'product_template_id')
-        }
-
         // Hide the UOM column if the field is optional and not active
         const uomCol = activeColumns.find((col) => col.name === "sol_uom");
         if (uomCol) {
@@ -118,20 +115,12 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         return `${classNames} ${this.isCombo(record) ? 'fw-bold' : ''}`;
     }
 
-    getCellClass(column, record) {
-        const classNames = super.getCellClass(column, record).split(" ");
-        if (column.name == "name" && record.isFieldInvalid("product_template_id")) {
-            classNames.push("o_invalid_cell o_required_modifier");
-        }
-        return classNames.join(" ");
-    }
-
     /**
      * @override
      */
     focusToName(editRec) {
         if (editRec && editRec.isNew && this.isSection(editRec)) {
-            // Don't always focus on `titleField` for sections since we are adding section_qty and
+            // Don't always focus on `productAndDescriptionColumn` for sections since we are adding section_qty and
             // section_uom_id fields in section row.
             return;
         }
@@ -220,7 +209,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
     getSectionColumns(columns) {
         const isSectionCol = (col) =>
-            [this.titleField, ...this.sectionColumns].includes(col.name) || col.widget === "handle";
+            [this.productAndDescriptionColumn, ...this.sectionColumns].includes(col.name) || col.widget === "handle";
 
         let titleColspan = 1;
         let absorbingColumns = true;
@@ -229,7 +218,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         const sectionCols = [];
 
         for (const col of columns) {
-            if (col.name === this.titleField) {
+            if (col.name === this.productAndDescriptionColumn) {
                 titleCol = col;
                 continue;
             }

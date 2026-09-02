@@ -85,7 +85,6 @@
                                             name="product_template_id"
                                             string="Product"
                                             required="not display_type"
-                                            options="{'show_label_warning': True}"
                                             widget="sotl_product_many2one"
                                         />
                                         <label for="product_uom_qty"/>
@@ -106,7 +105,7 @@
                                     </page>
                                 </notebook>
                             </form>
-                            <list string="Quotation Template Lines" editable="bottom">
+                            <list name="sotl_list" string="Quotation Template Lines" editable="bottom">
                                 <control>
                                     <create name="add_product_control" string="Add a product"/>
                                     <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
@@ -135,16 +134,18 @@
                                     <field
                                         name="product_template_id"
                                         string="Product"
-                                        options="{'show_label_warning': True}"
+                                        required="mandatory_product and not display_type"
                                         widget="sotl_product_many2one"
+                                        placeholder="Type to find a product..."
                                         invisible="display_type"
                                         optional="hide"
                                     />
                                     <field
                                         name="product_id"
                                         string="Product Variant"
-                                        options="{'show_label_warning': True}"
+                                        required="mandatory_product and not display_type"
                                         widget="sotl_product_many2one"
+                                        placeholder="Type to find a product..."
                                         invisible="display_type"
                                         optional="hide"
                                     />
@@ -153,9 +154,14 @@
                                         name="name"
                                         placeholder="Enter a Description"
                                         decoration-it="not display_type"
+                                        decoration-warning="not display_type and not product_id and mandatory_product"
                                         widget="text"
                                     />
-                                    <field name="label" widget="sotl_label_text"/>
+                                    <field
+                                        name="label"
+                                        widget="sotl_label_text"
+                                        invisible="display_type"
+                                    />
                                 </column>
                                 <column name="sotl_qty">
                                     <field name="product_uom_qty" invisible="display_type"/>
@@ -255,6 +261,22 @@
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="sale_order_template_view_form_mandatory_product" model="ir.ui.view">
+        <field name="name">sale.order.template.form.mandatory.product</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <!-- Will be activated along with mandatory product setting -->
+        <field name="active">False</field>
+        <field name="arch" type="xml">
+            <xpath
+                expr="//list[@name='sotl_list']//field[@name='product_template_id']"
+                position="attributes"
+            >
+                <attribute name="optional">show</attribute>
+            </xpath>
         </field>
     </record>
 

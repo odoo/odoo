@@ -70,7 +70,7 @@ class AccountMove extends models.Model {
     _records = [{ id: 1, name: "account.move" }]
 }
 class AccountMoveLine extends models.Model {
-    name = fields.Char();
+    name = fields.Text();
     product_id = fields.Many2one({
         string:"Product",
         relation:"product",
@@ -103,8 +103,10 @@ test("Update description on product line", async() => {
                     <page id="invoice_tab" name="invoice_tab" string="Invoice Lines">
                         <field name="invoice_line_ids" mode="list" widget="product_label_section_and_note_field_o2m">
                             <list name="journal_items" editable="bottom" string="Journal Items">
-                                <field name="product_id" widget="product_label_section_and_note_field" readonly="0"/>
-                                <field name="name" widget="account_label_text" optional="show"/>
+                                <column name="product_and_description">
+                                    <field name="product_id" widget="account_product_field" optional="show" readonly="0"/>
+                                    <field name="name" placeholder="Enter a description" optional="show"/>
+                                </column>
                             </list>
                         </field>
                     </page>

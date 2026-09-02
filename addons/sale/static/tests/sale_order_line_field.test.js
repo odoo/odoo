@@ -58,8 +58,10 @@ test("test combo move up/down", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle" invisible="combo_item_id"/>
-                        <field name="name"/>
-                        <field name="label"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                            <field name="label"/>
+                        </column>
                         <field name="display_type" column_invisible="1"/>
                         <field name="linked_line_id" column_invisible="1"/>
                         <field name="product_type" column_invisible="1"/>
@@ -204,8 +206,10 @@ test("Test combo columns", async () => {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle" invisible="combo_item_id"/>
-                        <field name="name"/>
-                        <field name="label"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                            <field name="label"/>
+                        </column>
                         <field name="price_unit"/>
                         <field name="product_uom_qty"/>
                         <field name="discount"/>
@@ -220,7 +224,7 @@ test("Test combo columns", async () => {
         `,
     });
 
-    expect(queryAllTexts('.o_data_row .o_list_text')).toEqual([
+    expect(queryAllTexts('.o_data_row td[name=product_and_description]')).toEqual([
         "Non Combo Line1",
         "Non Combo Line2",
         "Test Combo1",
