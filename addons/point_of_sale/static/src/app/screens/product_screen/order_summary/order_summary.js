@@ -131,6 +131,19 @@ export class OrderSummary extends Component {
         if (values.price_unit !== undefined) {
             orderline.price_unit = values.price_unit;
         }
+        if (values.product_uom_id !== undefined) {
+            orderline.product_uom_id = values.product_uom_id;
+        } else {
+            orderline.product_uom_id = values.product_id.uom_id;
+        }
+        if (values.price_type !== undefined) {
+            orderline.price_type = values.price_type;
+        } else if (
+            values.product_uom_id &&
+            values.product_uom_id.id === values.product_id?.uom_id.id
+        ) {
+            orderline.price_type = "original";
+        }
         orderline.setFullProductName();
 
         // Try to merge the orderline

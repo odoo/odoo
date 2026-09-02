@@ -1255,3 +1255,38 @@ class TestPosStockFlow(CommonPosStockTest):
         used_accounts = current_session.move_ids.line_ids.mapped('account_id')
         self.assertIn(mapped_expense, used_accounts)
         self.assertNotIn(default_expense, used_accounts)
+
+    def test_product_stock_update(self):
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
+        self.ten_dollars_no_tax.write({
+            'is_storable': True,
+            'uom_ids': [(4, pack_of_6.id)],
+        })
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.ten_dollars_no_tax.product_variant_id.id,
+            'inventory_quantity': 100,
+            'location_id': self.stock_location_components.id,
+        }).action_apply_inventory()
+        self.assertEqual(self.ten_dollars_no_tax.qty_available, 100)
+        order_data = {
+            'line_data': [
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id, 'qty': 1, 'product_uom_id': self.ten_dollars_no_tax.uom_id.id, 'price_unit': 10},
+                {'product_id': self.ten_dollars_no_tax.product_variant_id.id, 'qty': 1, 'product_uom_id': pack_of_6.id, 'price_unit': 60},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.bank_payment_method.id, 'amount': 70},
+            ],
+        }
+
+        self.pos_config_usd.open_ui()
+
+        order, _ = self.create_backend_pos_order({**order_data, 'order_data': {'to_invoice': True, 'partner_id': self.partner.id}})
+        self.assertEqual(order.state, 'paid')
+        self.assertEqual(len(order.picking_ids), 1)
+        self.assertEqual(order.picking_ids.state, 'done')
+        self.assertEqual(len(order.picking_ids.move_line_ids), 2)
+        self.assertEqual(order.picking_ids.move_ids[0].product_uom_qty, 1)
+        self.assertEqual(order.picking_ids.move_ids[0].packaging_uom_qty, 1)
+        self.assertEqual(order.picking_ids.move_ids[1].product_uom_qty, 6)
+        self.assertEqual(order.picking_ids.move_ids[1].packaging_uom_qty, 1)
+        self.assertEqual(self.ten_dollars_no_tax.qty_available, 93, "Available quantity should be reduced from 100 to 93 (100 - 1 - 6).")

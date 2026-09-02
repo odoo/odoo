@@ -13,7 +13,11 @@ patch(ProductTemplateAccounting.prototype, {
     ) {
         if (original_line && original_line.isLotTracked() && variant) {
             related_lines.push(
-                ...original_line.order_id.lines.filter((line) => line.product_id.id == variant.id)
+                ...original_line.order_id.lines.filter(
+                    (line) =>
+                        line.product_id.id == variant.id &&
+                        line.product_uom_id.id === original_line.product_uom_id.id
+                )
             );
             quantity = related_lines.reduce((sum, line) => sum + line.getQuantity(), 0);
         }

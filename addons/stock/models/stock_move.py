@@ -1389,6 +1389,9 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         return lambda move: base_getter(move) + tuple(_get_formatted_float_fields(move, f_name, float_precision) for f_name in float_fields)
 
+    def _get_group_by_for_merge_move(self, candidate_moves, key):
+        return groupby(candidate_moves, key=key)
+
     def _merge_moves(self, merge_into=False):
         """ This method will, for each move in `self`, go up in their linked picking and try to
         find in their existing moves a candidate into which we can merge the move.
@@ -1423,7 +1426,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         for candidate_moves in candidate_moves_set:
             # First step find move to merge.
             candidate_moves = candidate_moves.filtered(lambda m: m.state not in ('done', 'cancel', 'draft')) - neg_qty_moves
-            for __, g in groupby(candidate_moves, key=self._merge_move_itemgetter(distinct_fields)):
+            for __, g in self._get_group_by_for_merge_move(candidate_moves, self._merge_move_itemgetter(distinct_fields)):
                 moves = self.env['stock.move'].concat(g)
                 # Merge all positive moves together
                 if len(moves) > 1:
