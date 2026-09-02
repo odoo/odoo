@@ -61,6 +61,7 @@ class RecordScope extends Scope {
     constructor(record) {
         super(record._rawStore._.app);
         this.record = record;
+        record._registerDisposeFn(() => this.destroy());
     }
 
     destroy() {
