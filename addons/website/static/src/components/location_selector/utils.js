@@ -37,15 +37,7 @@ export function formatOpeningHours(openingHours) {
             .padStart(2, "0");
         return { h, m };
     }
-    const formattedOpeningHours = {
-        0: [],
-        1: [],
-        2: [],
-        3: [],
-        4: [],
-        5: [],
-        6: [],
-    };
+    const formattedOpeningHours = Array(7).fill([]);
     openingHours.forEach((period) => {
         const { h: hour_from, m: minute_from } = toTimeString(period.hour_from);
         const { h: hour_to, m: minute_to } = toTimeString(period.hour_to);

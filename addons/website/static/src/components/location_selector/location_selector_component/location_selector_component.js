@@ -23,7 +23,6 @@ export class LocationSelectorComponent extends Component {
         showPhone: t.boolean().optional(false),
         showWebsite: t.boolean().optional(false),
         zipCode: t.string().optional(),
-        containerEl: t.any().optional(),
     });
 
     setup() {
@@ -44,9 +43,7 @@ export class LocationSelectorComponent extends Component {
 
         useListener(window, "resize", this.debouncedOnResize.bind(this));
 
-        onMounted(() => {
-            this.updateSize();
-        });
+        onMounted(this.updateSize);
 
         // Fetch new locations when the zip code is updated.
         useEffect(() => {
@@ -67,7 +64,7 @@ export class LocationSelectorComponent extends Component {
      *
      * @param {String} searchedZip - The zip code used to look for close locations.
      */
-    async updateLocations(searchedZip) {
+    updateLocations(searchedZip) {
         const allLocations = JSON.parse(this.props.locationsList || "[]");
         this.state.locations = allLocations
             .filter(({ zip }) => zip?.match(searchedZip))

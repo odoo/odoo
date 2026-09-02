@@ -24,7 +24,6 @@ export class MapContainer extends Component {
         showPhone: t.boolean().optional(false),
         showWebsite: t.boolean().optional(false),
         showLocationNameOnMarkerHover: t.boolean().optional(false),
-        containerEl: t.any().optional(),
     });
 
     setup() {
@@ -43,16 +42,11 @@ export class MapContainer extends Component {
              * available.
              **/
             try {
-                const isCustomSnippetPreview =
-                    this.props.containerEl?.ownerDocument.documentElement.classList.contains(
-                        "o_add_snippets_preview"
-                    );
+                const snippetPreviewDoc = this.env.windowContext.iframePreviewDocument;
                 await Promise.all([
                     loadJS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"),
                     loadCSS("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css", {
-                        targetDoc: isCustomSnippetPreview
-                            ? this.props.containerEl.ownerDocument
-                            : undefined,
+                        targetDoc: snippetPreviewDoc,
                     }),
                 ]);
                 this.state.shouldLoadMap = true;
