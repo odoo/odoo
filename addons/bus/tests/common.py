@@ -331,7 +331,10 @@ class WebsocketCase(HttpCase, BusCase):
         # As the lock is always unlocked during WebsocketCases we have a whitelist of
         # methods which must match. We also default to super if we are coming from a cursor.
         allowed_methods = [  # function + filename
-            ('acquire_cursor', Like('.../bus/tools/misc.py')),
+            ('_terminate', Like('.../bus/websocket.py')),
+            ('_trigger_lifecycle_event', Like('.../bus/websocket.py')),
+            ('serve_websocket_message', Like('.../bus/websocket.py')),
+            ('_worker_loop', Like('.../bus/bus_dispatcher.py')),
         ]
         if any(
             frame.function == function and frame.filename == filename

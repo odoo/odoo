@@ -1099,15 +1099,16 @@ class BaseCase(case.TestCase):
             )
 
         try:
-            from odoo.addons.bus.tools import misc as bus_misc  # noqa: PLC0415
+            from odoo.addons.bus import bus_dispatcher as bus_dispatcher_mod  # noqa: PLC0415
+            from odoo.addons.bus import websocket as bus_websocket  # noqa: PLC0415
         except ImportError:
             additional_patches = ()
         else:
-            og_db_connect = bus_misc.db_connect
+            from odoo.sql_db import db_connect as og_db_connect  # noqa: PLC0415
 
             def _patched_ws_db_connect(to, allow_uri=False, readonly=False):
-                # acquire_cursor() opens a cursor via db_connect(db_name) directly instead
-                # of going through Registry(db_name).cursor(), bypassing the patch above.
+                # Websocket and bus dispatcher open a cursor via db_connect(db_name)
+                # instead of Registry(db_name).cursor(), bypassing the patch above.
                 # Redirect it to the test's cursor too.
                 if to == cr.dbname:
 
@@ -1119,7 +1120,8 @@ class BaseCase(case.TestCase):
                 return og_db_connect(to, allow_uri=allow_uri, readonly=readonly)
 
             additional_patches = (
-                patch.object(bus_misc, 'db_connect', _patched_ws_db_connect),
+                patch.object(bus_websocket, 'db_connect', _patched_ws_db_connect),
+                patch.object(bus_dispatcher_mod, 'db_connect', _patched_ws_db_connect),
             )
 
         def get_sequences(cr):

@@ -5,10 +5,8 @@ import json
 from collections import defaultdict
 from queue import Full
 from threading import Event
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from weakref import WeakSet
-
-from psycopg2.pool import PoolError
 
 try:
     import websocket as ws
@@ -27,7 +25,6 @@ from odoo.addons.bus.websocket import (
     PollablePriorityQueue,
     Websocket,
     WebsocketConnectionHandler,
-    acquire_cursor,
 )
 
 
@@ -216,7 +213,7 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_no_cursor_when_no_callback_for_lifecycle_event(self):
         with patch.object(Websocket, '_Websocket__event_callbacks', defaultdict(set)):
-            with patch('odoo.addons.bus.websocket.acquire_cursor') as mock:
+            with patch('odoo.addons.bus.websocket.db_connect') as mock:
                 self.websocket_connect()
                 self.assertFalse(mock.called)
 
@@ -304,20 +301,3 @@ class TestWebsocketCaryall(WebsocketCase):
         )
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             websocket.recv()
-
-    @patch('odoo.addons.bus.tools.misc.db_connect')
-    def test_propagates_caller_pool_error(self, mock_db_connect):
-        fake_cursor = MagicMock()
-        cr_ctx_manager = mock_db_connect.return_value.cursor.return_value
-        cr_ctx_manager.__enter__.return_value = fake_cursor
-        cr_ctx_manager.__exit__.return_value = False
-
-        with self.assertRaises(PoolError) as cm:
-            with acquire_cursor(self.env.cr.dbname) as cr:
-                self.assertIs(cr, fake_cursor)
-                raise PoolError("from_caller")
-
-        # Ensure the caller pool error propagated, not the "Failed to acquire cursor
-        # after..." raised by the acquire_cursor fn.
-        self.assertEqual(str(cm.exception), "from_caller")
-        mock_db_connect.return_value.cursor.assert_called_once()  # Ensure acquire_cursor didn't retry either.

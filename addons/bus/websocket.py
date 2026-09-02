@@ -37,12 +37,12 @@ from odoo.http.session import (
 )
 from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
+from odoo.sql_db import db_connect
 from odoo.tools import config
 
 from .bus_dispatcher import dispatch
 from .session_helpers import new_env
 from .tools import orjson
-from .tools.misc import acquire_cursor
 from .websocket_protocol import (
     CloseCode,
     ConnectionClosed,
@@ -533,7 +533,7 @@ class Websocket:
         self.__cmd_queue.close()
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
-        with acquire_cursor(self._db) as cr:
+        with db_connect(self._db).cursor() as cr:
             env = new_env(cr, self._session)
             env["ir.websocket"]._on_websocket_closed(self._cookies)
 
@@ -612,7 +612,7 @@ class Websocket:
         """
         if not self.__event_callbacks[event_type]:
             return
-        with acquire_cursor(self._db) as cr:
+        with db_connect(self._db).cursor() as cr:
             env = new_env(cr, self._session, set_lang=True)
             for callback in self.__event_callbacks[event_type]:
                 try:
@@ -745,7 +745,7 @@ class WebsocketRequest:
         data = jsonrequest.get('data')
         self.session = self._get_session()
 
-        with acquire_cursor(self.db) as cr:
+        with db_connect(self.db).cursor() as cr:
             try:
                 self.env = new_env(cr, self.session, set_lang=True)
                 self.registry = self.env.registry
