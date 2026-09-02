@@ -41,22 +41,14 @@ class Component extends owl.Component {
      */
     constructor(node) {
         super(node);
-        if (this.constructor.defaultProps) {
+        if (this.constructor.props || this.constructor.defaultProps) {
             throw new Error(
-                `Component "${this.constructor.name}" defines a static "defaultProps", ` +
-                    `which Owl 3 ignores. Declare the defaults through the props schema instead, ` +
+                `Component "${this.constructor.name}" defines a static "props" or "defaultProps", ` +
+                    `which Owl 3 ignores. Declare the props schema through "useProps" instead, ` +
                     `e.g. "props = useProps({ someProp: t.string().optional(defaultValue) })".`
             );
         }
-        this.props = owl.useProps();
         this.env = useEnv();
-    }
-
-    /**
-     * @param {boolean} [deep]
-     */
-    render(deep = false) {
-        this.__owl__.render(deep === true);
     }
 }
 owl.Component = Component;
@@ -77,20 +69,6 @@ owl.onWillRender = function onWillRender(cb) {
 owl.useComponent = function useComponent() {
     return owl.useScope().component;
 };
-
-/**
- * @param {HTMLElement} target
- * @param {string} eventName
- * @param {Function} handler
- * @param {any} eventParams
- */
-function useExternalListener(target, eventName, handler, eventParams) {
-    const node = owl.useScope();
-    const boundHandler = handler.bind(node.component);
-    owl.onMounted(() => target.addEventListener(eventName, boundHandler, eventParams));
-    owl.onWillUnmount(() => target.removeEventListener(eventName, boundHandler, eventParams));
-}
-owl.useExternalListener = useExternalListener; // kept for spreadsheet
 
 /**
  * @param {Function} effect
@@ -150,7 +128,6 @@ function useSubEnv(extension) {
     component.env = subEnv;
 }
 owl.useSubEnv = useSubEnv;
-owl.useChildSubEnv = useSubEnv; // kept for spreadsheet
 
 class VPortal extends owl.blockDom.text("").constructor {
     /**
@@ -232,60 +209,44 @@ class Portal extends owl.Component {
     }
 }
 
-const customDirectives = {
-    /**
-     * @param {HTMLElement} node
-     * @param {string} value
-     */
-    model: (node, value) => {
-        // kept for spreadsheet
-        node.setAttribute("t-model.proxy", value);
-    },
-    /**
-     * @param {HTMLElement} node
-     * @param {string} value
-     */
-    portal: (node, value) => {
-        if (node.nodeName.toLowerCase() !== "t") {
-            throw new Error("t-custom-portal should be on a 't' element");
-        }
-        node.setAttribute("t-component", "__globals__.Portal");
-        node.setAttribute("selector", value);
-    },
-};
-
-const globalValues = {
-    Portal,
-};
+/**
+ * @param {HTMLElement} node
+ * @param {string} value
+ */
+function portalDirective(node, value) {
+    if (node.nodeName.toLowerCase() !== "t") {
+        throw new Error("t-custom-portal should be on a 't' element");
+    }
+    node.setAttribute("t-component", "__globals__.Portal");
+    node.setAttribute("selector", value);
+}
 
 class App extends owl.App {
     /**
      * @param {any} config
      */
     constructor(config) {
-        const env = config.env ?? {};
-        if (config.plugins) {
-            if (config.plugins instanceof owl.Resource) {
-                config.plugins.add(EnvPlugin);
-            } else {
-                config.plugins.push(EnvPlugin);
-            }
-        } else {
-            config.plugins = [EnvPlugin];
-        }
-        super({
+        config = {
+            plugins: [],
+            config: {},
+            customDirectives: {},
+            globalValues: {},
             ...config,
-            customDirectives: {
-                ...customDirectives,
-                ...config.customDirectives,
-            },
-            globalValues: {
-                ...globalValues,
-                ...config.globalValues,
-            },
-            config: config.config ? Object.assign(Object.create(config.config), { env }) : { env },
-        });
-        this.env = env;
+        };
+
+        config.config.env ??= {};
+
+        if (config.plugins instanceof owl.Resource) {
+            config.plugins.add(EnvPlugin);
+        } else {
+            config.plugins.push(EnvPlugin);
+        }
+
+        config.customDirectives.portal ??= portalDirective;
+        config.globalValues.Portal ??= Portal;
+
+        super(config);
+        this.env = config.config.env;
     }
 
     createRoot(component, config = {}) {

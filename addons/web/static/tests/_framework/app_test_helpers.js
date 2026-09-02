@@ -207,9 +207,11 @@ export async function makeTestApp(options) {
     }
 
     const app = new TestApp({
+        config: {
+            env: Object.assign(makeEnv(), testEnv),
+        },
         customDirectives,
         dev: false,
-        env: Object.assign(makeEnv(), testEnv),
         getTemplate,
         globalValues,
         name: getCurrent().test?.fullName || "TEST",
