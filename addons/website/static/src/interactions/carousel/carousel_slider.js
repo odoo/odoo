@@ -40,7 +40,9 @@ export class CarouselSlider extends Interaction {
             }),
             "t-att-role": () => (this.areIndicatorsVisible ? "tabpanel" : "group"),
         },
-        ".slide-link": { "t-att-class": () => ({ "d-none": !this.showClickableSlideLinks }) },
+        // Kept for compatibility, as previous ".slide-link" elements could have
+        // been saved with the class "d-none", which was removed here
+        ".slide-link": { "t-att-class": () => ({ "d-none": false }) },
         ".carousel-indicators button, .carousel-indicators li": {
             "t-on-pointerdown": (ev) => {
                 const toLoadEl = this.carouselItemEls.at(ev.currentTarget.dataset.bsSlideTo);

@@ -1,19 +1,18 @@
 import { useDomState } from "@html_builder/core/utils";
 import { registry } from "@web/core/registry";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { CLICKABLE_LINK_SELECTOR } from "./clickable_element_option_plugin";
 
-export class ClickableCardOption extends BaseOptionComponent {
-    static id = "clickable_card_option";
-    static template = "website.ClickableCardOption";
+export class ClickableElementOption extends BaseOptionComponent {
+    static id = "clickable_element_option";
+    static template = "website.ClickableElementOption";
 
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
-            hasHref: editingElement
-                .querySelector(":scope > a.stretched-link")
-                ?.hasAttribute("href"),
+            hasHref: editingElement.querySelector(CLICKABLE_LINK_SELECTOR)?.hasAttribute("href"),
         }));
     }
 }
 
-registry.category("builder-options").add(ClickableCardOption.id, ClickableCardOption);
+registry.category("builder-options").add(ClickableElementOption.id, ClickableElementOption);
