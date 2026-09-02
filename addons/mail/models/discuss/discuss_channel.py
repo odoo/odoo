@@ -828,7 +828,8 @@ class DiscussChannel(models.Model):
                 stores[channel].add(channel, ["member_count"])
                 stores[channel].add(new_members, "_store_member_fields")
                 if channel.channel_type == "channel":
-                    devices, private_key, public_key = channel._web_push_get_partners_parameters(new_members.partner_id.ids)
+                    invited_partner_ids = new_members.filtered(lambda m: not m.is_self).partner_id.ids
+                    devices, private_key, public_key = channel._web_push_get_partners_parameters(invited_partner_ids)
                     if devices:
                         icon = f"/web/image/discuss.channel/{channel.id}/avatar_128"
                         languages = set(devices.partner_id.mapped("lang"))
