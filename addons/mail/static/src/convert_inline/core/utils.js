@@ -27,6 +27,35 @@ export const OPPOSITE_DIRECTION = {
     top: "bottom",
 };
 
+export const DYNAMIC_CSS_EVAL_EXPRESSIONS = new Set([
+    "calc",
+    // comparison
+    "min",
+    "max",
+    "clamp",
+    // rounding
+    "round",
+    "mod",
+    "rem",
+    // trigonometry
+    "sin",
+    "cos",
+    "tan",
+    "asin",
+    "acos",
+    "atan",
+    "atan2",
+    // power
+    "pow",
+    "sqrt",
+    "hypot",
+    "log",
+    "exp",
+    // sign
+    "abs",
+    "sign",
+]);
+
 export const BACKGROUND_VARIANTS = ["color", "image", "repeat", "size"];
 export const CONTOUR_VARIANTS = ["width", "style", "color"];
 export const DIRECTION_VARIANTS = ["top", "right", "bottom", "left"];

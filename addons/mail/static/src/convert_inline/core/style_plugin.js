@@ -3,6 +3,7 @@ import { Plugin } from "../plugin";
 import { parseCssText, parseSelector } from "@mail/convert_inline/css_parsers";
 import { registry } from "@web/core/registry";
 import { StyleInfo } from "./style_models";
+import { DYNAMIC_CSS_EVAL_EXPRESSIONS } from "./utils";
 
 export class StylePlugin extends Plugin {
     static id = "style";
@@ -110,7 +111,15 @@ export class StylePlugin extends Plugin {
     }
 
     isDynamicCSSValue(value) {
-        return value.includes("calc(") || value.includes("var(");
+        for (const expr of DYNAMIC_CSS_EVAL_EXPRESSIONS) {
+            if (value.includes(`${expr}(`)) {
+                return true;
+            }
+        }
+        if (value.includes("var(")) {
+            return true;
+        }
+        return false;
     }
 
     splitSimpleVars(value) {
