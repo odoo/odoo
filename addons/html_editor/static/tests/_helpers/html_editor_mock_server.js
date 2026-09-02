@@ -4,7 +4,7 @@ onRpc("res.lang", "get_installed", function getInstalled() {
     return [["en_US", "English (US)"]];
 });
 
-onRpc("/html_editor/material_symbols_search", async (request) => {
+onRpc("/html_editor/icons_search", async (request) => {
     const { params } = await request.json();
     const needle = (params.needle || "").toLowerCase();
     const icons = ["check", "diamond", "eco", "favorite", "home", "search", "mail", "local_bar", "close", "bug_report"];
