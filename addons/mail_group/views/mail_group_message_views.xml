@@ -12,11 +12,11 @@
                 <field name="mail_group_id"/>
                 <field name="moderation_status"/>
                 <field name="is_group_moderated" column_invisible="True"/>
-                <button name="action_moderate_accept" string="Accept" title="Accept"
+                <button name="action_moderate_accept" string="Accept"
                     type="object" class="btn btn-primary"
                     invisible="moderation_status != 'pending_moderation' or not is_group_moderated"/>
                 <button name="%(mail_group_message_reject_action)d"
-                    string="Reject" title="Remove message with explanation"
+                    string="Reject"
                     type="action" class="btn btn-secondary"
                     invisible="moderation_status != 'pending_moderation' or not is_group_moderated"
                     context="{'default_mail_group_message_id': id, 'default_action': 'reject'}" />
@@ -29,7 +29,7 @@
                     type="action" class="btn btn-secondary"
                     invisible="moderation_status != 'pending_moderation' or not is_group_moderated"
                     context="{'default_mail_group_message_id': id, 'default_action': 'ban'}" />
-                <button name="action_moderate_accept" string="Send" title="Send"
+                <button name="action_moderate_accept" string="Send"
                     type="object" class="btn btn-primary"
                     invisible="moderation_status != 'pending_moderation' or is_group_moderated"/>
             </list>
@@ -41,11 +41,11 @@
         <field name="arch" type="xml">
             <form string="Group Message" class="o_mail_group_message_form">
                 <header>
-                    <button name="action_moderate_accept" string="Accept" title="Accept"
+                    <button name="action_moderate_accept" string="Accept"
                         type="object" class="btn btn-primary"
                         invisible="moderation_status != 'pending_moderation' or not is_group_moderated"/>
                     <button name="%(mail_group_message_reject_action)d"
-                        string="Reject" title="Remove message with explanation"
+                        string="Reject"
                         type="action" class="btn btn-secondary"
                         invisible="moderation_status != 'pending_moderation' or not is_group_moderated"
                         context="{'default_mail_group_message_id': id, 'default_action': 'reject'}" />
@@ -58,7 +58,7 @@
                         type="action" class="btn btn-secondary"
                         invisible="moderation_status != 'pending_moderation' or not is_group_moderated"
                         context="{'default_mail_group_message_id': id, 'default_action': 'ban'}" />
-                    <button name="action_moderate_accept" string="Send" title="Send"
+                    <button name="action_moderate_accept" string="Send"
                         type="object" class="btn btn-primary"
                         invisible="moderation_status != 'pending_moderation' or is_group_moderated"/>
                 </header>
