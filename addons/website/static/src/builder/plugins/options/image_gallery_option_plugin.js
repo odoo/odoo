@@ -36,6 +36,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
             SetImageGalleryLayoutAction,
             SetImageGalleryColumnsAction,
             IndicatorsStyleClassAction,
+            UpdateGalleryControllersOrderAction,
         },
         system_classes: ["o_empty_gallery_alert"],
         gallery_items_providers: this.getGalleryItems.bind(this),
@@ -321,6 +322,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
             slideshowEl.querySelector(".carousel .o_carousel_controllers")?.classList.add("d-none");
             slideshowEl.querySelector(".carousel .carousel-inner")?.classList.add("d-none");
         }
+        updateGalleryControllersOrder(imageGalleryElement);
         this.addDomListener(slideshowEl, "slid.bs.carousel", this.onCarouselSlid);
     }
 
@@ -600,6 +602,54 @@ export class IndicatorsStyleClassAction extends ClassAction {
                 editingElement.classList.remove("s_image_gallery_indicators_outline");
             }
         }
+    }
+}
+
+/**
+ * Moves the slideshow controllers in the DOM so that their order matches the
+ * visual order of the selected "Control" layout. This way, the keyboard
+ * navigation follows what is displayed.
+ *
+ * @param {HTMLElement} imageGalleryEl the `.s_image_gallery` element
+ */
+export function updateGalleryControllersOrder(imageGalleryEl) {
+    const controllersEl = imageGalleryEl.querySelector(".carousel .o_carousel_controllers");
+    if (!controllersEl) {
+        return;
+    }
+    const pauseEl = controllersEl.querySelector(":scope > .o_carousel_pause");
+    const prevEl = controllersEl.querySelector(":scope > .carousel-control-prev");
+    const nextEl = controllersEl.querySelector(":scope > .carousel-control-next");
+    const indicatorsEl = controllersEl.querySelector(":scope > .carousel-indicators");
+
+    const classList = imageGalleryEl.classList;
+    let orderedEls;
+    if (classList.contains("s_image_gallery_controllers_outside_arrows_left")) {
+        // Outside, indicators at right.
+        orderedEls = [pauseEl, prevEl, nextEl, indicatorsEl];
+    } else if (classList.contains("s_image_gallery_controllers_outside_arrows_right")) {
+        // Outside, indicators at left.
+        orderedEls = [pauseEl, indicatorsEl, prevEl, nextEl];
+    } else if (classList.contains("s_image_gallery_controllers_outside")) {
+        // Outside, indicators at center.
+        orderedEls = [pauseEl, prevEl, indicatorsEl, nextEl];
+    } else {
+        // Classic / Indicators outside: the arrows are on the sides of the
+        // image, the pause button and the indicators are below them.
+        orderedEls = [prevEl, nextEl, pauseEl, indicatorsEl];
+    }
+    orderedEls = orderedEls.filter(Boolean);
+    // Only move the elements if needed, to avoid useless DOM mutations.
+    const currentEls = [...controllersEl.children].filter((el) => orderedEls.includes(el));
+    if (orderedEls.some((el, i) => el !== currentEls[i])) {
+        controllersEl.append(...orderedEls);
+    }
+}
+
+export class UpdateGalleryControllersOrderAction extends BuilderAction {
+    static id = "updateGalleryControllersOrder";
+    apply({ editingElement }) {
+        updateGalleryControllersOrder(editingElement);
     }
 }
 
