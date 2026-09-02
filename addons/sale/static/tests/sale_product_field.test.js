@@ -1,16 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { press, runAllTimers } from "@odoo/hoot-dom";
 import {
-    Command,
     contains,
     defineModels,
     fields,
-    makeMockServer,
     models,
     mountView,
     onRpc,
     patchWithCleanup,
-    serverState,
 } from "@web/../tests/web_test_helpers";
 import { saleModels } from "./sale_test_helpers";
 import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
@@ -34,9 +31,11 @@ saleModels.SaleOrder._views.form = /* xml */ `
     <form>
         <field name="order_line" widget="sol_o2m" mode="list">
             <list editable="bottom">
-                <field name="product_id" widget="sol_product_many2one"/>
-                <field name="product_template_id" widget="sol_product_many2one"/>
-                <field name="name" widget="sol_label_text"/>
+                <column name="product_and_description">
+                    <field name="product_id" widget="sol_product_many2one"/>
+                    <field name="product_template_id" widget="sol_product_many2one"/>
+                    <field name="name" widget="sol_label_text"/>
+                </column>
             </list>
         </field>
     </form>

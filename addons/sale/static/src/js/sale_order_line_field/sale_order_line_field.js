@@ -87,14 +87,6 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
     getActiveColumns() {
         let activeColumns = super.getActiveColumns();
-        const productTmplCol = activeColumns.find((col) => col.name === 'product_template_id');
-        const productCol = activeColumns.find((col) => col.name === 'product_id');
-
-        if (productCol && productTmplCol) {
-            // Hide the template column if the variant one is enabled.
-            activeColumns = activeColumns.filter((col) => col.name != 'product_template_id')
-        }
-
         // Hide the UOM column if the field is optional and not active
         const uomCol = activeColumns.find((col) => col.name === "sol_uom");
         if (uomCol) {
@@ -105,6 +97,27 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         }
 
         return activeColumns;
+    }
+
+    isColumnGroupFieldVisible(fieldInfo, record) {
+        const isColumnVisible = super.isColumnGroupFieldVisible(fieldInfo, record);
+        if (!isColumnVisible) {
+            return false;
+        }
+
+        // Hide the template field if variant one is active
+        if (fieldInfo.name === "product_template_id") {
+            return !this.optionalActiveFields["product_id"];
+        }
+
+        return true;
+    }
+
+    isProductFieldActive() {
+        return (
+            this.optionalActiveFields["product_id"]
+            || this.optionalActiveFields["product_template_id"]
+        );
     }
 
     getRowClass(record) {

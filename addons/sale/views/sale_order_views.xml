@@ -704,40 +704,42 @@
                                     column_invisible="not parent.show_sol_numbers"
                                     width="29px"
                                 />
-                                <field
-                                    name="product_id"
-                                    string="Product Variant"
-                                    readonly="not product_updatable"
-                                    required="mandatory_product and not display_type and not is_downpayment"
-                                    force_save="1"
-                                    context="{
-                                        'default_lst_price': price_unit,
-                                        'default_uom_id': product_uom_id,
-                                        'partner_id': parent.partner_id,
-                                    }"
-                                    optional="hide"
-                                    widget="sol_product_many2one"
-                                />
-                                <field
-                                    name="product_template_id"
-                                    string="Product"
-                                    readonly="id and not product_updatable"
-                                    required="mandatory_product and not display_type and not is_downpayment"
-                                    context="{
-                                        'default_list_price': price_unit,
-                                        'default_uom_id': product_uom_id,
-                                        'partner_id': parent.partner_id,
-                                    }"
-                                    optional="hide"
-                                    widget="sol_product_many2one"
-                                    placeholder="Type to find a product..."
-                                />
-                                <field name="name"/>
-                                <field
-                                    name="label"
-                                    widget="sol_label_text"
-                                    context="{'partner_id': parent.partner_id}"
-                                />
+                                <column name="product_and_description">
+                                    <field
+                                        name="product_template_id"
+                                        string="Product"
+                                        readonly="id and not product_updatable"
+                                        required="mandatory_product and not display_type and not is_downpayment"
+                                        context="{
+                                            'default_list_price': price_unit,
+                                            'default_uom_id': product_uom_id,
+                                            'partner_id': parent.partner_id,
+                                        }"
+                                        optional="hide"
+                                        widget="sol_product_many2one"
+                                        placeholder="Type to find a product..."
+                                    />
+                                    <field
+                                        name="product_id"
+                                        string="Product Variant"
+                                        readonly="not product_updatable"
+                                        required="mandatory_product and not display_type and not is_downpayment"
+                                        force_save="1"
+                                        context="{
+                                            'default_lst_price': price_unit,
+                                            'default_uom_id': product_uom_id,
+                                            'partner_id': parent.partner_id,
+                                        }"
+                                        optional="hide"
+                                        widget="sol_product_many2one"
+                                    />
+                                    <field name="name" decoration-it="not display_type"/>
+                                    <field
+                                        name="label"
+                                        widget="sol_label_text"
+                                        context="{'partner_id': parent.partner_id}"
+                                    />
+                                </column>
                                 <field
                                     name="analytic_distribution"
                                     widget="analytic_distribution"

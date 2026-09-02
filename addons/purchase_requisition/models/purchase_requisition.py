@@ -176,7 +176,7 @@ class PurchaseRequisitionLine(models.Model):
         ('line_note', "Note"),
     ], default=False, help="Technical field for UX purpose.")
     name = fields.Text(string='Line Description')
-    label = fields.Text(string='Line Label', compute='_compute_label', inverse='_set_description')
+    label = fields.Text(string='Line Label', compute='_compute_label', inverse='_inverse_label')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)])
     uom_id = fields.Many2one(
         'uom.uom', 'Unit',
@@ -218,7 +218,7 @@ class PurchaseRequisitionLine(models.Model):
             else:
                 line.label = line.name
 
-    def _set_description(self):
+    def _inverse_label(self):
         for line in self:
             display_name = line._get_product_display_name()
 

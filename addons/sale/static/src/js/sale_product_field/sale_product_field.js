@@ -2,16 +2,16 @@ import { t, useEffect, useProps } from "@odoo/owl";
 import {
     ProductLabelSectionAndNoteField,
     productLabelSectionAndNoteField,
-    productLabelSectionAndNoteFieldProps,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { saleProductMixin } from "../sale_product_mixin";
+import { many2OneFieldProps } from "@web/views/fields/many2one/many2one_field";
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     static template = "sale.SaleProductField";
     props = useProps({
-        ...productLabelSectionAndNoteFieldProps,
+        ...many2OneFieldProps,
         readonlyField: t.boolean().optional(),
     });
 
@@ -85,14 +85,8 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     }
 
     get value() {
+        debugger;
         return this.props.record.data[this.props.name];
-    }
-
-    /**
-     * @override
-     */
-    shouldShowWarning() {
-        return super.shouldShowWarning() && !this.isDownpayment;
     }
 
     // Hooks for saleProductMixin

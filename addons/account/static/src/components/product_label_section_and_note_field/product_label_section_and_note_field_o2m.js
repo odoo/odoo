@@ -30,8 +30,9 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
 
     getActiveColumns() {
         let activeColumns = super.getActiveColumns();
-        const productColActive = this.optionalActiveFields["product_id"];
-        const descriptionFieldActive = this.optionalActiveFields["name"];
+        const productColActive = this.isProductFieldActive();
+        const descriptionFieldActive =
+            this.optionalActiveFields["name"] || !("name" in this.optionalActiveFields);
 
         // Hide the stacked product_and_description column if neither the product nor the
         // description field is active.
@@ -52,7 +53,7 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
             return false;
         }
 
-        const isProductFieldActive = this.optionalActiveFields["product_id"];
+        const isProductFieldActive = this.isProductFieldActive();
 
         if (fieldInfo.name === "label") {
             return !isProductFieldActive;
@@ -61,6 +62,10 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
             return isProductFieldActive;
         }
         return true;
+    }
+
+    isProductFieldActive() {
+        return this.optionalActiveFields["product_id"];
     }
 }
 
