@@ -176,6 +176,7 @@ class PurchaseRequisitionLine(models.Model):
         ('line_note', "Note"),
     ], default=False, help="Technical field for UX purpose.")
     name = fields.Text(string='Line Description')
+    label = fields.Text(string='Line Label', compute='_compute_label', inverse='_set_description')
     product_id = fields.Many2one('product.product', string='Product', domain=[('purchase_ok', '=', True)])
     uom_id = fields.Many2one(
         'uom.uom', 'Unit',
@@ -204,6 +205,39 @@ class PurchaseRequisitionLine(models.Model):
                 raise ValidationError(_("A section or note line cannot have a product."))
             if not line.display_type and not line.product_id:
                 raise ValidationError(_("A product is required on purchase agreement lines."))
+
+    @api.depends("product_id", "name")
+    def _compute_label(self):
+        for line in self:
+            display_name = line._get_product_display_name()
+
+            if display_name and line.name:
+                line.label = f"{display_name}\n{line.name}"
+            elif display_name:
+                line.label = display_name
+            else:
+                line.label = line.name
+
+    def _set_description(self):
+        for line in self:
+            display_name = line._get_product_display_name()
+
+            if display_name and line.label:
+                line.name = (
+                    line.label
+                    .removeprefix(display_name)
+                    .removeprefix("\n")
+                )
+            else:
+                line.name = line.label
+
+    def _get_product_display_name(self):
+        self.ensure_one()
+        if not self.product_id:
+            return ""
+
+        product = self.product_id.with_context(seller_id=self._get_seller().id)
+        return product.display_name
 
     @api.depends('display_type', 'product_qty', 'price_unit')
     def _compute_price_subtotal(self):
@@ -261,10 +295,21 @@ class PurchaseRequisitionLine(models.Model):
         for line in self:
             if line.requisition_id.state != 'draft' or line.requisition_id.requisition_type != 'purchase_template' or not line.requisition_id.vendor_id or not line.product_id:
                 continue
-            seller = line.product_id._select_seller(
-                partner_id=line.requisition_id.vendor_id, quantity=line.product_qty,
-                date=line.requisition_id.date_start, uom_id=line.uom_id)
+            seller = line._get_seller()
             line.price_unit = seller.price if seller else line.product_id.standard_price
+
+    def _get_seller(self):
+        self.ensure_one()
+
+        if not self.product_id or not self.requisition_id.vendor_id:
+            return False
+
+        return self.product_id._select_seller(
+            partner_id=self.requisition_id.vendor_id,
+            quantity=self.product_qty,
+            date=self.requisition_id.date_start,
+            uom_id=self.uom_id,
+        )
 
     @api.model_create_multi
     def create(self, vals_list):
