@@ -2,6 +2,7 @@ import { AttachmentList } from "@mail/core/common/attachment_list";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -37,9 +38,7 @@ export class ScheduledMessage extends Component {
     }
 
     get scheduledDate() {
-        return this.props.scheduledMessage.scheduled_date.toLocaleString(
-            luxon.DateTime.DATETIME_SHORT
-        );
+        return formatDateTime(this.props.scheduledMessage.scheduled_date);
     }
 
     get truncatedMessage() {

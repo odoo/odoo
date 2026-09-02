@@ -9,7 +9,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD } from "@mail/chatter/web/scheduled_message";
 import { mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { deserializeDateTime } from "@web/core/l10n/dates";
+import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 import { MailComposerAttachmentSelector } from "@mail/core/web/mail_composer_attachment_selector";
 
@@ -44,9 +44,7 @@ test("Scheduled messages basic layout", async () => {
         }']`
     );
     await contains(
-        `.o-mail-Message-date[title='${deserializeDateTime(scheduled_date).toLocaleString(
-            luxon.DateTime.DATETIME_SHORT
-        )}']`,
+        `.o-mail-Message-date[title='${formatDateTime(deserializeDateTime(scheduled_date))}']`,
         { text: "in 3 hours" } // 3 hours because luxon toRelative rounds down
     );
     await contains(".o-mail-Message-body em", { text: "Subject: Greetings" });
