@@ -7,7 +7,7 @@ from base64 import b64decode
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.mimetypes import guess_mimetype
 
 FLOOR_PLAN_SUPPORTED_IMAGE_MIMETYPES = {
@@ -29,11 +29,20 @@ class RestaurantFloor(models.Model):
     _inherit = ['pos.load.mixin']
 
     name = fields.Char('Floor Name', required=True)
-    pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]")
-    table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables')
+    pos_config_ids = fields.Many2many('pos.config', string='Point of Sales', domain="[('module_pos_restaurant', '=', True)]", copy=False)
+    table_ids = fields.One2many('restaurant.table', 'floor_id', string='Tables', copy=True)
     sequence = fields.Integer('Sequence', default=1)
     active = fields.Boolean(default=True)
     floor_plan_layout = fields.Json(string='Floor Plan Layout', copy=False)
+
+    @api.constrains('pos_config_ids')
+    def _check_single_pos_config(self):
+        for floor in self:
+            if len(floor.pos_config_ids) > 1:
+                raise ValidationError(_(
+                    "The floor '%(floor)s' can only be linked to one Point of Sale.",
+                    floor=floor.name,
+                ))
 
     @api.model
     def _load_pos_data_domain(self, data):
@@ -70,12 +79,26 @@ class RestaurantFloor(models.Model):
         return super().write(vals)
 
     def copy_data(self, default=None):
-        default = dict(default or {}, pos_config_ids=[(5, 0, 0)])
+        default = dict(default or {})
         vals_list = super().copy_data(default=default)
         if 'name' not in default:
             for floor, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", floor.name)
         return vals_list
+
+    def _copy_floor_for_config(self, config):
+        self.ensure_one()
+        new_floor = self.copy({
+            'name': self.name,
+            'floor_plan_layout': self.floor_plan_layout,
+        })
+        new_floor.pos_config_ids = [(4, config.id)]
+        # the copied tables inherited a parent_id pointing at the original floor's tables
+        table_map = dict(zip(self.table_ids.ids, new_floor.table_ids))
+        for new_table in new_floor.table_ids:
+            if new_table.parent_id:
+                new_table.parent_id = table_map.get(new_table.parent_id.id, False)
+        return new_floor
 
     def deactivate_floor(self, session_id):
         draft_orders = self.env['pos.order'].search([('session_id', '=', session_id), ('state', '=', 'draft'), ('table_id.floor_id', '=', self.id)])

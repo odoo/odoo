@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools import convert
 
 
@@ -18,6 +19,16 @@ class PosConfig(models.Model):
         forbidden_keys = super()._get_forbidden_change_fields()
         forbidden_keys.append('floor_ids')
         return forbidden_keys
+
+    @api.constrains('floor_ids')
+    def _check_floor_single_pos_config(self):
+        for config in self:
+            for floor in config.floor_ids:
+                if len(floor.pos_config_ids) > 1:
+                    raise ValidationError(_(
+                        "The floor '%(floor)s' is already linked to another Point of Sale.",
+                        floor=floor.name,
+                    ))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -54,6 +65,18 @@ class PosConfig(models.Model):
                 'floor_plan_layout': {'top': 100, 'left': 100, 'width': 130, 'height': 130, 'color': 'green', 'shape': 'square'},
             })
 
+    def _link_default_scenario_floors(self, config):
+        config.ensure_one()
+        config_floors = [(5, 0)]
+        for floor_xml_id in ('pos_restaurant.floor_main', 'pos_restaurant.floor_patio'):
+            floor = self.env.ref(floor_xml_id, raise_if_not_found=False)
+            if not floor:
+                continue
+            if floor.sudo().pos_config_ids:
+                floor = floor.sudo()._copy_floor_for_config(config)
+            config_floors.append((4, floor.id))
+        config.update({'floor_ids': config_floors})
+
     @api.model
     def load_onboarding_bar_scenario(self, with_demo_data=True):
         journal, payment_methods_ids = self._create_journal_and_payment_methods(cash_journal_vals={'name': 'Cash Bar', 'show_on_dashboard': False})
@@ -72,12 +95,7 @@ class PosConfig(models.Model):
         }])
         if not self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False):
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_floor.xml', idref=None, mode='init', noupdate=True)
-        config_floors = [(5, 0)]
-        if (floor_main := self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False)):
-            config_floors += [(4, floor_main.id)]
-        if (floor_patio := self.env.ref('pos_restaurant.floor_patio', raise_if_not_found=False)):
-            config_floors += [(4, floor_patio.id)]
-        config.update({'floor_ids': config_floors})
+        self._link_default_scenario_floors(config)
         config._load_bar_demo_data(with_demo_data)
         return {'config_id': config.id}
 
@@ -122,12 +140,7 @@ class PosConfig(models.Model):
             self.env.ref("point_of_sale.group_pos_preset").implied_by_ids |= self.env.ref("base.group_user")
         if not self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False):
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_floor.xml', idref=None, mode='init', noupdate=True)
-        config_floors = [(5, 0)]
-        if (floor_main := self.env.ref('pos_restaurant.floor_main', raise_if_not_found=False)):
-            config_floors += [(4, floor_main.id)]
-        if (floor_patio := self.env.ref('pos_restaurant.floor_patio', raise_if_not_found=False)):
-            config_floors += [(4, floor_patio.id)]
-        config.update({'floor_ids': config_floors})
+        self._link_default_scenario_floors(config)
         config._load_restaurant_demo_data(with_demo_data)
         existing_session = self.env.ref('pos_restaurant.pos_closed_session_3', raise_if_not_found=False)
         if with_demo_data and self.env.company.id == self.env.ref('base.main_company').id and not existing_session:
