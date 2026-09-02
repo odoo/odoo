@@ -392,7 +392,8 @@ export class GeneratePrinterData {
                 receipts.push({
                     changes: changeData,
                     order: order.raw,
-                    config: this.config.raw,
+                    // Kitchen may have multiple configs, so use the order's config to print on receipt.
+                    config: this.order.config_id.raw,
                     // KOTs don't require company data, so it isn't loaded here while using from kitchen.
                     company: this.company?.raw,
                     partner: order.partner_id ? order.partner_id.raw : false,
@@ -411,7 +412,7 @@ export class GeneratePrinterData {
                         prepTicketBarcode: opts.prepBarcode || false,
                     },
                     conditions: {
-                        module_pos_restaurant: this.config.module_pos_restaurant,
+                        module_pos_restaurant: this.order.config_id.module_pos_restaurant,
                     },
                     _rawChange: reprint ? null : changes[0],
                 });
