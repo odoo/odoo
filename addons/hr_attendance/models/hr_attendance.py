@@ -258,6 +258,8 @@ class HrAttendance(models.Model):
             stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
         if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
             self._update_tolerance_state()
+        if 'check_out' in vals:
+            self._split_cross_day_shift()
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -502,10 +504,12 @@ class HrAttendance(models.Model):
 
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
                 if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.with_context(skip_time_rules=True).check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
-                    excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
+                    allowed_hours = expected_worked_hours + max_tol - previous_attendances_duration
+                    estimated_checkout_local = check_in_datetime + relativedelta(hours=allowed_hours)
+                    checkout_local = max(estimated_checkout_local, check_in_datetime + relativedelta(seconds=1))
+                    checkout_utc = checkout_local.astimezone(UTC).replace(tzinfo=None)
                     att.write({
-                        "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
+                        "check_out": checkout_utc,
                         "out_mode": "auto_check_out"
                     })
                     att.message_post(
@@ -620,11 +624,12 @@ class HrAttendance(models.Model):
         ], keep_distinct=True)
         period_interval = Intervals([(start, stop, self.env['resource.calendar'])])
         break_duration = 0.0
-        for start, stop, attendance in attendance_intervals & period_interval:
+        for a_start, a_stop, attendance in attendance_intervals & period_interval:
             attendance_duration = time_to_float(attendance.check_out - attendance.check_in)
-            break_duration += (
-                time_to_float(stop - start) / attendance_duration
-            ) * attendance.break_duration
+            if attendance_duration > 0:
+                break_duration += (
+                    time_to_float(a_stop - a_start) / attendance_duration
+                ) * attendance.break_duration
         return break_duration
 
     def init(self):
@@ -685,6 +690,68 @@ class HrAttendance(models.Model):
         if to_validate:
             to_validate.with_context(skip_time_rules=True, tracking_disable=True).write({'state': 'validated'})
 
+    def _split_attendance_intervals(self, check_in, check_out, employee_tz):
+        """ Split the Attendance Shift if it crosses the employee's timezone local midnight and save in UTC. """
+        if check_out < check_in:
+            return
+        current_start_utc = check_in
+        while current_start_utc < check_out:
+            local_start = current_start_utc.replace(tzinfo=UTC).astimezone(employee_tz)
+            next_day_date = local_start.date() + timedelta(days=1)
+            local_midnight = datetime.combine(next_day_date, time.min, tzinfo=employee_tz)
+            midnight_utc = local_midnight.astimezone(UTC).replace(tzinfo=None)
+            current_end_utc = min(midnight_utc, check_out)
+            yield (current_start_utc, current_end_utc)
+            current_start_utc = current_end_utc
+
+    def _split_cross_day_shift(self):
+        """
+        Post-process step: Splits cross-day shifts on cross day records.
+        Skips records early if check_in/check_out are missing or on the same day.
+        """
+        for attendance in self:
+            if not attendance.check_in or not attendance.check_out or not attendance.employee_id:
+                continue
+
+            tz = ZoneInfo(attendance.employee_id._get_tz())
+            local_in = attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date()
+            local_out = attendance.check_out.replace(tzinfo=UTC).astimezone(tz).date()
+
+            if local_out <= local_in:
+                continue
+
+            intervals = list(self._split_attendance_intervals(
+                attendance.check_in,
+                attendance.check_out,
+                tz,
+            ))
+
+            total_seconds = (attendance.check_out - attendance.check_in).total_seconds()
+            total_break = attendance.break_duration or 0.0
+
+            if len(intervals) > 1 and total_seconds > 0:
+                # Update the original record in-place to cover only Day 1
+                super(HrAttendance, attendance).write({
+                    'check_in': fields.Datetime.to_string(intervals[0][0]),
+                    'check_out': fields.Datetime.to_string(intervals[0][1]),
+                    'break_duration': total_break * ((intervals[0][1] - intervals[0][0]).total_seconds() / total_seconds)
+                })
+
+                # Create new records for other days with ensuring overtime calculations
+                vals_list = []
+                for start, end in intervals[1:]:
+                    vals_list.append({
+                        'employee_id': attendance.employee_id.id,
+                        'check_in': fields.Datetime.to_string(start),
+                        'check_out': fields.Datetime.to_string(end),
+                        'break_duration': total_break * ((end - start).total_seconds() / total_seconds),
+                        'in_mode': attendance.in_mode,
+                        'out_mode': attendance.out_mode,
+                    })
+                if vals_list:
+                    res = super().create(vals_list)
+                    res._update_tolerance_state()
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -697,7 +764,11 @@ class HrAttendance(models.Model):
                     if vals.get('employee_id'):
                         company = self.env['hr.employee'].browse(vals['employee_id']).company_id or company
                     vals['state'] = 'validated' if company.attendance_validation == 'no_validation' else 'draft'
+
         res = super().create(vals_list)
+
+        if any(v.get('check_out') for v in vals_list):
+            res._split_cross_day_shift()
         res._update_tolerance_state()
         return res
 
