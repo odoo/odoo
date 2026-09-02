@@ -1399,7 +1399,7 @@ class IrModelFields(models.Model):
                 or any(
                     # module introduced field on model by inheritance
                     field_name in self.env[parent]._fields
-                    for parent, parent_module in model._inherit_module.items()
+                    for parent, parent_module in model._inherit_module__.items()
                     if module == parent_module
                 )
             ):
@@ -2674,7 +2674,7 @@ class IrModelData(models.Model):
             # try and remove either the xid or the record, so check if the
             # record has a child we've just updated
             keep = False
-            for inheriting in (self.env[m] for m in Model._inherits_children):
+            for inheriting in (self.env[m] for m in Model._inherits_children__):
                 # ignore mixins
                 if inheriting._abstract:
                     continue

@@ -418,7 +418,7 @@ class Field[T]:
         if is_model_definition:
             assert '_base_fields__' not in self._args__
             self._module = owner._module
-            owner._field_definitions.append(self)
+            owner._field_definitions__.append(self)
             if self._shareable and (self._args__.get('related') or not self._args__.get('_shareable', True)):
                 self._shareable = False
             if self._shareable:
