@@ -1,5 +1,4 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 import { AttachmentPanel } from "@mail/discuss/core/common/attachment_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
@@ -116,9 +115,9 @@ registerThreadAction("notification-settings", {
         }
     },
     actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
-    dropdown: ({ owner }) => !owner.isDiscussContent,
-    dropdownComponent: NotificationSettings,
-    dropdownComponentProps: ({ channel }) => ({ channel }),
+    popoverComponent: NotificationSettings,
+    popoverComponentProps: ({ channel }) => ({ channel }),
+    dropdownTrigger: ({ owner }) => !owner.isDiscussContent,
     condition: ({ channel, owner, store }) =>
         channel && store.self_user && (!owner.props.chatWindow || owner.props.chatWindow.isOpen),
     setup({ owner }) {
@@ -306,7 +305,7 @@ registerThreadAction("leave", {
     onSelected: ({ channel }) => channel.leaveChannel(),
     sequence: 20,
     sequenceGroup: 40,
-    tags: ACTION_TAGS.DANGER,
+    btnVariant: () => "btn-danger",
 });
 
 registerThreadAction("delete-thread", {
@@ -337,5 +336,5 @@ registerThreadAction("delete-thread", {
     },
     sequence: ({ owner }) => (owner.props.chatWindow ? 50 : 40),
     sequenceGroup: 40,
-    tags: [ACTION_TAGS.DANGER],
+    btnVariant: () => "btn-danger",
 });

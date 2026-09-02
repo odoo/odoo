@@ -2,6 +2,8 @@ import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/ac
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { ActionCallButton } from "@mail/discuss/call/common/action_call_button";
+import { ActionCallDropdown } from "@mail/discuss/call/common/action_call_dropdown";
 import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dialog";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
@@ -70,13 +72,16 @@ export const muteAction = {
             });
         }
     },
-    tags: ({ action, store }) => {
+    btnVariant: ({ action, store }) =>
+        action.isActive ||
+        store.rtc.microphonePermission !== "granted" ||
+        store.rtc.showMicrophoneSilentWarning
+            ? "btn-danger"
+            : undefined,
+    tags: ({ store }) => {
         const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.DANGER);
-        }
         if (store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
+            tags.push(ACTION_TAGS.WARNING_BADGE);
         }
         return tags;
     },
@@ -85,15 +90,15 @@ registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
-    dropdown: true,
-    dropdownComponent: QuickVoiceSettings,
     dropdownMenuClass: ({ owner }) =>
         owner.env.inMeetingView
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
+    dropdownTrigger: true,
     icon: "keyboard_arrow_up",
     name: _t("Voice Settings"),
+    popoverComponent: QuickVoiceSettings,
     sequence: 15,
     sequenceGroup: 100,
 };
@@ -108,10 +113,8 @@ registerCallAction("deafen", {
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
     sequenceGroup: 100,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.DANGER : undefined,
-    ],
+    btnVariant: ({ action }) => (action.isActive ? "btn-danger" : undefined),
+    tags: [ACTION_TAGS.CALL_ACTION_TRACKED],
 });
 /** @type {CallActionDefinition} */
 export const cameraOnAction = {
@@ -134,16 +137,22 @@ export const cameraOnAction = {
         store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 120,
-    tags: ({ action, store, channel }) => {
-        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.SUCCESS);
-        }
+    btnVariant: ({ action, store, channel }) => {
         if (
             channel?.default_display_mode === "video_full_screen" &&
             store.rtc.cameraPermission !== "granted"
         ) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
+            return "btn-danger";
+        }
+        return action.isActive ? "btn-success" : undefined;
+    },
+    tags: ({ store, channel }) => {
+        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
+        if (
+            channel?.default_display_mode === "video_full_screen" &&
+            store.rtc.cameraPermission !== "granted"
+        ) {
+            tags.push(ACTION_TAGS.WARNING_BADGE);
         }
         return tags;
     },
@@ -152,15 +161,15 @@ registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
-    dropdown: true,
-    dropdownComponent: QuickVideoSettings,
     dropdownMenuClass: ({ owner }) =>
         owner.env.inMeetingView
             ? "o-discuss-CallActionList-menu overflow-x-hidden"
             : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
+    dropdownTrigger: true,
     icon: "keyboard_arrow_up",
     name: _t("Video Settings"),
+    popoverComponent: QuickVideoSettings,
     sequence: 15,
     sequenceGroup: 120,
 };
@@ -186,10 +195,8 @@ registerCallAction("raise-hand", {
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
     sequence: 50,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
+    tags: [ACTION_TAGS.CALL_ACTION_TRACKED],
+    btnVariant: ({ action }) => (action.isActive ? "btn-success" : undefined),
 });
 registerCallAction("share-screen", {
     condition: ({ channel }) => channel?.isSelfInCall && !isMobileOS(),
@@ -205,10 +212,8 @@ registerCallAction("share-screen", {
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
     sequence: 40,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
+    tags: [ACTION_TAGS.CALL_ACTION_TRACKED],
+    btnVariant: ({ action }) => (action.isActive ? "btn-success" : undefined),
 });
 registerCallAction("fullscreen", {
     btnAttrs: { "data-available-offline": true },
@@ -280,6 +285,8 @@ registerCallAction("change-layout", {
 });
 /** @type {CallActionDefinition} */
 export const acceptWithCamera = {
+    buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         channel?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
         typeof channel?.useCameraByDefault !== "boolean",
@@ -289,7 +296,7 @@ export const acceptWithCamera = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 };
 registerCallAction("accept-with-camera", acceptWithCamera);
 registerCallAction("join-back", {
@@ -298,20 +305,24 @@ registerCallAction("join-back", {
             "text-nowrap pe-2 rounded-pill": true,
             "mx-1": !owner.env.inCallInvitation,
         }),
+    buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ channel }) => (channel.useCameraByDefault ? "videocam" : "phone"),
-    inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
+    label: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
     sequence: 110,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 });
 registerCallAction("join-with-camera", {
     btnClass: "text-nowrap",
+    buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         !channel?.isSelfInCall &&
         !channel?.self_member_id?.rtc_inviting_session_id &&
@@ -329,10 +340,12 @@ registerCallAction("join-with-camera", {
     },
     sequence: 120,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 });
 /** @type {CallActionDefinition} */
 export const joinAction = {
+    buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault !== "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -341,7 +354,7 @@ export const joinAction = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
+    btnVariant: () => "btn-success",
 };
 registerCallAction("join", joinAction);
 /** @type {CallActionDefinition} */
@@ -351,10 +364,12 @@ export const rejectAction = {
             "pe-2 rounded-pill": typeof channel?.useCameraByDefault === "boolean",
             "mx-1": !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
         }),
+    buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "close_small",
-    inlineName: ({ owner, channel }) =>
+    label: ({ owner, channel }) =>
         !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
             ? _t("Reject")
             : undefined,
@@ -367,10 +382,12 @@ export const rejectAction = {
     },
     sequence: 140,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
+    btnVariant: () => "btn-danger",
 };
 registerCallAction("reject", rejectAction);
 registerCallAction("disconnect", {
+    buttonComponent: ActionCallButton,
+    dropdownComponent: ActionCallDropdown,
     condition: ({ channel }) =>
         channel?.isSelfInCall && !channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -379,7 +396,7 @@ registerCallAction("disconnect", {
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 150,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
+    btnVariant: () => "btn-danger",
 });
 
 export class CallAction extends Action {

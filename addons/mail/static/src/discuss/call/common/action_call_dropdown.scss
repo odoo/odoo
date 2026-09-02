@@ -1,0 +1,27 @@
+.o-mail-ActionList button.o-mail-ActionCallDropdown {
+    i {
+        color: white !important;
+        opacity: 100%;
+        background: var(--btn-bg);
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        padding: 0.4em;
+        box-sizing: content-box;
+        font-size: 0.7em !important;
+
+        &:is([data-icon="phone"], [data-icon="videocam"])::before {
+            transform: translateY(1px);
+        }
+    }
+
+    &:hover,
+    &:focus-visible {
+        i {
+            background: var(--btn-hover-bg);
+            color: var(--btn-hover-color);
+        }
+    }
+}

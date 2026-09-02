@@ -57,69 +57,27 @@
             }
         }
 
-        &.o-tag-JOIN_LEAVE_CALL i {
-            color: white !important;
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item,
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL {
-            i {
-                opacity: 100%;
-                background: var(--btn-bg);
-                aspect-ratio: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 100%;
-                padding: 0.4em;
-                box-sizing: content-box;
-            }
-
-            &:hover,
-            &:focus-visible {
-                i {
-                    background: var(--btn-hover-bg);
-                    color: var(--btn-hover-color);
-                }
-            }
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item i {
-            font-size: 0.7em !important;
-            &:is([data-icon="phone"], [data-icon="videocam"])::before {
-                transform: translateY(1px);
-            }
-        }
-
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL i {
-            font-size: 0.9em !important;
-
-            &[data-icon="phone"]::before {
-                transform: translateY(.5px);
-            }
-        }
-
         @each $status, $color in (danger: $danger, success: $success, primary: $primary) {
-            &.o-dropdown-item.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
+            &.o-dropdown-item.btn-#{$status}:not(.o-mail-ActionCallDropdown) {
                 &.focus {
                     background-color: rgba($color, 0.75);
                     color: white;
-                    &.o-tag-PRIMARY {
+                    &.btn-primary {
                         background-color: rgba($color, .9);
                     }
                 }
-                &.o-tag-PRIMARY {
+                &.btn-primary {
                     background-color: rgba($color, .9);
                 }
                 &:not(.focus) {
                     color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-                    &.o-tag-PRIMARY {
+                    &.btn-primary {
                         background-color: rgba($color, .35);
                     }
                 }
             }
 
-            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
+            &.o-inline.btn-#{$status}:not(.o-mail-ActionCallButton) {
                 &.o-hasBtnBg {
                     --btn-active-bg: var(--btn-bg);
                 }
@@ -147,7 +105,7 @@
         }
     }
 
-    & button.o-simulateDarkTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
+    & button.o-simulateDarkTheme.o-hasBtnBg:not(.btn-danger):not(.btn-success):not(.btn-primary) {
         background-color: #{$gray-800};
         border: 1px solid rgba(white, 0.1);
 

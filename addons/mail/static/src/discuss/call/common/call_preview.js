@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Action, ACTION_TAGS } from "@mail/core/common/action";
+import { Action } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
     cameraOnAction,
@@ -182,13 +182,11 @@ export class CallPreview extends Component {
             isActive: () => this.state.videoStream,
             name: ({ action }) => (action.isActive ? _t("Turn camera off") : _t("Turn camera on")),
             onSelected: () => this.toggleCamera(),
-            tags: (...args) => {
-                const tags = cameraOnAction.tags?.(...args) ?? [];
-                if (!args[0].action.isActive && this.rtc.cameraPermission !== "granted") {
-                    tags.push(ACTION_TAGS.DANGER);
-                }
-                return tags;
-            },
+            btnVariant: (...args) =>
+                cameraOnAction.btnVariant?.(...args) ??
+                (!args[0].action.isActive && this.rtc.cameraPermission !== "granted"
+                    ? "btn-danger"
+                    : undefined),
         };
         const muteActionUpdated = {
             ...muteAction,
@@ -206,7 +204,7 @@ export class CallPreview extends Component {
             onSelected: ({ store }) => {
                 store.settings.useBlur = !store.settings.useBlur;
             },
-            tags: ({ action }) => (action.isActive ? [ACTION_TAGS.SUCCESS] : []),
+            btnVariant: ({ action }) => (action.isActive ? "btn-success" : undefined),
         };
         const callAudioActions = [
             new Action({

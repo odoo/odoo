@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { Action, useAction, UseActions } from "@mail/core/common/action";
 import { InvitationSentDate } from "@mail/discuss/core/common/invitation_sent_date";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -89,7 +89,7 @@ registerChannelMemberAction("remove-member", {
         });
     },
     sequence: 40,
-    tags: [ACTION_TAGS.DANGER],
+    btnVariant: () => "btn-danger",
 });
 
 export class ChannelMemberAction extends Action {

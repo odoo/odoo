@@ -1320,7 +1320,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     await click(".o-dropdown-item:text('Start Now')");
     await contains(".o-mail-Meeting");
     await contains("button[title='Turn camera off']");
-    await contains("button[title='Turn camera off'].o-tag-DANGER");
+    await contains("button[title='Turn camera off'].btn-danger");
     await contains("button[title='Turn camera off'].o-tag-WARNING_BADGE");
     await rtc.exitFullscreen();
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
@@ -1331,7 +1331,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     );
     await click(".modal-footer button:text('Switch')");
     await contains("button[title='Turn camera on']");
-    await contains("button[title='Turn camera on'].o-tag-DANGER", { count: 0 });
+    await contains("button[title='Turn camera on'].btn-danger", { count: 0 });
     await contains("button[title='Turn camera on'].o-tag-WARNING_BADGE", { count: 0 });
     await click("button[title='Disconnect']");
     await waitNotifications(["discuss.channel.rtc.session/ended"]);

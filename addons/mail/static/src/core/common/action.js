@@ -6,14 +6,10 @@ import { markEventHandled } from "@web/core/utils/misc";
 import { Reactive } from "@web/core/utils/reactive";
 
 export const ACTION_TAGS = Object.freeze({
-    DANGER: "DANGER",
-    SUCCESS: "SUCCESS",
-    PRIMARY: "PRIMARY",
     IMPORTANT_BADGE: "IMPORTANT_BADGE",
     WARNING_BADGE: "WARNING_BADGE",
     CALL_ACTION_TRACKED: "CALL_ACTION_TRACKED",
     CALL_LAYOUT: "CALL_LAYOUT",
-    JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
 });
 
 /** @typedef {import("@odoo/owl").Component} Component */
@@ -60,14 +56,16 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [badgeText]
  * @property {Object|(params: ActionParams_T) => Object} [btnAttrs]
  * @property {string|(params: ActionParams_T) => string} [btnClass]
+ * @property {(params: ActionParams_T) => string} [btnVariant] Bootstrap button variant class
+ *   (e.g. `btn-primary`) applied to the action's button.
+ * @property {Component} [buttonComponent]
  * @property {Component} [component]
  * @property {boolean|(params: ActionParams_T) => boolean} [componentCondition=true]
  * @property {(params: ActionParams_T) => Component<Props, Env>} [componentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
  * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
- * @property {boolean} [dropdown]
- * @property {Component|(params: ActionParams_T) => Component} [dropdownComponent]
- * @property {Object|(params: ActionParams_T) => Object} [dropdownComponentProps]
+ * @property {boolean|(params: ActionParams_T) => boolean} [dropdownTrigger]
+ * @property {Component} [dropdownComponent]
  * @property {string|(params: ActionParams_T) => string} [dropdownMenuClass]
  * @property {string|(params: ActionParams_T) => string} [dropdownPosition]
  * @property {DropdownState|(params: ActionParams_T) => DropdownState} [dropdownState]
@@ -79,11 +77,13 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [hotkey]
  * @property {string|(params: ActionParams_T) => string} [icon]
  * @property {string|(params: ActionParams_T) => string} [iconClass]
- * @property {boolean|(params: ActionParams_T) => boolean} [inlineName=false]
  * @property {boolean|(params: ActionParams_T) => boolean} [isActive]
+ * @property {string|boolean|(params: ActionParams_T) => string|boolean} [label=false] When the action is rendered as an inline button, show this text label next to the icon.
  * @property {string|(params: ActionParams_T) => string} [name]
  * @property {string|(params: ActionParams_T) => string} [nameClass]
  * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
+ * @property {Component|(params: ActionParams_T) => Component} [popoverComponent]
+ * @property {Object|(params: ActionParams_T) => Object} [popoverComponentProps]
  * @property {number|(params: ActionParams_T) => number} [sequence]
  * @property {boolean|(params: ActionParams_T) => boolean} [sequenceGroup]
  * @property {boolean|(params: ActionParams_T) => boolean} [sequenceQuick]
@@ -310,6 +310,28 @@ export class Action {
         );
     }
 
+    /** @param {Action} action @returns {string|undefined} */
+    _btnVariant(action) {}
+    get btnVariant() {
+        return (
+            this._btnVariant(this.params) ??
+            this.definition.btnVariant?.call(this, this.params) ??
+            ""
+        );
+    }
+
+    /** @param {Action} action @returns {Component|undefined} */
+    _buttonComponent(action) {}
+    /**
+     * When provided, this component is used instead of ActionButton to render this action as a
+     * plain (non-dropdown) button. Unlike @see component, it does not bypass the surrounding
+     * ActionList context: it still receives the same props as ActionButton would (attrs, group
+     * position, hasBtnBg, etc). Must extend ActionButton.
+     */
+    get buttonComponent() {
+        return this._buttonComponent(this.params) ?? this.definition.buttonComponent;
+    }
+
     /** @param {Action} action @returns {Component|undefined} */
     _component(action) {}
     /** When provided, this component is mounted for this action. UI/UX of action is fully managed by the component */
@@ -367,45 +389,30 @@ export class Action {
     }
 
     /** @param {Action} action @returns {boolean|undefined} */
-    _dropdown(action) {}
+    _dropdownTrigger(action) {}
     /** Determines whether this action opens a dropdown on selection. */
-    get dropdown() {
+    get dropdownTrigger() {
         return (
-            this._dropdown(this.params) ??
-            (typeof this.definition.dropdown === "function"
-                ? this.definition.dropdown.call(this, this.params)
-                : this.definition.dropdown)
+            this._dropdownTrigger(this.params) ??
+            (typeof this.definition.dropdownTrigger === "function"
+                ? this.definition.dropdownTrigger.call(this, this.params)
+                : this.definition.dropdownTrigger)
         );
     }
 
     /** @param {Action} action @returns {Component|undefined} */
     _dropdownComponent(action) {}
-    /** When action is a dropdown @see dropdown, this determines an optional component to use for the content slot */
+    /**
+     * When provided, this component is used instead of ActionDropdown to render this action as a
+     * dropdown-item (@see props.dropdown of ActionList/Action). Must extend ActionDropdown.
+     */
     get dropdownComponent() {
-        return (
-            this._dropdownComponent(this.params) ??
-            (typeof this.definition.dropdownComponent === "function" &&
-            Object.getPrototypeOf(this.definition.dropdownComponent) !== Component
-                ? this.definition.dropdownComponent.call(this, this.params)
-                : this.definition.dropdownComponent)
-        );
-    }
-
-    /** @param {Action} action @returns {Object|undefined} */
-    _dropdownComponentProps(action) {}
-    /** When action is a dropdown @see dropdown, this determines optional props to pass to component of the content slot of dropdown. */
-    get dropdownComponentProps() {
-        return (
-            this._dropdownComponentProps(this.params) ??
-            (typeof this.definition.dropdownComponentProps === "function"
-                ? this.definition.dropdownComponentProps.call(this, this.params)
-                : this.definition.dropdownComponentProps)
-        );
+        return this._dropdownComponent(this.params) ?? this.definition.dropdownComponent;
     }
 
     /** @param {Action} action @returns {string|undefined} */
     _dropdownMenuClass(action) {}
-    /** When action is a dropdown @see dropdown, this determines an optional menu class for the dropdown, in addition to default dropdown menu classes */
+    /** When action is a dropdown @see dropdownTrigger, this determines an optional menu class for the dropdown, in addition to default dropdown menu classes */
     get dropdownMenuClass() {
         return (
             this._dropdownMenuClass(this.params) ??
@@ -417,7 +424,7 @@ export class Action {
 
     /** @param {Action} action @returns {string|undefined} */
     _dropdownPosition(action) {}
-    /** When action is a dropdown @see dropdown, this determines the preferred position of the dropdown */
+    /** When action is a dropdown @see dropdownTrigger, this determines the preferred position of the dropdown */
     get dropdownPosition() {
         return (
             this._dropdownPosition(this.params) ??
@@ -429,7 +436,7 @@ export class Action {
 
     /** @param {Action} action @returns {DropdownState|undefined} */
     _dropdownState(action) {}
-    /** When action is a dropdown @see dropdown, this determines the preferred position of the dropdown */
+    /** When action is a dropdown @see dropdownTrigger, this determines the preferred position of the dropdown */
     get dropdownState() {
         return (
             this._dropdownState(this.params) ??
@@ -441,7 +448,7 @@ export class Action {
 
     /** @param {Action} action @returns {string|undefined} */
     _dropdownTemplate(action) {}
-    /** When action is a dropdown @see dropdown, this determines an optional template to use for the content slot */
+    /** When action is a dropdown @see dropdownTrigger, this determines an optional template to use for the content slot */
     get dropdownTemplate() {
         return (
             this._dropdownTemplate(this.params) ??
@@ -454,7 +461,7 @@ export class Action {
     /** @param {Action} action @returns {Object|undefined} */
     _dropdownTemplateParams(action) {}
     /**
-     * When action is a dropdown @see dropdown, this determines optional params to pass to template of the content slot of dropdown.
+     * When action is a dropdown @see dropdownTrigger, this determines optional params to pass to template of the content slot of dropdown.
      * The params are provided to template in object `templateParams` with named parameters as given by explicit definition.
      * For example: `{ myParam1: 1 }` is retrieved in template with `templateParams.myParam1`.
      */
@@ -539,14 +546,14 @@ export class Action {
     }
 
     /** @param {Action} action @returns {string|undefined} */
-    _inlineName(action) {}
-    /** If set, when action is used in inline, shows action name in addition to icon. */
-    get inlineName() {
+    _label(action) {}
+    /** If set, when the action is rendered as an inline button, shows this text label next to the icon. */
+    get label() {
         return (
-            this._inlineName(this.params) ??
-            (typeof this.definition.inlineName === "function"
-                ? this.definition.inlineName.call(this, this.params)
-                : this.definition.inlineName) ??
+            this._label(this.params) ??
+            (typeof this.definition.label === "function"
+                ? this.definition.label.call(this, this.params)
+                : this.definition.label) ??
             false
         );
     }
@@ -602,6 +609,31 @@ export class Action {
         return (
             this._onSelected(this.params, ev) ??
             this.definition.onSelected?.call(this, this.params, ev)
+        );
+    }
+
+    /** @param {Action} action @returns {Component|undefined} */
+    _popoverComponent(action) {}
+    /** When action is a dropdown @see dropdownTrigger, this determines an optional component to use for the content slot */
+    get popoverComponent() {
+        return (
+            this._popoverComponent(this.params) ??
+            (typeof this.definition.popoverComponent === "function" &&
+            Object.getPrototypeOf(this.definition.popoverComponent) !== Component
+                ? this.definition.popoverComponent.call(this, this.params)
+                : this.definition.popoverComponent)
+        );
+    }
+
+    /** @param {Action} action @returns {Object|undefined} */
+    _popoverComponentProps(action) {}
+    /** When action is a dropdown @see dropdownTrigger, this determines optional props to pass to component of the content slot of dropdown. */
+    get popoverComponentProps() {
+        return (
+            this._popoverComponentProps(this.params) ??
+            (typeof this.definition.popoverComponentProps === "function"
+                ? this.definition.popoverComponentProps.call(this, this.params)
+                : this.definition.popoverComponentProps)
         );
     }
 
@@ -735,8 +767,8 @@ export class UseActions extends Reactive {
                     // a reused more-action gets its list swapped in place
                     actionsSignal: signal(data.actions),
                     btnAttrs: { "data-available-offline": true },
-                    dropdown: true,
                     dropdownState: new DropdownState(),
+                    dropdownTrigger: true,
                     icon: data?.icon ?? "more_vert",
                     isActive: ({ action }) => action.dropdownState.isOpen,
                     isMoreAction: true,
