@@ -104,6 +104,7 @@ class PosConfig(models.Model):
             'iface_available_categ_ids', 'iface_splitbill', 'module_pos_restaurant', 'self_ordering_mode',
             'self_ordering_service_mode', 'self_ordering_default_language_id', 'self_ordering_available_language_ids',
             'self_ordering_image_home_ids', 'self_ordering_default_user_id', 'self_ordering_pay_after',
+<<<<<<< b0cea5bbc4abdfb5810d34f88ba10c2df27a8d43
             'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'has_paper',
             'floor_ids', 'fiscal_position_ids', 'receipt_header', 'receipt_footer', 'current_session_id',
             'pricelist_id', 'available_pricelist_ids', 'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant',
@@ -111,6 +112,23 @@ class PosConfig(models.Model):
             'available_preset_ids', 'default_preset_id', 'use_presets', 'iface_tax_included',
             'status', 'self_ordering_image_background_ids', 'preparation_printer_ids', 'default_receipt_printer_id',
             'receipt_printer_ids', 'use_order_printer', 'other_devices', 'pos_snooze_ids',
+||||||| e1ed4fe077ba98ce7ac6802a43bb68242081dee9
+            'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'printer_ids', 'has_paper',
+            'floor_ids', 'fiscal_position_ids', 'is_order_printer', 'iface_print_via_proxy', 'receipt_header',
+            'receipt_footer', 'proxy_ip', 'current_session_id', 'pricelist_id', 'available_pricelist_ids',
+            'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
+            'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
+            'available_preset_ids', 'default_preset_id', 'epson_printer_ip', 'use_presets', 'iface_tax_included',
+            'status', 'self_ordering_image_background_ids', 'other_devices',
+=======
+            'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'printer_ids', 'has_paper',
+            'floor_ids', 'fiscal_position_ids', 'is_order_printer', 'iface_print_via_proxy', 'receipt_header',
+            'receipt_footer', 'proxy_ip', 'current_session_id', 'pricelist_id', 'available_pricelist_ids',
+            'default_fiscal_position_id', 'use_pricelist', 'module_pos_restaurant', 'is_header_or_footer',
+            'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
+            'available_preset_ids', 'default_preset_id', 'epson_printer_ip', 'use_presets', 'iface_tax_included',
+            'status', 'self_ordering_image_background_ids', 'other_devices', 'write_date',
+>>>>>>> 28ae19498283e276431c19fca3c619513627c84a
         ]
 
     def _update_access_token(self):
@@ -187,7 +205,22 @@ class PosConfig(models.Model):
         res = super().write(vals)
         self._ensure_public_attachments()
         self._prepare_self_order_custom_btn()
+        if vals.keys() & self._get_kiosk_reload_fields():
+            for config in self.filtered(lambda c: c.self_ordering_mode == 'kiosk' and c.has_active_session):
+                config._notify('CONFIG_UPDATED', {'write_date': config.write_date})
         return res
+
+    @api.model
+    def _get_kiosk_reload_fields(self):
+        return {
+            'self_ordering_mode', 'self_ordering_service_mode', 'self_ordering_pay_after',
+            'self_ordering_default_language_id', 'self_ordering_available_language_ids',
+            'self_ordering_image_home_ids', 'self_ordering_image_background_ids',
+            'self_ordering_image_brand', 'self_ordering_image_brand_name',
+            'limit_categories', 'iface_available_categ_ids', 'payment_method_ids',
+            'use_presets', 'available_preset_ids', 'default_preset_id',
+            'use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'iface_tax_included',
+        }
 
     def _ensure_public_attachments(self):
         attachments = self.self_ordering_image_background_ids | self.self_ordering_image_home_ids
