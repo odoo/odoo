@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_event.EventInfoPopup">
+        <Dialog contentClass="'event-order-info-popup'">
+            <t t-set-slot="header">
+                <h3 class="section-title" t-out="this.props.event.name"/>
+                <button type="button" class="btn-close mb-2" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
+            </t>
+            <div class="text-start">
+                <div t-if="this.props.event.description" class="pb-3 mb-3 border-bottom">
+                    <h4 class="h6 fw-bold mb-2">Description</h4>
+                    <div class="small">
+                        <t t-out="this.eventDescriptionMarkup"/>
+                    </div>
+                </div>
+
+                <div class="pb-3 mb-3 border-bottom">
+                    <h4 class="h6 fw-bold mb-2">Event</h4>
+                    <div class="d-flex flex-column gap-1 small">
+                        <div>
+                            <span class="fw-semibold me-2">Date:</span>
+                            <t t-out="this.formatEventDate(this.props.event.date_begin)"/>
+                            <t t-if="this.props.event.date_end">
+                                <i class='oi mx-1' data-icon='east'/>
+                                <t t-out="this.formatEventDate(this.props.event.date_end)"/>
+                            </t>
+                        </div>
+                        <div t-if="this.props.event.event_slot_ids.length" class="d-flex">
+                            <span class="fw-semibold me-2">Slots:</span>
+                            <div class="d-flex flex-wrap gap-1">
+                                <t t-foreach="this.props.event.event_slot_ids" t-as="slot" t-key="slot.id">
+                                    <span class="o_tag rounded-pill badge" t-att-class="'o_tag_color_' + slot.color" t-out="slot.name"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div t-if="this.props.event.address_id">
+                            <span class="fw-semibold me-2">Venue:</span><t t-out="this.props.event.address_id?.name"/>
+                        </div>
+                        <div t-if="this.props.event.tag_ids.length" class="d-flex">
+                            <span class="fw-semibold me-2">Tags:</span>
+                            <div class="d-flex flex-wrap gap-1">
+                                <t t-foreach="this.props.event.tag_ids" t-as="tag" t-key="tag.id">
+                                    <span class="o_tag rounded-pill badge" t-att-class="'o_tag_color_' + tag.color" t-out="tag.name"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="h6 fw-bold mb-2">Tickets</h4>
+                    <div t-if="this.props.event.event_ticket_ids.length" class="d-flex flex-column gap-1 small">
+                        <t t-foreach="this.props.event.event_ticket_ids" t-as="ticket" t-key="ticket.id">
+                            <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="rounded-circle" t-attf-style="width: 6px; height: 6px; background-color: {{ticket.color}}"/>
+                                    <t t-out="ticket.name"/>:
+                                </div>
+                                <span>
+                                    <span class="fw-semibold ms-2"><t t-out="this.formatTicketPrice(ticket)"/> (tax excl.)</span>
+                                </span>
+                            </div>
+                        </t>
+                    </div>
+                    <span t-else="" class="fw-semibold small">No tickets available for this event.</span>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button type="button" class="btn btn-primary w-100" t-on-click="this.props.close">Close</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>
