@@ -1,16 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { press, runAllTimers } from "@odoo/hoot-dom";
 import {
-    Command,
     contains,
     defineModels,
     fields,
-    makeMockServer,
     models,
     mountView,
     onRpc,
     patchWithCleanup,
-    serverState,
 } from "@web/../tests/web_test_helpers";
 import { saleModels } from "./sale_test_helpers";
 import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
@@ -34,9 +31,11 @@ saleModels.SaleOrder._views.form = /* xml */ `
     <form>
         <field name="order_line" widget="sol_o2m" mode="list">
             <list editable="bottom">
-                <field name="product_id" widget="sol_product_many2one"/>
-                <field name="product_template_id" widget="sol_product_many2one"/>
-                <field name="name" widget="sol_label_text"/>
+                <column name="product_and_description">
+                    <field name="product_id" widget="sol_product_many2one"/>
+                    <field name="product_template_id" widget="sol_product_many2one"/>
+                    <field name="name" widget="sol_label_text"/>
+                </column>
             </list>
         </field>
     </form>
@@ -87,25 +86,4 @@ test("pressing tab with incomplete text will create a product", async () => {
         "name_create",
         "_getProductConfiguratorData",
     ]);
-});
-
-test("Show full description if SOL name is not started with product name", async () => {
-    const { env } = await makeMockServer();
-    const product = env["product.product"][0];
-    const soId = env["sale.order"].create({
-        partner_id: serverState.partnerId,
-        order_line: [
-            Command.create({
-                product_id: product.id,
-                name: "A description",
-            }),
-        ],
-    });
-    await mountView({
-        type: "form",
-        resModel: "sale.order",
-        resId: soId,
-    });
-
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
 });

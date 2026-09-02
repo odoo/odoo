@@ -1291,20 +1291,30 @@
 
                                         <!-- Displayed fields -->
                                         <field name="sequence" widget="handle"/>
-                                        <field name="product_id"
-                                               optional="hide"
-                                               widget="product_label_section_and_note_field"
-                                               domain="
+                                        <column name="product_and_description">
+                                            <field
+                                                name="product_id"
+                                                optional="hide"
+                                                widget="account_product_field"
+                                                domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
                                                     and [('sale_ok', '=', True)]
                                                     or [('purchase_ok', '=', True)]
-                                               "/>
-                                        <field name="name" optional="show"/>
-                                        <field
-                                            name="label"
-                                            width="240px"
-                                            widget="account_label_text"
-                                        />
+                                                "
+                                                placeholder="Search a product"
+                                            />
+                                            <field
+                                                name="name"
+                                                placeholder="Enter a description"
+                                                decoration-it="display_type == 'product' and product_id"
+                                                optional="show"
+                                                widget="text"
+                                            />
+                                            <field
+                                                name="label"
+                                                widget="account_label_text"
+                                            />
+                                        </column>
                                         <field name="account_id"
                                                context="{
                                                     'partner_id': partner_id,

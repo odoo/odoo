@@ -121,7 +121,7 @@
                         </group>
                     </page>
                 </xpath>
-                <xpath expr="//field[@name='invoice_line_ids']//list/field[@name='product_id']" position="after">
+                <xpath expr="//field[@name='invoice_line_ids']//list/column[@name='product_and_description']" position="after">
                     <field name="l10n_hr_kpd_category_id"
                         coloumn_invisible="parent.country_code != 'HR'"
                         options="{'no_create': True, 'readonly': False}"

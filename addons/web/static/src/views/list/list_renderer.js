@@ -1197,7 +1197,7 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
-    isColumnGroupFieldVisible(fieldInfo, record) {
+    isColumnGroupFieldVisible(column, fieldInfo, record) {
         return (
             !this.evalInvisible(fieldInfo.invisible, record) &&
             fieldInfo.name in record.data &&

@@ -179,9 +179,12 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         super.add(params);
     }
 
-    isColumnGroupFieldVisible(fieldInfo, record) {
-        const isColumnVisible = super.isColumnGroupFieldVisible(fieldInfo, record);
-        if (!isColumnVisible) {
+    isColumnGroupFieldVisible(column, fieldInfo, record) {
+        if (column.name != "product_and_description") {
+            return super.isColumnGroupFieldVisible(column, fieldInfo, record);
+        }
+
+        if (!super.isColumnGroupFieldVisible(column, fieldInfo, record)) {
             return false;
         }
 

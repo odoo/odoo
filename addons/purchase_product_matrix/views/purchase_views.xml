@@ -6,10 +6,10 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//list/field[@name='product_id']" position="attributes">
+            <xpath expr="//list//field[@name='product_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>
             </xpath>
-            <xpath expr="//list/field[@name='product_id']" position="after">
+            <xpath expr="//list//field[@name='product_id']" position="before">
                 <!-- optional="show" allows name (description) to be editable -->
                 <field name="product_template_id"
                     string="Product"
@@ -19,10 +19,12 @@
                     context="{'partner_id': parent.partner_id}"
                     options="{'show_label_warning': True}"
                     widget="pol_product_many2one"/>
+            </xpath>
+            <column name="product_and_description" position="after">
                 <field name="product_template_attribute_value_ids" column_invisible="1"/>
                 <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
                 <field name="is_configurable_product" column_invisible="1"/>
-            </xpath>
+            </column>
             <field name="partner_id" position="after">
                 <field name="grid" invisible="1"/>
                 <field name="grid_product_tmpl_id" invisible="1"/>

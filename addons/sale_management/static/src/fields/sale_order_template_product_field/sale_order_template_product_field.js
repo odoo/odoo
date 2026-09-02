@@ -1,14 +1,14 @@
 import {
-    ProductLabelSectionAndNoteField,
-    productLabelSectionAndNoteField,
-} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
+    accountProductField,
+    AccountProductField,
+} from "@account/components/account_product_field/account_product_field";
 import { useEffect } from "@odoo/owl";
 import { saleProductMixin } from "@sale/js/sale_product_mixin";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
-export class SaleOrderTemplateLineProductField extends ProductLabelSectionAndNoteField {
+export class SaleOrderTemplateLineProductField extends AccountProductField {
     static template = "sale.SaleProductField";
 
     setup() {
@@ -40,7 +40,7 @@ export class SaleOrderTemplateLineProductField extends ProductLabelSectionAndNot
                 return product_id_data.display_name.split("\n")[0];
             }
         }
-        return super.productName;
+        return this.props.record.data[this.props.name].display_name;
     }
 
     // Hooks for saleProductMixin
@@ -62,12 +62,17 @@ export class SaleOrderTemplateLineProductField extends ProductLabelSectionAndNot
 
     get m2oProps() {
         const props = super.m2oProps;
+        let value = props.value && { ...props.value };
+        if (this.props.readonly && this.productName) {
+            value = { ...value, display_name: this.productName };
+        }
         return {
             ...props,
             update: (value) => {
                 this.isInternalUpdate = true;
                 return props.update(value);
             },
+            value,
         };
     }
 }
@@ -120,7 +125,7 @@ patch(SaleOrderTemplateLineProductField.prototype, {
 });
 
 export const saleOrderTemplateProductField = {
-    ...productLabelSectionAndNoteField,
+    ...accountProductField,
     component: SaleOrderTemplateLineProductField,
     fieldDependencies: [
         { name: "product_id", type: "many2one" },
