@@ -425,6 +425,16 @@ export function flushPendingOrdersSync() {
     ];
 }
 
+export function flushCurrentOrderSync() {
+    return {
+        content: "Force sync the current order to the server",
+        trigger: "body",
+        run: async () => {
+            await posmodel.syncAllOrders({ orders: [posmodel.getOrder()], force: true });
+        },
+    };
+}
+
 export function mockClearStorage() {
     return {
         content: "Mock .clear() for session and local storage.",

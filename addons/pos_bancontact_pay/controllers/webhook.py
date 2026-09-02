@@ -90,9 +90,15 @@ class BancontactPayController(http.Controller):
             return http.Response(status=204)
 
         payment = self._get_bancontact_payment(bancontact_id, payment_method, pos_config)
-        if payment and self._is_bancontact_payment_finalized(payment):
-            _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
-            return http.Response(status=204)
+        if payment:
+            if self._is_bancontact_payment_finalized(payment):
+                _logger.info("%s webhook ignored: payment already finalized (paymentId=%s)", log_prefix, bancontact_id)
+                return http.Response(status=204)
+
+            if bancontact_status == "SUCCEEDED":
+                payment.write({"qr_code": False, "payment_status": "done"})
+            else:
+                payment.write({"qr_code": False, "payment_status": "retry", "bancontact_id": False})
 
         _logger.info("%s webhook processed: paymentId=%s, status=%s", log_prefix, bancontact_id, bancontact_status)
         self._notify_pos(pos_config, bancontact_id, bancontact_status)
