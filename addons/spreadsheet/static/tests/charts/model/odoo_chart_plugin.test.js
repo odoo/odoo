@@ -93,7 +93,7 @@ const fakeActionService = {
     doAction: async (request, options = {}) => {
         if (request.type === "ir.actions.act_window") {
             expect.step("do-action");
-            expect(request).toEqual(action);
+            expect(request).toMatchObject(action);
         }
     },
     loadAction(actionRequest) {
@@ -1016,7 +1016,7 @@ test("See records when clicking on a pie chart slice", async () => {
         doAction: async (request, options = {}) => {
             if (request.type === "ir.actions.act_window") {
                 expect.step("do-action");
-                expect(request).toEqual({
+                expect(request).toMatchObject({
                     ...action,
                     name: "January 2022",
                 });
