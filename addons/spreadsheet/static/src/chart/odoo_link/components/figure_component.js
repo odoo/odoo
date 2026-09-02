@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { navigateToOdoolinkFromChart } from "../odoo_chart/odoo_chart_helpers";
+import { navigateToOdoolinkFromChart } from "../../odoo_chart/odoo_chart_helpers";
 
 patch(spreadsheet.components.ScorecardChart.prototype, {
     async navigateToOdooLink(newWindow) {
