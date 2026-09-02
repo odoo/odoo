@@ -745,10 +745,6 @@ class MailMessage(models.Model):
         self.ensure_one()
         if self.env.user._is_admin():
             return self
-        # sanity check on kwargs
-        allowed_params = self.env[self.sudo().model or 'mail.thread']._get_allowed_access_params()
-        if invalid := (set((kwargs or {}).keys()) - allowed_params):
-            _logger.warning("Invalid parameters to _get_with_access: %s", invalid)
         if self.sudo(False).has_access(mode):
             return self
         if self.model and self.res_id:
