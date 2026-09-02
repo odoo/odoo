@@ -153,7 +153,20 @@ class SmsSms(models.Model):
         domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True)]
 
         batch_size = self._get_send_batch_size()
-        records = self.search(domain, limit=batch_size, order='id').try_lock_for_update()
+
+        records_to_process = self.search(domain, limit=batch_size, order='id')
+        if not records_to_process:
+            return
+
+        # Create locks by mailing_id to avoid deadlocks from triggered webhook status updates
+        mailing_ids = sorted(set(records_to_process.sms_tracker_id.mailing_trace_id.mass_mailing_id.ids))
+        if mailing_ids:
+            self.env.cr.execute(
+                "SELECT id FROM mailing_mailing WHERE id IN %s ORDER BY id FOR UPDATE",
+                [tuple(mailing_ids)],
+            )
+
+        records = records_to_process.search([('id', 'in', records_to_process.ids)]).try_lock_for_update()
         if not records:
             return
         for sms_api, sms in records._split_by_api():
