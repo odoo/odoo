@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Display a "lock/unlock" icon for the MO in the Done state. -->
+    <t t-name="mrp.ProductionLockedStatusBarField.ItemLabel" t-inherit="stock.PickingLockedStatusBarField.ItemLabel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if=&quot;['done', 'cancel'].includes(item.value) and item.isSelected&quot;]" position="attributes">
+            <attribute name="t-if">item.value === 'done' and item.isSelected</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="mrp.ProductionLockedStatusBarField" t-inherit="stock.PickingLockedStatusBarField" t-inherit-mode="primary">
+        <xpath expr="//button/t[@t-call='stock.PickingLockedStatusBarField.ItemLabel']" position="attributes">
+            <attribute name="t-call">mrp.ProductionLockedStatusBarField.ItemLabel</attribute>
+        </xpath>
+        <!-- For Mobile View -->
+        <xpath expr="//t[@t-if='item' and @t-call='stock.PickingLockedStatusBarField.ItemLabel']" position="attributes">
+            <attribute name="t-call">mrp.ProductionLockedStatusBarField.ItemLabel</attribute>
+        </xpath>
+    </t>
+</templates>

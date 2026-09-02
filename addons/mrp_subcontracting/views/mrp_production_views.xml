@@ -11,7 +11,7 @@
                 <attribute name="js_class">subcontracting_production_form</attribute>
             </xpath>
             <xpath expr="//header" position="replace">
-                <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                <field name="state" widget="mrp_production_locked_statusbar" statusbar_visible="draft,confirmed,done"/>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="replace"/>
             <xpath expr="//div[hasclass('oe_title')]" position="replace"/>
