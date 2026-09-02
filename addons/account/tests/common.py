@@ -281,7 +281,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                 Command.link(cls.env.ref('base.test_company_be').id),
                 Command.link(cls.env.ref('base.test_company_branch_a').id),
                 Command.link(cls.env.ref('base.test_company_branch_b').id),
-                Command.link(cls.env.ref('base.test_company_without_branch').id),
+                Command.link(cls.env.ref('base.test_company_with_branch').id),
             ]
         )
 

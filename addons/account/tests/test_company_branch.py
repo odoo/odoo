@@ -16,6 +16,10 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
+    def setup_independent_company(cls):
+        return cls.env.ref('base.test_company_with_branch')
+
+    @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')

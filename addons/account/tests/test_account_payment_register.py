@@ -18,7 +18,11 @@ from odoo.addons.payment.tests.common import PaymentCommon
 @tagged('post_install', '-at_install')
 class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCommon):
 
-    _test_user_groups = None  # FIXME list needed groups
+    _test_user_groups = None  # FIXME list needed
+
+    @classmethod
+    def setup_independent_company(cls):
+        return cls.env.ref('base.test_company_with_branch')
 
     @classmethod
     def setUpClass(cls):

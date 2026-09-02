@@ -5,17 +5,17 @@
         <field name="partner_id" ref="test_company_partner"/>
         <field name="currency_id" ref="base.USD"/>
     </record>
+    <record id="test_company_with_branch" model="res.company">
+        <field name="name">Test Company Without Branches</field>
+        <field name="currency_id" ref="base.USD"/>
+    </record>
     <record id="test_company_branch_a" model="res.company">
         <field name="name">Test Company Branch A</field>
-        <field name="parent_id" ref="test_company"/>
+        <field name="parent_id" ref="test_company_with_branch"/>
     </record>
     <record id="test_company_branch_b" model="res.company">
         <field name="name">Test Company Branch B</field>
-        <field name="parent_id" ref="test_company"/>
-    </record>
-    <record id="test_company_without_branch" model="res.company">
-        <field name="name">Test Company Without Branches</field>
-        <field name="currency_id" ref="base.USD"/>
+        <field name="parent_id" ref="test_company_with_branch"/>
     </record>
     <record id="test_company_be" model="res.company">
         <field name="name">Test Company BE</field>
