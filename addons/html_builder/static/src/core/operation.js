@@ -51,6 +51,7 @@ export class Operation {
     constructor(editableDocument = document) {
         this.mutex = new OperationMutex();
         this.editableDocument = editableDocument;
+        this.loadingRequests = new Set();
     }
 
     /**
@@ -153,27 +154,41 @@ export class Operation {
     }
 
     /**
-     * Adds a transparent loading screen above the editable to prevent modifying
-     * its content during an ongoing operation. Returns a callback to remove
-     * the loading screen.
+     * Registers a request for the transparent loading screen displayed above
+     * the editable to prevent modifying its content during an ongoing
+     * operation. That screen is shared by all the pending requests: it is
+     * added on the first one, and only removed once the last one is released.
      *
      * @param {Boolean} withLoadingEffect if true, adds a loading effect
      * @param {Number} loadingEffectDelay delay after which the loading effect
      *   should appear
      * @param {Boolean} shouldInterceptClick - whether to redispatch the click
      *   under the loading element after the end of the current operation
-     * @returns {Function}
+     * @returns {Function} releases this request, removing the loading screen
+     *   if it was the last one
      */
     addLoadingElement(withLoadingEffect, loadingEffectDelay, shouldInterceptClick) {
-        this.loadingScreenEl = document.createElement("div");
-        this.loadingScreenEl.classList.add(
-            ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
-        );
-        const spinnerEl = document.createElement("img");
-        spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
-        this.loadingScreenEl.appendChild(spinnerEl);
+        if (!this.loadingScreenEl) {
+            this.loadingScreenEl = document.createElement("div");
+            this.loadingScreenEl.classList.add(
+                "o_loading_screen",
+                "d-flex",
+                "justify-content-center",
+                "align-items-center"
+            );
+            const spinnerEl = document.createElement("img");
+            spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
+            this.loadingScreenEl.appendChild(spinnerEl);
+            this.loadingScreenEl.classList.toggle("d-none", !!this.isUIBlocked);
+            this.editableDocument.body.appendChild(this.loadingScreenEl);
+        }
+
+        const request = { loadingEffectActive: false };
+        this.loadingRequests.add(request);
+        this.updateLoadingScreen();
 
         let removeClickListener = () => {};
+
         if (shouldInterceptClick) {
             const onClick = (ev) => {
                 const trueTargetEls = this.editableDocument.elementsFromPoint(
@@ -190,30 +205,37 @@ export class Operation {
                 });
             };
             this.editableDocument.addEventListener("click", onClick);
-            removeClickListener = () => this.editableDocument.removeEventListener("click", onClick);
-        }
-        if (this.isUIBlocked) {
-            this.loadingScreenEl.classList.add("d-none");
+            removeClickListener = () => {
+                this.editableDocument.removeEventListener("click", onClick);
+            };
         }
 
-        this.editableDocument.body.appendChild(this.loadingScreenEl);
-
-        // If specified, add a loading effect on that element after a delay.
         let loadingTimeout;
+
         if (withLoadingEffect) {
-            loadingTimeout = setTimeout(
-                () => this.loadingScreenEl?.classList.add("o_we_ui_loading"),
-                loadingEffectDelay
-            );
+            loadingTimeout = setTimeout(() => {
+                request.loadingEffectActive = true;
+                this.updateLoadingScreen();
+            }, loadingEffectDelay);
         }
+
         return () => {
-            if (loadingTimeout) {
-                clearTimeout(loadingTimeout);
-            }
+            clearTimeout(loadingTimeout);
             removeClickListener();
-            this.loadingScreenEl.remove();
-            this.loadingScreenEl = null;
+
+            this.loadingRequests.delete(request);
+            if (!this.loadingRequests.size) {
+                this.loadingScreenEl?.remove();
+                this.loadingScreenEl = null;
+            } else {
+                this.updateLoadingScreen();
+            }
         };
+    }
+
+    updateLoadingScreen() {
+        const hasLoadingEffect = [...this.loadingRequests].some((r) => r.loadingEffectActive);
+        this.loadingScreenEl.classList.toggle("o_we_ui_loading", hasLoadingEffect);
     }
 
     /**
