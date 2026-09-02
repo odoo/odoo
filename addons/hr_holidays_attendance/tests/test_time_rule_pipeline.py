@@ -3154,6 +3154,48 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         finally:
             rule.write({'active': False})
 
+    def test_weekly_rule_friday_start_past_week_fires(self):
+        """A leave in a completed Friday-based week must be processed immediately."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Week exceed 5h fri-start (fires)',
+            'working_hours_mode': 'week',
+            'week_start': '4',  # Friday
+            'threshold_operator': 'exceed',
+            'expected_hours': 5,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-14'):  # Wednesday; current Fri-week: Dec 9 - Dec 15
+                # leave inside the PREVIOUS Fri-week (Dec 2-8): Mon-Thu → ~24h > 5h → must fire
+                leave = self._make_leave(datetime(2022, 12, 5, 8), datetime(2022, 12, 8, 14))
+                self.assertTrue(self._outputs(leave),
+                                "Weekly rule with Friday start must fire for past complete Fri-week leave")
+        finally:
+            rule.write({'active': False})
+
+    def test_weekly_rule_friday_start_current_week_deferred(self):
+        """A leave inside the current Friday-based week must be deferred.
+        """
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Week exceed 5h fri-start (deferred)',
+            'working_hours_mode': 'week',
+            'week_start': '4',  # Friday
+            'threshold_operator': 'exceed',
+            'expected_hours': 5,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        try:
+            with freeze_time('2022-12-14'):  # Wednesday; current Fri-week: Dec 9 - Dec 15
+                # leave on Dec 9 (Fri) only: 6h > 5h threshold - must be DEFERRED because
+                # the Fri-week is still ongoing; must not fire before Dec 15 (Thu)
+                leave = self._make_leave(datetime(2022, 12, 9, 8), datetime(2022, 12, 9, 14))
+                self.assertFalse(self._outputs(leave),
+                                 "Weekly rule with Friday start must defer for current-week leave")
+        finally:
+            rule.write({'active': False})
+
     def test_day_cron_processes_yesterday_undertime(self):
 
         rule = self.env['hr.time.rule'].create({

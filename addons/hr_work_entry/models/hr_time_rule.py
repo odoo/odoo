@@ -12,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.tools.float_utils import float_compare
 from odoo.tools.intervals import Intervals, invert_intervals
@@ -239,6 +240,21 @@ class HrTimeRule(models.Model):
         vals_list = super().copy_data(default)
         return [dict(vals, name=self.env._("%s (copy)", rule.name)) for rule, vals in zip(self, vals_list)]
 
+    @api.constrains('employee_domain')
+    def _check_employee_domain(self):
+        for rule in self:
+            if not rule.employee_domain or rule.employee_domain == '[]':
+                continue
+            try:
+                literal_eval(rule.employee_domain)
+            except Exception as e:  # noqa: BLE001
+                raise ValidationError(self.env._(
+                    "Rule '%(name)s': invalid employee domain %(domain)s — %(error)s",
+                    name=rule.name,
+                    domain=rule.employee_domain,
+                    error=e,
+                )) from e
+
     @api.depends('threshold_operator', 'working_hours_mode', 'expected_hours', 'timing_start', 'timing_stop')
     def _compute_condition_label(self):
         def _fmt_hour(h):
@@ -249,13 +265,13 @@ class HrTimeRule(models.Model):
             op = '>' if rule.threshold_operator == 'exceed' else '<'
             mode = rule.working_hours_mode
             if mode in ('schedule_day', 'schedule_week'):
-                period = 'day' if mode == 'schedule_day' else 'week'
-                label = f"{op} schedule/{period}"
+                period = self.env._('day') if mode == 'schedule_day' else self.env._('week')
+                label = self.env._('%(op)s schedule/%(period)s', op=op, period=period)
             else:
-                period = 'day' if mode == 'day' else 'week'
-                label = f"{op} {rule.expected_hours:g}h/{period}"
+                period = self.env._('day') if mode == 'day' else self.env._('week')
+                label = self.env._('%(op)s %(hours)gh/%(period)s', op=op, hours=rule.expected_hours, period=period)
             if rule.timing_start != 0 or rule.timing_stop != 24:
-                label += f" {_fmt_hour(rule.timing_start)}-{_fmt_hour(rule.timing_stop)}"
+                label += ' ' + self.env._('%(from)s-%(to)s', **{'from': _fmt_hour(rule.timing_start), 'to': _fmt_hour(rule.timing_stop)})
             rule.condition_label = label
 
     @api.depends('company_id')
@@ -317,9 +333,14 @@ class HrTimeRule(models.Model):
             return employees
         try:
             domain = literal_eval(self.employee_domain)
-        except Exception:  # noqa: BLE001
-            return employees
-        return employees.sudo().filtered_domain(domain)
+            return employees.sudo().filtered_domain(domain)
+        except Exception as e:  # noqa: BLE001
+            raise ValidationError(self.env._(
+                "Rule '%(name)s': invalid employee domain %(domain)s — %(error)s",
+                name=self.name,
+                domain=self.employee_domain,
+                error=e,
+            )) from e
 
     def _weekday_flags(self):
         self.ensure_one()
@@ -970,6 +991,8 @@ class HrTimeRule(models.Model):
                         continue
                     cursor = iv.start
                     for exc_start, exc_end, exc_rule in all_excess[iv.source]:
+                        if exc_start >= iv.end:
+                            break
                         clip_start = max(cursor, exc_start)
                         clip_end = min(iv.end, exc_end)
                         if cursor < clip_start:

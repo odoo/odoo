@@ -49,7 +49,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         return []
 
     def _get_write_source_extra_source_fields(self):
-        return {}
+        return set()
 
     def _get_time_rule_end_write_vals(self, end_utc, stop_local):
         """Write vals dict for updating the span-end field.
@@ -172,20 +172,27 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
 
     @api.model
     def _cron_process_week_time_rules(self):
-        """Weekly cron: process week-based time rules for the Mon-Sun that just ended."""
+        """Daily cron: process week rules whose week boundary fell on yesterday.
+
+        On day X, yesterday was the last day of every week that starts on X.
+        Only rules with week_start matching X are processed, using the 7-day
+        window [X-7 .. X-1].  Days with no matching rules are a cheap no-op.
+        """
         assert 'employee_id' in self._fields
         today = date.today()
-        week_end = today - timedelta(days=1)
-        week_start = week_end - timedelta(days=6)
-        start = datetime.combine(week_start, time.min)
+        yesterday = today - timedelta(days=1)
+        week_start_key = str(today.weekday())   # '0'=Mon … '6'=Sun
+        week_end = yesterday
+        week_start_date = week_end - timedelta(days=6)
+        start = datetime.combine(week_start_date, time.min)
         end = datetime.combine(week_end, time.max)
         sources = self._get_source_records_for_time_rules(start, end, check_end=True)
         if not sources:
             return
         affected = [(s.employee_id, s[s._time_rule_span_start_field], s[s._time_rule_span_end_field]) for s in sources]
-        self._process_time_rules_for(affected, rule_period='week')
+        self._process_time_rules_for(affected, rule_period='week', rule_week_start=week_start_key)
 
-    def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None):
+    def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None, rule_week_start=None):
         """Recompute time rule outputs for the given (employee, date_from, date_to) tuples.
         """
         if not affected:
@@ -216,6 +223,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         else:
             day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
             week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+
+        if rule_week_start is not None:
+            week_rules = week_rules.filtered(lambda r: (r.week_start or '0') == rule_week_start)
 
         if not day_rules and not week_rules:
             _logger.warning(
@@ -284,13 +294,28 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         if not affected:
             return
         today = date.today()
-        latest_monday = today - timedelta(days=today.weekday())
+
+        # find the earliest active week-rule week-start to use as the current-week boundary;
+        # using min across all rules ensures a record inside ANY rule's current week is deferred
+        week_rules = self.env['hr.time.rule'].sudo().search([
+            ('active', '=', True),
+            ('quantity_period', '=', 'week'),
+            '|', ('company_id', '=', False), ('company_id', 'in', self.env.companies.ids),
+        ])
+        if week_rules:
+            week_starts = {int(r.week_start or '0') for r in week_rules}
+            latest_week_start = min(
+                today - timedelta(days=(today.weekday() - ws) % 7)
+                for ws in week_starts
+            )
+        else:
+            latest_week_start = today - timedelta(days=today.weekday())
 
         def to_date(dt):
             return dt.date() if hasattr(dt, 'date') else dt
         past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
         today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
-        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_monday]
+        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
         _logger.warning(
             "time rule affected split: %d past-day, %d current/future (exceed-only), %d past-week",
             len(past_day), len(today_list), len(past_week),

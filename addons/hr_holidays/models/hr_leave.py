@@ -20,7 +20,6 @@ from odoo.tools.misc import clean_context, format_date, format_duration
 from odoo.tools.translate import _
 
 
-
 def get_employee_from_context(values, context, user_employee_id):
     employee_ids_list = [value[2] for value in values.get('employee_ids', []) if len(value) == 3 and value[0] == Command.SET]
     employee_ids = employee_ids_list[-1] if employee_ids_list else []
@@ -1716,7 +1715,7 @@ class HrLeave(models.Model):
         by creating a calendar event and a resource time off. """
         holidays = self.filtered("employee_id")
         holidays.sudo()._create_resource_leave()
-        meeting_holidays = holidays.filtered(lambda l: l.work_entry_type_id.create_calendar_meeting)
+        meeting_holidays = holidays.filtered(lambda l: l.work_entry_type_id.create_calendar_meeting and not (l.meeting_id and l.meeting_id.active))
         meetings = self.env['calendar.event']
         if meeting_holidays:
             Meeting = self.env['calendar.event']

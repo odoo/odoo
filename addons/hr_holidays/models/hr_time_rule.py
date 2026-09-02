@@ -137,8 +137,17 @@ class HrTimeRule(models.Model):
         """
         return self
 
-    def _apply_leave_output(self, excess, deficit, active_iv=None):
-        new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
+    def _apply_allocation_credits(self, excess_alloc, deficit_alloc, *, approve_ctx=None):
+        """Translate excess/deficit hours into allocation credits and write the log.
+
+        Time-rule allocations are always open-ended (date_to=False) so they don't
+        collide with accrual or fixed-period allocations.
+
+        approve_ctx -- extra context passed to action_approve on new allocations
+                       (e.g. {'leave_skip_state_check': True})
+        """
+        approve_ctx = approve_ctx or {}
+        search_domain = [('state', '=', 'validate'), ('date_to', '=', False)]
 
         excess_by_key = defaultdict(float)
         log_by_source = defaultdict(float)
@@ -159,7 +168,7 @@ class HrTimeRule(models.Model):
             allocation = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', employee.id),
                 ('work_entry_type_id', '=', alloc_type.id),
-                ('state', '=', 'validate'),
+                *search_domain,
             ], limit=1)
             if allocation:
                 allocation.number_of_days += alloc_days
@@ -169,12 +178,13 @@ class HrTimeRule(models.Model):
                     'employee_id': employee.id,
                     'work_entry_type_id': alloc_type.id,
                     'number_of_days': alloc_days,
+                    'date_to': False,
                     'state': 'confirm',
                 })
                 alloc_create_keys.append((employee, alloc_type))
         if alloc_create_vals:
             new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(alloc_create_vals)
-            new_allocs.with_context(leave_skip_state_check=True).action_approve()
+            new_allocs.with_context(**approve_ctx).action_approve()
             for key, alloc in zip(alloc_create_keys, new_allocs):
                 alloc_by_key[key] = alloc
 
@@ -183,19 +193,19 @@ class HrTimeRule(models.Model):
             if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
                 continue
             hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
-            deduct_days = deficit_hours * rule.leave_compensation_rate / hours_per_day
-            if deduct_days > 0:
-                deficit_by_key[employee, rule.allocation_type_id] += deduct_days
-                log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] -= deduct_days
+            deduct = deficit_hours * rule.leave_compensation_rate / hours_per_day
+            if deduct > 0:
+                deficit_by_key[employee, rule.allocation_type_id] += deduct
+                log_by_source[log_source._name, log_source.id, employee, rule.allocation_type_id] -= deduct
 
-        for (employee, alloc_type), deduct_days in deficit_by_key.items():
+        for (employee, alloc_type), deduct in deficit_by_key.items():
             allocation = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', employee.id),
                 ('work_entry_type_id', '=', alloc_type.id),
-                ('state', '=', 'validate'),
+                *search_domain,
             ], limit=1)
             if allocation:
-                allocation.number_of_days = max(0, allocation.number_of_days - deduct_days)
+                allocation.number_of_days = max(0, allocation.number_of_days - deduct)
                 alloc_by_key.setdefault((employee, alloc_type), allocation)
 
         log_vals = []
@@ -211,6 +221,12 @@ class HrTimeRule(models.Model):
         if log_vals:
             self.env['hr.time.rule.allocation.log'].sudo().create(log_vals)
 
+    def _apply_leave_output(self, excess, deficit, active_iv=None):
+        new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
+        self._apply_allocation_credits(
+            excess_alloc, deficit_alloc,
+            approve_ctx={'leave_skip_state_check': True},
+        )
         if all_source_ids:
             Leave = self.env['hr.leave'].sudo()
             sources = Leave.with_context(active_test=False).browse(list(all_source_ids))
