@@ -3,6 +3,7 @@ import pstats
 from cProfile import Profile
 
 from odoo import fields, Command
+from odoo.tools.misc import mute_logger
 from odoo.tests import tagged, common
 
 
@@ -130,8 +131,10 @@ class test_string_field(CreatorCase):
     def test_within_bounds(self):
         self.assertEqual(self.export("foobar"), [["foobar"]])
 
+    @mute_logger('odoo.sql_db')
     def test_out_of_bounds(self):
-        self.assertEqual(self.export("C for Sinking, Java for Drinking, Smalltalk for Thinking. ...and Power to the Penguin!"), [["C for Sinking, J"]])
+        with self.assertRaises(Exception):
+            self.export("C for Sinking, Java for Drinking, Smalltalk for Thinking. ...and Power to the Penguin!")
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install

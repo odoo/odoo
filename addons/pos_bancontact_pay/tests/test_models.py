@@ -54,7 +54,7 @@ class TestModels(TestBancontactPay, CommonPosTest):
     def test_payment_method_supported_currency(self):
         usd_journal = self.env["account.journal"].create({
             "name": "USD Journal",
-            "code": "USDJOURNAL",
+            "code": "USDJOUR",
             "type": "bank",
             "company_id": self.company.id,
             "currency_id": self.usd_currency.id,
