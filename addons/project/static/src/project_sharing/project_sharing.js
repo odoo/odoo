@@ -53,6 +53,8 @@ export class ProjectSharingWebClient extends Component {
      * @param {MouseEvent} ev
      */
     onGlobalClick(ev) {
+        // guard?
+
         // When a ctrl-click occurs inside an <a href/> element
         // we let the browser do the default behavior and
         // we do not want any other listener to execute.

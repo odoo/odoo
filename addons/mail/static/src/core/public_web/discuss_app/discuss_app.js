@@ -37,6 +37,8 @@ export class Discuss extends Component {
             window,
             "keydown",
             (ev) => {
+                // guard?
+
                 if (getActiveHotkey(ev) === "escape" && !this.thread?.composer?.isFocused) {
                     if (this.thread?.composer) {
                         this.thread.composer.autofocus++;

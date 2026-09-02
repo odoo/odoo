@@ -280,6 +280,7 @@ export class FormController extends Component {
 
         useSetupAction({
             rootRef: this.rootRef,
+            // guard?
             beforeVisibilityChange: () => this.beforeVisibilityChange(),
             beforeLeave: (options) => this.beforeLeave(options),
             beforeUnload: (ev) => this.beforeUnload(ev),
