@@ -15,6 +15,15 @@
                 >
                     <field name="module_l10n_ph_invoice" widget="upgrade_boolean"/>
                 </setting>
+                <setting
+                        id="l10n_ph_discount_privileges_sale_setting"
+                        string="Discount Privileges on Sale Orders"
+                        help="Apply statutory discounts on quotations and sale orders."
+                        documentation="/applications/finance/fiscal_localizations/philippines.html"
+                        invisible="account_fiscal_country_id != %(base.ph)d"
+                >
+                    <field name="module_l10n_ph_sale" widget="upgrade_boolean"/>
+                </setting>
             </xpath>
         </field>
     </record>
