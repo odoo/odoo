@@ -64,7 +64,7 @@ export class IframeInput extends Component {
                         outline: none;
                         text-align: center;
                         border: none;
-                        background-color: ${isDarkMode ? "#262A36" : "#FFF"};
+                        background-color: ${isDarkMode ? "#25262b" : "#FFF"};
                         color: ${isDarkMode ? "#FFF" : "#000"};
                         ${this.props.inputStyle || ""}
                     }
