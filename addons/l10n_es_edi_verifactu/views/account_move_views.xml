@@ -109,6 +109,11 @@
                                            decoration-danger="state not in ('accepted', 'registered_with_errors')"
                                            decoration-warning="state == 'registered_with_errors'"
                                            decoration-success="state == 'accepted'"/>
+                                    <button name="action_download_xml"
+                                        class="btn btn-primary"
+                                        string="Download XML"
+                                        type="object"
+                                        invisible="not json_attachment_id"/>
                                 </list>
                             </field>
                         </group>
