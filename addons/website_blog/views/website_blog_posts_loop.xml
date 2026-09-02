@@ -138,7 +138,7 @@ according to the enabled options.
                             <t t-else="" t-set="post_year" t-value="blog_post.published_date.strftime('%Y')"/>
                             <t t-if="post_year != current_year">
                                 <div class="col-12 pb-4">
-                                    <span t-if="not blog_post.website_published" class="badge bg-light">Unpublished</span>
+                                    <span t-if="not blog_post.website_published" class="badge bg-light" t-out="'Unpublished'"/>
                                     <span t-else="" class="badge bg-light" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'yyyy'}"/>
                                 </div>
                                 <t t-set="current_year" t-value="post_year"/>
