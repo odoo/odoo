@@ -230,9 +230,22 @@ class AccountTestInvoicingCommon(ProductCommon):
             )
 
     @classmethod
-    def setup_other_company(cls, **kwargs):
-        # OVERRIDE
-        company = cls._create_company(**{'name': 'company_2'} | kwargs)
+    def setup_other_company(cls, name='company_2', **kwargs):
+        company = None
+        if not kwargs:
+            for test_company_xmlid in 'base.test_company', 'base.test_company_with_branch', 'base.test_company_be':
+                # we may check it a specific country or chart template was requested before returning an existing company
+                candidate_company = cls.env.ref(test_company_xmlid)
+                if candidate_company not in cls.env.user.company_ids:
+                    _logger.info('Selecting existing company %s as other company', test_company_xmlid)
+                    company = candidate_company
+                    company.name = name  # maybe not the best idea but the easiest solution to avoid adapting multiple test for now.
+                    cls.env.user.company_ids += company
+                    break
+
+        if not company:
+            _logger.info('No eligibile company found, creating a new one')
+            company = cls._create_company(name=name, **kwargs)
         data = cls.collect_company_accounting_data(company)
         cls.product_category.with_company(company).write({
             'property_account_income_categ_id': data['default_account_revenue'].id,
