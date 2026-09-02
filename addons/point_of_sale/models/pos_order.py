@@ -1848,7 +1848,7 @@ class PosOrderLine(models.Model):
         return original_price - self.price_subtotal_incl
 
     def isRefund(self):
-        return self.qty * self.price_unit < 0
+        return self.qty < 0
 
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
