@@ -15,15 +15,14 @@ class HrEmployeeBase(models.AbstractModel):
 
         domain = Domain.FALSE  # Nothing accepted by domain, by default
         user = self.env.user
-        employee = user.employee_id
         if user.has_groups('hr_expense.group_hr_expense_user'):
             domain = Domain('company_id', '=', False) | Domain('company_id', 'child_of', self.env.company.root_id.id)  # Then, domain accepts everything
         elif user.has_groups('hr_expense.group_hr_expense_team_approver') and user.employee_ids:
             employees = user.employee_ids
             domain = (
-                Domain('department_id.manager_id', '=', employees.id)
-                | Domain('parent_id', '=', employees.id)
-                | Domain('id', '=', employees.id)
+                Domain('department_id.manager_id', 'in', employees.ids)
+                | Domain('parent_id', 'in', employees.ids)
+                | Domain('id', 'in', employees.ids)
                 | Domain('expense_manager_id', '=', user.id)
             )
         elif user.employee_id:
