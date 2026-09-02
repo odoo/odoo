@@ -30,7 +30,16 @@ ir_rule_discuss_channel_all,discuss.channel: can access channels (as member or a
                                 (""group_public_id"", ""in"", user.all_group_ids.ids),
                 ]
             "
-ir_rule_discuss_channel_all_user_write,discuss.channel: can update channels (as member or as group allowed),discuss.channel,base.group_user,cu,"
+ir_rule_discuss_channel_all_user_create,discuss.channel: can create channels (as group allowed),discuss.channel,base.group_user,c,"
+                [
+                    ""|"",
+                        (""channel_type"", ""!="", ""channel""),
+                        ""|"",
+                            (""group_public_id"", ""="", False),
+                            (""group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            "
+ir_rule_discuss_channel_all_user_write,discuss.channel: can update channels (as member or as group allowed),discuss.channel,base.group_user,u,"
                 [
                     ""|"",
                         ""&"",

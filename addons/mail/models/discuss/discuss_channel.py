@@ -127,7 +127,7 @@ class DiscussChannel(models.Model):
         compute='_compute_channel_partner_ids', inverse='_inverse_channel_partner_ids',
         search='_search_channel_partner_ids')
     channel_member_ids = fields.One2many('discuss.channel.member', 'channel_id', string='Members')
-    member_indices = fields.Char(compute="_compute_member_indices", precompute=True, store=True)
+    member_indices = fields.Char(copy=False, readonly=True)
     parent_channel_id = fields.Many2one("discuss.channel", help="Parent channel", ondelete="cascade", index=True, bypass_search_access=True, readonly=True)
     sub_channel_ids = fields.One2many("discuss.channel", "parent_channel_id", string="Sub Channels", readonly=True)
     from_message_id = fields.Many2one("mail.message", help="The message the channel was created from.", readonly=True)
@@ -395,14 +395,6 @@ class DiscussChannel(models.Model):
             [f"p{pid}" for pid in sorted(partners.ids)] + [f"g{gid}" for gid in sorted(guests.ids)],
         )
 
-    # no depends: the combination is frozen at creation, a member deleted for history keeps it
-    def _compute_member_indices(self):
-        chats = self.filtered(lambda c: c.channel_type == "chat")
-        (self - chats).member_indices = None
-        for chat in chats:
-            members = chat.channel_member_ids
-            chat.member_indices = self._member_indices(members.partner_id, members.guest_id)
-
     @api.depends_context('uid', 'guest')
     @api.depends('channel_member_ids')
     def _compute_is_member(self):
@@ -529,6 +521,7 @@ class DiscussChannel(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        member_vals_lists = []
         for vals in vals_list:
             # find partners to add from partner_ids
             partner_ids_cmd = vals.get('channel_partner_ids') or []
@@ -561,29 +554,49 @@ class DiscussChannel(models.Model):
             # is_pinned + ensure they have rights to see channel
             if not self.env.context.get('install_mode') and not self.env.user._is_public():
                 partner_ids_to_add = list(set(partner_ids + [self.env.user.partner_id.id]))
-            vals["channel_member_ids"] = membership_ids_cmd + [
-                Command.create(
-                    {
-                        "partner_id": pid,
-                        "channel_role": (
-                            "owner"
-                            if vals.get("channel_type", "channel") in ["channel", "group"]
-                            and pid == self.env.user.partner_id.id
-                            and not self.env.user._is_public()
-                            else None
-                        ),
-                    }
-                )
+            member_vals_list = [cmd[2] for cmd in membership_ids_cmd] + [
+                {
+                    "channel_role": (
+                        "owner"
+                        if vals.get("channel_type", "channel") in ["channel", "group"]
+                        and pid == self.env.user.partner_id.id
+                        and not self.env.user._is_public()
+                        else None
+                    ),
+                    "partner_id": pid,
+                }
                 for pid in partner_ids_to_add if pid not in membership_pids
             ]
+            if vals.get("channel_type") == "chat" and len(member_vals_list) > 2:
+                raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
+            member_vals_lists.append(member_vals_list)
+            vals["member_indices"] = None
+            if vals.get("channel_type") == "chat":
+                vals["member_indices"] = self._member_indices(
+                    self.env["res.partner"].browse(
+                        member_vals["partner_id"]
+                        for member_vals in member_vals_list
+                        if member_vals.get("partner_id")
+                    ),
+                    self.env["mail.guest"].browse(
+                        member_vals["guest_id"]
+                        for member_vals in member_vals_list
+                        if member_vals.get("guest_id")
+                    ),
+                )
 
             # clean vals
+            vals.pop('channel_member_ids', False)
             vals.pop('channel_partner_ids', False)
 
         # Create channel and alias
-        channels = super(DiscussChannel, self.with_context(mail_create_bypass_create_check=self.env['discuss.channel.member']._bypass_create_check, mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
-        # pop the mail_create_bypass_create_check key to avoid leaking it outside of create)
-        channels = channels.with_context(mail_create_bypass_create_check=None)
+        channels = super(DiscussChannel, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)
+        # sudo: discuss.channel.member - can create the initial members of a new channel
+        self.env["discuss.channel.member"].sudo().create([
+            {**member_vals, "channel_id": channel.id}
+            for channel, member_vals_list in zip(channels, member_vals_lists)
+            for member_vals in member_vals_list
+        ])
         channels._subscribe_users_automatically()
         if not self.env.context.get("install_mode") and not self.env.user._is_public():
             Store(bus_channel=self.env.user).add(channels, "_store_channel_fields")
