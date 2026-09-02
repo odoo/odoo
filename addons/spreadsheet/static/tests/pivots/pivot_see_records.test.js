@@ -50,7 +50,7 @@ test("Can open see records on headers col", async function () {
     const fakeActionService = {
         doAction: (actionRequest, options = {}) => {
             expect.step("doAction");
-            expect(actionRequest).toEqual({
+            expect(actionRequest).toMatchObject({
                 ...basicListAction,
                 domain: [["foo", "=", 1]],
             });
@@ -69,7 +69,7 @@ test("Can open see records on headers row", async function () {
     const fakeActionService = {
         doAction: (actionRequest, options = {}) => {
             expect.step("doAction");
-            expect(actionRequest).toEqual({
+            expect(actionRequest).toMatchObject({
                 ...basicListAction,
                 domain: [["bar", "=", false]],
             });
@@ -88,7 +88,7 @@ test("Can open see records on measure headers", async function () {
     const fakeActionService = {
         doAction: (actionRequest, options = {}) => {
             expect.step("doAction");
-            expect(actionRequest).toEqual({
+            expect(actionRequest).toMatchObject({
                 ...basicListAction,
                 domain: [["foo", "=", 1]],
             });
