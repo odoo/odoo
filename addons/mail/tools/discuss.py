@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import os
 from collections import defaultdict
 from datetime import date, datetime
 
 from odoo import fields, models
 from odoo.tools import groupby
+from odoo.tools.misc import hmac
 
 
 def get_twilio_credentials(env) -> (str, str):
@@ -32,6 +34,11 @@ def get_sfu_key(env) -> str | None:
     if not sfu_key:
         return os.getenv("ODOO_SFU_KEY")
     return sfu_key
+
+
+def get_derived_sfu_key(env, channel_id) -> str:
+    digest = hmac(env(su=True), "discuss-sfu-channel-key", channel_id).encode()
+    return base64.b64encode(digest).decode()
 
 
 ids_by_model = defaultdict(lambda: ("id",))
