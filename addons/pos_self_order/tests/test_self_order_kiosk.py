@@ -3,11 +3,12 @@
 
 import base64
 import random
+from unittest.mock import patch
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
-from odoo import Command
+from odoo import Command, fields
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -345,3 +346,11 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
         self.start_tour(self_route, "test_self_order_parent_category")
+
+    def test_kiosk_reloads_on_config_change(self):
+        self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+        with patch.object(self.env.registry["pos.config"], "_notify") as notify:
+            self.pos_config.write({'self_ordering_default_user_id': self.pos_user.id})
+            notify.assert_any_call('CONFIG_UPDATED', {'write_date': fields.Datetime.to_string(self.pos_config.write_date)})
