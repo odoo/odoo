@@ -267,6 +267,42 @@ class HrVersion(models.Model):
                 ))
             if not version.active:
                 continue
+            # Check if this is the absolute first version of the employee overall
+            has_older_version_overall = self.env['hr.version'].search_count([
+                ('employee_id', '=', version.employee_id.id),
+                ('id', '!=', version.id),
+                '|',
+                    ('date_version', '<', version.date_version),
+                    '&',
+                        ('date_version', '=', version.date_version),
+                        ('id', '<', version.id)
+            ], limit=1) > 0
+
+            is_first_version_overall = not has_older_version_overall
+
+            # Keep synchronization mechanism for the first version overall
+            if not is_first_version_overall:
+                # Check if an OLDER version exists with the SAME contract_date_start
+                has_older_version_same_contract = self.env['hr.version'].search_count([
+                    ('employee_id', '=', version.employee_id.id),
+                    ('contract_date_start', '=', version.contract_date_start),
+                    ('id', '!=', version.id),
+                    '|',
+                        ('date_version', '<', version.date_version),
+                        '&',
+                            ('date_version', '=', version.date_version),
+                            ('id', '<', version.id)
+                ], limit=1) > 0
+
+                # If NO older version has this contract_date_start, this version IS the earliest version for it
+                is_earliest_version_for_contract = not has_older_version_same_contract
+
+                # Validate condition: Earliest version + contract start date < version date
+                if is_earliest_version_for_contract and version.contract_date_start < version.date_version:
+                    raise ValidationError(self.env._(
+                        "You're trying to start a new contract before the start of the version. "
+                        "Modify the start of the version first then add a new contract date."
+                    ))
             contract_date_end = version.contract_date_end or date.max
             contract_period_exists = False
             for date_start, date_end, versions in dates_per_employee[version.employee_id]:
