@@ -405,7 +405,7 @@ class TestUsers2(UsersCommonCase):
         during installation, so it always works (because it uses the normal
         group_ids field).
         """
-        default_group = self.env.ref('base.default_user_regular_group')
+        default_group = self.env.ref('base.default_user_group')
         test_group = self.env['res.groups'].create({'name': 'test_group'})
         default_group.implied_ids = test_group
 
@@ -415,7 +415,7 @@ class TestUsers2(UsersCommonCase):
         f.login = "bob"
         user = f.save()
 
-        group_user = self.env.ref('base.group_user_regular')
+        group_user = self.env.ref('base.group_user')
 
         self.assertIn(group_user, user.group_ids)
         self.assertEqual(default_group.implied_ids + group_user, user.group_ids)
