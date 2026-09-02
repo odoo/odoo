@@ -2,6 +2,24 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import { showProductColumn } from "@account/js/tours/tour_utils";
 
+function autoExpandMoreButtons(isActiveMobile = false) {
+    const isActive = ["auto"];
+    if (isActiveMobile) {
+        isActive.push("mobile");
+    }
+    return {
+        isActive,
+        content: `autoExpandMoreButtons`,
+        trigger: ".o-form-buttonbox",
+        async run({ queryFirst, click }) {
+            const more = queryFirst(".o-form-buttonbox .o_button_more");
+            if (more) {
+                await click(more);
+            }
+        },
+    };
+}
+
 function mobileKanbanSearchMany2X(modalTitle, valueSearched) {
     return [
         {
@@ -120,7 +138,7 @@ registry.category("web_tour.tours").add('main_flow_tour', {
 {
     trigger: ".o_form_saved",
 },
-stepUtils.autoExpandMoreButtons(),
+autoExpandMoreButtons(),
 {
     trigger: '.o_form_saved',
 },
@@ -1037,7 +1055,7 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["desktop"],
     trigger: '.o_breadcrumb .active:contains("S0")',
 },
-stepUtils.autoExpandMoreButtons(true),
+autoExpandMoreButtons(true),
 {
     isActive: ["mobile"],
     trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("S0")',

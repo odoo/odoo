@@ -27,24 +27,6 @@ export const stepUtils = {
         ];
     },
 
-    autoExpandMoreButtons(isActiveMobile = false) {
-        const isActive = ["auto"];
-        if (isActiveMobile) {
-            isActive.push("mobile");
-        }
-        return {
-            isActive,
-            content: `autoExpandMoreButtons`,
-            trigger: ".o-form-buttonbox",
-            async run({ queryFirst, click }) {
-                const more = queryFirst(".o-form-buttonbox .o_button_more");
-                if (more) {
-                    await click(more);
-                }
-            },
-        };
-    },
-
     goToAppSteps(dataMenuXmlid, description) {
         return [
             this.showAppsMenuItem(),
