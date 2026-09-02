@@ -85,6 +85,28 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         scrap._action_scrap()
         self.assertEqual(self.finished.total_value, 0)
 
+    def test_subcontracting_account_flow_without_purchase_order(self):
+        (self.comp1 | self.comp2 | self.finished).sudo().categ_id = self.category_fifo_auto
+        self.env['product.supplierinfo'].search([
+            ('partner_id', '=', self.subcontractor_partner1.id),
+            ('product_tmpl_id', '=', self.finished.product_tmpl_id.id),
+        ]).sudo().price = 30
+        self._make_in_move(self.comp1, 1, unit_cost=10,
+                           location_dest_id=self.env.company.subcontracting_location_id.id)
+        self._make_in_move(self.comp2, 1, unit_cost=20,
+                           location_dest_id=self.env.company.subcontracting_location_id.id)
+
+        move = self._make_in_move(
+            self.finished,
+            1,
+            create_picking=True,
+            partner_id=self.subcontractor_partner1.id,
+        )
+
+        mo = move.picking_id._get_subcontract_production()
+        self.assertEqual(mo.extra_cost, 30)
+        self.assertEqual(mo.move_finished_ids.value, 60)
+
     def test_subcontracting_account_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product
         The original subcontracting production order will be split into 4 backorders. This test
