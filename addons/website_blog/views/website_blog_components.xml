@@ -18,7 +18,7 @@
                 <li t-foreach="blogs" t-as="nav_blog">
                     <a t-attf-href="/blog/#{slug(nav_blog)}"
                        t-attf-class="btn btn-light #{(blog and nav_blog.id == blog.id) and 'active border-primary bg-primary-subtle text-primary-emphasis'}">
-                        <span t-out="nav_blog.name"/>
+                        <span t-field="nav_blog.name"/>
                     </a>
                 </li>
             </ul>
@@ -26,7 +26,7 @@
             <a t-if="len(blogs) > 1 and blog" href="/blog" t-attf-class="btn btn-link d-lg-none flex-shrink-0 me-auto ps-0">
                 <i class="oi me-1" data-icon="chevron_backward" role="img"/>All blogs
             </a>
-            <button t-if="len(blogs) > 1" class="o_wblog_sheet_trigger btn btn-light order-last d-lg-none flex-shrink-0"
+            <button t-if="len(blogs) > 1" class="o_wblog_sheet_trigger btn btn-light order-last d-lg-none flex-shrink-0 o_not_editable"
                     type="button"
                     t-att-title="blog.name if blog else wblog_all_title_string"
                     aria-haspopup="dialog">
@@ -119,14 +119,13 @@
                 t-attf-class="flex-shrink-0 o_not_editable #{_avatar_classes}"/>
         <div t-attf-class="small lh-sm #{_extra_classes}">
             <!-- Author -->
-            <div t-if="opt_posts_loop_show_author">
-                <div class="o_not_editable">
-                    <t t-out="blog_post.author_name"/>
-                </div>
+            <div t-if="opt_posts_loop_show_author" class="o_wblog_post_author">
+                <div t-if="editable" t-field="blog_post.author_id" t-options="{'widget': 'contact', 'fields': ['name']}"/>
+                <div t-else="" class="o_not_editable" t-out="blog_post.author_name"/>
             </div>
             <!-- Date -->
             <div t-if="opt_posts_loop_show_date">
-                <span t-if="opt_posts_loop_show_author and show_separator" t-attf-class="text-muted #{_separator_classes}">&#8226;</span>
+                <span t-if="opt_posts_loop_show_author and show_separator" t-attf-class="o_not_editable text-muted #{_separator_classes}">&#8226;</span>
                 <t t-if="not is_post_page">
                     <span t-if="blog_post.publish_on" class="text-muted" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
                     <span t-elif="blog_post.published_date" class="text-muted" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
@@ -164,7 +163,7 @@
                     <i class="oi d-lg-none me-1" data-icon="chevron_backward" role="presentation"/><t t-out="blog.name"/>
                 </a>
             </li>
-            <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-out="blog_post.name"/></li>
+            <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-field="blog_post.name"/></li>
         </ol>
     </nav>
 </template>
