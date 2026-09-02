@@ -585,3 +585,74 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             {'account_id': self.account.id, 'balance': 100.0},
             {'account_id': self.category.property_stock_valuation_account_id.id, 'balance': -25.0},
             {'account_id': self.category.property_account_expense_categ_id.id, 'balance': 25.0}])
+
+    def test_cogs_invoice_after_closing_no_delivery(self):
+        """Check the COGS in the reversal entry when the invoice is created after the session was closed
+        and no delivery is attached to the POS order.
+        When the product price is updated between the closing entry and the invoice,
+        the reversal entry uses the same cost as the invoice,
+        making the cost used in the closing entry the effective one.
+        """
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+        self.pos_config.open_ui()
+
+        # Open Session
+        pos_session = self.pos_config.current_session_id
+        pos_session.set_opening_control(0, None)
+
+        # Create Order
+        pos_order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': pos_session.id,
+            'lines': [Command.create({
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 200,
+                'qty': 1.0,
+                'price_subtotal': 200,
+                'price_subtotal_incl': 200,
+            })],
+            'amount_total': 200,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        # Pay
+        payment_context = {"active_ids": [pos_order.id], "active_id": pos_order.id}
+        payment = self.PosMakePayment.with_context(payment_context).create({
+            'amount': 200.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        payment.with_context(payment_context).check()
+        self.assertEqual(pos_order.state, 'paid')
+
+        # Close Session
+        pos_session.post_closing_cash_details(200.0)
+        pos_session.close_session_from_ui()
+        self.assertEqual(pos_session.state, 'closed')
+
+        # Ensure delivery not attached to the order, but to the session
+        self.assertFalse(bool(pos_order.picking_ids))
+        self.assertTrue(bool(pos_session.picking_ids))
+
+        # Ensure COGS in POS session AccountMove:
+        valuation_account = self.category.property_stock_valuation_account_id
+        session_cog_line = pos_session.move_id.line_ids.filtered(lambda aml: aml.account_id.id == valuation_account.id)
+        self.assertEqual(len(session_cog_line), 1)
+        self.assertEqual(session_cog_line.balance, -100)
+
+        # Update the product price
+        self.product.standard_price = 150
+
+        # Create invoice after session is closed
+        pos_order.action_pos_order_invoice()
+
+        # Check COGS lines
+        valuation_lines = self.env['account.move.line'].search([('account_id', '=', valuation_account.id)], order="id asc")
+        self.assertRecordValues(valuation_lines, [
+            {'debit': 0.0, 'credit': 100.0},  # POS session COGS
+            {'debit': 0.0, 'credit': 150.0},  # POS order COGS
+            {'debit': 150.0, 'credit': 0.0},  # Reversal COGS
+        ])
