@@ -31,11 +31,7 @@ export class OutOfFocusService {
     }
 
     async notify(message, thread) {
-        const modelsHandleByPush = ["mail.thread", "discuss.channel"];
-        if (
-            modelsHandleByPush.includes(message.thread?.model) &&
-            (await this.hasServiceWorkInstalledAndPushSubscriptionActive())
-        ) {
+        if (await this.hasServiceWorkInstalledAndPushSubscriptionActive()) {
             return;
         }
         const author = message.author;
