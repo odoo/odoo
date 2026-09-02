@@ -1008,6 +1008,26 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
         self.assertEqual(prepaid_amount, 0.0)
         self.assertEqual(payable_amount, 1000.0)
 
+    @freeze_time("2024-07-15 10:00:00")
+    def test_30_bill_reference_length(self):
+        """
+        On self billed documents, the bill reference is used as the InternalID (cbc:ID), which MyInvois
+        limits to 50 characters. A longer reference must be caught here instead of failing at submission.
+        """
+        bill = self.init_invoice(
+            'in_invoice', partner=self.partner_b, products=self.product_a, taxes=self.purchase_tax, post=True
+        )
+        bill.ref = 'B' * 51
+        myinvois_document = bill._create_myinvois_document()
+
+        _file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertTrue(any('50 characters' in error for error in errors))
+
+        # A reference of exactly 50 characters is within the limit.
+        bill.ref = 'B' * 50
+        _file, errors = myinvois_document._myinvois_generate_xml_file()
+        self.assertFalse(errors)
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 

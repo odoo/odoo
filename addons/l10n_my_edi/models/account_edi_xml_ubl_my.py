@@ -639,6 +639,11 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if is_general_public and any(code != '004' for code in line_classification_codes):
             self._l10n_my_edi_make_validation_error(constraints, 'general_public_requires_004', vals['customer'].id, vals['customer'].name)
 
+        # MyInvois limits the InternalID to 50 characters.
+        document_id = vals['document_node']['cbc:ID']['_text']
+        if document_id and len(document_id) > 50:
+            self._l10n_my_edi_make_validation_error(constraints, 'document_id_too_long', vals['myinvois_document'].id, vals['myinvois_document'].display_name)
+
         return constraints
 
     @api.model
@@ -709,6 +714,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             'general_public_requires_004': self.env._(
                 "TIN 'EI00000000010' (General Public / Consolidated e-Invoice) with BRN/NRIC of 'NA' requires "
                 "classification code '004' on every invoice line."
+            ),
+            'document_id_too_long': self.env._(
+                'The "Bill Reference" for %(invoice_name)s exceeds the maximum limit of 50 characters.',
+                invoice_name=record_name
             ),
         }
 
