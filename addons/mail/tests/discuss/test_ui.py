@@ -12,7 +12,7 @@ class TestUi(HttpCase):
     def test_02_mail_create_channel_no_mail_tour(self):
         self.env['res.users'].create({
             'email': '', # User should be able to create a channel even if no email is defined
-            'group_ids': [Command.set([self.ref('base.group_user_regular')])],
+            'group_ids': [Command.set([self.ref('base.group_user')])],
             'name': 'Test User',
             'login': 'testuser',
             'password': 'testuser',

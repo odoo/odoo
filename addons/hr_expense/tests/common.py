@@ -37,7 +37,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             login='expense_manager_1',
             email='expense_manager_1@example.com',
             notification_type='email',
-            groups='base.group_user_regular,hr_expense.group_hr_expense_manager',
+            groups='base.group_user,hr_expense.group_hr_expense_manager',
             company_ids=[Command.set(cls.env.companies.ids)],
         )
 
@@ -47,7 +47,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             login='expense_manager_2',
             email='expense_manager_2@example.com',
             notification_type='email',
-            groups='base.group_user_regular,hr_expense.group_hr_expense_manager',
+            groups='base.group_user,hr_expense.group_hr_expense_manager',
             company_ids=[Command.set(cls.env.companies.ids)],
         )
 

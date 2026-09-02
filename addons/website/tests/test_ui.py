@@ -149,7 +149,7 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
     def test_html_editor_scss(self):
         self.user_demo.write({
             'group_ids': [(6, 0, [
-                self.env.ref('base.group_user_regular').id,
+                self.env.ref('base.group_user').id,
                 self.env.ref('website.group_website_designer').id
             ])]
         })

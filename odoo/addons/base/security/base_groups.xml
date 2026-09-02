@@ -24,7 +24,7 @@
             base/data/ir_module_category_data.xml
         -->
         <record model="res.groups" id="group_user">
-            <field name="name">Role / Light User</field>
+            <field name="name">Role / User</field>
             <field name="comment">Access to the home menu with limited access</field>
         </record>
 
@@ -37,7 +37,7 @@
 
         <record model="res.groups" id="group_erp_manager">
             <field name="name">Access Rights</field>
-            <field name="implied_ids" eval="[(3, ref('base.group_user')), (4, ref('base.group_user_regular'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <record model="res.groups" id="group_sanitize_override">
@@ -117,11 +117,8 @@
     </data>
 
     <data noupdate="1">
-        <record id="default_user_regular_group" model="res.groups">
-            <field name="name">Default access for new regular users</field>
-        </record>
         <record id="default_user_group" model="res.groups">
-            <field name="name">Default access for new light users</field>
+            <field name="name">Default access for new users</field>
         </record>
     </data>
 </odoo>

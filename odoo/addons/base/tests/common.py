@@ -136,7 +136,7 @@ class BaseCommon(TransactionCase):
 
     @classmethod
     def get_default_groups(cls):
-        return cls.env.ref('base.group_user_regular')
+        return cls.env.ref('base.group_user')
 
     @classmethod
     def setup_main_company(cls, currency_code='USD'):
@@ -248,7 +248,7 @@ class HttpCaseWithUserDemo(HttpCase):
                 'login': 'demo',
                 'password': 'demo',
                 'partner_id': cls.partner_demo.id,
-                'group_ids': [Command.set([cls.env.ref('base.group_user_regular').id, cls.env.ref('base.group_partner_manager').id])],
+                'group_ids': [Command.set([cls.env.ref('base.group_user').id, cls.env.ref('base.group_partner_manager').id])],
             })
 
 
