@@ -709,7 +709,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
     def test_invoice_send_and_print_additional_documents(self):
         """ Ensure an additional document is added to the UBL under AdditionalDocumentReference. """
-        self.ensure_installed('test_orm')
+        self.ensure_installed('test_base')
 
         tax_21 = self.percent_tax(21.0)
         product = self._create_product(lst_price=1039.99, taxes_id=tax_21)
