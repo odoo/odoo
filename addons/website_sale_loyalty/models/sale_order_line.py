@@ -40,3 +40,7 @@ class SaleOrderLine(models.Model):
         return super()._is_sellable() and (
             not self.is_reward_line or self.reward_id.reward_type == "product"
         )
+
+    def _must_drop_from_cart(self):
+        """Override of `website_sale` to keep reward lines, whose products aren't published."""
+        return super()._must_drop_from_cart() and not self.is_reward_line

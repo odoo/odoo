@@ -12,3 +12,7 @@ class SaleOrderLine(models.Model):
         for record in wbooth:
             record.name_short = record.event_booth_pending_ids.event_id.name
         super(SaleOrderLine, self - wbooth)._compute_name_short()
+
+    def _must_drop_from_cart(self):
+        """Override of `website_sale` to keep booth lines, as booth products aren't published."""
+        return super()._must_drop_from_cart() and not self.event_booth_registration_ids
