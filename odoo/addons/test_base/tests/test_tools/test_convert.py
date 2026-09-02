@@ -336,7 +336,7 @@ class TestEnv(common.TransactionCase):
             ),
         )
 
-        r = self.env.ref('test_convert.testing')
+        r = self.env.ref('test_convert.testing')  # noqa: OLS05003 (Unknown module)
         self.assertEqual(r.name, 'a')
         self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
         self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
@@ -371,7 +371,7 @@ class TestEnv(common.TransactionCase):
             ),
         )
 
-        r = self.env.ref('test_convert.testing')
+        r = self.env.ref('test_convert.testing')  # noqa: OLS05003 (Unknown module)
         self.assertEqual(r.name, 'c')
         self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
         self.assertEqual(r.user_id, self.env.ref('base.user_admin'))

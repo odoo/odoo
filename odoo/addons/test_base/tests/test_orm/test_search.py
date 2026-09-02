@@ -5,7 +5,7 @@ from odoo.tests import TransactionCase, tagged, warmup
 from odoo.tools import BinaryBytes, SQL, mute_logger
 
 from .common import TestOrmPartnerCommon
-from odoo.addons.test_base.tests.test_orm.test_domain_expression import TransactionExpressionCase
+from .test_domain_expression import TransactionExpressionCase
 
 
 @tagged('at_install', '-post_install')

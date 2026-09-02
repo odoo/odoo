@@ -722,7 +722,7 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
 
         self.assertFalse(self._search(Country, [('state_ids', 'like', 'probably_unexisting_name')]))
         with self.assertRaises(ValueError):
-            Country.search([('state_ids', 'unexisting_op', 'probably_unexisting_name')])
+            Country.search([('state_ids', 'unexisting_op', 'probably_unexisting_name')])  # noqa: OLS03009 (Invalid comparison operator)
 
         # get the countries referenced by some state using a weird negative domain
         expected = self._search(Country, [('state_ids', 'not like', 'probably_unexisting_name')])
@@ -1222,19 +1222,19 @@ class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, Transactio
             Country.search([('abcdefg', 'in', ['foo'])])
 
         with self.assertRaisesRegex(ValueError, r"^Invalid field.*\"Et plouf\"'"):
-            Country.search([('name."Et plouf"', 'ilike', 'foo')])
+            Country.search([('name."Et plouf"', 'ilike', 'foo')])  # noqa: OLS03013 (Invalid dot notation)
 
         with self.assertRaisesRegex(ValueError, r"^Invalid field.*\"Et plouf\"'"):
-            Country.search([('name."Et plouf"', 'in', ['foo'])])
+            Country.search([('name."Et plouf"', 'in', ['foo'])])  # noqa: OLS03013 (Invalid dot notation)
 
         with self.assertRaisesRegex(ValueError, r"'does_not_exist'"):
             Country.search([]).filtered_domain([('does_not_exist', '=', 'foo')])
 
         with self.assertRaisesRegex(ValueError, r"^Invalid operator.*\('create_date', '>>', 'foo'\)$"):
-            Country.search([('create_date', '>>', 'foo')])
+            Country.search([('create_date', '>>', 'foo')])  # noqa: OLS03009 (Invalid comparison operator)
 
         with self.assertRaisesRegex(ValueError, r"^Invalid operator"):
-            Country.search([]).filtered_domain([('create_date', '>>', 'foo')])
+            Country.search([]).filtered_domain([('create_date', '>>', 'foo')])  # noqa: OLS03009 (Invalid comparison operator)
 
         with self.assertRaisesRegex(ValueError, r"Invalid isoformat string"):
             Country.search([('create_date', '=', "1970-01-01'); --")])

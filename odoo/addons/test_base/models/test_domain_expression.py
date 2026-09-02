@@ -38,6 +38,9 @@ class TestOrmDomainExpressionPartner(models.Model):
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
 
+    def _compute_vat(self):
+        self.vat = 'Tax ID'
+
 
 class TestOrmDomainExpressionPartnerBank(models.Model):
     _name = 'test_orm.domain_expression.partner.bank'

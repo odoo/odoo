@@ -110,7 +110,7 @@ class AddonManifestPatched(TransactionCase):
 
         def for_addon(module, **kwargs):
             if manifest := self.manifests.get(module):
-                return Manifest(path=__file__.rsplit(os.sep, 2)[0], manifest_content={'author': 'test_assetsbundle', 'license': 'LGPL-3', **manifest})
+                return Manifest(path=__file__.rsplit(os.sep, 3)[0], manifest_content={'author': 'test_assetsbundle', 'license': 'LGPL-3', **manifest})
             return default_for_addon(module)
 
         self.patch(odoo.modules.Manifest, 'for_addon', for_addon)
@@ -1250,7 +1250,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_other.mockmanifest1': [
@@ -1273,7 +1273,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_assetsbundle.manifest4': [
@@ -1299,7 +1299,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_assetsbundle.manifest4': [
@@ -1325,7 +1325,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_assetsbundle.manifest4': [
@@ -1348,7 +1348,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_assetsbundle.manifest4': [
@@ -1372,7 +1372,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_assetsbundle.manifest4': [
@@ -1495,7 +1495,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_other.bundle4': [
@@ -1524,7 +1524,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_assetsbundle.bundle4': [
@@ -1557,7 +1557,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_other.bundle4': [
@@ -1586,7 +1586,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
             'assets': {
                 'test_assetsbundle.bundle4': [
@@ -1812,12 +1812,12 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'path': '/test_assetsbundle/%s' % path_to_dummy,
+            'path': '/test_base/tests/test_assetsbundle/%s' % path_to_dummy,
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.irassetsec')
         with mute_logger('odoo.addons.base.models.assetsbundle'):
             attach = bundle.js()
-            self.assertIn(b"Could not get content for /test_assetsbundle/../../../tests/dummy.js", attach.exists().raw.content)
+            self.assertIn(b"Could not get content for /test_base/tests/test_assetsbundle/../../../tests/dummy.js", attach.exists().raw.content)
 
     @mute_logger('odoo.addons.base.models.ir_asset')
     def test_32_a_relative_path_in_addon(self):
@@ -1829,11 +1829,11 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'path': '/test_assetsbundle/%s' % path_to_dummy,
+            'path': '/test_base/tests/test_assetsbundle/%s' % path_to_dummy,
         })
 
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', {})
-        self.assertEqual(files, [('/test_assetsbundle/../../../tests/dummy.xml', None, 'test_assetsbundle.irassetsec', None)])
+        self.assertEqual(files, [('/test_base/tests/test_assetsbundle/../../../tests/dummy.xml', None, 'test_assetsbundle.irassetsec', None)])
         # TODO, validate this behaviour
         # the idea is that if the second element is False (not None) it will be added to the assetbundle, but considered in any case as an attachment url)
 
@@ -1855,7 +1855,7 @@ class TestAssetsManifest(AddonManifestPatched):
     def test_33(self):
         self.manifests['notinstalled_module'] = {
             'name': 'notinstalled_module',
-            'depends': ['test_assetsbundle'],
+            'depends': ['test_base'],
             'addons_path': pathlib.Path(__file__).resolve().parent,
         }
         self.env['ir.asset'].create({
@@ -1883,7 +1883,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'path': '/test_assetsbundle/__manifest__.py',
+            'path': '/test_base/__manifest__.py',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.irassetsec')
         links = bundle.get_links()
@@ -1894,10 +1894,10 @@ class TestAssetsManifest(AddonManifestPatched):
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irassetsec',
-            'path': '/test_assetsbundle/data/ir_asset.xml',
+            'path': '/test_base/data/ir_asset.xml',
         })
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', {})
-        self.assertEqual(files, [('/test_assetsbundle/data/ir_asset.xml', None, 'test_assetsbundle.irassetsec', None)])
+        self.assertEqual(files, [('/test_base/data/ir_asset.xml', None, 'test_assetsbundle.irassetsec', None)])
 
     def test_36(self):
         self.env['ir.asset'].create({
@@ -1929,14 +1929,14 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'my custom scss',
             'mimetype': 'text/scss',
             'type': 'binary',
-            'url': 'test_assetsbundle/my_style_attach.scss',
+            'url': 'test_base/tests/test_assetsbundle/my_style_attach.scss',
             'raw': scss_code,
         })
 
         self.env['ir.asset'].create({
             'name': '1',
             'bundle': 'test_assetsbundle.irasset_custom_attach',
-            'path': 'test_assetsbundle/my_style_attach.scss',
+            'path': 'test_base/tests/test_assetsbundle/my_style_attach.scss',
         })
         bundle = self.env['ir.qweb']._get_asset_bundle('test_assetsbundle.irasset_custom_attach')
         attach = bundle.css()
@@ -1945,7 +1945,7 @@ class TestAssetsManifest(AddonManifestPatched):
         self.assertStringEqual(
             content,
             """
-            /* test_assetsbundle/my_style_attach.scss */
+            /* test_base/tests/test_assetsbundle/my_style_attach.scss */
              .my_div.subdiv{color: blue;}
             """
         )

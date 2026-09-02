@@ -8,7 +8,7 @@ from odoo.models import Query
 from odoo.tests import tagged, TransactionCase, users
 from odoo.tools import OrderedSet, SQL
 
-from odoo.addons.test_base.tests.test_orm.test_domain_expression import TransactionExpressionCase
+from .test_domain_expression import TransactionExpressionCase
 
 
 class TestDomain(TransactionExpressionCase):
