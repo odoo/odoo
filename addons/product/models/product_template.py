@@ -375,7 +375,13 @@ class ProductTemplate(models.Model):
                     value = data[str(main_company_id)]
                 else:
                     value = next(iter(data.values()))
-            template.list_price = value if value is not None else 1.0
+            # A value equal to the company-dependent storage fallback (0.0 for a Float
+            # field) is never actually persisted in the jsonb column, so "no key found"
+            # is indistinguishable from "explicitly set to 0.0". Falling back to 0.0
+            # here (rather than a hardcoded 1.0) matches what was really written; a
+            # genuinely new product still shows 1.0 because create() explicitly writes
+            # it through the field's own default.
+            template.list_price = value if value is not None else 0.0
 
     def _inverse_list_price(self):
         for template in self:
@@ -398,7 +404,7 @@ class ProductTemplate(models.Model):
         raw_column = SQL.identifier(table._alias, 'specific_list_price')
         candidates = [SQL("%s -> %s", raw_column, str(company_id)) for company_id in ancestor_ids]
         candidates.append(SQL("(SELECT value FROM jsonb_each(%s) LIMIT 1)", raw_column))
-        candidates.append(SQL("to_jsonb(1.0::float8)"))
+        candidates.append(SQL("to_jsonb(0.0::float8)"))
         return SQL("(COALESCE(%s))::float8", SQL(", ").join(candidates))
 
     def _compute_template_field_from_variant_field(self, fname, default=False, multi_variant=False):

@@ -353,8 +353,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
     def test_perf_sql_queries_shop(self):
         # To increase the query count you must ask the permission to al
         queries = self._get_queries_shop()
-        queries['account_tax'] += 1
-        queries['account_account_tag'] = 2
 
         if self.env["res.groups"]._is_feature_enabled("product.group_show_uom_price"):
             queries += 1
