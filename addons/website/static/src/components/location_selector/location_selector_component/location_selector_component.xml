@@ -83,7 +83,15 @@
                     locations="this.locations"
                     selectedLocationId="this.state.selectedLocationId.toString()"
                     setSelectedLocation.bind="this.setSelectedLocation"
-                    validateSelection.bind="this.validateSelection"
+                    setVisibleLocations="(l) => this.setVisibleLocations?.(l)"
+                    showDetailsTextArea="this.props.showDetailsTextArea"
+                    showDetailsTooltip="this.props.showDetailsTooltip"
+                    showEmail="this.props.showEmail"
+                    showImage="this.props.showImage"
+                    showIndexes="false"
+                    showLocationNameOnMarkerHover="true"
+                    showPhone="this.props.showPhone"
+                    showWebsite="this.props.showWebsite"
                 />
             </section>
         </div>
