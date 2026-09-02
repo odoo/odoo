@@ -1,14 +1,13 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-export class ClickableCard extends Interaction {
-    static selector = ".s_card";
-    static selectorHas = "> a.stretched-link";
+export class ClickableElement extends Interaction {
+    static selector = "a.stretched-link, a.slide-link";
     dynamicSelectors = {
         ...this.dynamicSelectors,
         // Only define the dynamicSelector when there is at least one hoverable
         // image, to only add the listeners when necessary
-        _clickableEl: () => (this.hoverableImageEls.length ? this.el : undefined),
+        _clickableEl: () => (this.hoverableImageEls.length ? this.clickableEl : undefined),
     };
     dynamicContent = {
         _clickableEl: {
@@ -19,7 +18,8 @@ export class ClickableCard extends Interaction {
     };
 
     setup() {
-        this.hoverableImageEls = [...this.el.querySelectorAll("img[data-hover-effect]")];
+        this.clickableEl = this.el.parentElement;
+        this.hoverableImageEls = [...this.clickableEl.querySelectorAll("img[data-hover-effect]")];
         this.hoveredImageEl = null;
     }
 
@@ -60,4 +60,4 @@ export class ClickableCard extends Interaction {
     }
 }
 
-registry.category("public.interactions").add("website.clickable_card", ClickableCard);
+registry.category("public.interactions").add("website.clickable_element", ClickableElement);

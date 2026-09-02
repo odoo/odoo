@@ -8,7 +8,7 @@ import { onRpc } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
-setupInteractionWhiteList(["website.image_shape_hover_effect", "website.clickable_card"]);
+setupInteractionWhiteList(["website.image_shape_hover_effect", "website.clickable_element"]);
 
 describe.current.tags("interaction_dev");
 
