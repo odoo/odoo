@@ -21,7 +21,7 @@ import {
     webModels,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { router } from "@web/core/browser/router";
 import { listView } from "@web/views/list/list_view";
@@ -681,7 +681,7 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
     );
 
     // Prepare the URL hash to make sure the stored action will get executed.
-    Object.assign(browser.location, { search: "?model=partner&view_type=kanban" });
+    Object.assign(location, { search: "?model=partner&view_type=kanban" });
 
     // Create the web client. It should execute the stored action.
     await mountWithCleanup(WebClient);
@@ -726,7 +726,7 @@ test("retrieving a stored action should remove 'allowed_company_ids' from its co
     );
 
     // Prepare the URL hash to make sure the stored action will get executed.
-    // Object.assign(browser.location, { search: "?model=partner&view_type=kanban" });
+    // Object.assign(location, { search: "?model=partner&view_type=kanban" });
     redirect("/odoo/action-1?view_type=kanban");
 
     // Create the web client. It should execute the stored action.

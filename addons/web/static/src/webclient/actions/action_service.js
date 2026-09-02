@@ -1,6 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateExpr } from "@web/core/py_js/py";
@@ -1226,7 +1226,7 @@ export function makeActionManager(env, router = _router) {
             url = "/" + url;
         }
         if (action.target === "self") {
-            browser.location.assign(url);
+            location.assign(url);
         } else if (action.target === "download") {
             _openURL(url);
         } else {

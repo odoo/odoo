@@ -1,5 +1,5 @@
 import { markup } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { makeErrorFromResponse, rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -72,8 +72,8 @@ async function home() {
         };
         waitForServer(1000);
     });
-    const url = "/" + (browser.location.search || "");
-    browser.location.assign(url);
+    const url = "/" + (location.search || "");
+    location.assign(url);
 }
 
 registry.category("actions").add("home", home);

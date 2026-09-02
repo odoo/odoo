@@ -1,7 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { Component, proxy, signal, useListener } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -311,7 +311,7 @@ export class TourRecorder extends Component {
         tourRecorderState.setIsRecording(this.state.recording);
         this.state.editedElement = undefined;
         if (this.state.recording && !this.state.url) {
-            this.state.url = browser.location.pathname + browser.location.search;
+            this.state.url = location.pathname + location.search;
         }
     }
 

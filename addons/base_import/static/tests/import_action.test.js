@@ -22,7 +22,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { redirect } from "@web/core/utils/urls";
 import { ImportAction } from "../src/import_action/import_action";
@@ -352,7 +352,7 @@ describe("Import view", () => {
             "/web/dataset/call_kw/partner/get_import_templates",
             "/web/dataset/call_kw/base_import.import/create",
         ]);
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-2/import");
+        expect(location.href).toBe("https://www.hoot.test/odoo/action-2/import");
         expect(".o_import_action").toHaveCount(1);
         expect(".o_nocontent_help > div").toHaveCount(2);
         expect(".o_nocontent_help > div:first").toHaveText("Some Import Template");
@@ -384,7 +384,7 @@ describe("Import view", () => {
             "/web/dataset/call_kw/partner/get_import_templates",
             "/web/dataset/call_kw/base_import.import/create",
         ]);
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/action-2/import");
+        expect(location.href).toBe("https://www.hoot.test/odoo/action-2/import");
         expect(".o_import_action").toHaveCount(1);
     });
 
@@ -647,7 +647,7 @@ describe("Import view", () => {
             "action",
         ]);
         expect(".o_list_view").toHaveCount(1);
-        expect(browser.location.href).toBe(
+        expect(location.href).toBe(
             "https://www.hoot.test/odoo/action-2/import/imported-records"
         );
     });
@@ -1559,7 +1559,7 @@ describe("Import view", () => {
         ]);
 
         await runAllTimers(); // wait for router pushState
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/import?active_model=team");
+        expect(location.href).toBe("https://www.hoot.test/odoo/import?active_model=team");
     });
 
     test("model in params is the main model (retrocompatibility)", async () => {
@@ -1599,7 +1599,7 @@ describe("Import view", () => {
         ]);
 
         await runAllTimers(); // wait for router pushState
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/import?active_model=team");
+        expect(location.href).toBe("https://www.hoot.test/odoo/import?active_model=team");
     });
 
     test.tags("desktop");

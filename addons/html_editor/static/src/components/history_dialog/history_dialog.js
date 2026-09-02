@@ -17,7 +17,7 @@ import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { loadBundle } from "@web/core/assets";
 import { htmlReplaceAll } from "@web/core/utils/html";
@@ -346,7 +346,7 @@ export class HistoryDialog extends Component {
         if (!revision || !revision["create_uid"]) {
             return this.DEFAULT_AVATAR;
         }
-        return `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${revision["create_uid"]}`;
+        return `${location.origin}/web/image?model=res.users&field=avatar_128&id=${revision["create_uid"]}`;
     }
 
     get currentRevision() {

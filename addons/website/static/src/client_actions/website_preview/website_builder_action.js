@@ -16,7 +16,7 @@ import {
     t,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { isBrowserChrome, isBrowserMicrosoftEdge } from "@web/core/browser/feature_detection";
 import { router } from "@web/core/browser/router";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
@@ -501,7 +501,7 @@ export class WebsiteBuilderClientAction extends Component {
             if (url) {
                 ev.preventDefault();
                 try {
-                    browser.location.assign(url);
+                    location.assign(url);
                 } catch {
                     this.notification.add(_t("%s is not a valid URL.", url), {
                         title: _t("Invalid URL"),

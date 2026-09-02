@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
 import { ProfileDialog } from "../components/profile_dialog/profile_dialog";
@@ -14,7 +14,7 @@ export class ProfileEditor extends Interaction {
     openDialog() {
         this.services.dialog.add(ProfileDialog, {
             confirm: () => {
-                browser.location.reload();
+                location.reload();
             },
             focusWebsiteDescription:
                 this.el.dataset.focusWebsiteDescription &&

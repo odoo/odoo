@@ -7,12 +7,12 @@ export class SurveyQuickAccess extends Interaction {
 
     dynamicContent = {
         _document: { "t-on-keypress": this.onKeyPress },
-        "button[type='submit']": { 
+        "button[type='submit']": {
             "t-on-click.prevent": this.submitCode,
             "t-att-class": () => ({ "d-none": this.isLaunchShown })
         },
         "#session_code": { "t-on-input": this.onSessionCodeInput },
-        ".o_survey_launch_session": { 
+        ".o_survey_launch_session": {
             "t-on-click": this.onLaunchSessionClick,
             "t-att-class": () => ({ "d-none": !this.isLaunchShown }),
         },

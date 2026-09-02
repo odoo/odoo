@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { pyToJsLocale } from "@web/core/l10n/utils/locales";
 import { rpc } from "@web/core/network/rpc";
 import { Cache } from "@web/core/utils/cache";
@@ -253,7 +253,7 @@ export function _makeUser(session) {
             updateActiveCompanies(newCompanyIds, allowedCompanies, defaultCompany);
 
             if (options.reload) {
-                browser.location.reload();
+                location.reload();
             }
         },
     };

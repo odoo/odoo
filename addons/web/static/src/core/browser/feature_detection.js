@@ -1,5 +1,3 @@
-import { browser } from "./browser";
-
 // -----------------------------------------------------------------------------
 // Feature detection
 // -----------------------------------------------------------------------------
@@ -8,18 +6,18 @@ import { browser } from "./browser";
  * True if the browser is based on Chromium (Google Chrome, Opera, Edge).
  */
 export function isBrowserChrome() {
-    return /Chrome/i.test(browser.navigator.userAgent);
+    return /Chrome/i.test(navigator.userAgent);
 }
 
 export function isBrowserFirefox() {
-    return /Firefox/i.test(browser.navigator.userAgent);
+    return /Firefox/i.test(navigator.userAgent);
 }
 
 /**
  * True if the browser is Microsoft Edge.
  */
 export function isBrowserMicrosoftEdge() {
-    return /Edg/i.test(browser.navigator.userAgent);
+    return /Edg/i.test(navigator.userAgent);
 }
 
 /**
@@ -28,30 +26,30 @@ export function isBrowserMicrosoftEdge() {
  * @returns {boolean}
  */
 export function isBrowserSafari() {
-    return !isBrowserChrome() && browser.navigator.userAgent?.includes("Safari");
+    return !isBrowserChrome() && navigator.userAgent?.includes("Safari");
 }
 
 export function isAndroid() {
-    return /Android/i.test(browser.navigator.userAgent);
+    return /Android/i.test(navigator.userAgent);
 }
 
 export function isIOS() {
     let isIOSPlatform = false;
-    if ("platform" in browser.navigator) {
-        isIOSPlatform = browser.navigator.platform === "MacIntel";
+    if ("platform" in navigator) {
+        isIOSPlatform = navigator.platform === "MacIntel";
     }
     return (
-        /(iPad|iPhone|iPod)/i.test(browser.navigator.userAgent) ||
+        /(iPad|iPhone|iPod)/i.test(navigator.userAgent) ||
         (isIOSPlatform && maxTouchPoints() > 1)
     );
 }
 
 export function isOtherMobileOS() {
-    return /(webOS|BlackBerry|Windows Phone)/i.test(browser.navigator.userAgent);
+    return /(webOS|BlackBerry|Windows Phone)/i.test(navigator.userAgent);
 }
 
 export function isMacOS() {
-    return /Mac/i.test(browser.navigator.userAgent);
+    return /Mac/i.test(navigator.userAgent);
 }
 
 export function isMobileOS() {
@@ -59,25 +57,25 @@ export function isMobileOS() {
 }
 
 export function isIosApp() {
-    return /OdooMobile \(iOS\)/i.test(browser.navigator.userAgent);
+    return /OdooMobile \(iOS\)/i.test(navigator.userAgent);
 }
 
 export function isAndroidApp() {
-    return /OdooMobile.+Android/i.test(browser.navigator.userAgent);
+    return /OdooMobile.+Android/i.test(navigator.userAgent);
 }
 
 export function isDisplayStandalone() {
-    return browser.matchMedia("(display-mode: standalone)").matches;
+    return matchMedia("(display-mode: standalone)").matches;
 }
 
 export function hasTouch() {
-    return window.ontouchstart !== undefined || browser.matchMedia("(pointer:coarse)").matches;
+    return window.ontouchstart !== undefined || matchMedia("(pointer:coarse)").matches;
 }
 
 export function maxTouchPoints() {
-    return browser.navigator.maxTouchPoints || 1;
+    return navigator.maxTouchPoints || 1;
 }
 
 export function isVirtualKeyboardSupported() {
-    return "virtualKeyboard" in browser.navigator;
+    return "virtualKeyboard" in navigator;
 }

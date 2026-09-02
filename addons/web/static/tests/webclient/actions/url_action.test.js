@@ -1,9 +1,9 @@
 import { expect, test } from "@odoo/hoot";
 import { getService, makeTestApp, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 
 test("execute an 'ir.actions.act_url' action with target 'self'", async () => {
-    patchWithCleanup(browser.location, {
+    patchWithCleanup(location, {
         assign: (url) => {
             expect.step(url);
         },
@@ -30,7 +30,7 @@ test("execute an 'ir.actions.act_url' action with onClose option", async () => {
 });
 
 test("execute an 'ir.actions.act_url' action with url javascript:", async () => {
-    patchWithCleanup(browser.location, {
+    patchWithCleanup(location, {
         assign: (url) => {
             expect.step(url);
         },

@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -29,7 +29,7 @@ export function regenerateAssets() {
         description: _t("Regenerate Assets"),
         callback: async () => {
             await orm.call("ir.attachment", "regenerate_assets_bundles");
-            browser.location.reload();
+            location.reload();
         },
         sequence: 550,
         section: "tools",
@@ -37,7 +37,7 @@ export function regenerateAssets() {
 }
 
 export function becomeSuperuser() {
-    const becomeSuperuserURL = browser.location.origin + "/web/become";
+    const becomeSuperuserURL = location.origin + "/web/become";
     if (!user.isAdmin) {
         return false;
     }

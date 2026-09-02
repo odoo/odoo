@@ -1,13 +1,16 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
+    animationFrame,
+    beforeEach,
     click,
+    describe,
+    expect,
     queryAll,
     queryAllProperties,
     queryAllTexts,
     queryOne,
     queryText,
-} from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+    test,
+} from "@odoo/hoot";
 import { Component, useProps, xml } from "@odoo/owl";
 import {
     assignDialogTestEnv,
@@ -24,7 +27,7 @@ import {
     serverState,
     webModels,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { becomeSuperuser, regenerateAssets } from "@web/core/debug/debug_menu_items";
@@ -201,7 +204,7 @@ describe("DebugMenu", () => {
     });
 
     test("can regenerate assets bundles", async () => {
-        patchWithCleanup(browser.location, {
+        patchWithCleanup(location, {
             reload: () => expect.step("reloadPage"),
         });
         debugRegistry.category("default").add("regenerateAssets", regenerateAssets);

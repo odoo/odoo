@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Reactive } from "@web/core/utils/reactive";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 
 export class SelfOrderRouter extends Reactive {
     static serviceDependencies = [];
@@ -21,13 +21,13 @@ export class SelfOrderRouter extends Reactive {
     }
 
     addTableIdentifier(table) {
-        const url = new URL(browser.location.href);
+        const url = new URL(location.href);
         url.searchParams.set("table_identifier", table.identifier);
         history.replaceState({}, "", url);
     }
 
     getTableIdentifier() {
-        const url = new URL(browser.location.href);
+        const url = new URL(location.href);
         return url.searchParams.get("table_identifier");
     }
 
@@ -54,7 +54,7 @@ export class SelfOrderRouter extends Reactive {
      */
     navigate(routeName, routeParams = {}, historyState = {}) {
         const { route } = this.registeredRoutes[routeName];
-        const url = new URL(browser.location.href);
+        const url = new URL(location.href);
 
         url.pathname = route.replace(
             /\{\w+:(\w+)\}/g,
@@ -78,7 +78,7 @@ export class SelfOrderRouter extends Reactive {
             url = new URL(link.url);
             window.open(url);
         } catch {
-            url = new URL(browser.location.href);
+            url = new URL(location.href);
             url.pathname = link.url;
 
             history.pushState({}, "", url);

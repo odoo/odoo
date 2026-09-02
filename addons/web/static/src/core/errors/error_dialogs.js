@@ -1,4 +1,4 @@
-import { browser } from "../browser/browser";
+import { location, browser } from "../browser/browser";
 import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "../registry";
@@ -309,7 +309,7 @@ export class SessionExpiredDialog extends Component {
     });
 
     onClick() {
-        browser.location.reload();
+        location.reload();
     }
 }
 

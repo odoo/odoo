@@ -1,5 +1,5 @@
-import { registry } from "@web/core/registry";
 import { Plugin, signal, usePlugin } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
 
 export class BusParametersPlugin extends Plugin {

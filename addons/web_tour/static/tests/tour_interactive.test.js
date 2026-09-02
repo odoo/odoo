@@ -14,7 +14,7 @@ import {
     fields,
     defineModels,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -469,7 +469,7 @@ test("Tour started by the URL", async () => {
         { trigger: "button.foo", tour_id: 1 },
         { trigger: "button.bar", run: "click", tour_id: 1 },
     ];
-    browser.location.href = `${browser.location.origin}?tour=tour1`;
+    location.href = `${location.origin}?tour=tour1`;
 
     class Dummy extends Component {
         static props = ["*"];

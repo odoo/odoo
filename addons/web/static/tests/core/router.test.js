@@ -3,7 +3,7 @@ import { click, on } from "@odoo/hoot-dom";
 import { mockMatchMedia, tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import {
     parseHash,
     parseSearchQuery,
@@ -1634,7 +1634,7 @@ describe("pushState", () => {
         router.pushState({ k1: 2, k2: 3 });
         await tick();
         expect(router.current).toEqual({ k1: 2, k2: 3 });
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=3");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k2=3");
     });
     test("different order of keys shouldn't push a new state", async () => {
         redirect("/odoo?k1=2");
@@ -1649,13 +1649,13 @@ describe("pushState", () => {
         await tick();
         expect.verifySteps(["pushState"]);
         expect(router.current).toEqual({ a: 2, z: 1, k1: 2 });
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=2&z=1&a=2");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k1=2&z=1&a=2");
 
         router.pushState({ k1: 2 }, { replace: true });
         await tick();
         expect.verifySteps([]);
         expect(router.current).toEqual({ a: 2, z: 1, k1: 2 });
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=2&z=1&a=2");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k1=2&z=1&a=2");
     });
 });
 
@@ -1667,31 +1667,31 @@ describe("History", () => {
 
         router.pushState({ k1: 1 });
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=1");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k1=1");
 
         router.pushState({ k2: 2 });
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=1&k2=2");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k1=1&k2=2");
 
         router.pushState({ k3: 3 }, { replace: true });
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k3=3");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k3=3");
 
         browser.history.back(); // Click on back button
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=1&k2=2");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k1=1&k2=2");
 
         router.pushState({ k4: 3 }, { replace: true }); // Click on a link
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k4=3");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k4=3");
 
         browser.history.back(); // Click on back button
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k1=1&k2=2");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k1=1&k2=2");
 
         browser.history.forward(); // Click on forward button
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k4=3");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k4=3");
 
         expect.verifySteps(["ROUTE_CHANGE", "ROUTE_CHANGE", "ROUTE_CHANGE"]);
     });
@@ -1704,7 +1704,7 @@ describe("History", () => {
             actionStack: [{ action: "some-path", displayName: "A cool display name" }],
         });
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/some-path");
+        expect(location.href).toBe("https://www.hoot.test/odoo/some-path");
         expect(router.current).toEqual({
             actionStack: [{ action: "some-path", displayName: "A cool display name" }],
         });
@@ -1712,19 +1712,19 @@ describe("History", () => {
             actionStack: [{ action: "other-path", displayName: "A different display name" }],
         });
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/other-path");
+        expect(location.href).toBe("https://www.hoot.test/odoo/other-path");
         expect(router.current).toEqual({
             actionStack: [{ action: "other-path", displayName: "A different display name" }],
         });
         browser.history.back();
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/some-path");
+        expect(location.href).toBe("https://www.hoot.test/odoo/some-path");
         expect(router.current).toEqual({
             actionStack: [{ action: "some-path", displayName: "A cool display name" }],
         });
         browser.history.forward();
         await tick();
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo/other-path");
+        expect(location.href).toBe("https://www.hoot.test/odoo/other-path");
         expect(router.current).toEqual({
             actionStack: [{ action: "other-path", displayName: "A different display name" }],
         });
@@ -1739,17 +1739,17 @@ describe("History", () => {
         router.pushState({ k1: 1, k2: 2 });
         await tick();
         expect(router.current).toEqual({ k1: 1, k2: 2 });
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=2");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k2=2");
 
         router.pushState({ k3: 3 }, { replace: true }); // Click on a link
         await tick();
         expect(router.current).toEqual({ k3: 3 });
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k3=3");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k3=3");
 
         browser.history.back(); // Click on back button
         await tick();
         expect(router.current).toEqual({ k1: 1, k2: 2 });
-        expect(browser.location.href).toBe("https://www.hoot.test/odoo?k2=2");
+        expect(location.href).toBe("https://www.hoot.test/odoo?k2=2");
 
         expect.verifySteps(["ROUTE_CHANGE"]);
     });
@@ -1757,21 +1757,21 @@ describe("History", () => {
 
 describe("Scoped apps", () => {
     test("url location is changed to /odoo if the client is not used in a standalone scoped app", async () => {
-        Object.assign(browser.location, { pathname: "/scoped_app/some-path" });
+        Object.assign(location, { pathname: "/scoped_app/some-path" });
         createRouter();
         router.pushState({ app_name: "some_app", path: "scoped_app/some_path" });
         await tick();
-        expect(browser.location.href).toBe(
+        expect(location.href).toBe(
             "https://www.hoot.test/odoo/some-path?app_name=some_app&path=scoped_app%2Fsome_path"
         );
     });
     test("url location is preserved as /scoped_app if the client is used in a standalone scoped app", async () => {
         mockMatchMedia({ ["display-mode"]: "standalone" });
-        Object.assign(browser.location, { pathname: "/scoped_app/some-path" });
+        Object.assign(location, { pathname: "/scoped_app/some-path" });
         createRouter();
         router.pushState({ app_name: "some_app", path: "scoped_app/some_path" });
         await tick();
-        expect(browser.location.href).toBe(
+        expect(location.href).toBe(
             "https://www.hoot.test/scoped_app/some-path?app_name=some_app&path=scoped_app%2Fsome_path"
         );
     });
@@ -1779,45 +1779,45 @@ describe("Scoped apps", () => {
 
 describe("Retrocompatibility", () => {
     test("parse an url with hash (key/values)", async () => {
-        Object.assign(browser.location, { pathname: "/web" });
-        browser.location.hash = "#a=114&k=c.e&f=1&g=91";
+        Object.assign(location, { pathname: "/web" });
+        location.hash = "#a=114&k=c.e&f=1&g=91";
         createRouter();
-        expect(browser.location.search).toBe("?a=114&k=c.e&f=1&g=91");
-        expect(browser.location.hash).toBe("");
+        expect(location.search).toBe("?a=114&k=c.e&f=1&g=91");
+        expect(location.hash).toBe("");
         expect(router.current).toEqual({ a: 114, k: "c.e", f: 1, g: 91 });
-        expect(browser.location.pathname).toBe("/odoo");
+        expect(location.pathname).toBe("/odoo");
     });
 
     test("parse an url with hash (key/values) and query string", async () => {
-        Object.assign(browser.location, { pathname: "/web" });
-        browser.location.hash = "#g=91";
-        browser.location.search = "?a=114&t=c.e&f=1";
+        Object.assign(location, { pathname: "/web" });
+        location.hash = "#g=91";
+        location.search = "?a=114&t=c.e&f=1";
         createRouter();
-        expect(browser.location.search).toBe("?a=114&t=c.e&f=1&g=91");
-        expect(browser.location.hash).toBe("");
+        expect(location.search).toBe("?a=114&t=c.e&f=1&g=91");
+        expect(location.hash).toBe("");
         expect(router.current).toEqual({ a: 114, t: "c.e", f: 1, g: 91 });
-        expect(browser.location.pathname).toBe("/odoo");
+        expect(location.pathname).toBe("/odoo");
     });
 
     test("parse an url with hash (anchor link)", async () => {
         redirect("/odoo#anchor");
-        browser.location.hash = "#anchor";
+        location.hash = "#anchor";
         createRouter();
-        expect(browser.location.search).toBe("");
-        expect(browser.location.hash).toBe("#anchor");
-        expect(browser.location.pathname).toBe("/odoo");
+        expect(location.search).toBe("");
+        expect(location.hash).toBe("#anchor");
+        expect(location.pathname).toBe("/odoo");
         expect(router.current).toEqual({});
     });
 
     test("parse an url with hash (anchor link) and query string", async () => {
         redirect("/odoo?a=114&g=c.e&f=1#anchor");
-        browser.location.hash = "#anchor";
-        browser.location.search = "?a=114&g=c.e&f=1";
+        location.hash = "#anchor";
+        location.search = "?a=114&g=c.e&f=1";
         createRouter();
-        expect(browser.location.search).toBe("?a=114&g=c.e&f=1");
-        expect(browser.location.hash).toBe("#anchor");
+        expect(location.search).toBe("?a=114&g=c.e&f=1");
+        expect(location.hash).toBe("#anchor");
         expect(router.current).toEqual({ a: 114, g: "c.e", f: 1 });
-        expect(browser.location.pathname).toBe("/odoo");
+        expect(location.pathname).toBe("/odoo");
     });
 });
 
@@ -1899,11 +1899,11 @@ describe("internal links", () => {
         createRouter({ onPushState: () => expect.step("pushState") });
         const fixture = getFixture();
         const link = document.createElement("a");
-        link.href = "http://" + browser.location.host + "/odoo/some-action/2";
+        link.href = "http://" + location.host + "/odoo/some-action/2";
         fixture.appendChild(link);
 
         expect(router.current).toEqual({});
-        expect(browser.location.protocol).not.toBe(link.protocol, {
+        expect(location.protocol).not.toBe(link.protocol, {
             message:
                 "should have different protocols between the current location and the clicked link",
         });
