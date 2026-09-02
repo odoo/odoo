@@ -164,7 +164,10 @@ class IrQwebField(models.AbstractModel):
         """
         if not record:
             return False
-        value = record.with_context(**self.env.context)[field_name]
+        record = record.with_context(**self.env.context)
+        if record.env.context.get('edit_translations') and not options.get('translate'):
+            record = record.with_context(edit_translations=False)
+        value = record[field_name]
         return False if value is False else self.value_to_html(value, options=options)
 
     @api.model
