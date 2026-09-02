@@ -18,14 +18,14 @@
                     <span class="o_pager_limit" t-out="this.props.total"/>
                 </t>
             </span>
-            <span class="btn-group d-print-none gap-1" aria-atomic="true">
+            <span class="btn-group d-print-none" aria-atomic="true">
                 <!-- accesskeys not wanted in X2Many widgets -->
-                <button type="button" class="btn btn-secondary o_pager_previous px-1 rounded-start" aria-label="Previous" tabindex="-1"
+                <button type="button" class="btn btn-secondary o_pager_previous" aria-label="Previous" tabindex="-1"
                     data-tooltip="Previous" t-att-data-hotkey="this.props.withAccessKey ? 'p' : false" data-available-offline=""
                     t-att-disabled="this.state.isDisabled or this.isSinglePage"  t-on-click.stop="() => this.navigate(-1)">
                     <i class="oi" data-icon="arrow_back_ios_new"/>
                 </button>
-                <button type="button" class="btn btn-secondary o_pager_next px-1 rounded-end" aria-label="Next" tabindex="-1"
+                <button type="button" class="btn btn-secondary o_pager_next" aria-label="Next" tabindex="-1"
                     data-tooltip="Next" t-att-data-hotkey="this.props.withAccessKey ? 'n' : false" data-available-offline=""
                     t-att-disabled="this.state.isDisabled or this.isSinglePage" t-on-click.stop="() => this.navigate(1)">
                     <i class="oi" data-icon="arrow_forward_ios"/>
