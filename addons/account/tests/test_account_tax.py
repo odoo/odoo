@@ -556,3 +556,13 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
         self.assertEqual(tax.is_domestic, True)
         tax_copy = tax.copy({'name': 'new tax'})
         self.assertEqual(tax_copy.is_domestic, True)
+
+    def test_distribute_delta_amount_smoothly_empty_target_factors(self):
+        """ Empty 'target_factors' must not crash, e.g. a reverse-charge tax
+        with no positive-factor repartition line. """
+        result = self.env['account.tax']._distribute_delta_amount_smoothly(
+            precision_digits=2,
+            delta_amount=0.03,
+            target_factors=[],
+        )
+        self.assertEqual(result, [])
