@@ -5,11 +5,11 @@
     <div class="h-100 o-snippets-menu d-flex flex-column" t-ref="this.builderSidebarRef">
         <div class="o-snippets-top-actions d-flex justify-content-between flex-shrink-0 p-2">
             <div class="d-flex gap-1">
-                <button type="button" t-on-click="() => this.undo()" class="oi oi-lg o-hb-btn btn" data-icon="undo" t-att-disabled="!this.state.canUndo"/>
-                <button type="button"  t-on-click="() => this.redo()" class="oi oi-lg o-hb-btn btn" data-icon="redo" t-att-disabled="!this.state.canRedo"/>
+                <button type="button" t-on-click="() => this.undo()" class="oi oi-lg px-1 o-hb-btn btn" data-icon="undo" t-att-disabled="!this.state.canUndo"/>
+                <button type="button"  t-on-click="() => this.redo()" class="oi oi-lg px-1 o-hb-btn btn" data-icon="redo" t-att-disabled="!this.state.canRedo"/>
             </div>
             <div class="d-flex gap-1">
-                <button t-on-click="this.onMobilePreviewClick" type="button" class="o-hb-btn btn btn-success-color-active d-flex align-items-center" t-att-class="{ active: this.props.isMobile }" data-action="mobile" title="Mobile Preview" accesskey="m"><span class="oi oi-lg" data-icon="smartphone" role="img"/></button>
+                <button t-on-click="this.onMobilePreviewClick" type="button" class="o-hb-btn btn btn-success-color-active px-1 d-flex align-items-center" t-att-class="{ active: this.props.isMobile }" data-action="mobile" title="Mobile Preview" accesskey="m"><span class="oi oi-lg" data-icon="smartphone" role="img"/></button>
                 <t t-if="this.props.slots?.extraActions" t-call-slot="extraActions"/>
             </div>
         </div>
