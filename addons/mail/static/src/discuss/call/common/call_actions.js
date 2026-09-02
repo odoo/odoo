@@ -311,7 +311,7 @@ registerCallAction("join-back", {
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ channel }) => (channel.useCameraByDefault ? "videocam" : "phone"),
-    inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
+    label: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
@@ -369,7 +369,7 @@ export const rejectAction = {
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "close_small",
-    inlineName: ({ owner, channel }) =>
+    label: ({ owner, channel }) =>
         !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
             ? _t("Reject")
             : undefined,

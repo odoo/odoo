@@ -77,8 +77,8 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [hotkey]
  * @property {string|(params: ActionParams_T) => string} [icon]
  * @property {string|(params: ActionParams_T) => string} [iconClass]
- * @property {boolean|(params: ActionParams_T) => boolean} [inlineName=false]
  * @property {boolean|(params: ActionParams_T) => boolean} [isActive]
+ * @property {string|boolean|(params: ActionParams_T) => string|boolean} [label=false] When the action is rendered as an inline button, show this text label next to the icon.
  * @property {string|(params: ActionParams_T) => string} [name]
  * @property {string|(params: ActionParams_T) => string} [nameClass]
  * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
@@ -546,14 +546,14 @@ export class Action {
     }
 
     /** @param {Action} action @returns {string|undefined} */
-    _inlineName(action) {}
-    /** If set, when action is used in inline, shows action name in addition to icon. */
-    get inlineName() {
+    _label(action) {}
+    /** If set, when the action is rendered as an inline button, shows this text label next to the icon. */
+    get label() {
         return (
-            this._inlineName(this.params) ??
-            (typeof this.definition.inlineName === "function"
-                ? this.definition.inlineName.call(this, this.params)
-                : this.definition.inlineName) ??
+            this._label(this.params) ??
+            (typeof this.definition.label === "function"
+                ? this.definition.label.call(this, this.params)
+                : this.definition.label) ??
             false
         );
     }

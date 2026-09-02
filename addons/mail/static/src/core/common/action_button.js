@@ -33,7 +33,7 @@ export class ActionButton extends ActionBase {
      * circular icon background): composer/message inline actions.
      */
     get isInlineCircleButton() {
-        return Boolean(this.action.icon) && (this.env.inComposer || this.env.inMessage);
+        return Boolean(this.action.icon) && this.env.inComposer;
     }
 
     get alignmentClass() {
