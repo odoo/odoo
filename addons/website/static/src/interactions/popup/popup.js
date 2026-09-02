@@ -3,7 +3,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { getTabableElements } from "@web/core/utils/ui";
@@ -125,13 +125,13 @@ export class Popup extends Interaction {
     /**
      * @param {String} [hash]
      */
-    showPopupOnClick(hash = browser.location.hash) {
+    showPopupOnClick(hash = location.hash) {
         // If a hash exists in the URL and it corresponds to the ID of the modal,
         // then we open the modal.
         if (hash && hash.substring(1) === this.modalShownOnClickEl.id) {
             // We remove the hash from the URL because otherwise the popup
             // cannot open again after being closed.
-            const urlWithoutHash = browser.location.href.replace(hash, "");
+            const urlWithoutHash = location.href.replace(hash, "");
             browser.history.replaceState(null, null, urlWithoutHash);
             this.showPopup();
         }

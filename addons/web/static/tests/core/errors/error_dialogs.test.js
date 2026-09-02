@@ -1,13 +1,21 @@
-import { browser } from "@web/core/browser/browser";
-import { describe, test, expect } from "@odoo/hoot";
-import { animationFrame, tick } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    click,
+    describe,
+    expect,
+    freezeTime,
+    queryAllTexts,
+    queryFirst,
+    test,
+    tick,
+} from "@odoo/hoot";
 import {
     assignDialogTestEnv,
+    mockService,
     mountWithCleanup,
     patchWithCleanup,
-    mockService,
 } from "@web/../tests/web_test_helpers";
-import { click, freezeTime, queryAllTexts } from "@odoo/hoot-dom";
+import { location } from "@web/core/browser/browser";
 import {
     ClientErrorDialog,
     Error504Dialog,
@@ -17,7 +25,6 @@ import {
     UnlinkBlockedErrorDialog,
     WarningDialog,
 } from "@web/core/errors/error_dialogs";
-import { queryFirst } from "../../../lib/hoot-dom/hoot-dom";
 
 describe.current.tags("desktop");
 
@@ -329,7 +336,7 @@ test("Error504Dialog", async () => {
 });
 
 test("SessionExpiredDialog", async () => {
-    patchWithCleanup(browser.location, {
+    patchWithCleanup(location, {
         reload() {
             expect.step("location reload");
         },

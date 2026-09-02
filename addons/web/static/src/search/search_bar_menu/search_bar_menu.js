@@ -6,7 +6,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { useCommand } from "@web/core/commands/command_hook";
 import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -235,10 +235,10 @@ export class SearchBarMenu extends Component {
      * clipboard if possible. This url is parsed to reactivate filters if in route.
      */
     async shareViewUrl() {
-        let shareUrl = browser.location.href;
+        let shareUrl = location.href;
         const extra = this.env.searchModel.generateQueryString();
         if (extra) {
-            const [base, hash = ""] = browser.location.href.split("#");
+            const [base, hash = ""] = location.href.split("#");
             shareUrl = base + (base.includes("?") ? "&" : "?") + extra + (hash ? "#" + hash : "");
         }
 

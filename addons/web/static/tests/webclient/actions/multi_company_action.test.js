@@ -14,7 +14,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-dom";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { router } from "@web/core/browser/router";
 
@@ -43,12 +43,12 @@ beforeEach(() => {
         { id: 2, name: "Company 2", sequence: 2, parent_id: false, child_ids: [] },
         { id: 3, name: "Company 3", sequence: 3, parent_id: false, child_ids: [] },
     ];
-    patchWithCleanup(browser.location, {
+    patchWithCleanup(location, {
         reload() {
             expect.step("reload");
         },
     });
-    patchWithCleanup(browser.location, {
+    patchWithCleanup(location, {
         origin: "http://example.com",
     });
 });
@@ -67,7 +67,7 @@ test("open record withtout the correct company (load state)", async () => {
     await mountWebClient();
     expect(cookie.get("cids")).toBe("1-2");
     expect.verifySteps(["reload"]);
-    expect(browser.location.href).toBe("http://example.com/odoo/res.partner/1", {
+    expect(location.href).toBe("http://example.com/odoo/res.partner/1", {
         message: "url did not change",
     });
 });
@@ -85,10 +85,10 @@ test("open record withtout the correct company (doAction)", async () => {
     const _pushState = router.pushState;
     patchWithCleanup(router, {
         pushState: (state, options) => {
-            expect(browser.location.href).toBe("https://www.hoot.test/");
+            expect(location.href).toBe("https://www.hoot.test/");
             const res = _pushState(state, options);
             expect.step("pushState");
-            expect(browser.location.href).toBe("http://example.com/odoo/res.partner/1");
+            expect(location.href).toBe("http://example.com/odoo/res.partner/1");
             return res;
         },
     });
@@ -103,7 +103,7 @@ test("open record withtout the correct company (doAction)", async () => {
     await animationFrame();
     expect(cookie.get("cids")).toBe("1-2");
     expect.verifySteps(["pushState", "reload"]);
-    expect(browser.location.href).toBe("http://example.com/odoo/res.partner/1", {
+    expect(location.href).toBe("http://example.com/odoo/res.partner/1", {
         message: "url should contain the information of the doAction",
     });
 });

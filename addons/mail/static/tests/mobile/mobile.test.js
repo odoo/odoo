@@ -22,7 +22,7 @@ import { describe, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
@@ -104,10 +104,10 @@ test("click on an odoo link should fold the chat window (mobile)", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", `http://${browser.location.host}/odoo.com`);
+    await insertText(".o-mail-Composer-input", `http://${location.host}/odoo.com`);
     await click(".o-mail-Composer button[title='Send']");
     await contains(".o-mail-ChatWindow");
-    await click(`.o-mail-Message-richBody a[href="http://${browser.location.host}/odoo.com"]`);
+    await click(`.o-mail-Message-richBody a[href="http://${location.host}/odoo.com"]`);
     await contains(".o-mail-ChatWindow", { count: 0 });
     await contains(".o-mail-ChatBubble", { count: 0 });
     await openListView("discuss.channel", { res_id: channelId });

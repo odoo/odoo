@@ -1,19 +1,26 @@
-import { expect, test } from "@odoo/hoot";
-import { click, press, waitFor, waitForNone, queryOne } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+import { base64Img, setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { cleanLinkArtifacts } from "@html_editor/../tests/_helpers/format";
 import { getContent, setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
-import { base64Img, setupEditor } from "@html_editor/../tests/_helpers/editor";
-import { contains, onRpc, serverState, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { HtmlField } from "@html_editor/fields/html_field";
 import {
     click as mailClick,
     mailModels,
     openFormView,
     start,
 } from "@mail/../tests/mail_test_helpers";
-import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { HtmlField } from "@html_editor/fields/html_field";
-import { browser } from "@web/core/browser/browser";
+import {
+    animationFrame,
+    click,
+    expect,
+    press,
+    queryOne,
+    test,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot";
+import { contains, onRpc, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { browser, location } from "@web/core/browser/browser";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
@@ -223,11 +230,11 @@ test("link redirection should not be prefixed when the current page is not a web
             expect.step("website page url prefixed");
             expect(url.pathname.startsWith("/@")).toBe(true);
         },
-        location: {
-            // simulating being on a non-website page (eg. backend) by using /odoo/ URL
-            href: browser.location.origin + "/odoo/contactus",
-            hostname: browser.location.hostname,
-        },
+    });
+    patchWithCleanup(location, {
+        // simulating being on a non-website page (eg. backend) by using /odoo/ URL
+        href: location.origin + "/odoo/contactus",
+        hostname: location.hostname,
     });
     onRpc("/html_editor/link_preview_internal", () => ({}));
     onRpc("/contactus", () => ({}));

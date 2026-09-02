@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
@@ -36,9 +36,9 @@ export class ProjectSharingWebClient extends Component {
 
         // Scroll to anchor after the state is loaded
         if (stateLoaded) {
-            if (browser.location.hash !== "") {
+            if (location.hash !== "") {
                 try {
-                    const el = document.querySelector(browser.location.hash);
+                    const el = document.querySelector(location.hash);
                     if (el !== null) {
                         el.scrollIntoView(true);
                     }

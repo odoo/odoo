@@ -4,7 +4,7 @@ import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomp
 import { useProps, signal, t, onMounted } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import wUtils from "@website/js/utils";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { session } from "@web/session";
 
 /**
@@ -98,7 +98,7 @@ patch(LinkPopover.prototype, {
     isFrontendUrl(url) {
         const parsedUrl = new URL(url);
         return (
-            (browser.location.hostname === parsedUrl.hostname ||
+            (location.hostname === parsedUrl.hostname ||
                 // Also check if the odoo-hosted domain is the current domain of the url
                 new RegExp(`^https?://${session.db}\\.odoo\\.com(/.*)?$`).test(parsedUrl.origin)) &&
             !parsedUrl.pathname.startsWith("/odoo") &&
@@ -111,7 +111,7 @@ patch(LinkPopover.prototype, {
             const currentUrl = new URL(this.props.linkElement.href);
             // only when we are on a frontend page (in website builder) and the link is also a frontend link
             if (
-                this.isFrontendUrl(browser.location.href) &&
+                this.isFrontendUrl(location.href) &&
                 this.isFrontendUrl(this.props.linkElement.href)
             ) {
                 ev.preventDefault();

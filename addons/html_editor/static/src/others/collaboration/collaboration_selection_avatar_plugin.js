@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { isProtecting } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 
@@ -44,7 +44,7 @@ export class CollaborationSelectionAvatarPlugin extends Plugin {
             "oe-avatars-counters-overlay"
         );
         this.avatarUrl = `${
-            browser.location.origin
+            location.origin
         }/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(user.userId)}`;
     }
     handleCollaborationNotification({ notificationName, notificationPayload }) {
