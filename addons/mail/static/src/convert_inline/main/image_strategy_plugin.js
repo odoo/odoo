@@ -195,7 +195,7 @@ export class ImageStrategyPlugin extends Plugin {
                 callback(propertyName, propertyInfo);
             }
         };
-        const width = layout.getRef().styleInfo.getPropertyValue("width");
+        const width = layout.getRef(imgRef).styleInfo.getPropertyValue("width");
         const parentRenderNode = this.config.referenceDocument.createElement(
             emailNode.parent.layout.descendantTag
         );
@@ -212,8 +212,9 @@ export class ImageStrategyPlugin extends Plugin {
         }
         let needsFullWidthSpacing = false;
         if (width) {
-            const parsedWidth = parseCssValue(width);
-            needsFullWidthSpacing = parsedWidth.unit === "%";
+            needsFullWidthSpacing = true;
+            // const parsedWidth = parseCssValue(width);
+            // needsFullWidthSpacing = parsedWidth.unit === "%";
         }
         const spacingNodeArgs = needsFullWidthSpacing
             ? { refs: { root: { style: { width: "100%" } } } }
