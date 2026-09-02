@@ -4,6 +4,7 @@ import { Component, onMounted, proxy, t, useEffect, useListener, useProps } from
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+import { fuzzyLookup } from "@web/core/utils/search";
 
 export class LocationSelectorComponent extends Component {
     static components = { LocationList, MapContainer };
@@ -23,7 +24,6 @@ export class LocationSelectorComponent extends Component {
         showPhone: t.boolean().optional(false),
         showWebsite: t.boolean().optional(false),
         zipCode: t.string().optional(),
-        containerEl: t.any().optional(),
     });
 
     setup() {
@@ -31,26 +31,23 @@ export class LocationSelectorComponent extends Component {
         this.state = proxy({
             locations: [],
             viewMode: "list",
-            zipCode: this.props.zipCode,
+            searchQuery: this.props.zipCode,
             selectedLocationId: "",
             isSmall: this.uiService.isSmall,
         });
 
         this.debouncedOnResize = useDebounced(this.updateSize.bind(this), 300);
         this.debouncedSearchButton = useDebounced(() => {
-            this.state.locations = [];
-            this.updateLocations(this.state.zipCode);
+            this.updateLocations(this.state.searchQuery);
         }, 300);
 
         useListener(window, "resize", this.debouncedOnResize.bind(this));
 
-        onMounted(() => {
-            this.updateSize();
-        });
+        onMounted(this.updateSize);
 
-        // Fetch new locations when the zip code is updated.
+        // Fetch new locations when the search query is updated.
         useEffect(() => {
-            this.updateLocations(this.state.zipCode);
+            this.updateLocations(this.state.searchQuery);
         });
     }
 
@@ -61,23 +58,28 @@ export class LocationSelectorComponent extends Component {
     }
 
     /**
-     * Update displayed locations based on the zip in the searchbar. Then, if
+     * Update displayed locations based on the query in the searchbar. Then, if
      * the old selected location is not anymore displayed, select the first
      * location in the list.
      *
-     * @param {String} searchedZip - The zip code used to look for close locations.
+     * @param {String} searchQuery - The searched string
      */
-    async updateLocations(searchedZip) {
+    updateLocations(searchQuery) {
         const allLocations = JSON.parse(this.props.locationsList || "[]");
-        this.state.locations = allLocations
-            .filter(({ zip }) => zip?.match(searchedZip))
-            .map(({ partner_latitude, partner_longitude, zip, ...rest }) => ({
+
+        const searchResult = searchQuery
+            ? fuzzyLookup(searchQuery, allLocations, (location) => [location.city, location.zip])
+            : allLocations;
+
+        this.state.locations = searchResult.map(
+            ({ partner_latitude, partner_longitude, zip, ...rest }) => ({
                 ...rest,
                 zip_code: zip,
                 latitude: partner_latitude,
                 longitude: partner_longitude,
-            }));
-        if (!this.state.locations.find((l) => String(l.id) === this.state.selectedLocationId)) {
+            })
+        );
+        if (!this.state.locations.some((l) => String(l.id) === this.state.selectedLocationId)) {
             this.state.selectedLocationId = this.state.locations[0]
                 ? String(this.state.locations[0].id)
                 : false;

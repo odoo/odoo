@@ -3,6 +3,7 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 import { renderToString } from "@web/core/utils/render";
+import { isMacOS } from "@web/core/browser/feature_detection";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { _t } from "@web/core/l10n/translation";
 import { LOCATION_LIST } from "../utils";
@@ -58,7 +59,9 @@ export class Map extends Component {
             });
 
             if (this.props.pressControlToZoom) {
-                this.mapRef().dataset.zoomDisabledText = _t("Hold Ctrl and scroll to zoom");
+                this.mapRef().dataset.zoomDisabledText = isMacOS()
+                    ? _t("Hold ⌘ and scroll to zoom")
+                    : _t("Hold Ctrl and scroll to zoom");
                 this.leafletMap.scrollWheelZoom.disable();
                 this.leafletMapContainer.addEventListener("wheel", boundWheelHandler);
             }

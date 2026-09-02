@@ -35,17 +35,17 @@
                             <small t-out="this.getCityAndZipCode(this.selectedLocation)"/>
                             <br/>
                             <t t-if="(this.props.showImage and this.selectedLocation.image_256) or (this.props.showPhone and this.selectedLocation.phone) or (this.props.showEmail and this.selectedLocation.email) or (this.props.showWebsite and this.selectedLocation.website)">
-                                <b>Additional details:</b>
+                                <strong>Additional details:</strong>
                             </t>
                             <t t-if="this.props.showPhone and this.selectedLocation.phone">
                                 <small>
-                                    <i class="oi oi-fw me-1" data-icon="phone"/>
+                                    <i class="oi oi-fw me-1" data-icon="phone" role="img" aria-label="phone"/>
                                     <t t-out="this.selectedLocation.phone"/>
                                 </small>
                             </t>
                             <t t-if="this.props.showEmail and this.selectedLocation.email">
                                 <small>
-                                    <i class="oi oi-fw me-1" data-icon="mail"/>
+                                    <i class="oi oi-fw me-1" data-icon="mail" role="img" aria-label="mail"/>
                                     <a t-attf-href="mailto:{{this.selectedLocation.email}}">
                                         <t t-out="this.selectedLocation.email"/>
                                     </a>
@@ -53,7 +53,7 @@
                             </t>
                             <t t-if="this.props.showWebsite and this.selectedLocation.website">
                                 <small>
-                                    <i class="oi oi-fw me-1" data-icon="link"/>
+                                    <i class="oi oi-fw me-1" data-icon="link" role="img" aria-label="website"/>
                                     <a t-attf-href="{{this.selectedLocation.website}}" target="_blank">
                                         <t t-out="this.selectedLocation.website"/>
                                     </a>
@@ -115,19 +115,19 @@
                     <t t-if="(this.props.showImage and this.selectedLocation.image_256) or (this.props.showPhone and this.selectedLocation.phone) or (this.props.showEmail and this.selectedLocation.email) or (this.props.showWebsite and this.selectedLocation.website)">
                         <span class="d-flex align-items-center gap-1 small fw-bold">
                             Additional details:
-                            <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up"/>
+                            <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up" role="img" aria-hidden="true"/>
                         </span>
-                        <span class="collapse" id="map_collapseHours">
+                        <span class="collapse" id="map_collapseDetails">
                             <t t-if="this.props.showPhone and this.selectedLocation.phone">
                                 <small>
-                                    <i class="oi oi-fw me-1" data-icon="phone"/>
+                                    <i class="oi oi-fw me-1" data-icon="phone" role="img" aria-label="phone"/>
                                     <t t-out="this.selectedLocation.phone"/>
                                 </small>
                                 <br/>
                             </t>
                             <t t-if="this.props.showEmail and this.selectedLocation.email">
                                 <small>
-                                    <i class="oi oi-fw me-1" data-icon="mail"/>
+                                    <i class="oi oi-fw me-1" data-icon="mail" role="img" aria-label="email"/>
                                     <a t-attf-href="mailto:{{this.selectedLocation.email}}">
                                         <t t-out="this.selectedLocation.email"/>
                                     </a>
@@ -136,7 +136,7 @@
                             </t>
                             <t t-if="this.props.showWebsite and this.selectedLocation.website">
                                 <small>
-                                    <i class="oi oi-fw me-1" data-icon="link"/>
+                                    <i class="oi oi-fw me-1" data-icon="link" role="img" aria-label="website"/>
                                     <a t-attf-href="{{this.selectedLocation.website}}" target="_blank">
                                         <t t-out="this.selectedLocation.website"/>
                                     </a>
@@ -149,7 +149,7 @@
                             </t>
                             <t t-if="Object.keys(this.selectedLocation.opening_hours || {}).length">
                                 <small class="d-flex align-items-center gap-1 small">
-                                    <i class="oi" data-icon="schedule" role="img"/>
+                                    <i class="oi" data-icon="schedule" role="img" aria-hidden="true"/>
                                     <t t-out="openingHoursLabel"/>
                                 </small>
                                 <LocationSchedule openingHours="this.selectedLocation.opening_hours"/>
@@ -159,11 +159,11 @@
                     <t t-else="">
                         <!-- Schedule -->
                         <span t-attf-class="d-flex align-items-center gap-1 small fw-bold {{this.hasOpeningHours ? 'd-md-none' : 'd-none'}}">
-                            <i class="oi" data-icon="schedule" role="img"/>
+                            <i class="oi" data-icon="schedule" role="img" aria-hidden="true"/>
                             <t t-out="this.openingHoursLabel"/>
-                            <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up"/>
+                            <i class="o_location_selector_hours_caret oi ms-auto transition-base" data-icon="arrow_drop_up" role="img" aria-hidden="true"/>
                         </span>
-                        <span class="collapse" id="map_collapseHours">
+                        <span class="collapse" id="map_collapseDetails">
                             <LocationSchedule openingHours="this.selectedLocation.opening_hours"/>
                         </span>
                     </t>

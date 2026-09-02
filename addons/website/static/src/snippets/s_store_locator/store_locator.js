@@ -5,29 +5,40 @@ import { LocationSelectorComponent } from "@website/components/location_selector
 export class StoreLocator extends Interaction {
     static selector = ".s_store_locator";
 
-    start() {
-        const dataset = this.el.dataset;
-        const props = {
-            mapZoom: dataset.mapZoom,
-            hideOffscreenLocations: dataset.mapHideOffscreenLocations === "true" ? true : false,
-            locationsList: dataset.locationsList,
-            showDetailsTextArea: dataset.mapDetails == "area",
-            showDetailsTooltip: dataset.mapDetails == "tooltip",
-            showEmail: dataset.mapShowEmail === "true" ? true : false,
-            showImage: dataset.mapShowImage === "true" ? true : false,
-            showPhone: dataset.mapShowPhone === "true" ? true : false,
-            showWebsite: dataset.mapShowWebsite === "true" ? true : false,
-            showSearchbar: dataset.mapSearchbar === "true" ? true : false,
-            showSidebar: dataset.mapSidebar === "true" ? true : false,
-            mapSearchbarPlaceholder: dataset.mapSearchbarPlaceholder,
-            sidebarLocation: dataset.mapSidebarLocation,
-            containerEl: this.el,
+    setup() {
+        this.dataset = this.el.dataset;
+        this.props = {
+            mapZoom: this.dataset.mapZoom,
+            hideOffscreenLocations: this.dataset.mapHideOffscreenLocations === "true",
+            locationsList: this.dataset.locationsList,
+            showDetailsTextArea: this.dataset.mapDetails == "area",
+            showDetailsTooltip: this.dataset.mapDetails == "tooltip",
+            showEmail: this.dataset.mapShowEmail === "true",
+            showImage: this.dataset.mapShowImage === "true",
+            showPhone: this.dataset.mapShowPhone === "true",
+            showWebsite: this.dataset.mapShowWebsite === "true",
+            showSearchbar: this.dataset.mapSearchbar === "true",
+            showSidebar: this.dataset.mapSidebar === "true",
+            mapSearchbarPlaceholder: this.dataset.mapSearchbarPlaceholder,
+            sidebarLocation: this.dataset.mapSidebarLocation,
         };
-        this.mountComponent(
-            this.el.querySelector(".o_store_locator_component"),
-            LocationSelectorComponent,
-            props
-        );
+        // We need to keep track of the element's ownerDocument to correctly
+        // run Leaflets in snippet previews
+        this.env.windowContext = {};
+        if (this.el.ownerDocument.documentElement.classList.contains("o_add_snippets_preview")) {
+            this.env.windowContext = { iframePreviewDocument: this.el.ownerDocument };
+        }
+    }
+
+    start() {
+        const locationList = JSON.parse(this.dataset.locationsList || "[]");
+        if (locationList.length) {
+            this.mountComponent(
+                this.el.querySelector(".o_store_locator_component"),
+                LocationSelectorComponent,
+                this.props
+            );
+        }
     }
 }
 

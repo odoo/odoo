@@ -17,7 +17,7 @@ const assertLocationCount = (count) => [
             const els = document.querySelectorAll(
                 "div[data-container-title='Store Locator'] .o_we_table_wrapper table tr"
             );
-            if (els.length != count) {
+            if (els.length !== count) {
                 throw new Error("Wrong count of locations listed in the option");
             }
         },
@@ -29,7 +29,7 @@ const assertLocationCount = (count) => [
             const els = document
                 .querySelector("iframe")
                 .contentDocument.querySelectorAll("#o_location_selector_list_view button");
-            if (els.length != count) {
+            if (els.length !== count) {
                 throw new Error("Wrong number of locations listed in the snippet");
             }
         },
@@ -58,7 +58,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe div.o_location_selector_textarea",
         },
         {
-            content: "Check that no toltip is displayed",
+            content: "Check that no tooltip is displayed",
             trigger: ":iframe body:not(:has(section.o_location_selector_view div.leaflet-tooltip))",
         },
         {

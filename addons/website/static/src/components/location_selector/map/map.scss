@@ -22,21 +22,17 @@
 
 .leaflet-container {
     &::before {
-        opacity: 0;
-        content: "";
-        transition: opacity 1s ease;
-        color: #FFFFFF;
-        font-size: 2rem;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
+        @include o-position-absolute(0, 0, 0, 0);
         display: flex;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
         background: rgba(0, 0, 0, 0.5);
-        pointer-events:none;
+        color: #FFFFFF;
+        content: "";
+        font-size: 2rem;
+        opacity: 0;
+        transition: opacity 1s ease;
 
         // Leaflet elements could take up to z-index 700,
         // see leafletjs.com/reference.html#map-pane
@@ -44,8 +40,8 @@
     }
     &.map_zoom_disabled {
         &::before {
-            opacity: 1;
             content: attr(data-zoom-disabled-text);
+            opacity: 1;
         }
     }
 }

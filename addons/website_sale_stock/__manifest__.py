@@ -34,6 +34,8 @@ Then it can be made specific at the product level.
         "web.assets_backend": [
             "website_sale_stock/static/src/js/location_selector/**/*",
             "website_sale_stock/static/src/js/pickup_location_many2one/**/*",
+            "website/static/src/builder/plugins/store_locator_utils.js",
+            "website_sale_stock/static/src/js/location_selector/store_locator.js",
         ],
         "web.assets_tests": [
             "website_sale_stock/static/tests/tours/*",
