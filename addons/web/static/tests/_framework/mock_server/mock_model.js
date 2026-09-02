@@ -2646,6 +2646,28 @@ export class Model extends Array {
         ({ ids: idOrIds } = kwargs);
 
         const ids = ensureArray(idOrIds);
+
+        // Enforce many2one fields explicitly declared with ondelete="restrict".
+        // Fields with no explicit `ondelete` keep the previous behavior (silently
+        // cleared), matching the mock's simplified default.
+        for (const model of Object.values(MockServer.current._models)) {
+            for (const [fieldName, field] of Object.entries(model._fields)) {
+                if (!isM2OField(field) || field.ondelete !== "restrict") {
+                    continue;
+                }
+                const coModel = getRelation(field);
+                if (coModel?._name !== this._name) {
+                    continue;
+                }
+                if (model.some((record) => ids.includes(record[fieldName]))) {
+                    throw new MockServerError(
+                        `Cannot delete record(s) of "${this._name}": still referenced by ` +
+                            `field "${fieldName}" on "${model._name}" (ondelete="restrict")`
+                    );
+                }
+            }
+        }
+
         for (let i = this.length - 1; i >= 0; i--) {
             if (ids.includes(this[i].id)) {
                 this.splice(i, 1);
