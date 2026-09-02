@@ -264,7 +264,7 @@ class ResUsers(models.Model):
 
     view_group_hierarchy = fields.Json(string='Technical field for user group setting', store=False, copy=False, default=_default_view_group_hierarchy)
     role = fields.Selection([('group_user', 'Light User'), ('group_user_regular', 'User'), ('group_system', 'Administrator')],
-        compute='_compute_role', inverse='_inverse_role', search='_search_role', string="Role")
+        compute='_compute_role', inverse='_inverse_role', search='_search_role', string="Role", compute_sql='_compute_sql_role', compute_sudo=True)
 
     _login_key = models.Constraint("UNIQUE (login)",
         'You can not have two users with the same login!')
@@ -457,6 +457,20 @@ class ResUsers(models.Model):
                 groups = user.group_ids - (group_admin + group_user_regular + group_user)
                 user.group_ids = groups + (group_admin if user.role == 'group_system'
                                            else group_user_regular)
+
+    def _compute_sql_role(self, table):
+        return SQL("""
+            CASE
+                WHEN EXISTS (SELECT 1 FROM res_groups_users_rel rgur WHERE rgur.uid = %(table)s.id AND rgur.gid = %(role_admin_id)s) THEN 'group_system'
+                WHEN EXISTS (SELECT 1 FROM res_groups_users_rel rgur WHERE rgur.uid = %(table)s.id AND rgur.gid = %(role_user_id)s) THEN 'group_user_regular'
+                WHEN EXISTS (SELECT 1 FROM res_groups_users_rel rgur WHERE rgur.uid = %(table)s.id AND rgur.gid = %(role_light_user_id)s) THEN 'group_user'
+                ELSE NULL
+            END""",
+            role_admin_id=self.env.ref("base.group_system").id,
+            role_user_id=self.env.ref("base.group_user_regular").id,
+            role_light_user_id=self.env.ref("base.group_user").id,
+            table=table,
+        )
 
     @api.onchange('role')
     def _onchange_role(self):
@@ -1166,27 +1180,16 @@ class ResUsers(models.Model):
         return self.with_context({}).all_group_ids._ids
 
     def _action_show(self):
-        """If self is a singleton, directly access the form view. If it is a recordset, open a list view"""
-        view_id = self.env.ref('base.view_users_form').id
-        action = {
+        """Directly access the form view"""
+        return {
             'type': 'ir.actions.act_window',
             'res_model': 'res.users',
             'context': {'create': False},
+            'name': _('Users'),
+            'view_mode': 'form',
+            'views': [[self.env.ref('base.view_users_form').id, 'form']],
+            'domain': [('id', 'in', self.ids)],
         }
-        if len(self) > 1:
-            action.update({
-                'name': _('Users'),
-                'view_mode': 'list,form',
-                'views': [[None, 'list'], [view_id, 'form']],
-                'domain': [('id', 'in', self.ids)],
-            })
-        else:
-            action.update({
-                'view_mode': 'form',
-                'views': [[view_id, 'form']],
-                'res_id': self.id,
-            })
-        return action
 
     def action_show_groups(self):
         self.ensure_one()

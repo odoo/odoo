@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -21,7 +22,7 @@ _lt = LazyTranslate(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
+    state = fields.Selection(compute='_compute_state', search='_search_state', string='Status', compute_sql='_compute_sql_state', compute_sudo=True,
                  selection=[('new', 'Invited'), ('active', 'Confirmed'), ('inactive', 'Inactive')], tracking=4)
 
     def _search_state(self, operator, value):
@@ -39,6 +40,17 @@ class ResUsers(models.Model):
     def _compute_state(self):
         for user in self:
             user.state = 'inactive' if not user.active else 'active' if user.login_date else 'new'
+
+    def _compute_sql_state(self, table):
+        return SQL("""
+                CASE
+                    WHEN NOT %(table)s.active THEN 'incative'
+                    WHEN EXISTS (SELECT 1 FROM res_users_log WHERE %(table)s.id = res_users_log.create_uid) THEN 'active'
+                    ELSE 'new'
+                END
+            """,
+            table=table,
+        )
 
     @api.model
     def signup(self, values, token=None):
@@ -253,12 +265,11 @@ class ResUsers(models.Model):
                 message = _('A reset password link was sent by email')
             else:
                 _logger.info("Signup email sent for user <%s> to <%s>", user.login, user.email)
-                message = _('A signup link was sent by email')
+                message = _('Signup link sent by email')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': 'Notification',
                 'message': message,
                 'sticky': False
             }
