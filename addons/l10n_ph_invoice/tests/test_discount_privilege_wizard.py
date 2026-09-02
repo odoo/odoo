@@ -290,6 +290,55 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
             self.assertFalse(line_b.has_discount_privilege)
             self.assertEqual(line_b.discount_amount, 0.0)
 
+    def test_wizard_privilege_onchange_autoselects_categories(self):
+        """Selecting a category-scoped privilege in the wizard must switch the
+        scope to 'Product Categories' and pre-select the privilege's
+        categories (simulated as the web client does, through onchanges).
+        Switching to a different, category-less privilege afterwards, within
+        the same editing session, does not reset an already-selected scope."""
+        wizard = self._create_wizard(self.invoice)
+        with Form(wizard) as form:
+            form.privilege_id = self.privilege_with_categories
+            self.assertEqual(form.apply_on, "product_category")
+            self.assertEqual(form.category_ids.ids, self.category_a.ids)
+
+            form.privilege_id = self.privilege
+            self.assertEqual(form.apply_on, "product_category")
+            self.assertEqual(form.category_ids.ids, self.category_a.ids)
+        self.assertEqual(wizard.category_ids, self.category_a)
+
+    def test_fp_privilege_skips_lines_without_mappable_taxes(self):
+        """A fiscal-position privilege only applies to lines whose taxes it
+        maps: VAT-exempt and zero-rated lines keep their taxes and receive
+        no statutory discount."""
+        invoice = self._create_invoice_with_lines(
+            ("Line VAT", self.product_a, 100.0, {"tax_ids": self.tax_sale_12}),
+            ("Line Exempt", self.product_b, 100.0, {"tax_ids": self.tax_sale_0_exempt}),
+        )
+        vat_line = invoice.invoice_line_ids.filtered(lambda line: line.product_id == self.product_a)
+        exempt_line = invoice.invoice_line_ids.filtered(lambda line: line.product_id == self.product_b)
+
+        # The preview already excludes the exempt line.
+        wizard = self._create_wizard(invoice, privilege_id=self.privilege.id)
+        self.assertTrue(wizard._get_preview_privilege_for_line(vat_line))
+        self.assertFalse(wizard._get_preview_privilege_for_line(exempt_line))
+
+        self._apply_privilege(invoice, privilege_id=self.privilege.id, apply_on="all")
+        self.assertEqual(vat_line.tax_ids, self.tax_sale_0_exempt_sc_pwd)
+        self.assertEqual(vat_line.discount, 20.0)
+        self.assertEqual(exempt_line.tax_ids, self.tax_sale_0_exempt)
+        self.assertEqual(exempt_line.discount, 0.0)
+        self.assertFalse(exempt_line.l10n_ph_discount_privilege_id)
+
+        # Explicitly targeting the exempt line applies nothing.
+        with self.assertRaises(UserError):
+            self._apply_privilege(
+                invoice,
+                privilege_id=self.privilege.id,
+                apply_on="product",
+                product_ids=[Command.set([self.product_b.id])],
+            )
+
     def test_apply_requires_scope_selection(self):
         invoice = self.invoice
         for apply_on in ("product_category", "product"):
@@ -630,6 +679,54 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         self.assertEqual(line_a.discount, 20.0)
         self.assertEqual(line_b.discount, 20.0)
 
+    def test_apply_privilege_on_top_of_existing_privilege(self):
+        """Applying a different FP-based privilege on a line that already
+        carries one must re-map from the line's original, pre-any-privilege
+        taxes (not the intermediate mapped ones) and re-route the discount
+        allocation to the new privilege's account."""
+        other_tax = self._create_tax("Other Exempt SC/PWD", 0.0)
+        other_fpos = self.env["account.fiscal.position"].create({"name": "Other SC/PWD FP"})
+        other_tax.write({"original_tax_ids": [Command.set([self.base_tax.id])]})
+        other_fpos.write({"tax_ids": [Command.set([other_tax.id])]})
+        other_account = self.special_discount_account.copy({"name": "Other Discount Account"})
+        other_privilege = self._create_privilege(
+            "Other FP Privilege",
+            0.2,
+            fiscal_position_id=other_fpos,
+            account_id=other_account,
+        )
+
+        invoice = self._create_invoice_with_lines(
+            ("Line A", self.product_a, 100.0, {"tax_ids": self.base_tax, "discount": 10.0}),
+        )
+        line = invoice.invoice_line_ids
+
+        self._apply_privilege(invoice, privilege_id=self.privilege.id, apply_on="all")
+        self.assertEqual(line.tax_ids, self.tax_sale_0_exempt_sc_pwd)
+        self.assertEqual(line.l10n_ph_original_tax_ids, self.base_tax)
+        self.assertEqual(line.discount, 20.0)
+        self.assertEqual(line.l10n_ph_original_discount, 10.0)
+
+        self._apply_privilege(invoice, privilege_id=other_privilege.id, apply_on="all")
+        self.assertEqual(line.l10n_ph_discount_privilege_id, other_privilege)
+        self.assertEqual(line.tax_ids, other_tax)
+        self.assertEqual(line.l10n_ph_original_tax_ids, self.base_tax)
+        self.assertEqual(line.discount, 20.0)
+        # Original discount is still the pre-*any*-privilege value (10%), not
+        # the intermediate 20% set by the first privilege.
+        self.assertEqual(line.l10n_ph_original_discount, 10.0)
+
+        # The allocation moved fully to the new privilege's account: no
+        # stale entry is left pointing at the first privilege's account.
+        discount_lines = invoice.line_ids.filtered(
+            lambda line_item: line_item.display_type == "discount",
+        )
+        self.assertEqual(len(discount_lines), 2)
+        self.assertEqual(
+            {discount_line.account_id for discount_line in discount_lines},
+            {line.account_id, other_account},
+        )
+
     # ============================================================
     #  Preview Edge Cases
     # ============================================================
@@ -969,6 +1066,14 @@ class TestDiscountPrivilegeWizard(TestPhCommon):
         # Invoice remains unchanged.
         self.assertFalse(invoice.invoice_line_ids.l10n_ph_discount_privilege_id)
         self.assertEqual(invoice.invoice_line_ids.discount, 0.0)
+
+    # ============================================================
+    #  Document Field Validation
+    # ============================================================
+
+    def test_create_without_document_field_raises_error(self):
+        with self.assertRaises(ValidationError):
+            self.env["l10n_ph.discount.privilege.wizard"].create({"apply_on": "all"})
 
     # ============================================================
     #  Edge Cases — posted invoices, vendor bills, mixed basket

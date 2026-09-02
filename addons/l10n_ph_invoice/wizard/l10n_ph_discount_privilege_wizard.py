@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 
 
@@ -10,9 +10,17 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
     _description = "Discount Privilege Wizard"
     _check_company_auto = True
 
-    move_id = fields.Many2one("account.move", required=True)
-    company_id = fields.Many2one(related="move_id.company_id", readonly=True)
-    currency_id = fields.Many2one(related="move_id.currency_id", readonly=True)
+    move_id = fields.Many2one("account.move")
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        compute="_compute_l10n_ph_document_company_currency",
+        readonly=True,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        compute="_compute_l10n_ph_document_company_currency",
+        readonly=True,
+    )
     privilege_id = fields.Many2one(
         "l10n_ph.discount.privilege",
         string="Privilege Applied",
@@ -50,9 +58,15 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
     line_ids = fields.One2many(
         "l10n_ph.discount.privilege.wizard.line",
         "wizard_id",
-        string="Invoice Lines",
+        string="Lines",
     )
     has_applied_privileges = fields.Boolean(compute="_compute_has_applied_privileges")
+
+    def _compute_l10n_ph_document_company_currency(self):
+        for wizard in self:
+            document = wizard._get_document()
+            wizard.company_id = document.company_id or self.env.company
+            wizard.currency_id = document.currency_id or self.env.company.currency_id
 
     @api.depends("line_ids.has_applied_discount_privilege")
     def _compute_has_applied_privileges(self):
@@ -81,6 +95,52 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
                 )
             wizard.scope_category_ids = categories
 
+    @api.model
+    def _get_document_fields(self):
+        """
+        Return the names of the (mutually exclusive) fields that can hold
+        the document this wizard applies privileges on.
+
+        Concrete modules extend this to add their own document field
+        (e.g. order_id in l10n_ph_sale) instead of overriding move_id.
+        """
+        return ["move_id"]
+
+    def _get_document(self):
+        """Return the document (invoice, sale order, ...) set on the wizard."""
+        self.ensure_one()
+        document_fields = self._get_document_fields()
+        for field_name in document_fields:
+            document = self[field_name]
+            if document:
+                return document
+        return self[document_fields[0]]
+
+    def _check_document_fields(self, vals):
+        """Ensure exactly one of the fields returned by _get_document_fields() is set."""
+        document_fields = self._get_document_fields()
+        set_fields = [field_name for field_name in document_fields if vals.get(field_name)]
+        if not set_fields:
+            raise ValidationError(
+                self.env._(
+                    "You must set one of the following fields to use this wizard: %(fields)s.",
+                    fields=", ".join(
+                        self._fields[field_name]._description_string(self.env)
+                        for field_name in document_fields
+                    ),
+                ),
+            )
+        if len(set_fields) > 1:
+            raise ValidationError(
+                self.env._(
+                    "Only one of %(fields)s can be set on the same wizard.",
+                    fields=", ".join(
+                        self._fields[field_name]._description_string(self.env)
+                        for field_name in set_fields
+                    ),
+                ),
+            )
+
     @api.model_create_multi
     def create(self, vals_list):
         """
@@ -88,15 +148,12 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
         lines (which are handled by other modules and should not receive privileges).
         """
         for vals in vals_list:
+            self._check_document_fields(vals)
             if "line_ids" not in vals and vals.get("move_id"):
                 move = self.env["account.move"].browse(vals["move_id"])
                 invoice_lines = move.invoice_line_ids - move.invoice_line_ids._get_discount_lines()
                 vals["line_ids"] = [
-                    Command.create(
-                        {
-                            "invoice_line_id": line.id,
-                        },
-                    )
+                    Command.create({"invoice_line_id": line.id})
                     for line in invoice_lines
                     if line.display_type == "product"
                 ]
@@ -120,11 +177,26 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
 
         An unrestricted privilege applies everywhere; a privilege restricted
         to product categories only applies to lines whose product category
-        (or a parent of it) is eligible.
+        (or a parent of it) is eligible. A fiscal-position privilege only
+        applies to lines whose taxes it actually maps (the VAT it exempts):
+        lines with other taxes - e.g. already VAT-exempt or zero-rated -
+        are left untouched, as mapping them would drop their taxes without
+        any benefit.
         """
         self.ensure_one()
         categories = privilege._l10n_ph_get_applied_category_ids()
-        return not categories or source.product_id.categ_id.id in categories.ids
+        if categories and source.product_id.categ_id.id not in categories.ids:
+            return False
+        fiscal_position = privilege.fiscal_position_id
+        if fiscal_position:
+            # Check against the pre-privilege taxes rather than source.tax_ids:
+            # once a privilege is applied, tax_ids holds the *mapped* taxes, so
+            # checking eligibility for a replacement privilege (or re-checking
+            # the preview) must fall back to the original, pre-mapping taxes.
+            pre_privilege_taxes = source.l10n_ph_original_tax_ids or source.tax_ids
+            if not any(fiscal_position.tax_map.get(str(tax.id)) for tax in pre_privilege_taxes):
+                return False
+        return True
 
     def _get_preview_privilege_for_line(self, source):
         self.ensure_one()
@@ -138,7 +210,9 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
 
     def _check_can_modify(self):
         self.ensure_one()
-        if self.move_id.state != "draft" or not self.move_id.is_sale_document():
+        if self.move_id and (
+            self.move_id.state != "draft" or not self.move_id.is_sale_document()
+        ):
             raise UserError(
                 self.env._(
                     "Discount privileges can only be modified on draft customer invoices and credit notes.",
@@ -194,6 +268,7 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
             new_price_unit, original_price_unit = source._adjust_price_unit_from_privilege(
                 source.price_unit,
                 source.tax_ids,
+                source.document_tax_mode,
             )
             new_taxes, original_taxes = source._adjust_taxes_from_privilege(
                 source.tax_ids,
@@ -213,8 +288,9 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
         if privilege and not applied and not removals:
             raise UserError(
                 self.env._(
-                    "The selected discount privilege does not apply to any line of this invoice. "
-                    "Please check the product categories set on the privilege.",
+                    "The selected discount privilege does not apply to any line of this document. "
+                    "Please check the product categories set on the privilege and the taxes "
+                    "applied to the lines.",
                 ),
             )
         return {"type": "ir.actions.act_window_close"}
@@ -234,7 +310,9 @@ class L10nPhDiscountPrivilegeWizard(models.TransientModel):
             categories = wizard.privilege_id._l10n_ph_get_applied_category_ids()
             if not categories:
                 continue
-            available = categories & wizard.available_category_ids
+            # On onchange pseudo-records, available_category_ids contains
+            # NewId records: intersect with their real counterparts instead.
+            available = categories & wizard.available_category_ids._origin
             if available:
                 wizard.apply_on = "product_category"
                 wizard.category_ids = available
@@ -249,14 +327,15 @@ class L10nPhDiscountPrivilegeWizardLine(models.TransientModel):
         required=True,
         ondelete="cascade",
     )
-    invoice_line_id = fields.Many2one("account.move.line", required=True)
+    invoice_line_id = fields.Many2one("account.move.line")
     name = fields.Text(
         string="Product",
         compute="_compute_name",
     )
     category_id = fields.Many2one(
-        related="invoice_line_id.product_id.categ_id",
+        "product.category",
         string="Product Category",
+        compute="_compute_category_id",
     )
     currency_id = fields.Many2one(related="wizard_id.currency_id")
     has_discount_privilege = fields.Boolean(
@@ -285,6 +364,12 @@ class L10nPhDiscountPrivilegeWizardLine(models.TransientModel):
         for line in self:
             source = line._get_line_source()
             line.name = source.translated_product_name or source.name
+
+    @api.depends("invoice_line_id.product_id.categ_id")
+    def _compute_category_id(self):
+        for line in self:
+            source = line._get_line_source()
+            line.category_id = source.product_id.categ_id if source else False
 
     # --- Computed preview values ---
     @api.depends(
