@@ -205,25 +205,6 @@ select.form-select.css_attribute_select {
             box-shadow: $btn-focus-box-shadow;
         }
     }
-
-    label, .o_variant_pills {
-        &.css_not_available {
-            opacity: 0.6;
-        }
-    }
-}
-
-label.css_attribute_color.css_not_available {
-    &:after {
-        content: "";
-        @include o-position-absolute($top: 50%, $left: 50%);
-        width: 2px;
-        height: 110%;
-        background-color: var(--body-bg);
-        rotate: 45deg;
-        transform: translate(-50%, -50%);
-        transform-origin: top;
-    }
 }
 
 .js_product {
@@ -273,6 +254,34 @@ label.css_attribute_color.css_not_available {
     @media (max-width: 476px) {
         .td-qty {
             width: 60px;
+        }
+    }
+}
+
+label.css_attribute_color:is(.css_not_available, .o_wsale_sold_out):after {
+    opacity: .01;
+}
+
+label.css_attribute_image:is(.css_not_available, .o_wsale_sold_out),
+label.css_attribute_thumbnail:is(.css_not_available, .o_wsale_sold_out) {
+    color: $text-muted;
+}
+
+.variant_attribute {
+    label, .o_variant_pills {
+        &:is(.css_not_available, .o_wsale_sold_out):where(
+            :not(.css_attribute_image, .css_attribute_thumbnail)
+        ) {
+            text-decoration: line-through;
+            opacity: .5;
+        }
+    }
+
+    .o_variant_pills:is(.css_not_available, .o_wsale_sold_out) {
+        opacity: .5;
+
+        > :not(input) {
+            text-decoration: line-through;
         }
     }
 }

@@ -1040,6 +1040,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     or ptal.product_template_value_ids.filtered("ptav_active")[:1]
                 )
             )
+            # The values that weren't asked for were completed with the first value of their
+            # line, which can point at a variant that can't be bought while another one
+            # carrying the requested values can
+            combination = product._get_available_combination(
+                combination,
+                necessary_values=combination.filtered(
+                    lambda ptav: ptav.product_attribute_value_id.id in attribute_value_ids
+                ),
+            )
             combination_info = product._get_combination_info(
                 combination=combination.with_env(self.env)
             )

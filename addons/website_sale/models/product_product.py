@@ -321,6 +321,31 @@ class ProductProduct(models.Model):
         free_qty = self.env.website._get_product_available_qty(self.sudo())
         return free_qty <= 0
 
+    def _filter_sold_out(self):
+        """
+        Return the sold-out subset of `self`.
+
+        Kept as a separate recordset-level method so quantity computation can
+        stay batched (a single grouped query over quants/moves for the whole
+        recordset with the base implementation of `website._get_product_available_qty`),
+        and so extending modules can pre-warm quantities in their own context
+        before filtering.
+
+        :return: the products of `self` that are sold out.
+        :rtype: recordset of `product.product`
+        """
+        website = self.env.website
+        if not website:
+            return self.browse()
+
+        candidates = self.filtered(
+            lambda product: product.is_storable and not product.allow_out_of_stock_order
+        )
+
+        return candidates.filtered(
+            lambda product: website._get_product_available_qty(product.sudo()) <= 0
+        )
+
     def _has_stock_notification(self, partner, website):
         self.ensure_one()
         return bool(

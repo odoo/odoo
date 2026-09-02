@@ -585,8 +585,9 @@ export class ProductPage extends Interaction {
         const combinationData = combinationDataJson ? JSON.parse(combinationDataJson) : {};
 
         parent.querySelectorAll('option, input, label, .o_variant_pills').forEach(el => {
-            el.classList.remove('css_not_available');
+            el.classList.remove('css_not_available', 'o_wsale_sold_out');
         });
+
         parent.querySelectorAll('option, input').forEach(el => {
             const li = el.closest('li');
             if (li) {
@@ -594,58 +595,71 @@ export class ProductPage extends Interaction {
                 li.dataset.excludedBy = '';
             }
         });
-        if (combinationData.exclusions) {
-            // Browse all selected PTAVs.
-            Object.values(combination).forEach(selectedPtav => {
-                if (combinationData.exclusions.hasOwnProperty(selectedPtav)) {
-                    // For each exclusion of the selected PTAV, disable the excluded PTAV (even if
-                    // unselected) to provide visual feedback.
-                    Object.values(combinationData.exclusions[selectedPtav]).forEach(
-                        excludedPtav => this._disableInput(
-                            parent,
-                            excludedPtav,
-                            selectedPtav,
-                            combinationData.mapped_attribute_names,
-                        )
-                    );
-                }
-            });
-        }
-        if (combinationData.archived_combinations) {
-            combinationData.archived_combinations.forEach(excludedCombination => {
-                const commonPtavs = excludedCombination.filter(ptav => combination.includes(ptav));
-                if (
-                    !!commonPtavs
-                    && combination.length === excludedCombination.length
-                    && commonPtavs.length === combination.length
-                ) {
-                    // The selected combination is archived. All selected PTAVs must be disabled.
-                    combination.forEach(ptav => combination.forEach(otherPtav => {
-                        if (ptav === otherPtav) return;
-                        this._disableInput(
-                            parent, ptav, otherPtav, combinationData.mapped_attribute_names
-                        );
-                    }));
-                } else if (
-                    !!commonPtavs
-                    && combination.length === excludedCombination.length
-                    && commonPtavs.length === combination.length - 1
-                ) {
-                    // The selected combination has all but one PTAV in common with the archived
-                    // combination. The single unselected PTAV from the archived combination must be
-                    // disabled.
-                    const unavailablePtav = excludedCombination.find(
-                        ptav => !combination.includes(ptav)
-                    );
-                    excludedCombination.forEach(ptav => {
-                        if (ptav === unavailablePtav) return;
-                        this._disableInput(
-                            parent, unavailablePtav, ptav, combinationData.mapped_attribute_names
-                        );
-                    });
-                }
-            });
-        }
+
+        const exclusions = combinationData.exclusions || {};
+        const archivedCombinations = combinationData.archived_combinations || [];
+        const soldOutCombinations = combinationData.sold_out_combinations || [];
+        const attributeNames = combinationData.mapped_attribute_names || {};
+        const existingCombinations = combinationData.existing_combinations ?? null;
+        const noVariantPtavIds = combinationData.no_variant_ptav_ids || [];
+
+        parent.querySelectorAll(
+            'input.js_variant_change, select.js_variant_change option'
+        ).forEach(el => {
+            const ptav = parseInt(el.value);
+
+            // Selected values are never crossed.
+            if (!ptav || combination.includes(ptav))
+                return;
+
+            // Hypothetical selection resulting from picking this value:
+            // - radio/select: the value replaces the current one in its group;
+            // - checkbox (multi-checkbox display): the value is added alongside
+            //   the current selection, nothing is replaced.
+            const isCheckbox = el.tagName === 'INPUT' && el.type === 'checkbox';
+            let hypothetical;
+            if (isCheckbox)
+                hypothetical = combination.concat([ptav]);
+            else {
+                const siblingPtavs = Array.from(
+                    el.closest('ul, select').querySelectorAll('input.js_variant_change, option')
+                ).map(sibling => parseInt(sibling.value)).filter(Boolean);
+                hypothetical = combination
+                    .filter(selected => !siblingPtavs.includes(selected))
+                    .concat([ptav]);
+            }
+
+            const excludedBy = hypothetical.find(other =>
+                other !== ptav && (
+                    (exclusions[other] || []).includes(ptav)
+                    || (exclusions[ptav] || []).includes(other)
+                )
+            );
+
+            const variantHypothetical = hypothetical.filter(
+                p => !noVariantPtavIds.includes(p)
+            );
+            const matchesHypothetical = tuple =>
+                tuple.length === variantHypothetical.length
+                && tuple.every(p => variantHypothetical.includes(p));
+
+            const candidateIsNoVariant = noVariantPtavIds.includes(ptav);
+            const isArchived = !candidateIsNoVariant
+                && archivedCombinations.some(matchesHypothetical);
+            const isMissing = !candidateIsNoVariant
+                && Array.isArray(existingCombinations)
+                && !existingCombinations.some(matchesHypothetical);
+            const isSoldOut = !candidateIsNoVariant
+                && soldOutCombinations.some(matchesHypothetical);
+
+            if (excludedBy) {
+                this._disableInput(parent, ptav, excludedBy, attributeNames);
+            } else if (isArchived || isMissing) {
+                this._disableInput(parent, ptav);
+            } else if (isSoldOut) {
+                this._markSoldOut(parent, ptav);
+            }
+        });
     }
 
     /**
@@ -686,6 +700,37 @@ export class ProductPage extends Interaction {
 
             li.setAttribute('title', _t("Not available with %s", excludedByData.join(', ')));
             li.dataset.excludedBy = excludedByData.join(',');
+        }
+    }
+
+    /**
+     * Mute the input/option of the given attribute value to show that
+     * selecting it would lead to a sold-out combination.
+     *
+     * The input stays enabled on purpose: selecting a sold-out combination
+     * must remain possible so the customer can reach the out-of-stock message
+     * and the back-in-stock notification form.
+     *
+     * @param {Element} parent
+     * @param {integer} attributeValueId
+     */
+    _markSoldOut(parent, attributeValueId) {
+        const input = parent.querySelector(
+            `option[value="${attributeValueId}"], input[value="${attributeValueId}"]`
+        );
+
+        if (!input)
+            return;
+
+        for (const el of [input, input.closest('label'), input.closest('.o_variant_pills')]) {
+            el?.classList.add('css_not_available', 'o_wsale_sold_out');
+        }
+
+        const li = input.closest('li');
+        // Don't overwrite a "Not available with ..." explanation coming from
+        // a real exclusion; unavailability is the stronger statement.
+        if (li && !li.dataset.excludedBy) {
+            li.setAttribute('title', _t("Out of stock"));
         }
     }
 
