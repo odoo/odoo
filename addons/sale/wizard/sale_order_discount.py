@@ -97,6 +97,11 @@ class SaleOrderDiscount(models.TransientModel):
 
         return so_line_values_list
 
+    def _get_discountable_order_lines(self):
+        """Return the order lines a discount (per-line or global) may apply to."""
+        self.ensure_one()
+        return self.sale_order_id.order_line.filtered(lambda line: not line.display_type)
+
     def _get_discount_product(self):
         """Return the `product.product` record used for discount line."""
         self.ensure_one()
@@ -137,7 +142,7 @@ class SaleOrderDiscount(models.TransientModel):
 
         order = self.sale_order_id
         AccountTax = self.env["account.tax"]
-        order_lines = order.order_line.filtered(lambda x: not x.display_type)
+        order_lines = self._get_discountable_order_lines()
         base_lines = [line._prepare_base_line_for_taxes_computation() for line in order_lines]
         AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
@@ -162,6 +167,6 @@ class SaleOrderDiscount(models.TransientModel):
         self.ensure_one()
         self = self.with_company(self.company_id)
         if self.discount_type == "sol_discount":
-            self.sale_order_id.order_line.write({"discount": self.discount_percentage * 100})
+            self._get_discountable_order_lines().write({"discount": self.discount_percentage * 100})
         else:
             self._create_discount_lines()
