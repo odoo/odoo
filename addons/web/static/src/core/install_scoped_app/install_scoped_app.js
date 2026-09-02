@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { Component, onMounted, proxy } from "@odoo/owl";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
@@ -25,7 +25,7 @@ export class InstallScopedApp extends Component {
         if (value !== this.state.manifest.name) {
             const url = new URL(document.location.href);
             url.searchParams.set("app_name", encodeURIComponent(value));
-            browser.location.replace(url);
+            location.replace(url);
         }
     }
     onInstall() {
@@ -33,7 +33,7 @@ export class InstallScopedApp extends Component {
         this.pwa.show({
             onDone: (res) => {
                 if (res.outcome === "accepted") {
-                    browser.location.replace(this.state.manifest.start_url);
+                    location.replace(this.state.manifest.start_url);
                 } else {
                     this.state.showInstallUI = true;
                 }

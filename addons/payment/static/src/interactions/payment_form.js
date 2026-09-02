@@ -1,4 +1,4 @@
-import { browser } from '@web/core/browser/browser';
+import { location } from '@web/core/browser/browser';
 import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc, RPCError } from '@web/core/network/rpc';
@@ -553,7 +553,7 @@ export class PaymentForm extends Interaction {
             await this.waitFor(rpc('/payment/archive_token', {
                 'token_id': tokenId,
             }));
-            browser.location.reload();
+            location.reload();
         } catch (error) {
             if (error instanceof RPCError) {
                 this._displayErrorDialog(

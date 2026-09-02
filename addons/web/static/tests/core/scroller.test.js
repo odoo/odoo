@@ -3,7 +3,7 @@ import { Component, xml } from "@odoo/owl";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { WebClient } from "@web/webclient/webclient";
 import { registry } from "@web/core/registry";
@@ -24,7 +24,7 @@ test("Ignore empty hrefs", async () => {
 
     await mountWithCleanup(MyComponent);
 
-    browser.location.hash = "#testscroller";
+    location.hash = "#testscroller";
 
     await click(".inactive_link");
     await animationFrame();
@@ -32,7 +32,7 @@ test("Ignore empty hrefs", async () => {
     await click("[data-icon='delete'].oi-filled");
     await animationFrame();
 
-    expect(browser.location.hash).toBe("#testscroller");
+    expect(location.hash).toBe("#testscroller");
 });
 
 test("Simple rendering with a scroll", async () => {

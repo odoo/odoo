@@ -1,20 +1,20 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_action";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
 DiscussClientAction.components = { ...DiscussClientAction.components, WelcomePage };
 patch(DiscussClientAction.prototype, {
     setup() {
         super.setup(...arguments);
-        const url = new URL(browser.location.href);
+        const url = new URL(location.href);
         url.searchParams.delete("email_token");
         browser.history.replaceState(browser.history.state, null, url.toString());
         browser.addEventListener("popstate", () => this.restoreDiscussThread(this.props));
     },
     /** @override */
     getActiveId() {
-        const url = new URL(browser.location);
+        const url = new URL(location);
         // On the public page, `active_id` is only set for tabs and is mutually exclusive
         // with `channel`. So if `active_id` is set, there is no `channel`.
         const activeId = url.searchParams.get("active_id");
@@ -41,13 +41,13 @@ patch(DiscussClientAction.prototype, {
             browser.history.replaceState(
                 browser.history.state,
                 null,
-                `${new URL(channel.invitationLink).pathname}${browser.location.search}`
+                `${new URL(channel.invitationLink).pathname}${location.search}`
             );
         } else if (this.store.isChannelTokenSecret) {
             browser.history.replaceState(
                 browser.history.state,
                 null,
-                `/discuss/channel/${channel.id}${browser.location.search}`
+                `/discuss/channel/${channel.id}${location.search}`
             );
         }
     },

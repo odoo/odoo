@@ -1,5 +1,5 @@
-import { browser } from "@web/core/browser/browser";
-import { startUrl, router } from "@web/core/browser/router";
+import { location } from "@web/core/browser/browser";
+import { router, startUrl } from "@web/core/browser/router";
 import { patch } from "@web/core/utils/patch";
 
 patch(router, {
@@ -27,4 +27,4 @@ patch(router, {
 
 // Since the patch for `stateToUrl` and `urlToState` is executed
 // after the router state was already initialized, it has to be replaced.
-router.replaceState(router.urlToState(new URL(browser.location)));
+router.replaceState(router.urlToState(new URL(location)));

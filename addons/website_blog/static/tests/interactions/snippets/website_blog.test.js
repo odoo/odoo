@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { startInteractions, setupInteractionWhiteList } from "@web/../tests/public/helpers";
 
 setupInteractionWhiteList(["website_blog.website_blog"]);
@@ -19,8 +19,8 @@ test("click on next blog updates URL", async () => {
         </section>
     `);
     expect(core.interactions).toHaveLength(1);
-    expect(browser.location.pathname).toBe("/");
+    expect(location.pathname).toBe("/");
     await click(".o_wblog_next_button");
     await advanceTime(300);
-    expect(browser.location.pathname).toBe("/some/blog");
+    expect(location.pathname).toBe("/some/blog");
 });

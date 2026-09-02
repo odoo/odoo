@@ -1,6 +1,6 @@
 import { assertType, onWillStart, Plugin, t, usePlugin, whenReady } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { EffectPlugin } from "@web/core/effects/effect_plugin";
 import { ORM } from "@web/core/orm_plugin";
 import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
@@ -79,7 +79,7 @@ export class TourPlugin extends Plugin {
             return;
         }
 
-        const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
+        const paramsTourName = new URLSearchParams(location.search).get("tour");
         if (paramsTourName) {
             this.startTour(paramsTourName, { mode: "manual" });
         }
@@ -112,7 +112,7 @@ export class TourPlugin extends Plugin {
                     this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
                         !this.toursEnabled,
                     ]);
-                    browser.location.reload();
+                    location.reload();
                 },
             },
             sequence: 500,

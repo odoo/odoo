@@ -3,25 +3,6 @@
 import { mockLocation } from "@odoo/hoot";
 
 //-----------------------------------------------------------------------------
-// Internal
-//-----------------------------------------------------------------------------
-
-/**
- * List of properties that should not be mocked on the browser object.
- *
- * This is because they are already handled by HOOT and tampering with them could
- * lead to unexpected behavior.
- */
-const READONLY_PROPERTIES = [
-    "cancelAnimationFrame",
-    "clearInterval",
-    "clearTimeout",
-    "requestAnimationFrame",
-    "setInterval",
-    "setTimeout",
-];
-
-//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
@@ -35,22 +16,7 @@ const READONLY_PROPERTIES = [
 export function mockBrowserFactory(name, { fn }) {
     return function mockBrowser(...args) {
         const browserModule = fn(...args);
-        const properties = {
-            location: {
-                get: () => mockLocation,
-                set: (value) => (mockLocation.href = value),
-            },
-        };
-        for (const property of READONLY_PROPERTIES) {
-            const originalValue = browserModule.browser[property];
-            properties[property] = {
-                configurable: false,
-                get: () => originalValue,
-            };
-        }
-
-        Object.defineProperties(browserModule.browser, properties);
-
+        browserModule.location = mockLocation;
         return browserModule;
     };
 }

@@ -1,5 +1,5 @@
 import { Component, computed, proxy, signal, t, useProps } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
@@ -25,8 +25,8 @@ export class SettingsPage extends Component {
         if (this.props.modules) {
             let selectedTab = this.props.initialTab || this.props.modules[0].key;
 
-            if (browser.location.hash) {
-                const hash = browser.location.hash.substring(1);
+            if (location.hash) {
+                const hash = location.hash.substring(1);
                 if (this.props.modules.map((m) => m.key).includes(hash)) {
                     selectedTab = hash;
                 } else {
@@ -79,7 +79,7 @@ export class SettingsPage extends Component {
         }
         this.state.selectedTab = key;
         if (updateUrl) {
-            browser.location.hash = key;
+            location.hash = key;
         }
         this.env.searchState.clearSearch();
     }

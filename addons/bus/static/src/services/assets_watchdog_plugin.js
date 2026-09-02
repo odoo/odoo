@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Plugin, usePlugin } from "@odoo/owl";
@@ -47,7 +47,7 @@ export class AssetsWatchdogPlugin extends Plugin {
                             name: _t("Refresh"),
                             primary: true,
                             onClick: () => {
-                                browser.location.reload();
+                                location.reload();
                             },
                         },
                     ],

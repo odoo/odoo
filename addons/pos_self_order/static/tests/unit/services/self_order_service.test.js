@@ -1,20 +1,19 @@
-import { test, describe, expect, beforeEach } from "@odoo/hoot";
-import {
-    setupSelfPosEnv,
-    getFilledSelfOrder,
-    addComboProduct,
-    mockLNAPermissionCheck,
-} from "../utils";
-import { mockDate } from "@odoo/hoot-mock";
+import { beforeEach, describe, expect, mockDate, test } from "@odoo/hoot";
+import { MockServer, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { location } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
 import { definePosSelfModels } from "../data/generate_model_definitions";
-import { patchWithCleanup, onRpc, MockServer } from "@web/../tests/web_test_helpers";
+import {
+    addComboProduct,
+    getFilledSelfOrder,
+    mockLNAPermissionCheck,
+    setupSelfPosEnv,
+} from "../utils";
 
 definePosSelfModels();
 
 const setOrderIdentifier = (token) => {
-    const url = new URL(browser.location.href);
+    const url = new URL(location.href);
     url.searchParams.set("order_identifier", token);
     history.replaceState({}, "", url);
 };
