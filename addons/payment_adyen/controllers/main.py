@@ -4,6 +4,7 @@ import base64
 import binascii
 import hashlib
 import hmac
+import json
 import pprint
 
 from werkzeug.exceptions import Forbidden
@@ -12,6 +13,7 @@ from odoo import _, http, release
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import py_to_js_locale, urls
+from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -177,12 +179,9 @@ class AdyenController(http.Controller):
         """
         # Make the payment details request to Adyen
         provider_sudo = request.env['payment.provider'].browse(provider_id).sudo()
-        tx_sudo = request.env['payment.transaction'].sudo().search([
-            ('provider_id', '=', provider_sudo.id), ('reference', '=', reference),
-        ])
 
-        idempotency_key = payment_utils.generate_idempotency_key(
-            tx_sudo, scope='payment_details_request_controller'
+        idempotency_key = hmac_tool(
+            request.env(su=True), 'payment_details_request_controller', json.dumps(payment_details)
         )
 
         response_content = provider_sudo._send_api_request(
@@ -190,9 +189,7 @@ class AdyenController(http.Controller):
         )
 
         # Process the payment data request response.
-        request.env['payment.transaction'].sudo()._process(
-            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
-        )
+        request.env['payment.transaction'].sudo()._process('adyen', response_content)
 
         return response_content
 
