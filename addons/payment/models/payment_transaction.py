@@ -996,8 +996,8 @@ class PaymentTransaction(models.Model):
         for tx in txs_to_post_process:
             tx = tx.with_prefetch()  # Restrict pre-fetching before cache invalidation
             try:
-                if not tx.is_post_processed:  # No other flow post-processed the tx since the search
-                    tx._finalize_post_processing()
+                if tx_to_process := tx._lock_for_post_processing():
+                    tx_to_process._finalize_post_processing()
                     self.env.cr.commit()
             except psycopg2.OperationalError:
                 self.env.cr.rollback()  # Rollback and try later.
@@ -1008,8 +1008,33 @@ class PaymentTransaction(models.Model):
                 )
                 self.env.cr.rollback()
 
+    def _lock_for_post_processing(self):
+        if not self:
+            return self
+
+        try:
+            self.env.cr.execute(
+                "SELECT id FROM payment_transaction WHERE id IN %s FOR NO KEY UPDATE NOWAIT",
+                [tuple(self.ids)],
+                log_exceptions=False,
+            )
+        except psycopg2.OperationalError:
+            _logger.info(
+                "could not lock transactions with ids %s: they are already being post-processed by"
+                " another flow", self.ids
+            )
+            raise
+
+        # Read `is_post_processed` once the lock is acquired, when a concurrent flow can no longer
+        # change it, rather than relying on a value that was cached before that.
+        self.invalidate_recordset(['is_post_processed'])
+        return self.filtered(lambda tx: not tx.is_post_processed)
+
     def _finalize_post_processing(self):
         """ Trigger the final post-processing tasks and mark the transactions as post-processed.
+
+        Callers must first lock the transactions with `_lock_for_post_processing` to prevent
+        concurrent flows from triggering the post-processing side effects more than once.
 
         :return: None
         """
