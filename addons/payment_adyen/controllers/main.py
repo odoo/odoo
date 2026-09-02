@@ -4,6 +4,7 @@ import base64
 import binascii
 import hashlib
 import hmac
+import json
 import logging
 import pprint
 
@@ -14,6 +15,7 @@ from odoo import _, http, release
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import py_to_js_locale
+from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
@@ -183,9 +185,8 @@ class AdyenController(http.Controller):
         """
         # Make the payment details request to Adyen
         provider_sudo = request.env['payment.provider'].browse(provider_id).sudo()
-        tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
-        idempotency_key = payment_utils.generate_idempotency_key(
-            tx_sudo, scope='payment_details_controller'
+        idempotency_key = hmac_tool(
+            request.env(su=True), 'payment_details_controller', json.dumps(payment_details)
         )
         response_content = provider_sudo._adyen_make_request(
             endpoint='/payments/details', payload=payment_details, method='POST',
@@ -198,7 +199,7 @@ class AdyenController(http.Controller):
             reference, pprint.pformat(response_content)
         )
         request.env['payment.transaction'].sudo()._handle_notification_data(
-            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
+            'adyen', response_content,
         )
 
         return response_content
