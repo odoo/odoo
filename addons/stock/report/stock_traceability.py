@@ -33,9 +33,13 @@ class StockTraceabilityReport(models.TransientModel):
                 Domain('product_id', '=', move_line.product_id.id),
                 Domain('lot_id', '=', move_line.lot_id.id),
             ])
+            parent_lines, children_lines = self._get_linked_move_lines(move_line)
             if line_type == 'parent':
+                # if manufacturing or repair
+                if parent_lines:
+                    lines = parent_lines
                 # if MTO
-                if move_line.move_id.move_orig_ids:
+                elif move_line.move_id.move_orig_ids:
                     lines = move_line.move_id.move_orig_ids.move_line_ids.filtered(
                         lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
                     ) - lines_seen
@@ -50,7 +54,10 @@ class StockTraceabilityReport(models.TransientModel):
                     continue
                 lines_seen |= lines
             elif line_type == 'child':
-                if move_line.move_id.move_dest_ids:
+                # if manufacturing or repair
+                if children_lines:
+                    lines = children_lines
+                elif move_line.move_id.move_dest_ids:
                     lines = move_line.move_id.move_dest_ids.move_line_ids.filtered(
                         lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
                     ) - lines_seen
@@ -71,7 +78,6 @@ class StockTraceabilityReport(models.TransientModel):
         model = kw.get('model_name') or context.get('model')
         record_id = kw.get('record_id') or context.get('active_id')
         level = kw.get('level') or 1
-        lines = self.env['stock.move.line']
         if record_id and model == 'stock.lot':
             base_domain = Domain.AND([
                 Domain('lot_id', '=', record_id),
@@ -86,11 +92,7 @@ class StockTraceabilityReport(models.TransientModel):
             return self._get_lot_lines(move_lines=lines, level=level, main_loc_ids=main_location_ids)
         elif record_id and model == 'stock.move.line' and line_type:
             move_line = self.env[model].browse(record_id)
-            parent_lines, children_lines = self._get_linked_move_lines(move_line)
-            if line_type == 'parent':
-                lines = parent_lines or self._get_related_move_lines(move_line, line_type)
-            elif line_type == 'child':
-                lines = children_lines or self._get_related_move_lines(move_line, line_type)
+            lines = self._get_related_move_lines(move_line, line_type)
             return self._get_move_lines(move_lines=lines, level=level, line_type=line_type)
         elif record_id and model == 'stock.picking':
             picking = self.env[model].browse(record_id)
