@@ -166,10 +166,14 @@ class WebsiteSaleL10nTW(WebsiteSale):
         order_sudo=False,
         **kwargs
     ):
+        """Override of `website_sale` to add default value for l10n_tw_edi_require_paper_format."""
         rendering_values = super()._prepare_address_form_values(*args, callback=callback, order_sudo=order_sudo, **kwargs)
-        partner_sudo = kwargs.get('partner_sudo') or (args[0] if args else None)
-        if partner_sudo and request.website.sudo().company_id.account_fiscal_country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
-            rendering_values["l10n_tw_edi_require_paper_format"] = partner_sudo.l10n_tw_edi_require_paper_format
+        if not order_sudo or rendering_values["is_anonymous_cart"]:
+            return rendering_values
+
+        company = order_sudo.company_id
+        if company.account_fiscal_country_id.code == "TW" and company._is_ecpay_enabled():
+            rendering_values["l10n_tw_edi_require_paper_format"] = order_sudo.partner_id.l10n_tw_edi_require_paper_format
         return rendering_values
 
     def _validate_address_values(self, address_values, partner_sudo, address_type, *args, **kwargs):
@@ -201,44 +205,35 @@ class WebsiteSaleL10nTW(WebsiteSale):
             callback='/my/addresses',
             required_fields=False,
             verify_address_values=True,
+            order_sudo=False,
             **form_data
     ):
-        partner_sudo, res = super()._create_or_update_address(
+        partner_sudo, feedback_dict = super()._create_or_update_address(
             partner_sudo,
             address_type=address_type,
             use_delivery_as_billing=use_delivery_as_billing,
             callback=callback,
             required_fields=required_fields,
             verify_address_values=verify_address_values,
+            order_sudo=order_sudo,
             **form_data
         )
+        if (
+            not order_sudo
+            or order_sudo.company_id.account_fiscal_country_id.code != "TW"
+            or not order_sudo.company_id._is_ecpay_enabled()
+        ):
+            return partner_sudo, feedback_dict
 
-        address_values, extra_form_data = self._parse_form_data(form_data)
+        # TODO: In 19.1 we always create parent company if user set `company_name` so we probably
+        # don't need this override
+        if partner_sudo.company_name and not partner_sudo.parent_id:
+            company_contact = request.env['res.partner'].sudo().create({
+                "name": partner_sudo.company_name,
+                "vat": partner_sudo.vat,
+                "company_type": "company",
+                "l10n_tw_edi_require_paper_format": True,
+            })
+            partner_sudo.parent_id = company_contact
 
-        if request.website.sudo().company_id.account_fiscal_country_id.code == 'TW' and request.website.sudo().company_id._is_ecpay_enabled():
-            order_sudo = request.cart
-            if address_values.get('company_name'):
-                l10n_tw_edi_is_print = True
-            else:
-                l10n_tw_edi_is_print = extra_form_data.get('l10n_tw_edi_require_paper_format') == "1"
-            if address_values.get('company_name'):  # B2B customer
-                # Create company contact if it does not exist
-                if not partner_sudo.parent_id:
-                    company_contact = request.env['res.partner'].sudo().create({
-                        'name': address_values.get('company_name'),
-                        'vat': address_values.get('vat'),
-                        'company_type': 'company',
-                        'l10n_tw_edi_require_paper_format': l10n_tw_edi_is_print,
-                    })
-                    partner_sudo.parent_id = company_contact
-                else:
-                    partner_sudo.parent_id.write({
-                        'name': address_values.get('company_name'),
-                        'vat': address_values.get('vat'),
-                        'l10n_tw_edi_require_paper_format': l10n_tw_edi_is_print,
-                    })
-            else:  # B2C customer
-                partner_sudo.l10n_tw_edi_require_paper_format = l10n_tw_edi_is_print
-
-            order_sudo.l10n_tw_edi_is_print = l10n_tw_edi_is_print
-        return partner_sudo, res
+        return partner_sudo, feedback_dict
