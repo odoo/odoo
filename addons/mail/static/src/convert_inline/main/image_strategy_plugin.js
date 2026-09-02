@@ -213,8 +213,6 @@ export class ImageStrategyPlugin extends Plugin {
         let needsFullWidthSpacing = false;
         if (width) {
             needsFullWidthSpacing = true;
-            // const parsedWidth = parseCssValue(width);
-            // needsFullWidthSpacing = parsedWidth.unit === "%";
         }
         const spacingNodeArgs = needsFullWidthSpacing
             ? { refs: { root: { style: { width: "100%" } } } }
