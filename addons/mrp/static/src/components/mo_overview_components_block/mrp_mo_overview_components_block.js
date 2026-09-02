@@ -100,4 +100,30 @@ export class MoOverviewComponentsBlock extends Component {
     hasComponentsBlock(replenishment) {
         return this.hasComponents(replenishment) && !this.state.fold[replenishment?.summary.index];
     }
+
+    filterComponentsToReplenish(components) {
+        return components.flatMap((component) => {
+            const replenishments = (component.replenishments ?? []).flatMap((replenishment) => {
+                const nestedComponents = this.filterComponentsToReplenish(
+                    replenishment.components ?? []
+                );
+                if (replenishment.summary?.model === "to_order" || nestedComponents.length) {
+                    return [{ ...replenishment, components: nestedComponents }];
+                }
+                return [];
+            });
+            if (component.summary?.state === "to_order" || replenishments.length) {
+                return [{ ...component, replenishments }];
+            }
+            return [];
+        });
+    }
+
+    get components() {
+        const components = this.props.components ?? [];
+        if (this.props.showOptions.toReplenish) {
+            return this.filterComponentsToReplenish(components);
+        }
+        return components;
+    }
 }

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mrp.MoOverviewComponentsBlock">
-        <t t-foreach="this.props.components" t-as="component" t-key="component.summary.index">
+        <t t-foreach="this.components" t-as="component" t-key="component.summary.index">
             <MoOverviewLine
                 data="component.summary"
                 hasFoldButton="this.hasReplenishments(component)"
@@ -27,12 +27,12 @@
                 </t>
             </t>
         </t>
-        <MoOverviewOperationsBlock
+        <MoOverviewOperationsBlock t-if="!this.props.showOptions.toReplenish"
             unfoldAll="this.state.unfoldAll"
             summary="this.props.operations.summary"
             operations="this.props.operations.details"
             showOptions="this.props.showOptions"/>
-        <MoOverviewByproductsBlock
+        <MoOverviewByproductsBlock t-if="!this.props.showOptions.toReplenish"
             unfoldAll="this.state.unfoldAll"
             summary="this.props.byproducts.summary"
             byproducts="this.props.byproducts.details"
