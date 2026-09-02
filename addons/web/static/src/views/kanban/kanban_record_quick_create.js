@@ -143,7 +143,7 @@ export class KanbanQuickCreateController extends Component {
                     return;
                 }
                 const target = this.mousedownTarget || ev.target;
-                if (!this.rootRef().contains(target)) {
+                if (this.rootRef() && !this.rootRef().contains(target)) {
                     const isSameOverlay =
                         this.rootRef().closest(".o-overlay-item") ===
                         target.closest(".o-overlay-item");
