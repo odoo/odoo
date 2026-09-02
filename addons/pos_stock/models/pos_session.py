@@ -49,7 +49,7 @@ class PosSession(models.Model):
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
             self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing()
-        super()._process_session_validation(balancing_account, amount_to_balance, bank_payment_method_diffs)
+        return super()._process_session_validation(balancing_account, amount_to_balance, bank_payment_method_diffs)
 
     def _create_picking_at_end_of_session(self):
         self.ensure_one()
