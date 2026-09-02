@@ -195,6 +195,14 @@ class ProductFeed(models.Model):
         products = self._get_feed_products()
         base_url = self.website_id.get_base_url()
 
+        # Fetch the pricelist rules applicable to the whole batch of products at once and cache
+        # them, instead of letting each product's price computation search for its own rules.
+        rules_cache = {}
+        request.pricelist.with_context(
+            website_sale_pricelist_rules_cache=rules_cache,
+        )._get_applicable_rules(products, fields.Datetime.now())
+        products = products.with_context(website_sale_pricelist_rules_cache=rules_cache)
+
         def format_product_link(url_):
             if self.pricelist_id:
                 parsed_url = url_parse(url_)

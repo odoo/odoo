@@ -129,3 +129,21 @@ class ProductPricelist(models.Model):
             '&', ('website_id', '=', False),
             '|', ('selectable', '=', True), ('code', '!=', False),
         ]
+
+    def _get_applicable_rules(self, products, date, **kwargs):
+        """Reuse a batch-fetched set of rules when rendering large product listings.
+
+        Computing prices product by product (e.g. for the GMC feed) would otherwise search
+        `product.pricelist.item` once per product. When `website_sale_pricelist_rules_cache` is
+        set in the context, the rules matching the full batch of products are fetched once and
+        reused for every narrower request, since they are a superset of the rules matching any
+        single product from that batch.
+        """
+        rules_cache = self.env.context.get('website_sale_pricelist_rules_cache')
+        if rules_cache is None:
+            return super()._get_applicable_rules(products, date, **kwargs)
+
+        self.ensure_one()
+        if self.id not in rules_cache:
+            rules_cache[self.id] = super()._get_applicable_rules(products, date, **kwargs)
+        return rules_cache[self.id]
