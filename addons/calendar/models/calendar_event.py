@@ -1055,7 +1055,7 @@ class CalendarEvent(models.Model):
                     force_send=True,
                 )
 
-        if 'videocall_location' in values or update_time:
+        if 'videocall_location' in values or 'is_draft' in values or update_time:
             self._ensure_videocall_channels()
         if 'name' in values or update_time:
             self._sync_videocall_channels()
@@ -1328,6 +1328,8 @@ class CalendarEvent(models.Model):
             if event.stop and event.stop < now:
                 continue
             if event.recurrency and not event.recurrence_id:
+                continue
+            if event.is_draft:
                 continue
             event._create_videocall_channel()
 

@@ -43,7 +43,9 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
 
     getFullEventContext() {
         const context = getDefaultValuesFromRecord(this.model.root.data);
-        context.default_is_draft = true;
+        if (!this.props.context.disable_event_creation_as_draft) {
+            context.default_is_draft = true;
+        }
         return context;
     }
 
