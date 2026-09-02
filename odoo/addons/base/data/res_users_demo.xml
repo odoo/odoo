@@ -37,7 +37,7 @@
             <field name="password">demo</field>
             <field name="signature" type="html"><div>Mr Demo</div></field>
             <field name="company_id" ref="main_company"/>
-            <field name="group_ids" eval="[Command.set([ref('base.group_user_regular'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+            <field name="group_ids" eval="[Command.set([ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
             <field name="image_1920" type="bytes" file="base/static/img/user_demo-image.png"/>
         </record>
 
