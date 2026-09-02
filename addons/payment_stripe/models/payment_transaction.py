@@ -132,8 +132,6 @@ class PaymentTransaction(models.Model):
             'expand[]': 'payment_method',
             **stripe_utils.include_shipping_address(self),
         }
-        if payment_method_type == "sepa_direct_debit":
-            payment_intent_payload["statement_descriptor"] = self.reference[:22]
         if self.operation in ['online_token', 'offline']:
             if not self.token_id.stripe_payment_method:  # Pre-SCA token, migrate it.
                 self.token_id._stripe_sca_migrate_customer()
