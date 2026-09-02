@@ -55,6 +55,20 @@ class ProjectShareWizard(models.TransientModel):
     share_link = fields.Char("Share Link")
     collaborator_ids = fields.One2many('project.share.collaborator.wizard', 'parent_wizard_id', string='Collaborators')
     existing_partner_ids = fields.Many2many('res.partner', compute='_compute_existing_partner_ids', export_string_translation=False)
+    partners_no_email = fields.Many2many('res.partner', string="Partner without email",
+        compute="_compute_partners_no_email", export_string_translation=False)
+    all_partners_have_email = fields.Boolean(compute='_compute_all_partners_have_email', export_string_translation=False)
+
+    @api.depends('collaborator_ids')
+    def _compute_partners_no_email(self):
+        for wizard in self:
+            wizard.partners_no_email = wizard.collaborator_ids.filtered(
+                lambda c: not c.partner_id.email and c.send_invitation).mapped('partner_id')
+
+    @api.depends('partners_no_email.email')
+    def _compute_all_partners_have_email(self):
+        for wizard in self:
+            wizard.all_partners_have_email = all(partner.email for partner in wizard.partners_no_email) if wizard.partners_no_email else True
 
     @api.depends('res_model', 'res_id')
     def _compute_resource_ref(self):
@@ -138,35 +152,40 @@ class ProjectShareWizard(models.TransientModel):
         self.ensure_one()
         if not self.collaborator_ids:
             return
+        action = self.env["ir.actions.actions"]._for_xml_id("project.project_share_wizard_action")
+        action['res_id'] = self.id
+        if self.partners_no_email and self.collaborator_ids.partner_id.has_access('write'):
+            action.update({
+                'name': self.env._('No Email Address for Collaborators'),
+                'views': [(self.env.ref('project.partner_no_email_list_wizard').id, 'form')],
+            })
+            return action
         on_invite = self.env['res.users']._get_signup_invitation_scope() == 'b2b'
         new_portal_user = self.collaborator_ids.filtered(lambda c: c.send_invitation and not c.partner_id.user_ids) and on_invite
         if not new_portal_user:
             return self.action_send_mail()
-        return {
+        action.update({
             'name': _('Confirmation'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
             'views': [(self.env.ref('project.project_share_wizard_confirm_form').id, 'form')],
-            'res_model': 'project.share.wizard',
-            'res_id': self.id,
-            'target': 'new',
             'context': self.env.context,
-        }
+        })
+        return action
 
     def action_send_mail(self):
         result = {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'type': 'success',
-                'message': _("Project shared with your collaborators."),
-                'next': {'type': 'ir.actions.act_window_close'},
-            }}
+                'type': 'danger',
+                'message': self.env._("The project has already been shared, or there are no collaborators to share with."),
+            },
+        }
         partner_ids_in_readonly_mode = []
         partner_ids_in_edit_mode = []
-        for collaborator in self.collaborator_ids:
-            if not collaborator.send_invitation:
-                continue
+        partners = self.collaborator_ids.filtered(lambda c: c.send_invitation and c.partner_id.email)
+        if not partners:
+            return result
+        for collaborator in partners:
             if collaborator.access_mode == 'read':
                 partner_ids_in_readonly_mode.append(collaborator.partner_id.id)
             else:
@@ -178,4 +197,18 @@ class ProjectShareWizard(models.TransientModel):
         if partner_ids_in_readonly_mode:
             self.partner_ids = self.env['res.partner'].browse(partner_ids_in_readonly_mode)
             super().action_send_mail()
+
+        if self.partners_no_email:
+            notification_type = "info"
+            message = self.env._("Project shared — partners without a work email were skipped.")
+        else:
+            notification_type = "success"
+            message = self.env._("Project shared with your collaborators.")
+        result.update({
+            'params': {
+                'type': notification_type,
+                'message': message,
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        })
         return result
