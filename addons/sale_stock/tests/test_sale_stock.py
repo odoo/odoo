@@ -1474,7 +1474,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         incoterm = self.env['account.incoterms'].create({
             'name': 'Test Incoterm',
-            'code': 'TEST',
+            'code': 'TES',
         })
 
         so = self.env['sale.order'].create({

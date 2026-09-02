@@ -78,7 +78,7 @@ class TestUi(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon):
             'email': 'admin@yourcompany.example.com',
         })
 
-        cls.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH - Test'})
+        cls.env['account.journal'].create({'name': 'Cash - Test', 'type': 'cash', 'code': 'CASH-T'})
 
     def test_admin(self):
         self.env['product.pricelist'].sudo().with_context(active_test=False).search([]).unlink()

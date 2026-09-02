@@ -430,19 +430,32 @@ class test_string_field(ImporterCase):
             [
                 ['foobar'],
                 ['foobarbaz'],
-                ['Með suð í eyrum við spilum endalaust'],
-                ["People 'get' types. They use them all the time. Telling someone he can't pound a nail with a banana doesn't much surprise him."],
             ],
         )
-        self.assertEqual(len(result['ids']), 4)
+        self.assertEqual(len(result['ids']), 2)
         self.assertFalse(result['messages'])
         self.assertEqual(
             [
                 "foobar",
                 "foobarbaz",
-                "Með suð í eyrum ",
-                "People 'get' typ",
             ],
+            values(self.read()),
+        )
+
+    @mute_logger('odoo.sql_db')
+    def test_imported_too_long(self):
+        result = self.import_(
+            ['value'],
+            [
+                ['foobar'],
+                ['foobarbaz'],
+                ['Með suð í eyrum við spilum endalaust'],
+            ],
+        )
+        self.assertEqual(result['ids'], False)
+        self.assertEqual(result['messages'][0]['rows']['from'], 2, "Failed row at index 2")
+        self.assertIn('too long', result['messages'][0]['message'])
+        self.assertFalse(
             values(self.read()),
         )
 
