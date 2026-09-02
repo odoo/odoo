@@ -488,36 +488,37 @@ class PosOrderReceipt(models.AbstractModel):
 
         return "".join(map(str, raster_data)), padded_width, height
 
+    def _image_to_epos_raster_xml(self, image_bytes: bytes):
+        # Wkhtmltoimage doesn't works in tests see def _run_wkhtmltoimage in ir.actions.report
+        if modules.module.current_test:
+            raster_str = "10101010"
+            actual_width = 100
+            actual_height = 100
+        else:
+            raster_str, actual_width, actual_height = self._canvas_to_raster(image_bytes)
+
+        # Pack 8 pixels per byte, mirroring JS encodeRaster()
+        encoded = bytearray()
+        for i in range(0, len(raster_str), 8):
+            byte_str = raster_str[i:i + 8].ljust(8, '0')
+            encoded.append(int(byte_str, 2))
+
+        b64 = base64.b64encode(bytes(encoded)).decode('ascii')
+        return (
+            f'<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">'
+            f'<s:Body>'
+            f'<epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">'
+            f'<image width="{actual_width}" height="{actual_height}" align="center">{b64}</image>'
+            f'<cut type="feed"/>'
+            f'</epos-print>'
+            f'</s:Body>'
+            f'</s:Envelope>'
+        )
+
     def _order_change_receipts_generate_raster(self, prep_categ_ids=None):
         images = self._order_change_receipt_generate_images(prep_categ_ids)
-        processed = []
+        return [self._image_to_epos_raster_xml(image_bytes) for image_bytes in images]
 
-        # Wkhtmltoimage doesn't works in tests see def _run_wkhtmltoimage in ir.actions.report
-        for image_bytes in images:
-            if modules.module.current_test:
-                raster_str = "10101010"
-                actual_width = 100
-                actual_height = 100
-            else:
-                raster_str, actual_width, actual_height = self._canvas_to_raster(image_bytes)
-
-            # Pack 8 pixels per byte, mirroring JS encodeRaster()
-            encoded = bytearray()
-            for i in range(0, len(raster_str), 8):
-                byte_str = raster_str[i:i + 8].ljust(8, '0')
-                encoded.append(int(byte_str, 2))
-
-            b64 = base64.b64encode(bytes(encoded)).decode('ascii')
-            xml = (
-                f'<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">'
-                f'<s:Body>'
-                f'<epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">'
-                f'<image width="{actual_width}" height="{actual_height}" align="center">{b64}</image>'
-                f'<cut type="feed"/>'
-                f'</epos-print>'
-                f'</s:Body>'
-                f'</s:Envelope>'
-            )
-            processed.append(xml)
-
-        return processed
+    def _order_receipt_generate_raster(self, basic_receipt=False):
+        image_bytes = self.order_receipt_generate_image(basic_receipt)
+        return self._image_to_epos_raster_xml(image_bytes)
