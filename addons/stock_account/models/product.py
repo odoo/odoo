@@ -384,6 +384,8 @@ class ProductProduct(models.Model):
                     continue
                 qty_by_move[moves[0]] += remaining_qty
                 for move in moves[1:]:
+                    if not move.is_in and not move.is_out:
+                        continue
                     qty_by_move[move] += move._get_valued_qty(lot)
             if not qty_by_move:
                 continue
@@ -563,18 +565,20 @@ class ProductProduct(models.Model):
         # Going up to get the quantity in the argument
         while quantity > 0 and fifo_stack:
             move = fifo_stack.pop(0)
+            with_owner = not move.is_in and not move.is_out
             last_move = move
-            move_value = move.value
+            move_value = move.value if not with_owner else 0
+            qty_on_first_move = qty_on_first_move if not with_owner else move.quantity
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
-                in_value = move_value * in_qty / valued_qty
+                in_value = (move_value * in_qty / valued_qty) if valued_qty else 0
                 qty_on_first_move = 0
             else:
-                in_qty = move._get_valued_qty(lot=lot)
+                in_qty = move._get_valued_qty(lot=lot) if not with_owner else move.quantity
                 in_value = move_value
                 if lot:
-                    valued_qty = move._get_valued_qty()
+                    valued_qty = move._get_valued_qty() if not with_owner else move.quantity
                     in_value = in_value * in_qty / valued_qty if valued_qty else 0
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
@@ -593,6 +597,7 @@ class ProductProduct(models.Model):
         # TODO: return a list of tuple (move, valued_qty) instead
         external_location = location and location.is_valued_external
         fifo_stack = []
+        owned_fifo_stack = []
         fifo_stack_size = 0
         if location:
             self = self.with_context(location=location.ids)  # noqa: PLW0642
@@ -619,7 +624,12 @@ class ProductProduct(models.Model):
         if external_location:
             moves_domain &= Domain([('is_out', '=', True)])
         else:
-            moves_domain &= Domain([('is_in', '=', True)])
+            valued_internal_locations = self.env['stock.location'].with_context(
+                active_test=False).sudo().search([('is_valued_internal', '=', True)])
+            moves_domain &= Domain([
+                ('location_dest_id', 'in', valued_internal_locations.ids),
+                ('location_id', 'not in', valued_internal_locations.ids),
+            ])
 
         # Arbitrary limit as we can't guess how many moves correspond to the qty_available, but avoid fetching all moves at the same time.
         initial_limit = 100
@@ -632,7 +642,10 @@ class ProductProduct(models.Model):
             move = moves_in[0].with_prefetch(moves_in.ids)
             moves_in = moves_in[1:]
             in_qty = move._get_valued_qty(lot=lot)
-            fifo_stack.append(move)
+            if not move.is_in and not move.is_out:
+                owned_fifo_stack.append(move)
+            else:
+                fifo_stack.append(move)
             remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
             fifo_stack_size -= in_qty
             if self.uom_id.compare(fifo_stack_size, 0) > 0 and not moves_in:
@@ -640,6 +653,7 @@ class ProductProduct(models.Model):
                 current_offset += 1
                 moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', offset=current_offset * initial_limit, limit=initial_limit)
         fifo_stack.reverse()
+        fifo_stack.extend(owned_fifo_stack)
         return fifo_stack, remaining_qty_on_first_stack_move
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
