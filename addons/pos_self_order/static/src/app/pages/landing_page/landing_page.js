@@ -21,6 +21,8 @@ export class LandingPage extends Component {
                     order.delete();
                 }
                 this.selfOrder.selectedOrderUuid = null;
+                this.selfOrder.computeAvailableCategories();
+                this.selfOrder.resetCategorySelection();
             }
             this.selfOrder.rpcLoading = false;
         });
