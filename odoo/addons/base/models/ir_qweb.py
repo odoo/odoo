@@ -784,6 +784,8 @@ class IrQWeb(models.AbstractModel):
                         yield from {def_name}_content(self, values)
                     except QWebException:
                         raise
+                    except AccessError:
+                        raise
                     except Exception as e:
                         if isinstance(e, TransactionRollbackError):
                             raise
