@@ -3,9 +3,11 @@
 .o_form_view {
     @include media-breakpoint-down(md) {
         --field-spacing-unit: 8px;
+        --o-field-box-spacing: #{map-get($spacers, 3)};
         --o-field-box-border-color: var(--gray-300);
 
         %-o-field-box {
+            margin-bottom: var(--o-field-box-spacing);
             border-radius: calc(.5 * var(--field-spacing-unit));
             border: 1px solid var(--o-field-box-border-color);
             padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
@@ -114,7 +116,6 @@
 
                 .o_property_field_value {
                     @extend %-o-field-box;
-                    margin-bottom: map-get($spacers, 3);
                 }
 
                 label {
