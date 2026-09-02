@@ -296,7 +296,7 @@ class WebsiteForum(WebsiteProfile):
             & Domain('can_view', '=', True)
         )
         slug = env['ir.http']._slug
-        for forum_post in ForumPost.search(dom):
+        for forum_post in ForumPost.search(dom).with_context(prefetch_fields=False):
             loc = f'/forum/{slug(forum_post.forum_id)}/{slug(forum_post)}'
             if not qs or qs.lower() in loc:
                 yield {'loc': loc, 'lastmod': forum_post.write_date.date()}
