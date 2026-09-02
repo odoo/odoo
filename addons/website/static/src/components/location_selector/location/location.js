@@ -6,13 +6,14 @@ export class Location extends Component {
     static components = { LocationSchedule };
     static template = "website.locationSelector.location";
     props = useProps({
+        additionalData: t.object().optional(),
         id: t.string(),
         number: t.number(),
         name: t.string(),
         street: t.string(),
         city: t.string(),
         zipCode: t.string(),
-        openingHours: t.record(t.array(t.string()).optional()),
+        openingHours: t.record(t.array(t.string()).optional()).optional({}),
         additionalData: t.object().optional(),
         isSelected: t.boolean(),
         setSelectedLocation: t.function(),
