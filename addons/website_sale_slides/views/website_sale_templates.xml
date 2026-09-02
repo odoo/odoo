@@ -19,7 +19,7 @@
                 <div class="col-4 p-0">
                     <div t-if="course.image_1920" class="h-100 w-100 overflow-hidden ratio ratio-4x3 rounded-start" t-field="course.image_1920" t-options="{'widget': 'image', 'class': 'img img-fluid object-fit-cover'}"/>
                     <div t-else="" class="h-100 w-100 overflow-hidden ratio ratio-4x3 rounded-start">
-                        <img class="img img-fluid object-fit-cover" src="/website_slides/static/src/img/channel-training-default.jpg"/>
+                        <img class="img img-fluid object-fit-cover" src="/website_slides/static/src/img/channel-training-default.jpg" t-att-alt="course.name"/>
                     </div>
                 </div>
                 <t t-set="invitation_link" t-value="course_memberships[course].invitation_link if course in course_memberships else ''"/>
