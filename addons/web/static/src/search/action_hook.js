@@ -71,7 +71,11 @@ export function useSetupAction(params = {}) {
     } = params;
 
     if (beforeVisibilityChange) {
-        useListener(document, "visibilitychange", beforeVisibilityChange);
+        useListener(document, "visibilitychange", (ev) => {
+            if (rootRef()) {
+                beforeVisibilityChange(ev);
+            }
+        });
     }
 
     if (beforeUnload) {

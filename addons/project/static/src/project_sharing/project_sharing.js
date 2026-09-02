@@ -21,11 +21,13 @@ export class ProjectSharingWebClient extends Component {
                 this.state.fullscreen = mode === "fullscreen";
             }
         });
+        this.isMounted = false;
         onMounted(() => {
             this.loadRouterState();
             // the chat window and dialog services listen to 'web_client_ready' event in
             // order to initialize themselves:
             this.env.bus.trigger("WEB_CLIENT_READY");
+            this.isMounted = true;
         });
         useListener(window, "click", this.onGlobalClick.bind(this), { capture: true });
     }
@@ -57,6 +59,7 @@ export class ProjectSharingWebClient extends Component {
         // we let the browser do the default behavior and
         // we do not want any other listener to execute.
         if (
+            this.isMounted &&
             (ev.ctrlKey || ev.metaKey) &&
             !ev.target.isContentEditable &&
             ((ev.target instanceof HTMLAnchorElement && ev.target.href) ||

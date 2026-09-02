@@ -611,7 +611,7 @@ class PickerMobileInDialog extends PickerMobile {
             window,
             "click",
             (ev) => {
-                if (ev.target !== this.root.el && !this.root.el.contains(ev.target)) {
+                if (ev.target !== this.root.el && !this.root.el?.contains(ev.target)) {
                     this.props.close?.();
                 }
             },

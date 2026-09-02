@@ -475,7 +475,7 @@ export class AutoComplete extends Component {
     }
 
     externalClose(ev) {
-        if (this.isOpened && !this.root.el.contains(ev.target)) {
+        if (this.isOpened && this.root.el && !this.root.el.contains(ev.target)) {
             this.cancel();
         }
     }
