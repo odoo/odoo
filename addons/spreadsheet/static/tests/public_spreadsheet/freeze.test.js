@@ -1,5 +1,5 @@
 import { animationFrame, describe, expect, test } from "@odoo/hoot";
-import { Model, registries } from "@odoo/o-spreadsheet";
+import { Model, registries, constants, helpers } from "@odoo/o-spreadsheet";
 import { createSpreadsheetWithChart } from "@spreadsheet/../tests/helpers/chart";
 import {
     addGlobalFilter,
@@ -9,9 +9,15 @@ import {
     setGlobalFilterValue,
     createCarousel,
     addChartFigureToCarousel,
+    updatePivot,
 } from "@spreadsheet/../tests/helpers/commands";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { getCell, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
+import {
+    getCell,
+    getEvaluatedCell,
+    getComputedStyle,
+    getComputedBorder,
+} from "@spreadsheet/../tests/helpers/getters";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 import {
     createModelWithDataSource,
@@ -22,6 +28,8 @@ import { freezeOdooData, waitForDataLoaded } from "@spreadsheet/helpers/model";
 import { OdooPivot, OdooPivotRuntimeDefinition } from "@spreadsheet/pivot/odoo_pivot";
 
 const { pivotRegistry } = registries;
+const { PIVOT_STATIC_TABLE_CONFIG } = constants;
+const { toXC } = helpers;
 
 import { getMenuServerData } from "@spreadsheet/../tests/links/menu_data_utils";
 import { createSpreadsheetWithList } from "../helpers/list";
@@ -31,7 +39,9 @@ defineSpreadsheetModels();
 
 test("odoo pivot functions are replaced with their value", async function () {
     const { model } = await createSpreadsheetWithPivot({ pivotType: "static" });
-    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"bar",FALSE)'
+    );
     expect(getCell(model, "C3").compiledFormula.toFormulaString(model.getters)).toBe(
         '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
     );
@@ -83,7 +93,9 @@ test("Pivot with a type different of ODOO is not converted", async function () {
 
 test("values are not exported formatted", async function () {
     const { model } = await createSpreadsheetWithPivot({ pivotType: "static" });
-    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe('=PIVOT.HEADER(1,"bar",FALSE)');
+    expect(getCell(model, "A3").compiledFormula.toFormulaString(model.getters)).toBe(
+        '=PIVOT.HEADER(1,"bar",FALSE)'
+    );
     expect(getCell(model, "C3").compiledFormula.toFormulaString(model.getters)).toBe(
         '=PIVOT.VALUE(1,"probability:avg","bar",FALSE,"foo",2)'
     );
@@ -332,11 +344,72 @@ test("spilled pivot table", async function () {
     expect(cells.B12).toBe("131");
     expect(data.formats[sheet.formats.B12]).toBe("#,##0.00");
     expect(data.pivots).toEqual({});
-    expect(sheet.styles).toEqual({ B12: 1 });
     expect(data.styles[sheet.styles["B12"]]).toEqual(
-        { bold: true },
+        { bold: true, hideGridLines: true },
         { message: "style is preserved" }
     );
+});
+
+test("Dynamic table of an array odoo formula is frozen", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+          <pivot>
+              <field name="probability" type="measure"/>
+          </pivot>
+        `,
+    });
+    const pivotId = model.getters.getPivotIds()[0];
+    updatePivot(model, pivotId, { style: { tableStyleId: "None" } });
+    const sheetId = model.getters.getActiveSheetId();
+    setCellContent(model, "A10", "=PIVOT(1)");
+    model.dispatch("CREATE_TABLE", {
+        tableType: "dynamic",
+        sheetId,
+        ranges: [model.getters.getRangeDataFromXc(sheetId, "A10:B12")],
+        config: { ...PIVOT_STATIC_TABLE_CONFIG },
+    });
+    setCellStyle(model, "B12", { bold: true });
+    const data = await freezeOdooData(model);
+
+    const importedModel = new Model(data);
+    expect(importedModel.getters.getTables(sheetId)).toHaveLength(0);
+
+    for (let row = 9; row <= 11; row++) {
+        for (let col = 0; col <= 1; col++) {
+            const xc = toXC(col, row);
+            expect(getComputedStyle(importedModel, xc)).toEqual(getComputedStyle(model, xc));
+            expect(getComputedBorder(importedModel, xc)).toEqual(getComputedBorder(model, xc));
+        }
+    }
+});
+
+test("Pivot table style is frozen", async function () {
+    const { model } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+          <pivot>
+              <field name="probability" type="measure"/>
+          </pivot>
+        `,
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    setCellContent(model, "A10", "=PIVOT(1)");
+    model.dispatch("CREATE_TABLE", {
+        tableType: "dynamic",
+        sheetId,
+        ranges: [model.getters.getRangeDataFromXc(sheetId, "A10:B12")],
+        config: { ...PIVOT_STATIC_TABLE_CONFIG },
+    });
+    setCellStyle(model, "B12", { bold: true });
+    const data = await freezeOdooData(model);
+
+    const importedModel = new Model(data);
+    for (let row = 9; row <= 12; row++) {
+        for (let col = 0; col <= 1; col++) {
+            const xc = toXC(col, row);
+            expect(getComputedStyle(importedModel, xc)).toEqual(getComputedStyle(model, xc));
+            expect(getComputedBorder(importedModel, xc)).toEqual(getComputedBorder(model, xc));
+        }
+    }
 });
 
 test('empty string computed measure is exported as =""', async function () {
