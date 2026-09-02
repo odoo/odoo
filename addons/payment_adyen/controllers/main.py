@@ -192,7 +192,7 @@ class AdyenController(http.Controller):
             reference, pprint.pformat(response_content)
         )
         request.env['payment.transaction'].sudo()._handle_notification_data(
-            'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
+            'adyen', response_content,
         )
 
         return response_content
