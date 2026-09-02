@@ -3,7 +3,7 @@
 
     <t t-name="web.TextField">
         <t t-if="this.props.readonly">
-            <span t-out="this.props.record.data[this.props.name] or ''" />
+            <span t-out="this.value" />
         </t>
         <t t-else="">
             <textarea

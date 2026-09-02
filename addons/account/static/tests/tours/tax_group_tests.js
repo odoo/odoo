@@ -58,7 +58,7 @@ registry.category("web_tour.tours").add('account_tax_group', {
     },
     {
         content: "Select input",
-        trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
+        trigger: 'div[name="invoice_line_ids"] .o_selected_row div[name="product_id"] input',
         run: "edit Account Tax Group Product",
     },
     {

@@ -82,14 +82,14 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] textarea`,
+        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=name] textarea`,
         content: _t("Add a description to your item."),
         tooltipPosition: "bottom",
         run: "edit A very useful description.",
     },
     {
         isActive: ["auto"],
-        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] textarea`,
+        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=name] textarea`,
         run: function () {
             // Since the t-on-change of the input is not triggered by the run: "edit" action,
             // we need to dispatch the event manually requiring a function.

@@ -37,7 +37,7 @@
                         invisible="not l10n_my_edi_state or (l10n_my_edi_state not in ['in_progress', 'valid']) or (l10n_my_edi_state == 'rejected' and move_type not in ('out_invoice', 'out_refund'))"/>
             </xpath>
             <!-- Add the classification code to the invoice lines -->
-            <xpath expr="//field[@name='invoice_line_ids']/list/field[@name='name']" position="after">
+            <xpath expr="//field[@name='invoice_line_ids']/list/column[@name='product_and_description']" position="after">
                 <field name="l10n_my_edi_classification_code" optional="hide"/>
             </xpath>
             <!-- There are quite a few fields, and with other modules adding some too it would be too messy to not put them in a tab. -->
