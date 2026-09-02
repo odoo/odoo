@@ -14,6 +14,8 @@ from odoo.tools import OrderedSet, config, parse_version
 
 _logger = logging.getLogger(__name__)
 
+MODULE_TO_CHANGE_DOMAIN = [('state', 'in', ['to install', 'to upgrade', 'to remove'])]
+
 
 class Module(Command):
     """ Manage modules, install demo data """
@@ -48,12 +50,19 @@ class Module(Command):
             description="Install demonstration data (force)",
         )
         force_demo_parser.set_defaults(func=self._force_demo)
+        list_parser = subparsers.add_parser(
+            'list',
+            help="List modules",
+            description="List modules",
+        )
+        list_parser.set_defaults(func=self._list_modules)
 
         for parser in (
             install_parser,
             uninstall_parser,
             upgrade_parser,
             force_demo_parser,
+            list_parser,
         ):
             parser.formatter_class = argparse.RawDescriptionHelpFormatter
             parser.add_argument(
@@ -64,6 +73,13 @@ class Module(Command):
                 help="database name, connection details will be taken from the config file")
             parser.add_argument("-D", "--data-dir", dest="data_dir",
                  help="directory where to store Odoo data")
+        for parser in (
+            install_parser,
+            uninstall_parser,
+            upgrade_parser,
+        ):
+            parser.add_argument("-n", "--dry-run", dest="dry_run", action='store_true',
+                 help="simulate changes")
 
         install_parser.add_argument(
             'modules', nargs='+', metavar='MODULE',
@@ -124,28 +140,37 @@ class Module(Command):
             or self._get_zip_path(module)
         }
 
-    def _get_module_model(self, env):
-        Module = env['ir.module.module']
-        Module.update_list()
-        return Module
-
-    def _get_all_installed_modules(self, env):
-        return self._get_module_model(env).search([['state', '=', 'installed']])
-
-    def _get_modules(self, env, module_names):
-        return self._get_module_model(env).search([('name', 'in', module_names)])
-
     @contextmanager
     def _create_env_context(self, db_name):
         with Registry.new(db_name).cursor() as cr:
             yield Environment(cr, SUPERUSER_ID, {})
 
+    def show_modules(self, modules, show_state=False, show_version=False):
+        for module in modules:
+            info = [module.name]
+            if show_version:
+                if module.state == 'to upgrade' and module.latest_version != module.installed_version:
+                    info.extend((module.latest_version, '->', module.installed_version))
+                elif v := module.latest_version:
+                    info.append(v)
+            if show_state:
+                info.append(f'({module.state})')
+            info.extend(('-', module.shortdesc or '(empty)'))
+            print(*info)  # noqa: T201
+
     def _install(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
 
             valid_module_names = self._get_module_names(parsed_args.modules)
-            installable_modules = self._get_modules(env, valid_module_names)
-            if installable_modules:
+            Module = env['ir.module.module']
+            Module.update_list()
+            installable_modules = Module.search([('name', 'in', valid_module_names)])
+            if parsed_args.dry_run:
+                _logger.info("Dry-run")
+                installable_modules.button_install()
+                self.show_modules(Module.search(MODULE_TO_CHANGE_DOMAIN))
+                env.cr.rollback()
+            elif installable_modules:
                 installable_modules.button_immediate_install()
 
             non_installable_modules = OrderedSet(
@@ -161,29 +186,54 @@ class Module(Command):
             if importable_zipfiles:
                 if 'imported' not in env['ir.module.module']._fields:
                     _logger.warning("Cannot import data modules unless the `base_import_module` module is installed")
+                elif parsed_args.dry_run:
+                    _logger.warning("Dry-run does not support importable zip files")
                 else:
                     for importable_zipfile in importable_zipfiles:
                         env['ir.module.module']._import_zipfile(importable_zipfile)
 
     def _upgrade(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
+            Module = env['ir.module.module']
+            Module.update_list()
             if 'all' in parsed_args.modules:
-                upgradable_modules = self._get_all_installed_modules(env)
+                upgradable_modules = Module.search([('state', '=', 'installed')])
             else:
                 valid_module_names = self._get_module_names(parsed_args.modules)
-                upgradable_modules = self._get_modules(env, valid_module_names)
+                upgradable_modules = Module.search([('name', 'in', valid_module_names)])
             if parsed_args.outdated:
                 upgradable_modules = upgradable_modules.filtered(
                     lambda x: parse_version(x.installed_version) > parse_version(x.latest_version),
                 )
-            if upgradable_modules:
+            if parsed_args.dry_run:
+                _logger.info("Dry-run")
+                upgradable_modules.button_upgrade()
+                self.show_modules(Module.search(MODULE_TO_CHANGE_DOMAIN), show_version=True)
+                env.cr.rollback()
+            elif upgradable_modules:
                 upgradable_modules.button_immediate_upgrade()
 
     def _uninstall(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
-            if modules := self._get_modules(env, parsed_args.modules):
-                modules.button_immediate_uninstall()
+            Module = env['ir.module.module']
+            if modules := Module.search([('name', 'in', parsed_args.modules)]):
+                Module.update_list()
+                if parsed_args.dry_run:
+                    _logger.info("Dry-run")
+                    modules.button_uninstall()
+                    self.show_modules(Module.search(MODULE_TO_CHANGE_DOMAIN))
+                    env.cr.rollback()
+                else:
+                    modules.button_immediate_uninstall()
 
     def _force_demo(self, parsed_args):
         with self._create_env_context(parsed_args.db_name) as env:
             force_demo(env)
+
+    def _list_modules(self, parsed_args):
+        with self._create_env_context(parsed_args.db_name) as env:
+            Module = env['ir.module.module']
+            _logger.info("Listing modules")
+            self.show_modules(Module.search([('state', '=', 'installed')]), show_version=True)
+            if modules := Module.search(MODULE_TO_CHANGE_DOMAIN):
+                self.show_modules(modules, show_state=True, show_version=True)
