@@ -255,10 +255,10 @@ class ChannelMember(models.Model):
         sfu_server_url = discuss.get_sfu_url(self.env)
         if not sfu_server_url:
             return
-        sfu_server_key = discuss.get_sfu_key(self.env)
+        channel_key = discuss.get_derived_sfu_key(self.env, self.channel_id.id)
         json_web_token = jwt.sign(
-            {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}"},
-            key=sfu_server_key,
+            {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}", "key": channel_key},
+            key=discuss.get_sfu_key(self.env),
             ttl=30,
             algorithm=jwt.Algorithm.HS256,
         )
@@ -279,7 +279,7 @@ class ChannelMember(models.Model):
             [
                 session.guest_id or session.partner_id,
                 "discuss.channel.rtc.session/sfu_hot_swap",
-                {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=sfu_server_key)},
+                {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=channel_key)},
             ]
             for session in self.channel_id.rtc_session_ids
         ]
@@ -291,14 +291,18 @@ class ChannelMember(models.Model):
         if not sfu_channel_uuid or not sfu_server_url:
             return None
         if not key:
-            key = discuss.get_sfu_key(self.env)
+            key = discuss.get_derived_sfu_key(self.env, self.channel_id.id)
         claims = {
             "sfu_channel_uuid": sfu_channel_uuid,
             "session_id": rtc_session.id,
             "ice_servers": ice_servers,
         }
         json_web_token = jwt.sign(claims, key=key, ttl=60 * 60 * 8, algorithm=jwt.Algorithm.HS256)  # 8 hours
-        return {"url": sfu_server_url, "jsonWebToken": json_web_token}
+        return {
+            "url": sfu_server_url,
+            "channelUUID": sfu_channel_uuid,
+            "jsonWebToken": json_web_token,
+        }
 
     def _rtc_leave_call(self):
         self.ensure_one()
