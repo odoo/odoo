@@ -7,12 +7,16 @@
         padding: 0;
     }
 
-    i {
-        &.fa-bell,&.fa-bell-o {
-            color: $o-gray-600;
-            -webkit-text-stroke-color: $o-gray-600;
-        }
+    &.reminder_off {
+        .o_wetrack_js_reminder_on { display: none; }
+        .o_wetrack_js_reminder_off { display: inline; }
     }
+
+    &.reminder_on {
+        .o_wetrack_js_reminder_on { display: inline; }
+        .o_wetrack_js_reminder_off { display: none; }
+    }
+
 }
 
 /*
