@@ -6137,7 +6137,7 @@ class AccountMove(models.Model):
                 if move_n1.made_sequence_gap != n1_made_gap:
                     move_n1.made_sequence_gap = n1_made_gap
 
-            if move_p1 and (not is_computed_with_mixin(current_move) or current_move.state != 'posted'):
+            if move_p1 and (not is_computed_with_mixin(current_move) or current_move.state != 'posted' or move_p1.state != 'posted'):
                 p1_made_gap = bool(check_around(move_p2, move_p1, self.browse() if invalidate_current else current_move))
                 if move_p1.made_sequence_gap != p1_made_gap:
                     move_p1.made_sequence_gap = p1_made_gap
