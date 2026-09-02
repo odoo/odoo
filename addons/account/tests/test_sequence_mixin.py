@@ -894,6 +894,50 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         self.all_moves[2].button_draft()
         self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
+    def test_rolling_draft_post_1(self):
+        move_4 = self.create_move()
+        move_4.action_post()
+        all_moves = self.all_moves + move_4
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, False, False])
+        all_moves[2].button_draft()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, True, False])
+        all_moves[1].button_draft()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, True, False, False])
+        all_moves[0].button_draft()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, False, False])
+        all_moves[0].action_post()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, True, False, False])
+        all_moves[1].action_post()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, True, False])
+        all_moves[2].action_post()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, False, False])
+
+    def test_rolling_draft_post_2(self):
+        move_4 = self.create_move()
+        move_4.action_post()
+        all_moves = self.all_moves + move_4
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, False, False])
+        all_moves[1].button_draft()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, True, False, False])
+        all_moves[2].button_draft()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, True, False, False])
+        all_moves[3].button_draft()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, True, False, False])
+        all_moves[3].action_post()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, True, False, False])
+        all_moves[2].action_post()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, True, False, False])
+        all_moves[1].action_post()
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, False, False])
+
+    def test_draft_last_of_chain(self):
+        self.all_moves[-1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+        move_4 = self.create_move()
+        move_4.action_post()
+        all_moves = self.all_moves + move_4
+        self.assertEqual(all_moves.mapped('made_sequence_gap'), [False, False, True, False])
+
     def test_branch_company_user_empty_prefix(self):
         """Branch-company users must not get an AccessError when creating a journal
         entry in a journal where one of the first two posted entries had its
