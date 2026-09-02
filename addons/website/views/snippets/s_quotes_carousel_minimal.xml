@@ -8,10 +8,6 @@
             <!-- Controls and indicators are set before the content so that they
                  are focused in priority when navigating the page with tab. -->
             <!-- Controls -->
-            <button class="o_carousel_pause o_snippet_not_selectable o_not_editable o_btn_reset z-2" t-attf-aria-controls="myQuoteCarouselMinimal{{uniq}}" title="Pause slides">
-                <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
-                <span class="visually-hidden">Pause slides</span>
-            </button>
             <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myQuoteCarouselMinimal{{uniq}}" t-attf-aria-controls="myQuoteCarouselMinimal{{uniq}}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
                 <span class="carousel-control-prev-icon" aria-hidden="true"/>
                     <span class="visually-hidden">Previous slide</span>
@@ -19,6 +15,10 @@
             <button class="carousel-control-next o_not_editable" t-attf-data-bs-target="#myQuoteCarouselMinimal{{uniq}}" t-attf-aria-controls="myQuoteCarouselMinimal{{uniq}}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
                 <span class="carousel-control-next-icon" aria-hidden="true"/>
                 <span class="visually-hidden">Next slide</span>
+            </button>
+            <button class="o_carousel_pause o_snippet_not_selectable o_not_editable o_btn_reset z-2" t-attf-aria-controls="myQuoteCarouselMinimal{{uniq}}" title="Pause slides">
+                <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
+                <span class="visually-hidden">Pause slides</span>
             </button>
             <!-- Indicators -->
             <div class="carousel-indicators s_carousel_indicators_dots" role="tablist">
