@@ -3173,6 +3173,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_get_allocation_future_leaves_regular2(self):
         self._test_get_allocation_future_leaves_regular(regular_before=True)
 
+    @freeze_time('2026-01-01')
     def test_department_accrual_allocation(self):
         """
         Make sure when creating a multi employee accrual allocation the correct
