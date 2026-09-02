@@ -70,7 +70,7 @@ class TestPhoneFormat(TransactionCase):
 
         countries = self.env['res.country'].sudo().create([{
             'name': f'Test Country {n}',
-            'code': str(n),
+            'code': f'{n:02}',
         } for n in range(20)])
 
         country_partners = self.env['res.partner'].create([

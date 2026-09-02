@@ -12,7 +12,6 @@ class TestOrmSchema(models.Model):
 
     # Attributes
     required = fields.Char(required=True)
-    size = fields.Char(size=3)
     index_btree = fields.Char(index='btree')
     index_btree_not_null = fields.Char(index='btree_not_null')
     index_trigram = fields.Char(index='trigram')

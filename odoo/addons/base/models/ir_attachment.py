@@ -598,7 +598,7 @@ class IrAttachment(models.Model):
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
                             string='Type', required=True, default='binary', change_default=True,
                             help="You can either upload a file from your computer or copy/paste an internet link to your file.")
-    url = fields.Char('Url', index='btree_not_null', size=1024)
+    url = fields.Char('URL', index='btree_not_null', size=1024)
     public = fields.Boolean('Is public document')
     res_access_read = fields.Boolean(
         groups=fields.NO_ACCESS,
@@ -618,11 +618,12 @@ class IrAttachment(models.Model):
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename', index=True)
     file_size = fields.Integer('File Size', readonly=True)
-    checksum = fields.Char("Checksum/SHA1", size=40, readonly=True)
+    checksum = fields.Char("Checksum/SHA1", readonly=True)
     mimetype = fields.Char('Mime Type', readonly=True)
     index_content = fields.Text('Indexed Content', readonly=True, prefetch=False)
 
     _res_idx = models.Index("(res_model, res_id)")
+    _url_chk = models.Constraint("CHECK (url IS NULL OR LENGTH(url) <= 1024)", "The size of the URL must be lower than 1024 characters")
 
     def _check_serving_attachments(self):
         if self.env.is_admin():

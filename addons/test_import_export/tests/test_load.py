@@ -416,40 +416,13 @@ class test_float_field(ImporterCase):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class test_string_field(ImporterCase):
-    model_name = 'export.string.bounded'
+    model_name = 'export.string'
 
     def test_empty(self):
         result = self.import_(['value'], [['']])
         self.assertEqual(len(result['ids']), 1)
         self.assertFalse(result['messages'])
         self.assertEqual([False], values(self.read()))
-
-    def test_imported(self):
-        result = self.import_(
-            ['value'],
-            [
-                ['foobar'],
-                ['foobarbaz'],
-                ['Með suð í eyrum við spilum endalaust'],
-                ["People 'get' types. They use them all the time. Telling someone he can't pound a nail with a banana doesn't much surprise him."],
-            ],
-        )
-        self.assertEqual(len(result['ids']), 4)
-        self.assertFalse(result['messages'])
-        self.assertEqual(
-            [
-                "foobar",
-                "foobarbaz",
-                "Með suð í eyrum ",
-                "People 'get' typ",
-            ],
-            values(self.read()),
-        )
-
-
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class test_unbound_string_field(ImporterCase):
-    model_name = 'export.string'
 
     def test_imported(self):
         result = self.import_(

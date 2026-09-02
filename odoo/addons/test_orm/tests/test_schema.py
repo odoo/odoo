@@ -466,16 +466,6 @@ class TestSchema(common.TransactionCase):
             }),
         )
 
-    def test_size_attribute(self):
-        self.assertEqual(
-            self.columns_data.get('size'),
-            self._expected_column_data(override={
-                'character_maximum_length': 3,
-                'data_type': 'character varying',
-                'udt_name': 'varchar',
-            }),
-        )
-
     def test_index_btree_attribute(self):
         indexdef = self._get_indexdef(self.model._table, '%(index_btree)%')
 
