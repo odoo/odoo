@@ -129,6 +129,11 @@ export class SelfOrder {
                     window.location.reload();
                 }
             });
+            this.data.connectWebSocket("CONFIG_UPDATED", ({ write_date }) => {
+                if (write_date > this.config.raw.write_date && !session.test_mode) {
+                    window.location.reload();
+                }
+            });
             this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
                     const [orderData] = data["pos.order"];
@@ -257,7 +262,9 @@ export class SelfOrder {
     }
     computeAvailableCategories() {
         this.availableCategories = this.getAvailableCategories();
-        this.currentCategory = this.availableCategories[0];
+        if (!this.isCategoryAvailable(this.currentCategory?.id)) {
+            this.currentCategory = this.availableCategories[0];
+        }
     }
 
     get topCategories() {
@@ -451,6 +458,7 @@ export class SelfOrder {
         if (!this.kioskMode) {
             return;
         }
+        this.availableCategories = this.getAvailableCategories();
         this.currentCategory = this.availableCategories[0];
     }
 
@@ -850,27 +858,24 @@ export class SelfOrder {
         }
 
         try {
-            this.currentOrder.setOrderPrices();
+            order.setOrderPrices();
             const tableIdentifier = this.currentTableIdentifier;
-            let uuid = this.selectedOrderUuid;
             if (this.shouldUpdateLastOrderChange()) {
-                this.currentOrder.updateLastOrderChange();
+                order.updateLastOrderChange();
             }
             const data = await rpc(
                 `/pos-self-order/process-order/${this.config.self_ordering_mode}`,
                 {
-                    order: this.currentOrder.serializeForORM(),
+                    order: order.serializeForORM(),
                     access_token: this.access_token,
                     table_identifier: tableIdentifier, // Always trust URL one, is the one user scanned
                 }
             );
-            const result = this.models.connectNewData(data);
-            if (result["pos.order"][0].uuid !== this.selectedOrderUuid) {
-                this.orderTakeAwayState[result["pos.order"][0].uuid] =
-                    this.orderTakeAwayState[this.selectedOrderUuid];
-                delete this.orderTakeAwayState[this.selectedOrderUuid];
-                this.currentOrder.delete();
-                uuid = result["pos.order"][0].uuid;
+            const syncedOrder = this.models.connectNewData(data)["pos.order"][0];
+            if (syncedOrder.uuid !== order.uuid) {
+                this.orderTakeAwayState[syncedOrder.uuid] = this.orderTakeAwayState[order.uuid];
+                delete this.orderTakeAwayState[order.uuid];
+                order.delete();
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
 
@@ -878,10 +883,9 @@ export class SelfOrder {
                 this.selectedOrderUuid = null;
             }
 
-            this.currentOrder.recomputeChanges();
-            return this.models["pos.order"].getBy("uuid", uuid);
+            syncedOrder.recomputeChanges();
+            return syncedOrder;
         } catch (error) {
-            const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
             this.handleErrorNotification(error, [order.access_token]);
             return false;
         }
@@ -1102,6 +1106,7 @@ export class SelfOrder {
     verifyCart() {
         let result = true;
         const unavailableProducts = new Set();
+        this.availableCategories = this.getAvailableCategories();
 
         const deliveryProductId = this.currentOrder.preset_id?.delivery_product_id?.id;
         for (const line of this.currentOrder.unsentLines) {
@@ -1118,13 +1123,16 @@ export class SelfOrder {
                 : false;
 
             const wrongChild = line.combo_line_ids.find((l) => !l.product_id.self_order_available);
-            if (wrongChild || !line.product_id?.self_order_available) {
+            const lineAvailable =
+                line.product_id?.self_order_available &&
+                this.isProductAvailable(line.product_id.product_tmpl_id);
+            if (wrongChild || !lineAvailable) {
                 if (alreadySent) {
                     line.qty = alreadySent.qty;
                     line.customer_note = alreadySent.customer_note;
                     line.selected_attributes = alreadySent.selected_attributes;
                 } else {
-                    const productName = !line.product_id?.self_order_available
+                    const productName = !lineAvailable
                         ? line.product_id?.name
                         : wrongChild?.product_id?.name;
 

@@ -209,7 +209,22 @@ class PosConfig(models.Model):
         res = super().write(vals)
         self._ensure_public_attachments()
         self._prepare_self_order_custom_btn()
+        if vals.keys() & self._get_kiosk_reload_fields():
+            for config in self.filtered(lambda c: c.self_ordering_mode == 'kiosk' and c.has_active_session):
+                config._notify('CONFIG_UPDATED', {'write_date': config.write_date})
         return res
+
+    @api.model
+    def _get_kiosk_reload_fields(self):
+        return {
+            'self_ordering_mode', 'self_ordering_service_mode', 'self_ordering_pay_after',
+            'self_ordering_default_language_id', 'self_ordering_available_language_ids',
+            'self_ordering_image_home_ids', 'self_ordering_image_background_ids',
+            'self_ordering_image_brand', 'self_ordering_image_brand_name',
+            'limit_categories', 'iface_available_categ_ids', 'payment_method_ids',
+            'use_presets', 'available_preset_ids', 'default_preset_id',
+            'use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'iface_tax_included',
+        }
 
     def _get_paid_orders_config_domain(self):
         kiosk_domain = Domain('config_id.self_ordering_mode', '=', 'kiosk') & Domain('config_id.company_id', '=', self.company_id.id)
