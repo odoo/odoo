@@ -54,8 +54,8 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <t t-out="partner.name"/>
-                                        <t t-if="partner.company_name">
-                                            , <t t-out="partner.company_name"/>
+                                        <t t-if="partner.parent_name">
+                                            , <t t-out="partner.parent_name"/>
                                         </t><br />
                                         <t id="partner_vat" t-if="partner.vat">
                                             <t t-out="partner.vat" /><br />
