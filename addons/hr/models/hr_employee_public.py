@@ -11,7 +11,7 @@ from odoo.addons.mail.tools.discuss import Store
 class HrEmployeePublic(models.Model):
     _name = 'hr.employee.public'
     _description = 'Public Employee'
-    _order = 'name'
+    _order = 'name, id'
     _auto = False
     _log_access = True  # Include magic fields
 
