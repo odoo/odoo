@@ -178,6 +178,39 @@ test("verifyCart", async () => {
     }
 });
 
+test("verifyCart removes lines whose category hour window has closed", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    await getFilledSelfOrder(store);
+
+    models["pos.category"].get(1).update({
+        hour_after: 10,
+        hour_until: 12,
+    });
+    mockDate("2025-11-29 18:00:00");
+
+    const result = store.verifyCart();
+    expect(result).toBe(false);
+    expect(store.currentOrder.lines).toHaveLength(1);
+    expect(store.currentOrder.lines[0].product_id.product_tmpl_id.id).toBe(6);
+});
+
+test("verifyCart keeps combo choices from unavailable categories", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboLine = await addComboProduct(store);
+    const categ1 = models["pos.category"].get(1);
+    const categ2 = models["pos.category"].get(2);
+
+    comboLine.combo_line_ids[0].product_id.product_tmpl_id.update({ pos_categ_ids: [categ1] });
+    store.config.limit_categories = true;
+    store.config.iface_available_categ_ids = [categ2];
+    store.initProducts();
+
+    expect(store.verifyCart()).toBe(true);
+    expect(store.currentOrder.lines).toHaveLength(3);
+});
+
 test("getProductPriceInfo", async () => {
     const store = await setupSelfPosEnv();
     const order = await getFilledSelfOrder(store);
