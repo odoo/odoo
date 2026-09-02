@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import timedelta
 
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
@@ -160,6 +161,25 @@ class StockMove(models.Model):
             done_moves.filtered(lambda m: m._is_out())._set_value()
             done_moves._create_account_move()
         return moves
+
+    def write(self, vals):
+        if 'date' not in vals:
+            return super().write(vals)
+        old_dates = {move.id: move.date for move in self}
+        res = super().write(vals)
+        for move in self.filtered(lambda m: m.state == 'done' and (m.is_in or m.is_dropship)):
+            if move.date >= old_dates[move.id]:
+                continue
+            # Keep the manual values the move is moved across before it, so it is valued
+            manual_values = self.env['product.value'].sudo().search([
+                ('product_id', '=', move.product_id.id),
+                ('company_id', '=', move.company_id.id),
+                ('move_id', '=', False),
+                ('date', '>', move.date),
+                ('date', '<=', old_dates[move.id]),
+            ])
+            manual_values.date = move.date - timedelta(seconds=1)
+        return res
 
     def action_adjust_valuation(self):
         if len(self) != 1:
