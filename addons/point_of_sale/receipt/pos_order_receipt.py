@@ -524,7 +524,7 @@ class PosOrderReceipt(models.AbstractModel):
                 500,
                 0,
             )
-            rasterified = [self._order_change_receipts_generate_raster(image) for image in images]
+            rasterified = [self._image_to_epos_raster_xml(image) for image in images]
             receipts[printer] = rasterified
         return receipts
 
@@ -574,7 +574,7 @@ class PosOrderReceipt(models.AbstractModel):
 
         return "".join(map(str, raster_data)), padded_width, height
 
-    def _order_change_receipts_generate_raster(self, image_bytes):
+    def _image_to_epos_raster_xml(self, image_bytes: bytes):
         # Wkhtmltoimage doesn't works in tests see def _run_wkhtmltoimage in ir.actions.report
         if modules.module.current_test:
             raster_str = "10101010"
@@ -600,3 +600,7 @@ class PosOrderReceipt(models.AbstractModel):
             f'</s:Body>'
             f'</s:Envelope>'
         )
+
+    def _order_receipt_generate_raster(self, basic_receipt=False):
+        image_bytes = self.order_receipt_generate_image(basic_receipt)
+        return self._image_to_epos_raster_xml(image_bytes)
