@@ -6,6 +6,7 @@ from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import verify_limited_field_access_token
 
@@ -152,6 +153,45 @@ class ThreadController(StoreController):
             "parent_id": parent_record.id if parent_record else None,
             "parent_model": parent_record._name if parent_record else None,
         }
+
+    @mail_route("/mail/thread/get_followers", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_thread_get_followers(self, thread_model, thread_id, offset=0, search_term=None):
+        """This method returns a page of followers sorted by name and then by id
+        to keep offset pagination stable when followers have the same name.
+        :param thread_model: Model on which we are currently working.
+        :param thread_id: ID of the document whose followers are fetched.
+        :param offset: Number of sorted followers already fetched.
+        :param search_term: Term used to filter followers by name or email.
+        :return: Follower data and IDs. If offset is 0 or len(followers) < limit, also returns:
+            followersCount: including the current user, to update the global thread count.
+            followers_count: excluding the current user, for load more requests.
+        :rtype: dict
+        """
+        thread = self._get_thread_with_access(thread_model, thread_id)
+        thread_domain = (
+            Domain("res_id", "=", thread_id)
+            & Domain("res_model", "=", thread_model)
+        )
+        domain = thread_domain & Domain("partner_id", "!=", request.env.user.partner_id.id)
+        if search_term:
+            domain &= (
+                Domain("name", "ilike", search_term)
+                | Domain("email", "ilike", search_term)
+            )
+        limit = 20
+        followers = request.env["mail.followers"].search_fetch(
+            domain, offset=offset, limit=limit, order="name ASC, id ASC",
+        )
+        store = Store().add(followers, "_store_follower_fields")
+        result = {"store_data": store, "follower_ids": followers.ids}
+        if not offset or len(followers) < limit:
+            store.add(
+                thread,
+                {"followersCount": request.env["mail.followers"].search_count(thread_domain)},
+                as_thread=True,
+            )
+            result["followers_count"] = request.env["mail.followers"].search_count(domain)
+        return result
 
     def _prepare_message_data(self, post_data, *, thread, from_create=True, **kwargs):
         res = {

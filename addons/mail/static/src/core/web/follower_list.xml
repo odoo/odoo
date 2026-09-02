@@ -2,29 +2,35 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.FollowerList">
-        <DropdownItem t-if="this.props.thread.selfFollower" class="'d-flex px-1 o-mail-FollowerList-unfollow'" onSelected="() => this.onClickUnfollow()">
-            <span class="o-mail-FollowerList-unfollowBtn text-danger d-flex align-items-center flex-grow-1 px-3 fw-bold">
-                Unfollow
-            </span>
-            <span class="o-mail-Follower-action btn btn-icon rounded-0 p-0 opacity-50 opacity-100-hover me-1" title="Edit Notification Preferences" t-on-click.stop="(ev) => this.onClickEdit(ev)">
-                <i class="oi oi-fw oi-filled" data-icon="notifications"/>
-            </span>
-        </DropdownItem>
-        <DropdownItem t-else="" class="'o-mail-FollowerList-followBtn text-success'" onSelected="() => this.onClickFollow()">
-            Follow
-        </DropdownItem>
-        <div role="separator" class="dropdown-divider opacity-50"/>
-        <t t-if="this.props.thread.hasWriteAccess">
-            <DropdownItem onSelected="() => this.onClickAddFollowers()" tag="'a'">
-                Add Followers
-            </DropdownItem>
-            <div t-if="this.props.thread.followers.length > 0" role="separator" class="dropdown-divider opacity-50"/>
-        </t>
-        <div t-if="this.props.thread.followers.length > 0" class="d-flex flex-column gap-1">
-            <t t-foreach="this.props.thread.followers" t-as="follower" t-key="follower.id">
-                <Follower follower="follower" onFollowerChanged="this.props.onFollowerChanged" close="this.props.dropdown.close"/>
+        <div t-if="this.otherFollowersCount > 20 || this.search.searchTerm" class="px-3 pb-1">
+            <SearchInput search="this.search" placeholder.translate="Search by name or email" autofocus="true" onClear="() => this.onClearSearch()"/>
+        </div>
+        <div class="d-flex align-items-center gap-1 px-2 py-1">
+            <button t-if="this.props.thread.selfFollower" class="btn btn-link btn-sm text-danger d-inline-flex align-items-center gap-1" t-on-click="() => this.onClickUnfollow()" title="Unfollow">
+                <i class="oi oi-fw oi-filled" data-icon="person" aria-hidden="true"/>
+                <span>Unfollow</span>
+            </button>
+            <button t-else="" class="btn btn-link btn-sm text-success d-inline-flex align-items-center gap-1" t-on-click="() => this.onClickFollow()" title="Follow">
+                <i class="oi oi-fw" data-icon="person" aria-hidden="true"/>
+                <span>Follow</span>
+            </button>
+            <button t-if="this.props.thread.selfFollower" class="btn btn-sm opacity-75 d-inline-flex align-items-center gap-1" title="Edit Notification Preferences" t-on-click.stop="(ev) => this.onClickEdit(ev)">
+                <i class="oi oi-fw oi-filled" data-icon="notifications" aria-hidden="true"/>
+                <span>Notifications</span>
+            </button>
+            <button t-if="this.props.thread.hasWriteAccess" class="btn btn-sm opacity-75 d-inline-flex align-items-center gap-1 ms-auto" t-on-click="() => this.onClickAddFollowers()" title="Add Followers">
+                <i class="oi oi-fw oi-filled" data-icon="person_add" aria-hidden="true"/>
+                <span>Add</span>
+            </button>
+        </div>
+        <div t-if="this.followerListView.followers.length > 0" class="d-flex flex-column gap-1 pt-1">
+            <t t-foreach="this.followerListView.followers" t-as="follower" t-key="follower.id">
+                <Follower follower="follower" onFollowerChanged.bind="this.onFollowerChanged" close="() => this.props.dropdown.close()"/>
             </t>
-            <span t-if="!this.props.thread.followersFullyLoaded" class="btn btn-link" t-on-click="this.props.thread.loadMoreFollowers" t-ref="this.loadMoreRef">Load more</span>
+            <span t-if="!this.followerListView.isFullyLoaded" class="btn btn-link" t-on-click="() => this.followerListView.loadFollowers({ abortSignal: this.scope.abortSignal, searchTerm: this.search.searchTerm })" t-ref="this.loadMoreRef">Load more</span>
+        </div>
+        <div t-elif="this.search.searchTerm" class="dropdown-item disabled">
+            No Matching Followers
         </div>
         <div t-elif="!this.props.thread.hasWriteAccess" class="dropdown-item disabled">
             No Followers

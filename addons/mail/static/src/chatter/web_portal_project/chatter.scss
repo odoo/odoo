@@ -46,14 +46,14 @@
     max-height: Min(500px, 50vh);
 }
 
+.o-mail-Follower:hover, .o-mail-Follower:focus-within {
+    background-color: $dropdown-link-hover-bg !important;
+}
+
 .o-mail-Follower-avatar {
     --Avatar-size: #{$o-mail-Avatar-sizeSmall};
 }
 
-.o-mail-Follower:has(.o-mail-Follower-action:hover), .o-mail-FollowerList-unfollow:has(.o-mail-Follower-action:hover) {
+.o-mail-Follower:has(.o-mail-Follower-action:hover) {
     background-color: inherit !important;
-}
-
-.btn.o-mail-Chatter-follow:hover {
-    color: $black !important;
 }
