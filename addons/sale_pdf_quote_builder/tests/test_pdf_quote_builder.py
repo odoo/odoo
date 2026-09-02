@@ -161,7 +161,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         ).get_update_included_pdf_params()
         # should return all document data regardless of access
         self.assertEqual("Header", dialog_param["headers"]["files"][0]["name"])
-        self.assertEqual("Product > Test Product", dialog_param["lines"][0]["name"])
+        self.assertEqual("Test Product", dialog_param["lines"][0]["name"])
 
     def test_quotation_document_is_removed_on_template_change(self):
         so_tmpl = self.env["sale.order.template"].create({
