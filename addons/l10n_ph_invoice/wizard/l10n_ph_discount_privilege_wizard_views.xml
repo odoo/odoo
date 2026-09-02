@@ -23,7 +23,7 @@
                     </div>
                     <group>
                         <field name="line_ids" nolabel="1">
-                            <list string="Invoice Lines" create="0" delete="0" no_open="1" limit="10">
+                            <list string="Lines" create="0" delete="0" no_open="1" limit="10">
                                 <field name="name" string="Label"/>
                                 <field name="category_id" string="Product Category"/>
                                 <field name="discount" string="Disc. Applied (%)" invisible="not has_discount_privilege"/>
@@ -55,7 +55,7 @@
                             class="btn-danger"
                             invisible="not has_applied_privileges"
                             data-hotkey="z"
-                            confirm="Are you sure you want to remove all discount privileges from this invoice?"
+                            confirm="Are you sure you want to remove all discount privileges from this document?"
                     />
                     <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                 </footer>

@@ -108,6 +108,48 @@ class L10nPhDiscountPrivilegeLineMixin(models.AbstractModel):
                 line.l10n_ph_regular_discount_amount = subtotal_price_discount
                 line.l10n_ph_special_discount_amount = 0.0
 
+    # --- Price unit / taxes helpers (called by the wizard) ---
+
+    def _adjust_price_unit_from_privilege(self, price_unit, tax_ids, document_tax_mode):
+        """
+        Compute the new price_unit and original_price_unit to set on the
+        line after applying (or removing) the privilege's fiscal position.
+        """
+        self.ensure_one()
+        fiscal_position = self.l10n_ph_discount_privilege_id.fiscal_position_id
+        if fiscal_position:
+            tax_ids = self.l10n_ph_original_tax_ids or tax_ids
+            taxes_after_fp = fiscal_position.map_tax(tax_ids)
+            new_price_unit = tax_ids._adapt_price_unit_to_another_taxes(
+                price_unit=self.l10n_ph_original_price_unit or price_unit,
+                product=None,
+                original_taxes=tax_ids,
+                new_taxes=taxes_after_fp,
+                document_tax_mode=document_tax_mode,
+            )
+            original_price_unit = self.l10n_ph_original_price_unit or price_unit
+        elif self.l10n_ph_original_price_unit:
+            new_price_unit = self.l10n_ph_original_price_unit
+            original_price_unit = 0.0
+        else:
+            new_price_unit = price_unit
+            original_price_unit = 0.0
+        return new_price_unit, original_price_unit
+
+    def _adjust_taxes_from_privilege(self, tax_ids):
+        """
+        Compute the new tax_ids and original tax_ids to set on the line
+        after applying (or removing) the privilege's fiscal position.
+        """
+        self.ensure_one()
+        fiscal_position = self.l10n_ph_discount_privilege_id.fiscal_position_id
+        if fiscal_position:
+            original_taxes = self.l10n_ph_original_tax_ids or tax_ids
+            new_taxes = fiscal_position.map_tax(original_taxes)
+            return new_taxes, original_taxes
+        new_taxes = self.l10n_ph_original_tax_ids or tax_ids
+        return new_taxes, self.env["account.tax"]
+
     # --- Preview helper for wizard ---
 
     def _l10n_ph_get_preview_discount_amount(self, privilege):
