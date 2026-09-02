@@ -33,16 +33,7 @@ class SaleOrderLine(models.Model):
                 if line.remaining_hours_available:
                     remaining_time = ''
                     if is_hour:
-                        hours, mins = divmod(round(abs(line.remaining_hours) * 60), 60)
-                        sign = '-' if line.remaining_hours < 0 else ''
-                        kwargs = {'sign': sign, 'hours': hours, 'minutes': mins}
-                        if hours and mins:
-                            time_part = self.env._("%(sign)s%(hours)sh %(minutes)sm", **kwargs)
-                        elif hours:
-                            time_part = self.env._("%(sign)s%(hours)sh", **kwargs)
-                        else:
-                            time_part = self.env._("%(sign)s%(minutes)sm", **kwargs)
-                        remaining_time = f' ({time_part})'
+                        remaining_time = f' ({self.env["account.analytic.line"]._format_portal_hours(line.remaining_hours)})'
                     elif is_day:
                         remaining_days = company.project_time_mode_id._compute_quantity(line.remaining_hours, encoding_uom, round=False)
                         remaining_time = f' ({remaining_days:.02f} {unit_label})'
