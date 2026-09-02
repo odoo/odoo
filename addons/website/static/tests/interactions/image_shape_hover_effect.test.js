@@ -7,7 +7,7 @@ import { advanceTime } from "@odoo/hoot-mock";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
-setupInteractionWhiteList(["website.image_shape_hover_effect", "website.clickable_card"]);
+setupInteractionWhiteList(["website.image_shape_hover_effect", "website.clickable_element"]);
 
 describe.current.tags("interaction_dev");
 
