@@ -10,8 +10,9 @@ export class WebsiteEventTrackReminder extends Interaction {
     static selector = ".o_wetrack_js_reminder";
 
     dynamicContent = {
-        ".o_wetrack_js_reminder_bell": {
+        ".o_wetrack_js_reminder_on, .o_wetrack_js_reminder_off": {
             "t-on-click.prevent.stop": this.debounced(this.onReminderToggleClick, 500, true),
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
             "t-on-mouseover": (ev) => {
                 if (!this.reminderOn){
                     ev.currentTarget.classList.add("oi-filled");
@@ -22,6 +23,19 @@ export class WebsiteEventTrackReminder extends Interaction {
                     ev.currentTarget.classList.remove("oi-filled")
                 }
             },
+||||||| afed3c16b57a9e18edd4c1c870701221b49a6017
+            "t-on-mouseover.withTarget": (ev, targetEl) => {
+                if (!this.reminderOn){
+                    targetEl.classList.replace("fa-bell-o", "fa-bell");
+                }
+            },
+            "t-on-mouseout.withTarget": (ev, targetEl) => {
+                if (!this.reminderOn){
+                    targetEl.classList.replace("fa-bell", "fa-bell-o");
+                }
+            },
+=======
+>>>>>>> 13afcadbdd617654c5fdad9f45e692828b81ce29
         },
     };
 
@@ -30,7 +44,6 @@ export class WebsiteEventTrackReminder extends Interaction {
         this.orm = this.services.orm;
         this.trackId = parseInt(this.el.dataset.trackId);
         this.reminderOn = this.el.dataset.reminderOn;
-        this.bellSelectorEl = this.el.querySelector(".o_wetrack_js_reminder_bell");
     }
 
     async onReminderToggleClick() {
@@ -55,7 +68,7 @@ export class WebsiteEventTrackReminder extends Interaction {
             } else {
                 this.reminderOn = reminderOnValue;
                 if (this.reminderOn) {
-                    this.favoriteAddedConfirmation = _t("Track successfully added to your favorites.");
+                    this.favoriteAddedConfirmation = _t("Track added to favorites");
                     // When the `social_push_notifications` module is installed,
                     // we display a popup that allows the user to enable push
                     // notifications to receive reminders:
@@ -63,16 +76,27 @@ export class WebsiteEventTrackReminder extends Interaction {
                         title: _t("Allow push notifications?"),
                         body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
                     });
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
                     this.bellSelectorEl.classList.add("oi-filled");
                     this.bellSelectorEl.setAttribute("title", _t("Favorite On"));
+||||||| afed3c16b57a9e18edd4c1c870701221b49a6017
+                    this.bellSelectorEl.classList.replace("fa-bell-o", "fa-bell");
+                    this.bellSelectorEl.setAttribute("title", _t("Favorite On"));
+=======
+>>>>>>> 13afcadbdd617654c5fdad9f45e692828b81ce29
                 } else {
-                    this.notification.add(_t("Talk removed from your Favorites"), {
-                        type: "info",
-                    });
                     this.favoriteAddedConfirmation = "";
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
                     this.bellSelectorEl.classList.remove("oi-filled");
                     this.bellSelectorEl.setAttribute("title", _t("Set Favorite"));
+||||||| afed3c16b57a9e18edd4c1c870701221b49a6017
+                    this.bellSelectorEl.classList.replace("fa-bell", "fa-bell-o");
+                    this.bellSelectorEl.setAttribute("title", _t("Set Favorite"));
+=======
+>>>>>>> 13afcadbdd617654c5fdad9f45e692828b81ce29
                 }
+                this.el.classList.toggle("reminder_on", reminderOnValue);
+                this.el.classList.toggle("reminder_off", !reminderOnValue);
             }
         });
     }
@@ -131,14 +155,7 @@ export class WebsiteEventTrackReminder extends Interaction {
             track_id: this.trackId,
             email_to: emailTo
         }).then(async (result) => {
-            if (result.success || result.error == "missing_template"){
-                const emailSentInfo = result.error != "missing_template" ? _t("Check your email to add the track to your agenda.") : "";
-                this.notification.add(
-                    [this.favoriteAddedConfirmation, emailSentInfo].join(" "),
-                    {type: "info", className: "o_send_email_reminder_success"}
-                );
-            }
-            else {
+            if (!(result.success || result.error == "missing_template")){
                 if (this.favoriteAddedConfirmation) {
                     this.notification.add(this.favoriteAddedConfirmation, {type: "info"});
                 }

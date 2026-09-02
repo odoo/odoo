@@ -9,13 +9,25 @@ const reminderToggleSteps = function (talkName, reminderOn, toggleReminder) {
     if (reminderOn) {
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was already on`,
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
             trigger: "div.o_wetrack_js_reminder i[data-icon='star'].oi-filled",
+||||||| afed3c16b57a9e18edd4c1c870701221b49a6017
+            trigger: "div.o_wetrack_js_reminder i.fa-bell",
+=======
+            trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_on",
+>>>>>>> 13afcadbdd617654c5fdad9f45e692828b81ce29
         }]);
     }
     else {
         steps = steps.concat([{
             content: `Check Favorite for ${talkName} was off`,
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
             trigger: "div.o_wetrack_js_reminder i[data-icon='star']",
+||||||| afed3c16b57a9e18edd4c1c870701221b49a6017
+            trigger: "div.o_wetrack_js_reminder i.fa-bell-o",
+=======
+            trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_off",
+>>>>>>> 13afcadbdd617654c5fdad9f45e692828b81ce29
         }]);
         if (toggleReminder) {
             steps = steps.concat([{
@@ -37,7 +49,13 @@ const reminderToggleSteps = function (talkName, reminderOn, toggleReminder) {
             }
             steps = steps.concat([{
                 content: `Check Favorite for ${talkName} is now on`,
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
                 trigger: "div.o_wetrack_js_reminder i[data-icon='star'].oi-filled",
+||||||| afed3c16b57a9e18edd4c1c870701221b49a6017
+                trigger: "div.o_wetrack_js_reminder i.fa-bell",
+=======
+                trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_on",
+>>>>>>> 13afcadbdd617654c5fdad9f45e692828b81ce29
             }]);
         }
     }
@@ -148,7 +166,7 @@ const registerSteps = [
         expectUnloadPage: true,
     },
     {
-        trigger: "h5:contains(Book your talks)",
+        trigger: "div.plan_your_xp",
     },
 ];
 
@@ -176,7 +194,7 @@ var browseTalksSteps = [{
     expectUnloadPage: true,
 }, {
     content: 'Check we are on the talk list page',
-    trigger: 'h5:contains("Book your talks")',
+    trigger: 'div.plan_your_xp',
 }];
 
 var browseBackSteps = [{
@@ -186,7 +204,7 @@ var browseBackSteps = [{
     expectUnloadPage: true,
 }, {
     content: 'Check we are back on the talk list page',
-    trigger: 'h5:contains("Book your talks")',
+    trigger: 'div.plan_your_xp',
 }];
 
 registry.category("web_tour.tours").add('wevent_register', {

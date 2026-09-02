@@ -7,10 +7,28 @@
         padding: 0;
     }
 
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     i[data-icon="notifications"] {
         color: $o-gray-600;
         -webkit-text-stroke-color: $o-gray-600;
+||||||| afed3c16b57a9e18edd4c1c870701221b49a6017
+    i {
+        &.fa-bell,&.fa-bell-o {
+            color: $o-gray-600;
+            -webkit-text-stroke-color: $o-gray-600;
+        }
+=======
+    &.reminder_off {
+        .o_wetrack_js_reminder_on { display: none; }
+        .o_wetrack_js_reminder_off { display: inline; }
+>>>>>>> 13afcadbdd617654c5fdad9f45e692828b81ce29
     }
+
+    &.reminder_on {
+        .o_wetrack_js_reminder_on { display: inline; }
+        .o_wetrack_js_reminder_off { display: none; }
+    }
+
 }
 
 /*
