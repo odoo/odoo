@@ -99,7 +99,7 @@ test("click a menu link [2]", async () => {
     const fakeActionService = {
         doAction(action) {
             expect.step("do-action");
-            expect(action).toEqual({
+            expect(action).toMatchObject({
                 name: "an odoo view",
                 res_model: "partner",
                 target: "current",
@@ -140,6 +140,11 @@ test("Click a link containing an action xml id", async () => {
             expect(action.type).toBe("ir.actions.act_window");
             expect(action.views).toEqual([[false, "list"]]);
             expect(action.domain).toEqual([[1, "=", 1]]);
+            // Ensure `help` remains trusted markup instead of a plain string.
+            expect(typeof action.help).toBe("object");
+            expect(action.help.toString()).toBe(
+                "<p class='o_view_nocontent_smiling_face'>No data to display</p>"
+            );
         },
     });
     await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
