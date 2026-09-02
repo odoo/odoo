@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import os
 from collections import UserList, defaultdict
 from contextlib import suppress
@@ -15,6 +16,7 @@ from odoo import models
 from odoo.exceptions import MissingError
 from odoo.http import request, route
 from odoo.tools import OrderedSet
+from odoo.tools.misc import hmac
 
 from odoo.addons.bus.websocket import wsrequest
 
@@ -155,6 +157,11 @@ def get_sfu_key(env) -> str | None:
     if not sfu_key:
         return os.getenv("ODOO_SFU_KEY")
     return sfu_key
+
+
+def get_derived_sfu_key(env, channel_id) -> str:
+    digest = hmac(env(su=True), "discuss-sfu-channel-key", channel_id).encode()
+    return base64.b64encode(digest).decode()
 
 
 ids_by_model = defaultdict(lambda: ("id",))
