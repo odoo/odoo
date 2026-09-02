@@ -908,9 +908,6 @@
 
             .o_inner_group {
                 margin-bottom: 0 !important;
-                &:last-child {
-                    margin-bottom: map-get($spacers, 3) !important;
-                }
             }
         }
 
@@ -1044,10 +1041,6 @@
 
 .o_form_view.o_xxs_form_view {
     .o_group {
-        .o_inner_group {
-            margin-bottom: $o-form-spacing-unit * 4;
-        }
-
         .o_form_label {
             font-size: $o-label-font-size-factor * $o-font-size-base-touch;
             font-weight: $font-weight-normal;
