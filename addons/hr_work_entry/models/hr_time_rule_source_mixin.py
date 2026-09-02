@@ -29,6 +29,10 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         raise NotImplementedError
 
+    def _on_sources_collected(self, sources):
+        # overriden in hr_holidays
+        pass
+
     def _get_pipeline_intervals_local(self, schedule):
         """Return (start, stop) local-naive pairs for this record's pipeline segments.
 
@@ -138,6 +142,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
                 len(sources), self._name, sources.ids, start_dt.date(), end_dt.date(),
             )
 
+            self._on_sources_collected(sources)
             excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
 
             for emp, by_src in excess.items():

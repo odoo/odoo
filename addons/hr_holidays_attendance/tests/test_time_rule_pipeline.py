@@ -2559,6 +2559,47 @@ class TestTimeRulePipeline(TransactionCase):
             msg="1h 29m 44s weekend OT on Saturday (Brussels)",
         )
 
+    def test_alloc_idempotent_second_attendance_excess(self):
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Excess Idem',
+            'code': 'CEXIDE',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self.time_rule.write({
+            'work_entry_type_id': False,
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+
+        def _alloc():
+            return self.env['hr.leave.allocation'].sudo().search([
+                ('employee_id', '=', self.cal_emp.id),
+                ('work_entry_type_id', '=', comp_type.id),
+            ])
+
+        # att_a: 2h Saturday, no scheduled hours -> all excess → 2h / 8h = 0.25d
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 10, 10),   # Saturday
+            'check_out': datetime(2022, 12, 10, 12),   # 2h
+        })
+        alloc = _alloc()
+        self.assertEqual(len(alloc), 1, "Allocation created after first attendance")
+        self.assertAlmostEqual(alloc.number_of_days, 0.25, places=5,
+                               msg="2h excess / 8h per day = 0.25d after att_a")
+
+        # att_b: 4h same Saturday → pipeline re-runs with both -> combined 6h excess
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 10, 12),
+            'check_out': datetime(2022, 12, 10, 16),   # 4h
+        })
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.75, places=5,
+                               msg="6h total / 8h per day = 0.75d; not 0.25d + 0.75d = 1.0d")
+
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline')
 class TestTimeRuleCronBehavior(TransactionCase):
@@ -3689,3 +3730,51 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         finally:
             rule1.write({'active': False})
             rule2.write({'active': False})
+
+    def test_alloc_idempotent_second_leave_deficit(self):
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Deficit Idem',
+            'code': 'CDIDE',
+            'requires_allocation': True,
+            'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        allocation = self.env['hr.leave.allocation'].sudo().create({
+            'employee_id': self.emp.id,
+            'work_entry_type_id': comp_type.id,
+            'number_of_days': 10.0,
+            'state': 'confirm',
+        })
+        allocation.action_approve()
+
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Deficit 8h/day leave (idempotent)',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 8.0,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        try:
+            # leave_a: 3h -> deficit 5h (8h threshold - 3h) -> deducts 5/8 = 0.625d
+            self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 11))
+            allocation.invalidate_recordset()
+            self.assertAlmostEqual(allocation.number_of_days, 9.375, places=5,
+                                   msg="10d - 5h/8h = 9.375d after first leave")
+
+            # delete the stale deficit output leave so leave_b can occupy the same slot
+            self.env['hr.leave'].sudo().search([
+                ('employee_id', '=', self.emp.id),
+                ('work_entry_type_id', '=', self.out_type.id),
+                ('time_rule_id', '=', rule.id),
+            ]).with_context(skip_time_rules=True).unlink()
+
+            # leave_b: 5h fills the deficit slot -> combined 8h -> deficit 0h -> deduction reversal
+            self._make_leave(datetime(2022, 12, 12, 11), datetime(2022, 12, 12, 16))
+            allocation.invalidate_recordset()
+            self.assertAlmostEqual(allocation.number_of_days, 10.0, places=5,
+                                   msg="combined 8h meets threshold → no deficit → prior deduction reversed → 10.0d")
+        finally:
+            rule.write({'active': False})

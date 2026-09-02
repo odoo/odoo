@@ -8,6 +8,15 @@ from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
+class HrTimeRuleSourceMixin(models.AbstractModel):
+    _inherit = 'hr.time.rule.source.mixin'
+
+    def _on_sources_collected(self, sources):
+        """Reverse prior allocation credits before the batch is re-evaluated.
+        """
+        self.env['hr.time.rule']._reverse_allocation_credits(self._name, sources.ids)
+
+
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
