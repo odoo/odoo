@@ -9,6 +9,7 @@ from freezegun import freeze_time
 from odoo.http.session import session_store
 from odoo.tests import HttpCase, mute_logger, new_test_user
 from odoo.tools import SQL
+from odoo.tools.lru import LRU
 
 from odoo.addons.bus.session_helpers import (
     _get_session_token_query_params,
@@ -60,6 +61,42 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
         john_session["deletion_time"] = time.time() - 3600
         store.save(john_session)
         self.assertEqual(set(check_sessions(self.env.cr, sessions)), {jane_session.sid})
+
+    @patch("odoo.addons.bus.session_helpers._stat_by_sid", new_callable=lambda: LRU(4096))
+    def test_check_session_cache_hit_skips_session_creation(self, stat_by_sid):
+        bob = new_test_user(self.env, "bob", groups="base.group_user")
+        self.authenticate(bob.login, bob.password)
+        self.assertIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
+        self.assertIn(self.session.sid, stat_by_sid)
+        with patch.object(
+            session_store(),
+            "get",
+            side_effect=AssertionError("cache hit must not reload the session from disk"),
+        ):
+            resolved = check_sessions(self.env.cr, [self.session])
+            self.assertIs(resolved[self.session.sid], self.session)
+        # A real mutation (rotation/logout/save) must still be picked up on the next check.
+        self.update_session(deletion_time=time.time() - 3600)
+        self.assertNotIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
+
+    @patch("odoo.addons.bus.session_helpers._stat_by_sid", new_callable=lambda: LRU(4096))
+    def test_check_session_mtime_collision(self, stat_by_sid):
+        bob = new_test_user(self.env, "bob", groups="base.group_user")
+        self.authenticate(bob.login, bob.password)
+        self.assertIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
+        real_fstat = os.fstat
+
+        class _FrozenStat:
+            def __init__(self, st):
+                self.st_mtime_ns = 123456789
+                self.st_ino = st.st_ino
+
+        with patch(
+            "odoo.addons.bus.session_helpers.os.fstat",
+            side_effect=lambda fd: _FrozenStat(real_fstat(fd)),
+        ):
+            self.update_session(deletion_time=time.time() - 3600)
+            self.assertNotIn(self.session.sid, check_sessions(self.env.cr, [self.session]))
 
     def test_query_shape_is_user_agnostic(self):
         """The shape cached by `_get_session_token_query_params` must hold
