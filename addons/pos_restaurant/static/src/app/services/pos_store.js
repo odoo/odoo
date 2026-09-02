@@ -30,15 +30,6 @@ patch(PosStore.prototype, {
             ? { page: "LoginScreen", params: {} }
             : this.router.defaultPage;
     },
-    get openOrder() {
-        if (this.config.module_pos_restaurant) {
-            return (
-                this.models["pos.order"].find((o) => o.state === "draft" && o.isDirectSale) ||
-                this.addNewOrder()
-            );
-        }
-        return super.openOrder;
-    },
     saveIfOrder() {
         if (!this.config.module_pos_restaurant) {
             return super.saveIfOrder(...arguments);

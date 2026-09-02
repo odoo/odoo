@@ -755,8 +755,8 @@ describe("restaurant pos_store.js", () => {
         const order = store.addNewOrder();
         store.setOrder(order);
 
-        expect(store.defaultPage.page).toBe("ProductScreen");
-        expect(store.defaultPage.params.orderUuid).toBe(order.uuid);
+        expect(store.router.defaultPage.page).toBe("ProductScreen");
+        expect(store.router.defaultPage.params.orderUuid).toBe(order.uuid);
     });
 
     test("showDefault navigates to ProductScreen with selected order in register mode", async () => {
@@ -807,7 +807,7 @@ describe("restaurant pos_store.js", () => {
         const order = store.addNewOrder();
         store.setOrder(order);
 
-        const page = store.defaultPage;
+        const page = store.router.defaultPage;
 
         expect(page.page).toBe("ProductScreen");
         expect(page.params.orderUuid).toBe(order.uuid);

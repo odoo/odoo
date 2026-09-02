@@ -40,10 +40,10 @@ patch(LoginScreen.prototype, {
         });
     },
     async barcodeCashierAction(code) {
-        if (!this.config.module_pos_hr) {
+        if (!this.pos.config.module_pos_hr) {
             return;
         }
-        const employee = this.data.models["hr.employee"].find(
+        const employee = this.pos.models["hr.employee"].find(
             (emp) => emp._barcode === Sha1.hash(code.code)
         );
         if (

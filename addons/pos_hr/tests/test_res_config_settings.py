@@ -27,17 +27,17 @@ class TestConfigureShopsPoSHR(TestPosHrHttpCommon, TestConfigureShops):
     def test_advanced_employees_kept_on_later_write(self):
         """
         Another misc write on the same config, coming from an override,
-        should not drop the previously set advanced_employee_ids.
+        should not drop the previously set manager_employee_ids.
         """
         employees = self.env['hr.employee'].create([{'name': 'Employee A'}, {'name': 'Employee B'}])
         config = self.main_pos_config.with_context(from_settings_view=True)
 
-        config.write({'advanced_employee_ids': [Command.link(emp.id) for emp in employees]})
-        advanced_employees = config.advanced_employee_ids
-        self.assertTrue(employees <= advanced_employees)
+        config.write({'manager_employee_ids': [Command.link(emp.id) for emp in employees]})
+        manager_employees = config.manager_employee_ids
+        self.assertTrue(employees <= manager_employees)
 
         config.write({})
-        self.assertEqual(config.advanced_employee_ids, advanced_employees)
+        self.assertEqual(config.manager_employee_ids, manager_employees)
 
     def test_write_create_employee_if_none(self):
         """This test make sure that the employee set on manager_employee_ids is from

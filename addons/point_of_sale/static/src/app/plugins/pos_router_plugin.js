@@ -4,10 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { signal, Plugin, computed, usePlugin } from "@odoo/owl";
-import { uuidv4, random5Chars } from "@point_of_sale/utils";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
-
-const { DateTime } = luxon;
 
 const parseParams = (matches, paramSpecs) =>
     Object.fromEntries(
@@ -54,36 +51,18 @@ export class PosRouterPlugin extends Plugin {
         this.config = config;
     }
 
-    setNextOrderRefs(order) {
-        const deviceIdentifier = this.data.device.identifier;
-        const number = `${this.data.device.useNext()}`.padStart(6, "0");
-        const configId = this.config.id;
-        const year2Digits = DateTime.now().year.toString().slice(-2);
-        const posReference = `${year2Digits}${deviceIdentifier}-${configId}-${number}`;
-
-        order.pos_reference = posReference;
-        order.tracking_number = deviceIdentifier + `${parseInt(number) % 1000}`.padStart(3, "0");
+    get openOrder() {
+        return (
+            this.config.models["pos.order"].find((o) => o.state === "draft") ||
+            window.posmodel?.addNewOrder()
+        );
     }
 
     get defaultPage() {
-        let openOrder = this.config.models["pos.order"].find((o) => o.state === "draft");
-        if (!openOrder) {
-            openOrder = this.config.models["pos.order"].create({
-                session_id: this.data.session_id,
-                company_id: this.config.company_id,
-                config_id: this.config.id,
-                access_token: uuidv4(),
-                ticket_code: random5Chars(),
-                tracking_number: "",
-                sequence_number: 0,
-                pos_reference: "",
-            });
-            this.setNextOrderRefs(openOrder);
-        }
         return {
             page: "ProductScreen",
             params: {
-                orderUuid: openOrder.uuid,
+                orderUuid: this.openOrder?.uuid,
             },
         };
     }

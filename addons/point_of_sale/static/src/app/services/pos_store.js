@@ -1552,9 +1552,6 @@ export class PosStore extends WithLazyGetterTrap {
             return this.addNewOrder();
         }
     }
-    get openOrder() {
-        return this.models["pos.order"].find((o) => o.state === "draft") || this.addNewOrder();
-    }
     getDefaultPartnerId() {
         return null;
     }
