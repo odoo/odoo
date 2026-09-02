@@ -11,3 +11,4 @@ from . import test_hr_attendance_access_rights
 from . import test_hr_attendance_self_edit_role
 from . import test_hr_attendance_manager
 from . import test_oman_overtime
+from . import test_hr_attendance_cross_day
