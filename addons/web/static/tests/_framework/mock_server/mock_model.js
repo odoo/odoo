@@ -1695,6 +1695,7 @@ export class Model extends Array {
      */
     copy(idOrIds, defaultValues) {
         ({ ids: idOrIds, default: defaultValues } = getKwArgs(arguments, "ids", "default"));
+        defaultValues ||= {};
 
         for (const fieldName in defaultValues) {
             if (!(fieldName in this._fields)) {
@@ -1705,11 +1706,33 @@ export class Model extends Array {
         /** @type {number[]} */
         const copyIds = [];
         for (const originalRecord of this.browse(idOrIds)) {
-            const recordCopy = {
-                ...originalRecord,
-                ...defaultValues,
-                id: this._getNextId(),
-            };
+            const recordCopy = { id: this._getNextId() };
+            for (const [fieldName, value] of Object.entries(originalRecord)) {
+                if (fieldName === "id" || fieldName in defaultValues) {
+                    continue;
+                }
+                const field = this._fields[fieldName];
+                if (field?.copy === false) {
+                    // fields not marked as copyable are left out: create()'s defaults/computes apply instead
+                    continue;
+                }
+                if (field?.type === "one2many") {
+                    // o2m fields that are copyable get their lines duplicated (and re-attached),
+                    // instead of pointing the copy at the original's child records
+                    const coModel = getRelation(field, originalRecord);
+                    const inverseFieldName = field.inverse_fname_by_model_name?.[coModel._name];
+                    recordCopy[fieldName] = value.map(
+                        (childId) =>
+                            coModel.copy(
+                                childId,
+                                inverseFieldName ? { [inverseFieldName]: recordCopy.id } : {}
+                            )[0]
+                    );
+                } else {
+                    recordCopy[fieldName] = value;
+                }
+            }
+            Object.assign(recordCopy, defaultValues);
             if (recName) {
                 recordCopy[recName] = `${originalRecord[recName]} (copy)`;
             }
