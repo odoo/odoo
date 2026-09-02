@@ -302,7 +302,7 @@ export class OdooPivot {
     getPivotMeasureValue(name) {
         this.assertIsValid();
         return {
-            value: this.getMeasure(name).displayName,
+            value: this.getters.dynamicTranslate(this.getMeasure(name).displayName),
         };
     }
 
@@ -323,7 +323,9 @@ export class OdooPivot {
         }
         if (lastNode.field === "measure") {
             const measureId = lastNode.value;
-            return { value: this.getMeasure(measureId).displayName };
+            return {
+                value: this.getters.dynamicTranslate(this.getMeasure(measureId).displayName),
+            };
         }
         const value = this.model.getGroupByCellValue(lastNode.field, lastNode.value);
         const format = this._getPivotFieldFormat(lastNode.field, lastNode.value);

@@ -16928,7 +16928,10 @@ const PIVOT = {
 				}
 			}
 		}
-		if (visibilityOptions.displayColumnHeaders || visibilityOptions.displayMeasuresRow) result[0][0] = { value: pivotTitle };
+		if (visibilityOptions.displayColumnHeaders || visibilityOptions.displayMeasuresRow) {
+			// Pivot name is shown as the top-left header cell (first column title) in dashboards
+			result[0][0] = { value: this.getters.dynamicTranslate(pivotTitle) };
+		}
 		return result;
 	}
 };
@@ -26837,7 +26840,7 @@ function getCarouselItemPreview(getters, item) {
 	return (chartSubtypeRegistry.getAll().find((c) => c.matcher?.(definition)) || chartSubtypeRegistry.get(definition.type)).preview;
 }
 function getCarouselItemTitle(getters, item) {
-	if (item.title) return item.title;
+	if (item.title) return getters.dynamicTranslate(item.title);
 	if (item.type === "carouselDataView") return _t("Data");
 	const definition = getters.getChartDefinition(item.chartId);
 	return (chartSubtypeRegistry.getAll().find((c) => c.matcher?.(definition)) || chartSubtypeRegistry.get(definition.type)).displayName;
@@ -27707,7 +27710,9 @@ var CarouselFigure = class extends Component {
 		return cssPropertiesToCss(cssProperties);
 	}
 	get title() {
-		return this.carousel.title?.text ?? "";
+		const text = this.carousel.title?.text;
+		// Carousel titles are extracted from .json files and translated at runtime
+		return text ? this.env.model.getters.dynamicTranslate(text) : "";
 	}
 	get titleStyle() {
 		return cssPropertiesToCss(cellTextStyleToCss(chartStyleToCellStyle({
@@ -41280,7 +41285,9 @@ var SpreadsheetPivot = class {
 		return this.definition.getMeasure(id);
 	}
 	getPivotMeasureValue(id) {
-		return { value: this.getMeasure(id).displayName };
+		// Measure display names (userDefinedName) are extracted from dashboard JSON
+		// and translated at runtime, like chart/carousel titles.
+		return { value: this.getters.dynamicTranslate(this.getMeasure(id).displayName) };
 	}
 	getPivotHeaderValueAndFormat(domain) {
 		const lastNode = domain.at(-1);
