@@ -3010,8 +3010,39 @@ export class Model extends Array {
                 }
                 criterion = [criterion[0], "in", Array.from(childIds)];
             }
+            // 'parent_of' operator isn't supported by domain.js either, replace it by
+            // 'in' with the ids of the record and all its ancestors
+            if (criterion[1] === "parent_of") {
+                let oldLength = 0;
+                const parentIds = [criterion[2]];
+                while (parentIds.length > oldLength) {
+                    oldLength = parentIds.length;
+                    for (const parentId of [...parentIds]) {
+                        const record = this.find((r) => r.id === parentId);
+                        const parentValue = record?.[this._parent_name];
+                        if (parentValue && parentIds.indexOf(parentValue) < 0) {
+                            parentIds.push(parentValue);
+                        }
+                    }
+                }
+                criterion = [criterion[0], "in", parentIds];
+            }
             // In case of many2many field, if domain operator is '=' generally change it to 'in' operator
             const field = this._fields[criterion[0]] || {};
+
+            // 'any'/'not any' aren't supported by domain.js (always match), resolve the
+            // subdomain against the comodel and replace it by 'in'/'not in' on ids
+            if ((criterion[1] === "any" || criterion[1] === "not any") && field.relation) {
+                const matchedIds = [...this.env[field.relation]._filter(criterion[2])].map(
+                    (r) => r.id
+                );
+                criterion = [
+                    criterion[0],
+                    criterion[1] === "any" ? "in" : "not in",
+                    matchedIds,
+                ];
+            }
+
             if (isX2MField(field) && criterion[1] === "=") {
                 if (criterion[2] === false) {
                     // if undefined value asked, domain.js require equality with empty array
