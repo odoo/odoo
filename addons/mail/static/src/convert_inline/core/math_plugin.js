@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 
 // TODO EGGMAIL: evaluate pertinence of pixel tolerance
-const EPSILON = 0.02;
+const EPSILON = 0.05;
 const MAX_SCALE = 4;
 
 export class MathPlugin extends Plugin {
