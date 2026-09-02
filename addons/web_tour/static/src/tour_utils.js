@@ -182,34 +182,6 @@ export const stepUtils = {
         return steps;
     },
 
-    mobileKanbanSearchMany2X(modalTitle, valueSearched) {
-        return [
-            {
-                isActive: ["mobile"],
-                trigger: `.modal:not(.o_inactive_modal) .o_control_panel_navigation .btn [data-icon='search']`,
-                run: "click",
-            },
-            {
-                isActive: ["mobile"],
-                trigger: ".o_searchview_input",
-                run: `edit ${valueSearched}`,
-            },
-            {
-                isActive: ["mobile"],
-                trigger: ".dropdown-menu.o_searchview_autocomplete",
-            },
-            {
-                isActive: ["mobile"],
-                trigger: ".o_searchview_input",
-                run: "press Enter",
-            },
-            {
-                isActive: ["mobile"],
-                trigger: `.modal:not(.o_inactive_modal) .o_kanban_record:contains('${valueSearched}')`,
-                run: "click",
-            },
-        ];
-    },
     /**
      * Utility steps to save a form and wait for the save to complete
      */
