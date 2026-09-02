@@ -1,21 +1,20 @@
 import {
-    SectionAndNoteFieldOne2Many,
-    sectionAndNoteFieldOne2Many,
-    SectionAndNoteListRenderer,
-    getSectionRecords,
-} from '@account/components/section_and_note_fields_backend/section_and_note_fields_backend';
+    ProductLabelSectionAndNoteListRender,
+    productLabelSectionAndNoteOne2Many,
+    ProductLabelSectionAndNoteOne2Many,
+} from "@account/components/product_label_section_and_note_o2m/product_label_section_and_note_field_o2m";
+import { getSectionRecords } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_plugin';
 import { registry } from '@web/core/registry';
 import { useSubEnv } from '@web/owl2/utils';
 
-export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRenderer {
+export class SaleOrderTemplateLineListRenderer extends ProductLabelSectionAndNoteListRender {
     static recordRowTemplate = 'sale_management.ListRenderer.RecordRow';
 
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
-        this.productAndDescriptionColumn = "product_and_description";
         useSubEnv({
             adjustSectionQuantities: this.adjustSectionQuantities.bind(this),
             shouldCollapse: this.shouldCollapse.bind(this),
@@ -179,25 +178,17 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         super.add(params);
     }
 
-    isColumnGroupFieldVisible(fieldInfo, record) {
-        const isColumnVisible = super.isColumnGroupFieldVisible(fieldInfo, record);
-        if (!isColumnVisible) {
-            return false;
+    isColumnGroupFieldVisible(column, fieldInfo, record) {
+        const visible = super.isColumnGroupFieldVisible(column, fieldInfo, record);
+        if (column.name != this.productAndDescriptionColumn || !visible) {
+            return visible;
         }
 
-        const isVariantFieldActive = this.optionalActiveFields["product_id"];
-        const isTemplateFieldActive = this.optionalActiveFields["product_template_id"];
-
+        // Hide the template field if variant one is active
         if (fieldInfo.name === "product_template_id") {
-            return !isVariantFieldActive;
+            return !this.optionalActiveFields["product_id"];
         }
-        const isProductFieldActive = isVariantFieldActive || isTemplateFieldActive;
-        if (fieldInfo.name === "label") {
-            return !isProductFieldActive;
-        }
-        if (fieldInfo.name === "name") {
-            return isProductFieldActive;
-        }
+
         return true;
     }
 
@@ -439,7 +430,7 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         return { ...super.fieldsToReset(), is_optional: false };
     }
 }
-export class SaleOrderTemplateLineOne2Many extends SectionAndNoteFieldOne2Many {
+export class SaleOrderTemplateLineOne2Many extends ProductLabelSectionAndNoteOne2Many {
     static components = {
         ...super.components,
         ListRenderer: SaleOrderTemplateLineListRenderer,
@@ -447,7 +438,7 @@ export class SaleOrderTemplateLineOne2Many extends SectionAndNoteFieldOne2Many {
 }
 
 export const saleOrderTemplateLineOne2Many = {
-    ...sectionAndNoteFieldOne2Many,
+    ...productLabelSectionAndNoteOne2Many,
     component: SaleOrderTemplateLineOne2Many,
 };
 

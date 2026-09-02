@@ -105,7 +105,7 @@ class SaleOrderTemplate extends saleManagementModels.SaleOrderTemplate {
                         </control>
                         <field name="sequence" widget="handle"/>
                         <column name="product_and_description">
-                            <field name="name"/>
+                            <field name="name" invisible="not display_type"/>
                             <field name="label"/>
                         </column>
                         <field name="product_uom_qty"/>
