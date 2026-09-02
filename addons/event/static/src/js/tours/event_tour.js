@@ -6,20 +6,6 @@ import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 
 import { markup } from "@odoo/owl";
 
-function autoExpandMoreButtons() {
-    return {
-        isActive: ["auto"],
-        content: `autoExpandMoreButtons`,
-        trigger: ".o-form-buttonbox",
-        async run({ queryFirst, click }) {
-            const more = queryFirst(".o-form-buttonbox .o_button_more");
-            if (more) {
-                await click(more);
-            }
-        },
-    };
-}
-
 registry.category("web_tour.tours").add('event_tour', {
     steps: () => [stepUtils.showAppsMenuItem(), {
     isActive: ["mobile", "community"],
@@ -86,7 +72,17 @@ registry.category("web_tour.tours").add('event_tour', {
     content: _t("Save the ticket."),
     trigger: '.o_dialog .o_form_button_save',
     run: "click",
-}, autoExpandMoreButtons(), {
+}, {
+    isActive: ["auto"],
+    content: `autoExpandMoreButtons`,
+    trigger: ".o-form-buttonbox",
+    async run({ queryFirst, click }) {
+        const more = queryFirst(".o-form-buttonbox .o_button_more");
+        if (more) {
+            await click(more);
+        }
+    },
+}, {
     isActive: ["mobile"],
     trigger: ".o-form-buttonbox:has(.o_button_more) .o_button_more",
     run: "click",
