@@ -41,7 +41,7 @@ test("kiosk without any available category", async () => {
 test("getSubCategories and selectCategory", async () => {
     const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
     const models = store.models;
-    expect(store.currentCategory).toBeEmpty();
+    expect(store.currentCategory.id).toBe(1);
     const comp = await mountWithCleanup(ProductListPage, {});
 
     expect(store.currentCategory.id).toBe(1);

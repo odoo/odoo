@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+from unittest.mock import patch
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
@@ -268,3 +269,14 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
         result = self.env['pos.order'].search_order_ids(classic_config.id, [], 80, 0)
         self.assertIn(order.id, [order_id for order_id, _ in result['ordersInfo']])
+
+    def test_kiosk_reloads_on_config_change(self):
+        self.pos_config.write({'self_ordering_mode': 'kiosk'})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+
+        with patch.object(self.env.registry["pos.config"], "_notify") as notify:
+            self.pos_config.write({'has_paper': False})
+            notify.assert_not_called()
+            self.pos_config.write({'limit_categories': True})
+            notify.assert_called_once_with('CONFIG_UPDATED', {'write_date': self.pos_config.write_date})

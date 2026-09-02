@@ -31,9 +31,7 @@ export class ProductListPage extends Component {
         this.ui = useService("ui");
 
         const initCategories = !this.selfOrder.currentCategory;
-        if (initCategories) {
-            this.selfOrder.computeAvailableCategories();
-        }
+        this.selfOrder.computeAvailableCategories();
         const topCategories = this.topCategories;
         const selectedCategory =
             initCategories && topCategories.length > 0
