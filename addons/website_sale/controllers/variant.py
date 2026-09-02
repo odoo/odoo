@@ -52,14 +52,30 @@ class WebsiteSaleVariantController(Controller):
         ):
             combination_info.pop(key)
 
+        show_images = self.env.website.product_page_image_width != "none" and not (
+            self.env.context.get("website_sale_no_images", False)
+        )
         product = self.env["product.product"].browse(combination_info["product_id"])
         if product and product.id == product_id:
             combination_info["no_product_change"] = True
+            if show_images:
+                # The ribbon may depend on quantity changes
+                ribbon = product_template.sudo()._get_ribbon(
+                    price_vals=combination_info, variant=product
+                )
+                combination_info["ribbon"] = self.env.website._render_template(
+                    "website_sale.product_ribbon",
+                    values={
+                        "product": product_template,
+                        "ribbon": ribbon,
+                        "bg_color": ribbon.bg_color,
+                        "text_color": ribbon.text_color,
+                        "ribbon_price_vals": combination_info,
+                    },
+                )
             return combination_info
 
-        if self.env.website.product_page_image_width != "none" and not self.env.context.get(
-            "website_sale_no_images", False
-        ):
+        if show_images:
             product_or_template = product or product_template
             combination_info["display_image"] = bool(product_or_template.image_128)
             combination_info["carousel"] = self.env.website._render_template(
@@ -68,6 +84,7 @@ class WebsiteSaleVariantController(Controller):
                     "product": product_template,
                     "product_variant": product,
                     "website": self.env.website,
+                    "combination_info": combination_info,
                 },
             )
 

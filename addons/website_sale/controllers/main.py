@@ -648,6 +648,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             request.fiscal_position.with_context(self.env.context),
             website.with_context(self.env.context),
         )
+        # Avoid displaying the discount ribbon on hidden prices
+        for product in products:
+            price_vals = products_prices[product.id]
+            price_vals["hide_price"] = website._hide_product_price(
+                product, not price_vals["price_reduce"]
+            )
         product_query_params = self._get_product_query_params(**post)
 
         reset_attribute_value_params, reset_filters = self._get_shop_filter_reset_params()
