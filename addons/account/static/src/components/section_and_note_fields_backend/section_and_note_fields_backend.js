@@ -87,7 +87,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      */
     setup() {
         super.setup();
-        this.titleField = "name";
+        this.productAndDescriptionColumn = "product_and_description";
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
         this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
@@ -282,7 +282,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
     focusToName(editRec) {
         if (editRec && editRec.isNew && this.isSectionOrNote(editRec)) {
-            const col = this.columns.find((c) => c.name === this.titleField);
+            const col = this.columns.find((c) => c.name === this.productAndDescriptionColumn);
             this.focusCell(col, null);
         }
     }
@@ -445,11 +445,11 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         const sectionCols = columns.filter(
             (col) =>
                 col.widget === "handle"
-                || [this.titleField, "product_and_description"].includes(col.name)
+                || col.name === this.productAndDescriptionColumn
                 || (this.isSection(record) && this.sectionColumns.includes(col.name))
         );
         return sectionCols.map((col) => {
-            if (["product_and_description", this.titleField].includes(col.name)) {
+            if (col.name === this.productAndDescriptionColumn) {
                 return { ...col, colspan: columns.length - sectionCols.length + 1 };
             } else {
                 return { ...col };

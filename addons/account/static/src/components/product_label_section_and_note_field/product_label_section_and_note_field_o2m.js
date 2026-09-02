@@ -30,27 +30,37 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
 
     getActiveColumns() {
         let activeColumns = super.getActiveColumns();
-        const productCol = activeColumns.find((col) => this.productColumns.includes(col.name));
-        const hasDescriptionCol = activeColumns.some((col) => col.name === this.descriptionColumn);
+        const productColActive = this.optionalActiveFields["product_id"];
+        const descriptionFieldActive = this.optionalActiveFields["name"];
 
-        if (productCol) {
-            activeColumns = activeColumns.filter(
-                (col) => ![this.labelColumn, this.descriptionColumn].includes(col.name)
-            );
-            this.titleField = productCol.name;
-        } else if (hasDescriptionCol) {
-            activeColumns = activeColumns.filter((col) => col.name !== this.descriptionColumn);
-            this.titleField = this.labelColumn;
-        } else {
-            activeColumns = activeColumns.filter((col) => col.name !== this.labelColumn);
+        // Hide the stacked product_and_description column if neither the product nor the
+        // description field is active.
+        if (!productColActive && !descriptionFieldActive) {
+            activeColumns = activeColumns.filter((col) => col.name != "product_and_description");
         }
 
-        const columnIsProductAndLabel = !!productCol && hasDescriptionCol;
-        this.props.list.records.forEach((record) => {
-            record.columnIsProductAndLabel = columnIsProductAndLabel;
-        });
-
         return activeColumns;
+    }
+
+    isColumnGroupFieldVisible(fieldInfo, record) {
+        // Always show name field for section and note.
+        if (this.isSectionOrNote(record)) {
+            return fieldInfo.name === "name";
+        }
+
+        if (!super.isColumnGroupFieldVisible(fieldInfo, record)) {
+            return false;
+        }
+
+        const isProductFieldActive = this.optionalActiveFields["product_id"];
+
+        if (fieldInfo.name === "label") {
+            return !isProductFieldActive;
+        }
+        if (fieldInfo.name === "name") {
+            return isProductFieldActive;
+        }
+        return true;
     }
 }
 

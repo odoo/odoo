@@ -1,88 +1,46 @@
 import { _t } from "@web/core/l10n/translation";
 import {
     buildM2OFieldDescription,
-    extractM2OFieldProps,
-    m2oSupportedOptions,
     many2OneFieldProps,
 } from "@web/views/fields/many2one/many2one_field";
 import { registry } from "@web/core/registry";
-import { ProductNameAndDescriptionField } from "@product/product_name_and_description/product_name_and_description";
-import { t, useProps } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
+import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 
-export const productLabelSectionAndNoteFieldProps = {
-    ...many2OneFieldProps,
-    show_label_warning: t.boolean().optional(false),
-};
-
-export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionField {
+export class ProductLabelSectionAndNoteField extends Component {
     static template = "account.ProductLabelSectionAndNoteField";
-    props = useProps(productLabelSectionAndNoteFieldProps);
+    static components = { Many2One };
+    props = useProps(many2OneFieldProps);
 
-    static descriptionColumn = "name";
+    get productName() {
+        return this.props.record.data[this.props.name].display_name || "";
+    }
 
-    get sectionAndNoteClasses() {
+    get isProductClickable() {
+        return this.props.record.evalContext.parent.state !== "draft";
+    }
+
+    get m2oProps() {
+        const p = computeM2OProps(this.props);
+        let value = p.value && { ...p.value };
+        if (this.props.readonly && this.productName) {
+            value = { ...value, display_name: this.productName };
+        }
         return {
-            "fw-bolder": this.isSection,
-            "fw-bold": this.isSubSection,
-            "fst-italic": this.isNote(),
-            "text-warning": this.shouldShowWarning(),
+            ...p,
+            canOpen: p.canOpen && (!this.props.readonly || this.isProductClickable),
+            placeholder: _t("Search a product"),
+            preventMemoization: true,
+            value,
         };
-    }
-
-    get sectionAndNoteIsReadonly() {
-        return (
-            this.props.readonly
-            && this.isProductClickable
-            && (["cancel", "posted"].includes(this.props.record.evalContext.parent.state)
-            || this.props.record.evalContext.parent.locked)
-        )
-    }
-
-    get isSection() {
-        return this.props.record.data.display_type === "line_section";
-    }
-
-    get isSubSection() {
-        return this.props.record.data.display_type === "line_subsection";
-    }
-
-    get isSectionOrSubSection() {
-        return this.isSection || this.isSubSection;
-    }
-
-    isNote(record = null) {
-        record = record || this.props.record;
-        return record.data.display_type === "line_note";
-    }
-
-    shouldShowWarning() {
-        return (
-            !this.productName &&
-            this.props.show_label_warning &&
-            !this.isSectionOrSubSection &&
-            !this.isNote()
-        );
     }
 }
 
 export const productLabelSectionAndNoteField = {
     ...buildM2OFieldDescription(ProductLabelSectionAndNoteField),
     listViewWidth: [240, 400],
-    supportedOptions: [
-        ...m2oSupportedOptions,
-        {
-            label: _t("Show Label Warning"),
-            name: "show_label_warning",
-            type: "boolean",
-            default: false
-        },
-    ],
-    extractProps({ options }) {
-        const props = extractM2OFieldProps(...arguments);
-        props.show_label_warning = options.show_label_warning;
-        return props;
-    },
 };
+
 registry
     .category("fields")
     .add("product_label_section_and_note_field", productLabelSectionAndNoteField);
