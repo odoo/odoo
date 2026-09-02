@@ -43,21 +43,9 @@ export class OutOfFocusService {
         ) {
             return;
         }
-        const author = message.author;
-        let notificationTitle;
-        let icon = "/mail/static/src/img/odoobot_transparent.png";
-        if (!author) {
-            notificationTitle = _t("New message");
-        } else {
-            icon = author.avatarUrl;
-            if (message.thread?.channel?.channel_type === "channel") {
-                notificationTitle = _t("%(author name)s from %(channel name)s", {
-                    "author name": message.authorName,
-                    "channel name": message.channel_id.displayName,
-                });
-            } else {
-                notificationTitle = message.authorName;
-            }
+        let title = message.thread?.displayName || _t("New message");
+        if (message.thread?.channel?.channel_type === "channel") {
+            title = `#${title}`;
         }
         const notificationContent = htmlToTextContentInline(message.previewText).substring(
             0,
@@ -66,9 +54,9 @@ export class OutOfFocusService {
         await this.sendNotification({
             message: notificationContent,
             sound: Boolean(message.channel_id),
-            title: notificationTitle,
+            title,
             type: "info",
-            icon,
+            icon: message.thread?.avatarUrl ?? "/web/static/img/odoo-icon-192x192.png",
         });
     }
 

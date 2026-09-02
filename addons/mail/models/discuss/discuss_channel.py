@@ -1311,22 +1311,31 @@ class DiscussChannel(models.Model):
             store.add(message.channel_id, ["message_count"])
         return rdata
 
+    def _notify_by_push_get_title(self, message, force_record_name=False):
+        author = message.author_id or message.author_guest_id
+        if self.channel_type == "chat":
+            # in a DM the conversation is the author
+            return author.name
+        record_name = force_record_name or message.record_name
+        if self.channel_type == "channel":
+            return f"#{record_name}"
+        return record_name or self.display_name
+
+    def _notify_by_push_get_body_prefix(self, message):
+        # in a DM the title is already the author's name
+        if self.channel_type == "chat":
+            return ""
+        return super()._notify_by_push_get_body_prefix(message)
+
+    def _notify_by_push_get_icon(self, message):
+        if self.channel_type in ["channel", "group"]:
+            return f"/web/image/discuss.channel/{self.id}/avatar_128"
+        author = message.author_id or message.author_guest_id
+        return f"/web/image/{author._name}/{author.id}/avatar_128"
+
     def _notify_by_web_push_prepare_payload(self, message, force_record_name=False):
         payload = super()._notify_by_web_push_prepare_payload(message, force_record_name=force_record_name)
         payload['options']['data']['action'] = 'mail.action_discuss'
-        record_name = force_record_name or message.record_name
-        author = message.author_id or message.author_guest_id
-        if self.channel_type == 'chat':
-            payload['title'] = author.name
-        elif self.channel_type == 'channel':
-            payload['title'] = "#%s - %s" % (record_name, author.name)
-        elif self.channel_type == 'group':
-            if not record_name:
-                member_names = self.channel_member_ids.mapped(lambda m: m.partner_id.name if m.partner_id else m.guest_id.name)
-                record_name = f"{', '.join(member_names[:-1])} and {member_names[-1]}" if len(member_names) > 1 else member_names[0] if member_names else ""
-            payload['title'] = "%s - %s" % (record_name, author.name)
-        else:
-            payload['title'] = "#%s" % (record_name)
         return payload
 
     def _notify_thread_by_web_push(self, message, recipients_data, **kwargs):

@@ -4141,6 +4141,21 @@ class MailThread(models.AbstractModel):
             } for device in devices])
             self.env.ref('mail.ir_cron_web_push_notification')._trigger()
 
+    def _notify_by_push_get_title(self, message, force_record_name=False):
+        return force_record_name or message.record_name
+
+    def _notify_by_push_get_body_prefix(self, message):
+        """ Author prefix for the notification body, when the title does not already name them. """
+        author = message.author_id or message.author_guest_id
+        if name := author.name or message.email_from:
+            return f"{name}: "
+        return ""
+
+    def _notify_by_push_get_icon(self, message):
+        if module := self._original_module:
+            return modules.module.get_module_icon(module)
+        return '/web/static/img/odoo-icon-192x192.png'
+
     def _notify_by_web_push_prepare_payload(self, message, force_record_name=False):
         """ Returns dictionary containing message information for a browser device.
         This info will be delivered to a browser device via its recorded endpoint.
@@ -4149,16 +4164,11 @@ class MailThread(models.AbstractModel):
         :param str force_record_name: record_name to use instead of being
           related record's display_name;
         """
-        title = force_record_name or message.record_name
+        title = self._notify_by_push_get_title(message, force_record_name=force_record_name)
+        icon = self._notify_by_push_get_icon(message)
         body = message.body
         if message.message_type == 'tracking':
             body = "\n%s\n%s" % (message.subtype_id.description, body)
-
-        if message.author_id:
-            title = "%s: %s" % (message.author_id.name, title)
-            icon = "/web/image/res.partner/%d/avatar_128" % message.author_id.id
-        else:
-            icon = '/web/static/img/odoo-icon-192x192.png'
 
         if tools.is_html_empty(body) and message.attachment_ids:
             total_attachments = len(message.attachment_ids)
@@ -4183,10 +4193,13 @@ class MailThread(models.AbstractModel):
                     count=total_attachments - 1,
                 )
 
+        body = html2plaintext(body, include_references=False)
+        if prefix := self._notify_by_push_get_body_prefix(message):
+            body = f"{prefix}{body}"
         return {
             'title': title,
             'options': {
-                'body': html2plaintext(body, include_references=False),
+                'body': body,
                 'icon': icon,
                 'data': {
                     'model': message.model or '',
