@@ -681,9 +681,10 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_get_billing_specified_period_node(self, vals):
         invoice = vals['invoice']
         billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
-        billing_start_dates += [move_line.deferred_start_date for move_line in invoice.invoice_line_ids if move_line.deferred_start_date]
         billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
-        billing_end_dates += [move_line.deferred_end_date for move_line in invoice.invoice_line_ids if move_line.deferred_end_date]
+        if invoice.invoice_line_ids._fields.get('deferred_start_date'):
+            billing_start_dates += [move_line.deferred_start_date for move_line in invoice.invoice_line_ids if move_line.deferred_start_date]
+            billing_end_dates += [move_line.deferred_end_date for move_line in invoice.invoice_line_ids if move_line.deferred_end_date]
         start_date = end_date = None
         if billing_start_dates:
             start_date = min(billing_start_dates)
