@@ -26,6 +26,7 @@ class BaseLanguageInstall(models.TransientModel):
     first_lang_id = fields.Many2one('res.lang',
                                     compute='_compute_first_lang_id',
                                     help="Used when the user only selects one language and is given the option to switch to it")
+    first_lang_code = fields.Char(related='first_lang_id.code', string='Language Code')
 
     def _compute_first_lang_id(self):
         self.first_lang_id = False
