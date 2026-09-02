@@ -1,5 +1,4 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { useDomState } from "@html_builder/core/utils";
 import { onWillStart, usePlugin } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
@@ -50,17 +49,11 @@ export class StoreLocatorOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.orm = usePlugin(ORM);
-        this.state = useDomState((editingElement) => {
-            const locations = JSON.parse(editingElement.dataset.locationsList || "[]");
-            return {
-                availableRecords: this.state.availableRecords ?? "[]",
-                hasAvailableRecords: this.state.hasAvailableRecords,
-                hasLocations: !!locations.length,
-            };
-        });
+        this.availableRecords = [];
+        this.hasAvailableRecords = false;
 
         onWillStart(async () => {
-            const searchResult = await this.orm.searchRead(
+            this.searchResult = await this.orm.searchRead(
                 "res.partner",
                 [
                     ["city", "!=", false],
@@ -69,8 +62,8 @@ export class StoreLocatorOption extends BaseOptionComponent {
                 ],
                 STORE_LOCATOR_PARTNER_FIELDS
             );
-            this.state.availableRecords = JSON.stringify(searchResult);
-            this.state.hasAvailableRecords = searchResult.length > 0;
+            this.availableRecords = JSON.stringify(this.searchResult ?? []);
+            this.hasAvailableRecords = this.searchResult?.length > 0;
         });
     }
 }

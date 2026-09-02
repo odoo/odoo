@@ -9,17 +9,17 @@
     </t>
 
     <t t-name="website.locationSelector.map.tooltip">
-        <b t-out="location.name"/><br/>
+        <strong t-out="location.name"/><br/>
         <t t-out="location.street"/><br/>
         <t t-out="location.zip_code"/> <t t-out="location.city"/>
         <t t-if="showPhone and location.phone">
-            <br/><i class="oi oi-fw me-1" data-icon="phone"/> <t t-out="location.phone"/>
+            <br/><i class="oi oi-fw me-1" data-icon="phone" role="img" aria-hidden="true"/> <t t-out="location.phone"/>
         </t>
         <t t-if="showEmail and location.email">
-            <br/><i class="oi oi-fw me-1" data-icon="mail"/> <t t-out="location.email"/>
+            <br/><i class="oi oi-fw me-1" data-icon="mail" role="img" aria-hidden="true"/> <t t-out="location.email"/>
         </t>
         <t t-if="showWebsite and location.website">
-            <br/><i class="oi oi-fw me-1" data-icon="link"/> <a t-attf-href="{{location.website}}" target="_blank"><t t-out="location.website"/></a>
+            <br/><i class="oi oi-fw me-1" data-icon="link" role="img" aria-hidden="true"/> <a t-attf-href="{{location.website}}" target="_blank"><t t-out="location.website"/></a>
         </t>
     </t>
 

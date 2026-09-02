@@ -23,11 +23,15 @@ export class StoreLocator extends Interaction {
             sidebarLocation: dataset.mapSidebarLocation,
             containerEl: this.el,
         };
-        this.mountComponent(
-            this.el.querySelector(".o_store_locator_component"),
-            LocationSelectorComponent,
-            props
-        );
+
+        const locationList = JSON.parse(dataset.locationsList || "[]")
+        if (locationList.length){
+            this.mountComponent(
+                this.el.querySelector(".o_store_locator_component"),
+                LocationSelectorComponent,
+                props
+            );
+        }
     }
 }
 

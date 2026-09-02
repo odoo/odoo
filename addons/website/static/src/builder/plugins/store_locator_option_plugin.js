@@ -15,19 +15,7 @@ class StoreLocatorOptionPlugin extends Plugin {
             HideLocationsOffscreenAction,
             RefreshStoreLocatorAction,
         },
-        on_will_save_handlers: this.onWillSave.bind(this),
     };
-
-    onWillSave(rootEl = this.editable) {
-        // Remove store_locator snippets without entries
-        const storeLocatorSnippets = rootEl.querySelectorAll(".s_store_locator");
-        storeLocatorSnippets.forEach((snippet) => {
-            const locationList = JSON.parse(snippet.dataset.locationsList || "[]");
-            if (locationList.length == 0) {
-                snippet.remove();
-            }
-        });
-    }
 }
 
 export class HideLocationsOffscreenAction extends BuilderAction {
@@ -53,16 +41,14 @@ export class HideLocationsOffscreenAction extends BuilderAction {
             });
         }
     }
-
-    clean() {}
 }
 
-async function batchGeolocalize(orm, locationsMap, IDsToUpdate) {
+async function batchGeolocalize(orm, locationsMap, idsToUpdate) {
     // Calls geo_localize to update the coordinates of the partners
-    await orm.call("res.partner", "geo_localize", [IDsToUpdate]);
+    await orm.call("res.partner", "geo_localize", [idsToUpdate]);
     // Reads the new coordinates and copies them to the locations, replacing
     // the old coordinates
-    const coordinatesData = await orm.read("res.partner", IDsToUpdate, [
+    const coordinatesData = await orm.read("res.partner", idsToUpdate, [
         "partner_latitude",
         "partner_longitude",
     ]);
@@ -73,14 +59,14 @@ async function batchGeolocalize(orm, locationsMap, IDsToUpdate) {
     });
 }
 
-async function batchUpdateCalendar(orm, locationsMap, IDsToUpdate) {
+async function batchUpdateCalendar(orm, locationsMap, idsToUpdate) {
     const updateCalendarsProms = [];
-    // Tries to retrieve the opening hours for IDsToUpdate
+    // Tries to retrieve the opening hours for idsToUpdate
     let calendars;
     try {
         calendars = await orm.searchRead(
             "stock.warehouse",
-            [["partner_id", "in", IDsToUpdate]],
+            [["partner_id", "in", idsToUpdate]],
             ["partner_id", "opening_hours"]
         );
     } catch (error) {
@@ -139,12 +125,12 @@ export class AddLocationToStoreLocatorAction extends BuilderAction {
         await batchUpdateCalendar(this.services.orm, locationsMap, newLocationsId);
 
         let newLocationsList = Array.from(locationsMap.values());
-        const lenghtBeforeFiltering = newLocationsList.length;
+        const lengthBeforeFiltering = newLocationsList.length;
         newLocationsList = newLocationsList.filter(
             (l) => l.partner_latitude && l.partner_longitude
         );
         const lengthAfterFiltering = newLocationsList.length;
-        if (lenghtBeforeFiltering > lengthAfterFiltering) {
+        if (lengthBeforeFiltering > lengthAfterFiltering) {
             this.services.dialog.add(ConfirmationDialog, {
                 title: _t("Geolocation Failed"),
                 body: _t(

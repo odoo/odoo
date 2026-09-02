@@ -58,7 +58,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe div.o_location_selector_textarea",
         },
         {
-            content: "Check that no toltip is displayed",
+            content: "Check that no tooltip is displayed",
             trigger: ":iframe body:not(:has(section.o_location_selector_view div.leaflet-tooltip))",
         },
         {
