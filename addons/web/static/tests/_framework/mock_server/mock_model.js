@@ -685,7 +685,7 @@ function isValidFieldValue(record, fieldDef) {
             );
         }
         case "selection": {
-            return fieldDef.selection.some(([value]) => value === value);
+            return fieldDef.selection.some(([key]) => key === value);
         }
         default: {
             return true;
@@ -3327,42 +3327,63 @@ export class Model extends Array {
                 // interpret commands
                 for (const command of value || []) {
                     const coModel = getRelation(field, record);
-                    if (command[0] === 0) {
-                        // CREATE
-                        const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
-                        const inverseFieldName = field.inverse_fname_by_model_name?.[coModel._name];
-                        if (inverseFieldName) {
-                            inverseData[inverseFieldName] =
-                                field.type === "many2many" ? [record.id] : record.id;
+                    switch (command[0]) {
+                        case 0: {
+                            // CREATE
+                            const inverseData = command[2]; // write in place instead of copy, because some tests rely on the object given being updated
+                            const inverseFieldName =
+                                field.inverse_fname_by_model_name?.[coModel._name];
+                            if (inverseFieldName) {
+                                inverseData[inverseFieldName] =
+                                    field.type === "many2many" ? [record.id] : record.id;
+                            }
+                            const [newId] = coModel.create([inverseData]);
+                            ids.push(newId);
+                            break;
                         }
-                        const [newId] = coModel.create([inverseData]);
-                        ids.push(newId);
-                    } else if (command[0] === 1) {
-                        // UPDATE
-                        coModel.write([command[1]], command[2]);
-                    } else if (command[0] === 2 || command[0] === 3) {
-                        // DELETE or FORGET
-                        ids.splice(ids.indexOf(command[1]), 1);
-                    } else if (command[0] === 4) {
-                        // LINK_TO
-                        if (!ids.includes(command[1])) {
-                            ids.push(command[1]);
+                        case 1: {
+                            // UPDATE
+                            coModel.write([command[1]], command[2]);
+                            break;
                         }
-                    } else if (command[0] === 5) {
-                        // DELETE ALL
-                        ids = [];
-                    } else if (command[0] === 6) {
-                        // REPLACE WITH
-                        // copy array to avoid leak by reference (eg. of default data)
-                        ids = [...command[2]];
-                    } else {
-                        throw new MockServerError(
-                            `Command "${JSON.stringify(
-                                value
-                            )}" is not supported by the MockServer on field "${fieldName}" in model "${
-                                this._name
-                            }"`
-                        );
+                        case 2: {
+                            // DELETE: remove the relation and delete the corecord
+                            ids.splice(ids.indexOf(command[1]), 1);
+                            coModel.unlink([command[1]]);
+                            break;
+                        }
+                        case 3: {
+                            // UNLINK: only remove the relation, keep the corecord
+                            ids.splice(ids.indexOf(command[1]), 1);
+                            break;
+                        }
+                        case 4: {
+                            // LINK_TO
+                            if (!ids.includes(command[1])) {
+                                ids.push(command[1]);
+                            }
+                            break;
+                        }
+                        case 5: {
+                            // DELETE ALL
+                            ids = [];
+                            break;
+                        }
+                        case 6: {
+                            // REPLACE WITH
+                            // copy array to avoid leak by reference (eg. of default data)
+                            ids = [...command[2]];
+                            break;
+                        }
+                        default: {
+                            throw new MockServerError(
+                                `Command "${JSON.stringify(
+                                    value
+                                )}" is not supported by the MockServer on field "${fieldName}" in model "${
+                                    this._name
+                                }"`
+                            );
+                        }
                     }
                 }
                 applyWrite(fieldName, ids);
