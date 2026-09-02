@@ -43,7 +43,8 @@ class TestTotalAverageCostCommon(TransactionCase):
         return self._create_move(qty, price, self.today - timedelta(days=days), self.supplier_loc, self.stock_loc)
 
     def _set_standard_price(self, price, date, product=None):
-        """Change the cost with an effective date, the way the wizard does.
+        """
+        Change the cost with an effective date, the way the wizard does.
 
         A plain write stamps the history at wall-clock now, which is after every
         back-dated move a test creates, so the moves would not see the new cost.

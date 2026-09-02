@@ -12,7 +12,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         ]
 
     def _get_production_move_values(self, moves):
-        """Value a manufacturing order's output at its 製造原価.
+        """
+        Value a manufacturing order's output at its 製造原価.
 
         法人税法施行令 32条1項2号 counts the materials, the labour and the overhead,
         which is what core's own _cal_price totals, and by-products take the share
@@ -35,7 +36,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             finished_qty = sum(
                 production.move_finished_ids
                 .filtered(lambda m: m.state == 'done' and m.product_id == production.product_id)
-                .mapped('quantity_product_uom')
+                .mapped('quantity_product_uom'),
             )
             total_cost = abs(sum(production.move_raw_ids.mapped('value')))
             total_cost += sum(order._cal_cost() for order in production.workorder_ids)

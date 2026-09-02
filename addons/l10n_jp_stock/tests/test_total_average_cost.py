@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo import fields
@@ -117,6 +117,20 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         # core values a consignor's goods at nothing, so they are not acquisitions either
         self.assertAlmostEqual(self.product.standard_price, 100, places=2)
         self.assertEqual(action['params']['type'], 'info')
+
+    def test_period_boundaries_follow_the_user_timezone(self):
+        self._add_opening_stock()
+        # 16:00 UTC is already the next day in Tokyo, 14:00 UTC is not
+        self._create_move(10, 200, datetime(2026, 1, 14, 16, 0), self.supplier_loc, self.stock_loc)
+        self._create_move(5, 300, datetime(2026, 1, 14, 14, 0), self.supplier_loc, self.stock_loc)
+        wizard = self.env['l10n_jp_stock.total.average.cost.wizard'].with_context(tz='Asia/Tokyo').create({
+            'category_id': self.category.id,
+            'date_from': self.today,
+            'date_to': self.today,
+        })
+        wizard.action_apply_total_average_cost()
+        # only the first is acquired in the period; the second opened it
+        self.assertAlmostEqual(self.product.standard_price, (105 * 100 + 10 * 200) / 115, places=2)
 
     def test_basic_calculation(self):
         self._add_opening_stock()

@@ -201,7 +201,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         }
 
     def _get_production_move_values(self, moves):
-        """Return the acquisition value of each manufacturing receipt, by move id.
+        """
+        Return the acquisition value of each manufacturing receipt, by move id.
 
         Without ``mrp`` a receipt from a production location is valued at its own
         unit price; ``l10n_jp_mrp`` values the order's output at the materials
@@ -235,8 +236,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         billed = move._get_value_from_account_move(qty)
         value = billed['value']
         remaining_qty = qty - billed['quantity']
-        if remaining_qty and 'purchase_line_id' in move._fields and (line := move.purchase_line_id):
-            value += line._get_stock_move_price_unit(self._move_date_local(move)) * move._get_cost_ratio(remaining_qty)
+        # the order only prices the move where purchase_stock is installed
+        line = move.purchase_line_id if 'purchase_line_id' in move._fields else False
+        if remaining_qty and line:
+            value += line._get_stock_move_price_unit(move.date) * move._get_cost_ratio(remaining_qty)
             remaining_qty = 0
         if remaining_qty:
             value += remaining_qty * move.price_unit
