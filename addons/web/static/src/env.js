@@ -100,9 +100,9 @@ export const globalValues = {
 export async function mountComponent(component, target, appConfig = {}) {
     const env = makeEnv();
     const app = new App({
+        config: { env },
         customDirectives,
         dev: odoo.debug || session.test_mode,
-        env,
         getTemplate,
         globalValues,
         name: appConfig.name || component.constructor.name,
