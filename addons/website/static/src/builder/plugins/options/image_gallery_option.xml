@@ -88,13 +88,17 @@
         <!-- Controls and indicators are set before the content so that they
              are focused in priority when navigating the page with tab. -->
         <div class="o_carousel_controllers">
-            <button class="o_carousel_pause o_snippet_not_selectable o_not_editable o_btn_reset z-2" t-attf-aria-controls="slideshow_sample" title="Pause slides">
-                <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
-                <span class="visually-hidden">Pause slides</span>
-            </button>
             <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" t-attf-aria-controls="#{this.id}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
                 <span class="carousel-control-prev-icon" aria-hidden="true"/>
                 <span class="visually-hidden">Previous slide</span>
+            </button>
+            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" t-attf-aria-controls="#{this.id}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
+                <span class="carousel-control-next-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Next slide</span>
+            </button>
+            <button class="o_carousel_pause o_snippet_not_selectable o_not_editable o_btn_reset z-2" t-attf-aria-controls="slideshow_sample" title="Pause slides">
+                <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
+                <span class="visually-hidden">Pause slides</span>
             </button>
             <div class="carousel-indicators s_image_gallery_indicators_bars" role="tablist">
                 <t t-foreach="this.images" t-as="image" t-key="image_index">
@@ -111,10 +115,6 @@
                     </button>
                 </t>
             </div>
-            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{this.id}" t-attf-aria-controls="#{this.id}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
-                <span class="carousel-control-next-icon" aria-hidden="true"/>
-                <span class="visually-hidden">Next slide</span>
-            </button>
         </div>
         <div class="carousel-inner" t-attf-id="#{this.id}_inner" t-att-aria-live="this.ride === 'false' ? 'polite' : 'off'">
             <t t-foreach="this.images" t-as="image" t-key="image_index">

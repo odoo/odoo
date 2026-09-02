@@ -3388,7 +3388,7 @@ Disallow: /*/my/*
     <xpath expr="//div[@role='search']" position="replace">
         <t t-if="not placeholder" t-set="placeholder">Search...</t>
         <form t-attf-class="o_searchbar_form s_searchbar_input #{_form_classes}" t-att-action="action" method="get" t-attf-data-snippet="s_searchbar_input">
-            <a t-if="_simple_button_layout" t-attf-class="o_search_btn {{_simple_button_classes or 'p-1 bg-o-color-3 lh-1'}} btn o_not_editable" role="button" title="Search" href="#">
+            <a t-if="_simple_button_layout" t-attf-class="o_search_btn {{_simple_button_classes or 'p-1 bg-o-color-3 lh-1'}} btn o_not_editable" role="button" aria-label="Search bar" title="Search" href="#">
                 <i class="oi-stack lh-lg oi" data-icon="search" role="img"/>
             </a>
             <t>$0</t>
