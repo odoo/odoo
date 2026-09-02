@@ -4,7 +4,7 @@ import json
 
 import babel.dates
 
-from odoo.addons.test_orm.tests.test_properties import TestPropertiesMixin
+from odoo.addons.test_base.tests.test_orm.test_properties import TestPropertiesMixin
 from odoo.exceptions import UserError
 from odoo.fields import Domain, Command
 from odoo.tests import tagged, Form

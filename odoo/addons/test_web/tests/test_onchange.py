@@ -77,7 +77,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_onchange(self):
         """ test the effect of onchange() """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         BODY = "What a beautiful day!"
         USER = self.env.user
 
@@ -398,7 +398,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_fields_specific(self):
         """ test the effect of field-specific onchange method """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         demo = self.user_demo
 
         fields_spec = self.Discussion._get_fields_spec()
@@ -457,7 +457,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_onchange_one2many_value(self):
         """ test the value of the one2many field inside the onchange """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         demo = self.user_demo
 
         fields_spec = self.Discussion._get_fields_spec()
@@ -502,12 +502,12 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_onchange_one2many_with_domain_on_related_field(self):
         """ test the value of the one2many field when defined with a domain on a related field"""
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         demo = self.user_demo
 
         # mimic UI behaviour, so we get subfields
         # (we need at least subfield: 'important_emails.important')
-        view_info = self.Discussion.get_view(self.env.ref('test_orm.discussion_form').id, 'form')
+        view_info = self.Discussion.get_view(self.env.ref('test_base.discussion_form').id, 'form')
         fields_spec = self.Discussion._get_fields_spec(view_info=view_info)
         self.assertEqual(fields_spec, {
             'name': {},
@@ -606,7 +606,7 @@ class TestOnchange(SavepointCaseWithUserDemo):
 
     def test_onchange_many2one_one2many(self):
         """ Setting a many2one field should not read the inverse one2many. """
-        discussion = self.env.ref('test_orm.discussion_0')
+        discussion = self.env.ref('test_base.discussion_0')
         fields_spec = self.Message._get_fields_spec()
         self.assertEqual(fields_spec, {
             'discussion': {'fields': {'display_name': {}}},
@@ -1372,7 +1372,7 @@ class TestComputeOnchange2(TransactionCase):
             'participants': [Command.set(self.env.user.ids)],
         })
 
-        with Form(discussion, 'test_orm.discussion_form_2') as discussion_form:
+        with Form(discussion, 'test_base.discussion_form_2') as discussion_form:
             self.assertEqual(len(discussion_form.messages), 1)
             with discussion_form.messages.new() as message_form:
                 # this actually checks that during the onchange, the new message
@@ -1391,7 +1391,7 @@ class TestComputeOnchange2(TransactionCase):
             'participants': [Command.set(self.env.user.ids)],
         })
 
-        with Form(discussion, 'test_orm.discussion_form_2') as discussion_form:
+        with Form(discussion, 'test_base.discussion_form_2') as discussion_form:
             self.assertEqual(len(discussion_form.messages), 0)
             with discussion_form.messages.new() as message_form:
                 # this actually checks that during the onchange, the new message
@@ -1423,7 +1423,7 @@ class TestComputeOnchange2(TransactionCase):
             'participants': [Command.set(self.env.user.ids)],
         })
 
-        with Form(discussion, 'test_orm.discussion_form_2') as discussion_form:
+        with Form(discussion, 'test_base.discussion_form_2') as discussion_form:
             self.assertEqual(len(discussion_form.messages), 1)
             with discussion_form.messages.new() as message_form:
                 # check that Msg1 is visible in the one2many during onchange()
