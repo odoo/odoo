@@ -245,15 +245,7 @@ class ProjectTask(models.Model):
                     days_left = _("(%s days remaining)", task._convert_hours_to_days(task.remaining_hours))
                     task.display_name = task.display_name + "\u00A0" + days_left
                 elif task.allow_timesheets and task.allocated_hours > 0:
-                    hours, mins = divmod(round(abs(task.remaining_hours) * 60), 60)
-                    sign = '-' if task.remaining_hours < 0 else ''
-                    kwargs = {'sign': sign, 'hours': hours, 'minutes': mins}
-                    if hours and mins:
-                        hours_left = self.env._("%(sign)s%(hours)sh %(minutes)sm", **kwargs)
-                    elif hours:
-                        hours_left = self.env._("%(sign)s%(hours)sh", **kwargs)
-                    else:
-                        hours_left = self.env._("%(sign)s%(minutes)sm", **kwargs)
+                    hours_left = self.env['account.analytic.line']._format_portal_hours(task.remaining_hours)
                     if self.env.context.get('formatted_display_name'):
                         task.display_name = f"{task.display_name} \t --{hours_left}--"
                     else:
