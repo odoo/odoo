@@ -190,6 +190,14 @@ def change(root: etree._ElementTree, path: str) -> bool:
                 )):
                 # Move the t-set if the are some content or if it's used
                 # for an other t-set
+                if tcall.getparent() is None:
+                    inner = etree.Element(tcall.tag, tcall.attrib)
+                    inner.text = tcall.text
+                    inner.extend(list(tcall))
+                    tcall.attrib.clear()
+                    tcall.tag = 't'
+                    tcall.append(inner)
+                    tcall = inner
                 move_tset_before_tcall(tset, tcall)
                 tcall.set(tset.get('t-set'), tset.get('t-set'))
                 content_updated = True
