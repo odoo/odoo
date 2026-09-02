@@ -67,7 +67,7 @@ class Binary(http.Controller):
         '/web/content/<int:id>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>',
-    ], type='http', auth='public', readonly=True)
+    ], type='http', auth='public', readonly=True, cors="*")
     # pylint: disable=redefined-builtin,invalid-name
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                        filename=None, filename_field='name', mimetype=None, unique=False,

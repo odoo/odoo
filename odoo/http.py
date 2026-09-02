@@ -2329,6 +2329,7 @@ class Dispatcher(ABC):
                 'POST' if routing['type'] == JsonRPCDispatcher.routing_type
                 else ', '.join(routing['methods'] or ['GET', 'POST'])
             ))
+            set_header('Access-Control-Expose-Headers', 'Content-Disposition')
 
         if cors and self.request.httprequest.method == 'OPTIONS':
             set_header('Access-Control-Max-Age', CORS_MAX_AGE)

@@ -1,4 +1,5 @@
 import { url } from "@web/core/utils/urls";
+import { session } from "@web/session";
 
 export const FileModelMixin = (T) =>
     class extends T {
@@ -28,7 +29,12 @@ export const FileModelMixin = (T) =>
             const route = url(this.urlRoute, this.urlQueryParams);
             const encodedRoute = encodeURIComponent(route);
             if (this.isPdf) {
-                return `/web/static/lib/pdfjs/web/viewer.html?file=${encodedRoute}#pagemode=none`;
+                const url = `/web/static/lib/pdfjs/web/viewer.html?file=${encodedRoute}#pagemode=none`;
+                const originUrl = session.origin;
+                if (originUrl) {
+                    return `${originUrl}${url}`;
+                }
+                return url;
             }
             if (this.isUrlYoutube) {
                 const urlArr = this.url.split("/");
