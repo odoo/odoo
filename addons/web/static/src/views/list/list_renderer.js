@@ -386,7 +386,7 @@ export class ListRenderer extends Component {
     }
 
     focusCell(column, forward = true) {
-        const index = this.state.columns.indexOf(column);
+        const index = this.state.columns.map(e => e.name).indexOf(column.name);
         let columns;
         if (index === -1 && !forward) {
             columns = this.state.columns.slice(0).reverse();
