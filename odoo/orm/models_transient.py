@@ -21,10 +21,17 @@ class TransientModel(Model):
     _transient = True           # transient
 
     # default values for _transient_vacuum()
-    _transient_max_count = lazy_classproperty(lambda _: int(config.get('osv_memory_count_limit')))
-    "maximum number of transient records, unlimited if ``0``"
-    _transient_max_hours = lazy_classproperty(lambda _: float(config.get('transient_age_limit')))
-    "maximum idle lifetime (in hours), unlimited if ``0``"
+    @lazy_classproperty
+    def _transient_max_count(cls):
+        """maximum number of transient records, unlimited if ``0``
+        """
+        return int(config.get('osv_memory_count_limit'))
+
+    @lazy_classproperty
+    def _transient_max_hours(cls):
+        """maximum idle lifetime (in hours), unlimited if ``0``
+        """
+        return float(config.get('transient_age_limit'))
 
     @api.autovacuum
     def _transient_vacuum(self):
