@@ -119,6 +119,12 @@ export class SelfOrder extends Reactive {
             this.data.connectWebSocket("STATUS", async ({ status }) => {
                 await this.handleKioskSessionStatusChange(status);
             });
+            this.data.connectWebSocket("CONFIG_UPDATED", ({ write_date }) => {
+                // The bus replays recent notifications on first poll: skip those already loaded
+                if (write_date > this.config.raw.write_date) {
+                    window.location.reload();
+                }
+            });
             this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
                     const [orderData] = data["pos.order"];
@@ -264,7 +270,9 @@ export class SelfOrder extends Reactive {
     }
     computeAvailableCategories() {
         this.availableCategories = this.getAvailableCategories();
-        this.currentCategory = this.availableCategories[0];
+        if (!this.isCategoryAvailable(this.currentCategory?.id)) {
+            this.currentCategory = this.availableCategories[0];
+        }
     }
 
     isCategoryAvailable(categId) {
@@ -954,9 +962,20 @@ export class SelfOrder extends Reactive {
         return webFormatCurrency(price, this.currency.id);
     }
 
+    isLineProductAvailable(line) {
+        if (!line.product_id?.self_order_available) {
+            return false;
+        }
+        const categIds = line.product_id.product_tmpl_id?.pos_categ_ids?.length
+            ? line.product_id.product_tmpl_id.pos_categ_ids.map((c) => c.id)
+            : [0];
+        return categIds.some((id) => this.isCategoryAvailable(id));
+    }
+
     verifyCart() {
         let result = true;
         const unavailableProducts = new Set();
+        this.availableCategories = this.getAvailableCategories();
 
         const deliveryProductId = this.currentOrder.preset_id?.delivery_product_id?.id;
         for (const line of this.currentOrder.unsentLines) {
@@ -973,13 +992,14 @@ export class SelfOrder extends Reactive {
                 : false;
 
             const wrongChild = line.combo_line_ids.find((l) => !l.product_id.self_order_available);
-            if (wrongChild || !line.product_id?.self_order_available) {
+            const lineAvailable = this.isLineProductAvailable(line);
+            if (wrongChild || !lineAvailable) {
                 if (alreadySent) {
                     line.qty = alreadySent.qty;
                     line.customer_note = alreadySent.customer_note;
                     line.selected_attributes = alreadySent.selected_attributes;
                 } else {
-                    const productName = !line.product_id?.self_order_available
+                    const productName = !lineAvailable
                         ? line.product_id?.name
                         : wrongChild?.product_id?.name;
 
