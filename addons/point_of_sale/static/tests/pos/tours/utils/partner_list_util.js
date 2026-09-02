@@ -27,6 +27,7 @@ export function clickPartner(name = "", { expectUnloadPage = false } = {}) {
             trigger: `.modal-dialog .input-group input`,
             run: `edit ${name}`,
         },
+        ...searchMore(),
         {
             content: `click partner '${name}' from partner list screen`,
             trigger: partnerListTrigger(name),
@@ -143,6 +144,28 @@ export function checkCustomerShown(val) {
     };
 }
 
+export function searchMore() {
+    return [
+        {
+            content: `Manually trigger keyup event`,
+            trigger: ".modal-header .input-group input",
+            run: function () {
+                document
+                    .querySelector(".modal-header .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
+            },
+        },
+        {
+            content: `Press Enter to trigger "search more"`,
+            trigger: `.modal-dialog .input-group input`,
+            run: () =>
+                document
+                    .querySelector(".modal-dialog .input-group input")
+                    .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" })),
+        },
+    ];
+}
+
 export function searchCustomerValue(val, pressEnter = false) {
     const steps = [
         {
@@ -159,23 +182,7 @@ export function searchCustomerValue(val, pressEnter = false) {
     ];
 
     if (pressEnter) {
-        steps.push({
-            content: `Manually trigger keyup event`,
-            trigger: ".modal-header .input-group input",
-            run: function () {
-                document
-                    .querySelector(".modal-header .input-group input")
-                    .dispatchEvent(new KeyboardEvent("keyup", { key: "" }));
-            },
-        });
-        steps.push({
-            content: `Press Enter to trigger "search more"`,
-            trigger: `.modal-dialog .input-group input`,
-            run: () =>
-                document
-                    .querySelector(".modal-dialog .input-group input")
-                    .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" })),
-        });
+        steps.push(...searchMore());
     }
     steps.push(checkCustomerShown(val));
     return steps;
