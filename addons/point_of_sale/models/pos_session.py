@@ -255,7 +255,9 @@ class PosSession(models.Model):
                 if session.state == 'closed':
                     total_cash = session.cash_real_transaction + total_cash_payment
                 else:
-                    total_cash = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
+                    # sudo: cash moves are hidden by the account.move record rules
+                    # from users without accounting rights, who can still create them
+                    total_cash = sum(session.sudo().statement_line_ids.mapped('amount')) + total_cash_payment
 
                 session.cash_register_balance_end = session.cash_register_balance_start + total_cash
                 session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
