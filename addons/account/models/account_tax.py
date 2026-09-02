@@ -1859,6 +1859,9 @@ class AccountTax(models.Model):
                                     defining how much delta will be allocated to this factor.
         :return:                    A list of floats, one per element in 'target_factors'.
         """
+        if not target_factors:
+            return []
+
         precision_rounding = float(f"1e-{precision_digits}")
         amounts_to_distribute = [0.0] * len(target_factors)
         if float_is_zero(delta_amount, precision_digits=precision_digits):

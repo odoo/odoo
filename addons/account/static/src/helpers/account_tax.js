@@ -778,6 +778,10 @@ export const accountTaxHelpers = {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     distribute_delta_amount_smoothly(precision_digits, delta_amount, target_factors) {
+        if (!target_factors.length) {
+            return [];
+        }
+
         const precision_rounding = Number(`1e-${precision_digits}`);
         const amounts_to_distribute = target_factors.map((x) => 0.0);
         if (floatIsZero(delta_amount, precision_digits)) {
