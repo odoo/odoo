@@ -153,7 +153,7 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
         })
         sale_order.action_confirm()
         self.assertEqual(loyalty_card.points, 1)
-        self.env['ir.config_parameter'].set_str('point_of_sale.limited_customer_count', '0')
+        self.env['ir.config_parameter'].set_str('point_of_sale.limited_customer_count', '1')
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_sale_order_loyalty_card_can_be_used_in_pos')
         order = self.main_pos_config.current_session_id.order_ids[0]
