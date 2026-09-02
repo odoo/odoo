@@ -189,7 +189,7 @@
                     <small t-out="track.partner_tag_line"/>
                 </div>
             </div>
-            <div class="o_we_agenda_card_filter_badges d-flex justify-content-center align-items-end gap-1 pb-1">
+            <div class="o_we_agenda_card_filter_badges justify-content-center align-items-end pb-1">
                 <div>
                     <t t-foreach="track.tag_ids" t-as="tag">
                         <span t-if="tag.color" t-att-title="tag.name"
@@ -202,16 +202,17 @@
                             "
                         />
                     </t>
-                </div>
-                <div class="d-flex justify-content-end flex-wrap-reverse ms-auto align-items-center gap-1 o_weagenda_track_badges">
                     <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
-                        class="mx-1 badge text-bg-danger rounded-1">Live
+                        class="m-1 badge text-bg-danger rounded-1">Live
                     </small>
+                </div>
+                <div class="d-block mx-auto align-items-center o_weagenda_track_badges">
+
                     <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))">
                         <t t-call="website_event_track.track_widget_reminder"
                             reminder_light="False"
                             reminder_small="True"
-                            light_theme="False"/>
+                        />
                     </span>
                 </div>
             </div>
