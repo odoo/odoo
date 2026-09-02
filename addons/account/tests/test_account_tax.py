@@ -390,3 +390,13 @@ class TestAccountTax(AccountTestInvoicingCommon):
             hide_original_tax_ids=True,
         ).name_search(name='Name search tax')
         self.assertEqual(result, [(tax_1.id, tax_1.display_name)])
+
+    def test_distribute_delta_amount_smoothly_empty_target_factors(self):
+        """ Empty 'target_factors' must not crash, e.g. a reverse-charge tax
+        with no positive-factor repartition line. """
+        result = self.env['account.tax']._distribute_delta_amount_smoothly(
+            precision_digits=2,
+            delta_amount=0.03,
+            target_factors=[],
+        )
+        self.assertEqual(result, [])
