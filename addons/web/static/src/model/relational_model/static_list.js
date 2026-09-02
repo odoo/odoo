@@ -867,7 +867,25 @@ export class StaticList extends DataPoint {
                     commands.push([uCommand[0], uCommand[1], values]);
                 }
             } else if (command[0] === CREATE || command[0] === UPDATE) {
-                const record = this._cache[command[1]];
+                const id = command[1];
+                let record = this._cache[id];
+                if (!record) {
+                    // Commands can get out of sync with the cache when lines are
+                    // added/removed faster than onchange/save. Recover from the
+                    // still-visible records so we don't drop user input; skip
+                    // true ghosts (no matching row) so save can complete.
+                    record = this.records.find((r) => r._virtualId === id || r.resId === id);
+                    if (record) {
+                        this._cache[id] = record;
+                        const cacheId = record.resId || record._virtualId;
+                        if (cacheId && !this._cache[cacheId]) {
+                            this._cache[cacheId] = record;
+                        }
+                    }
+                }
+                if (!record) {
+                    continue;
+                }
                 if (command[0] === CREATE && record.resId) {
                     // we created a new record, but it has already been saved (e.g. because we clicked
                     // on a view button in the x2many dialog), so replace the CREATE command by a

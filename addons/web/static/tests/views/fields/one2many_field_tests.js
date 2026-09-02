@@ -11265,6 +11265,50 @@ QUnit.module("Fields", (hooks) => {
         assert.hasClass(target.querySelectorAll(".o_data_row")[1], "o_selected_row");
     });
 
+    QUnit.test("saving x2many recovers CREATE missing from cache", async function (assert) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree editable="bottom">
+                            <field name="turtle_foo"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "web_save") {
+                    assert.step("web_save");
+                    assert.ok(
+                        args.args[1].turtles.some(
+                            (cmd) => cmd[0] === 0 && cmd[2].turtle_foo === "new"
+                        ),
+                        "visible new line should still be written"
+                    );
+                    assert.ok(
+                        !args.args[1].turtles.some((cmd) => cmd[1] === "virtual_ghost"),
+                        "ghost CREATE command should be skipped"
+                    );
+                }
+            },
+        });
+
+        await addRow(target);
+        await editInput(target, ".o_field_widget[name=turtle_foo] input", "new");
+
+        const list = form.model.root.data.turtles;
+        const createCommand = list._commands.find((c) => c[0] === 0);
+        assert.ok(createCommand, "CREATE command exists");
+        delete list._cache[createCommand[1]];
+        list._commands.push([0, "virtual_ghost"]);
+
+        await clickSave(target);
+        assert.verifySteps(["web_save"]);
+    });
+
     QUnit.test(
         "many2manys inside a one2many are fetched in batch after onchange",
         async function (assert) {
