@@ -12,10 +12,13 @@ from odoo.tools.pdf import PdfFileWriter, PdfFileReader, NameObject, NumberObjec
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
+    def _get_sale_pdfs(self):
+        return ['sale.report_saleorder']
+
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):
         """Override to add and fill headers, footers and product documents to the sale quotation."""
         result = super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
-        if self._get_report(report_ref).report_name != 'sale.report_saleorder':
+        if self._get_report(report_ref).report_name not in self._get_sale_pdfs():
             return result
 
         orders = self.env['sale.order'].browse(res_ids)
