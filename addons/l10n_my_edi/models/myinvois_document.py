@@ -406,7 +406,7 @@ class MyInvoisDocument(models.Model):
             # raised error.
             invoice_bodies = {
                 invoice.id: self.env['account.move.send']._format_error_html({
-                    'error_title': self.env._("Error when generating the file."),
+                    'error_title': self.env._("Error when processing E-Invoice."),
                     'errors': errored_doc_messages[doc.id],
                 })
                 for doc in errored_docs
@@ -418,7 +418,7 @@ class MyInvoisDocument(models.Model):
                     log_env['account.move'].browse(invoice_bodies)._message_log_batch(bodies=invoice_bodies)
             if len(self) == 1:
                 raise UserError(self.env['account.move.send']._format_error_text({
-                    'error_title': self.env._("Error when generating the file."),
+                    'error_title': self.env._("Error when processing E-Invoice."),
                     'errors': errored_doc_messages[errored_docs.id],
                 }))
             errored_invoices = errored_docs.invoice_ids
