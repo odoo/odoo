@@ -68,6 +68,22 @@ class TestLoyalty(TransactionCase):
         with mute_logger("odoo.sql_db"), self.assertRaises(IntegrityError):
             self.program.reward_ids.discount_line_product_id.unlink()
 
+    def test_discount_line_product_no_default_tax(self):
+        """The auto-created discount product should never pick up the company's default
+        sale tax, even if one is configured."""
+        default_tax = self.env["account.tax"].create({
+            "name": "Test Default Sale Tax",
+            "amount": 15,
+            "type_tax_use": "sale",
+        })
+        self.env.company.account_sale_tax_id = default_tax
+        reward = self.env["loyalty.reward"].create({
+            "program_id": self.program.id,
+            "reward_type": "discount",
+            "description": "Test Discount",
+        })
+        self.assertFalse(reward.discount_line_product_id.taxes_id)
+
     def test_loyalty_mail(self):
         # Test basic loyalty_mail functionalities
         loyalty_card_model_id = self.env.ref("loyalty.model_loyalty_card")
