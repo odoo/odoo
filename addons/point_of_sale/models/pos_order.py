@@ -1052,33 +1052,16 @@ class PosOrder(models.Model):
                     })
                     total_amount_currency += amount_currency
                     total_balance += balance
-        # Stock.
-        if self.picking_ids.ids:
-            stock_moves = self.env['stock.move'].sudo().search([
-                ('picking_id', 'in', self.picking_ids.ids),
-                ('product_id.valuation', '=', 'real_time'),
-            ])
-            for stock_move in stock_moves:
-                product_accounts = stock_move.with_company(stock_move.company_id).product_id._get_product_accounts()
-                expense_account = product_accounts['expense']
-                stock_account = product_accounts['stock_valuation']
-                balance = stock_move.value if stock_move.is_out else -stock_move.value
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': expense_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': balance,
-                    'balance': balance,
-                })
-                aml_vals_list_per_nature['stock'].append({
-                    'name': _("Stock variation for %s", stock_move.product_id.name),
-                    'account_id': stock_account.id,
-                    'partner_id': commercial_partner.id,
-                    'currency_id': self.company_id.currency_id.id,
-                    'amount_currency': -balance,
-                    'balance': -balance,
-                })
+        # Stock: reverse the COGS from the invoice
+        for cogs_line in self.account_move.line_ids.filtered(lambda aml: aml.display_type == 'cogs'):
+            aml_vals_list_per_nature['stock'].append({
+                'name': _("Stock variation for %s", cogs_line.product_id.name),
+                'account_id': cogs_line.account_id.id,
+                'partner_id': cogs_line.partner_id.id,
+                'currency_id': self.company_id.currency_id.id,
+                'amount_currency': cogs_line.balance,
+                'balance': cogs_line.balance,
+            })
 
         # sort self.payment_ids by is_split_transaction:
         for payment_id in self.payment_ids:
