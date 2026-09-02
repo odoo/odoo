@@ -783,6 +783,16 @@ export class ProductPage extends Interaction {
         if (comparePrice) {
             comparePrice.classList.toggle('d-none', combination.has_discounted_price);
         }
+        const discountBadge = parent.querySelector('[name="product_discount_badge"]');
+        if (discountBadge) {
+            discountBadge.classList.toggle('d-none', !combination.has_discounted_price);
+            if (combination.has_discounted_price && combination.list_price) {
+                const discountPercent = Math.round(
+                    (combination.list_price - combination.price) / combination.list_price * 100
+                );
+                discountBadge.textContent = `-${discountPercent}%`;
+            }
+        }
 
         Object.entries(attributeValueImages || {}).forEach(([valueId, imageUrl]) => {
             const input = parent.querySelector(`input[data-value-id="${valueId}"]`);

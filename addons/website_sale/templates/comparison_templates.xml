@@ -62,6 +62,17 @@
                                                         t-out="combination_info['list_price']"
                                                         t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                                                     />
+                                                    <t
+                                                        t-set="product_discount_percent"
+                                                        t-value="round(
+                                                            (combination_info['list_price'] - combination_info['price'])
+                                                            / combination_info['list_price'] * 100
+                                                        ) if combination_info['has_discounted_price'] and combination_info['list_price'] else 0"
+                                                    />
+                                                    <span
+                                                        name="product_discount_badge"
+                                                        t-attf-class="badge text-bg-success ms-1 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                                        ><t t-out="'-%s' % product_discount_percent"/>%</span>
                                                 </div>
                                             </div>
                                         </a>
@@ -134,6 +145,17 @@
                                                 t-out="combination_info['list_price']"
                                                 t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
                                             />
+                                            <t
+                                                t-set="product_discount_percent"
+                                                t-value="round(
+                                                    (combination_info['list_price'] - combination_info['price'])
+                                                    / combination_info['list_price'] * 100
+                                                ) if combination_info['has_discounted_price'] and combination_info['list_price'] else 0"
+                                            />
+                                            <span
+                                                name="product_discount_badge"
+                                                t-attf-class="badge text-bg-success me-2 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                                ><t t-out="'-%s' % product_discount_percent"/>%</span>
                                             <small t-if="'base_unit_price' in combination_info"
                                                    class="d-block text-muted">
                                                 <t t-call="website_sale.base_unit_price"
