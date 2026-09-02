@@ -21,10 +21,9 @@ class TestProductRibbon(WebsiteSaleCommon):
         })
 
         # Sale ribbon
-        self.sale_ribbon = self.env["product.ribbon"].create({
-            "name": "Sale Ribbon",
-            "assign": "sale",
-        })
+        self.sale_ribbon = self.env["product.ribbon"].search(
+            [("assign", "=", "sale")], limit=1
+        ) or self.env["product.ribbon"].create({"name": "Sale Ribbon", "assign": "sale"})
 
         # New ribbon
         self.new_ribbon = self.env["product.ribbon"].create({"name": "New Ribbon", "assign": "new"})

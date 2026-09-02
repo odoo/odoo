@@ -90,6 +90,39 @@ class ProductRibbon(models.Model):
                 css_classes += " o_right"
         return css_classes
 
+    def _get_discount_percent(self, price_data):
+        """Compute the discount percentage from the given price information.
+
+        :param dict price_data: price information for the given product
+        :return: the discount percentage
+        :rtype: int
+        """
+        if not price_data:
+            return 0
+        if "base_price" in price_data:  # for /shop page
+            before, after = price_data["base_price"], price_data.get("price_reduce") or 0
+        elif price_data.get("has_discounted_price") and price_data.get("list_price"):  # for /product page
+            before, after = price_data["list_price"], price_data.get("price") or 0
+        elif "compare_list_price" in price_data:  # for /product page
+            before, after = price_data["compare_list_price"], price_data.get("price") or 0
+        else:
+            return 0
+        if not before or before <= after:
+            return 0
+        return round((before - after) / before * 100)
+
+    def _get_display_name(self, price_data=None):
+        """Return the text to display for this ribbon.
+
+        :param dict price_data: price information for the given product
+        :rtype: str
+        """
+        if self.assign == "sale":
+            discount_percent = self._get_discount_percent(price_data)
+            if discount_percent:
+                return f"-{discount_percent}%"
+        return self.name or ""
+
     def _is_applicable_for(self, product, price_data):
         """Return whether the product matches the criteria of the ribbon automatic assignment.
 
@@ -104,23 +137,7 @@ class ProductRibbon(models.Model):
 
         # Check if a discount is applied to the product using a pricelist, comparison price, or
         # others.
-        if (  # noqa: SIM103
-            self.assign == "sale"
-            and price_data
-            and (
-                # for /shop page
-                (
-                    "base_price" in price_data
-                    and (price_data["base_price"] > price_data["price_reduce"])
-                )
-                # for /product page
-                or (
-                    "compare_list_price" in price_data
-                    and price_data["compare_list_price"] > price_data["price"]
-                )
-                or price_data.get("has_discounted_price")
-            )
-        ):
+        if self.assign == "sale" and self._get_discount_percent(price_data):
             return True
         # Check if the product is published within the ribbon's new period.
         if (  # noqa: SIM103
