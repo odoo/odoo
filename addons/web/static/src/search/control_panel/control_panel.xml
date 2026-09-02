@@ -64,7 +64,7 @@
                     <t t-if="this.uiService.isSmall">
                         <EmbeddedActionsPanel id="embedded-actions-panel-mobile" state="this.embeddedPanelState"/>
                     </t>
-                    <div t-if="this.pagerProps and this.pagerProps.total > 0" class="o_cp_pager text-nowrap " role="search">
+                    <div t-if="this.pagerProps and this.pagerProps.total > 0" class="o_cp_pager text-nowrap align-self-stretch" role="search">
                         <Pager t-props="this.pagerProps"/>
                     </div>
                     <button t-if="this.embeddedPanelState.embeddedInfos.embeddedActions?.length and !this.uiService.isSmall" name="embedded_actions" class="btn btn-secondary"
