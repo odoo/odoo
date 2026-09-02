@@ -72,9 +72,10 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         invoice = vals['invoice']
         super()._add_invoice_header_nodes(document_node, vals)
 
+        profile_id = self._l10n_fr_pdp_get_profile_id(vals)
         document_node.update({
             'cbc:CustomizationID': {'_text': CPRO_CUSTOMIZATION_ID if b2g else PDP_CUSTOMIZATION_ID},
-            'cbc:ProfileID': {'_text': self._l10n_fr_pdp_get_profile_id(vals)},
+            'cbc:ProfileID': {'_text': profile_id},
         })
 
         # [BR-FR-05] Add mandatory notes with defaults if not already present
@@ -97,6 +98,12 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 }
             }
 
+        # [BR-FR-CO-09/BT-23] : Si le cadre de facturation (BT-23) est B2, S2 ou M2, alors la date d'échéance (BT-9) doit être renseignée et correspondre à la date de paiement.
+        # For credit notes, this is handled in `_add_invoice_payment_means_nodes` instead, as `cac:PaymentMeans` is
+        # not populated yet at this point.
+        if profile_id in ('B2', 'S2', 'M2') and vals['document_type'] != 'credit_note':
+            document_node['cbc:DueDate'] = {'_text': invoice._pdp_get_payment_date() or invoice.invoice_date}
+
         # B2G
         if not b2g:
             return
@@ -108,6 +115,21 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             document_node['cac:OrderReference'] = {
                 'cbc:ID': {'_text': invoice.purchase_order_reference}
             }
+
+    def _add_invoice_payment_means_nodes(self, document_node, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._add_invoice_payment_means_nodes(document_node, vals)
+
+        if vals['document_type'] != 'credit_note':
+            return
+
+        profile_id = self._l10n_fr_pdp_get_profile_id(vals)
+        # [BR-FR-CO-09/BT-23] : Si le cadre de facturation (BT-23) est B2, S2 ou M2, alors la date d'échéance (BT-9) doit être renseignée et correspondre à la date de paiement.
+        if profile_id in ('B2', 'S2', 'M2'):
+            invoice = vals['invoice']
+            payment_due_date = invoice._pdp_get_payment_date() or invoice.invoice_date
+            for node in document_node['cac:PaymentMeans']:
+                node['cbc:PaymentDueDate'] = {'_text': payment_due_date}
 
     def _ubl_add_party_identification_nodes(self, vals):
         super()._ubl_add_party_identification_nodes(vals)
