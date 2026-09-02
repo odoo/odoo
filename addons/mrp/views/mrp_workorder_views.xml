@@ -75,7 +75,8 @@
                 <field name="name" string="Operation" readonly="state in ['cancel', 'done']"/>
                 <field name="workcenter_id" readonly="state in ['cancel', 'done', 'progress']"/>
                 <field name="product_id" optional="show"/>
-                <field name="qty_production" optional="show" string="Quantity"/>
+                <field name="qty_production" optional="hide" string="Quantity"/>
+                <field name="qty_to_produce" optional="show" string="To Produce"/>
                 <field name="qty_produced" optional="hide" string="Produced"/>
                 <field name="qty_remaining" optional="hide" string="Remaining"/>
                 <field name="qty_ready" optional="hide" string="Ready" groups="base.group_no_one"/>
@@ -494,11 +495,14 @@
             <xpath expr="//field[@name='qty_production']" position="attributes">
                 <attribute name="sum">Total Quantity</attribute>
             </xpath>
+            <xpath expr="//field[@name='qty_to_produce']" position="attributes">
+                <attribute name="sum">Total To Produce</attribute>
+            </xpath>
             <xpath expr="//field[@name='qty_production']" position="after">
                 <field name="production_lot_producing_id" optional="hide" groups="stock.group_production_lot"/>
             </xpath>
             <xpath expr="//field[@name='qty_produced']" position="attributes">
-                <attribute name="sum">Total To Produce</attribute>
+                <attribute name="sum">Total Produced</attribute>
                 <attribute name="optional">show</attribute>
             </xpath>
             <xpath expr="//field[@name='qty_remaining']" position="attributes">

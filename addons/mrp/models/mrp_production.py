@@ -1772,18 +1772,18 @@ class MrpProduction(models.Model):
             production.move_raw_ids._action_assign()
         return True
 
-    def button_plan(self, as_soon_as_possible=True):
+    def button_plan(self, as_soon_as_possible=True, ignore_schedule=False):
         """ Create work orders. And probably do stuff, like things. """
         for order in self:
             if order.is_planned:
                 continue
             if as_soon_as_possible:
                 order.date_start = fields.Datetime.now()
-            order._plan_workorders()
+            order._plan_workorders(ignore_schedule)
             order.message_post(body=self.env._("The manufacturing order has been planned."), subtype_id=self.env.ref('mrp.mt_mo_state').id)
         return True
 
-    def _plan_workorders(self):
+    def _plan_workorders(self, ignore_schedule=False):
         """ Plan all the production's workorders depending on the workcenters
         work schedule.
         """
@@ -1799,7 +1799,7 @@ class MrpProduction(models.Model):
         self.workorder_ids.filtered(
             lambda wo: not wo.is_planned
             and not wo.needed_by_workorder_ids
-        )._action_plan(from_date=self.date_start)
+        )._action_plan(from_date=self.date_start, ignore_schedule=ignore_schedule)
 
     def button_unplan(self):
         self._unplan_workorders()
@@ -2276,12 +2276,16 @@ class MrpProduction(models.Model):
             for index, workorder in enumerate(bo.workorder_ids):
                 remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
                 workorder.qty_reported_from_previous_wo = max(workorder.qty_production - remaining_qty, 0)
+                workorder.duration_expected = workorder._get_duration_expected()
                 if remaining_qty:
                     initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
                 else:
                     workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
         backorders._action_confirm_mo_backorders()
+        for production, backorders in production_to_backorders.items():
+            if production.is_planned:
+                backorders.button_plan(ignore_schedule=True)
 
         return self.env['mrp.production'].browse(production_ids)
 
@@ -2318,11 +2322,11 @@ class MrpProduction(models.Model):
             productions_not_to_backorder = self
             productions_to_backorder = self.env['mrp.production']
         productions_not_to_backorder = productions_not_to_backorder.with_context(no_procurement=True)
-        self.workorder_ids.button_finish()
 
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder
 
+        self.workorder_ids.button_finish()
         for production in self.filtered(lambda p: not p.uom_id.is_zero(production.qty_producing)):
             production.move_raw_ids.filtered(lambda m: not m.picked).picked = True
 
