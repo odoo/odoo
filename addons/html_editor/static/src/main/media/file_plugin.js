@@ -91,9 +91,9 @@ export class FilePlugin extends Plugin {
 
     setup() {
         this.attachmentViewer = this.services.fileViewer();
-        this.editable.addEventListener("click", this.onClick.bind(this));
-        this.editable.addEventListener("keydown", this.onKeyDown.bind(this));
-        this.document.addEventListener("pointerdown", this.onPointerDown.bind(this));
+        this.addDomListener(this.editable, "click", this.onClick);
+        this.addDomListener(this.editable, "keydown", this.onKeyDown);
+        this.addDomListener(this.document, "pointerdown", this.onPointerDown);
     }
 
     onClick(ev) {
