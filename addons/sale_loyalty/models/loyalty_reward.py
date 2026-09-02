@@ -9,7 +9,7 @@ class LoyaltyReward(models.Model):
     def _get_discount_product_values(self):
         res = super()._get_discount_product_values()
         for vals in res:
-            vals.update({"taxes_id": False, "supplier_taxes_id": False, "invoice_policy": "order"})
+            vals.update({"invoice_policy": "order"})
         return res
 
     def unlink(self):
