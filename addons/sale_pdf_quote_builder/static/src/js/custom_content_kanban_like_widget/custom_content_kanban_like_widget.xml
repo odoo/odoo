@@ -35,25 +35,30 @@
         <t t-set="id" t-value="section.id or section.name"/>
         <div class="mb-4">
             <div class="mb-2">
-                <h3 t-out="section.name"/>
-                <t t-foreach="section.files" t-as="doc" t-key="id+'-button-'+doc.id">
-                    <input
-                        type="checkbox"
-                        class="btn-check"
-                        t-att-id="id+'-'+doc.id"
-                        t-att-checked="doc.is_selected"
-                        t-on-click="() => {
-                            doc.is_selected = !doc.is_selected;
-                            save(id, doc.id, doc.is_selected);
-                        }"
-                        t-att-disabled="this.props.readonly"
-                    />
-                    <label
-                        class="btn btn-secondary m-1"
-                        t-att-for="id+'-'+doc.id"
-                        t-out="doc.name"
-                    />
-                </t>
+                <div
+                    class="o_horizontal_separator mb-3 text-uppercase fw-bolder small"
+                    t-out="section.name"
+                />
+                <div class="d-flex flex-wrap gap-1">
+                    <t t-foreach="section.files" t-as="doc" t-key="id+'-button-'+doc.id">
+                        <input
+                            type="checkbox"
+                            class="btn-check"
+                            t-att-id="id+'-'+doc.id"
+                            t-att-checked="doc.is_selected"
+                            t-on-click="() => {
+                                doc.is_selected = !doc.is_selected;
+                                save(id, doc.id, doc.is_selected);
+                            }"
+                            t-att-disabled="this.props.readonly"
+                        />
+                        <label
+                            class="btn btn-secondary"
+                            t-att-for="id+'-'+doc.id"
+                            t-out="doc.name"
+                        />
+                    </t>
+                </div>
             </div>
             <t
                 t-foreach="section.files.filter(doc => doc.is_selected)"
