@@ -1,4 +1,5 @@
-    import { changePricelist, checkPriceCart } from "@website_event_sale/../tests/tours/helpers/WebsiteEventSaleTourMethods";
+    import { checkPriceCart } from "@website_event_sale/../tests/tours/helpers/WebsiteEventSaleTourMethods";
+    import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 
     function checkPriceBooth(eventName, price, priceSelected) {
         return [
@@ -49,7 +50,7 @@
     export const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceSelected, priceCart, priceBeforeDiscount=false}) {
         const checkPriceSteps = priceBeforeDiscount ? checkPriceDiscountBooth(eventName, price, priceSelected, priceBeforeDiscount) : checkPriceBooth(eventName, price, priceSelected);
         return [
-           ...changePricelist(pricelistName),
+           ...wsTourUtils.selectPriceList(pricelistName),
            ...checkPriceSteps,
            ...checkPriceCart(priceCart),
         ]

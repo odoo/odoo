@@ -45,6 +45,7 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
                 })
             ],
         })
+        cls.website.show_line_subtotals_tax_selection = "tax_excluded"
 
     def test_website_sale_cart_notification_tax_included(self):
         self.env.ref("website_sale.product_search").sudo().active = True

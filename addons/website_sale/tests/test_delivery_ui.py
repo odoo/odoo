@@ -16,6 +16,8 @@ class TestUi(HttpCase):
         if "enforce_cities" in self.env["res.country"]._fields:
             self.env.company.country_id.enforce_cities = False
 
+        self.env.company.website_id.show_line_subtotals_tax_selection = "tax_excluded"
+
         # Avoid Shipping/Billing address page
         self.env.ref("base.partner_admin").write({
             "street": "215 Vine St",

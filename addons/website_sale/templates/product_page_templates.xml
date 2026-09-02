@@ -81,7 +81,6 @@
                                 </li>
                             </ol>
                             <div class="d-flex d-md-none gap-2 ms-auto">
-                                <t t-call="website_sale.pricelist_list"/>
                                 <t t-call="website.website_search_box_input"
                                     search_type.f="products"
                                     placeholder="placeholder"
@@ -91,9 +90,7 @@
                         </div>
                         <div
                             class="o_wsale_product_top_bar_desktop d-none d-md-inline-flex flex-wrap gap-2 w-auto mb-lg-auto"
-                        >
-                            <t t-call="website_sale.pricelist_list"/>
-                        </div>
+                        />
                     </div>
                     <div
                         t-attf-class="row align-items-lg-start {{website.product_page_cols_order == 'inverse' and 'flex-lg-row-reverse' or ''}}"
@@ -923,7 +920,7 @@
 
     <template id="website_sale.tax_indication" active="False">
         <small
-            t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+            t-if="website.tax_display == 'tax_excluded'"
             class="text-muted text-nowrap"
         >
             (Tax excluded)

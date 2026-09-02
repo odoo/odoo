@@ -14,7 +14,6 @@ from odoo.tools import float_round
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
-    PRICELIST_SESSION_CACHE_KEY,
 )
 
 
@@ -86,7 +85,7 @@ class SaleOrder(models.Model):
         self.amount_delivery = 0.0
         for order in self.filtered("website_id"):
             delivery_lines = order.order_line.filtered("is_delivery")
-            if order.website_id.show_line_subtotals_tax_selection == "tax_excluded":
+            if order.website_id.tax_display == "tax_excluded":
                 order.amount_delivery = sum(delivery_lines.mapped("price_subtotal"))
             else:
                 order.amount_delivery = sum(delivery_lines.mapped("price_total"))
@@ -505,9 +504,7 @@ class SaleOrder(models.Model):
             # we need to recompute the prices to match the new pricelist if it changed
             self._recompute_prices()
 
-            new_pricelist = self.pricelist_id
-            request.session[PRICELIST_SESSION_CACHE_KEY] = new_pricelist.id
-            request.pricelist = new_pricelist
+            self.env.website.sudo().pricelist_id = self.pricelist_id
 
         if self.carrier_id and "partner_shipping_id" in fnames and self._has_deliverable_products():
             # Update the delivery method on shipping address change.

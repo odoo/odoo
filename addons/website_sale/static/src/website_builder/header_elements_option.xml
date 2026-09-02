@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.HeaderElementsOption" t-inherit="website.HeaderElementsOption" t-inherit-mode="extension">
+        <xpath expr="//*[@id=&quot;'header_language_selector_opt'&quot;]" position="after">
+            <BuilderButton
+                title.translate="Pricelist Selector"
+                className="'fa fa-money flex-grow-1'"
+                actionParam="{
+                    views: ['website_sale.header_pricelist_selector'],
+                    resetViewArch: true,
+                }"
+            />
+        </xpath>
+    </t>
+
+</templates>

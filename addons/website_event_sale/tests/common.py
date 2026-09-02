@@ -96,5 +96,6 @@ class TestWebsiteEventSaleCommon(WebsiteSaleCommon):
             })
 
         cls.pricelist = cls._enable_pricelists()
-        cls.pricelist_without_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR Without Discount Included')
-        cls.ex_pricelist_without_discount = create_pricelist(currency=cls.currency_test, name='EX Without Discount Included')
+        cls.pricelist_without_discount = create_pricelist(currency=cls.env.company.currency_id, name='EUR')
+        cls.ex_pricelist_without_discount = create_pricelist(currency=cls.currency_test, name='EX')
+        cls.website.show_line_subtotals_tax_selection = 'tax_excluded'
