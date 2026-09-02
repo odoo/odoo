@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools import SQL
 
 
 class AccountMove(models.Model):
@@ -21,6 +22,8 @@ class AccountMove(models.Model):
     )
     withholding_residual_amount_currency = fields.Monetary(
         compute="_compute_residual_withholding_amount",
+        compute_sql='_compute_sql_residual_withholding_amount',
+        compute_sudo=False,
         currency_field='currency_id',
         help="The remaining withholding amount to be deducted."
     )
@@ -97,6 +100,9 @@ class AccountMove(models.Model):
     def _compute_residual_withholding_amount(self):
         for move in self:
             move.withholding_residual_amount_currency = move.withholding_total_amount_currency - move.withholding_deducted_amount_currency
+
+    def _compute_sql_residual_withholding_amount(self, table):
+        return SQL("%s - %s", table.withholding_total_amount_currency, table.withholding_deducted_amount_currency)
 
     @api.depends("amount_residual", "withholding_residual_amount_currency")
     def _compute_withholding_net_residual_amount(self):
