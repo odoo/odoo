@@ -47,7 +47,7 @@ export class SearchModal extends Component {
         });
 
         useListener(window, "click", (event) => {
-            if (!this.modalRef()?.contains(event.target)) {
+            if (this.modalRef() && !this.modalRef().contains(event.target)) {
                 this.props.close();
             }
         });
