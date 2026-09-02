@@ -1,7 +1,6 @@
 import { Component, markup, usePlugin, t, useProps } from "@odoo/owl";
 import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { router } from "@web/core/browser/router";
@@ -80,28 +79,9 @@ export function preferencesItem() {
     };
 }
 
-export function odooAccountItem() {
-    return {
-        type: "item",
-        id: "account",
-        description: _t("My Odoo.com Account"),
-        callback: () => {
-            rpc("/web/session/account")
-                .then((url) => {
-                    browser.open(url, "_blank");
-                })
-                .catch(() => {
-                    browser.open("https://accounts.odoo.com/account", "_blank");
-                });
-        },
-        sequence: 60,
-    };
-}
-
 function installPWAItem() {
     const pwa = useService("pwa");
     const menu = useService("menu");
-
     let description = _t("Install App");
     let callback = () => pwa.show();
     let hide = !pwa.isAvailable || isDisplayStandalone();
@@ -171,7 +151,6 @@ registry
     .add("shortcuts", shortCutsItem)
     .add("separator", separator)
     .add("preferences", preferencesItem)
-    .add("odoo_account", odooAccountItem)
     .add("install_pwa", installPWAItem)
     .add("log_out", logOutItem)
     .add("share_url", shareUrlMenuItem);
