@@ -3008,8 +3008,10 @@ class AccountEdiUBL(models.AbstractModel):
         end_date_str = line_tree.findtext('./{*}InvoicePeriod/{*}EndDate')
         if start_date_str and end_date_str:
             to_write = collected_values['to_write']
-            to_write['deferred_start_date'] = fields.Date.from_string(start_date_str)
-            to_write['deferred_end_date'] = fields.Date.from_string(end_date_str)
+            if "deferred_start_date" in self.env["account.move.line"]._fields:
+                # only checking the existence of the first of the enterprise fields
+                to_write['deferred_start_date'] = fields.Date.from_string(start_date_str)
+                to_write['deferred_end_date'] = fields.Date.from_string(end_date_str)
 
     def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
         percentage = tax_category_tree.findtext('./{*}Percent')
