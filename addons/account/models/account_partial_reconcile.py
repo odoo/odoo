@@ -957,7 +957,7 @@ class AccountPartialReconcile(models.Model):
             frozendict(tax_line_vals['analytic_distribution'] or {}),
         )
 
-    def _create_tax_cash_basis_moves(self, aml_residual_map):
+    def _create_tax_cash_basis_moves(self):
         ''' Create the tax cash basis journal entries.
         :return: The newly created journal entries.
         '''
@@ -966,11 +966,12 @@ class AccountPartialReconcile(models.Model):
         moves_to_create_and_post = []
         moves_to_create_in_draft = []
         to_reconcile_after = []
+
         for move_values in tax_cash_basis_values_per_move.values():
             move = move_values['move']
             pending_cash_basis_lines = []
             amount_residual_per_tax_line = {
-                line.id: aml_residual_map.get(line.id, line.amount_residual_currency)
+                line.id: line.amount_residual_currency
                 for line_type, line, *line_amount in move_values['to_process_lines'] if line_type == 'tax'
             }
 
@@ -1145,6 +1146,7 @@ class AccountPartialReconcile(models.Model):
         # passing add_caba_vals in the context to make sure that any exchange diff that would be created for
         # this cash basis move would set the field draft_caba_move_vals accordingly on the partial
         self.env['account.move.line'].with_context(add_caba_vals=True)._reconcile_plan(reconciliation_plan)
+
         return moves.with_env(self.env)
 
     def _get_draft_caba_move_vals(self):
