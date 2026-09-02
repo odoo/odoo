@@ -373,7 +373,7 @@ export class MassMailingHtmlField extends HtmlField {
         if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
             this.activeElement = undefined;
             this.onBlur();
-        } else if (this.iframeWrapperRef().contains(ev.target)) {
+        } else if (this.iframeWrapperRef()?.contains(ev.target)) {
             this.activeElement = this.iframeWrapperRef();
         }
     }

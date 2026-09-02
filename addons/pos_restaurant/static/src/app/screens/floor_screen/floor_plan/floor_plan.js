@@ -118,12 +118,15 @@ export class FloorPlan extends FloorPlanBase {
         if (!this.selectedFloor || this.isKanban) {
             return;
         }
+        const scrollContainer = this.containerRef();
+        if (!scrollContainer || !this.canvasRef()) {
+            // Not mounted yet (e.g. a window resize occurred during setup).
+            return;
+        }
         const size = this.selectedFloor.getSize();
 
         let canvasWidth = size.width;
         let canvasHeight = size.height;
-
-        const scrollContainer = this.containerRef();
 
         // Add some padding if overflow
         if (canvasWidth > scrollContainer.clientWidth) {

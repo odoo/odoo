@@ -290,9 +290,11 @@ export class ImageCrop extends Component {
      * @param {MouseEvent} ev
      */
     onDocumentMousedown(ev) {
+        const el = this.elRef();
         if (
+            el &&
             this.props.document.body.contains(ev.target) &&
-            (this.elRef() === ev.target || !this.elRef().contains(ev.target))
+            (el === ev.target || !el.contains(ev.target))
         ) {
             return this.closeCropper();
         }
