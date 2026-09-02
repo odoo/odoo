@@ -13,6 +13,16 @@
                     />
                 </t>
             </div>
+            <textarea
+                class="o_input d-print-none border-0 fst-italic"
+                placeholder="Enter a description"
+                rows="1"
+                type="text"
+                t-att-class="{ 'd-none': !(this.columnIsProductAndLabel.value and (this.label or this.labelVisibility.value)) }"
+                t-att-readonly="this.isDescriptionReadonly"
+                t-att-value="this.label"
+                t-custom-ref="labelNodeRef"
+            />
         </div>
     </t>
 
