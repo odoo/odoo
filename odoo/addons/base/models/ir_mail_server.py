@@ -48,6 +48,23 @@ class MailDeliveryException(Exception):
     """Specific exception subclass for mail delivery errors"""
 
 
+class SMTP_AWS_SES(smtplib.SMTP_SSL):
+    def data(self, msg):
+        (code, msg) = super().data(msg)
+        if (code == 250) and (match := re.match(r'Ok\s+(.+)', msg.decode('utf-8'))):
+            self.message_id = f"{match[1]}@{self.domain}"
+        return (code, msg)
+
+    def send_message(self, message, smtp_from, smtp_to_list, mail_options=(), rcpt_options=()):
+        self.message_id = None
+        res = super().send_message(message, smtp_from, smtp_to_list, mail_options=mail_options, rcpt_options=rcpt_options)
+        if self.message_id:
+            # This mutates the EmailMessage rather than change the method signature.
+            del message['Message-Id']
+            message['Message-Id'] = self.message_id
+        return res
+
+
 # Python 3: patch SMTP's internal printer/debugger
 def _print_debug(self, *args):
     _logger.debug(' '.join(str(a) for a in args))
@@ -473,7 +490,12 @@ class IrMail_Server(models.Model):
             ))
 
         if smtp_encryption in ('ssl', 'ssl_strict'):
-            connection = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=SMTP_TIMEOUT, context=ssl_context)
+
+            if match := re.search(r'([^.]+)\.amazonaws\.com$', smtp_server):
+                connection = SMTP_AWS_SES(smtp_server, port, timeout=SMTP_TIMEOUT, context=ssl_context)
+                connection.domain = f"{match[1]}.amazonses.com"
+            else:
+                connection = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=SMTP_TIMEOUT, context=ssl_context)
         else:
             connection = smtplib.SMTP(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
         connection.set_debuglevel(smtp_debug)
@@ -820,9 +842,8 @@ class IrMail_Server(models.Model):
             return message['Message-Id']
 
         try:
-            message_id = message['Message-Id']
-
             smtp.send_message(message, smtp_from, smtp_to_list)
+            message_id = message['Message-Id']
 
             # do not quit() a pre-established smtp_session
             if not smtp_session:
