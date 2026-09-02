@@ -1,16 +1,16 @@
-# import json
+import json
 import logging
 import shutil
-# from base64 import b64decode
 from pathlib import Path
 
-# import requests
-# from cryptography.hazmat.backends import default_backend
-# from cryptography.hazmat.primitives import padding
-# from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+import requests
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from odoo import models
-# from odoo.osv import expression
+from odoo.osv import expression
+from odoo.addons.l10n_pl_edi.tools import u64
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +42,8 @@ class IrAttachment(models.Model):
             ('res_id', '=', self.env.ref(CRON_NAME).id),
         ], order="create_date desc")
 
-    def merge(self, dest_name, res_model=False, res_id=False):
+    def merge(self, dest_name, res_model=False, res_id=False, delete=False):
+        """ Merge current attachments into a new one """
         if not self:
             raise ValueError("You cannot merge no attachments")
         dest = self.create({'name': dest_name, 'type': 'binary', 'raw': b'', 'res_model': res_model, 'res_id': res_id})
@@ -54,60 +55,55 @@ class IrAttachment(models.Model):
                     shutil.copyfileobj(f_in, f_out, length=BUFFER_SIZE)
 
         dest.file_size = dest_path.stat().st_size
-        self.unlink()
+        if delete:
+            self.unlink()
         return dest
 
-    # def _l10n_pl_edi_download_parts(self, batch_data):
-    #     symmetric_key = b64decode(batch_data['encryption']['symmetric_key'])
-    #     iv = b64decode(batch_data['encryption']['iv'])
-    #     cipher = Cipher(algorithms.AES(symmetric_key), modes.CBC(iv), backend=default_backend())
-    #     decryptor = cipher.decryptor()
-    #     unpadder = padding.PKCS7(128).unpadder()
+    def _l10n_pl_edi_download_parts(self):
+        self.ensure_one()
+        batch_data = json.loads(self.raw.decode())
+        encryption_data = batch_data['encryption_data']
+        cipher = Cipher(
+            algorithms.AES(u64(encryption_data['raw_symmetric_key'])),
+            modes.CBC(u64(encryption_data['raw_iv'])),
+            backend=default_backend(),
+        )
+        decryptor = cipher.decryptor()
+        unpadder = padding.PKCS7(128).unpadder()
 
-    #     for part in self:
-    #         part_data = batch_data['parts'][part.name]
-    #         requests_method, url = {'GET': requests.get, 'POST': requests.post}[part_data['method']], part_data['url']
-    #         try:
-    #             response = requests_method(url, timeout=30)
-    #             response.raise_for_status()
-    #             encrypted_data = response.content
-    #         except Exception:
-    #             _logger.exception()
-    #             return False
+        create_data = []
+        for part_name, part_data in batch_data['parts'].items():
+            requests_method, url = {'GET': requests.get, 'POST': requests.post}[part_data['method']], part_data['url']
+            try:
+                response = requests_method(url, timeout=30)
+                response.raise_for_status()
+                encrypted_data = response.content
+            except Exception:
+                _logger.exception()
+                return False
 
-    #         decrypted_bytes = decryptor.update(encrypted_data) + decryptor.finalize()
-    #         decrypted_bytes = unpadder.update(decrypted_bytes) + unpadder.finalize()
-    #         part.raw = decrypted_bytes
+            decrypted_bytes = decryptor.update(encrypted_data) + decryptor.finalize()
+            decrypted_bytes = unpadder.update(decrypted_bytes) + unpadder.finalize()
+            create_data.append({
+                'name': part_data['name'].replace('.aes', ''),
+                'type': 'binary',
+                'mimetype': 'application/zip',
+                'description': batch_data['number'],
+                'res_model': 'ir.cron',
+                'res_id': self.env.ref(CRON_NAME).id,
+                'raw': decrypted_bytes,
+            })
+        existing_parts = self._l10n_pl_edi_get_parts()
+        new_parts = self.sudo().create([x for x in create_data if x['name'] not in existing_parts.mapped("name")])
+        for part in new_parts:
+            _logger.info("Created part %s/%s", part.description, part.name)
+        return new_parts.with_env(self.env)
 
-    # def _l10n_pl_edi_get_batch_info(self):
-    #     batch_fullpath = self._full_path(self.store_fname)
-    #     return json.load(batch_fullpath)
-
-    # def _l10n_pl_edi_get_cron(self):
-    #     return self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
-
-    # def _l10n_pl_edi_get_parts(self, company, extra_domain=None):
-    #     return self.search([
-    #         *expression.OR([[('name', 'ilike', '%.zip.aes')], [('name', 'ilike', '%.zip')]]),
-    #         ('type', '=', 'binary'),
-    #         ('res_model', '=', 'ir.cron'),
-    #         ('res_id', '=', self._l10n_pl_edi_get_cron().id),
-    #         *(extra_domain or []),
-    #     ], order="create_date desc")
-
-    # def _l10n_pl_edi_set_parts(self, company, parts):
-    #     if not parts:
-    #         return self.env['ir.attachment']
-    #     names = set(parts.mapped('name'))
-    #     old = self._l10n_pl_edi_get_parts(company, [('name', 'in', names)])
-    #     return old + self.create([
-    #         {
-    #             'name': part['name'],
-    #             'description': part['batch_number'],
-    #             'type': 'binary',
-    #             'res_model': 'ir.cron',
-    #             'res_id': self._l10n_pl_edi_get_cron().id,
-    #         }
-    #         for part in parts
-    #         if part['name'] not in old.mapped('name')
-    #     ])
+    def _l10n_pl_edi_get_parts(self, extra_domain=None):
+        return self.sudo().search([
+            *expression.OR([[('name', 'ilike', '%.zip.aes')], [('name', 'ilike', '%.zip')]]),
+            ('type', '=', 'binary'),
+            ('res_model', '=', 'ir.cron'),
+            ('res_id', '=', self.env.ref(CRON_NAME).id),
+            *(extra_domain or []),
+        ], order="create_date desc").with_env(self.env)

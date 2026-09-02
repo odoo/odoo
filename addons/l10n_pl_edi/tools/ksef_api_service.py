@@ -22,7 +22,15 @@ TIMEOUT = 30
 
 
 def b64(value):
+    if isinstance(value, str):
+        value = value.encode()
     return base64.b64encode(value).decode()
+
+
+def u64(value):
+    if isinstance(value, str):
+        value = value.encode()
+    return base64.b64decode(value)
 
 
 def format_time(date_value):
@@ -131,26 +139,20 @@ class KsefApiService:
         raw_iv = os.urandom(16)
         ksef_public_key_pem = self._get_public_keys().get('symmetric')
         public_key = serialization.load_pem_public_key(ksef_public_key_pem.encode('utf-8'))
-        encrypted_symmetric_key = public_key.encrypt(
-            raw_symmetric_key,
-            padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
-        )
-        encryption_data = {
-            "encryption": {
-                "encryptedSymmetricKey": b64(encrypted_symmetric_key),
-                "initializationVector": b64(raw_iv),
-            }
-        }
-        return (raw_symmetric_key, raw_iv, encryption_data)
+        key_padding = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
+        encrypted_symmetric_key = public_key.encrypt(raw_symmetric_key, key_padding)
+        return {'raw_symmetric_key': b64(raw_symmetric_key), 'encrypted_symmetric_key': b64(encrypted_symmetric_key), 'raw_iv': b64(raw_iv)}
 
     def open_ksef_session(self):
         """Builds the encrypted request and opens an interactive session, with one retry on token expiry."""
         if self.company.sudo().l10n_pl_edi_session_id and self.get_session_status().get('code') == 100:
             return
-        self.raw_symmetric_key, self.raw_iv, encryption_data = self._create_encryption_data()
+        encryption_data = self._create_encryption_data()
+        self.raw_symmetric_key = u64(encryption_data['raw_symmetric_key'])
+        self.raw_iv = u64(encryption_data['raw_iv'])
         request_body = {
             "formCode": {"systemCode": "FA (3)", "schemaVersion": "1-0E", "value": "FA"},
-            **encryption_data,
+            **self._get_encryption_json(encryption_data),
         }
         endpoint = f"{self.api_url}/sessions/online"
         headers = {'Content-Type': 'application/json'}
@@ -364,14 +366,12 @@ class KsefApiService:
         except requests.exceptions.RequestException as e:
             raise UserError(self.env._("Failed to redeem token: %s", e.response.text if e.response else e))
 
-    def download_batch_status(self, number, date_from, date_to):
+    def download_batch_status(self, number, date_from, date_to, encryption_data):
         try:
             response = self._make_request("GET", f"{self.api_url}/invoices/exports/{number}")
             json_response = response.json()
 
-            _logger.info("download_batch_status(%s): %s", number, json.dumps(json_response, indent=4))
-
-            return {
+            batch_data = {
                 'number': number,
                 'status': json_response['status']['code'],
                 'date_from': fields.Datetime.to_string(date_from),
@@ -388,13 +388,26 @@ class KsefApiService:
                     }
                     for part in json_response.get('package', {}).get('parts', [])
                 },
+                'encryption_data': encryption_data,
             }
+            _logger.info("download_batch_status(%s): %s", number, json.dumps(batch_data, indent=4))
+            return batch_data
+
         except KSeFRateLimitError as e:
             return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
 
+    def _get_encryption_json(self, encryption_data):
+        return {"encryption": {
+            "encryptedSymmetricKey": encryption_data['encrypted_symmetric_key'],
+            "initializationVector": encryption_data['raw_iv'],
+        }}
+
     def download_batch_request(self, date_from, date_to, encryption_data, subject_type="Subject1"):
         dates = {"from": format_time(date_from), "to": format_time(date_to), "dateType": "Invoicing"}
-        payload = {**encryption_data, "filters": {"subjectType": subject_type, "dateRange": dates}}
+        payload = {
+            **self._get_encryption_json(encryption_data),
+            "filters": {"subjectType": subject_type, "dateRange": dates},
+        }
         try:
             response = self._make_request('POST', f"{self.api_url}/invoices/exports", json=payload)
             json_response = response.json()

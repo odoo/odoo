@@ -729,30 +729,6 @@ class AccountMove(models.Model):
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
-
-        # def batch_finished(company, batch_attachment, batch_data, parts_attachments):
-        #     Journal = self.env['account.journal'].with_context(default_move_type='in_invoice')
-        #     if paths := [Path(attachment._full_path(attachment.store_fname)) for attachment in parts_attachments]:
-        #         with zipfile.ZipFile(MultiPathStream(paths), 'r') as zip_ref:
-        #             for zip_info in zip_ref.infolist():
-        #                 with zip_ref.open(zip_info) as source:
-        #                     filename = Path(zip_info.filename).name
-        #                     ext = Path(filename).suffix.lstrip('.').lower()
-        #                     attachment = Attachment.create({
-        #                         'name': filename,
-        #                         'type': 'binary',
-        #                         'mimetype': f'application/{ext}' if ext in ('json', 'xml') else 'text/plain',
-        #                         'raw': source.read(),
-        #                     })
-        #                     move = Journal._create_document_from_attachment(attachment.ids)
-        #                     move.l10n_pl_edi_number = batch_data['number']
-        #                     if self._can_commit():
-        #                         self.env.cr.commit()
-        #     date_to = fields.Datetime.from_string(batch_data['date_to'])
-        #     self._l10n_pl_edi_set_last_download_date(company, date_to)
-        #     (parts_attachments + batch_attachment).unlink()
-        #     return True
-
         info = dict.fromkeys(('to_delete', 'to_download', 'retriggered', 'retrigger', 'retry_after'), False)
         for company in self.env['res.company'].search([('l10n_pl_edi_access_token', '!=', False)]):
 
@@ -760,6 +736,7 @@ class AccountMove(models.Model):
 
             if not info['retriggered']:
                 self._l10n_pl_edi_request_bills_recent(company, info)
+                info['retrigger'] = True
             if info.get('retry_after'):
                 continue
 
@@ -779,11 +756,13 @@ class AccountMove(models.Model):
 
     def _l10n_pl_edi_download_batches(self, company, batches):
         for batch in batches:
-            batch_data = json.loads(batch.raw.decode())
-            name, date_from, date_to = batch.name, batch_data['date_from'], batch_data['date_to']
-            _logger.info("KSeF batch %s, %s - %s", name, date_from, date_to)
-            for part_name, values in batch_data['parts'].items():
-                _logger.info("%s:%s", part_name, values)
+            batch_name = batch.name
+            _logger.info("Downloading batch %s ...", batch_name)
+            batch._l10n_pl_edi_download_parts()
+            batch.unlink()
+            _logger.info("Deleted batch %s", batch_name)
+            if self._can_commit():
+                self.env.cr.commit()
 
     def _l10n_pl_edi_request_bills_recent(self, company, info):
         """ Always download all recent invoices, no matter if we already have a batch for that period.
@@ -796,18 +775,18 @@ class AccountMove(models.Model):
 
     def _l10n_pl_edi_request_batch(self, company, date_from, date_to, info):
         service = KsefApiService(company)
-        _symmetric_key, _raw_iv, encryption_data = service._create_encryption_data()
+        encryption_data = service._create_encryption_data()
         if batch_ticket := service.download_batch_request(date_from, date_to, encryption_data):
             if error := batch_ticket.get('error'):
                 info['retrigger'] = True
                 info['retry_after'] = error.get('retry_after')
-                return error
-            batch_number = batch_ticket['number']
-            if batch_status := service.download_batch_status(batch_number, date_from, date_to):
-                batch_status_json = json.dumps(batch_status, indent=4)
-                self.env['ir.attachment']._l10n_pl_edi_create_batch(batch_number, batch_status_json)
-            if self._can_commit():
-                self.env.cr.commit()
+            else:
+                batch_number = batch_ticket['number']
+                if batch_status := service.download_batch_status(batch_number, date_from, date_to, encryption_data):
+                    batch_status_json = json.dumps(batch_status, indent=4)
+                    self.env['ir.attachment']._l10n_pl_edi_create_batch(batch_number, batch_status_json)
+                if self._can_commit():
+                    self.env.cr.commit()
 
     def _l10n_pl_edi_request_bills_historic(self, company, info):
         date_to = self._l10n_pl_edi_get_last_historic_date(company)
@@ -816,10 +795,10 @@ class AccountMove(models.Model):
             if error := self._l10n_pl_edi_request_batch(company, date_from, date_to, info):
                 info['retrigger'] = True
                 info['retry_after'] = error.get('retry_after')
-                return
-            self._l10n_pl_edi_move_last_historic_date(company)
-            # If we have more, retrigger this for later, so we get another slice
-            info['retrigger'] = date_from >= KSEF_FIRST_DAY
+            else:
+                self._l10n_pl_edi_move_last_historic_date(company)
+                # If we have more, retrigger this for later, so we get another slice
+                info['retrigger'] = date_from >= KSEF_FIRST_DAY
 
     def _l10n_pl_edi_check_batches(self, company, info):
         service = KsefApiService(company)
@@ -827,6 +806,7 @@ class AccountMove(models.Model):
         retriggered, retrigger = False, info['retrigger']
         for batch in Attachment._l10n_pl_edi_get_batches():
             batch_data = json.loads(batch.raw.decode())
+            encryption_data = batch_data['encryption_data']
             is_old = batch.create_date < today_datetime()
             retriggered |= not is_old
             match batch_data['status']:
@@ -839,8 +819,11 @@ class AccountMove(models.Model):
                     # Ask for a new state
                     number, date_from_str, date_to_str = unpack(batch_data, 'number', 'date_from', 'date_to')
                     date_from, date_to = fields.Datetime.from_string(date_from_str), fields.Datetime.from_string(date_to_str)
-                    if batch_status := service.download_batch_status(number, date_from, date_to):
-                        batch.raw = json.dumps(batch_status, indent=4).encode()
+                    if batch_status := service.download_batch_status(number, date_from, date_to, encryption_data):
+                        batch.update({
+                            'raw': json.dumps(batch_status, indent=4).encode(),
+                            'mimetype': 'application/json'
+                        })
                         retrigger = True
                 case _:
                     # Warn the user and then delete
