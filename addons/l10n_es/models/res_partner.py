@@ -145,6 +145,7 @@ class ResPartner(models.Model):
             if partner.commercial_partner_id == partner and (country_code == 'ES' or (not country_code and partner.country_code == 'ES')):
                 partner.is_company = not partner._l10n_es_freelancer()
 
+<<<<<<< 60c5227459f56222e821d87d1c82d360b388278f
     @api.model
     def _get_all_additional_identifiers_metadata(self):
         return {
@@ -174,3 +175,31 @@ class ResPartner(models.Model):
                 'countries': False,
             },
         }
+||||||| 007a6efcf3784e7b79d510d503e102f5d4ab5560
+    def _get_mandatory_billing_address_fields(self, country_sudo, **kwargs):
+        """Require VAT/NIF for Spanish customers in billing addresses on Spanish e-commerce."""
+        field_names = super()._get_mandatory_billing_address_fields(country_sudo, **kwargs)
+
+        if self.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('vat')
+
+        return field_names
+
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        """Require State for Spanish customers on Spanish e-commerce."""
+        field_names = super()._get_mandatory_address_fields(country_sudo, **kwargs)
+
+        if self.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('state_id')
+
+        return field_names
+=======
+    def _get_mandatory_address_fields(self, country_sudo, **kwargs):
+        """Require State for Spanish customers on Spanish e-commerce."""
+        field_names = super()._get_mandatory_address_fields(country_sudo, **kwargs)
+
+        if self.env.company.country_code == country_sudo.code == 'ES':
+            field_names.add('state_id')
+
+        return field_names
+>>>>>>> 56da43c988ba5245fbdd517197683ed530bb8f74
