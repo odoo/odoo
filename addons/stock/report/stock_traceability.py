@@ -79,25 +79,18 @@ class StockTraceabilityReport(models.TransientModel):
         record_id = kw.get('record_id') or context.get('active_id')
         level = kw.get('level') or 1
         if record_id and model == 'stock.lot':
-            base_domain = Domain.AND([
-                Domain('lot_id', '=', record_id),
-                Domain('state', '=', 'done'),
-            ])
             main_location_ids = self.env['stock.warehouse'].search([]).lot_stock_id.ids
             domain = Domain.AND([
-                base_domain,
+                Domain('lot_id', '=', record_id),
+                Domain('state', '=', 'done'),
                 self._get_location_domain(main_loc_ids=main_location_ids),
             ])
             lines = self.env['stock.move.line'].search(domain)
             return self._get_lot_lines(move_lines=lines, level=level, main_loc_ids=main_location_ids)
         elif record_id and model == 'stock.move.line' and line_type:
-            move_line = self.env[model].browse(record_id)
-            lines = self._get_related_move_lines(move_line, line_type)
-            return self._get_move_lines(move_lines=lines, level=level, line_type=line_type)
+            return self._get_move_lines(record_id=record_id, level=level, line_type=line_type)
         elif record_id and model == 'stock.picking':
-            picking = self.env[model].browse(record_id)
-            lines = picking.move_ids.move_line_ids.filtered(lambda m: m.state == 'done')
-            return self._get_picking_lines(move_lines=lines, level=level)
+            return self._get_picking_lines(record_id=record_id, level=level)
         return []
 
     @api.model
@@ -232,14 +225,15 @@ class StockTraceabilityReport(models.TransientModel):
         return sorted(final_vals, key=lambda l: (l['date'], l['id']), reverse=True)
 
     @api.model
-    def _get_picking_lines(self, move_lines=None, level=0):
+    def _get_picking_lines(self, record_id=0, level=0):
         """ If we come from a picking and it's a non-return incoming picking, we just process
         the lines of the picking as child lines because incoming lines should not have parents.
         In all other cases, the SMLs are considered parents and we check if there's a next line
         in the chain. Any line found will be processed as a child line. """
         final_vals = []
-        line_type = 'child' if move_lines.picking_id.picking_type_code == 'incoming' and not move_lines.move_id.origin_returned_move_id else 'parent'
-        initial_lines = move_lines or []
+        picking = self.env['stock.picking'].browse(record_id)
+        initial_lines = picking.move_ids.move_line_ids.filtered(lambda m: m.state == 'done')
+        line_type = 'child' if initial_lines.picking_id.picking_type_code == 'incoming' and not initial_lines.move_id.origin_returned_move_id else 'parent'
         for line in initial_lines:
             unfoldable = self._is_unfoldable(line, line_type)
             final_vals.append(self._make_dict_move(move_line=line, line_type=line_type, level=level, unfoldable=unfoldable))
@@ -251,9 +245,10 @@ class StockTraceabilityReport(models.TransientModel):
         return sorted(final_vals, key=lambda l: (l['date'], l['id']), reverse=True)
 
     @api.model
-    def _get_move_lines(self, move_lines=None, level=0, line_type=None):
+    def _get_move_lines(self, record_id=0, level=0, line_type=None):
         final_vals = []
-        lines = move_lines or []
+        move_line = self.env['stock.move.line'].browse(record_id)
+        lines = self._get_related_move_lines(move_line, line_type)
         for line in lines:
             unfoldable = self._is_unfoldable(line, line_type)
             final_vals.append(self._make_dict_move(move_line=line, line_type=line_type, level=level, unfoldable=unfoldable))
