@@ -692,8 +692,14 @@
         // Handlers
         //---------------------------------------------------------------------
         _onQuizNextSlide: function () {
-            var url = this.$('.o_wslides_js_lesson_quiz').data('next-slide-url');
-            window.location.replace(url);
+            const url = this.$('.o_wslides_js_lesson_quiz').data('next-slide-url');
+            if (!url) {
+                return;
+            }
+            const nextUrl = new URL(url, window.location.href);
+            if (nextUrl.origin === window.location.origin) {
+                window.location.replace(nextUrl.href);
+            }
         },
 
         //----------------------------------------------------------------------
