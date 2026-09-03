@@ -73,6 +73,8 @@ class WebsiteForm(http.Controller):
                 # for the email queue to process
 
                 if model_name == 'mail.mail':
+                    if not kwargs.get("website_form_signature"):
+                        raise AccessDenied(self.env._("Missing website_form_signature"))
                     form_has_email_cc = {'email_cc', 'email_bcc'} & kwargs.keys() or \
                         'email_cc' in kwargs["website_form_signature"]
                     # remove the email_cc information from the signature
