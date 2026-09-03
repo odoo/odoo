@@ -17,6 +17,21 @@ class DeliveryCarrier(models.Model):
                 carrier, f"{carrier.delivery_type}_use_locations"
             ) and getattr(carrier, f"{carrier.delivery_type}_use_locations")
 
+    def _is_available_for_order(self, order):
+        """Use the customer address when the current shipping address is a pickup location."""
+        self.ensure_one()
+        order.ensure_one()
+        if order.partner_shipping_id.pickup_delivery_method_id:
+            if not self._match(order.partner_id, order):
+                return False
+            if self.delivery_type == "base_on_rule":
+                try:
+                    self._get_price_available(order)
+                except UserError:
+                    return False
+            return True
+        return super()._is_available_for_order(order)
+
     def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
         """Return the pickup locations of the delivery method close to a given zip code.
 

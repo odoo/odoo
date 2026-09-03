@@ -2,11 +2,14 @@
 
 import json
 from unittest import skip
+from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
+from odoo.addons.delivery.models.delivery_carrier import DeliveryCarrier
+from odoo.addons.website_sale.controllers.delivery import Delivery
 from odoo.addons.website_sale_collect.tests.common import ClickAndCollectCommon
 
 
@@ -310,3 +313,42 @@ class TestSaleOrder(ClickAndCollectCommon):
         order._set_delivery_method(self.in_store_dm)  # Create the delivery line.
         order._recompute_cart()
         self.assertTrue(order.partner_shipping_id.pickup_location_data)
+
+    def test_switching_from_in_store_rates_using_customer_address(self):
+        """Selecting a shipping method after click-and-collect must rate the customer address.
+
+        The pickup location would otherwise make the method look unavailable and show Free.
+        """
+        so = self._create_in_store_delivery_order()
+        self.free_delivery.write({
+            "is_published": True,
+            "country_ids": self.country_us.ids,
+        })
+        self.partner.country_id = self.country_us
+        pickup_partner = self.env["res.partner"].create({
+            **self.dummy_partner_address_values,
+            "name": "Test Store",
+            "country_id": self.country_be.id,
+            "parent_id": self.partner.id,
+            "pickup_delivery_method_id": self.in_store_dm.id,
+            "pickup_location_data": {"id": self.warehouse.id, "name": "Test Store"},
+        })
+        so.partner_shipping_id = pickup_partner
+        rated_partners = []
+
+        def _capture_rate(carrier, order):
+            rated_partners.append(order.partner_shipping_id)
+            return {"success": True, "price": 7.78}
+
+        with (
+            self.mock_request(sale_order_id=so.id) as request,
+            patch.object(DeliveryCarrier, "rate_shipment", _capture_rate),
+        ):
+            request.cart = so
+            result = Delivery().shop_set_delivery_method(dm_id=self.free_delivery.id)
+
+        self.assertEqual(rated_partners, [self.partner])
+        self.assertTrue(result["success"])
+        self.assertFalse(result["is_free_delivery"])
+        self.assertEqual(so.partner_shipping_id, self.partner)
+        self.assertEqual(so.carrier_id, self.free_delivery)
