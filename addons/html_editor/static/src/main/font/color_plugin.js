@@ -12,13 +12,13 @@ import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_edito
 import {
     isEmptyBlock,
     isEmptyTextNode,
-    isRedundantElement,
     isTextNode,
     isWhitespace,
     isZwnbsp,
     PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { isRedundantElement } from "@html_editor/utils/formatting";
 import { isCSSColor } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 import { reactive } from "@odoo/owl";
@@ -84,11 +84,21 @@ export class ColorPlugin extends Plugin {
     }
 
     normalize(root) {
-        for (const el of selectElements(root, "font")) {
-            if (isRedundantElement(el)) {
-                unwrapContents(el);
-            }
+        // Check all elements first, then unwrap. Unwrapping changes the DOM,
+        // so checking after each unwrap would make the browser recompute the
+        // styles every time.
+        const redundantElements = [...selectElements(root, "font")].filter(
+            (el) => !closestElement(el, `t, ${PROTECTED_QWEB_SELECTOR}`) && isRedundantElement(el)
+        );
+        if (!redundantElements.length) {
+            return;
         }
+        const cursors = this.dependencies.selection.preserveSelection();
+        for (const el of redundantElements) {
+            cursors.update(callbacksForCursorUpdate.unwrap(el));
+            unwrapContents(el);
+        }
+        cursors.restore();
     }
 
     /**

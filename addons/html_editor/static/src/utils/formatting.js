@@ -1,8 +1,9 @@
 import { normalizeCSSColor } from "@web/core/utils/colors";
+import { BG_CLASSES_REGEX, COLOR_COMBINATION_CLASSES_REGEX, TEXT_CLASSES_REGEX } from "./color";
 import { removeClass } from "./dom";
 import { isBold, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
 import { closestElement, closestPath, findNode } from "./dom_traversal";
-import { isBlock } from "./blocks";
+import { closestBlock, isBlock } from "./blocks";
 
 /**
  * Array of all the classes used by the editor to change the font size.
@@ -249,4 +250,118 @@ export function getFontSizeDisplayValue(sel, document) {
     }
     const pxValue = remValue && convertNumericToUnit(remValue, "rem", "px", htmlStyle);
     return pxValue || parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
+}
+
+/**
+ * Checks if all classes in node are present in node2 (subset check)
+ */
+function hasClassesSubset(node, node2) {
+    const getNodeClasses = (n) => (n || "").trim().split(/\s+/).filter(Boolean);
+    const [nodeClasses, node2Classes] = [node, node2].map(getNodeClasses);
+    return nodeClasses.every((cls) => node2Classes.includes(cls));
+}
+
+/**
+ * Checks if a node is redundant based on its closest element with same tag,
+ * or based on its parent's visual formatting / styles.
+ *
+ * @param {Node} node - The DOM node to evaluate.
+ * @returns {boolean} True if the node is redundant, false otherwise.
+ */
+export function isRedundantElement(node) {
+    // Ignore invalid nodes, non-elements, nodes without a parent, or nodes outside the document.
+    if (!node || node.nodeType !== Node.ELEMENT_NODE || !node.parentElement || !node.isConnected) {
+        return false;
+    }
+
+    // Semantic formatting tags without attributes whose visual formatting is
+    // already inherited from their parent.
+    if (!node.hasAttributes()) {
+        const formatSpec = Object.values(formatsSpecs).find((spec) => spec.isTag?.(node));
+        if (formatSpec) {
+            return formatSpec.isFormatted(node.parentElement);
+        }
+        // Other tags without attributes are only redundant inside the same tag.
+        return !!closestElement(node.parentElement, node.tagName);
+    }
+
+    // Check if inline styles or color classes are already provided by ancestors.
+    if (node.tagName === "SPAN" || node.tagName === "FONT") {
+        const hasStyle = node.hasAttribute("style");
+        const hasClass = node.hasAttribute("class");
+
+        // Only handle nodes with style or class, not exotic attributes (e.g. id).
+        const expectedAttrCount = (hasStyle ? 1 : 0) + (hasClass ? 1 : 0);
+        if (node.attributes.length !== expectedAttrCount) {
+            return false;
+        }
+
+        // Check if inline styles match the parent's computed styles.
+        // Bolder font weights stack numerically, so judge a format style
+        // (bold, italic, ...) as boolean: the node and its parent must have it.
+        let styleRedundant = !hasStyle;
+        const formatSpec = Object.values(formatsSpecs).find(
+            (spec) => spec.isTag && spec.hasStyle(node)
+        );
+        if (formatSpec) {
+            styleRedundant =
+                formatSpec.isFormatted(node) && formatSpec.isFormatted(node.parentElement);
+        } else if (hasStyle) {
+            const parentElement = node.parentElement;
+            const nodeStyle = getComputedStyle(node);
+            const parentStyle = getComputedStyle(parentElement);
+            styleRedundant = [...node.style].every((styleKey) => {
+                const nodeStyleValue = nodeStyle.getPropertyValue(styleKey);
+                return nodeStyleValue && nodeStyleValue === parentStyle.getPropertyValue(styleKey);
+            });
+        }
+
+        // Check if color classes are covered by a closer ancestor span/font.
+        let classRedundant = !hasClass;
+        if (hasClass) {
+            const COLOR_CLASS_REGEXES = [
+                TEXT_CLASSES_REGEX,
+                BG_CLASSES_REGEX,
+                COLOR_COMBINATION_CLASSES_REGEX,
+            ];
+            const nodeClasses = [...node.classList];
+            // All classes must be recognized color classes.
+            if (
+                !nodeClasses.every((nodeClass) =>
+                    COLOR_CLASS_REGEXES.some((colorRegex) => colorRegex.test(nodeClass))
+                )
+            ) {
+                return false;
+            }
+            const blockBoundary = closestBlock(node);
+            let ancestor = node.parentElement;
+            while (ancestor && ancestor !== blockBoundary) {
+                if (ancestor.tagName === "SPAN" || ancestor.tagName === "FONT") {
+                    const ancestorClasses = [...ancestor.classList];
+                    // Check if this node overrides a color class of the ancestor.
+                    const isOverridingAncestor = nodeClasses.some((nodeClass) => {
+                        const sameTypeRegex = COLOR_CLASS_REGEXES.find((colorRegex) =>
+                            colorRegex.test(nodeClass)
+                        );
+                        return ancestorClasses.some(
+                            (ancestorClass) =>
+                                ancestorClass !== nodeClass && sameTypeRegex?.test(ancestorClass)
+                        );
+                    });
+                    if (isOverridingAncestor) {
+                        return false;
+                    } else if (
+                        hasClassesSubset(node.getAttribute("class"), ancestor.getAttribute("class"))
+                    ) {
+                        classRedundant = true;
+                        break;
+                    }
+                }
+                ancestor = ancestor.parentElement;
+            }
+        }
+        return styleRedundant && classRedundant;
+    }
+
+    return false;
 }
