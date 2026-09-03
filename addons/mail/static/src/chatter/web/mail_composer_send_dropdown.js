@@ -20,10 +20,20 @@ class MailComposerSendDropdown extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
+        this.notification = useService("notification");
+        const attachmentUploadService = useService("mail.attachment_upload");
+        this.uploadingAttachments = useState(attachmentUploadService.uploadingAttachmentIds)
         this.buttonState = useState({ disabled: false });
     }
 
     async onClickSend() {
+        debugger;
+        if (this.uploadingAttachments.size > 0) {
+            this.notification.add(_t("Please wait while the file is uploading."), {
+                type: "warning",
+            });
+            return;
+        }
         this.buttonState.disabled = true;
         // don't send message if save failed (eg. missing required field )
         if (await this.props.record.save()) {

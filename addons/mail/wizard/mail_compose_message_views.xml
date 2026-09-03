@@ -71,12 +71,10 @@
                         </page>
                     </notebook>
                     <footer>
-                        <button string="Send" name="action_send_mail"
-                                type="object" class="btn-primary o_mail_send" data-hotkey="q"
-                                invisible="subtype_is_log or composition_mode == 'comment' and not composition_batch"/>
-                        <button string="Log" name="action_send_mail"
-                                type="object" class="btn-primary" data-hotkey="q"
-                                invisible="not subtype_is_log or composition_mode =='comment' and not composition_batch"/>
+                        <widget name="composer_send_button" text="Send"
+                            invisible="subtype_is_log or composition_mode == 'comment' and not composition_batch"/>
+                        <widget name="composer_send_button" text="Log"
+                            invisible="not subtype_is_log or composition_mode =='comment' and not composition_batch"/>
                         <widget name="mail_composer_send_dropdown" invisible="composition_batch or composition_mode != 'comment'"/>
                         <button string="Discard" class="btn-secondary w-auto" special="cancel" data-hotkey="x" />
                         <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
