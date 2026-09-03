@@ -66,6 +66,7 @@ export class PosOrder extends PosOrderAccounting {
             tip: { value: false, type: false },
             last_general_customer_note: this.general_customer_note || "",
             last_internal_note: this.internal_note || "",
+            isReprinting: false,
         };
     }
 
@@ -832,6 +833,8 @@ export class PosOrder extends PosOrderAccounting {
                     changes.categoryCount["noteUpdate"] ??= { name: _t("Note"), count: 0 };
                     changes.categoryCount["noteUpdate"].count += 1;
                 }
+            } else if (this.uiState.isReprinting) {
+                changes["addedQuantity"].push(this.dataMaker(orderline, orderline.qty));
             }
             orderline.setHasChange(quantityDiff !== 0 || orderline.changeNote);
         }
@@ -867,11 +870,14 @@ export class PosOrder extends PosOrderAccounting {
             }
         }
 
-        if (this.uiState.last_general_customer_note !== this.general_customer_note) {
+        if (
+            this.uiState.last_general_customer_note !== this.general_customer_note ||
+            this.uiState.isReprinting
+        ) {
             changes.general_customer_note = this.general_customer_note;
         }
 
-        if (this.uiState.last_internal_note !== this.internal_note) {
+        if (this.uiState.last_internal_note !== this.internal_note || this.uiState.isReprinting) {
             changes.internal_note = this.internal_note;
         }
 

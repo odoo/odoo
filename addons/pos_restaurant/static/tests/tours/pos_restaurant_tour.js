@@ -872,3 +872,55 @@ registry.category("web_tour.tours").add("test_guest_count_defaults_to_table_seat
             FeedbackScreen.isShown(),
         ].flat(),
 });
+
+registry
+    .category("web_tour.tours")
+    .add("test_preparation_printer_for_reprint_order_only_drink_printer", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                Dialog.confirm("Open Register"),
+                FloorScreen.clickTable("5"),
+                ProductScreen.clickDisplayedProduct("Coca-Cola"),
+                checkPreparationTicketData([{ name: "Coca-Cola", qty: 1 }]),
+                ProductScreen.clickOrderButton(),
+                Chrome.closePrintingWarning(),
+                FloorScreen.clickTable("5"),
+                ProductScreen.orderlinesHaveNoChange(),
+                checkPreparationTicketData([]),
+                ProductScreen.clickDisplayedProduct("Bruschetta"),
+                checkPreparationTicketData([]),
+                checkPreparationTicketData([{ name: "Coca-Cola", qty: 1 }], { reprint: true }),
+                checkPreparationTicketData([]),
+            ].flat(),
+    });
+
+registry
+    .category("web_tour.tours")
+    .add("test_preparation_printer_for_reprint_order_food_and_drinks_printer", {
+        steps: () =>
+            [
+                Chrome.startPoS(),
+                FloorScreen.clickTable("4"),
+                ProductScreen.clickDisplayedProduct("Coca-Cola"),
+                checkPreparationTicketData([{ name: "Coca-Cola", qty: 1 }]),
+                ProductScreen.clickOrderButton(),
+                Chrome.closePrintingWarning(),
+                FloorScreen.clickTable("4"),
+                ProductScreen.orderlinesHaveNoChange(),
+                checkPreparationTicketData([]),
+                ProductScreen.clickDisplayedProduct("Bruschetta"),
+                checkPreparationTicketData([{ name: "Bruschetta", qty: 1 }]),
+                ProductScreen.clickOrderButton(),
+                Chrome.closePrintingWarning(),
+                FloorScreen.clickTable("4"),
+                checkPreparationTicketData(
+                    [
+                        { name: "Bruschetta", qty: 1 },
+                        { name: "Coca-Cola", qty: 1 },
+                    ],
+                    { reprint: true }
+                ),
+                checkPreparationTicketData([]),
+            ].flat(),
+    });
