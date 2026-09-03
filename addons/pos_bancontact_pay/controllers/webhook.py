@@ -26,10 +26,10 @@ class BancontactPayController(http.Controller):
         payment_method = request.env['pos.payment.method'].browse(payment_method_id)
 
         lang = request.env.context.get('lang')
-        frame_lang = lang.split('_')[0] if lang else 'fr'
-        supported_frames = ['fr', 'nl']
+        frame_lang = lang.split('_')[0] if lang else 'en'
+        supported_frames = ['en', 'fr', 'nl', 'de']
         if frame_lang not in supported_frames:
-            frame_lang = 'fr'
+            frame_lang = 'en'
 
         # load frame
         frame_path = file_path(f'pos_bancontact_pay/static/img/frames/frame_{frame_lang}.png')

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_bancontact_pay.pos_order_receipt_footer" inherit_id="point_of_sale.pos_order_receipt_footer">
+            <div name="footer" position="inside">
+                <div t-if="extra_data.get('processed_by_bancontact')">
+                    <div class="text-center">This transaction is processed by Bancontact Company</div>
+                    <div class="text-center"><img t-att-src="image['bancontact_logo']" class="w-50" /></div>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

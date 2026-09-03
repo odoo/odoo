@@ -3,7 +3,7 @@
     "category": "Sales/Point of Sale",
     "sequence": 100,
     "summary": "Accept Bancontact Pay and Wero QR code payments in POS (Payconiq).",
-    "data": ["views/pos_payment_method_views.xml"],
+    "data": ["views/pos_payment_method_views.xml", "receipt/pos_order_receipt.xml"],
     "depends": ["point_of_sale"],
     "assets": {
         "point_of_sale._assets_pos": [
