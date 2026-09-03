@@ -51,6 +51,17 @@ export class BorderPlugin extends Plugin {
         const isTable = ({ referenceNode }) => referenceNode.nodeName === "TABLE";
         rules.allow("border-collapse", { when: isTable });
         rules.allow("border-spacing", { when: isTable });
+        rules.require("border-color", {
+            when: ({ referenceNode }) => {
+                if (this.hasVisibleBorder(referenceNode)) {
+                    return true;
+                }
+                return false;
+            },
+            how: ({ referenceNode }) => ({
+                propertyValue: this.getStylePropertyValue(referenceNode, "border-color"),
+            }),
+        });
     }
 
     hasVisibleBorder(element, layoutDimensions) {
