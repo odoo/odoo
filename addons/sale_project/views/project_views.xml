@@ -20,6 +20,17 @@
         </field>
     </record>
 
+    <record id="project_project_view_form_simplified_inherit_js_class" model="ir.ui.view">
+        <field name="name">project.project.view.form.simplified.sale_project.js_class</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="js_class">sale_project_project_form</attribute>
+            </form>
+        </field>
+    </record>
+
     <record id="project_embedded_action_invoices" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">60</field>
