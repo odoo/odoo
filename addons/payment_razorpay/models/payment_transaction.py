@@ -452,6 +452,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "razorpay":
             return super()._extract_amount_data(payment_data)
 
+        # Amount and currency are not sent in the payment data when redirecting to the return route.
+        if "amount" not in payment_data or "currency" not in payment_data:
+            return None
+
         amount = payment_utils.to_major_currency_units(payment_data["amount"], self.currency_id)
         return {"amount": amount, "currency_code": payment_data["currency"]}
 
