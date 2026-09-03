@@ -2000,10 +2000,25 @@ test("Should properly show the preview if fetching metadata fails", async () => 
 test("Should open link popover in read only mode when link is not editable", async () => {
     onRpc("/html_editor/link_preview_internal", () => ({}));
     onRpc("/link", () => ({}));
-    await setupEditor('<p><a contenteditable="false" href="/link">link</a></p>');
+    const { el } = await setupEditor('<p><a contenteditable="false" href="/link">link</a></p>');
+    setSelection({ anchorNode: el.querySelector("a"), anchorOffset: 1 });
     await click(queryOne(`a[contenteditable="false"]`));
     await waitFor(".o-we-linkpopover");
     expect(".o_we_edit_link").toHaveCount(0);
     expect(".o_we_remove_link").toHaveCount(0);
     expect(".o_we_copy_link").toHaveCount(1);
+});
+
+test("Should change selection when clicking inside a contenteditable under non editable link", async () => {
+    onRpc("/html_editor/link_preview_internal", () => ({}));
+    onRpc("/link", () => ({}));
+    const { el } = await setupEditor(
+        '<p><a contenteditable="false" href="/link"><span contenteditable="true">abc</span></a></p>'
+    );
+    setSelection({ anchorNode: el.querySelector("span"), anchorOffset: 1 });
+    await click(queryOne(`a[contenteditable="false"]`));
+    await waitFor(".o-we-linkpopover");
+    expect(getContent(el)).toBe(
+        '<p><a contenteditable="false" href="/link"><span contenteditable="true">abc[]</span></a></p>'
+    );
 });
