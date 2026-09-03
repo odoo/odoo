@@ -27,6 +27,7 @@ function useImageTransform({ document, closeImageTransformation, buttonSelector 
     // So we need to keep track if the pointerdown is inside or outside to know
     // if we want to close the image transform component or not.
     useListener(document, "pointerdown", (ev) => {
+        // guard?
         if (isNodeInsideTransform(ev.target)) {
             pointerDownInsideTransform = true;
         } else {
@@ -38,6 +39,7 @@ function useImageTransform({ document, closeImageTransformation, buttonSelector 
         document,
         "click",
         (ev) => {
+            // guard?
             if (!isNodeInsideTransform(ev.target) && !pointerDownInsideTransform) {
                 closeImageTransformation();
             }
@@ -48,6 +50,7 @@ function useImageTransform({ document, closeImageTransformation, buttonSelector 
     // When we click on any character the image is deleted and we need to close
     // the image transform. We handle this by selectionchange.
     useListener(document, "selectionchange", (ev) => {
+        // guard?
         closeImageTransformation();
     });
 

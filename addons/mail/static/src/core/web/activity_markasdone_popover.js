@@ -25,6 +25,8 @@ export class ActivityMarkAsDone extends Component {
     }
 
     onKeydown(ev) {
+        // guard?
+
         if (ev.key === "Escape" && this.props.close) {
             this.props.close();
         }
