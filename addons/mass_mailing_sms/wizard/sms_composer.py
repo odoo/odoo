@@ -70,6 +70,11 @@ class SMSComposer(models.TransientModel):
         if self.mailing_id:
             seen_ids, seen_list = self.mailing_id._get_seen_list_sms()
             res += seen_ids
+            # Duplicates spotted across batches at the mailing level (the
+            # composer only sees its own batch).
+            duplicate_res_ids = self.env.context.get('mailing_sms_duplicate_res_ids')
+            if duplicate_res_ids:
+                res += [record.id for record in records if record.id in duplicate_res_ids]
         return res
 
     def _prepare_body_values(self, records):
