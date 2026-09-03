@@ -59,7 +59,7 @@ def _patch_request_ciusro_download_answer(company, key_download, session):
                 'amount_total': '1785.0',
                 'seller_vat': '8001011234567',
                 'date': datetime.date(2017, 1, 1),
-                'attachment_raw': file_open("l10n_ro_edi/tests/test_files/from_odoo/ciusro_in_invoice.xml").read(),
+                'attachment_raw': file_open("l10n_ro_edi/tests/test_files/from_odoo/ciusro_in_invoice.xml").read().encode(),
             },
         },
         '3029027563': {
