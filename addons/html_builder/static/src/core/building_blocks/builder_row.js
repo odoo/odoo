@@ -168,31 +168,42 @@ function refreshSublevelLines(rowEl) {
 // Recompute the vertical connector line for nested rows:
 // - Clear any previous offset on all rows.
 // - Skip hidden rows to avoid zero-size measurements.
-// - When a row comes back to a shallower level after deeper rows, stretch its
-//   line up to the last visible sibling of the same level.
+// - Align each connector elbow with the current label center.
+// - When rows connect with a previous same-level row, stretch the line up to
+//   that label center, unless the computed value already matches the CSS default.
 function alignSublevelLines(optionsContainerEl) {
-    const rowEls = [...optionsContainerEl.querySelectorAll(".hb-row")];
-    if (!rowEls.length) {
-        return;
-    }
-    const visibleRowEls = [];
-    for (const rowEl of rowEls) {
+    const visibleRowEls = [...optionsContainerEl.querySelectorAll(".hb-row")].filter((rowEl) => {
         const labelEl = rowEl.querySelector(":scope > .hb-row-label");
         if (labelEl) {
             labelEl.style.removeProperty("--o-hb-row-sublevel-top");
+            labelEl.style.removeProperty("--o-hb-row-sublevel-center");
         }
-        if (getComputedStyle(rowEl).display !== "none") {
-            visibleRowEls.push(rowEl);
-        }
-    }
+        return getComputedStyle(rowEl).display !== "none";
+    });
     for (let index = 0; index < visibleRowEls.length; index++) {
         const rowEl = visibleRowEls[index];
         const level = getRowLevel(rowEl);
         if (!level) {
             continue;
         }
+        const labelEl = rowEl.querySelector(":scope > .hb-row-label");
+        if (!labelEl) {
+            continue;
+        }
+        const rowTop = rowEl.getBoundingClientRect().top;
+        setLineStyle(labelEl, "center", getLabelCenter(labelEl) - rowTop);
         const previousRowEl = visibleRowEls[index - 1];
-        if (!previousRowEl || getRowLevel(previousRowEl) <= level) {
+        if (!previousRowEl) {
+            continue;
+        }
+        const previousLevel = getRowLevel(previousRowEl);
+        const rowGap =
+            rowEl.getBoundingClientRect().top - previousRowEl.getBoundingClientRect().bottom;
+        if (previousLevel === level && Math.abs(rowGap) <= 1) {
+            applyLineOffset(rowEl, previousRowEl);
+            continue;
+        }
+        if (previousLevel <= level) {
             continue;
         }
         for (let previousIndex = index - 1; previousIndex >= 0; previousIndex--) {
@@ -211,11 +222,29 @@ function applyLineOffset(rowEl, previousRowEl) {
     if (!labelEl || !previousLabelEl) {
         return;
     }
-    const offset =
-        previousLabelEl.getBoundingClientRect().bottom - labelEl.getBoundingClientRect().top;
+    const offset = getLabelCenter(previousLabelEl) - rowEl.getBoundingClientRect().top;
     if (offset < 0) {
-        labelEl.style.setProperty("--o-hb-row-sublevel-top", `${offset}px`);
+        setLineStyle(labelEl, "top", offset);
     }
+}
+
+function getLabelCenter(labelEl) {
+    const { top, bottom, height = bottom - top } = labelEl.getBoundingClientRect();
+    return top + height / 2;
+}
+
+function setLineStyle(el, property, value) {
+    const propertyName = `--o-hb-row-sublevel-${property}`;
+    const defaultValue = parseFloat(
+        getComputedStyle(el).getPropertyValue(
+            propertyName.replace("-sublevel-", "-sublevel-default-")
+        )
+    );
+    if (Math.abs(value - defaultValue) <= 0.5) {
+        el.style.removeProperty(propertyName);
+        return;
+    }
+    el.style.setProperty(propertyName, `${value}px`);
 }
 
 function getRowLevel(rowEl) {

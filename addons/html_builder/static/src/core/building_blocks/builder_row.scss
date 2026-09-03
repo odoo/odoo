@@ -1,17 +1,17 @@
 @mixin sublevel-line($_level-left: 0) {
     position: absolute;
-    top: var(--o-hb-row-sublevel-top, 0);
-    bottom: 0;
+    top: var(--o-hb-row-sublevel-top, var(--o-hb-row-sublevel-default-top));
+    bottom: calc(100% - var(--o-hb-row-sublevel-center, var(--o-hb-row-sublevel-default-center)));
     left: $_level-left - $o-we-border-width;
     border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
     border-width: 0 0 $o-we-border-width $o-we-border-width;
     pointer-events: none;
-    transform: translate(0, ($o-hb-row-min-height + $o-hb-row-spacing) * -0.5 + $o-we-border-width);
     content: "";
 }
 
 .hb-row {
     $_z-index: 4;
+    $_default-center: $o-hb-row-spacing + $o-hb-row-min-height * 0.5;
 
     .popover & {
         --o-hb-row-bg-color: var(--o-hb-row-bg-color-popover, #{$o-we-fg-lighter});
@@ -32,6 +32,8 @@
     }
 
     --o-hb-btn-minHeight: #{$o-hb-row-min-height - ($o-hb-row-spacing * 0.5)};
+    --o-hb-row-sublevel-default-center: #{$_default-center};
+    --o-hb-row-sublevel-default-top: #{$_default-center - $o-hb-row-min-height - $o-hb-row-spacing};
 
     min-height: $o-hb-row-min-height;
     padding-top: $o-hb-row-spacing;
@@ -56,7 +58,7 @@
         z-index: $_z-index;
         background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
         padding: $o-hb-row-spacing $o-hb-row-spacing $o-hb-row-spacing $o-hb-row-padding-left;
-        align-self: baseline;
+        align-self: center;
     }
 
     .hb-row-content {
@@ -77,7 +79,7 @@
     .o_hb_collapse_toggler {
         position: absolute;
         padding-left: $o-hb-row-spacing;
-        align-self: baseline;
+        align-self: center;
         z-index: $_z-index + 1;
         box-shadow: none;
         font-size: 1em;
@@ -93,10 +95,6 @@
         top: -0.4em;
         margin-left: 0.2em;
         font-size: 0.65em;
-    }
-
-    &:has(> div > .o_cc_preview_wrapper) > .o_hb_collapse_toggler {
-        align-self: center;
     }
 
     // ==== States
