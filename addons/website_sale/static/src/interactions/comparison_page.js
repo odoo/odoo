@@ -1,52 +1,37 @@
-import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import comparisonUtils from '@website_sale/js/comparison_utils';
 import { redirect } from '@web/core/utils/urls';
+import { BelowTopFixedElements } from "@website/interactions/below_top_fixed_elements";
 
-export class ComparisonPage extends Interaction {
+export class ComparisonPage extends BelowTopFixedElements {
     static selector = '.o_wsale_comparison_page';
     dynamicContent = {
+        ...this.dynamicContent,
+        _stickyEl: {
+            ...this.dynamicContent._stickyEl,
+            // Managed here (and not with `classList`) so that the mini sticky
+            // is hidden again when the interaction stops (e.g. in edit mode),
+            // together with the reset of its `top`.
+            "t-att-class": () => ({
+                show: this.isMiniStickyShown,
+                "d-none": !this.isMiniStickyShown,
+            }),
+        },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
         'button[name="comparison_clear_all_button"]': { 't-on-click': this.clearAllProducts },
     };
 
-    // TODO the sticky logic could probably make use of the WebsiteSaleStickyObject
-    // interaction. We'd simply need to remove the offset that comes with the interaction
-    // and handle the fact that the sticky element is hidden and appears when the user scrolls.
+    gap = 0;
 
     setup() {
-        this.position = 0;
+        super.setup();
+        this.stickyEl = this.el.querySelector("#miniStickyComparison");
+        this.isMiniStickyShown = false;
     }
 
     start() {
-        this._adaptToHeaderChange();
-        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
+        super.start();
         this._initMiniStickyComparison();
-    }
-
-    /**
-     * Adapt the position of elements when the header changes.
-     *
-     * @private
-     */
-    _adaptToHeaderChange() {
-        let position = 0;
-
-        // Calculate total height of fixed elements at top
-        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
-            position += el.offsetHeight;
-        }
-
-        if (this.position !== position) {
-            this.position = position;
-            this.updateContent();
-
-            // Update mini sticky position if it exists
-            const miniStickyEl = this.el.querySelector('#miniStickyComparison');
-            if (miniStickyEl) {
-                miniStickyEl.style.top = `${position}px`;
-            }
-        }
     }
 
     /**
@@ -68,9 +53,6 @@ export class ComparisonPage extends Interaction {
 
         if (!miniStickyEl || !productImagesEl) return;
 
-        // Set initial position
-        miniStickyEl.style.top = `${this.position}px`;
-
         // Get scroll containers
         const mainScrollEl = this.el.querySelector('.table-comparator').closest('.overflow-x-auto');
         const miniScrollEl = this.el.querySelector('#miniStickyComparison .overflow-x-auto');
@@ -78,10 +60,12 @@ export class ComparisonPage extends Interaction {
         // Handle vertical scroll (show/hide mini sticky)
         const handleVerticalScroll = () => {
             const rect = productImagesEl.getBoundingClientRect();
-            const shouldShow = rect.bottom < this.position + 20;
+            const shouldShow = rect.bottom < this.topFixedOffset + 20;
 
-            miniStickyEl.classList.toggle('show', shouldShow);
-            miniStickyEl.classList.toggle('d-none', !shouldShow);
+            if (this.isMiniStickyShown !== shouldShow) {
+                this.isMiniStickyShown = shouldShow;
+                this.updateContent();
+            }
 
             // Sync horizontal position when showing
             if (shouldShow && mainScrollEl && miniScrollEl) {
