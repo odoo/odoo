@@ -3,10 +3,9 @@
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import api, Command, fields, models, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, _
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_compare, float_repr
-from odoo.exceptions import UserError
 from odoo.tools.misc import OrderedSet
 
 
@@ -34,10 +33,15 @@ class PurchaseOrder(models.Model):
     date_promised = fields.Datetime('Promised Date', index=True, copy=False, compute="_compute_date_promised", store=True, readonly=False,
         help="Date promised by the vendor for at least 1 or more products to be delivered by.")
 
-    @api.depends('order_line.move_ids.picking_id')
+    @api.depends('order_line.move_ids.picking_id', 'picking_ids.move_ids.move_dest_ids')
     def _compute_picking_ids(self):
         for order in self:
-            order.picking_ids = order.order_line.move_ids.picking_id
+            moves = order.order_line.move_ids
+            picking_ids = self.env['stock.picking']
+            while moves:
+                picking_ids |= moves.picking_id
+                moves = moves.move_dest_ids
+            order.picking_ids = picking_ids
 
     @api.depends('picking_ids')
     def _compute_incoming_picking_count(self):
@@ -227,7 +231,7 @@ class PurchaseOrder(models.Model):
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
                 order_lines_ids.update(order.order_line.ids)
-            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state not in ('cancel', 'done')).ids)
+            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state not in ('cancel', 'done') and r.location_id.usage == 'supplier').ids)
             # We can't cancel pickings that are already done, so we leave them untouched but log a note about it.
             for picking in order.picking_ids:
                 if picking.state == 'done':

@@ -201,11 +201,11 @@ class PurchaseOrderLine(models.Model):
                 moves_to_assign.purchase_line_id = line.id
                 previous_qty = self.env.context['previous_product_qty'][line.id] if 'previous_product_qty' in self.env.context else 0
                 diff_qty = line.product_qty - previous_qty
-                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_id.usage == 'supplier')
                 if line_pickings:
                     picking = line_pickings[0]
                 else:
-                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_id.usage == 'supplier')
                     picking = pickings and pickings[0] or False
 
                 # if no picking was found we look for OUT picking in case of -ve qty update before creating a new picking
@@ -439,12 +439,11 @@ class PurchaseOrderLine(models.Model):
         outgoing_moves = self.env['stock.move']
         incoming_moves = self.env['stock.move']
 
-        for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and r.location_dest_usage != 'inventory' and self.product_id == r.product_id):
+        for move in self.move_ids.filtered(lambda r: r.state != 'cancel' and r.location_dest_usage != 'inventory' and self.product_id == r.product_id and (not r.move_orig_ids or r.location_dest_id.usage == 'supplier')):
             if move._is_purchase_return() and (move.to_refund or not move.origin_returned_move_id):
                 outgoing_moves |= move
-            elif move.location_dest_id.usage != "supplier":
-                if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
-                    incoming_moves |= move
+            elif move.location_dest_id.usage != "supplier" and (not move.origin_returned_move_id or move.to_refund):
+                incoming_moves |= move
 
         return outgoing_moves, incoming_moves
 
