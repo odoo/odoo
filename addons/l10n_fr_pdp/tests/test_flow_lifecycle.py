@@ -569,6 +569,50 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(invoices[0].findtext('ID'), invoice.name)
         self.assertEqual(invoices[0].findtext('CurrencyCode'), invoice.currency_id.name)
 
+    def test_b2bi_invoice_limits_free_text_values(self):
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        invoice.invoice_line_ids.name = 'P' * 300
+        invoice.narration = 'N' * 1100
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_node = xml.find('./TransactionsReport/Invoice')
+
+        self.assertEqual(
+            invoice_node.findtext('Line/Product/Name'),
+            invoice.invoice_line_ids.display_name[:255],
+        )
+        self.assertEqual(invoice_node.findtext('IncludedNote/Content'), 'N' * 1024)
+
+    def test_b2bi_invoice_normalizes_country_codes(self):
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        self.b2bi_customer.country_id.code = 'be'
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_node = xml.find('./TransactionsReport/Invoice')
+
+        self.assertEqual(invoice_node.findtext('Buyer/PostalAddress/CountryId'), 'BE')
+        self.assertEqual(invoice_node.findtext('Delivery/Location/CountryId'), 'BE')
+
+    def test_b2bi_invoice_rejects_invalid_report_values(self):
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        self.company.partner_id.company_registry = 'invalid'
+        self.b2bi_customer.country_id.code = 'B1'
+        self.b2bi_customer.with_context(no_vat_validation=True).vat = 'BE12345678901234567'
+        self.b2c_customer.country_id = False
+        self.b2c_customer.zip = '12345678901'
+        invoice.partner_shipping_id = self.b2c_customer
+
+        errors = invoice._get_l10n_fr_pdp_errors()
+
+        self.assertIn('The company SIREN is missing or invalid.', errors)
+        self.assertIn(
+            'VAT number for PDP B2BI Customer must not exceed 18 characters.',
+            errors,
+        )
+        self.assertIn('Partner country code must contain two letters.', errors)
+        self.assertIn('Address zip code must not exceed 10 characters.', errors)
+        self.assertIn('Missing address country.', errors)
+
     def test_b2bi_service_on_debits_reports_tax_due_date_type_code(self):
         service_tax_on_debits = self._get_tax_on_payment_20_tax_included().copy({
             'name': '20% Service on debits',
