@@ -159,3 +159,9 @@ class TestPaymentTransaction(RazorpayCommon):
         tx.token_id = self._create_token()
         token_values = tx._extract_token_values(self.tokenize_payment_data)
         self.assertFalse(token_values)
+
+    def test_extract_amount_data_returns_none_if_amount_missing(self):
+        """Test that no amount data is extracted from redirect payment data, which never
+        contains the amount (e.g., for FPX payments)."""
+        tx = self._create_transaction("redirect")
+        self.assertIsNone(tx._extract_amount_data(self.redirect_payment_data))
