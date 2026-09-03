@@ -32,6 +32,7 @@ class MailingTrace(models.Model):
         ('sms_credit', 'Insufficient Credit'),
         ('sms_country_not_supported', 'Country Not Supported'),
         ('sms_registration_needed', 'Country-specific Registration Required'),
+        ('sms_database_non_active', 'Database non active'),
         ('sms_server', 'Server Error'),
         ('sms_acc', 'Unregistered Account'),
         # mass mode specific codes
