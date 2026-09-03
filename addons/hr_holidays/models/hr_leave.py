@@ -1648,16 +1648,12 @@ class HrLeave(models.Model):
             if any(leave.state == 'cancel' for leave in self):
                 raise UserError(_('Only a manager can modify a canceled leave.'))
 
-        # If a leave changes state from validated
-        # unlink the corresponding resource calendar leave
-
-        date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to'}
+        # If a leave changes state from validated unlink the corresponding resource calendar leave
         validated_leaves = self.filtered(lambda l: l.state == 'validate')
-        dates_changed = bool(date_fields.intersection(values))
-        state_unvalidated = 'state' in values and values['state'] != 'validate'
-        if validated_leaves and state_unvalidated:
+        state_invalidated = 'state' in values and values['state'] != 'validate'
+        if validated_leaves and state_invalidated:
             validated_leaves._remove_resource_leave()
-            # reverse any allocation credits that the engine logged against these leaves as sources
+            # Preserve allocation reversal logic from existing codebase
             self.env['hr.time.rule']._reverse_allocation_credits('hr.leave', validated_leaves.ids)
 
         employee_id = values.get('employee_id', False)
@@ -1685,18 +1681,25 @@ class HrLeave(models.Model):
         write_self = self.with_context(skip_leave_version_check=True) if skip_leave_version_check else self
         result = super(HrLeave, write_self).write(values)
 
-        if validated_leaves and dates_changed and not state_unvalidated:
+        # If the dates of a validated leave were changed, amend the resource calendar leave dates
+        date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to', 'request_hour_from', 'request_hour_to'}
+        dates_amended = bool(date_fields.intersection(values))
+        if validated_leaves and dates_amended and not state_invalidated:
             if not self.env.context.get('skip_create_resource_leave'):
-                validated_leaves._create_resource_leave()
+                validated_leaves._amend_resource_leave_dates()
+
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
+                # Preserve context check for date validation skip
                 if not self.env.context.get('leave_skip_date_check'):
                     self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)._check_validity()
-            self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
+            self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])
+
         if not self.env.context.get('leave_fast_create'):
             for holiday in self:
                 if employee_id:
                     holiday.add_follower(employee_id)
+
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -1841,6 +1844,22 @@ class HrLeave(models.Model):
         if self.has_access('write'):
             return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).sudo().unlink()
         return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
+
+    def _amend_resource_leave_dates(self):
+        """
+        This method updates the dates of an existing resource calendar leave object for already validated leaves.
+        For cases where overrides change the leave dates but not the validated state.
+        """
+        resource_leaves = self.env['resource.calendar.leaves'].sudo().search([
+            ('holiday_id', 'in', self.ids),
+        ])
+
+        resource_leaves_by_holiday_id = {resource_leave.holiday_id: resource_leave for resource_leave in resource_leaves}
+
+        for leave in self:
+            resource_leave = resource_leaves_by_holiday_id.get(leave)
+            if resource_leave:
+                resource_leave.write(leave._prepare_resource_leave_vals())
 
     def _validate_leave_request(self):
         """ Validate time off requests
