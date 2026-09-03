@@ -8,6 +8,7 @@
 
         <record id="group_hr_timesheet_user" model="res.groups">
             <field name="name">User: own timesheets only</field>
+            <field name="comment">Can only manage their own timesheets.</field>
             <field name="sequence">10</field>
             <field name="privilege_id" ref="res_groups_privilege_timesheets"/>
             <field name="implied_ids" eval="[(3, ref('base.group_user')), (4, ref('base.group_user_regular'))]"/>
@@ -16,6 +17,7 @@
 
         <record id="group_hr_timesheet_approver" model="res.groups">
             <field name="name">User: all timesheets</field>
+            <field name="comment">Can manage timesheets for all employees, but can only approve timesheets and billing targets for their team members. Has access to reporting.</field>
             <field name="sequence">20</field>
             <field name="privilege_id" ref="res_groups_privilege_timesheets"/>
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
@@ -23,6 +25,7 @@
 
         <record id="group_timesheet_manager" model="res.groups">
             <field name="name">Administrator</field>
+            <field name="comment">Can manage and approve all timesheets, with access to reporting and configuration.</field>
             <field name="sequence">30</field>
             <field name="privilege_id" ref="res_groups_privilege_timesheets"/>
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver')), (4, ref('hr.group_hr_user'))]"/>
