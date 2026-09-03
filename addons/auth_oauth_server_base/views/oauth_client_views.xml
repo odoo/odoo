@@ -52,7 +52,6 @@
         </field>
     </record>
 
-    <menuitem id="oauth_root_menu" name="OAuth" groups="base.group_system" sequence="100"/>
-    <menuitem id="oauth_client_menu" name="Clients"
-        parent="oauth_root_menu" action="oauth_client_action" sequence="10"/>
+    <menuitem id="oauth_client_menu" name="OAuth Clients"
+        parent="base.menu_security" action="oauth_client_action" sequence="21"/>
 </odoo>

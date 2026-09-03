@@ -28,6 +28,27 @@
         </field>
     </record>
 
+    <record id="oauth_token_view_kanban" model="ir.ui.view">
+        <field name="name">oauth.token.kanban</field>
+        <field name="model">oauth.token</field>
+        <field name="arch" type="xml">
+            <kanban create="0" can_open="0">
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <div>
+                            <div>
+                                <field name="client_name" class="fw-bold fs-5"/>
+                                <field name="create_date" class="ms-2 text-muted"/>
+                            </div>
+                            <small class="d-block" invisible="not scope">Scope: <field name="scope"/></small>
+                        </div>
+                        <button name="action_remove" type="object" string="Revoke" class="btn btn-secondary ms-auto mb-auto my-auto"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="oauth_token_action" model="ir.actions.act_window">
         <field name="name">OAuth Tokens</field>
         <field name="res_model">oauth.token</field>
@@ -41,6 +62,4 @@
         </field>
     </record>
 
-    <menuitem id="oauth_token_menu" name="Tokens"
-        parent="auth_oauth_server_base.oauth_root_menu" action="oauth_token_action" sequence="20"/>
 </odoo>
