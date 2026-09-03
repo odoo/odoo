@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { Switch } from "@html_editor/components/switch/switch";
 
 class GoogleFontAutoComplete extends AutoComplete {
     get dropdownOptions() {
@@ -66,7 +67,7 @@ function getUploadedFontWeight(fontName) {
 
 export class AddFontDialog extends Component {
     static template = "website.dialog.addFont";
-    static components = { GoogleFontAutoComplete, Dialog };
+    static components = { GoogleFontAutoComplete, Dialog, Switch };
     props = useProps({
         close: t.function(),
         allFonts: t.array(),
