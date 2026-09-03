@@ -3,7 +3,7 @@
     <t t-name="product.ProductCatalogOrderLine">
         <!-- Replace the element found using the css selector by the content of the portalled
              template.  -->
-        <Portal target="this.portalTarget" t-key="this.rev">
+        <Portal target="this.portalTarget">
             <div class="d-inline-flex align-items-baseline">
                 <span t-if="this.showPrice" t-out="this.price" class="o_product_catalog_price fw-bold me-4"/>
             </div>
