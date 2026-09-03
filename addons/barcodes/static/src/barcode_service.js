@@ -28,7 +28,7 @@ export const barcodeService = {
     isMobileChrome: isMobileOS() && isBrowserChrome(),
 
     cleanBarcode: function(barcode) {
-        return barcode.replace(/Alt|Shift|Control/g, '');
+        return barcode.replace(/Alt|Shift|Control|\x00/g, '');
     },
 
     start() {
@@ -129,6 +129,7 @@ export const barcodeService = {
 
         return {
             bus,
+            cleanBarcode: barcodeService.cleanBarcode,
         };
     },
 };
