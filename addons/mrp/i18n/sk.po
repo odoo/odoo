@@ -16,16 +16,15 @@
 # Martin Trigaux, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2023
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 04:30+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-master/mrp/"
-"sk/>\n"
+"PO-Revision-Date: 2026-07-21 01:43+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-s19-4/mrp/sk/"
+">\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +36,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_state
-#, fuzzy
 msgid ""
 " * Draft: The MO is not confirmed yet.\n"
 " * Confirmed: The MO is confirmed, the stock rules and the reordering of the "
@@ -47,21 +45,12 @@ msgid ""
 " * Done: The MO is closed, the stock moves are posted. \n"
 " * Cancelled: The MO has been cancelled, can't be confirmed anymore."
 msgstr ""
-" * Návrh: Výrobná objednávka nie je potvrdená.\n"
-" * Potvrdené: Výrobná objednávka je potvrdená, skladové pravidlá a "
-"objednávanie komponentov je spustené..\n"
-" * Spracováva sa: Výroba (na výrobobnej objenávke alebo pracovnej začala "
-"objendávke) začala..\n"
-" * K zavretie:  Výroba je dokončená, vyrobnú objednávku je treba ukončiť .\n"
-" * Hotové: Výrobná objednávka je dokončená, rovnako skladové pohyby. \n"
-" * Zrušené: Výrobná objednávka bola zrušená a nemôže byť znovu potvrdená."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid " <br/><br/> The components will be taken from <b>%s</b>."
-msgstr " <br/><br/> Komponenty budú spotrebované z <b>%s</b>."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -135,9 +124,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "%(producible_qty)s Ready"
-msgstr "%(producible_qty)s Pripravené"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -148,16 +136,14 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid "%(product_name)s (new) %(number_of_boms)s"
-msgstr "%(product_name)s (nové) %(number_of_boms)s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
-#, fuzzy
 msgid "%(qty)s %(measure)s unbuilt in %(order)s"
-msgstr "%(qty)s %(measure)s rozobraté v %(order)s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -174,9 +160,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
-#, fuzzy
 msgid "%i work orders"
-msgstr "%i pracovné objednávky"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -198,41 +183,35 @@ msgstr "%snie je možné vymazať. Skúste ich predtým zrušiť."
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
-#, fuzzy
 msgid "'Bom Overview - %s' % object.display_name"
-msgstr "'Rozpad kusovníka - %s' % object.display_name"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
-#, fuzzy
 msgid "'Finished products - %s' % object.name"
-msgstr "'Dokončené produkty - %s' % object.name"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_mrp_mo_overview
-#, fuzzy
 msgid "'MO Overview - %s' % object.display_name"
-msgstr "'Rozpad výrobnej objednávky- %s' % object.display_name"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_production_order
-#, fuzzy
 msgid "'Production Order - %s' % object.name"
-msgstr "'Výrobná objednávka - %s' % object.name"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_workorder
-#, fuzzy
 msgid "'Work Order - %s' % object.name"
-msgstr "'Pracovná objednávka - %s' % object.name"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "(in"
-msgstr "(v"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -248,9 +227,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "- Overview"
-msgstr "- Prehľad"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -283,9 +261,8 @@ msgstr "18″ x 2½″ štvorcová noha"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#, fuzzy
 msgid "8 GB RAM"
-msgstr "8 GB RAM"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -398,9 +375,8 @@ msgstr "<span class=\"o_stat_text\">Predobjednávky</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr "<span class=\"o_stat_text\">Rozpad kusovníka</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -430,9 +406,8 @@ msgstr "<span class=\"o_stat_text\">Vyrobené</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_form_inherit_mrp
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Manufacturing</span>"
-msgstr "<span class=\"o_stat_text\">Výroba</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -441,21 +416,18 @@ msgstr "<span class=\"o_stat_text\">OEE</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Operations</span>"
-msgstr "<span class=\"o_stat_text\">Operácie</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Operations<br/>Performance</span>"
-msgstr "<span class=\"o_stat_text\">Výkonnosť<br/>operácií</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Overview</span>"
-msgstr "<span class=\"o_stat_text\">Prehľad</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -465,9 +437,8 @@ msgstr "<span class=\"o_stat_text\">Výkon</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Product Moves</span>"
-msgstr "<span class=\"o_stat_text\">Skladové pohyby produktu</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -491,15 +462,13 @@ msgstr "<span class=\"o_stat_text\">Zdroj MO</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr "<span class=\"o_stat_text\">Sledovateľnosť</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Unbuilds</span>"
-msgstr "<span class=\"o_stat_text\">Rozobrávky</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -528,15 +497,11 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#, fuzzy
 msgid ""
 "<span>\n"
 "            Components\n"
 "        </span>"
 msgstr ""
-"<span>\n"
-"            Komponenty\n"
-"        </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -585,15 +550,13 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "<strong>Barcode</strong>"
-msgstr "<strong>Čiarový kód</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "<strong>Deadline:</strong><br/>"
-msgstr "<strong>Termín:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -622,47 +585,40 @@ msgstr "<strong>Je dôvod blokovania? </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-#, fuzzy
 msgid "<strong>Manufacturing Order:</strong><br/>"
-msgstr "<strong>Výrobná objednávka:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "<strong>Operation</strong>"
-msgstr "<strong>Operácia</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "<strong>Product:</strong><br/>"
-msgstr "<strong>Produkt:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "<strong>Quantity Producing:</strong><br/>"
-msgstr "<strong>Vyrábané množstvo:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "<strong>Quantity to Produce:</strong><br/>"
-msgstr "<strong>Množstvo k výrobe:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_productivity_loss_kanban
-#, fuzzy
 msgid "<strong>Reason: </strong>"
-msgstr "<strong>Dôvod: </strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "<strong>Responsible:</strong><br/>"
-msgstr "<strong>Zodpovedá:</strong><br/>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -671,9 +627,8 @@ msgstr "<strong>Zdroj:</strong><br/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-#, fuzzy
 msgid "<strong>Unit Cost</strong>"
-msgstr "<strong>Jednotkové náklady</strong>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -687,23 +642,18 @@ msgstr "? Môže to viesť k nezrovnalostiam v inventári."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid ""
 "A BoM of type Kit is not produced with a manufacturing order.<br/>\n"
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Kusovník typu Súprava sa nevyrába pomocou výrobnej objednávky.<br/>\n"
-"                                Namiesto toho sa používa na rozklad "
-"kusovníka na jeho komponenty keď:"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
-msgstr "Výrobok s kusovníkom typu súprava nemôže mať pravidlo objednávania."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -754,9 +704,8 @@ msgstr "Označenie výnimky v aktivite"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_plans_ids
-#, fuzzy
 msgid "Activity Plans"
-msgstr "Plány aktivít"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -776,9 +725,8 @@ msgstr "Ikona typ aktivity"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__actual
-#, fuzzy
 msgid "Actual"
-msgstr "Aktuálné"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__actual
@@ -805,15 +753,11 @@ msgstr "Pridať riadok"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Add by-products to bills of materials. This can be used to get several "
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
-"Pridávanie vedľajších produktov do kusovníkov. Takto môžete získať niekoľko "
-"hotových výrobkov naraz. Bez tejto možnosti môžete robiť len: A + B = C. S "
-"touto možnosťou: A + B = C + D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -822,15 +766,13 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Add quality checks to your work orders"
-msgstr "Pridajte kontrolu kvality do pracovných objednávok"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_tag
-#, fuzzy
 msgid "Add tag for the workcenter"
-msgstr "Pridanie značky pre pracovisko"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__note
@@ -854,9 +796,8 @@ msgstr "Správca"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__after
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "After"
-msgstr "Po"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -875,9 +816,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "All Products"
-msgstr "Všetky produkty"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__batch_size
@@ -888,17 +828,12 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
-#, fuzzy
 msgid ""
 "All product quantities must be greater or equal to 0.\n"
 "Lines with 0 quantities can be used as optional lines. \n"
 "You should install the mrp_byproduct module if you want to manage extra "
 "products on BoMs!"
 msgstr ""
-"Všetky množstvá výrobkov musia byť väčšie alebo rovné 0.\n"
-"Riadky s množstvom 0 sa môžu použiť ako voliteľné riadky. \n"
-"Ak chcete spravovať vedľajšie produkty kusovníka, mali by ste si "
-"nainštalovať modul mrp_byproduct!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -907,32 +842,26 @@ msgstr "Pridelenie"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Allocation Report"
-msgstr "Prehľad pridelenia"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Allocation Report Labels"
-msgstr "Štítky prehľadu pridelenia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allow_workorder_dependencies
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__allow_workorder_dependencies
-#, fuzzy
 msgid "Allow Work Order Dependencies"
-msgstr "Povolenie závislostí pracovných objednávok"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Allow manufacturing users to modify quantities to consume, without the need "
 "for prior approval"
 msgstr ""
-"Umožniť výrobným používateľom upravovať množstvo spotrebovaných komponentov "
-"bez potreby predchádzajúceho schválenia"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__use_create_components_lots
@@ -943,9 +872,8 @@ msgstr "Umožnite vytvoriť nové šarže / sériové čísla komponentov"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_product_uom__allowed_uom_ids
-#, fuzzy
 msgid "Allowed Uom"
-msgstr "Povolená MJ"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -1020,21 +948,16 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/product.py:0
-#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Keďže pre tento produkt už boli použité iné merné jednotky (napr. %"
-"(problem_uom)s) ako %(uom)s, zmenu merných jednotiek nie je možné vykonať. "
-"Ak ju chcete zmeniť, archivujte produkt a vytvorte nový."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Assembling"
-msgstr "Zostavovanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_assign_serial_numbers
@@ -1075,49 +998,40 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report
-#, fuzzy
 msgid "Auto Print Allocation Report"
-msgstr "Automatická tlač prehľadu priradenia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
-#, fuzzy
 msgid "Auto Print Allocation Report Labels"
-msgstr "Automatická tlač štítkov pridelenia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_production_order
-#, fuzzy
 msgid "Auto Print Done Production Order"
-msgstr "Automatická tlač hotovej výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
-#, fuzzy
 msgid "Auto Print Generated Lot/SN Label"
-msgstr "Automatická tlač štítkov vygenerovaných šarží/SČ"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_lot
-#, fuzzy
 msgid "Auto Print Produced Lot Label"
-msgstr "Automatická tlač štítku vyrobenej šarže"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
-#, fuzzy
 msgid "Auto Print Produced Product Labels"
-msgstr "Automatická tlači štítku vyrobeného produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
-#, fuzzy
 msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
-"Automatická tlač štítku s číslom šarže/SN pri použití tlačidla „Vytvoriť "
-"nové sériové číslo/číslo šarže“."
 
 #. module: mrp
 #. odoo-javascript
@@ -1128,9 +1042,8 @@ msgstr "Dostupnosť"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-#, fuzzy
 msgid "Availabilities on products."
-msgstr "Dostupnosť produktov."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__availability
@@ -1153,47 +1066,38 @@ msgstr "Dostupné"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__produce_delay
-#, fuzzy
 msgid ""
 "Average lead time in days to manufacture this product. In the case of multi-"
 "level BOM, the manufacturing lead times of the components will be added. In "
 "case the product is subcontracted, this can be used to determine the date at "
 "which components should be sent to the subcontractor."
 msgstr ""
-"Priemerný čas výroby tohto výrobku v dňoch. V prípade viacúrovňového "
-"kusovníka sa pripočítajú pribežná doba výroby komponentov. V prípade, že je "
-"výrobok zadaný subdodávateľovi, možno tento údaj použiť na určenie dátumu, "
-"ku ktorému sa majú komponenty poslať subdodávateľovi."
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Avg Cost of Components per Unit"
-msgstr "Priemerné náklady na komponenty na jednotku"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Avg Cost of Operations per Unit"
-msgstr "Priemerné prevádzkové náklady na jednotku"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Avg Total Cost per Unit"
-msgstr "Priemerné celkové náklady na jednotku"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
-#, fuzzy
 msgid "BOM Overview Report"
-msgstr "Rozpad kusovníka"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -1282,9 +1186,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__before
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Before"
-msgstr "Predtým"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1342,26 +1245,19 @@ msgstr "Kusovníky"
 #: model:ir.model.fields,help:mrp.field_mrp_production__bom_id
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__mo_bom_id
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_bom_id
-#, fuzzy
 msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components "
 "and work order instructions."
 msgstr ""
-"Kusovníky nazývané aj receptúry, sa používajú na spotrebovanie komponentov a "
-"zápis pokynov k pracovným príkazom."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
-#, fuzzy
 msgid ""
 "Bills of materials allow you to define the list of required raw\n"
 "                materials used to make a finished product; through a "
 "manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"Kusovník umožňuje zadanie potrebných materiálov\n"
-"                použitých pre výrobu produktu; pomocou výrobných \n"
-"                objednávok alebo balením produktov."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -1410,9 +1306,8 @@ msgstr "Dôvod blokovania"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
-#, fuzzy
 msgid "Blocks"
-msgstr "Bloky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -1454,9 +1349,8 @@ msgstr "Riadky kusovníka"
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-#, fuzzy
 msgid "BoM Overview"
-msgstr "Rozpad kusovníka"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1473,9 +1367,8 @@ msgstr "Bolt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__bom_ids
-#, fuzzy
 msgid "Bom"
-msgstr "Kusovník"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__bom_id_placeholder
@@ -1500,9 +1393,8 @@ msgstr "Vedľajší produkt"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid "By-product %s should not be the same as BoM product."
-msgstr "Vedľajší produkt %s nemôže byť rovnaký ako vyrábaný produkt."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -1520,9 +1412,8 @@ msgstr "Vedľajšie produkty"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "By-products cost shares must be positive."
-msgstr "Podiely nákladov vedľajších produktov musí byť kladné"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_byproduct
@@ -1533,9 +1424,8 @@ msgstr "Vedľajší produkt"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "Byproducts"
-msgstr "Vedľajšie produkty"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -1598,16 +1488,14 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
-#, fuzzy
 msgid "Carried Quantity"
-msgstr "Prenesené množstvo"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Catalog"
-msgstr "Katalóg"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity_loss__loss_id
@@ -1618,9 +1506,8 @@ msgstr "Kategória"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Center A"
-msgstr "Centrum A"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -1659,36 +1546,31 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/stock_label_type.py:0
-#, fuzzy
 msgid "Choose Labels Layout"
-msgstr "Vyberte rozloženie štítkov"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "Choose Type of Labels To Print"
-msgstr "Vyberte typ štítkov na tlač"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_picking_label_type
-#, fuzzy
 msgid "Choose whether to print product or lot/sn labels"
-msgstr "Vyberte, či chcete tlačiť štítky produktu alebo šarží/SČ"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_stop
-#, fuzzy
 msgid "Cleanup Time"
-msgstr "Čas čistenia"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-#, fuzzy
 msgid "Clear"
-msgstr "Zmazať"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1752,9 +1634,8 @@ msgstr "Komponent"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
-#, fuzzy
 msgid "Component Status"
-msgstr "Stav komponentov"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -1801,9 +1682,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
-#, fuzzy
 msgid "Computed on last"
-msgstr "Vypočítané dňa"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
@@ -1840,9 +1720,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-#, fuzzy
 msgid "Conflicts"
-msgstr "Konflikty"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_consumed_qty_uom
@@ -1881,30 +1760,26 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
-#, fuzzy
 msgid "Copy Existing Operations"
-msgstr "Skopírovať existujúce operácie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_copy_to_bom_tree_view
-#, fuzzy
 msgid "Copy selected operations"
-msgstr "Skopírovať vybrané operácie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cost
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__cost
-#, fuzzy
 msgid "Cost"
-msgstr "Náklady"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Cost Breakdown of Products"
-msgstr "Rozpad nákladov produktov"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__cost_mode
@@ -1914,9 +1789,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__cost_share
 #: model:ir.model.fields,field_description:mrp.field_stock_move__cost_share
-#, fuzzy
 msgid "Cost Share (%)"
-msgstr "Zdielanie nákladov (%)"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -1938,10 +1812,8 @@ msgstr ""
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost based on related replenishments. Otherwise cost from product form"
 msgstr ""
-"Náklady na základe súvisiacich doplnení. Inak náklady z formulára výrobku"
 
 #. module: mrp
 #. odoo-javascript
@@ -1953,17 +1825,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Cost of Components per unit"
-msgstr "Náklady komponentov na jednotku"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Cost of Operations per unit"
-msgstr "Náklady na operácie na jednotku"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__costs_hour
@@ -1978,9 +1848,8 @@ msgstr "Cenová informácia"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_count
-#, fuzzy
 msgid "Count of MO generated"
-msgstr "Počet vytvorených VO"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
@@ -2038,9 +1907,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Create customizable worksheets for your quality checks"
-msgstr "Vytvárajte prispôsobiteľné pracovné hárky pre kontroly kvality"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -2163,9 +2031,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle
-#, fuzzy
 msgid "Cycles"
-msgstr "Cykly"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -2195,33 +2062,25 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Date by Month"
-msgstr "Dátum po mesiacoch"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_finished
-#, fuzzy
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
-"Dátum, kedy očakávate ukončenie výroby, alebo skutočný dátum ukončenia "
-"výroby."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
-#, fuzzy
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
-"Dátum, kedy plánujete začať výrobu, alebo dátum, kedy ste výrobu skutočne "
-"začali."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Date: Last 365 Days"
-msgstr "Dátum: Posledných 365 dní"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -2234,9 +2093,8 @@ msgstr "Dni"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid "Days to Supply Components"
-msgstr "Dni na dodanie komponentov"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__days_to_prepare_mo
@@ -2280,13 +2138,10 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
-#, fuzzy
 msgid ""
 "Define the components and finished products you wish to use in\n"
 "                bill of materials and manufacturing orders."
 msgstr ""
-"Definujte komponenty a hotové výrobky, ktoré chcete použiť v\n"
-"                kusovníkov a výrobných objednávkach."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -2317,9 +2172,8 @@ msgstr "Dodacie objednávky"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "Demand"
-msgstr "Požiadavka"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__note
@@ -2340,9 +2194,8 @@ msgstr "Cieľová lokácia"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Details"
-msgstr "Podrobnosti"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__cost_mode
@@ -2369,9 +2222,8 @@ msgstr "Zrušiť"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.xml:0
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
-#, fuzzy
 msgid "Display"
-msgstr "Zobraziť"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__display_name
@@ -2435,15 +2287,13 @@ msgstr "Na ťahoch zobrazte skratku sériového čísla"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Displays the consumed Lot/Serial Numbers."
-msgstr "Zobrazí spotrebované čísla šarží/sériové čísla."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Displays the produced Lot/Serial Numbers."
-msgstr "Zobrazí vyrobené šarže/sériové čísla."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
@@ -2452,9 +2302,8 @@ msgstr "Potvrdzujete, že chcete zrušiť stavbu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Documentation"
-msgstr "Dokumentácia"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -2555,9 +2404,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_finished
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_finished
-#, fuzzy
 msgid "End"
-msgstr "Koniec"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__date_end
@@ -2575,9 +2423,8 @@ msgstr "Zabezpečte sledovateľnosť skladovateľného produktu vo vašom sklade
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason1
-#, fuzzy
 msgid "Equipment Failure"
-msgstr "Zlyhanie zariadenia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__cost_mode__estimated
@@ -2594,9 +2441,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "Estimated %s"
-msgstr "Odhadnuté %s"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -2623,9 +2469,8 @@ msgstr "Očakávané"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "Expected %s"
-msgstr "Očakávané %s"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration_expected
@@ -2678,15 +2523,13 @@ msgstr "Lokácia hotových produkov"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__lot_name
-#, fuzzy
 msgid "First SN"
-msgstr "Prvé SČ"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
-#, fuzzy
 msgid "Fixed"
-msgstr "Pevný"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -2694,9 +2537,8 @@ msgstr "Pevný"
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.js:0
-#, fuzzy
 msgid "Fold"
-msgstr "Zložiť"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_follower_ids
@@ -2721,22 +2563,19 @@ msgstr "Odberatelia (partneri)"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#, fuzzy
 msgid "Forecast"
-msgstr "Odhad"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 #: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Forecast Report"
-msgstr "Prognóza"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__product_virtual_available
-#, fuzzy
 msgid ""
 "Forecast quantity (computed as Quantity On Hand - Outgoing + Incoming - "
 "Quantity to Remove)\n"
@@ -2747,26 +2586,16 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Očakávané množstvo (vypočítané ako množstvo na sklade - odoslané + prijaté - "
-"množstvo na odstránenie)\n"
-"V kontexte s jedným skladovým miestom to zahŕňa tovar uskladnený na tomto "
-"mieste alebo na ktoromkoľvek z jeho podriadených miest.\n"
-"V kontexte s jedným skladom to zahŕňa tovar uskladnený na skladovom mieste "
-"tohto skladu alebo na ktoromkoľvek z jeho podriadených miest.\n"
-"V ostatných prípadoch to zahŕňa tovar uskladnený na akomkoľvek skladovom "
-"mieste typu „interný“."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "Forecasted"
-msgstr "Prognózované"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_issue
-#, fuzzy
 msgid "Forecasted Issue"
-msgstr "Očakávaný problém"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_location_id
@@ -2777,17 +2606,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-#, fuzzy
 msgid "Free to Use / On Hand"
-msgstr "Voľné k použitiu / skladom"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Free to use / On Hand"
-msgstr "Voľné k použitiu / skladom"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2801,9 +2628,8 @@ msgstr "Plne produktívny"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason7
-#, fuzzy
 msgid "Fully Productive Time"
-msgstr "Plne produktívny čas"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2818,9 +2644,8 @@ msgstr "Všeobecné informácie"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
-#, fuzzy
 msgid "Generate"
-msgstr "Všeobecné"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2834,21 +2659,18 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
-#, fuzzy
 msgid "Generate Serial Numbers"
-msgstr "Generujte sériová čísla"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Generate a new BoM from this Manufacturing Order"
-msgstr "Vytvorte nový kusovník z tejto výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__generated_mrp_lot_label_to_print
-#, fuzzy
 msgid "Generated Lot/SN Label to Print"
-msgstr "Vytvorené šarže/SČ na tlač"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -2876,9 +2698,8 @@ msgstr "Dáva sekvenčné poradie pri zobrazovaní."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Hardware"
-msgstr "Hardware"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_produced
@@ -2887,9 +2708,8 @@ msgstr "Bol vyrobený"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__has_kits
-#, fuzzy
 msgid "Has Kits"
-msgstr "Obsahuje súpravy"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__has_message
@@ -2903,9 +2723,8 @@ msgstr "Má správu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__has_routing_lines
-#, fuzzy
 msgid "Has Routing Lines"
-msgstr "je použité v operáciách"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__has_conflicts
@@ -2919,9 +2738,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
-#, fuzzy
 msgid "Hourly processing cost."
-msgstr "Hodinové výrobné náklady."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -2935,9 +2753,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_week
-#, fuzzy
 msgid "Hours per Week"
-msgstr "Hodiny za týždeň"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__id
@@ -3075,53 +2892,38 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report labels of a MO when it is done."
 msgstr ""
-"Ak je toto zaškrtávacie políčko zaškrtnuté, Odoo automaticky vytlačí štítky "
-"pridelení výrobného príkazu po jeho dokončení."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the allocation "
 "report of a MO when it is done and has assigned moves."
 msgstr ""
-"Ak je toto zaškrtávacie políčko zaškrtnuté, Odoo automaticky vytlačí "
-"pridelení výrobného príkazu, keď je dokončený a má priradené skladové pohyby."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_lot
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the lot/SN label "
 "of a MO when it is done."
 msgstr ""
-"Ak je toto políčko zaškrtnuté, Odoo automaticky vytlačí štítok šarže/SN "
-"výrobného príkazu po jeho dokončení."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels "
 "of a MO when it is done."
 msgstr ""
-"Ak je toto zaškrtávacie políčko zaškrtnuté, Odoo automaticky vytlačí štítky "
-"produktov výrobného príkazu po jeho dokončení."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
-#, fuzzy
 msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
-"Ak je toto políčko zaškrtnuté, Odoo automaticky vytlačí výrobný príkaz po "
-"jeho dokončení."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3159,9 +2961,8 @@ msgstr "Spracováva sa"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "In Transit"
-msgstr "V presune"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
@@ -3184,9 +2985,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_default_code
-#, fuzzy
 msgid "Internal Reference"
-msgstr "Interná referencia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
@@ -3228,9 +3028,8 @@ msgstr "Odberateľ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__is_kits
 #: model:ir.model.fields,field_description:mrp.field_product_template__is_kits
-#, fuzzy
 msgid "Is Kits"
-msgstr "Je súpravou"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_locked
@@ -3261,14 +3060,10 @@ msgstr "To už bolo odblokované."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
 "Manufacturing Order instead in order to unplan all the linked operations."
 msgstr ""
-"Nie je možné zrušiť plánovanie jednej pracovnej objednávky. Pre zrušenie "
-"plánovania všetkých prepojených operácií by ste mali zrušiť plánovanie "
-"výrobného príkazu."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
@@ -3283,15 +3078,13 @@ msgstr "Údaje JSON pre miniaplikáciu pre popover"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "John Doe"
-msgstr "Janko Mrkvička"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__kanban_dashboard_graph
-#, fuzzy
 msgid "Kanban Dashboard Graph"
-msgstr "Riadiaci panel - graf"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__type__phantom
@@ -3307,27 +3100,23 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-#, fuzzy
 msgid "Laptop"
-msgstr "Laptop"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Laptop Model X"
-msgstr "Laptop Model X"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-#, fuzzy
 msgid "Laptop model X"
-msgstr "Laptop model X"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Laptop with 16GB RAM"
-msgstr "Laptop s 16GB RAM"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__write_uid
@@ -3407,9 +3196,8 @@ msgstr "Omeškané aktivity"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Late Availability"
-msgstr "Dostupné neskôr"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3418,14 +3206,10 @@ msgstr "Neskoré MO alebo neskoré dodanie komponentov"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__components_availability
-#, fuzzy
 msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
 msgstr ""
-"Najnovší stav dostupnosti komponentov pre túto výrobnú objednávku. Ak je "
-"zelený, potom stav pripravenosti komponentov zodpovedá konfigurácii "
-"kusovníka."
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
@@ -3502,21 +3286,18 @@ msgstr "Dôvod straty"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Lot/SN Label"
-msgstr "Štítok šarže/SČ"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__done_mrp_lot_label_to_print
-#, fuzzy
 msgid "Lot/SN Label to Print"
-msgstr "Štítok šarže/SČ k tlači"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Lot/SN Labels"
-msgstr "Štítky šarží/SČ"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_lot
@@ -3543,44 +3324,38 @@ msgstr "Šarže / sériové čísla"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
-#, fuzzy
 msgid "MO Backorder"
-msgstr "Výrobná doobjednávka"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "MO Cost"
-msgstr "Náklad výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "MO Costs"
-msgstr "Náklady výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "MO Generated by %s"
-msgstr "Výrobné objednávky generované z %s"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mo_overview
 #: model:ir.actions.report,name:mrp.action_report_mrp_mo_overview
-#, fuzzy
 msgid "MO Overview"
-msgstr "Prehľad výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_mo_overview
-#, fuzzy
 msgid "MO Overview Report"
-msgstr "Prehľad nákladov výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3589,15 +3364,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
-#, fuzzy
 msgid "MO Readiness"
-msgstr "Pripravenosť výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "MO Ready"
-msgstr "Pripravené k výrobe"
+msgstr ""
 
 #. module: mrp
 #: model:mail.message.subtype,name:mrp.mt_mo_state
@@ -3617,15 +3390,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
-#, fuzzy
 msgid "MRP Work Orders"
-msgstr "Pracovné objednávky"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "MRP-001"
-msgstr "MRP-001"
+msgstr ""
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
@@ -3640,9 +3411,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
-#, fuzzy
 msgid "Manual Duration"
-msgstr "Ručne vykázané trvanie"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -3660,15 +3430,13 @@ msgstr "Výroba"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__mrp_one_step
-#, fuzzy
 msgid "Manufacture (1 step)"
-msgstr "Výroba (v 1 kroku)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
-#, fuzzy
 msgid "Manufacture MTO Rule"
-msgstr "Pravidlo výroby na zákazku (MTO)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
@@ -3682,29 +3450,25 @@ msgstr "Vyrobiť tento produkt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_to_resupply
-#, fuzzy
 msgid "Manufacture to Resupply"
-msgstr "Výroba podľa požiadaviek"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__mrp_product_qty
 #: model:ir.model.fields,field_description:mrp.field_product_template__mrp_product_qty
-#, fuzzy
 msgid "Manufactured"
-msgstr "Vyrobené"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
-#, fuzzy
 msgid "Manufactured Products"
-msgstr "Vyrobené produkty"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
-#, fuzzy
 msgid "Manufactured in the last 365 days"
-msgstr "Vyrobené v posledných 365 dňoch"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -3724,9 +3488,8 @@ msgstr "Výroba"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
-#, fuzzy
 msgid "Manufacturing Forecast"
-msgstr "Prognóza výroby"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -3737,9 +3500,8 @@ msgstr "Výrobná dodacia lehota"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
-#, fuzzy
 msgid "Manufacturing Operation Type"
-msgstr "Typ operácie - výroba"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -3783,16 +3545,14 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr "Potvrdené výrobné objednávky."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__ready_to_produce
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "Manufacturing Readiness"
-msgstr "Pripravenosť výroby"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3823,30 +3583,24 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__production_availability
-#, fuzzy
 msgid ""
 "Manufacturing readiness for this MO, as per bill of material configuration:\n"
 "            * Ready: The material is available to start the production.\n"
 "            * Waiting: The material is not available to start the "
 "production.\n"
 msgstr ""
-"Manufacturing readiness for this MO, as per bill of material configuration:\n"
-"          * Ready: The material is available to start the production.\n"
-"          * Waiting: The material is not available to start the production.\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation_graph
 #: model:ir.ui.menu,name:mrp.mrp_operation_picking
-#, fuzzy
 msgid "Manufacturings"
-msgstr "Výroba"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-#, fuzzy
 msgid "Marc Demo"
-msgstr "Marc Demo"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_mark_as_done_workorders
@@ -3862,9 +3616,8 @@ msgstr "Hlavný harmonogram výroby"
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason0
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Material Availability"
-msgstr "Dostupnosť materiálu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
@@ -3928,55 +3681,47 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__move_id
-#, fuzzy
 msgid "Move"
-msgstr "Presunúť"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_move.py:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_byproduct_ids
-#, fuzzy
 msgid "Move Byproduct"
-msgstr "Pohyb vedľajšieho produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_line_ids
-#, fuzzy
 msgid "Moves to Track"
-msgstr "Skladové pohyby na sledovanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
-#, fuzzy
 msgid "Mrp Consumption Warning Line"
-msgstr "Riadok s varovaním spotreby"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_mrp_display
-#, fuzzy
 msgid "Mrp Display"
-msgstr "Zobrazenie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_ids
-#, fuzzy
 msgid "Mrp Production"
-msgstr "Výroba"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
-#, fuzzy
 msgid "Mrp Production Count"
-msgstr "Počítadlo výroby"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "My Activities"
-msgstr "Moje aktivity"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__my_activity_date_deadline
@@ -4011,9 +3756,8 @@ msgstr "Nové"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "New BoM from %(mo_name)s"
-msgstr "Nový kusovník z %(mo_name)s"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
@@ -4072,17 +3816,15 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
-#, fuzzy
 msgid "No bill of materials found. Let's create one!"
-msgstr "Nenašli sme žiadny kusovník. Poďme jeden vytvoriť!"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-#, fuzzy
 msgid "No data available."
-msgstr "Nie sú k dispozícii žiadne údaje."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
@@ -4092,9 +3834,8 @@ msgstr "Zatiaľ žiadne údaje!"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
-#, fuzzy
 msgid "No manufacturing order found. Let's create one."
-msgstr "Nenašla sa žiadna výrobná objednávka. Vytvorme nejakú!"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.product_template_action
@@ -4103,15 +3844,13 @@ msgstr "Nenašli sa žiadne produkty. Vytvorte nový!"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_blocked
-#, fuzzy
 msgid "No productivity loss for this equipment"
-msgstr "Žiadna strata produktivity tohto zariadenia"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
-#, fuzzy
 msgid "No unbuild order found"
-msgstr "Žiadne objednávky na rozobratie"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -4126,18 +3865,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_workorders_kanban
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-#, fuzzy
 msgid "No work orders to do!"
-msgstr "Žiadne pracovné objednávky!"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-#, fuzzy
 msgid ""
 "No workorder currently in progress. Click to mark work center as blocked."
 msgstr ""
-"V súčasnosti sa nevykonáva žiadna pracovná objednávka. Kliknutím označíte "
-"pracovisko ako zablokované."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__0
@@ -4151,9 +3886,8 @@ msgstr "Normálna"
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__unavailable
-#, fuzzy
 msgid "Not Available"
-msgstr "Nedostupné"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -4164,40 +3898,30 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "Not Ready"
-msgstr "Nepripravené"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Note that another version of this BOM is available."
-msgstr "Upozorňujeme, že je k dispozícii aj iná verzia tohto kusovníka."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
-#, fuzzy
 msgid ""
 "Note that archived work center(s): '%s' is/are still linked to active Bill "
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
-"Všimnite si, že archivované pracovisko (pracoviská): '%s' je (sú) stále "
-"prepojené s aktívnym kusovníkom materiálu, čo znamená, že na ňom/nich možno "
-"stále plánovať operácie. Aby ste tomu zabránili, odporúča sa namiesto toho "
-"vymazať pracovné stredisko."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/product.py:0
-#, fuzzy
 msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
 msgstr ""
-"Upozorňujeme, že produkt(-y): '%s' je stále prepojený na aktívne kusovníky, "
-"čo znamená, že výrobok sa v nich stále môže používať."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -4216,9 +3940,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
-#, fuzzy
 msgid "Number of Manufacturing Orders Late"
-msgstr "Počet oneskorených výrobných objednávok"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_to_close
@@ -4227,15 +3950,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
-#, fuzzy
 msgid "Number of Manufacturing Orders Waiting"
-msgstr "Počet čakajúcich výrobných objednávok"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_todo
-#, fuzzy
 msgid "Number of Manufacturing Orders to Process"
-msgstr "Počet výrobných objednávok na spracovanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__lot_quantity
@@ -4244,9 +3965,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_count
-#, fuzzy
 msgid "Number of Unbuilds"
-msgstr "Počet rozobratí"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_all_child_count
@@ -4270,9 +3990,8 @@ msgstr "Počet chýb"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_child_count
-#, fuzzy
 msgid "Number of generated MO"
-msgstr "Počet vytvorených výrobných objednávok"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -4281,9 +4000,8 @@ msgstr "Počet vytvorených výrobných objednávok"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__message_needaction_counter
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__message_needaction_counter
-#, fuzzy
 msgid "Number of messages requiring action"
-msgstr "Počet správ, ktoré vyžadujú akciu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_has_error_counter
@@ -4304,21 +4022,18 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
-#, fuzzy
 msgid "Number of source MO"
-msgstr "Počet zdrojových výrobných objednávok"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-#, fuzzy
 msgid "OEE"
-msgstr "OEE"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee_target
-#, fuzzy
 msgid "OEE Target"
-msgstr "Ciel OEE"
+msgstr ""
 
 #. module: mrp
 #: model:ir.module.module,description:base.module_mrp
@@ -4402,7 +4117,6 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you want to print instantly,\n"
 "                                install the IoT App on a computer that is on "
@@ -4410,17 +4124,11 @@ msgid ""
 "                                barcode operator and configure the routing "
 "of the reports."
 msgstr ""
-"Odoo štandardne otvára náhľad PDF. Ak chcete tlačiť okamžite,\n"
-"                     nainštalujte aplikáciu IoT do počítača, ktorý je v "
-"rovnakej miestnej sieti ako\n"
-"                     operátor čiarových kódov a nakonfigurujte smerovanie "
-"zostáv."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee
-#, fuzzy
 msgid "Oee"
-msgstr "OEE"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4437,15 +4145,13 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
-msgstr "Iba výrobné objednávky s kusovníkom môžu byť %s."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#, fuzzy
 msgid "Open"
-msgstr "Otvorené"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__name
@@ -4458,9 +4164,8 @@ msgstr "Operatíva"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__operation_id
-#, fuzzy
 msgid "Operation To Consume"
-msgstr "Spotreba na operácii"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__picking_type_id
@@ -4506,40 +4211,34 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Operations Done"
-msgstr "Dokončené operácie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Operations Planned"
-msgstr "Plánované operácie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
-#, fuzzy
 msgid "Operations Search Filters"
-msgstr "Filtre vyhľadávania operácií"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
-#, fuzzy
 msgid "Operations that cannot start before this operation is completed."
-msgstr "Operácie, ktoré sa nemôžu spustiť pred dokončením tejto operácie."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
-#, fuzzy
 msgid "Operations that need to be completed before this operation can start."
-msgstr "Operácie, ktoré je potrebné dokončiť pred spustením tejto operácie."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "Order"
-msgstr "Poradie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
@@ -4553,29 +4252,25 @@ msgstr "Objednávky"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_production
-#, fuzzy
 msgid "Original Production Quantity"
-msgstr "Pôvodné množstvo výroby"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
-#, fuzzy
 msgid "Outdated BoM"
-msgstr "Zastaralý kusovník"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
-#, fuzzy
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr "Cieľová hodnota celkovej efektívnosti zariadení v percentách"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_oee
 #: model:ir.ui.menu,name:mrp.menu_mrp_workcenter_productivity_report
-#, fuzzy
 msgid "Overall Equipment Effectiveness"
-msgstr "Celková efektivita zariadení"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee
@@ -4585,9 +4280,8 @@ msgstr "Celková účinnosť zariadenia, založená na minulom mesiaci"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_productivity_report_oee
-#, fuzzy
 msgid "Overall Equipment Effectiveness: no working or blocked time"
-msgstr "Celková účinnosť zariadení: nepracovný alebo blokovaný čas"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__pdf
@@ -4598,9 +4292,8 @@ msgstr "PDF"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Package barcode"
-msgstr "Čiarový kód balenia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -4614,9 +4307,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__parent_product_tmpl_id
-#, fuzzy
 msgid "Parent Product Template"
-msgstr "Nadradený produkt"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__mrp_consumption_warning_id
@@ -4638,9 +4330,8 @@ msgstr "Výkon"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
-#, fuzzy
 msgid "Performance Losses"
-msgstr "Straty výkonu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__performance
@@ -4650,16 +4341,14 @@ msgstr "Výkonnosť za minulý mesiac"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "Pick Components"
-msgstr "Vychystať komponenty"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "Pick components and then manufacture"
-msgstr "Vychystať komponenty a potom výroba"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
@@ -4669,9 +4358,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "Pick components, manufacture and then store products (3 steps)"
-msgstr "Vychystať komponenty, výroba a potom uskladnenie produktov (3 kroky)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
@@ -4680,21 +4368,18 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
-#, fuzzy
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "MTO pravidlo vychystaní pred výrobou"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
-#, fuzzy
 msgid "Picking Before Manufacturing Operation Type"
-msgstr "Typ operácie - vychystanie pred výrobou"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_route_id
-#, fuzzy
 msgid "Picking Before Manufacturing Route"
-msgstr "Trasa - vychystanie pred výrobou"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking_type
@@ -4703,21 +4388,18 @@ msgstr "Typ výberu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
-#, fuzzy
 msgid "Picking associated to this manufacturing order"
-msgstr "Vychystávanie súvisiace s touto výrobnou objednávkou"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
-#, fuzzy
 msgid "Picking before Manufacturing Location"
-msgstr "Lokácia vychystania pred výrobou"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#, fuzzy
 msgid "Pieces"
-msgstr "Kusy"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_workorders
@@ -4735,9 +4417,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-#, fuzzy
 msgid "Plan Orders"
-msgstr "Plánovať objednávky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_plan_at_date
@@ -4746,9 +4427,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr "Plánovať výrobné alebo nákupné objednávky na základe prognózy"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -4759,9 +4439,8 @@ msgstr "Plánované"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_start
-#, fuzzy
 msgid "Planned Date"
-msgstr "Plánovaný dátum"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -4783,23 +4462,20 @@ msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
-#, fuzzy
 msgid "Plastic Laminate"
-msgstr "Umelohmotný laminát"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_move.py:0
-#, fuzzy
 msgid "Please enter a positive quantity."
-msgstr "Zadajte, prosím, kladné množstvo."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "Please set the first Serial Number or a default sequence"
-msgstr "Nastavte prvé sériové číslo alebo predvolenú postupnosť"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -4825,51 +4501,44 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "Please unblock the work center to start the work order."
-msgstr "Odblokujte pracovisko, aby ste mohli spustiť pracovnú objednávku."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "Please unblock the work center to validate the work order"
-msgstr "Odblokujte pracovisko, aby ste mohli potvrdiť pracovnú objednávku"
+msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_ply_product_template
-#, fuzzy
 msgid "Ply Layer"
-msgstr "Podkladová vrstva"
+msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_ply_veneer_product_template
-#, fuzzy
 msgid "Ply Veneer"
-msgstr "Dýha"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__possible_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__possible_bom_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__possible_bom_product_template_attribute_value_ids
-#, fuzzy
 msgid "Possible Product Template Attribute Value"
-msgstr "Možná hodnota atribútu šablóny produktu"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "Post-Production"
-msgstr "Post produkcia"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "Pre-Production"
-msgstr "Pred produkcia"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
@@ -4890,21 +4559,18 @@ msgstr "Tlač"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Print labels as:"
-msgstr "Tlačiť štítky ako:"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Print when \"Create new Lot/SN\""
-msgstr "Tlačiť ak \"Vytvoriť novú šaržu/SČ\""
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Print when done"
-msgstr "Tlačiť pri dokončení"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__priority
@@ -4914,33 +4580,28 @@ msgstr "Priority"
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason5
-#, fuzzy
 msgid "Process Defect"
-msgstr "Chyba procesu"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Process manufacturing orders from the barcode application"
-msgstr "Spracovanie výrobných objednávok z aplikácie čiarových kódov"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Process operations at specific work centers"
-msgstr "Spracovávať operácie na konkrétnych pracoviskách"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__produce_line_ids
-#, fuzzy
 msgid "Processed Disassembly Lines"
-msgstr "Spracované riadky rozmontovania"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_procurement_compute_mrp
-#, fuzzy
 msgid "Procurement: run scheduler"
-msgstr "Obstarávanie: spusť plánovač"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4949,41 +4610,35 @@ msgstr "Vyprodukovať"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
-#, fuzzy
 msgid "Produce residual products"
-msgstr "Vyrobiť vedľajšie produkty"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Produce residual products (A + B -> C + D)"
-msgstr "Vyrobiť vedľajšie produkty (A + B -> C + D)"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
-#, fuzzy
 msgid "Produced"
-msgstr "Vyrobené"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "Produced Quantity"
-msgstr "Vyrobené množstvo"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
-#, fuzzy
 msgid "Produced Serial Numbers"
-msgstr "Vyrobené sériové čísla"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
-#, fuzzy
 msgid "Produced in Operation"
-msgstr "Vyrobené v operácii"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -5013,9 +4668,8 @@ msgstr "Produkt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "Product Capacities"
-msgstr "Kapacity produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_bom
@@ -5030,27 +4684,23 @@ msgstr ""
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-#, fuzzy
 msgid "Product Documents"
-msgstr "Produktové dokumenty"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_virtual_available
-#, fuzzy
 msgid "Product Forecasted Quantity"
-msgstr "Prognózované množstvo produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__mrp_product_label_to_print
-#, fuzzy
 msgid "Product Label to Print"
-msgstr "Štítok produktu k tlači"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
-#, fuzzy
 msgid "Product Labels"
-msgstr "Štítky produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
@@ -5064,27 +4714,23 @@ msgstr "Pohyby produktu (riadok skladového pohybu)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_name
-#, fuzzy
 msgid "Product Name"
-msgstr "Názov produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_qty_available
-#, fuzzy
 msgid "Product On Hand Quantity"
-msgstr "Množstvo produktu skladom"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_replenish
-#, fuzzy
 msgid "Product Replenish"
-msgstr "Doplnenie produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_replenish_mixin
-#, fuzzy
 msgid "Product Replenish Mixin"
-msgstr "Mixin na doplnenie produktu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_tmpl_id
@@ -5101,9 +4747,8 @@ msgstr "Varianta produktu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Product to build..."
-msgstr "Produkt na zostavenie..."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_workcenter_product_product_uom_unique
@@ -5119,15 +4764,13 @@ msgstr "Výroba"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_capacity
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_capacity
-#, fuzzy
 msgid "Production Capacity"
-msgstr "Kapacita výroby"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_date
-#, fuzzy
 msgid "Production Date"
-msgstr "Dátum výroby"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5144,9 +4787,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "Production Information"
-msgstr "Informácie pre výrobu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
@@ -5162,15 +4804,13 @@ msgstr "Výrobná objednávka"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
-#, fuzzy
 msgid "Production Order for components"
-msgstr "Výrobná objednávka pro komponenty"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_id
-#, fuzzy
 msgid "Production Order for finished products"
-msgstr "Výrobná objednávka pro hotové produkty"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5180,9 +4820,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_state
-#, fuzzy
 msgid "Production State"
-msgstr "Stav výroby"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -5192,9 +4831,8 @@ msgstr "Výrobné pracovisko"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
-#, fuzzy
 msgid "Production of Draft MO"
-msgstr "Výroba z navrhovanej výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -5206,27 +4844,23 @@ msgstr "Výroba začala neskoro"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
-#, fuzzy
 msgid "Productions"
-msgstr "Výroby"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
-#, fuzzy
 msgid "Productions To Split"
-msgstr "Výroba k rozdeleniu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__productive
-#, fuzzy
 msgid "Productive"
-msgstr "Produktívne"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__productive_time
-#, fuzzy
 msgid "Productive Time"
-msgstr "Produktívny čas"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__productive_time
@@ -5240,9 +4874,8 @@ msgstr "Produktivita"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report_blocked
-#, fuzzy
 msgid "Productivity Losses"
-msgstr "Straty produktivity"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_template_action
@@ -5253,9 +4886,8 @@ msgstr "Produkty"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
-#, fuzzy
 msgid "Progress Done (%)"
-msgstr "Dosiahnutý pokrok (%)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_cancel
@@ -5264,9 +4896,8 @@ msgstr "Propagovať zrušenie a rozdelenie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__properties
-#, fuzzy
 msgid "Properties"
-msgstr "Vlastnosti"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control
@@ -5276,15 +4907,13 @@ msgstr "Kvalita"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
-#, fuzzy
 msgid "Quality Losses"
-msgstr "Straty kvality"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control_worksheet
-#, fuzzy
 msgid "Quality Worksheet"
-msgstr "Pracovný hárok kvality"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_quant
@@ -5316,9 +4945,8 @@ msgstr "Množstvo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_produced
-#, fuzzy
 msgid "Quantity Done"
-msgstr "Množstvo spracované"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
@@ -5330,9 +4958,8 @@ msgstr "Vyrobené množstvo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_producing
-#, fuzzy
 msgid "Quantity Producing"
-msgstr "Vyrábané množstvo"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
@@ -5341,15 +4968,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
-#, fuzzy
 msgid "Quantity To Be Produced"
-msgstr "Množstvo, ktoré sa má vyrábať"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__should_consume_qty
-#, fuzzy
 msgid "Quantity To Consume"
-msgstr "Množstvo k spotrebe"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
@@ -5357,9 +4982,8 @@ msgstr "Množstvo k spotrebe"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__product_qty
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__quantity
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_to_produce
-#, fuzzy
 msgid "Quantity To Produce"
-msgstr "Množstvo k výrobe"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
@@ -5372,15 +4996,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_capacity
 #: model:ir.model.fields,help:mrp.field_mrp_production_split__production_capacity
-#, fuzzy
 msgid "Quantity that can be produced with the current stock of components"
-msgstr "Množstvo, ktoré možno vyrobiť s aktuálnymi zásobami komponentov"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-#, fuzzy
 msgid "RAM"
-msgstr "RAM"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__rating_ids
@@ -5389,15 +5011,13 @@ msgstr "RAM"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__rating_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__rating_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__rating_ids
-#, fuzzy
 msgid "Ratings"
-msgstr "Hodnotenia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
-#, fuzzy
 msgid "Raw Moves"
-msgstr "Pohyby"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5411,52 +5031,45 @@ msgstr "Pripravené"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Real Cost"
-msgstr "Skutočný náklad"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "Real Costs"
-msgstr "Skutočné náklady"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__duration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
-#, fuzzy
 msgid "Real Duration"
-msgstr "Skutočné trvanie"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Receipt"
-msgstr "Potvrdenka"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "Receipts"
-msgstr "Príjemky"
+msgstr ""
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason4
-#, fuzzy
 msgid "Reduced Speed"
-msgstr "Znížená rýchlosť"
+msgstr ""
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason6
-#, fuzzy
 msgid "Reduced Yield"
-msgstr "Znížená výťažnosť"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__code
@@ -5468,9 +5081,8 @@ msgstr "Referencia"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_reference
-#, fuzzy
 msgid "Reference between stock documents"
-msgstr "Prepojenie medzi skladovými dokladmi"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_name_uniq
@@ -5490,9 +5102,8 @@ msgstr "Referencia:"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reference_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_reference_ids
-#, fuzzy
 msgid "References"
-msgstr "Referencie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -5502,9 +5113,8 @@ msgstr ""
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_relative_date_unformatted_field.js:0
-#, fuzzy
 msgid "Remaining Days"
-msgstr "Zostávajúce dni"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -5519,30 +5129,26 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cycle_number
-#, fuzzy
 msgid "Repetitions"
-msgstr "Opakovania"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
-#, fuzzy
 msgid "Replenish"
-msgstr "Doplnenie"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "Replenish on Order (MTO)"
-msgstr "Doplnenie na zákazku (MTO)"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "Replenishments"
-msgstr "Doplnenie zásob"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -5585,9 +5191,8 @@ msgstr "Zodpovedný užívateľ"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-#, fuzzy
 msgid "Resupply lead time."
-msgstr "Priebežná doba doplnenia."
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -5599,9 +5204,8 @@ msgstr "Trasa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__routing_line_ids
-#, fuzzy
 msgid "Routing Lines"
-msgstr "Riadky smerovania"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -5652,9 +5256,8 @@ msgstr "Vyraďovací pohyb"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "Scrap Products"
-msgstr "Nepodarené produkty"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5664,9 +5267,8 @@ msgstr "Vyradenia"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
-#, fuzzy
 msgid "Screw"
-msgstr "Screw"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -5701,9 +5303,8 @@ msgstr "Vyhľadať mrp pracovisko"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_routing.py:0
-#, fuzzy
 msgid "Select Operations to Copy"
-msgstr "Vyberte operácie na kopírovanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__allow_operation_dependencies
@@ -5728,9 +5329,8 @@ msgstr "Postupnosť"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
-#, fuzzy
 msgid "Serial Numbers"
-msgstr "Sériové čísla"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5740,9 +5340,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
-#, fuzzy
 msgid "Set Quantity"
-msgstr "Nastaviť množstvo"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5766,34 +5365,29 @@ msgstr "Nastavenia"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_start
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__time_start
-#, fuzzy
 msgid "Setup Time"
-msgstr "Čas nastavenia"
+msgstr ""
 
 #. module: mrp
 #: model:mrp.workcenter.productivity.loss,name:mrp.block_reason2
-#, fuzzy
 msgid "Setup and Adjustments"
-msgstr "Nastavenie a prispôsobenie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "Shop Floor"
-msgstr "Shop Floor (Dielňa)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_allocation
-#, fuzzy
 msgid "Show Allocation"
-msgstr "Zobraziť pridelenie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
-#, fuzzy
 msgid "Show BoM column"
-msgstr "Zobraziť stĺpec kusovníka"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__show_bom
@@ -5818,9 +5412,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_final_lots
-#, fuzzy
 msgid "Show Final Lots"
-msgstr "Zobraziť konečné šarže"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_generate_bom
@@ -5829,9 +5422,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lock
-#, fuzzy
 msgid "Show Lock/unlock buttons"
-msgstr "Zobraziť tlačidla Zamknúť/Odomknúť"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_set_bom_button
@@ -5846,34 +5438,28 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr ""
-"Zobraziť všetky záznamy, kde dátum nasledujúcej aktivity je v minulosti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
-#, fuzzy
 msgid "Show backorder lines"
-msgstr "Zobraziť riadky doobjednávok"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
-#, fuzzy
 msgid "Slot into workcenter calendar once planned"
-msgstr "Zaradenie do kalendára pracoviska po naplánovaní"
+msgstr ""
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
-#, fuzzy
 msgid "Solid wood is a durable natural material."
-msgstr "Masívne drevo je trvanlivý prírodný materiál."
+msgstr ""
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
-#, fuzzy
 msgid "Solid wood table."
-msgstr "Stôl z masívneho dreva."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5886,32 +5472,22 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "Some work orders are already done, so you cannot unplan this manufacturing "
 "order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Niektoré pracovné objednávky sú už hotové, takže túto výrobnú objednávku "
-"nemôžete odplánovať.\n"
-"\n"
-"Bola by škoda premárniť všetok ten pokrok, však?"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "Some work orders have already started, so you cannot unplan this "
 "manufacturing order.\n"
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
-"Niektoré pracovné objednávky sa už začali, takže túto výrobnú objednávku "
-"nemôžete odplánovať.\n"
-"\n"
-"Bola by škoda premárniť všetok ten pokrok, však?"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -5925,10 +5501,8 @@ msgstr "Zdrojová lokácia"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
-#, fuzzy
 msgid "Specific number of pieces that can be produced in parallel per product."
 msgstr ""
-"Konkrétny počet kusov, ktoré sa môžu vyrábať paralelne na jeden výrobok."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
@@ -5938,54 +5512,46 @@ msgstr "Rozdeliť"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
-#, fuzzy
 msgid "Split Details"
-msgstr "Detail rozdelenia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
-#, fuzzy
 msgid "Split Production"
-msgstr "Rozdeliť výrobu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_line
-#, fuzzy
 msgid "Split Production Detail"
-msgstr "Detail rozdelenia výroby"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
-#, fuzzy
 msgid "Split Productions"
-msgstr "Rozdeliť výrobu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split
-#, fuzzy
 msgid "Split production"
-msgstr "Rozdeliť výrobu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
-#, fuzzy
 msgid "Split productions"
-msgstr "Rozdeliť výrobu"
+msgstr ""
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
-#, fuzzy
 msgid "Stainless steel screw"
-msgstr "Skrutka z nehrdzavejúcej ocele"
+msgstr ""
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
-#, fuzzy
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
-msgstr "Skrutka z nehrdzavejúcej ocele plná (priem. - 5 mm, dĺžka - 10 mm) "
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -6009,9 +5575,8 @@ msgstr "Dátum začiatku"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
-#, fuzzy
 msgid "Start date"
-msgstr "Dátum začiatku"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
@@ -6050,15 +5615,13 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_type_id
-#, fuzzy
 msgid "Stock After Manufacturing Operation Type"
-msgstr "Zásoby po typu operácie Výroba"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_rule_id
-#, fuzzy
 msgid "Stock After Manufacturing Rule"
-msgstr "Zásoby po Výrobnom pravidle"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_allocation_report
@@ -6067,9 +5630,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
-#, fuzzy
 msgid "Stock Availability"
-msgstr "Dostupnosť zásob"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -6078,9 +5640,8 @@ msgstr "Pohyb skladu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_dest_ids
-#, fuzzy
 msgid "Stock Movements of Produced Goods"
-msgstr "Skladové pohyby vyrobeného tovaru"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
@@ -6089,9 +5650,8 @@ msgstr "Skladové pohyby"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
-#, fuzzy
 msgid "Stock Replenishment Report"
-msgstr "Prehľad doplnení zásob"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
@@ -6116,21 +5676,18 @@ msgstr "Report skladového pravidla"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "Store Finished Product"
-msgstr "Uskladnenie hotového výrobku"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
-#, fuzzy
 msgid "Sub BoM"
-msgstr "Podriadený kusovník"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
-#, fuzzy
 msgid "Subcontracting"
-msgstr "Kooperácia"
+msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
@@ -6139,27 +5696,23 @@ msgstr "Stôl"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_table_kit_product_template
-#, fuzzy
 msgid "Table Kit"
-msgstr "Zostava stola"
+msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
-#, fuzzy
 msgid "Table Leg"
-msgstr "Noha stola"
+msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_head_product_template
-#, fuzzy
 msgid "Table Top"
-msgstr "Vrch stola"
+msgstr ""
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_table_kit_product_template
-#, fuzzy
 msgid "Table kit"
-msgstr "Zostava stola"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
@@ -6173,31 +5726,25 @@ msgstr "Názov tagu"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_allocation
-#, fuzzy
 msgid ""
 "Technical Field used to decide whether the button \"Allocation\" should be "
 "displayed."
 msgstr ""
-"Technické pole, ktoré sa používa na rozhodnutie, či sa má zobraziť tlačidlo "
-"„Pridelenie“."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__has_routing_lines
-#, fuzzy
 msgid "Technical field for workcenter views"
-msgstr "Technické pole pro zobrazenia pracoviska"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
-#, fuzzy
 msgid "Technical field to check when we can reserve quantities"
-msgstr "Technické pole na kontrolu, kedy môžeme rezervovať množstvo"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__unreserve_visible
-#, fuzzy
 msgid "Technical field to check when we can unreserve"
-msgstr "Technické pole na kontrolu, kedy môžeme zrušiť rezerváciu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__show_copy_operations_button
@@ -6214,27 +5761,22 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
-#, fuzzy
 msgid "The BoM has been updated since creation of the MO"
-msgstr "Kusovník bol aktualizovaný od vytvorenia výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
-#, fuzzy
 msgid "The Workorder (%s) cannot be started twice!"
-msgstr "Pracovnú objednávku (%s) nie je možné začať dvakrát!"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "The attribute value %(attribute)s set on product %(product)s does not match "
 "the BoM product %(bom_product)s."
 msgstr ""
-"Hodnota atribútu %(attribute)s nastavená na produkte %(product)s nezodpovedá "
-"kusovníku produktu %(bom_product)s."
 
 #. module: mrp
 #. odoo-python
@@ -6251,13 +5793,10 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "The current configuration is incorrect because it would create a cycle "
 "between these products: %s."
 msgstr ""
-"Súčasná konfigurácia je nesprávna, pretože by vytvorila zacyklenie medzi "
-"týmito produktmi: %s."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__day_2
@@ -6268,9 +5807,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
-#, fuzzy
 msgid "The following replenishment order has been generated"
-msgstr "Bola vygenerovaná táto objednávka na doplnenie"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6286,67 +5824,48 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__operation_id
-#, fuzzy
 msgid ""
 "The operation where the components are consumed, or the finished products "
 "created."
 msgstr ""
-"Operácia, pri ktorej sa spotrebúvajú komponenty alebo vytvárajú hotové "
-"výrobky."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__cost_share
-#, fuzzy
 msgid ""
 "The percentage of the final production cost for this by-product line "
 "(divided between the quantity produced).The total of all by-products' cost "
 "share must be less than or equal to 100."
 msgstr ""
-"Percentuálny podiel konečných výrobných nákladov na tento vedľajší produkt "
-"(vydelený vyrobeným množstvom).Celkový podiel nákladov všetkých vedľajších "
-"produktov musí byť menší alebo rovný 100."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__cost_share
-#, fuzzy
 msgid ""
 "The percentage of the final production cost for this by-product. The total "
 "of all by-products' cost share must be smaller or equal to 100."
 msgstr ""
-"Percento konečných výrobných nákladov na tento vedľajší produkt. Celkový "
-"podiel nákladov všetkých vedľajších produktov musí byť menší alebo rovný 100."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
 msgstr ""
-"Plánovaný dátum ukončenia pracovnej objednávky nemôže byť skorší ako "
-"plánovaný dátum začatia, opravte ho a uložte pracovnú objednávku."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "The product has already been used at least once, editing its structure may "
 "lead to undesirable behaviours. You should rather archive the product and "
 "create a new one with a new bill of materials."
 msgstr ""
-"Výrobok už bol minimálne raz použitý, úprava jeho štruktúry môže viesť k "
-"nežiaducemu správaniu. Výrobok by ste mali radšej archivovať a vytvoriť nový "
-"s novým kusovníkom."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_reported_from_previous_wo
-#, fuzzy
 msgid ""
 "The quantity already produced awaiting allocation in the backorders chain."
 msgstr ""
-"Množstvo, ktoré už bolo vyrobené a čaká na pridelenie v reťazci doobjednávok."
 
 #. module: mrp
 #. odoo-python
@@ -6362,15 +5881,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
-#, fuzzy
 msgid "The quantity to produce must be positive!"
-msgstr "Množstvo na výrobu musí byť kladné!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_unbuild_qty_positive
-#, fuzzy
 msgid "The quantity to unbuild must be positive!"
-msgstr "Množstvo k rozobratí musí byť kladné!"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__remaining_time
@@ -6385,50 +5902,37 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already "
 "been produced"
 msgstr ""
-"Sériové číslo %(number)s použité pre vedľajší produkt %(product_name)s už "
-"bolo vyrobené"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
-"Sériové číslo %(number)s použité pre komponent %(component)s už bolo "
-"spotrebované"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
-#, fuzzy
 msgid "The tag name must be unique."
-msgstr "Názov značky musí byť jedinečný."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
 msgstr ""
-"Celkový podiel nákladov na vedľajšie produkty kusovníka nesmie presiahnuť "
-"100."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "The total cost share for a manufacturing order's by-products cannot exceed "
 "100."
 msgstr ""
-"Celkový podiel nákladov na vedľajšie produkty výrobnej objednávky nesmie "
-"presiahnuť 100."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
@@ -6442,20 +5946,16 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid ""
 "There are no components to consume. Are you still sure you want to continue?"
 msgstr ""
-"Neexistujú žiadne komponenty na spotrebu. Ste si stále istí, že chcete "
-"pokračovať?"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "There is no defined calendar on workcenter %s."
-msgstr "Pracovisko %s nemá definovaný kalendár."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6471,9 +5971,8 @@ msgstr "Zatiaľ neexistuje pohyb produktu"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
-#, fuzzy
 msgid "This Week"
-msgstr "Tento týždeň"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__tz
@@ -6486,7 +5985,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency
-#, fuzzy
 msgid ""
 "This field is used to calculate the expected duration of a work order at "
 "this work center. For example, if a work order takes one hour and the "
@@ -6494,49 +5992,35 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
-"Toto pole sa používa na výpočet očakávaného trvania pracovnej objednávky na "
-"tomto pracovisku. Ak napríklad pracovná objednávka trvá jednu hodinu a "
-"faktor účinnosti je 100 %, potom bude očakávané trvanie jedna hodina. Ak je "
-"však faktor účinnosti 200 %, očakávané trvanie bude 30 minút."
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
-#, fuzzy
 msgid "This is a BoM of type Kit!"
-msgstr "Tento kusovník je typu Súprava!"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-#, fuzzy
 msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
-"Ide o náklad založený na kusovníku výrobku. Vypočíta sa súčtom nákladov na "
-"komponenty a operácie potrebné na vytvorenie výrobku."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
-#, fuzzy
 msgid ""
 "This menu gives you the full traceability of inventory operations on a "
 "specific product.\n"
 "                You can filter on the product to see all the past movements "
 "for the product."
 msgstr ""
-"Táto ponuka poskytuje úplnú sledovateľnosť skladových operácií konkrétneho "
-"výrobku.\n"
-"             Môžete si vyfiltrovať výrobok a zobraziť všetky jeho minulé "
-"pohyby."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "This production has been merge in %s"
-msgstr "Táto produkcia bola zlúčená do %s"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6547,21 +6031,16 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "This production order has been created from Replenishment Report."
 msgstr ""
-"Tento výrobná objednávka výroby bola vytvorená z prehľadu doplnení zásob."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
-#, fuzzy
 msgid ""
 "This should be the smallest quantity that this product can be produced in. "
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
 msgstr ""
-"Najmenšie množstvo, v akom sa tento výrobok môže vyrábať. Ak kusovník "
-"obsahuje operácie, uistite sa, že kapacita pracoviska je primeraná."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6582,21 +6061,18 @@ msgstr "Čas"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_efficiency
-#, fuzzy
 msgid "Time Efficiency"
-msgstr "Časová efektivita"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_ids
-#, fuzzy
 msgid "Time Logs"
-msgstr "Časové záznamy"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "Time Spent"
-msgstr "Strávený čas"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6611,15 +6087,13 @@ msgstr "Sledovanie času: %(user)s"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-#, fuzzy
 msgid "Time in minutes for the cleaning."
-msgstr "Čas čistenia v minútach."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-#, fuzzy
 msgid "Time in minutes for the setup."
-msgstr "Čas nastavenia v minútach."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6629,9 +6103,8 @@ msgstr "Časová zóna"
 #. module: mrp
 #: model:digest.tip,name:mrp.digest_tip_mrp_0
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
-#, fuzzy
 msgid "Tip: Use tablets in the shop to control manufacturing"
-msgstr "Tip: Pre riadenie výroby na dielni, požívajte tablety"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6640,9 +6113,8 @@ msgstr "Do"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__to_backorder
-#, fuzzy
 msgid "To Backorder"
-msgstr "Na doobjednanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__to_close
@@ -6669,9 +6141,8 @@ msgstr "Úlohy"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-#, fuzzy
 msgid "To Launch"
-msgstr "Na spustenie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -6681,9 +6152,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, fuzzy
 msgid "To Order"
-msgstr "Na objednanie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -6693,16 +6163,14 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "To Produce"
-msgstr "Na vyrobenie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Today"
-msgstr "Dnes"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -6713,68 +6181,59 @@ msgstr "Dnešné aktivity"
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__day_1
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Tomorrow"
-msgstr "Zajtra"
+msgstr ""
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
-#, fuzzy
 msgid "Top layer of a wood panel."
-msgstr "Vrchná vrstva dreveného panelu."
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-#, fuzzy
 msgid "Total Cost"
-msgstr "Celkové náklady"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Total Cost of Components"
-msgstr "Celkové náklady na komponenty"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Total Cost of Operations"
-msgstr "Celkové náklady na operácie"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Total Cost of Production"
-msgstr "Celkové náklady výroby"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_total
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
-#, fuzzy
 msgid "Total Duration"
-msgstr "Celkové trvanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
-#, fuzzy
 msgid "Total Late Orders"
-msgstr "Celkový počet oneskorených objednávok"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_blocked_count
-#, fuzzy
 msgid "Total Pending Orders"
-msgstr "Celkový počet čakajúcich objednávok"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
@@ -6812,15 +6271,13 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-#, fuzzy
 msgid "Total expected duration"
-msgstr "Celkové očakávané trvanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__duration_expected
-#, fuzzy
 msgid "Total expected duration (in minutes)"
-msgstr "Celkové očakávané trvanie ( v minútach)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__cost
@@ -6830,15 +6287,13 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-#, fuzzy
 msgid "Total real duration"
-msgstr "Celkové skutočné trvanie"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__duration
-#, fuzzy
 msgid "Total real duration (in minutes)"
-msgstr "Celkové skutočné trvanie (v minútach)"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -6885,44 +6340,38 @@ msgstr "Typ výnimočnej aktivity v zázname."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "Unable to split with more than the quantity to produce."
-msgstr "Nie je možné rozdeliť viac ako je množstvo na výrobu."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__unbuild_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-#, fuzzy
 msgid "Unbuild"
-msgstr "Rozobrať"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-#, fuzzy
 msgid "Unbuild Order"
-msgstr "Objednávka rozobratia"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
-#, fuzzy
 msgid "Unbuild Orders"
-msgstr "Objednávky rozobratí"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
-#, fuzzy
 msgid "Unbuilds"
-msgstr "Rozobratia"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Unbuilt"
-msgstr "Rozobrané"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_confirm_production
@@ -6955,31 +6404,27 @@ msgstr "Rozvinúť"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
-#, fuzzy
 msgid "Unit"
-msgstr "Jednotka"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
-#, fuzzy
 msgid "Unit Cost"
-msgstr "Jednotkový náklad"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "Unit Costs"
-msgstr "Jednotkové náklady"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__unit_factor
-#, fuzzy
 msgid "Unit Factor"
-msgstr "Faktor jednotky"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -6998,28 +6443,24 @@ msgstr "Merná jednotka (Merná jednotka) je jednotka merania pre inventarizáci
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
 #: model_terms:ir.ui.view,arch_db:mrp.report_simple_label4x12
-#, fuzzy
 msgid "Units"
-msgstr "Jednotky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_unlocked_by_default
-#, fuzzy
 msgid "Unlock Manufacturing Orders"
-msgstr "Odomknúť výrobné objednávky"
+msgstr ""
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_unlocked_by_default
-#, fuzzy
 msgid "Unlocked by default"
-msgstr "Odomknuté v predvolenom nastavení"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_unplan_workorders
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Unplan"
-msgstr "Odplánovať"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
@@ -7028,9 +6469,8 @@ msgstr "Odrezervovať"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Update BoM"
-msgstr "Aktualizovať kusovník"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -7044,20 +6484,16 @@ msgstr "Súrne"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
-#, fuzzy
 msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
-"Používajte výrobné príkazy (VO) na výrobu hotových výrobkov pri súčasnom "
-"spotrebovaní komponentov: t. j. 1 stôl = 4 nohy stola + 1 doska stola."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
-#, fuzzy
 msgid "Used In"
-msgstr "Použité v"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__production_group_id
@@ -7094,9 +6530,8 @@ msgstr "Platný"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__valid_product_template_attribute_line_ids
-#, fuzzy
 msgid "Valid Product Attribute Lines"
-msgstr "Platné riadky atribútu produktu"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -7106,28 +6541,24 @@ msgstr "Potvrdiť"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#, fuzzy
 msgid "Variant"
-msgstr "Variant"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-#, fuzzy
 msgid "Vendor ABC"
-msgstr "Dodávateľ ABC"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "View Planning"
-msgstr "Zobraziť plánovanie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "Visible to all"
-msgstr "Viditeľné pre všetkých"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -7148,15 +6579,13 @@ msgstr "Sklad"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#, fuzzy
 msgid "Warehouse:"
-msgstr "Sklad:"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
-#, fuzzy
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr "Varovanie nedostatočného množstva na rozobratie"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7172,9 +6601,8 @@ msgstr "Varovania"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_wear_product_template
-#, fuzzy
 msgid "Wear Layer"
-msgstr "Nosná vrstva"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__picking_type_id
@@ -7188,9 +6616,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__asap
-#, fuzzy
 msgid "When components for 1st operation are available"
-msgstr "Ak sú k dispozícii komponenty pre 1. operáciu"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_to_resupply
@@ -7201,28 +6628,19 @@ msgstr "Ak sú výrobky vyrobené,  môžu byť vyrábané v tomto skladisku."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid ""
 "When products are needed in <b>%s</b>, <br/> a manufacturing order is "
 "created to fulfill the need."
 msgstr ""
-"Keď sú výrobky potrebné v <b>%s</b>, <br/> vytvorí sa výrobná objednávka na "
-"splnenie potreby."
 
 #. module: mrp
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
-#, fuzzy
 msgid ""
 "With the Odoo work center control panel, your worker can start work orders "
 "in the shop and follow instructions of the worksheet. Quality tests are "
 "perfectly integrated into the process. Workers can trigger feedback loops, "
 "maintenance alerts, scrap products, etc."
 msgstr ""
-"Pomocou ovládacieho panela pracoviska Odoo, môže váš pracovník spúšťať "
-"pracovné príkazy a postupovať podľa pokynov pracovného listu. Do tohto "
-"procesu sú tiež integrované testy kvality. Pracovníci môžu priamo poskytnúť "
-"spätnú väzbu, spúšťať upozornenia pre údržbu, nahlásiť nepodarené výrobky "
-"atď."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning
@@ -7233,27 +6651,23 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
-#, fuzzy
 msgid "Wizard to Split Multiple Productions"
-msgstr "Sprievodca na rozdelenie viacerých výrobných objednávok"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split
-#, fuzzy
 msgid "Wizard to Split a Production"
-msgstr "Sprievodca na rozdelenie výrobnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder
-#, fuzzy
 msgid "Wizard to mark as done or create back order"
-msgstr "Sprievodca na dokončenie ale vytvorenie doobjednávok"
+msgstr ""
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_wood_panel_product_template
-#, fuzzy
 msgid "Wood Panel"
-msgstr "Drevený panel"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -7272,9 +6686,8 @@ msgstr "Pracovisko"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_capacity
-#, fuzzy
 msgid "Work Center Capacity"
-msgstr "Kapacia pracoviska"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workcenter_load
@@ -7289,9 +6702,8 @@ msgstr "Záťaže pracoviska"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "Work Center Name"
-msgstr "Názov pracoviska"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -7312,9 +6724,8 @@ msgstr "Pracoviská"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_kanban_action
-#, fuzzy
 msgid "Work Centers Overview"
-msgstr "Prehľad pracovísk"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_workorder
@@ -7328,23 +6739,17 @@ msgstr "Pracovná objednávka"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Work Order Operations allow you to create and manage the manufacturing "
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
-"Operácie pracovných objednávok vám umožňujú vytvárať a spravovať výrobné "
-"operácie, ktoré by sa mali vykonávať v rámci vašich pracovísk s cieľom "
-"vyrobiť produkt. Sú spojené s kusovníkmi, ktoré definujú požadované "
-"komponenty."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
-#, fuzzy
 msgid "Work Order To Consume"
-msgstr "Spotrebovávaná pracovná objednávka"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -7369,9 +6774,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
-#, fuzzy
 msgid "Work Orders Performance"
-msgstr "Výkonnosť pracovnej objednávky"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
@@ -7381,60 +6785,46 @@ msgstr "Plánovanie pracovných objednávok"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
-#, fuzzy
 msgid "Work center"
-msgstr "Pracovisko"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_workorders_kanban
-#, fuzzy
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "                    Operations are defined in the bill of materials or added "
 "in the manufacturing order directly."
 msgstr ""
-"Pracovné objednávky sú operácie, ktoré sa majú vykonať ako súčasť výrobnej "
-"objednávky.\n"
-"                   Operácie sa definujú v kusovníku alebo sa pridávajú "
-"priamo do výrobného príkazu."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production_specific
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workorder_todo
-#, fuzzy
 msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "            Operations are defined in the bill of materials or added in the "
 "manufacturing order directly."
 msgstr ""
-"Pracovné objednávky sú operácie, ktoré sa majú vykonať ako súčasť výrobnej "
-"objednávky.\n"
-"              Operácie sa definujú v kusovníku alebo sa pridávajú priamo do "
-"výrobného príkazu."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-#, fuzzy
 msgid "Work orders in progress. Click to block work center."
-msgstr "Prebiehajúce pracovné objednávky. Kliknutím zablokujete pracovisko."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__workcenter_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
-#, fuzzy
 msgid "Workcenter"
-msgstr "Pracovisko"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
-#, fuzzy
 msgid "Workcenter %s cannot be an alternative of itself."
-msgstr "Pracovisko %s nemôže byť samo pre seba alternatívnym."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_form_view
@@ -7442,36 +6832,31 @@ msgstr "Pracovisko %s nemôže byť samo pre seba alternatívnym."
 #: model_terms:ir.ui.view,arch_db:mrp.oee_pie_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_pivot_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_tree_view
-#, fuzzy
 msgid "Workcenter Productivity"
-msgstr "Produktivita pracoviska"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity
-#, fuzzy
 msgid "Workcenter Productivity Log"
-msgstr "Záznamy produktivity pracoviska"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.oee_loss_tree_view
-#, fuzzy
 msgid "Workcenter Productivity Loss"
-msgstr "Strata produktivity pracoviska"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__working_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_state
-#, fuzzy
 msgid "Workcenter Status"
-msgstr "Stav pracoviska"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
-#, fuzzy
 msgid "Workcenter blocked, click to unblock."
-msgstr "Pracovisko je blokované, kliknite pre odblokovanie."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
@@ -7480,15 +6865,13 @@ msgstr "Pracovný čas"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
-#, fuzzy
 msgid "Working user on this work order."
-msgstr "Používateľ pracujúci na tejto pracovnej objednávke."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__workorder_id
-#, fuzzy
 msgid "Workorder"
-msgstr "Pracovná objednávka"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter_productivity_loss_type
@@ -7508,35 +6891,26 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__yesterday
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Yesterday"
-msgstr "Včera"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_lot.py:0
-#, fuzzy
 msgid ""
 "You are not allowed to create or edit a lot or serial number for the "
 "components with the operation type \"Manufacturing\". To change this, go on "
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
-"Nie je povolené vytvárať ani upravovať šarže alebo sériové čísla pre "
-"komponenty s typom operácie „Výroba“. Ak to chcete zmeniť, prejdite na typ "
-"operácie a začiarknite políčko „Vytvoriť nové šarže/sériové čísla pre "
-"komponenty“."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
-"Pre výrobky, ktoré majú aspoň jedno pravidlo objednávania, nemôžete vytvoriť "
-"kusovník typu súprava."
 
 #. module: mrp
 #. odoo-python
@@ -7551,38 +6925,29 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "You can only merge manufacturing orders of identical products with same BoM."
 msgstr ""
-"Zlúčiť môžete len výrobné objednávky rovnakých produktov s rovnakým "
-"kusovníkom."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "You can only merge manufacturing orders with no additional components or by-"
 "products."
 msgstr ""
-"Zlúčiť môžete len výrobné objednávky bez ďalších komponentov alebo "
-"vedľajších produktov."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You can only merge manufacturing with the same operation type"
 msgstr ""
-"Zlúčiť môžete len výrobné objednávky s rovnakým typom skladovej operácie"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You can only merge manufacturing with the same state."
-msgstr "Zlúčiť môžete len výrobu s rovnakým stavom."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7599,9 +6964,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid "You cannot create a new Bill of Material from here."
-msgstr "Odtiaľto nie je možné vytvoriť nový kusovník."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7619,42 +6983,34 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
-#, fuzzy
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Dokončenú objednávku na rozobratie nie je možné zmazať."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot have %s  as the finished product and in the Byproducts"
-msgstr "Nemôžete mať %s ako hotový výrobok a rovnako ako vedľajší produkt"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "You cannot link this work order to another manufacturing order."
 msgstr ""
-"Túto pracovnú objednávku nemôžete prepojiť s inou výrobnou objednávkou."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot move a manufacturing order once it is cancelled or done."
-msgstr "Výrobnú objednávku nemožno presunúť, keď je zrušená alebo hotová."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_picking.py:0
-#, fuzzy
 msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr ""
-"Ako cieľovú lokáciu pre operáciu výrobného typu nemôžete nastaviť lokáciu "
-"vyradenia."
 
 #. module: mrp
 #. odoo-python
@@ -7671,28 +7027,22 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid "You cannot start a work order that is already done or cancelled"
 msgstr ""
-"Nemôžete spustiť pracovnú objednávku, ktorá už bola dokončená alebo zrušená"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
-#, fuzzy
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Nemôžete rozobrať nedokončenú výrobnú objednávku."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "You cannot use the 'Apply on Variant' functionality and simultaneously "
 "create a BoM for a specific variant."
 msgstr ""
-"Nemôžete použiť funkciu „Použiť na variantu“ a zároveň vytvoriť kusovník pre "
-"konkrétnu variantu."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -7706,46 +7056,35 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You need at least two production orders to merge them."
-msgstr "Na zlúčenie potrebujete aspoň dve výrobné objednávky."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid ""
 "You need to define at least one productivity loss in the category "
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"Musíte definovať aspoň jednu stratu produktivity v kategórii „Výkon“. "
-"Vytvorte ju z aplikácie Výroba, ponuka: Konfigurácia / Straty produktivity."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
-#, fuzzy
 msgid ""
 "You need to define at least one productivity loss in the category "
 "'Productivity'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"V kategórii „Produktivita“ musíte definovať aspoň jednu stratu produktivity. "
-"Vytvorte ju z aplikácie Výroba, ponuka: Konfigurácia / Straty produktivity."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workcenter.py:0
-#, fuzzy
 msgid ""
 "You need to define at least one unactive productivity loss in the category "
 "'Performance'. Create one from the Manufacturing app, menu: Configuration / "
 "Productivity Losses."
 msgstr ""
-"V kategórii „Výkon“ musíte definovať aspoň jednu neaktívnu stratu "
-"produktivity. Vytvorte ju z aplikácie Výroba, ponuka: Konfigurácia / Straty "
-"produktivity."
 
 #. module: mrp
 #. odoo-python
@@ -7763,28 +7102,23 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
-#, fuzzy
 msgid "You should provide a lot number for the final product."
-msgstr "Mali by ste uviesť číslo šarže konečného výrobku."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_quant.py:0
-#, fuzzy
 msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
 msgstr ""
-"Namiesto priamej aktualizácie množstva výrobku súpravy by ste mali "
-"aktualizovať množstvo komponentov."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__generated_mrp_lot_label_to_print__zpl
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__mrp_product_label_to_print__zpl
-#, fuzzy
 msgid "ZPL"
-msgstr "ZPL"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7805,47 +7139,39 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
-#, fuzzy
 msgid "expected duration"
-msgstr "očakávané trvanie"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
-#, fuzzy
 msgid "from location"
-msgstr "z pozície"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/stock_picking.py:0
-#, fuzzy
 msgid "id"
-msgstr "id"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid "it is added as a component in a manufacturing order"
-msgstr "je pridaný ako komponent vo výrobnej objednávke."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-#, fuzzy
 msgid ""
 "it is moved via a transfer, such as a receipt or a delivery order for "
 "instance."
 msgstr ""
-"sa presúva prostredníctvom prevodu, ako je napríklad príjemka alebo príkaz "
-"na dodanie."
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "manufacturing order"
-msgstr "výrobná objednávka"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7856,9 +7182,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "merged"
-msgstr "zlúčené"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -7872,9 +7197,8 @@ msgstr "objednané namiesto"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "per workcenter"
-msgstr "na pracovisko"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -7888,108 +7212,86 @@ msgstr "množstvo bolo aktualizované."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
-#, fuzzy
 msgid "real duration"
-msgstr "skutočné trvanie"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "split"
-msgstr "rozdeliť"
+msgstr ""
 
 #, fuzzy
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d deň(dni)"
+msgid "Allocation Report for Manufacturing Orders"
+msgstr "Prehľad pridelenia pre výrobné objednávky"
+
+msgid "Create backorder"
+msgstr "Vytvorte nevybavené objednávky"
 
 #, fuzzy
-#~ msgid "+ %s day(s)"
-#~ msgstr "+ %s deň(dni)"
+msgid "MRP Reception Report"
+msgstr "Prehľad dokončenej výroby"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Úžasná ikona fronty napr. fa-tasks"
-
-#, fuzzy
-#~ msgid "Print Labels"
-#~ msgstr "Tlačiť štítky"
+msgid "No Backorder"
+msgstr "Žiadna pohľadávka"
 
 #, fuzzy
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "Informácie dodávateľa k doplnení zásob"
+msgid "Produce All"
+msgstr "Vyrobiť všetko"
 
 #, fuzzy
-#~ msgid "Allocation Report for Manufacturing Orders"
-#~ msgstr "Prehľad pridelenia pre výrobné objednávky"
-
-#~ msgid "Create backorder"
-#~ msgstr "Vytvorte nevybavené objednávky"
+msgid "Set Quantities & Validate"
+msgstr "Nastaviť množstvá a potvrdiť"
 
 #, fuzzy
-#~ msgid "MRP Reception Report"
-#~ msgstr "Prehľad dokončenej výroby"
-
-#~ msgid "No Backorder"
-#~ msgstr "Žiadna pohľadávka"
+msgid "Show Produce"
+msgstr "Zobraziť Vyrobiť"
 
 #, fuzzy
-#~ msgid "Produce All"
-#~ msgstr "Vyrobiť všetko"
+msgid "Show Produce All"
+msgstr "Zobraziť Vyrobiť všetko"
 
 #, fuzzy
-#~ msgid "Set Quantities & Validate"
-#~ msgstr "Nastaviť množstvá a potvrdiť"
+msgid "Stock Reception Report"
+msgstr "Prehľad príjmov na sklad"
 
 #, fuzzy
-#~ msgid "Show Produce"
-#~ msgstr "Zobraziť Vyrobiť"
+msgid "Technical field to check if produce all button can be shown"
+msgstr ""
+"Technické pole na kontrolu, či je možné zobraziť tlačidlo Vyrobiť všetko"
 
 #, fuzzy
-#~ msgid "Show Produce All"
-#~ msgstr "Zobraziť Vyrobiť všetko"
+msgid "Technical field to check if produce button can be shown"
+msgstr "Technické pole na kontrolu, či je možné zobraziť tlačidlo Výroby"
 
 #, fuzzy
-#~ msgid "Stock Reception Report"
-#~ msgstr "Prehľad príjmov na sklad"
+msgid "Use Reception Report with Manufacturing Orders"
+msgstr "Používajte prehľad príjmov z výrobných objednávok"
+
+msgid "Check availability"
+msgstr "Skontrolovať dostupnosť"
 
 #, fuzzy
-#~ msgid "Technical field to check if produce all button can be shown"
-#~ msgstr ""
-#~ "Technické pole na kontrolu, či je možné zobraziť tlačidlo Vyrobiť všetko"
+msgid "The number of products already handled by this work order"
+msgstr ""
+"Počet výrobkov, ktoré už boli spracované v rámci tejto pracovnej objednávky"
 
 #, fuzzy
-#~ msgid "Technical field to check if produce button can be shown"
-#~ msgstr "Technické pole na kontrolu, či je možné zobraziť tlačidlo Výroby"
+msgid "Time Remaining"
+msgstr "Zostávajúci čas"
 
 #, fuzzy
-#~ msgid "Use Reception Report with Manufacturing Orders"
-#~ msgstr "Používajte prehľad príjmov z výrobných objednávok"
+msgid "Unbuild: %s"
+msgstr "Rozobrať: %s"
 
-#~ msgid "Check availability"
-#~ msgstr "Skontrolovať dostupnosť"
+msgid "Website Messages"
+msgstr "Správy webstránok"
 
-#, fuzzy
-#~ msgid "The number of products already handled by this work order"
-#~ msgstr ""
-#~ "Počet výrobkov, ktoré už boli spracované v rámci tejto pracovnej "
-#~ "objednávky"
+msgid "Website communication history"
+msgstr "História komunikácie webstránok"
 
-#, fuzzy
-#~ msgid "Time Remaining"
-#~ msgstr "Zostávajúci čas"
+msgid "days"
+msgstr "dni"
 
-#, fuzzy
-#~ msgid "Unbuild: %s"
-#~ msgstr "Rozobrať: %s"
-
-#~ msgid "Website Messages"
-#~ msgstr "Správy webstránok"
-
-#~ msgid "Website communication history"
-#~ msgstr "História komunikácie webstránok"
-
-#~ msgid "days"
-#~ msgstr "dni"
-
-#~ msgid "Attachments Count"
-#~ msgstr "Počet príloh"
+msgid "Attachments Count"
+msgstr "Počet príloh"

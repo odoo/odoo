@@ -28,9 +28,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-20 00:02+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/sms/"
+"PO-Revision-Date: 2026-08-11 11:32+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/sms/"
 "fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -411,7 +411,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
 msgid "Document ID"
-msgstr "Dokumentin ID"
+msgstr "Asiakirjan tunnus"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
@@ -1006,7 +1006,7 @@ msgstr "Tekstiviestivirheet"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id_int
 msgid "SMS ID"
-msgstr "Tekstiviestin ID"
+msgstr "Tekstiviestin tunnus"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -1271,17 +1271,17 @@ msgstr "Onnistuminen"
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__template_ids
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Template"
-msgstr "Malli"
+msgstr "Mallipohja"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__template_fs
 msgid "Template Filename"
-msgstr "Mallin tiedostonimi"
+msgstr "Mallipohjan tiedostonimi"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
 msgid "Template Preview"
-msgstr "Mallin esikatselu"
+msgstr "Mallipohjan esikatselu"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
@@ -1291,7 +1291,7 @@ msgstr "Mallin kielen esikatselu"
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
 msgid "Templates"
-msgstr "Mallit"
+msgstr "Mallipohjat"
 
 #. module: sms
 #. odoo-python
@@ -1409,17 +1409,19 @@ msgid ""
 "actions\n"
 msgstr ""
 "Palvelintoiminnon tyyppi. Saatavilla seuraavat arvot:\n"
-"- 'Päivitä tietue': päivitä tietueen arvot\n"
+"- 'Päivitä kirjaus': päivittää kirjauksen arvot\n"
 "- 'Luo toimenpide': luo toimenpiteen (Viestintä)\n"
-"- 'Lähetä sähköposti': lähetä viesti, huomautus tai sähköposti (Viestintä)\n"
-"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin "
-"(Tekstiviesti)- 'Lisää/Poista seuraajia': lisää tai poista tietueen "
-"seuraajia (Viestintä)\n"
-"- 'Luo tietue': luo uusi tietue uusilla arvoilla\n"
-"- 'Suorita koodi': Python-koodin pätkä, joka suoritetaan\n"
-"- 'Lähetä Webhook-ilmoitus': lähetä POST-pyyntö ulkoiseen järjestelmään, "
-"joka tunnetaan myös nimellä Webhook\n"
-"- 'Monitoiminnot': Määritä toiminto, joka käynnistää useita muita "
+"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin "
+"(Viestintä)\n"
+"- 'Lähetä tekstiviesti': lähettää tekstiviestejä, kirjaa ne asiakirjoihin "
+"(Tekstiviesti)\n"
+"- 'Lisää/poista seuraajia': lisää tai poistaa tietueen seuraajia "
+"(Viestintä)\n"
+"- 'Luo kirjaus': luo uuden kirjauksen uusilla arvoilla\n"
+"- 'Suorita koodi': pätkä Python-koodia, joka suoritetaan\n"
+"- 'Lähetä Webhook-ilmoitus': lähettää JULKAISU-pyynnön ulkoiseen "
+"järjestelmään, joka tunnetaan myös nimellä Webhook\n"
+"- 'Useita toimintoja': määrittää toiminnon, joka laukaisee useita muita "
 "palvelintoimintoja\n"
 
 #. module: sms
@@ -1470,10 +1472,10 @@ msgid ""
 msgstr ""
 "Käytetään viestigeneraattorin luokitteluun\n"
 "'email': syntyy saapuvan sähköpostin, esim. mailgatewayn, tuloksena\n"
-"'kommentti': syntyy käyttäjän syötteestä esim. discuss- tai composer-"
-"ohjelmassa\n"
-"'email_outgoing': syntyy postituksesta\n"
-"'notification': järjestelmän tuottama esim. seurantaviestit\n"
+"'kommentti': syntyy käyttäjän syöttämänä, esim. viestinnän tai "
+"kirjoitustoiminnon kautta\n"
+"'email_outgoing': postituksen luoma\n"
+"'notification': järjestelmän tuottama, esim. viestien seuranta\n"
 "'auto_comment': automaattisen ilmoitusmekanismin tuottama, esim. kuittaus\n"
 "'user_notification': luodaan tietylle vastaanottajalle"
 
@@ -1647,68 +1649,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "record:"
 msgstr "tietue:"
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (kopio)"
-
-#~ msgid ""
-#~ "<span invisible=\"sms_method != 'sms'\">\n"
-#~ "                                    The message will be sent as an SMS to "
-#~ "the recipients of the template\n"
-#~ "                                    and will not appear in the messaging "
-#~ "history.\n"
-#~ "                                </span>\n"
-#~ "                                <span invisible=\"sms_method != "
-#~ "'note'\">\n"
-#~ "                                    The SMS will not be sent, it will "
-#~ "only be posted as an\n"
-#~ "                                    internal note in the messaging "
-#~ "history.\n"
-#~ "                                </span>\n"
-#~ "                                <span invisible=\"sms_method != "
-#~ "'comment'\">\n"
-#~ "                                    The SMS will be sent as an SMS to the "
-#~ "recipients of the\n"
-#~ "                                    template and it will also be posted "
-#~ "as an internal note\n"
-#~ "                                    in the messaging history.\n"
-#~ "                                </span>"
-#~ msgstr ""
-#~ "<span invisible=\"sms_method != 'sms'\">\n"
-#~ "                                    Tämä viesti lähetetään tekstiviestinä "
-#~ "mallipohjan vastaanottajille\n"
-#~ "                                    eikä se näy viestihistoriassa.\n"
-#~ "                                </span>\n"
-#~ "                                <span invisible=\"sms_method != "
-#~ "'note'\">\n"
-#~ "                                    Tekstiviestiä ei lähetetä; se "
-#~ "kirjataan\n"
-#~ "                                    sisäisenä muistiinpanona "
-#~ "viestihistoriaan.\n"
-#~ "                                </span>\n"
-#~ "                                <span invisible=\"sms_method != "
-#~ "'comment'\">\n"
-#~ "                                    Tekstiviesti lähetetään "
-#~ "tekstiviestinä mallipohjan vastaanottajille\n"
-#~ "                                    ja se kirjataa sisäiseksi "
-#~ "muistiinpanoksi \n"
-#~ "                                    viestihistoriaan.\n"
-#~ "                                </span>"
-
-#~ msgid "Country-specific registration required."
-#~ msgstr "Maakohtainen rekisteröinti vaaditaan."
-
-#~ msgid "Note only"
-#~ msgstr "Huomautus vain"
-
-#~ msgid "Register now."
-#~ msgstr "Rekisteröidy nyt."
-
-#~ msgid "SMS (with note)"
-#~ msgstr "Tekstiviesti (huomautuksen kanssa)"
-
-#~ msgid "SMS (without note)"
-#~ msgstr "Tekstiviesti (ilman huomautusta)"
-
-#~ msgid "Send SMS As"
-#~ msgstr "Lähetä tekstiviesti kuten"

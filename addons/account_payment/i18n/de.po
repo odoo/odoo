@@ -14,16 +14,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-22 00:28+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 10:09+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_payment/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_payment
 #. odoo-python
@@ -32,8 +32,8 @@ msgid ""
 "#%(number)s - Installment of <strong>%(amount)s</strong> due on <strong "
 "class=\"text-primary\">%(date)s</strong>"
 msgstr ""
-"#%(number)s - Teilzahlung von <strong>%(amount)s</strong> fällig am <strong "
-"class=\"text-primary\">%(date)s</strong>"
+"Nr. %(number)s - Teilzahlung in Höhe von <strong>%(amount)s</strong> fällig "
+"am <strong class=\"text-primary\">%(date)s</strong>"
 
 #. module: account_payment
 #. odoo-javascript
@@ -213,7 +213,7 @@ msgstr "Autorisierte Transaktionen"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Kontoauszugszeile"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -769,6 +769,9 @@ msgid ""
 "You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
+"Sie können eine Zahlungsmethode, die mit einem installierten Anbieter "
+"verknüpft ist, nicht löschen.\n"
+"Verknüpfte Anbieter: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -787,6 +790,9 @@ msgid ""
 "You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Sie müssen einen Zahlungsanbieter zunächst deinstallieren, bevor Sie dessen "
+"Journal löschen können.\n"
+"Verknüpfte Anbieter: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -822,15 +828,3 @@ msgstr "überfällig"
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
 msgstr "Preisliste nicht erlaubt"
-
-#~ msgid "Payment Methods"
-#~ msgstr "Zahlungsmethoden"
-
-#~ msgid "Payment Providers"
-#~ msgstr "Zahlungsanbieter"
-
-#~ msgid "Payment Tokens"
-#~ msgstr "Zahlungstoken"
-
-#~ msgid "Payment Transactions"
-#~ msgstr "Zahlungstransaktionen"

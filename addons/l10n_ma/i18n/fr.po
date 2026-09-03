@@ -8,17 +8,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.1alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 18:15+0000\n"
-"PO-Revision-Date: 2026-01-24 20:12+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
+"POT-Creation-Date: 2026-08-28 18:21+0000\n"
+"PO-Revision-Date: 2026-07-21 13:35+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
 "l10n_ma/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_ma
+#: model:ir.module.module,description:base.module_l10n_ma
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Morocco.\n"
+"\n"
+"This module has been built with the help of Caudigef.\n"
+msgstr ""
 
 #. module: l10n_ma
 #: model_terms:ir.ui.view,arch_db:l10n_ma.address_form_fields
@@ -53,6 +62,7 @@ msgstr "Mise en page des documents de votre société"
 
 #. module: l10n_ma
 #: model:ir.model.fields,field_description:l10n_ma.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_ma.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_ma.field_base_document_layout__display_name
 msgid "Display Name"
 msgstr "Nom affiché"
@@ -68,22 +78,27 @@ msgid "ICE"
 msgstr "ICE"
 
 #. module: l10n_ma
-#. odoo-python
-#: code:addons/l10n_ma/controllers/portal.py:0
-msgid "ICE number should consist of 15 digits."
-msgstr "Le numéro ICE doit comporter 15 chiffres."
-
-#. module: l10n_ma
 #: model:ir.model.fields,field_description:l10n_ma.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_ma.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_ma.field_base_document_layout__id
 msgid "ID"
 msgstr "ID"
 
-#~ msgid "Contact"
-#~ msgstr "Contact"
+#. module: l10n_ma
+#: model:ir.model,name:l10n_ma.model_account_journal
+msgid "Journal"
+msgstr ""
 
-#~ msgid "Create a Customer"
-#~ msgstr "Créer un client"
+#. module: l10n_ma
+#: model:ir.module.module,shortdesc:base.module_l10n_ma
+msgid "Morocco - Accounting"
+msgstr ""
 
-#~ msgid "ICE number should have exactly 15 digits."
-#~ msgstr "Le numéro ICE doit comporter exactement 15 chiffres."
+msgid "Contact"
+msgstr "Contact"
+
+msgid "Create a Customer"
+msgstr "Créer un client"
+
+msgid "ICE number should have exactly 15 digits."
+msgstr "Le numéro ICE doit comporter exactement 15 chiffres."

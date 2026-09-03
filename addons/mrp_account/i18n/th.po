@@ -7,16 +7,16 @@
 # Wichanon Jamwutthipreecha, 2023
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-29 07:20+0000\n"
+"PO-Revision-Date: 2026-08-20 07:08+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "mrp_account/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,6 @@ msgstr ""
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
-#, fuzzy
 msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
 msgstr "%(value)s สำหรับ%(quantity)s %(unit)s จาก%(production)s"
 
@@ -63,7 +62,6 @@ msgstr "<span class=\"o_stat_text\">การผลิต</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
-#, fuzzy
 msgid "<span class=\"o_stat_text\">WIP</span>"
 msgstr "<span class=\"o_stat_text\">งานที่ยังทำไม่เสร็จ</span>"
 
@@ -90,7 +88,7 @@ msgstr "<span>สินค้า</span>"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
 msgid "<span>Quantity</span>"
-msgstr "<span>ปริมาณ</span>"
+msgstr "<span>จำนวน</span>"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -176,7 +174,6 @@ msgstr "หมวดหมู่"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_res_company
-#, fuzzy
 msgid "Company"
 msgstr "บริษัท"
 
@@ -199,7 +196,7 @@ msgstr "คำนวณราคาของสินค้าโดยใช้
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "สกุลเงินรวม"
 
 #. module: mrp_account
 #. odoo-javascript
@@ -329,7 +326,7 @@ msgstr "รายการบันทึก"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Journal item to be created when posting WIP journal entry"
-msgstr ""
+msgstr "รายการบันทึกที่จะสร้างขึ้นเมื่อโพสต์บันทึก WIP"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
@@ -446,7 +443,7 @@ msgstr "บัญชีการผลิต"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "อัตรา"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -546,12 +543,12 @@ msgstr "WIP - ค่าใช้จ่าย"
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "WIP Entries of %s"
-msgstr ""
+msgstr "รายการบันทึกงานระหว่างทำของ%s"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_count
 msgid "WIP Journal Entry Count"
-msgstr ""
+msgstr "จำนวนรายการบันทึกบัญชีงานระหว่างทำ"
 
 #. module: mrp_account
 #. odoo-python
@@ -587,12 +584,12 @@ msgstr "รายการบัญชีวิเคราห์ Wc"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__wip_move_ids
 msgid "Wip Move"
-msgstr ""
+msgstr "งานที่กำลังดำเนินการอยู่"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP journal entry"
-msgstr ""
+msgstr "ตัวช่วยบันทึกบัญชีงานระหว่างผลิต"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -632,14 +629,14 @@ msgstr "บันทึกผลผลิตของศูนย์งาน"
 msgid "[WC] %s"
 msgstr "[WC] %s"
 
-#~ msgid "Acme Corp."
-#~ msgstr "Acme Corp."
+msgid "Acme Corp."
+msgstr "Acme Corp."
 
-#~ msgid "Laptop"
-#~ msgstr "แล็ปท็อป"
+msgid "Laptop"
+msgstr "แล็ปท็อป"
 
-#~ msgid "REF123"
-#~ msgstr "REF123"
+msgid "REF123"
+msgstr "REF123"
 
-#~ msgid "Units"
-#~ msgstr "หน่วย"
+msgid "Units"
+msgstr "หน่วย"

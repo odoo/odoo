@@ -3,16 +3,16 @@
 # * payment_mercado_pago
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 23:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-24 17:31+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "payment_mercado_pago/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "Mercado Pago -tilisi linkittämisessä Odooseen tapahtui virhe."
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
 msgid "Are you sure you want to disconnect?"
-msgstr "Oletko varma, että haluat katkaista yhteyden?"
+msgstr "Haluatko varmasti katkaista yhteyden?"
 
 #. module: payment_mercado_pago
 #: model:payment.method,name:payment_mercado_pago.payment_method_argencard
@@ -245,13 +245,15 @@ msgstr "Mercado Pago -asiakas"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_public_key
+#, fuzzy
 msgid "Mercado Pago Public Key"
-msgstr ""
+msgstr "Mercado Pago -julkinen avain"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_refresh_token
+#, fuzzy
 msgid "Mercado Pago Refresh Token"
-msgstr ""
+msgstr "Mercado Pago -päivitystunnus"
 
 #. module: payment_mercado_pago
 #: model:payment.method,name:payment_mercado_pago.payment_method_mercado_pago_wallet
@@ -261,18 +263,23 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "Mercado Pago credentials are missing. Click the \"Connect\" button to set up "
 "your account."
 msgstr ""
+"Mercado Pago -tunnukset puuttuvat. Klikkaa \"Yhdistä\" -painiketta "
+"määrittääksesi tilisi."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "Mercado Pago is not available in your country; please use another payment "
 "provider."
 msgstr ""
+"Mercado Pago ei ole saatavilla maassasi. Käytä toista maksupalveluntarjoajaa."
 
 #. module: payment_mercado_pago
 #: model:payment.method,name:payment_mercado_pago.payment_method_naranja
@@ -292,14 +299,15 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid "Only the currency %s is available for this account."
-msgstr ""
+msgstr "Vain valuutta %s on käytettävissä tälle tilille."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
 msgid "Other Payment Providers"
-msgstr "Muut maksupalvelujen tarjoajat"
+msgstr "Muut maksupalveluntarjoajat"
 
 #. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_provider
@@ -342,8 +350,9 @@ msgstr ""
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, fuzzy
 msgid "Received data with invalid status: %s."
-msgstr ""
+msgstr "Vastaanotetut tiedot, joiden tila on virheellinen: %s."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -360,8 +369,9 @@ msgstr "Vastaanotetut tiedot, joiden tila puuttuu."
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid "Set the account country before connecting the account."
-msgstr ""
+msgstr "Määritä tilin maa ennen sen yhdistämistä."
 
 #. module: payment_mercado_pago
 #: model:payment.method,name:payment_mercado_pago.payment_method_shopping
@@ -375,10 +385,13 @@ msgstr ""
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__mercado_pago_account_country_id
+#, fuzzy
 msgid ""
 "The country of the Mercado Pago account. The currency will be updated to "
 "match the country of the Mercado Pago account."
 msgstr ""
+"Mercado Pago -tilin maa. Valuutta päivitetään vastaamaan Mercado Pago -tilin "
+"maata."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
@@ -459,12 +472,18 @@ msgstr "Sinun on hyväksyttävä maksu tällä kortilla."
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+#, fuzzy
 msgid ""
 "You must renew your connection to Mercado Pago in order to enable the new\n"
 "                        Card payment method experience, which allows saving "
 "payment details for\n"
 "                        recurring payments."
 msgstr ""
+"Sinun on uusittava yhteytesi Mercado Pagoon, jotta voit ottaa käyttöön "
+"uuden\n"
+"                        korttimaksutavan. Sen avulla voit tallentaa "
+"maksutietoja\n"
+"                        toistuvia maksuja varten."
 
 #. module: payment_mercado_pago
 #. odoo-python
@@ -480,6 +499,3 @@ msgid ""
 "statement descriptor."
 msgstr ""
 "Maksusi on hyvitetty. Yhteenvedossasi näet veloituksen tiliotteen kuvauksena."
-
-#~ msgid "Disconnect Your Mercado Pago Account"
-#~ msgstr "Poista Mercado Pago -tilisi"

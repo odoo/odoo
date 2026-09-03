@@ -7,14 +7,15 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2018
 # Daniel Forslund <daniel.forslund@gmail.com>, 2018
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-06-22 01:15+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-28 16:58+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
 "payment_authorize/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +27,7 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr "ABA Routingnummer"
+msgstr "ABA-clearingnummer"
 
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_ach_direct_debit
@@ -36,7 +37,7 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "API Client Key"
-msgstr "API-klientnyckel"
+msgstr "API-kundnyckel"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -46,12 +47,12 @@ msgstr "API-inloggnings-ID"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "API Signature Key"
-msgstr "API-signaturnyckel"
+msgstr "API-underskriftsnyckel"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "API Transaction Key"
-msgstr "Överföringsnyckel för API"
+msgstr "API-transaktionsnyckel"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -102,7 +103,7 @@ msgstr "Authorize.net"
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_token_form
 msgid "Authorize.Net Profile ID"
-msgstr "Authorize.Net profil-ID"
+msgstr "Profilens ID-nummer på Authorize.net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -157,7 +158,7 @@ msgid ""
 "error_details: %(error_message)s)"
 msgstr ""
 "Det gick inte att hämta transaktionsinformationen. (felkod:%(error_code)s; "
-"felmeddelande_detaljer: %(error_message)s)"
+"error_details: %(error_message)s)"
 
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_diners
@@ -179,7 +180,7 @@ msgstr "Visningsnamn"
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Expiration"
-msgstr "Offertens förfallodatum"
+msgstr "Förfallodatum"
 
 #. module: payment_authorize
 #. odoo-python
@@ -188,13 +189,13 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
-"Misslyckades med autentiseringen.\n"
+"Autentiseringen misslyckades.\n"
 "%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
-msgstr "Generera klientnyckel"
+msgstr "Skapa kundnyckel"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
@@ -226,13 +227,13 @@ msgstr ""
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr "Namn på konto"
+msgstr "Kontoinnehavarens namn"
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr "Endast en valuta kan väljas för ett Authorize.Net-konto."
+msgstr "Endast en valuta kan väljas för ett konto på Authorize.net."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -247,7 +248,7 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
 msgid "Payment Token"
-msgstr "Betalnings-token"
+msgstr "Betalningstoken"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_transaction
@@ -258,7 +259,7 @@ msgstr "Betalningstransaktion"
 #. odoo-javascript
 #: code:addons/payment_authorize/static/src/interactions/payment_form.js:0
 msgid "Payment processing failed"
-msgstr "Betalningshanteringen misslyckades"
+msgstr "Behandlingen av betalningen misslyckades"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -280,18 +281,18 @@ msgstr ""
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
 "Received data with status code \"%(status)s\" and error code \"%(error)s\"."
-msgstr ""
+msgstr "Mottagen data med statuskod \"%(status)s\" och felkod \"%(error)s\"."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr "Mottagit manipulerade uppgifter om betalningsbegäran."
+msgstr "Tog emot en betalningsbegäran med manipulerade uppgifter."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr "Ange kontovaluta"
+msgstr "Ange kontots valuta"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_webhook_id
@@ -301,7 +302,7 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
-msgstr "Det ID som endast används för att identifiera kontot med Authorize.Net"
+msgstr "Numret används endast för att identifiera kontot med Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
@@ -309,13 +310,13 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
-"Den offentliga klientnyckeln. För att generera direkt från Odoo eller från "
-"Authorize.Net backend."
+"Den offentliga kundnyckeln. För att skapa direkt genom backend i Odoo eller "
+"Authorize.net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Den tekniska koden för denna betalningsleverantör."
+msgstr "Betalningsleverantörens tekniska kod."
 
 #. module: payment_authorize
 #. odoo-python
@@ -324,8 +325,8 @@ msgid ""
 "The transaction is not in a status to be refunded. (status: %(status)s, "
 "details: %(message)s)"
 msgstr ""
-"Transaktionen är inte i en status som ska återbetalas. (status:%(status)s, "
-"detaljer: %(message)s)"
+"Transaktionen är inte i återbetalningsstatus. (status:%(status)s, "
+"information: %(message)s)"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -333,13 +334,14 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
-"Den unika referensen för partner/token-kombinationen i Authorize.net-backend."
+"Det unika referensnumret för kombinationen partner/token i backend hos "
+"Authorize.net."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 msgid "Transaction not found."
-msgstr ""
+msgstr "Transaktionen hittades inte."
 
 #. module: payment_authorize
 #: model:payment.method,name:payment_authorize.payment_method_visa
@@ -362,8 +364,8 @@ msgstr "ÅÅ"
 msgid "Your Authorize.Net webhook was successfully set up!"
 msgstr ""
 
-#~ msgid "How to get paid with Authorize.Net"
-#~ msgstr "Så här får du betalt med Authorize.Net"
+msgid "How to get paid with Authorize.Net"
+msgstr "Så här får du betalt med Authorize.Net"
 
-#~ msgid "This action cannot be performed while the provider is disabled."
-#~ msgstr "Denna åtgärd kan inte utföras när leverantören är inaktiverad."
+msgid "This action cannot be performed while the provider is disabled."
+msgstr "Denna åtgärd kan inte utföras när leverantören är inaktiverad."

@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-23 22:53+0000\n"
+"PO-Revision-Date: 2026-07-21 20:02+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "product_expiry/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -30,13 +30,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 msgid "\t--Expire on %(date)s--"
-msgstr ""
+msgstr "\t--หมดอายุในวันที่%(date)s--"
 
 #. module: product_expiry
 #. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 msgid "\t--Expired--"
-msgstr ""
+msgstr "\t--หมดอายุ--"
 
 #. module: product_expiry
 #: model:ir.module.module,description:base.module_product_expiry
@@ -65,6 +65,11 @@ msgid ""
 "            <span class=\"badge rounded-pill float-end text-bg-danger\" "
 "invisible=\"not product_expiry_alert\">Expired</span>"
 msgstr ""
+"<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
+"\">กำลังหมดอายุ</span>\n"
+"            <span class=\"badge rounded-pill float-end text-bg-danger\" "
+"invisible=\"not product_expiry_alert\">หมดอายุ</span>"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_production_lot_view_kanban
@@ -100,12 +105,12 @@ msgstr "ถึงวันแจ้งเตือนแล้ว"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Alert Lots"
-msgstr ""
+msgstr "แจ้งเตือนของล็อต"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Alert from"
-msgstr ""
+msgstr "แจ้งเตือนจาก"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__available_quantity
@@ -125,7 +130,7 @@ msgid ""
 "type."
 msgstr ""
 "ปริมาณคงเหลือที่พร้อมใช้งาน\n"
-"(คำนวณจาก: จำนวนคลังสินค้า - จำนวนที่จองไว้ - จำนวนที่ต้องนำออก)\n"
+"(คำนวณจาก: จำนวนสินค้าคงคลัง - จำนวนที่จองไว้ - จำนวนที่ต้องนำออก)\n"
 "ในกรณีที่มีเพียงสถานที่จัดเก็บสินค้าเดียว "
 "ระบบจะนับรวมสินค้าที่เก็บอยู่ในสถานที่นั้นหรือในสถานที่ย่อยทั้งหมดด้วย \n"
 "หากอยู่ในบริบทที่มีคลังสินค้าเพียงแห่งเดียว "
@@ -147,7 +152,7 @@ msgstr "ใช้ก่อนวันที่"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 msgid "Best before"
-msgstr ""
+msgstr "ควรใช้ก่อน"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
@@ -275,13 +280,13 @@ msgstr "ล็อตที่หมดอายุ"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.quant_search_view_inherit_product_expiry
 msgid "Expired Lots"
-msgstr ""
+msgstr "ล็อตที่หมดอายุแล้ว"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "Expired Stock"
-msgstr ""
+msgstr "สต็อกที่หมดอายุแล้ว"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_reminded
@@ -314,7 +319,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__virtual_available
 msgid "Forecasted Quantity"
-msgstr "ปริมาณพยากรณ์"
+msgstr "ปริมาณที่คาดการณ์"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
@@ -362,7 +367,7 @@ msgstr "ล็อต"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_report_stock_report_lot_label
 msgid "Lot Label Report"
-msgstr ""
+msgstr "รายงานป้ายกำกับล็อต"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_lot
@@ -430,7 +435,7 @@ msgstr "การรับ"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except expired"
-msgstr ""
+msgstr "ดำเนินการต่อ ยกเว้นกรณีที่หมดอายุ"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
@@ -461,7 +466,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quant"
-msgstr ""
+msgstr "ยอดสินค้าตามตำแหน่ง"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -547,24 +552,24 @@ msgstr "นี่คือวันที่สินค้าที่มีห
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_header.xml:0
 msgid "To Remove"
-msgstr ""
+msgstr "เพื่อนำออก"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove now"
-msgstr ""
+msgstr "เพื่อนำออกทันที"
 
 #. module: product_expiry
 #. odoo-javascript
 #: code:addons/product_expiry/static/src/forecasted_details.xml:0
 msgid "To remove on"
-msgstr ""
+msgstr "เพื่อนำออกจาก"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr ""
+msgstr "รายงานการติดตามาย้อนกลับ"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking

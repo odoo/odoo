@@ -19,16 +19,17 @@
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Martin Dinovski <martin.dinovski@industria.tech>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 04:09+0000\n"
+"PO-Revision-Date: 2026-07-21 08:56+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-s19-4/"
 "stock/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
@@ -379,10 +380,13 @@ msgstr "-&gt;"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
+#, fuzzy
 msgid ""
 ".\n"
 "            Manual actions may be needed."
 msgstr ""
+".\n"
+"             Може да са необходими ръчни действия."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
@@ -535,13 +539,15 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#, fuzzy
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Закъснял</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#, fuzzy
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Изчакване</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
@@ -641,8 +647,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Скрап</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -652,8 +659,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Traceability</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Проследимост</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -736,8 +744,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Баркод</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -823,7 +832,7 @@ msgstr "<strong>Поръчка:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>Поръчай</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -910,8 +919,9 @@ msgstr "<strong>Къде искате да изпратите продуктит
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
+#, fuzzy
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? Това може да доведе до несъответствия в складовата ви наличност."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -987,8 +997,9 @@ msgstr "Дейности"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Дейности на"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_exception_decoration
@@ -999,8 +1010,9 @@ msgstr "Декорация за изключение на дейност"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Планове за дейност"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1262,8 +1274,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Разрешени МЕ"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1393,11 +1406,16 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
+#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Като други мерни единици (ex : %(problem_uom)s) когато %(uom)s вече са били "
+"използвани за този продукт, промяната на мерната единица не може да се "
+"извърши. Ако искате да я промените, моля, архивирайте продукта и създайте "
+"нов."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__picking_policy__direct
@@ -2051,13 +2069,15 @@ msgstr "Потвърждение"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "Потвърдете поръчка"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Confirmation Email"
-msgstr ""
+msgstr "Имейл за потвърждение"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2232,8 +2252,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model,website_form_label:stock.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Създаване на клиент"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2838,8 +2859,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
+#, fuzzy
 msgid "Demand"
-msgstr ""
+msgstr "Търсене"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -2893,8 +2915,9 @@ msgstr "Описание за външни трансфери"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
+#, fuzzy
 msgid "Description for Receipts"
-msgstr ""
+msgstr "Описание за Получавания"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
@@ -2917,8 +2940,9 @@ msgstr "Забележка към получаване"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "Description on transfer"
-msgstr ""
+msgstr "Описание за прехвърляния"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__dest_location_id
@@ -3057,8 +3081,9 @@ msgstr "Разлика"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
+#, fuzzy
 msgid "Digest"
-msgstr ""
+msgstr "Публикация"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3362,14 +3387,16 @@ msgstr "Изключение(я):"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Exchange"
-msgstr ""
+msgstr "Обмен"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "Изтекъл"
 
 #. module: stock
 #. odoo-python
@@ -3399,8 +3426,9 @@ msgstr "Фаворит"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__favorite_user_ids
+#, fuzzy
 msgid "Favorite User"
-msgstr ""
+msgstr "Любим потребител"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
@@ -3552,8 +3580,9 @@ msgstr "Прогнозно количество"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__in
+#, fuzzy
 msgid "Forecasted Receipts"
-msgstr ""
+msgstr "Прогнозни получавания"
 
 #. module: stock
 #. odoo-javascript
@@ -3742,8 +3771,9 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "Goods Receipt Note"
-msgstr ""
+msgstr "Складова разписка за прием"
 
 #. module: stock
 #. odoo-javascript
@@ -5803,8 +5833,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "Никакъв"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6588,8 +6619,9 @@ msgstr ""
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
+#, fuzzy
 msgid "Pay now"
-msgstr ""
+msgstr "Завърши поръчката"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
@@ -6663,8 +6695,9 @@ msgstr "Операции с пикинги"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
+#, fuzzy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Политика за избор"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -6728,8 +6761,9 @@ msgstr "Предпочитан маршрут"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Prefix value of the record for the sequence"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -7800,8 +7834,9 @@ msgstr ""
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "Резервирайте"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8113,8 +8148,9 @@ msgstr "Примерни данни"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "Запазете"
 
 #. module: stock
 #. odoo-python
@@ -8215,8 +8251,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, fuzzy
 msgid "Scrapped"
-msgstr ""
+msgstr "Обявено за скрап"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -8297,8 +8334,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "Продавайте и купувайте продукти в различни мерни единици или опаковки"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8603,8 +8641,10 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Показване на всички записи, чиято следваща дата на активност е отминала"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -9220,6 +9260,7 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
+#, fuzzy
 msgid ""
 "The Serial Number (%(serial_number)s) is already used in location(s): %"
 "(location_list)s.\n"
@@ -9230,6 +9271,14 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
+"Серийния номер (%(serial_number)s) вече се ползва в следната локация(и): %"
+"(location_list)s.\n"
+"\n"
+"Очаквано ли е това? Например, това може да се случи, ако операция по "
+"доставка е валидирана преди съответстващата ѝ операция по получаване. В този "
+"случай проблемът ще бъде разрешен автоматично, след като всички стъпки бъдат "
+"изпълнени. В противен случай серийният номер трябва да бъде коригиран, за да "
+"се предотвратят несъответствия в данните."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -9634,10 +9683,13 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
+#, fuzzy
 msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the "
 "warehouse)."
 msgstr ""
+"Тази бележка се добавя към приемите (входящите доставки) (напр. къде да се "
+"складира продуктът в склада)."
 
 #. module: stock
 #. odoo-python
@@ -10160,8 +10212,9 @@ msgstr "Единици"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Единици и Опаковки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__uom_id
@@ -10290,8 +10343,9 @@ msgstr "Валидирай"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Потвърдете инвентар"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10663,8 +10717,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "When to start shipping"
-msgstr ""
+msgstr "Кога да започне доставката"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -11361,86 +11416,74 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 
-#~ msgid "Close"
-#~ msgstr "Затвори"
+msgid "Reason"
+msgstr "Причина"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Икона, примерно fa-tasks"
+msgid "Check Availability"
+msgstr "Провери наличността"
 
-#~ msgid "Choose your date"
-#~ msgstr "Изберете датата си"
+msgid "Compute shipping costs and ship with DHL"
+msgstr "Изчислете транспортните разходи и изпратете с DHL"
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "История на наличностите"
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "Изчислете разходите за доставка и изпратете с Easypost"
 
-#~ msgid "Reason"
-#~ msgstr "Причина"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "Изчислете разходите за доставка и изпратете с FedEx"
 
-#~ msgid "Check Availability"
-#~ msgstr "Провери наличността"
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Изчислете разходите за доставка и изпратете чрез Sendcloud"
 
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "Изчислете транспортните разходи и изпратете с DHL"
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "Изчислете разходите за доставка и изпратете чрез Shiprocket"
 
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "Изчислете разходите за доставка и изпратете с Easypost"
+msgid "Compute shipping costs and ship with UPS"
+msgstr "Изчислете разходите за доставка и изпратете с UPS"
 
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "Изчислете разходите за доставка и изпратете с FedEx"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "Изчислете разходите за доставка и изпратете с USPS"
 
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "Изчислете разходите за доставка и изпратете чрез Sendcloud"
+msgid "Compute shipping costs and ship with bpost"
+msgstr "Изчислете разходите за доставка и изпратете с bpost"
 
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "Изчислете разходите за доставка и изпратете чрез Shiprocket"
+msgid "DHL Express Connector"
+msgstr "DHL Express конектор"
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "Изчислете разходите за доставка и изпратете с UPS"
+msgid "Easypost Connector"
+msgstr "Easypost конектор"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "Изчислете разходите за доставка и изпратете с USPS"
+msgid "FedEx Connector"
+msgstr "FedEx конектор"
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "Изчислете разходите за доставка и изпратете с bpost"
+msgid "Nothing to check the availability for."
+msgstr "Нищо за проверка наличността."
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "DHL Express конектор"
+msgid "Sendcloud Connector"
+msgstr "Sendcloud конектор"
 
-#~ msgid "Easypost Connector"
-#~ msgstr "Easypost конектор"
+msgid "Shipping Connectors"
+msgstr "Шипинг конектори"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "FedEx конектор"
+msgid "Shiprocket Connector"
+msgstr "Shiprocket конектор"
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "Нищо за проверка наличността."
+msgid "UPS Connector"
+msgstr "UPS конектор"
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "Sendcloud конектор"
+msgid "USPS Connector"
+msgstr "USPS конектор"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "Шипинг конектори"
+msgid "Website Messages"
+msgstr "Съобщения в уебсайт"
 
-#~ msgid "Shiprocket Connector"
-#~ msgstr "Shiprocket конектор"
+msgid "Website communication history"
+msgstr "История на комуникацията на уебсайт"
 
-#~ msgid "UPS Connector"
-#~ msgstr "UPS конектор"
+msgid "bpost Connector"
+msgstr "bpost конектор"
 
-#~ msgid "USPS Connector"
-#~ msgstr "USPS конектор"
+msgid "On hand:"
+msgstr "Под ръка:"
 
-#~ msgid "Website Messages"
-#~ msgstr "Съобщения в уебсайт"
-
-#~ msgid "Website communication history"
-#~ msgstr "История на комуникацията на уебсайт"
-
-#~ msgid "bpost Connector"
-#~ msgstr "bpost конектор"
-
-#~ msgid "On hand:"
-#~ msgstr "Под ръка:"
-
-#~ msgid "Real Quantity"
-#~ msgstr "Реално количество"
+msgid "Real Quantity"
+msgstr "Реално количество"

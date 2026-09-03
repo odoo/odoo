@@ -3,15 +3,15 @@
 # * auth_passkey
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 07:43+0000\n"
+"PO-Revision-Date: 2026-07-22 01:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-4/"
 "auth_passkey/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -34,7 +34,6 @@ msgstr ""
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-#, fuzzy
 msgid ""
 "<span class=\"text-muted\">\n"
 "                            Recommended for extra security.\n"
@@ -46,14 +45,12 @@ msgstr ""
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
-#, fuzzy
 msgid "<strong>Use your passkey to authenticate</strong>"
 msgstr "<strong>K ověření použijte svůj přístupový kód</strong>"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_form
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_users_preferences
-#, fuzzy
 msgid "Add Passkey"
 msgstr "Přidat přístupový klíč"
 
@@ -64,7 +61,6 @@ msgstr "Metoda ověřování"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_res_users__auth_passkey_key_ids
-#, fuzzy
 msgid "Auth Passkey Key"
 msgstr "Autorizační přístupový kód"
 
@@ -76,13 +72,11 @@ msgstr "Vytvořit"
 #. module: auth_passkey
 #. odoo-python
 #: code:addons/auth_passkey/models/res_users.py:0
-#, fuzzy
 msgid "Create Passkey"
 msgstr "Vytvořit přístupový klíč"
 
 #. module: auth_passkey
 #: model:ir.actions.act_window,name:auth_passkey.action_auth_passkey_key_create
-#, fuzzy
 msgid "Create Passkey Wizard"
 msgstr "Průvodce vytvořením přístupového klíče"
 
@@ -93,7 +87,6 @@ msgstr "Vytvořit Uid"
 
 #. module: auth_passkey
 #: model:ir.model,name:auth_passkey.model_auth_passkey_key_create
-#, fuzzy
 msgid "Create a Passkey"
 msgstr "Vytvořit přístupový klíč"
 
@@ -110,7 +103,6 @@ msgstr "Vytvořeno dne"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__credential_identifier
-#, fuzzy
 msgid "Credential Identifier"
 msgstr "Identifikátor pověření"
 
@@ -138,7 +130,6 @@ msgstr "ID"
 #. module: auth_passkey
 #. odoo-python
 #: code:addons/auth_passkey/models/res_users_identitycheck.py:0
-#, fuzzy
 msgid ""
 "Incorrect Passkey. Please provide a valid passkey or use a different "
 "authentication method."
@@ -160,7 +151,6 @@ msgstr "Naposledy upraveno dne"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_key_view_kanban
-#, fuzzy
 msgid "Last used:"
 msgstr "Naposledy použito:"
 
@@ -177,7 +167,6 @@ msgstr "Název"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
-#, fuzzy
 msgid "Or choose a different method:"
 msgstr "Nebo zvolte jinou metodu:"
 
@@ -186,7 +175,6 @@ msgstr "Nebo zvolte jinou metodu:"
 #: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
 #: model:ir.model,name:auth_passkey.model_auth_passkey_key
 #: model:ir.model.fields.selection,name:auth_passkey.selection__res_users_identitycheck__auth_method__webauthn
-#, fuzzy
 msgid "Passkey"
 msgstr "Přístupový klíč"
 
@@ -204,7 +192,6 @@ msgstr "Průvodce kontrolou hesla"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__public_key
-#, fuzzy
 msgid "Public Key"
 msgstr "Veřejný klíč"
 
@@ -216,7 +203,6 @@ msgstr "Přejmenovat"
 #. module: auth_passkey
 #. odoo-python
 #: code:addons/auth_passkey/models/auth_passkey_key.py:0
-#, fuzzy
 msgid "Rename Passkey"
 msgstr "Přejmenovat přístupový klíč"
 
@@ -233,52 +219,44 @@ msgstr "Bezpečnostní kontrola"
 
 #. module: auth_passkey
 #: model:ir.model.fields,field_description:auth_passkey.field_auth_passkey_key__sign_count
-#, fuzzy
 msgid "Sign Count"
 msgstr "Počet přihlášení"
 
 #. module: auth_passkey
 #: model:ir.model.constraint,message:auth_passkey.constraint_auth_passkey_key_unique_identifier
-#, fuzzy
 msgid "The credential identifier should be unique."
 msgstr "Identifikátor pověření by měl být jedinečný."
 
 #. module: auth_passkey
 #. odoo-python
 #: code:addons/auth_passkey/models/res_users.py:0
-#, fuzzy
 msgid "Unknown passkey"
 msgstr "Neznámý přístupový klíč"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
-#, fuzzy
 msgid "Use Passkey"
 msgstr "Použijte přístupový klíč"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.auth_passkey_login_oauth
-#, fuzzy
 msgid "Use a Passkey"
 msgstr "Použijte přístupový klíč"
 
 #. module: auth_passkey
 #. odoo-javascript
 #: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
-#, fuzzy
 msgid "Use passkey"
 msgstr "Použijte přístupový klíč"
 
 #. module: auth_passkey
 #: model_terms:ir.ui.view,arch_db:auth_passkey.res_users_identitycheck_view_form_passkey
-#, fuzzy
 msgid "Use password"
 msgstr "Použíjte heslo"
 
 #. module: auth_passkey
 #. odoo-javascript
 #: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
-#, fuzzy
 msgid "Use your passkey"
 msgstr "Použijte svůj přístupový klíč"
 
@@ -290,6 +268,5 @@ msgstr "Uživatel"
 #. module: auth_passkey
 #. odoo-javascript
 #: code:addons/auth_passkey/static/src/services/check_identity/check_identity.xml:0
-#, fuzzy
 msgid "When you are ready, authenticate using the button below."
 msgstr "Až budete připraveni, přihlaste se pomocí tlačítka níže."

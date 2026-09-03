@@ -12,9 +12,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 17:14+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-29 10:11+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_work_entry/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,11 @@ msgid ""
 "(country)s\".\n"
 "                    "
 msgstr ""
+"\n"
+"Impossibile inserire \"%(insert_name)s\":\n"
+"il tipo di fuso orario \"%(name)s\" del codice \"%(code)s\" esiste già per "
+"il Paese \"%(country)s\".\n"
+"                    "
 
 #. module: hr_work_entry
 #. odoo-python
@@ -45,18 +50,23 @@ msgid ""
 "already exists.\n"
 "                    "
 msgstr ""
+"\n"
+"Impossibile inserire \"%(insert_name)s\":\n"
+"il tipo di tempo \"%(name)s\" del codice \"%(code)s\", senza Paese "
+"assegnato, esiste già.\n"
+"                    "
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
 msgid "%(duration)s hours %(work_entry_type)s"
-msgstr ""
+msgstr "%(duration)s ore %(work_entry_type)s"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
 msgid "%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s"
-msgstr ""
+msgstr "%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -69,6 +79,8 @@ msgid ""
 "<span class=\"text-muted fst-italic\">Define how this time type affects "
 "payslips and salary computation.</span>"
 msgstr ""
+"<span class=\"text-muted fst-italic\">Definisci in che modo questo tipo di "
+"orario influisce sulle buste paga e sul calcolo dello stipendio.</span>"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_attendance
@@ -166,7 +178,7 @@ msgstr "Tempo di assenza"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Azione richiesta"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -177,27 +189,27 @@ msgstr "Attivo"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Attività"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decorazione eccezione attività"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Piani attività"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Stato attività"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icona tipo di attività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_additional_hours_100
@@ -253,12 +265,12 @@ msgstr "Congedo per servizio militare e ausiliario"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_annual_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_annual_leave
 msgid "Annual Leave"
-msgstr ""
+msgstr "Ferie annuali"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__4
 msgid "April"
-msgstr ""
+msgstr "Aprile"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -269,7 +281,7 @@ msgstr "In archivio"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Numero allegati"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_attendance
@@ -310,42 +322,42 @@ msgstr "Presenza"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_dbl_hol
 msgid "Attendance - Double Holiday"
-msgstr ""
+msgstr "Presenze - Doppia festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_dbl_hol_rest
 msgid "Attendance - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Presenze - Doppia festività (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rh
 msgid "Attendance - Regular Holiday"
-msgstr ""
+msgstr "Presenze - Festività regolari"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rh_rest
 msgid "Attendance - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Presenze - Festività regolari (giorni di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rest
 msgid "Attendance - Rest Day"
-msgstr ""
+msgstr "Presenze - Giorno di riposo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_snw
 msgid "Attendance - Special Non-Working Holiday"
-msgstr ""
+msgstr "Presenze - Giorni festivi speciali non lavorativi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_snw_rest
 msgid "Attendance - Special Non-Working Holiday (Rest Day)"
-msgstr ""
+msgstr "Presenze - Giorno festivo speciale non lavorativo (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__8
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_available_not_working
@@ -370,7 +382,7 @@ msgstr "Indennità nascita"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_bereavement
 msgid "Bereavement"
-msgstr ""
+msgstr "Lutto"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
@@ -382,11 +394,12 @@ msgstr "Congedo per lutto"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
 msgid "Birth Leave (Father / Co-parent) (Circumstantial leave)"
 msgstr ""
+"Congedo di paternità (padre/co-genitore) (Congedo per motivi particolari)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
 msgid "Birth leave (Circumstantial leave)"
-msgstr ""
+msgstr "Congedo di maternità (congedo per motivi particolari)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
@@ -436,7 +449,7 @@ msgstr "Malattia ordinaria oltre il periodo legale retribuito"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_compassionate_leave
 msgid "COM"
-msgstr ""
+msgstr "CONG. STR."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_corona
@@ -500,16 +513,18 @@ msgstr "Congedo per assistenza"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_child_adoption
 msgid "Child Adoption / Long-Term Foster Care (Circumstantial leave)"
 msgstr ""
+"Adozione di minori/Affido a lungo termine (congedo per motivi familiari)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_child_ceremony
 msgid "Child Ceremony (Communion / Secular Youth) (Circumstantial leave)"
 msgstr ""
+"Cerimonia infantile (Comunione/Giovani laici) (Permesso circostanziale)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment
 msgid "Circumstantial leave"
-msgstr ""
+msgstr "Permesso circonstanziale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_civic_duty_unpaid
@@ -519,7 +534,7 @@ msgstr "Servizio civile (non retribuito)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_civic_duty
 msgid "Civic or Judicial Duty (Circumstantial leave)"
-msgstr ""
+msgstr "Doveri civici o giudiziari (congedo circostanziale)"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -538,7 +553,7 @@ msgstr "Codice utilizzato nelle esportazioni manuali"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.res_company_view_form_inherit_hr_work_entry
 msgid "Code used in work entry exports"
-msgstr ""
+msgstr "Codice utilizzato nelle esportazioni delle registrazioni di lavoro"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__color
@@ -563,7 +578,7 @@ msgstr "Azienda"
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Company External Code"
-msgstr ""
+msgstr "Codice esterno dell’azienda"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
@@ -574,7 +589,7 @@ msgstr "Congedo per assistenza familiare"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_compassionate_leave
 msgid "Compassionate leave"
-msgstr ""
+msgstr "Congedo per assistenza familiare"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_compensatory
@@ -687,7 +702,7 @@ msgstr "Codice nazione"
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
 msgid "Create a new Time type"
-msgstr ""
+msgstr "Crea un nuovo tipo di tempo"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_uid
@@ -714,17 +729,17 @@ msgstr "Credito tempo"
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_day_overtime
 msgid "Day time Overtime Hours"
-msgstr ""
+msgstr "Ore extra diurne"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_death_one_day
 msgid "Death (One Day Leave) (Circumstantial leave)"
-msgstr ""
+msgstr "Morte (permesso di un giorno) (permesso per motivi familiari)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_death
@@ -735,21 +750,22 @@ msgstr "Permesso per lutto"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_death_extended_family
 msgid "Death of Extended Family Member (Circumstantial leave)"
 msgstr ""
+"Decesso di un membro della famiglia allargata (congedo per motivi familiari)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_death_parents
 msgid "Death of Parent or In-law (Circumstantial leave)"
-msgstr ""
+msgstr "Morte di un genitore o di un suocero (congedo per motivi familiari)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_death_close_family
 msgid "Death of Partner or Child (Circumstantial leave)"
-msgstr ""
+msgstr "Morte del partner o di un figlio (congedo per motivi familiari)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__12
 msgid "December"
-msgstr ""
+msgstr "Dicembre"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_attendance_view_tree
@@ -776,7 +792,7 @@ msgstr "Invalidità per malattia (ente previdenziale)"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
 msgid "Discard"
-msgstr ""
+msgstr "Abbandona"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -808,29 +824,29 @@ msgstr "Nome visualizzato"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_dvl_leave
 msgid "Domestic Violence Leave"
-msgstr ""
+msgstr "Congedo per violenza domestica"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_dh_leave
 msgid "Double Holiday"
-msgstr ""
+msgstr "Doppia festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_double
 msgid "Double Time (2x)"
-msgstr ""
+msgstr "Ritmo doppio (2x)"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Download Export"
-msgstr ""
+msgstr "Scarica esportazione"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Duration"
-msgstr ""
+msgstr "Durata"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_economic_unemployment
@@ -869,12 +885,12 @@ msgstr "Permessi studio"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training_time_off_with_meal_voucher
 msgid "Educational Time Off (with Meal Voucher)"
-msgstr ""
+msgstr "Permessi studio (con buono pasto)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__eligible_employee_line_ids
 msgid "Eligible Employees"
-msgstr ""
+msgstr "Dipendenti idonei"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_emergency
@@ -897,13 +913,13 @@ msgstr "Contratto dipendente"
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Employee Ext. Code"
-msgstr ""
+msgstr "Codice esterno dipendente"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "Employee Name"
-msgstr ""
+msgstr "Nome dipendente"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_adoption_company
@@ -913,12 +929,12 @@ msgstr "Congedo per adozione e affidamento a carico del datore di lavoro"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european
 msgid "European Time Off (Employee)"
-msgstr ""
+msgstr "Ferie europee (dipendente)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_european_worker
 msgid "European Time Off (Worker)"
-msgstr ""
+msgstr "Ferie europee (lavoratore)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_examination_leave
@@ -940,7 +956,7 @@ msgstr "Esenzione dai benefici di fine carriera"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
 msgid "Export"
-msgstr ""
+msgstr "Esporta"
 
 #. module: hr_work_entry
 #. odoo-javascript
@@ -949,12 +965,12 @@ msgstr ""
 #: model:ir.actions.server,name:hr_work_entry.action_hr_employee_export_work_entries
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_export_work_entries_wizard
 msgid "Export Time Entries"
-msgstr ""
+msgstr "Esporta registrazioni orarie"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_export_work_entries
 msgid "Export Work Entries"
-msgstr ""
+msgstr "Esporta voci di lavoro"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -1010,7 +1026,7 @@ msgstr "Congedo formativo (Fiandre)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_fmla_leave
 msgid "FMLA Leave"
-msgstr ""
+msgstr "Congedo FMLA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_foster_care
@@ -1035,12 +1051,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__2
 msgid "February"
-msgstr ""
+msgstr "Febbraio"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_fdrcl
 msgid "First Degree Relatives Compassionate Leave"
-msgstr ""
+msgstr "Congedo per familiari di primo grado"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_construction_bad_weather_first_day
@@ -1055,7 +1071,7 @@ msgstr "Permesso per formazione fiammingo"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flemish_training_time_off_with_meal_voucher
 msgid "Flemish Educational Time Off (with Meal Voucher)"
-msgstr ""
+msgstr "Permesso studio fiammingo (con buono pasto)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_flexi_attendance
@@ -1065,12 +1081,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguito da"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguito da (partner)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_foster_care
@@ -1118,7 +1134,7 @@ msgstr "Permesso generale (GTO)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness
 msgid "GWI"
-msgstr ""
+msgstr "GWI"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_leave
@@ -1157,7 +1173,7 @@ msgstr "Congedo generico"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness
 msgid "Guaranted wage interrupted day illness"
-msgstr ""
+msgstr "Salario garantito in caso di assenza per malattia"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_home_working
@@ -1204,17 +1220,17 @@ msgstr "Permesso Hajj"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Ha messaggio"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off
 msgid "Health risk (prophylactic leave)"
-msgstr ""
+msgstr "Rischio per la salute (congedo preventivo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_holiday_previous_vacation_credit_year
 msgid "Holiday previous vacation credit year"
-msgstr ""
+msgstr "Ferie anno precedente con credito in sospeso"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_home_working
@@ -1294,7 +1310,7 @@ msgstr "ID"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_iddah_leave
 msgid "IDD"
-msgstr ""
+msgstr "IDD"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_construction_imperative_maintained_salary
@@ -1330,12 +1346,12 @@ msgstr "Incapacità lavorativa"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Icona"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Icona per indicare un'attività eccezione."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_iddah
@@ -1346,18 +1362,18 @@ msgstr "Permesso Iddah"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_iddah_leave
 msgid "Iddah leave"
-msgstr ""
+msgstr "Permesso Iddah"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Se spuntato, ci sono nuovi messaggi che richiedono la tua attenzione."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_has_error
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Se selezionata, alcuni messaggi presentano un errore di consegna."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
@@ -1365,12 +1381,16 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time type "
 "without removing it."
 msgstr ""
+"Se il campo attivo è impostato su false, ti permetterà di nascondere il tipo "
+"di ora senza rimuoverlo."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
 msgid ""
 "If you want the hours to be paid double, the rate should be set to 200%."
 msgstr ""
+"Se vuoi che le ore vengano pagate il doppio, la tariffa deve essere "
+"impostata su 200%."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_ami
@@ -1397,6 +1417,9 @@ msgid ""
 "during the theoretical legal period of guaranteed salary for reasons "
 "attributable to the worker"
 msgstr ""
+"Malattia o infortunio ai sensi del diritto comune, non coperti dal salario "
+"garantito, durante il periodo legale teorico di salario garantito per motivi "
+"imputabili al lavoratore"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker
@@ -1447,6 +1470,8 @@ msgid ""
 "Incapacity for work with guaranteed salary system for workers - 2nd week "
 "(Short Term Employee)"
 msgstr ""
+"Inabilità al lavoro con sistema di retribuzione garantita per i dipendenti - "
+"2ª settimana (dipendente a breve termine)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_incapacity_worker_after_second_week
@@ -1470,7 +1495,7 @@ msgstr "È selezionato"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Sta seguendo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_justified_reason_paid
@@ -1485,22 +1510,22 @@ msgstr "Assenza giustificata non retribuita"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__1
 msgid "January"
-msgstr ""
+msgstr "Gennaio"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__7
 msgid "July"
-msgstr ""
+msgstr "Luglio"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__6
 msgid "June"
-msgstr ""
+msgstr "Giugno"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_jury_duty
 msgid "Jury Duty"
-msgstr ""
+msgstr "Servizio di giurato"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_justified_reason_paid
@@ -1515,7 +1540,7 @@ msgstr "Motivo giustificato (non retribuito)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_paid_leave
 msgid "Kuwait: Paid Leave"
-msgstr ""
+msgstr "Kuwait: ferie retribuite"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_long_sick
@@ -1593,7 +1618,7 @@ msgstr "Ferie maternità convertite"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "MTY"
-msgstr ""
+msgstr "MO"
 
 #. module: hr_work_entry
 #: model:ir.module.module,summary:base.module_hr_work_entry
@@ -1603,12 +1628,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__3
 msgid "March"
-msgstr ""
+msgstr "Marzo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_marriage_employee
 msgid "Marriage (Employee) (Circumstantial leave)"
-msgstr ""
+msgstr "Matrimonio (dipendente) (congedo per motivi familiari)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_marriage
@@ -1621,7 +1646,7 @@ msgstr "Congedo matrimoniale"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_marriage_family
 msgid "Marriage of a Family Member (Circumstantial leave)"
-msgstr ""
+msgstr "Matrimonio di un familiare (congedo per motivi familiari)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_type_icon
@@ -1665,7 +1690,7 @@ msgstr "Permesso maternità (pagato al 75%)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "Maternity leave"
-msgstr ""
+msgstr "Congedo maternità"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity_time_off_converted
@@ -1679,12 +1704,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off_maternity_protection
 msgid "Maternity protection (prophylactic leave)"
-msgstr ""
+msgstr "Tutela della maternità (congedo preventivo)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__5
 msgid "May"
-msgstr ""
+msgstr "Maggio"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
@@ -1704,12 +1729,12 @@ msgstr "Congedo medico per assistere figli con diagnosi di cancro (IMSS)"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Errore consegna messaggio"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Messaggi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_militia_obligation
@@ -1731,7 +1756,7 @@ msgstr "Fuso orario mancante per la generazione di voci lavorative."
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_month
 msgid "Month"
-msgstr ""
+msgstr "Mese"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_monthly_wt
@@ -1741,7 +1766,7 @@ msgstr "Stipendio mensile"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Scadenza mia attività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_normal_inactivity
@@ -1768,107 +1793,110 @@ msgstr "Nome"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Prossimo evento del calendario delle attività"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Scadenza prossima attività"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Riepilogo prossima attività"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tipologia prossima attività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns
 msgid "Night Shift"
-msgstr ""
+msgstr "Turno di notte"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_dbl_hol
 msgid "Night Shift - Double Holiday"
-msgstr ""
+msgstr "Turno di notte - Doppia festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_dbl_hol_rest
 msgid "Night Shift - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Turno di notte - Doppia festività (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime
 msgid "Night Shift - Overtime"
-msgstr ""
+msgstr "Turno di notte - Straordinari"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_dbl_hol
 msgid "Night Shift - Overtime - Double Holiday"
-msgstr ""
+msgstr "Turno di notte - Straordinari - Doppia festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_dbl_hol_rest
 msgid "Night Shift - Overtime - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Turno di notte - Straordinari - Doppia festività (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_rh
 msgid "Night Shift - Overtime - Regular Holiday"
-msgstr ""
+msgstr "Turno di notte - Straordinari - Festività regolari"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_rh_rest
 msgid "Night Shift - Overtime - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Turno di notte - Straordinari - Festività regolari (giorni di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_rest
 msgid "Night Shift - Overtime - Rest Day"
-msgstr ""
+msgstr "Turno di notte - Straordinari - Giorno di riposo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_snw
 msgid "Night Shift - Overtime - Special Non-Working Holiday"
-msgstr ""
+msgstr "Turno di notte - Straordinari - Festività speciali non lavorative"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_overtime_snw_rest
 msgid "Night Shift - Overtime - Special Non-Working Holiday (Rest Day)"
 msgstr ""
+"Turno di notte - Straordinari - Giorno festivo speciale non lavorativo "
+"(giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_rh
 msgid "Night Shift - Regular Holiday"
-msgstr ""
+msgstr "Turno di notte - Festività regolari"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_rh_rest
 msgid "Night Shift - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Turno di notte - Giorno festivo regolare (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_rest
 msgid "Night Shift - Rest Day"
-msgstr ""
+msgstr "Turno di notte - Giorno di riposo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_snw
 msgid "Night Shift - Special Non-Working Holiday"
-msgstr ""
+msgstr "Turno di notte - Giorno festivo speciale non lavorativo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_ns_snw_rest
 msgid "Night Shift - Special Non-Working Holiday (Rest Day)"
 msgstr ""
+"Turno di notte - Giorno festivo speciale non lavorativo (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_night_overtime
 msgid "Night time Overtime Hours"
-msgstr ""
+msgstr "Orario notturno e straordinario"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service
@@ -1888,27 +1916,27 @@ msgstr "Preavviso (non fornito)"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__11
 msgid "November"
-msgstr ""
+msgstr "Novembre"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Numero di azioni"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Numero di errori"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Numero di messaggi che richiedono un'azione"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Numero di messaggi con errore di consegna"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid
@@ -1970,7 +1998,7 @@ msgstr "Malattia professionale (non retribuita)"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__10
 msgid "October"
-msgstr ""
+msgstr "Ottobre"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_hr_work_entry_type_out_of_contract
@@ -2053,7 +2081,7 @@ msgstr "Straordinari"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_overtime
 msgid "Overtime (1.5x)"
-msgstr ""
+msgstr "Straordinari (1,5x)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_recoverable
@@ -2063,7 +2091,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_1
 msgid "Overtime 1"
-msgstr ""
+msgstr "Straordinari 1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_overtime_wt
@@ -2078,7 +2106,7 @@ msgstr "Straordinari 125%"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_overtime_2
 msgid "Overtime 2"
-msgstr ""
+msgstr "Straordinari 2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_overtime
@@ -2116,37 +2144,39 @@ msgstr "Ore di straordinario"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_dbl_hol
 msgid "Overtime Hours - Double Holiday"
-msgstr ""
+msgstr "Ore di straordinario - Doppia festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_dbl_hol_rest
 msgid "Overtime Hours - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "Ore di straordinario - Doppia festività (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_rh
 msgid "Overtime Hours - Regular Holiday"
-msgstr ""
+msgstr "Ore di straordinario - Festività ordinarie"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_rh_rest
 msgid "Overtime Hours - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "Ore di straordinario - Giorno festivo regolare (giorno di riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_rest
 msgid "Overtime Hours - Rest Day"
-msgstr ""
+msgstr "Ore di straordinario - Giorno di riposo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_snw
 msgid "Overtime Hours - Special Non-Working Holiday"
-msgstr ""
+msgstr "Ore di straordinario - Giorno festivo speciale non lavorativo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_overtime_snw_rest
 msgid "Overtime Hours - Special Non-Working Holiday (Rest Day)"
 msgstr ""
+"Ore di straordinario - Giorno festivo speciale non lavorativo (giorno di "
+"riposo)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_overtime_no_onss
@@ -2156,12 +2186,12 @@ msgstr "Ore di straordinario non soggette a contributi previdenziali"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_off_days
 msgid "Overtime Off-days"
-msgstr ""
+msgstr "Straordinari in giorni di riposo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_public_holiday
 msgid "Overtime Public Holiday"
-msgstr ""
+msgstr "Straordinari in giorni festivi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_rest_days
@@ -2171,12 +2201,12 @@ msgstr "Giorni di riposo straordinari"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_daytime
 msgid "Overtime Weekdays Daytime"
-msgstr ""
+msgstr "Straordinari di mattina in settimana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_overtime_work_days_nighttime
 msgid "Overtime Weekdays Nighttime"
-msgstr ""
+msgstr "Straordinari di notte in settimana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_overtime_work_days_daytime
@@ -2246,12 +2276,12 @@ msgstr "Congedo paternità"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_paid_absence
 msgid "PDA"
-msgstr ""
+msgstr "PDA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_public_duty
 msgid "PDU"
-msgstr ""
+msgstr "DG"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_public_holiday
@@ -2293,7 +2323,7 @@ msgstr "Giorno festivo retribuito"
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_with_recovery
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_without_recovery
 msgid "PHW"
-msgstr ""
+msgstr "PHW"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_jo_work_entry_type_pilgrimage
@@ -2313,12 +2343,12 @@ msgstr "Congedo non retribuito per l'esercizio di cariche pubbliche"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n1
 msgid "PN1"
-msgstr ""
+msgstr "PN1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n2
 msgid "PN2"
-msgstr ""
+msgstr "PN2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_political_leave
@@ -2384,7 +2414,7 @@ msgstr "Disoccupazione temporanea"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paid_absence
 msgid "Paid Absence"
-msgstr ""
+msgstr "Assenze retribuite"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_parental
@@ -2471,7 +2501,7 @@ msgstr "Permesso paternità (pagato dall'azienda)"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Pay Rate"
-msgstr ""
+msgstr "Retribuzione"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -2486,12 +2516,12 @@ msgstr "Codice libro paga"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_start
 msgid "Period Start"
-msgstr ""
+msgstr "Inizio periodo"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__period_stop
 msgid "Period Stop"
-msgstr ""
+msgstr "Fine periodo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_personal_leave
@@ -2511,17 +2541,19 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n1
 msgid "Postponed Paid Time Off N-1"
-msgstr ""
+msgstr "Ferie retribuite posticipate N-1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n2
 msgid "Postponed Paid Time Off N-2"
-msgstr ""
+msgstr "Ferie retribuite posticipate N-2"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Provide a description of the Time Type, in which case should it be used"
 msgstr ""
+"Fornisci una descrizione del tipo di tempo, in quale caso dovrebbe essere "
+"utilizzato"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_public_holiday
@@ -2581,12 +2613,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_public_holidays_overtime
 msgid "Public Holidays Overtime"
-msgstr ""
+msgstr "Straordinari in giorni festivi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_public_duty
 msgid "Public duty"
-msgstr ""
+msgstr "Dovere pubblico"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment
@@ -2596,12 +2628,12 @@ msgstr "Giorni festivi durante i periodi di disoccupazione temporanea"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_with_recovery
 msgid "Public holiday worked (to recover)"
-msgstr ""
+msgstr "Giorno festivo lavorato (per recuperare)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_working_without_recovery
 msgid "Public holiday worked (without recovery)"
-msgstr ""
+msgstr "Giorno festivo lavorato (senza recupero)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_mandate_unpaid
@@ -2626,7 +2658,7 @@ msgstr "Tasso"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Valutazioni"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_recovery_additional
@@ -2641,7 +2673,7 @@ msgstr "Recupero festa nazionale"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_rh_leave
 msgid "Regular Holiday"
-msgstr ""
+msgstr "Festività regolari"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_attendance_ids
@@ -2661,7 +2693,7 @@ msgstr "Risorsa orario lavorativo"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Utente responsabile"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_rest_days_overtime
@@ -2671,12 +2703,12 @@ msgstr "Giorni di riposo straordinari"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_rest_days
 msgid "Restday(s) & public holidays Overtime"
-msgstr ""
+msgstr "Straordinari in giorni di riposo e festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_special_rest_days
 msgid "Restday(s) & public holidays Special Overtime"
-msgstr ""
+msgstr "Straordinari speciali in giorni di riposo e festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_rostered_days_off
@@ -2696,7 +2728,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_schooldays
 msgid "SDY"
-msgstr ""
+msgstr "SDY"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_sailor_time_off
@@ -2711,7 +2743,7 @@ msgstr "Inabilità temporanea al lavoro"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Errore di consegna SMS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_solicitation_time_off
@@ -2809,17 +2841,17 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_schooldays
 msgid "Schooldays"
-msgstr ""
+msgstr "Giorni di scuola"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Time Type"
-msgstr ""
+msgstr "Cerca tipo di tempo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sdrcl
 msgid "Second Degree Relatives Compassionate Leave"
-msgstr ""
+msgstr "Congedo per motivi familiari di secondo grado"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_selectable
@@ -2834,7 +2866,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__9
 msgid "September"
-msgstr ""
+msgstr "Settembre"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -2844,7 +2876,7 @@ msgstr "Sequenza"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_sil_leave
 msgid "Service Incentive Leave"
-msgstr ""
+msgstr "Congedo incentivo di servizio"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders
@@ -2864,27 +2896,27 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_sick_leave
 msgid "Sick Leave"
-msgstr ""
+msgstr "Congedo per malattia"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
-msgstr ""
+msgstr "Congedo malattia (100% pagato)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_35
 msgid "Sick Leave (35% Paid)"
-msgstr ""
+msgstr "Congedo per malattia (35% pagato)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_50
 msgid "Sick Leave (50% Paid)"
-msgstr ""
+msgstr "Congedo per malattia (50% pagato)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_75
 msgid "Sick Leave (75% Paid)"
-msgstr ""
+msgstr "Congedo per malattia (75% pagato)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
@@ -2975,7 +3007,7 @@ msgstr "Congedo per malattia senza certificato"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_sick_leave_paid_by_CNS
 msgid "Sick Time Off paid by CNS"
-msgstr ""
+msgstr "Congedo per malattia retribuito dal CNS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_sick_leave_75
@@ -3006,17 +3038,17 @@ msgstr "Permesso per attività di sollecitazione"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_spl_leave
 msgid "Solo-Parent Leave"
-msgstr ""
+msgstr "Congedo per genitore single"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_slfw_leave
 msgid "Special Leave For Women"
-msgstr ""
+msgstr "Congedo speciale per le donne"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_snwh_leave
 msgid "Special Non-Working Holiday"
-msgstr ""
+msgstr "Giorno festivo speciale non lavorativo"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_state
@@ -3026,6 +3058,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Stato basato sulle attività\n"
+"In ritardo: scadenza già superata\n"
+"Oggi: attività in data odierna\n"
+"Pianificato: attività future."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_statutory_holiday
@@ -3088,7 +3124,7 @@ msgstr "Accordo collettivo di chiusura"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_trade_union_duty
 msgid "TUD"
-msgstr ""
+msgstr "PS"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure
@@ -3125,7 +3161,7 @@ msgstr "Incidente disoccupazione temporanea"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_tardiness
 msgid "Tardiness"
-msgstr ""
+msgstr "Ritardi"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_environmental_protection
@@ -3183,7 +3219,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure
 msgid "Temporary unemployment due to force majeure"
-msgstr ""
+msgstr "Disoccupazione temporanea per cause di forza maggiore"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical
@@ -3232,6 +3268,8 @@ msgstr ""
 msgid ""
 "The color selected here will be used in every screen with the time type."
 msgstr ""
+"Il colore selezionato qui verrà utilizzato in ogni schermata con il tipo di "
+"ora."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -3270,13 +3308,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Time Type"
-msgstr ""
+msgstr "Tipo di tempo"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view_employee
 msgid "Time Types"
-msgstr ""
+msgstr "Tipi di tempo"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated
@@ -3291,7 +3329,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_trade_union_duty
 msgid "Trade union duty"
-msgstr ""
+msgstr "Permesso sindacale"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
@@ -3312,7 +3350,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo di attività eccezione sul record."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unjustified_reason
@@ -3367,7 +3405,7 @@ msgstr "Non retribuito"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_upcomming_public_holiday
 msgid "UPH"
-msgstr ""
+msgstr "FEST AP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unpredictable
@@ -3441,12 +3479,13 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_upcomming_public_holiday
 msgid "Upcoming Public Holiday"
-msgstr ""
+msgstr "Prossima festività"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
 msgid "Urgent Family or Social Reason (Unpaid) (Circumstantial leave)"
 msgstr ""
+"Motivo familiare o sociale urgente (non retribuito) (permesso circostanziale)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__external_code
@@ -3459,42 +3498,42 @@ msgstr "Utilizza questo codice per esportare i tuoi dati verso terze parti"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_150
 msgid "V15"
-msgstr ""
+msgstr "V15"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_200
 msgid "V20"
-msgstr ""
+msgstr "V20"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_net
 msgid "VNO"
-msgstr ""
+msgstr "VNO"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_holiday_previous_vacation_credit_year
 msgid "VPC"
-msgstr ""
+msgstr "VPC"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries_employee__version_ids
 msgid "Version"
-msgstr ""
+msgstr "Versione"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_net
 msgid "Voluntary Net Overtime (100%)"
-msgstr ""
+msgstr "Straordinari volontari netti (100%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_150
 msgid "Voluntary Overtime (150%)"
-msgstr ""
+msgstr "Straordinari volontari (150%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_voluntary_overtime_200
 msgid "Voluntary Overtime (200%)"
-msgstr ""
+msgstr "Straordinari volontari (200%)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_work_accident_first_week
@@ -3525,42 +3564,42 @@ msgstr "Incidente di lavoro non retribuito"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_wedding_leave
 msgid "WED"
-msgstr ""
+msgstr "CM"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_worker_time_off
 msgid "WTO"
-msgstr ""
+msgstr "Ferie dipendente"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_wedding_leave
 msgid "Wedding leave"
-msgstr ""
+msgstr "Congedo matrimonio"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_work_days_daytime
 msgid "Weekday(s) Daytime Overtime"
-msgstr ""
+msgstr "Straordinari diurni in settimana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_special_work_days_daytime
 msgid "Weekday(s) Daytime Special Overtime"
-msgstr ""
+msgstr "Straordinari speciali diurni in settimana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_work_days_nighttime
 msgid "Weekday(s) Nighttime Overtime"
-msgstr ""
+msgstr "Straordinari di notte in settimana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_special_work_days_nighttime
 msgid "Weekday(s) Nighttime Special Overtime"
-msgstr ""
+msgstr "Straordinari speciali di notte in settimana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_week_days_overtime
 msgid "Weekday(s) Overtime"
-msgstr ""
+msgstr "Straordinari in settimana"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ae_work_entry_type_weekend
@@ -3603,7 +3642,7 @@ msgstr "Voci di lavoro Dipendente"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_export_work_entries_employee
 msgid "Work Entry Export Employee"
-msgstr ""
+msgstr "Esporta voci lavorative dipendente"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_second_week
@@ -3621,6 +3660,9 @@ msgid ""
 "Work accident or occupational illness with employer supplement from the 2nd "
 "week of CCT 12bis/13bis (Short Term Employee)"
 msgstr ""
+"Infortunio sul lavoro o malattia professionale con integrazione salariale da "
+"parte del datore di lavoro a partire dalla seconda settimana ai sensi del "
+"CCT 12bis/13bis (Dipendenti a tempo determinato)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_work_accident_guaranteed_monthly
@@ -3646,7 +3688,7 @@ msgstr "Rischio professionale (IMSS)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_worker_time_off
 msgid "Worker Time Off"
-msgstr ""
+msgstr "Ferie dei lavoratori"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
@@ -3687,7 +3729,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__reference_year
 msgid "Year"
-msgstr ""
+msgstr "Anno"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -3696,6 +3738,8 @@ msgid ""
 "You cannot create more than one time type of code \"%(code)s\" for the same "
 "country (%(country)s)"
 msgstr ""
+"Non è possibile creare più di un tipo di codice tempo \"%(code)s\" per lo "
+"stesso Paese (%(country)s)"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
@@ -3715,7 +3759,7 @@ msgstr "ad esempio ferie retribuite, vacanze brevi..."
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. Paid Time Off, Sick Leave, Work From Home"
-msgstr ""
+msgstr "ad es. Ferie retribuite, Congedo per malattia, Lavoro da casa"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -3726,99 +3770,59 @@ msgstr "ad es. LAVORO100, FERIE210, FUORI..."
 #. odoo-python
 #: code:addons/hr_work_entry/wizard/hr_export_work_entries.py:0
 msgid "workentries_"
+msgstr "workentries_"
+
+msgid "Brief Holiday (Birth)"
+msgstr "Permesso breve per nascita"
+
+msgid "Double Time Hours"
+msgstr "Ore di straordinario a doppia tariffa"
+
+msgid "Overtime Hours (Paid at 150%)"
+msgstr "Straordinari (pagati al 150%)"
+
+msgid "Prophylactic Time Off"
+msgstr "Congedo preventivo"
+
+msgid "Retro Overtime Hours"
+msgstr "Ore di straordinario retroattive"
+
+msgid "Retro Regular Pay Hours"
+msgstr "Ore di retribuzione ordinaria retroattive"
+
+msgid "Small Unemployment (Brief Holiday)"
+msgstr "Disoccupazione ridotta (ferie brevi)"
+
+msgid "VY1"
+msgstr "Ferie non utilizzate primo anno"
+
+msgid "VY2"
+msgstr "Ferie non utilizzate secondo anno"
+
+msgid ""
+"Vacation that a worker was unable to take due to certain suspensions and "
+"which is taken during the first year following the vacation year"
 msgstr ""
+"Ferie che un lavoratore non ha potuto godere a causa di determinate "
+"sospensioni e che vengono godute durante il primo anno successivo all'anno "
+"di ferie"
 
-#~ msgid "Added to Monthly Pay"
-#~ msgstr "Aggiunto allo stipendio mensile"
+msgid ""
+"Vacation that a worker was unable to take due to certain suspensions and "
+"which is taken during the second year following the vacation year"
+msgstr ""
+"Ferie che un lavoratore non ha potuto godere a causa di determinate "
+"sospensioni e che vengono godute nel secondo anno successivo all'anno di "
+"ferie"
 
-#~ msgid ""
-#~ "Check this setting if you want the hours to be considered as extra time "
-#~ "and added as a bonus to the basic salary."
-#~ msgstr ""
-#~ "Seleziona questa impostazione se desideri che le ore siano considerate "
-#~ "come straordinari e aggiunte come bonus allo stipendio base."
+msgid "Work Entry Type"
+msgstr "Tipo di voce lavorativa"
 
-#~ msgid "Type of Work"
-#~ msgstr "Tipo di lavoro"
+msgid "Configuration"
+msgstr "Configurazione"
 
-#~ msgid "YSO"
-#~ msgstr "Ferie giovani lavoratori"
+msgid "Week Days Overtime"
+msgstr "Straordinari nei giorni feriali"
 
-#~ msgid "Youth / Senior Time Off"
-#~ msgstr "Ferie giovani/senior"
-
-#~ msgid "Cash Out of Leave in Service"
-#~ msgstr "Monetizzazione ferie durante il servizio"
-
-#~ msgid "Other Paid Leave"
-#~ msgstr "Altre ferie retribuite"
-
-#~ msgid "Overtime: Public Time Off"
-#~ msgstr "Straordinari: festività"
-
-#~ msgid "Overtime: Regular"
-#~ msgstr "Straordinari: regolare"
-
-#~ msgid "Overtime: Saturday & Public Time Off"
-#~ msgstr "Straordinari: sabato e festività"
-
-#~ msgid "Overtime: Sunday & Public Time Off"
-#~ msgstr "Straordinari: domenica e festività"
-
-#~ msgid "Unused Leave on Termination"
-#~ msgstr "Ferie non utilizzate alla cessazione del rapporto"
-
-#~ msgid "Brief Holiday (Birth)"
-#~ msgstr "Permesso breve per nascita"
-
-#~ msgid "Double Time Hours"
-#~ msgstr "Ore di straordinario a doppia tariffa"
-
-#~ msgid "Overtime Hours (Paid at 150%)"
-#~ msgstr "Straordinari (pagati al 150%)"
-
-#~ msgid "Prophylactic Time Off"
-#~ msgstr "Congedo preventivo"
-
-#~ msgid "Retro Overtime Hours"
-#~ msgstr "Ore di straordinario retroattive"
-
-#~ msgid "Retro Regular Pay Hours"
-#~ msgstr "Ore di retribuzione ordinaria retroattive"
-
-#~ msgid "Small Unemployment (Brief Holiday)"
-#~ msgstr "Disoccupazione ridotta (ferie brevi)"
-
-#~ msgid "VY1"
-#~ msgstr "Ferie non utilizzate primo anno"
-
-#~ msgid "VY2"
-#~ msgstr "Ferie non utilizzate secondo anno"
-
-#~ msgid ""
-#~ "Vacation that a worker was unable to take due to certain suspensions and "
-#~ "which is taken during the first year following the vacation year"
-#~ msgstr ""
-#~ "Ferie che un lavoratore non ha potuto godere a causa di determinate "
-#~ "sospensioni e che vengono godute durante il primo anno successivo "
-#~ "all'anno di ferie"
-
-#~ msgid ""
-#~ "Vacation that a worker was unable to take due to certain suspensions and "
-#~ "which is taken during the second year following the vacation year"
-#~ msgstr ""
-#~ "Ferie che un lavoratore non ha potuto godere a causa di determinate "
-#~ "sospensioni e che vengono godute nel secondo anno successivo all'anno di "
-#~ "ferie"
-
-#~ msgid "Work Entry Type"
-#~ msgstr "Tipo di voce lavorativa"
-
-#~ msgid "Configuration"
-#~ msgstr "Configurazione"
-
-#~ msgid "Week Days Overtime"
-#~ msgstr "Straordinari nei giorni feriali"
-
-#~ msgid "Working Schedules"
-#~ msgstr "Orari lavorativi"
+msgid "Working Schedules"
+msgstr "Orari lavorativi"

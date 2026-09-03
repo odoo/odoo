@@ -6,23 +6,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 18:20+0000\n"
-"PO-Revision-Date: 2025-07-23 07:09+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-08-28 18:21+0000\n"
+"PO-Revision-Date: 2026-07-21 21:17+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Malay <https://translate.odoo.com/projects/odoo-s19-4/"
+"l10n_my_edi_pos/ms/>\n"
 "Language: ms\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_my_edi_pos
+#: model:ir.module.module,description:base.module_l10n_my_edi_pos
+msgid ""
+"\n"
+"This modules allows the user to send consolidated invoices to the MyInvois "
+"system when using the POS app.\n"
+msgstr ""
 
 #. module: l10n_my_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_partner_form_pos_ui_inherit_l10n_my_edi_pos
 msgid ""
-"<span class=\"text-success fa fa-check\" title=\"Validation Successful\" "
-"invisible=\"not l10n_my_edi_display_tin_warning or "
+"<span class=\"text-success oi\" data-icon=\"check\" title=\"Validation "
+"Successful\" invisible=\"not l10n_my_edi_display_tin_warning or "
 "l10n_my_tin_validation_state != 'valid'\"/>\n"
-"                        <span class=\"text-danger fa fa-close\" "
+"                        <span class=\"text-danger oi\" data-icon=\"close\" "
 "title=\"Validation Failed\" invisible=\"not l10n_my_edi_display_tin_warning "
 "or l10n_my_tin_validation_state != 'invalid'\"/>"
 msgstr ""
@@ -30,6 +40,11 @@ msgstr ""
 #. module: l10n_my_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_pos_form
 msgid "<span>Consolidated<br/>Invoice</span>"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__cancelled
+msgid "Cancelled"
 msgstr ""
 
 #. module: l10n_my_edi_pos
@@ -45,6 +60,11 @@ msgstr ""
 #. module: l10n_my_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.myinvois_document_pos_list_view
 msgid "Consolidate Orders"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.module.module,summary:base.module_l10n_my_edi_pos
+msgid "Consolidated E-invoicing using MyInvois"
 msgstr ""
 
 #. module: l10n_my_edi_pos
@@ -123,6 +143,11 @@ msgid "Individual"
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__invalid
+msgid "Invalid"
+msgstr ""
+
+#. module: l10n_my_edi_pos
 #. odoo-python
 #: code:addons/l10n_my_edi_pos/wizard/myinvois_consolidate_invoice_wizard.py:0
 msgid "Invalid Operation. No order to consolidate."
@@ -139,6 +164,11 @@ msgid "MSIC code"
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.module.module,shortdesc:base.module_l10n_my_edi_pos
+msgid "Malaysia - E-invoicing (POS)"
+msgstr ""
+
+#. module: l10n_my_edi_pos
 #. odoo-python
 #: code:addons/l10n_my_edi_pos/controllers/portal.py:0
 msgid "Malaysian VAT is required to process invoice"
@@ -152,6 +182,22 @@ msgstr ""
 #. module: l10n_my_edi_pos
 #: model:ir.model,name:l10n_my_edi_pos.model_myinvois_document
 msgid "MyInvois Document"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_order_filter
+msgid "MyInvois In Progress"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.model.fields,field_description:l10n_my_edi_pos.field_pos_order__l10n_my_edi_state
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_order_filter
+msgid "MyInvois State"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_pos_order_filter
+msgid "MyInvois Valid"
 msgstr ""
 
 #. module: l10n_my_edi_pos
@@ -208,12 +254,24 @@ msgid "Pos Order"
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__rejected
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_my_edi_pos
 #. odoo-python
 #: code:addons/l10n_my_edi_pos/controllers/portal.py:0
 msgid "Some fields are missing or have wrong values"
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.model.fields,help:l10n_my_edi_pos.field_pos_order__l10n_my_edi_state
+msgid "State of this order on the MyInvois portal."
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#. odoo-python
+#: code:addons/l10n_my_edi_pos/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.portal_address_form_fields_my
 msgid "Tax Identification Number"
 msgstr ""
@@ -227,8 +285,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__valid
+msgid "Valid"
+msgstr ""
+
+#. module: l10n_my_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi_pos.view_partner_form_pos_ui_inherit_l10n_my_edi_pos
 msgid "Validate"
+msgstr ""
+
+#. module: l10n_my_edi_pos
+#: model:ir.model.fields.selection,name:l10n_my_edi_pos.selection__pos_order__l10n_my_edi_state__in_progress
+msgid "Validation In Progress"
 msgstr ""
 
 #. module: l10n_my_edi_pos

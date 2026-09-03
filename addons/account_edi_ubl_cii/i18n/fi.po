@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-22 00:38+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-23 12:06+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_edi_ubl_cii/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "%(invoice_name)s - Odoon luoma"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "%s should have a KVK or OIN number set."
-msgstr ""
+msgstr "%s:lla tulisi olla KVK- tai OIN-numero määritettynä."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -62,6 +62,8 @@ msgstr ""
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
 msgstr ""
+"%s:lla pitäisi olla voimassa oleva KBO/BCE-numero määritettynä "
+"lisätunnisteeksi (BE_EN)."
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -77,6 +79,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        Esikatselu\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -87,7 +94,7 @@ msgstr "A"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
-msgstr ""
+msgstr "Ostajan viite tai ostotilauksen viite on ilmoitettava."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -167,7 +174,7 @@ msgstr "Itävallan VOKZ"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_routing_schemes
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_routing_schemes
 msgid "Available Routing Schemes"
-msgstr ""
+msgstr "Saatavilla olevat reitityssuunnitelmat"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__b
@@ -213,7 +220,7 @@ msgstr "Yritysrekisteriverkosto"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot decode origin file, try by importing it again"
-msgstr ""
+msgstr "Alkuperätiedoston purkaminen ei onnistu, yritä tuoda se uudelleen"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -246,7 +253,7 @@ msgstr "EDI-asiakirjojen yleistoiminnot: tietojen luominen, rajoitukset, jne"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Yritys"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -273,6 +280,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"'%s' vastaavan kumppanin hakeminen samalla ALV-numerolla ei onnistunut. Uusi "
+"kumppani luotiin."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -429,7 +438,7 @@ msgstr "EAN-sijaintikoodi"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_identifier
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_identifier
 msgid "EDI Routing Address"
-msgstr ""
+msgstr "EDI-reititysosoite"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
@@ -538,7 +547,7 @@ msgstr "Asiakirjan tuonnissa käytettävä muoto: %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Format used to import the invoice: %s"
-msgstr ""
+msgstr "Laskun tuonnissa käytettävä muoto: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -592,19 +601,19 @@ msgstr "GS1-tunnistusavaimet"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "GS1 identification keys for supply chain management."
-msgstr ""
+msgstr "GS1-tunnisteavaimet toimitusketjun hallintaan."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General discount"
-msgstr ""
+msgstr "Yleinen alennus"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General upsell"
-msgstr ""
+msgstr "Yleinen lisämyynti"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0246
@@ -657,7 +666,7 @@ msgstr "Unkarin ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__id
@@ -710,7 +719,7 @@ msgstr "Asenna Chorus Pro"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "International Bank Account Number, used as an EDI identifier."
-msgstr ""
+msgstr "Kansainvälinen pankkitilinumero, käytetään EDI-tunnisteena."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -748,7 +757,7 @@ msgstr "On UBL-muodossa"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__is_unece_code_supported
 msgid "Is Unece Code Supported"
-msgstr ""
+msgstr "Unece-koodi on tuettu"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
@@ -957,7 +966,7 @@ msgstr "Portugalin ALV"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Tuotteen mittayksikkö"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -992,7 +1001,7 @@ msgstr "Pyöristys"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "Reitityspäätepiste"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__routing_scheme
@@ -1000,13 +1009,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_scheme
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Routing ID"
-msgstr ""
+msgstr "Reititystunnus"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "Routing identifier should be in the format 'SCHEME:ENDPOINT'."
-msgstr ""
+msgstr "Reititystunnisteen pitäisi olla muodossa 'SCHEME:ENDPOINT'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__s
@@ -1157,11 +1166,13 @@ msgid ""
 "Taxes of category 'Service outside scope of tax' shall not be mixed with tax "
 "from other categories. You should split your invoice in two"
 msgstr ""
+"Kategorian 'Veron ulkopuolinen palvelu' veroja ei saa sekoittaa muiden "
+"kategorioiden veroihin. Lasku on jaettava kahteen osaan"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.constraint,message:account_edi_ubl_cii.constraint_uom_uom_unece_code_unique
 msgid "The UN/ECE code already exists!"
-msgstr ""
+msgstr "UN/ECE-koodi on jo olemassa!"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1171,6 +1182,9 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
+"Mittayksikkö '%(uom)s' (koodista '%(code)s') ohitettiin tuotteen '%"
+"(product)s' rivillä, koska se ei ole yhteensopiva tuotteen mittayksikön '%"
+"(product_uom)s' kanssa. Mittayksikkö jätettiin tyhjäksi."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
@@ -1202,7 +1216,7 @@ msgstr "Pankkitilin hakeminen ei onnistunut: %s"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "The code element for units of measurement (UoM) as specified by UN/ECE"
-msgstr ""
+msgstr "YK/ECE:n määrittelemä koodielementti mittayksiköille"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1267,6 +1281,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"Tämä on visuaalinen esitys xml-sisällöstä.<br/>\n"
+"                    <strong style=\"color: #495057;\">Se ei ole virallinen "
+"asiakirja.</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9952
@@ -1296,17 +1313,17 @@ msgstr "UBL BIS Billing 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "UBL PINT-EU Layer"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0193
@@ -1328,7 +1345,7 @@ msgstr "UBL/CII-tiedostonimi"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "UN/ECE Code"
-msgstr ""
+msgstr "UN/ECE-koodi"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
@@ -1355,7 +1372,7 @@ msgstr "Yhdistyneen kuningaskunnan ALV"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "Tiedostotyyppi ei ole tuettu %s kautta"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
@@ -2192,6 +2209,8 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] Sähköinen osoite (EAS) on määritettävä asiakkaalle "
+"'%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2200,6 +2219,8 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] Sähköinen osoite (EAS) on määritettävä yritykselle "
+"'%s'."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format
@@ -2222,90 +2243,80 @@ msgstr "fx"
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
-#~ msgid "Unspported file type via %s"
-#~ msgstr "Tiedostotyyppi ei ole tuettu %s kautta"
+msgid ""
+"%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
+"address (EAS code 0106 or 0190)."
+msgstr ""
+"%s:lla tulisi olla KVK- tai OIN-numero määritettynä yritystunnus-kenttään "
+"tai sähköiseksi Peppol-osoitteeksi (EAS-koodi 0106 tai 0190)."
 
-#~ msgid "Unknown partner"
-#~ msgstr "Tuntematon kumppani"
+msgid "%s should have a valid KBO/BCE number in the Company ID field"
+msgstr "%s tarvitsee kelvollisen KBO/BCE-numeron yritystunnuskenttään"
 
-#~ msgid "Untaxed"
-#~ msgstr "Veroton"
+msgid "<span class=\"text-muted\">FROM</span>"
+msgstr "<span class=\"text-muted\">LÄHETTÄJÄ</span>"
 
-#~ msgid ""
-#~ "%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
-#~ "address (EAS code 0106 or 0190)."
-#~ msgstr ""
-#~ "%s:lla tulisi olla KVK- tai OIN-numero määritettynä yritystunnus-kenttään "
-#~ "tai sähköiseksi Peppol-osoitteeksi (EAS-koodi 0106 tai 0190)."
+msgid "<span class=\"text-muted\">TO</span>"
+msgstr "<span class=\"text-muted\">VASTAANOTTAJA</span>"
 
-#~ msgid "%s should have a valid KBO/BCE number in the Company ID field"
-#~ msgstr "%s tarvitsee kelvollisen KBO/BCE-numeron yritystunnuskenttään"
+msgid "Available Peppol Eas"
+msgstr "Käytettävissä oleva Peppol Eas"
 
-#~ msgid "<span class=\"text-muted\">FROM</span>"
-#~ msgstr "<span class=\"text-muted\">LÄHETTÄJÄ</span>"
+msgid ""
+"Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
+msgstr ""
+"BIS Billing 3.0:n ja sen johdannaisten päätepisteen tunnistamiseen "
+"käytettävä koodi.\n"
+"             Luettelo on saatavilla osoitteessa https://docs.peppol.eu/poacc/"
+"billing/3.0/codelist/eas/"
 
-#~ msgid "<span class=\"text-muted\">TO</span>"
-#~ msgstr "<span class=\"text-muted\">VASTAANOTTAJA</span>"
+msgid "Export XML"
+msgstr "Vie XML"
 
-#~ msgid "Available Peppol Eas"
-#~ msgstr "Käytettävissä oleva Peppol Eas"
+msgid "Generated by Odoo"
+msgstr "Odoon luoma"
 
-#~ msgid ""
-#~ "Code used to identify the Endpoint for BIS Billing 3.0 and its "
-#~ "derivatives.\n"
-#~ "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
-#~ "codelist/eas/"
-#~ msgstr ""
-#~ "BIS Billing 3.0:n ja sen johdannaisten päätepisteen tunnistamiseen "
-#~ "käytettävä koodi.\n"
-#~ "             Luettelo on saatavilla osoitteessa https://docs.peppol.eu/"
-#~ "poacc/billing/3.0/codelist/eas/"
+msgid "Is Peppol Edi Format"
+msgstr "On Peppol EDI-muodossa"
 
-#~ msgid "Export XML"
-#~ msgstr "Vie XML"
+msgid "Peppol Endpoint"
+msgstr "Peppol-päätepiste"
 
-#~ msgid "Generated by Odoo"
-#~ msgstr "Odoon luoma"
+msgid "Peppol ID"
+msgstr "Peppol-tunnus"
 
-#~ msgid "Is Peppol Edi Format"
-#~ msgstr "On Peppol EDI-muodossa"
+msgid ""
+"The Peppol endpoint (%s) is not valid. It should contain only letters and "
+"digit."
+msgstr ""
+"Peppol-päätepiste (%s) ei kelpaa. Sen saa sisältää vain kirjaimia ja "
+"numeroita."
 
-#~ msgid "Peppol Endpoint"
-#~ msgstr "Peppol-päätepiste"
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"Peppol-päätepiste ei kelpaa. Sen tulee sisältää täsmälleen 10 numeroa "
+"(yritysrekisterinumero). Odotettu muoto on: 1234567890"
 
-#~ msgid "Peppol ID"
-#~ msgstr "Peppol-tunnus"
+msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
+msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 0239843188"
 
-#~ msgid ""
-#~ "The Peppol endpoint (%s) is not valid. It should contain only letters and "
-#~ "digit."
-#~ msgstr ""
-#~ "Peppol-päätepiste (%s) ei kelpaa. Sen saa sisältää vain kirjaimia ja "
-#~ "numeroita."
+msgid ""
+"The Peppol endpoint is not valid. The expected format is: 73282932000074"
+msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 73282932000074"
 
-#~ msgid ""
-#~ "The Peppol endpoint is not valid. It should contain exactly 10 digits "
-#~ "(Company Registry number).The expected format is: 1234567890"
-#~ msgstr ""
-#~ "Peppol-päätepiste ei kelpaa. Sen tulee sisältää täsmälleen 10 numeroa "
-#~ "(yritysrekisterinumero). Odotettu muoto on: 1234567890"
+msgid ""
+"Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
+"known as 'Endpoint ID'."
+msgstr ""
+"BIS Billing 3.0:n ja sen johdannaisten käyttämä yksilöllinen tunniste, joka "
+"tunnetaan myös nimellä 'Päätepisteen tunnus'."
 
-#~ msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
-#~ msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 0239843188"
+msgid "Vendor Bill"
+msgstr "Toimittajan lasku"
 
-#~ msgid ""
-#~ "The Peppol endpoint is not valid. The expected format is: 73282932000074"
-#~ msgstr "Peppol-päätepiste ei kelpaa. Odotettu muoto on: 73282932000074"
-
-#~ msgid ""
-#~ "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
-#~ "known as 'Endpoint ID'."
-#~ msgstr ""
-#~ "BIS Billing 3.0:n ja sen johdannaisten käyttämä yksilöllinen tunniste, "
-#~ "joka tunnetaan myös nimellä 'Päätepisteen tunnus'."
-
-#~ msgid "Vendor Bill"
-#~ msgstr "Toimittajan lasku"
-
-#~ msgid "EN 16931"
-#~ msgstr "EN 16931"
+msgid "EN 16931"
+msgstr "EN 16931"

@@ -5,16 +5,16 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
 # "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-20 06:01+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-21 20:41+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-master/product/es_419/>\n"
+"odoo-s19-4/product/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +107,6 @@ msgstr "%(percentage)s %% de descuento en el precio de venta"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12_gs1
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label4x7
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label_dymo
-#, fuzzy
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
@@ -305,7 +304,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "<span class=\"text-muted\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">A la mano</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -501,14 +500,12 @@ msgstr "Icono del tipo de actividad"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
-#, fuzzy
 msgid "Add"
 msgstr "Agregar"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid "Add Products"
 msgstr "Agregar productos"
 
@@ -532,7 +529,6 @@ msgstr "Agregar cantidad"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
@@ -584,7 +580,7 @@ msgstr "Todas las categorías"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "All Companies"
-msgstr ""
+msgstr "Todas las empresas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
@@ -690,7 +686,6 @@ msgstr "Archivado"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
-#, fuzzy
 msgid "Archived Products"
 msgstr "Productos archivados"
 
@@ -865,12 +860,12 @@ msgstr "Códigos de barras"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
 msgid "Barcodes can be configured on"
-msgstr ""
+msgstr "Puedes configurar los códigos de barras en"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_label_base
 msgid "Base Product Label Report"
-msgstr ""
+msgstr "Reporte base de etiquetas del producto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_name
@@ -1708,6 +1703,8 @@ msgid ""
 "End date can't be earlier than the start date. Please check dates for vendor "
 "pricelist: %s"
 msgstr ""
+"La fecha de finalización no puede ser anterior a la fecha de inicio. Revisa "
+"las fechas de la lista de precios del proveedor: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
@@ -1913,13 +1910,11 @@ msgstr "Escritorio para cuatro personas"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__free_qty
-#, fuzzy
 msgid "Free To Use"
 msgstr "Disponible para uso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__free_qty
-#, fuzzy
 msgid "Free To Use Quantity "
 msgstr "Cantidad disponible para uso "
 
@@ -2493,7 +2488,7 @@ msgstr "Líneas"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr "Enlace entre los productos y sus unidades de medida"
+msgstr "Relación entre los productos y sus unidades de medida"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -2560,7 +2555,6 @@ msgstr "Guinda"
 
 #. module: product
 #: model:product.attribute,name:product.pa_material
-#, fuzzy
 msgid "Material"
 msgstr "Material"
 
@@ -2778,14 +2772,12 @@ msgstr ""
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
-#, fuzzy
 msgid "No products could be found."
 msgstr "No se encontraron productos."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid "No products found in the report"
 msgstr "No se encontraron productos en el reporte"
 
@@ -2808,7 +2800,7 @@ msgstr "Paneles que reducen el ruido para espacios abiertos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "None"
-msgstr ""
+msgstr "Ninguna"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__normal
@@ -3036,7 +3028,7 @@ msgstr "Pantene"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Parent"
-msgstr ""
+msgstr "Principal"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -3050,7 +3042,6 @@ msgstr "Ruta principal"
 
 #. module: product
 #: model:product.attribute,name:product.pa_pattern
-#, fuzzy
 msgid "Pattern"
 msgstr "Patrón"
 
@@ -3436,7 +3427,7 @@ msgstr "Nombre del producto"
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_packagingbarcode
 msgid "Product Packaging Barcode Report"
-msgstr ""
+msgstr "Reporte de códigos de barras de empaques de productos"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
@@ -3585,7 +3576,7 @@ msgstr "Productos: %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr "Promociones, cupones, tarjeta de regalo y programa de lealtad"
+msgstr "Promociones, cupones, tarjetas de regalo y programas de lealtad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_properties
@@ -3620,7 +3611,6 @@ msgstr "Morado"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
-#, fuzzy
 msgid "Quantities"
 msgstr "Cantidades"
 
@@ -3972,7 +3962,7 @@ msgstr "Mostrar por separado el precio adicional para este valor de atributo."
 #. module: product
 #: model:product.attribute,name:product.pa_sides
 msgid "Sides"
-msgstr ""
+msgstr "Partes"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_silver
@@ -4624,9 +4614,8 @@ msgstr "Actualizar el precio adicional en productos existentes"
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
-#, fuzzy
 msgid "Upload"
-msgstr "Subir"
+msgstr "Cargar"
 
 #. module: product
 #. odoo-python
@@ -5068,7 +5057,6 @@ msgstr "Puede subir una imagen que se use como color del valor del atributo."
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
-#, fuzzy
 msgid "You can't edit this product in the catalog."
 msgstr "No puede editar este producto en el catálogo."
 
@@ -5127,6 +5115,8 @@ msgid ""
 "You cannot change the company of %(categories)s as they hold products shared "
 "between companies or belonging to other companies."
 msgstr ""
+"No puedes cambiar la empresa de %(categories)s porque contienen productos "
+"compartidos entre empresas o que pertenecen a otras empresas."
 
 #. module: product
 #. odoo-python
@@ -5135,6 +5125,8 @@ msgid ""
 "You cannot change the company of %(category)s as it holds products shared "
 "between companies or belonging to other companies."
 msgstr ""
+"No puedes cambiar la empresa de %(category)s porque contiene productos "
+"compartidos entre empresas o que pertenecen a otras empresas."
 
 #. module: product
 #. odoo-python
@@ -5217,7 +5209,6 @@ msgstr ""
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
-#, fuzzy
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or "
@@ -5440,7 +5431,7 @@ msgstr "Por ejemplo, USD minoristas"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
 msgid "each variant"
-msgstr ""
+msgstr "cada variante"
 
 #. module: product
 #. odoo-python
@@ -5495,13 +5486,3 @@ msgstr "para"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (copia)"
-
-#, fuzzy
-#~ msgid "Remove"
-#~ msgstr "Eliminar"
-
-#~ msgid "barcodelookup.com"
-#~ msgstr "barcodelookup.com"

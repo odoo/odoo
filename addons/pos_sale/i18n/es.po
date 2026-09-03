@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 18:45+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-28 08:53+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
 "pos_sale/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -48,12 +49,12 @@ msgstr "%(old_name)s (cancelado)"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(impuestos incluidos)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_orderline_receipt_information
 msgid "<strong>Sale Order: </strong>"
-msgstr ""
+msgstr "<strong>Pedido de venta: </strong>"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -109,17 +110,17 @@ msgstr "Tipo de cambio"
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__default_product_id
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_default_product_id
 msgid "Default Product"
-msgstr ""
+msgstr "Producto predeterminado"
 
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_sol_product_product_template
 msgid "Default Product (POS)"
-msgstr ""
+msgstr "Producto predeterminado (PdV)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Default Sale Product"
-msgstr ""
+msgstr "Producto de venta predeterminado"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
@@ -129,7 +130,7 @@ msgstr "Cantidad de entrega"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_name
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -191,7 +192,7 @@ msgstr "Saldo vencido: %s"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__has_default_product
 msgid "Has Default Product"
-msgstr ""
+msgstr "Tiene un producto predeterminado"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__id
@@ -223,6 +224,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Parece que no has configurado un producto para anticipos en tu punto de "
+"venta. Puedes ir a la configuración del punto de venta para seleccionar uno."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -231,6 +234,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale settings to choose one."
 msgstr ""
+"Parece que no has configurado un producto para anticipos en tu punto de "
+"venta. Ve a los ajustes del punto de venta para seleccionar uno."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
@@ -240,7 +245,7 @@ msgstr "Asiento contable"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Apunte contable"
 
 #. module: pos_sale
 #: model:ir.module.module,summary:base.module_pos_sale
@@ -309,17 +314,17 @@ msgstr "Configuración del TPV"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Pedido del punto de venta"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "Línea del pedido de punto de venta"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Generador de tickets de pedidos del punto de venta"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -329,7 +334,7 @@ msgstr "Sesión TPV"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
 msgid "Point of Sales"
-msgstr "Terminal punto de venta (TPV)"
+msgstr "Punto de venta"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
@@ -434,6 +439,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied on description only Sale order lines."
 msgstr ""
+"Este producto se aplicará a las líneas del pedido de venta que solo tengan "
+"una descripción."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -445,6 +452,8 @@ msgstr "Este producto se aplicará al hacer un anticipo"
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_default_product_id
 msgid "This product will be used as default product on productless SOLs."
 msgstr ""
+"Este producto se utilizará como producto predeterminado en las líneas del "
+"pedido de venta sin un producto."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
@@ -458,6 +467,9 @@ msgid ""
 "To check whether the product is default product from pos.config or not. In "
 "case of description only SOLs we use default product from pos.config."
 msgstr ""
+"Indica si el producto es el producto predeterminado configurado en el punto "
+"de venta. En las líneas del pedido de venta que solo tienen una descripción, "
+"se utiliza el producto predeterminado de pos.config."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -500,4 +512,4 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"

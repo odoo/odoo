@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-22 00:30+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/crm/"
+"PO-Revision-Date: 2026-07-30 08:09+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/crm/"
 "it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +64,7 @@ msgstr "%(attach_name)s (da %(lead_name)s)"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity_mass.py:0
 msgid "%(converted_count)s leads have been converted"
-msgstr ""
+msgstr "%(converted_count)s lead convertiti"
 
 #. module: crm
 #. odoo-python
@@ -102,7 +102,7 @@ msgstr "(dati campione)"
 #. odoo-python
 #: code:addons/crm/wizard/crm_lead_to_opportunity_mass.py:0
 msgid "1 lead has been converted"
-msgstr ""
+msgstr "1 lead convertito"
 
 #. module: crm
 #. odoo-javascript
@@ -253,11 +253,20 @@ msgid ""
 "merge all duplicates listed below.\n"
 "                    </span>"
 msgstr ""
+"<span invisible=\"name != 'convert'\">\n"
+"                        Abbiamo trovato potenziali duplicati. Utilizza "
+"\"Converti e unisci con duplicati\" per pulire i tuoi dati prima della "
+"conversione.\n"
+"                   </span>\n"
+"                    <span invisible=\"name != 'convert_and_merge'\"> \n"
+"                        Converti i lead selezionati in opportunità e unisci "
+"tutti i duplicati elencati di seguito.\n"
+"                   </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span> %</span>"
-msgstr ""
+msgstr "<span> %</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -267,12 +276,12 @@ msgstr "<span> lead ogni 30 giorni </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<span>@</span>"
-msgstr ""
+msgstr "<span>@</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -316,7 +325,7 @@ msgstr "<span>in questo qui.</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span>~ </span>"
-msgstr ""
+msgstr "<span>~ </span>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
@@ -429,7 +438,7 @@ msgstr "Accetta e-mail da"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Access request for \"%s\""
-msgstr ""
+msgstr "Richiesta di accesso per \"%s\""
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
@@ -894,6 +903,8 @@ msgid ""
 "Click on the breadcrumbs to go back to your Pipeline. Odoo will save all "
 "your changes as you navigate."
 msgstr ""
+"Fai clic sul percorso di navigazione per tornare alla pipeline. Odoo salverà "
+"tutti i cambiamenti."
 
 #. module: crm
 #. odoo-javascript
@@ -1060,12 +1071,12 @@ msgstr "Data di conversione da lead a opportunità"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Convert"
-msgstr ""
+msgstr "Converti"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__name__convert_and_merge
 msgid "Convert & Merge with Opportunities"
-msgstr ""
+msgstr "Converti e unisci con opportunità"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
@@ -1420,12 +1431,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__duplicated_lead_ids
 msgid "Duplicated Lead"
-msgstr ""
+msgstr "Lead duplicato"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__duplicated_lead_ids_domain
 msgid "Duplicated Lead Ids Domain"
-msgstr ""
+msgstr "Dominio ID dei lead duplicati"
 
 #. module: crm
 #. odoo-python
@@ -1531,7 +1542,7 @@ msgstr "Data stimata di vincita dell’opportunità."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Even if assigned"
-msgstr ""
+msgstr "Anche se assegnato"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1934,7 +1945,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Install request for \"%s\""
-msgstr ""
+msgstr "Richiesta di installazione per \"%s\""
 
 #. module: crm
 #. odoo-javascript
@@ -2002,7 +2013,7 @@ msgstr "Mantieni team attuale"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Keep current teams"
-msgstr ""
+msgstr "Mantieni i team attuali"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.merge_opportunity_form
@@ -2012,7 +2023,7 @@ msgstr "Mantieni utente attuale"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Keep current users"
-msgstr ""
+msgstr "Mantieni utenti attuali"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
@@ -2325,14 +2336,14 @@ msgstr "Numero lead/opportunità"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
 msgid "Leads/Opportunities to merge"
-msgstr ""
+msgstr "Lead/Opportunità da unire"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/promote_mail_plugins_dialog/promote_mail_plugins_dialog.xml:0
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Learn More"
-msgstr ""
+msgstr "Scopri di più"
 
 #. module: crm
 #. odoo-javascript
@@ -2358,11 +2369,13 @@ msgid ""
 "Link these opportunities to customers by either finding a match or creating "
 "a new one."
 msgstr ""
+"Collega queste opportunità ai clienti trovando una corrispondenza o "
+"creandone una nuova."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__link_to_matching_customer
 msgid "Link to matching customers"
-msgstr ""
+msgstr "Collega ai clienti corrispondenti"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_id
@@ -2547,7 +2560,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Maximum Leads To Assign"
-msgstr ""
+msgstr "Numero massimo di lead da assegnare"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__medium_id
@@ -3969,7 +3982,7 @@ msgstr "Sottotipo"
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Survey"
-msgstr ""
+msgstr "Sondaggio"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4025,7 +4038,7 @@ msgstr "Membri del team"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Template for Leads & Opportunities"
-msgstr ""
+msgstr "Modello per lead e opportunità"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -4596,7 +4609,7 @@ msgstr "Cosa è andato storto?"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
 msgid "Without activities scheduled"
-msgstr ""
+msgstr "Senza attività in programma"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4
@@ -4656,6 +4669,8 @@ msgid ""
 "You can make your opportunity advance through your pipeline by clicking on "
 "stages here. Try sending it to the next stage!"
 msgstr ""
+"Puoi far avanzare la tua opportunità nella pipeline cliccando sulle fasi "
+"qui. Prova a inviarla alla fase successiva!"
 
 #. module: crm
 #. odoo-python
@@ -4883,23 +4898,9 @@ msgstr "indirizzo e-mail valido"
 msgid "valid phone number"
 msgstr "numero di telefono valido"
 
-#~ msgid ""
-#~ "<i class=\"oi\" data-icon=\"east\"/>\n"
-#~ "                                Install Extension"
-#~ msgstr ""
-#~ "<i class=\"oi\" data-icon=\"east\"/>\n"
-#~ "                                Installa estensione"
-
-#~ msgid "Assign salespersons into multiple Sales Teams."
-#~ msgstr "Organizza gli addetti vendite in più squadre di vendita."
-
-#~ msgid ""
-#~ "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
-#~ "messages, and get AI-powered transcripts of your conversations."
-#~ msgstr ""
-#~ "Fai e ricevi chiamate con Odoo grazie al dialer di ringover. Traccia "
-#~ "chiamate, messaggi SMS e ottieni trascrizioni delle tue conversazioni "
-#~ "grazie all'AI."
-
-#~ msgid "Ringover VOIP Phone"
-#~ msgstr "Telefono VOIP ringover"
+msgid ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                                Install Extension"
+msgstr ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                                Installa estensione"

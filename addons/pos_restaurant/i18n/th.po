@@ -11,14 +11,15 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:40+0000\n"
-"PO-Revision-Date: 2026-06-20 07:36+0000\n"
+"PO-Revision-Date: 2026-07-21 19:41+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "pos_restaurant/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +47,7 @@ msgstr ""
 #: code:addons/pos_restaurant/models/pos_course.py:0
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (สำเนา)"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -58,7 +59,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "%s, sent to the kitchen"
-msgstr ""
+msgstr "%s ส่งไปที่ครัว"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -75,13 +76,13 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_order_receipt_header
 msgid ", Guest"
-msgstr ""
+msgstr "ลูกค้า"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "/ Guest"
-msgstr ""
+msgstr "/ ลูกค้า"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
@@ -110,7 +111,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_restaurant_pos_category_kanban_view
 msgid "<span>Course:</span>"
-msgstr ""
+msgstr "<span>คอร์สอาหาร:</span>"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -120,12 +121,12 @@ msgstr "<strong>ชื่อชั้น: </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales:</strong>"
-msgstr ""
+msgstr "<strong>การขายหน้าร้าน:</strong>"
 
 #. module: pos_restaurant
 #: model:ir.model.constraint,message:pos_restaurant.constraint_pos_course_name_unique
 msgid "A course with this name already exists"
-msgstr ""
+msgstr "ชื่อคอร์สนี้มีอยู่แล้วในระบบ"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -147,19 +148,19 @@ msgstr "เปิดใช้งาน"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Add Decor"
-msgstr ""
+msgstr "เพิ่มการตกแต่ง"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Add Floor"
-msgstr ""
+msgstr "เพิ่มพื้นที่"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Add Table"
-msgstr ""
+msgstr "เพิ่มโต๊ะ"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -169,19 +170,19 @@ msgstr "เพิ่มชั้นใหม่ของร้านอาหา
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_pos_course
 msgid "Add courses"
-msgstr ""
+msgstr "เพิ่มคอร์สอาหาร"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Add decor"
-msgstr ""
+msgstr "เพิ่มการตกแต่ง"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Add image"
-msgstr ""
+msgstr "เพิ่มรูปภาพ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -193,7 +194,7 @@ msgstr "ปรับจำนวน"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Alignment"
-msgstr ""
+msgstr "การจัดตำแหน่ง"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_anchovy
@@ -215,7 +216,7 @@ msgstr "เก็บถาวรแล้ว"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.js:0
 msgid "Are you sure you want to delete this floor?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการลบพื้นที่นี้?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -226,7 +227,7 @@ msgstr "มอบหมาย"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Assign categories to default course"
-msgstr ""
+msgstr "กำหนดหมวดหมู่ให้กับคอร์สเริ่มต้น"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_pos_course
@@ -234,11 +235,13 @@ msgid ""
 "Assign products to courses like starter, main or dessert to ensure dishes "
 "are prepared and served in the correct order."
 msgstr ""
+"จัดประเภทอาหารให้เข้ากับคอร์สอาหาร เช่น อาหารเรียกน้ำย่อย อาหารหลัก หรือของหวาน "
+"เพื่อรับประกันว่าอาหารถูกเตรียมและเสิร์ฟตามลำดับที่ถูกต้อง"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Automatic course allocation"
-msgstr ""
+msgstr "การจัดสรรคอร์สอาหารอัตโนมัติ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -251,7 +254,7 @@ msgstr "กลับ"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Background"
-msgstr ""
+msgstr "พื้นหลัง"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
@@ -283,7 +286,7 @@ msgstr "มะกอกดำ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Bold"
-msgstr ""
+msgstr "ตัวหนา"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -295,12 +298,12 @@ msgstr "จองโต๊ะ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Border"
-msgstr ""
+msgstr "กรอบ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__bottom
 msgid "Bottom"
-msgstr ""
+msgstr "ด้านล่าง"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_old_fashioned_product_template
@@ -311,7 +314,7 @@ msgstr "เบอร์บอน, บิทเทอร์, น้ำตาล �
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Bring forward"
-msgstr ""
+msgstr "นำมาข้างหน้า"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
@@ -321,7 +324,7 @@ msgstr "เมนูเบอร์เกอร์คอมโบ"
 #. module: pos_restaurant
 #: model:product.combo,name:pos_restaurant.burger_combo
 msgid "Burgers"
-msgstr ""
+msgstr "เบอร์เกอร์"
 
 #. module: pos_restaurant
 #: model:pos.payment.method,name:pos_restaurant.payment_method
@@ -356,7 +359,7 @@ msgstr "แซนวิชแกงไก่"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
 msgid "Close"
-msgstr ""
+msgstr "ปิด"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_club_product_template
@@ -390,7 +393,7 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
 msgid "Corner rounding"
-msgstr ""
+msgstr "การโค้งมุม"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_cosmopolitan_product_template
@@ -411,23 +414,23 @@ msgstr "คอร์ส"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.js:0
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Course "
-msgstr ""
+msgstr "คอร์ส "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__name
 msgid "Course Name"
-msgstr ""
+msgstr "ชื่อคอร์ส"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__course_id
 msgid "Course Ref"
-msgstr ""
+msgstr "อ้างอิงคอร์ส"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__index
 msgid "Course index"
-msgstr ""
+msgstr "ลำดับคอร์ส"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_pos_course
@@ -462,13 +465,13 @@ msgstr "สร้างเมื่อ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Dashed"
-msgstr ""
+msgstr "เส้นประ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__default_screen
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_default_screen
 msgid "Default Screen"
-msgstr ""
+msgstr "หน้าจอเริ่มต้น"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -481,7 +484,7 @@ msgstr "ลบ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Delete Floor"
-msgstr ""
+msgstr "ลบพื้นที่"
 
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_delivery_preset
@@ -496,13 +499,13 @@ msgstr "ออกแบบชั้นและมอบหมายออเด
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_takein_preset
 msgid "Dine In"
-msgstr ""
+msgstr "ทานที่ร้าน"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/pos_order.js:0
 msgid "Direct Sale"
-msgstr ""
+msgstr "การขายตรง"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -514,7 +517,7 @@ msgstr "ละทิ้ง"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
 msgid "Discard all changes"
-msgstr ""
+msgstr "ยกเลิกการเปลี่ยนแปลงทั้งหมด"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_category__display_name
@@ -537,7 +540,7 @@ msgstr "แสดงชื่อ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Dotted"
-msgstr ""
+msgstr "เส้นจุด"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.drinks
@@ -550,7 +553,7 @@ msgstr "เครื่องดื่ม"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
 msgid "Duplicate"
-msgstr ""
+msgstr "ทำซ้ำ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__duration
@@ -566,51 +569,51 @@ msgstr "โหลดชุดตัวเลือกการกำหนดค
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "Edit Floor"
-msgstr ""
+msgstr "แก้ไขพื้นที่"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Edit Floor Plan"
-msgstr ""
+msgstr "แก้ไขแผนผังพื้นที่"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr ""
+msgstr "แก้ไขผังร้าน"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Edit text"
-msgstr ""
+msgstr "แก้ไขข้อความ"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan/floor_plan.xml:0
 msgid "Edit your floor plan"
-msgstr ""
+msgstr "แก้ไขแผนผังพื้นที่"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__use_course_allocation
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_use_course_allocation
 msgid "Enable Course Allocation"
-msgstr ""
+msgstr "เปิดการกำหนดคอร์สอาหาร"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/numpad_dropdown/numpad_dropdown.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Enter a table number"
-msgstr ""
+msgstr "ป้อนหมายเลขโต๊ะ"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.js:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.js:0
 msgid "Enter your text"
-msgstr ""
+msgstr "ป้อนข้อความ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
@@ -636,7 +639,7 @@ msgstr "แฟนต้า"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
 msgid "Fire %s"
-msgstr ""
+msgstr "เริ่มทำ %s"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -648,7 +651,7 @@ msgstr "ไล่ออก"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired_date
 msgid "Fired Date"
-msgstr ""
+msgstr "วันเวลาที่สั่งทำ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -665,18 +668,18 @@ msgstr "ชื่อชั้น"
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_plan
 msgid "Floor Plan"
-msgstr ""
+msgstr "แผนผังพื้นที่"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__floor_plan_layout
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_plan_layout
 msgid "Floor Plan Layout"
-msgstr ""
+msgstr "รูปแบบพื้นที่ร้าน"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_plan_settings
 msgid "Floor Plan Settings"
-msgstr ""
+msgstr "การตั้งค่าแผนผังพื้นที่"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_floor_form
@@ -694,7 +697,7 @@ msgstr "ชื่อของพื้นที่"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/navbar/navbar.xml:0
 msgid "Floor plan editor"
-msgstr ""
+msgstr "เครื่องมือแก้ไขแผนผังพื้นที่"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -721,12 +724,12 @@ msgstr "อาหาร"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.js:0
 msgid "For the current display, an image a resolution of %s is recommended."
-msgstr ""
+msgstr "สำหรับการแสดงผลปัจจุบัน แนะนำให้ใช้ภาพที่มีความละเอียด%s "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
 msgid "Force guest selection when clicking on order button in PoS restaurant"
-msgstr ""
+msgstr "บังคับให้ลูกค้าเลือกเมื่อคลิกปุ่มสั่งอาหารในระบบการขายหน้าร้านของร้านอาหาร"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -797,13 +800,13 @@ msgstr "หากเป็นเท็จ โต๊ะจะถูกปิด�
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.js:0
 msgid "If you proceed, your changes will be lost"
-msgstr ""
+msgstr "หากคุณดำเนินการต่อ การเปลี่ยนแปลงของคุณจะสูญหาย"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Images"
-msgstr ""
+msgstr "รูปภาพ"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -814,13 +817,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Italic"
-msgstr ""
+msgstr "ตัวอักษรเอียง"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/numpad_dropdown/numpad_dropdown.xml:0
 msgid "Jump"
-msgstr ""
+msgstr "ข้าม"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__write_uid
@@ -842,12 +845,12 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Layers"
-msgstr ""
+msgstr "ลำดับ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__left
 msgid "Left"
-msgstr ""
+msgstr "ซ้าย"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_maki_product_template
@@ -867,13 +870,13 @@ msgstr "มื้อกลางวัน เทมากิมิกซ์ 3 �
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_mai_tai_product_template
 msgid "Mai Tai"
-msgstr ""
+msgstr "Mai Tai (ไหมไทย)"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
 msgid "Main Floor"
-msgstr ""
+msgstr "พื้นที่หลัก"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_margarita_product_template
@@ -899,12 +902,12 @@ msgstr "โมจิโต้"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/toolbar/toolbar.xml:0
 msgid "More"
-msgstr ""
+msgstr "เพิ่มเติม"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_moscow_mule_product_template
 msgid "Moscow Mule"
-msgstr ""
+msgstr "Moscow Mule (มอสโกมิวล์)"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_mozza_product_template
@@ -920,7 +923,7 @@ msgstr "เห็ด"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Name"
-msgstr ""
+msgstr "ชื่อ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_negroni_product_template
@@ -949,30 +952,30 @@ msgstr "คำสั่งใหม่"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_category_form_inherit_course
 msgid "No default"
-msgstr ""
+msgstr "ไม่มีค่าเริ่มต้น"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan/floor_plan.xml:0
 msgid "No tables are available yet."
-msgstr ""
+msgstr "ขณะนี้ยังไม่มีโต๊ะว่าง"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
 msgid "Notes"
-msgstr ""
+msgstr "โน้ต"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
 msgid "Number of Seats"
-msgstr ""
+msgstr "จำนวนที่นั่ง"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_old_fashioned_product_template
 msgid "Old Fashioned"
-msgstr ""
+msgstr "Old Fashioned (โอลด์แฟชั่น)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__line_ids
@@ -988,12 +991,12 @@ msgstr "อ้างอิงคำสั่ง"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 msgid "Oval"
-msgstr ""
+msgstr "รูปวงรี"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_course
 msgid "POS Course"
-msgstr ""
+msgstr "คอร์สอาหารการขายหน้าร้าน"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_order_course
@@ -1003,7 +1006,7 @@ msgstr "ระบบสั่งอาหาร POS"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_side
 msgid "Parent Side"
-msgstr ""
+msgstr "ฝั่งโต๊ะหลัก"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
@@ -1031,7 +1034,7 @@ msgstr "จ่าย"
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Payment"
-msgstr ""
+msgstr "การชำระเงิน"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_4formaggi_product_template
@@ -1046,7 +1049,7 @@ msgstr "เปปเปอร์โรนี"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_pina_colada_product_template
 msgid "Pina colada"
-msgstr ""
+msgstr "Pina colada (พินา โคลาดา)"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
@@ -1073,17 +1076,19 @@ msgid ""
 "this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
+"โปรดปิดและตรวจสอบความถูกต้องของเซสชันการขายหน้าร้านที่เปิดอยู่ต่อไปนี้ ก่อนที่จะแก้ไขพื้นที่นี้\n"
+"เซสชันที่เปิดอยู่:%(session_names)s"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Point of Sale"
-msgstr ""
+msgstr "การขายหน้าร้าน"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_category
 msgid "Point of Sale Category"
-msgstr ""
+msgstr "หมวดการขายหน้าร้าน"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -1093,17 +1098,17 @@ msgstr "กำหนดค่าการขายหน้าร้าน"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "คำสั่งซื้อจากหน้าร้าน"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "รายการคำสั่งซื้อจากหน้าร้าน"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "โปรแกรมสร้างใบเสร็จรับเงิน ณ จุดขาย"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_session
@@ -1118,7 +1123,7 @@ msgstr "การขายหน้าร้าน"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__category_ids
 msgid "Pos Category"
-msgstr ""
+msgstr "หมวดหมู่การขายหน้าร้าน"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_potato_thyme
@@ -1128,13 +1133,13 @@ msgstr "มันฝรั่งกับโหระพา"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "สินค้า"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/floor_plan_editor.xml:0
 msgid "Properties"
-msgstr ""
+msgstr "คุณสมบัติ"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_aperol_spritz_product_template
@@ -1145,7 +1150,7 @@ msgstr "โพรเซคโก้ อะเพโรล โซดา"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 msgid "Rectangular"
-msgstr ""
+msgstr "สี่เหลี่ยมผืนผ้า"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__pos_config__default_screen__register
@@ -1168,13 +1173,13 @@ msgstr "ปล่อยโต๊ะ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Remove Background Image"
-msgstr ""
+msgstr "ลบภาพพื้นหลัง"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Reprint"
-msgstr ""
+msgstr "พิมพ์ซ้ำ"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1212,7 +1217,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__right
 msgid "Right"
-msgstr ""
+msgstr "ขวา"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1224,7 +1229,7 @@ msgstr "กลม"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Rounded"
-msgstr ""
+msgstr "โค้งมน"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_mai_tai_product_template
@@ -1256,30 +1261,30 @@ msgstr "ที่นั่ง"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_table_popup/add_table_popup.xml:0
 msgid "Select Table Shape"
-msgstr ""
+msgstr "เลือกรูปแบบโต๊ะ"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Select table to transfer order"
-msgstr ""
+msgstr "เลือกโต๊ะเพื่อย้ายออเดอร์"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Select the table first or after registering the order"
-msgstr ""
+msgstr "เลือกโต๊ะก่อนหรือหลังจากลงทะเบียนคำสั่งซื้อแล้ว"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Self-Order Kiosk"
-msgstr ""
+msgstr "เครื่องสั่งอาหารด้วยตนเอง"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Self-Order Mobile"
-msgstr ""
+msgstr "สั่งซื้อเองผ่านมือถือ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1292,19 +1297,19 @@ msgstr "ส่ง"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Send backward"
-msgstr ""
+msgstr "ย้ายไปข้างหลังหนึ่งระดับ"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Send to back"
-msgstr ""
+msgstr "ย้ายไปไว้ข้างหลังสุด"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Send to front"
-msgstr ""
+msgstr "ย้ายมาไว้ข้างหน้าสุด"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__sequence
@@ -1316,25 +1321,25 @@ msgstr "ลำดับ"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Set Order Name"
-msgstr ""
+msgstr "ตั้งชื่อออเดอร์"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Tab"
-msgstr ""
+msgstr "เปิดบิลสะสม"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Table"
-msgstr ""
+msgstr "เลือกโต๊ะ"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Set a Background Image"
-msgstr ""
+msgstr "ตั้งภาพพื้นหลัง"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1346,7 +1351,7 @@ msgstr "รูปร่าง"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Shapes"
-msgstr ""
+msgstr "รูปร่าง"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__use_show_items_on_course_ticket
@@ -1374,7 +1379,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Size"
-msgstr ""
+msgstr "ขนาด"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_smashed_sweet_potato
@@ -1384,13 +1389,13 @@ msgstr "มันฝรั่งหวานทุบ"
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.pos_category_soft_drinks
 msgid "Soft drinks"
-msgstr ""
+msgstr "เครื่องดื่มอัดลม"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Solid"
-msgstr ""
+msgstr "ทึบ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
@@ -1401,7 +1406,7 @@ msgstr "แซนวิชทูน่าสไปซี่"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Split Order"
-msgstr ""
+msgstr "แบ่งคำสั่งซื้อ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1413,17 +1418,17 @@ msgstr "สี่เหลี่ยม"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Style"
-msgstr ""
+msgstr "สไตล์"
 
 #. module: pos_restaurant
 #: model:product.combo,name:pos_restaurant.sushi_choice
 msgid "Sushi"
-msgstr ""
+msgstr "ซูชิ"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.sushi_drink_combo_product_template
 msgid "Sushi Lunch Combo"
-msgstr ""
+msgstr "ชุดอาหารกลางวันซูชิ"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_sweet_potato
@@ -1434,7 +1439,7 @@ msgstr "มันฝรั่งทอดหวาน"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Switch Floor View"
-msgstr ""
+msgstr "สลับมุมมองพื้นที่"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1451,7 +1456,7 @@ msgstr "โต๊ะ"
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_table/edit_table.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number
 msgid "Table Number"
-msgstr ""
+msgstr "เลขโต๊ะ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1465,7 +1470,7 @@ msgstr "โต๊ะ"
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_takeout_preset
 msgid "Takeout"
-msgstr ""
+msgstr "ซื้อกลับบ้าน"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_margarita_product_template
@@ -1477,7 +1482,7 @@ msgstr "เตกีล่า Jose Cuervo, น้ำมะนาว, น้ำ�
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Text"
-msgstr ""
+msgstr "ข้อความ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__customer_count
@@ -1519,7 +1524,7 @@ msgstr "โต๊ะที่เสิร์ฟออเดอร์นี้"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Thickness"
-msgstr ""
+msgstr "ความหนา"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
@@ -1529,19 +1534,19 @@ msgstr "ซอสมะเขือเทศ, อะเจโรลามอส�
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_table__parent_side__top
 msgid "Top"
-msgstr ""
+msgstr "ด้านบน"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "Transfer"
-msgstr ""
+msgstr "โอนย้าย"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Transfer \"%s\" to:"
-msgstr ""
+msgstr "โอน \"%s\" ไปยัง:"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1553,32 +1558,32 @@ msgstr "โอน / ผสาน"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Transfer Course"
-msgstr ""
+msgstr "โอนย้ายคอร์สอาหาร"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Transfer all products of \"%s\" into:"
-msgstr ""
+msgstr "โอนสินค้าทั้งหมดของ \"%s\" ไปยัง:"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_floor/edit_floor.xml:0
 msgid "Transparency"
-msgstr ""
+msgstr "ความโปร่งใส"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/edit_decor/edit_decor.xml:0
 msgid "Underline"
-msgstr ""
+msgstr "ขีดเส้นใต้"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid "Uploaded image's format is not supported. Try with: %s"
-msgstr ""
+msgstr "ไม่รองรับรูปแบบของภาพที่อัปโหลด ลองกับ: %s"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__uuid
@@ -1594,13 +1599,13 @@ msgstr "วอดก้า 42 Below มะนาว น้ำตาล เบี
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_plan_editor/add_decor_popup/add_decor_popup.xml:0
 msgid "Walls"
-msgstr ""
+msgstr "กำแพง"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/floor_plan/floor_plan_service.js:0
 msgid "Warning"
-msgstr ""
+msgstr "คำเตือน"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.water_product_template
@@ -1610,7 +1615,7 @@ msgstr "น้ำ"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_whiskey_sour_product_template
 msgid "Whiskey Sour"
-msgstr ""
+msgstr "Whiskey Sour (วิสกี้ซาวเออร์)"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_whiskey_sour_product_template
@@ -1631,13 +1636,13 @@ msgstr "เหล้ารัมขาว น้ำตาล น้ำมะน�
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "With"
-msgstr ""
+msgstr "กับ"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "You are currently transferring the order %s"
-msgstr ""
+msgstr "คุณกำลังโอนย้ายคำสั่งซื้ออยู่%s"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1669,7 +1674,7 @@ msgstr "คุณไม่สามารถลบโต๊ะที่ยัง
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_preset.py:0
 msgid "You cannot delete the master preset(s)."
-msgstr ""
+msgstr "คุณไม่สามารถลบการตั้งค่าล่วงหน้าหลักได้"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1691,61 +1696,49 @@ msgstr "คุณไม่สามารถลบโต๊ะที่ใช้
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "You cannot transfer an order to itself"
-msgstr ""
+msgstr "คุณไม่สามารถโอนคำสั่งซื้อไปยังคำสั่งซื้อเดียวกันได้"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "discount"
-msgstr ""
+msgstr "ส่วนลด"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "e.g. John"
-msgstr ""
+msgstr "เช่น John"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "fired"
-msgstr ""
+msgstr "ส่งเข้าครัวแล้ว"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
-msgstr ""
+msgstr "รายการ"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
-msgstr ""
+msgstr "สินค้าที่เลือก"
 
-#~ msgid "Allow Bill Splitting"
-#~ msgstr "อนุญาตให้แยกบิล"
+msgid "Options"
+msgstr "ตัวเลือก"
 
-#~ msgid "Enables Bill Splitting in the Point of Sale."
-#~ msgstr "เปิดใช้การแยกบิลในการขายหน้าร้าน"
+msgid "Sides"
+msgstr "ด้านข้าง"
 
-#~ msgid "Pos Iface Splitbill"
-#~ msgstr "Pos Iface แยกบิล"
+msgid "Message"
+msgstr "ข้อความ"
 
-#~ msgid "Split total or order lines"
-#~ msgstr "แยกรายการทั้งหมดหรือรายการออเดอร์"
+msgid "Note"
+msgstr "โน้ต"
 
-#~ msgid "Options"
-#~ msgstr "ตัวเลือก"
-
-#~ msgid "Sides"
-#~ msgstr "ด้านข้าง"
-
-#~ msgid "Message"
-#~ msgstr "ข้อความ"
-
-#~ msgid "Note"
-#~ msgstr "โน้ต"
-
-#~ msgid "Split"
-#~ msgstr "แยก"
+msgid "Split"
+msgstr "แยก"

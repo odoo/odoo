@@ -9,10 +9,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:11+0000\n"
-"PO-Revision-Date: 2025-11-26 11:32+0000\n"
-"Last-Translator: Betty Keresztesi <betty@soft4biz.ro>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19-l10n/"
+"POT-Creation-Date: 2026-08-28 18:22+0000\n"
+"PO-Revision-Date: 2026-07-22 02:04+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
 "l10n_ro_edi/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,14 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_ro_edi
+#: model:ir.module.module,description:base.module_l10n_ro_edi
+msgid ""
+"\n"
+"E-invoice implementation for Romania\n"
+msgstr ""
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,help:l10n_ro_edi.field_account_bank_statement_line__l10n_ro_edi_state
@@ -59,14 +66,9 @@ msgid ""
 "<span class=\"o_form_label\">\n"
 "                                    E-Factura Details\n"
 "                                </span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" "
-"title=\"Values set here are company-specific.\"/>"
+"                                <span class=\"oi oi-lg\" data-"
+"icon=\"business\" title=\"Values set here are company-specific.\"/>"
 msgstr ""
-"<span class=\"o_form_label\">\n"
-"                                    Detalii E-Factura\n"
-"                                </span>\n"
-"                                <span class=\"fa fa-lg fa-building-o\" "
-"title=\"Valorile setate aici sunt specifice companiei.\"/>"
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_res_company__l10n_ro_edi_access_token
@@ -196,6 +198,11 @@ msgid "Copy the generated Client ID and Client Secret to the fields below"
 msgstr "Copiați Client ID și Client Secret generate în câmpurile de mai jos"
 
 #. module: l10n_ro_edi
+#: model:ir.model,website_form_label:l10n_ro_edi.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_ro_edi
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_cpv_code__create_uid
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_account_move_fetch_invoices_wizard__create_uid
 #: model:ir.model.fields,field_description:l10n_ro_edi.field_l10n_ro_edi_document__create_uid
@@ -296,6 +303,11 @@ msgstr "E-Factura: Reîmprospătare token de acces"
 #: model:ir.actions.server,name:l10n_ro_edi.ir_cron_l10n_ro_edi_synchronize_invoices_ir_actions_server
 msgid "E-Factura: Synchronize with ANAF"
 msgstr "E-Factura: Sincronizare cu ANAF"
+
+#. module: l10n_ro_edi
+#: model:ir.module.module,summary:base.module_l10n_ro_edi
+msgid "E-Invoice implementation for Romania"
+msgstr ""
 
 #. module: l10n_ro_edi
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__l10n_ro_edi_document__state__invoice_refused
@@ -575,6 +587,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:l10n_ro_edi.selection__res_partner__invoice_edi_format__ciusro
 msgid "Romania (CIUS RO)"
 msgstr "România (CIUS RO)"
+
+#. module: l10n_ro_edi
+#: model:ir.module.module,shortdesc:base.module_l10n_ro_edi
+msgid "Romania - E-invoicing"
+msgstr ""
 
 #. module: l10n_ro_edi
 #: model_terms:ir.ui.view,arch_db:l10n_ro_edi.res_config_settings_form_inherit_l10n_ro_edi
@@ -893,15 +910,12 @@ msgstr "Format factură electronică"
 msgid "https://pfinternet.anaf.ro/"
 msgstr "https://pfinternet.anaf.ro/"
 
-#~ msgid "Create a Customer"
-#~ msgstr "Creează un client"
+msgid ""
+"The following partner doesn't have a VAT nor Company ID: %s. At least one of "
+"them is required. "
+msgstr ""
+"Următorul partener nu are TVA sau ID de companie: %s. Cel puțin unul dintre "
+"ele este necesar. "
 
-#~ msgid ""
-#~ "The following partner doesn't have a VAT nor Company ID: %s. At least one "
-#~ "of them is required. "
-#~ msgstr ""
-#~ "Următorul partener nu are TVA sau ID de companie: %s. Cel puțin unul "
-#~ "dintre ele este necesar. "
-
-#~ msgid "The CIUS-RO E-Factura has already been sent"
-#~ msgstr "CIUS-RO E-Factura a fost deja trimisă"
+msgid "The CIUS-RO E-Factura has already been sent"
+msgstr "CIUS-RO E-Factura a fost deja trimisă"

@@ -8,14 +8,15 @@
 # Sarah Park, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 11:55+0000\n"
+"PO-Revision-Date: 2026-07-22 02:11+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_recruitment_survey/ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -184,8 +185,9 @@ msgstr "작성자"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__body_has_template_value
+#, fuzzy
 msgid "Body content is the same as the template"
-msgstr ""
+msgstr "본문 내용은 서식과 동일합니다"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__can_edit_body
@@ -307,9 +309,12 @@ msgstr "ID"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_login_required
+#, fuzzy
 msgid ""
 "If checked, users have to login before answering even with a valid token."
 msgstr ""
+"이 옵션을 선택하면 사용자는 유효한 토큰을 사용하더라도 응답 전에 로그인해야 "
+"합니다."
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col2
@@ -524,8 +529,9 @@ msgstr "응답"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__scheduled_date
+#, fuzzy
 msgid "Scheduled Date"
-msgstr ""
+msgstr "예정일"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -621,10 +627,13 @@ msgstr ""
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
+#, fuzzy
 msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
 msgstr ""
+"다음 수신자에게는 사용자 계정이 없습니다: %s. 해당 수신자의 사용자 계정을 새"
+"로 만들거나 외부 로그인 환경 설정을 허용해야합니다."
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -635,10 +644,13 @@ msgstr "설문조사 %(survey_link)s 가 %(partner_link)s로 전송되었습니�
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/hr_recruitment_survey_invite.py:0
+#, fuzzy
 msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
+"이 설문 조사는 외부인의 참여를 허용하지 않습니다. 이에 따라 사용자 계정을 만"
+"들거나 설문 조사 액세스 모드를 업데이트해야 합니다."
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_recruitment_survey_invite__survey_users_can_signup
@@ -699,10 +711,10 @@ msgstr "id"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_recruitment_survey_invite__scheduled_date
+#, fuzzy
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
 msgstr ""
-
-#~ msgid "<i class=\"oi oi-fw oi-arrow-right\"/>Go to Recruitment"
-#~ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>채용으로 이동"
+"해당 날짜 이후에 이메일을 전송합니다. 이 날짜는 UTC 시간대를 기준으로 계산됩"
+"니다."

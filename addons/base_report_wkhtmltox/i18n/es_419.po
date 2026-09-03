@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_report_wkhtmltox
+# * base_report_wkhtmltox
 #
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-18 20:45+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-21 20:50+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-master/base_report_wkhtmltox/es_419/>\n"
+"odoo-s19-4/base_report_wkhtmltox/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgstr ""
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields,field_description:base_report_wkhtmltox.field_ir_actions_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre a mostrar"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields,field_description:base_report_wkhtmltox.field_ir_actions_report__report_type
@@ -42,17 +43,17 @@ msgstr ""
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields,field_description:base_report_wkhtmltox.field_ir_actions_report__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model.fields.selection,name:base_report_wkhtmltox.selection__ir_actions_report__report_type__qweb-pdf-wkhtmltopdf
 msgid "PDF (Wkhtmltopdf)"
-msgstr ""
+msgstr "PDF (Wkhtmltopdf)"
 
 #. module: base_report_wkhtmltox
 #: model:ir.model,name:base_report_wkhtmltox.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Acción de reporte"
 
 #. module: base_report_wkhtmltox
 #: model:ir.module.module,shortdesc:base.module_base_report_wkhtmltox
@@ -66,12 +67,17 @@ msgid ""
 "rendering method. HTML means the report will be opened directly in your "
 "browser, PDF means the report will be generated and downloaded by the user."
 msgstr ""
+"El tipo de reporte que se renderizará. Cada uno tiene su propio método de "
+"renderizado. HTML significa que el reporte se abrirá directamente en tu "
+"navegador. PDF significa que el reporte se generará y el usuario lo "
+"descargará."
 
 #. module: base_report_wkhtmltox
 #. odoo-python
 #: code:addons/base_report_wkhtmltox/models/ir_actions_report.py:0
 msgid "Tried to convert multiple documents in wkhtmltopdf using unpatched QT"
 msgstr ""
+"Se intentó convertir varios documentos en wkhtmltopdf con QT sin parches"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
@@ -80,6 +86,8 @@ msgid ""
 "Wkhtmltoimage failed (error code: %(error_code)s). Message: %"
 "(error_message_end)s"
 msgstr ""
+"Ocurrió un error con Wkhtmltoimage (código de error: %(error_code)s). "
+"Mensaje: %(error_message_end)s"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
@@ -88,18 +96,23 @@ msgid ""
 "Wkhtmltopdf failed (error code: %(error_code)s). Memory limit too low or "
 "maximum file number of subprocess reached. Message : %(message)s"
 msgstr ""
+"Ocurrió un error con Wkhtmltopdf (código de error: %(error_code)s). El "
+"límite de memoria es demasiado bajo o alcanzó el número máximo de archivos "
+"de subproceso. Mensaje: %(message)s"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
 #: code:addons/base_report_wkhtmltox/models/ir_actions_report.py:0
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
 msgstr ""
+"Ocurrió un error con Wkhtmltopdf (código de error: %(error_code)s). Mensaje: "
+"%(message)s"
 
 #. module: base_report_wkhtmltox
 #. odoo-python
 #: code:addons/base_report_wkhtmltox/models/ir_actions_report.py:0
 msgid "wkhtmltoimage 0.12.0^ is required in order to render images from html"
-msgstr ""
+msgstr "Necesitas wkhtmltoimage 0.12.0^ para renderizar imágenes desde HTML"
 
 #. module: base_report_wkhtmltox
 #: model:ir.module.module,summary:base.module_base_report_wkhtmltox

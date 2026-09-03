@@ -18,10 +18,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 18:57+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-18 16:40+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"master/project/pt_BR/>\n"
+"s19-4/project/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -779,7 +779,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
-#, fuzzy
 msgid "<span>@</span>"
 msgstr "<span>@</span>"
 
@@ -856,6 +855,7 @@ msgstr ""
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private (non-template) task cannot have a parent."
 msgstr ""
+"Uma tarefa privada (que não seja um modelo) não pode ter um tarefa primária."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -915,7 +915,7 @@ msgstr "Atividades de"
 #. module: project
 #: model:ir.model,name:project.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "Atividade"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
@@ -973,7 +973,7 @@ msgstr "Tipo de atividade"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr ""
+msgstr "Adicionar subtarefa"
 
 #. module: project
 #. odoo-javascript
@@ -1032,6 +1032,8 @@ msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
 msgstr ""
+"Administrador: Pode gerenciar projetos e etapas, com acesso a relatórios e "
+"configurações."
 
 #. module: project
 #. odoo-javascript
@@ -1096,7 +1098,7 @@ msgstr "Tudo"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "All Projects"
-msgstr ""
+msgstr "Todos os projetos"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
@@ -1301,6 +1303,8 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
+"Anexe todos os documentos ou links diretamente à tarefa para que todas as "
+"informações de pesquisa fiquem centralizadas."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -1482,6 +1486,9 @@ msgid ""
 "Cannot convert back to regular task because the task has no project defined "
 "but has a parent or sub-tasks."
 msgstr ""
+"Não é possível voltar a converter como uma tarefa regular porque a tarefa "
+"não tem nenhum projeto definido, mas possui uma tarefa prrimária ou "
+"subtarefas."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
@@ -1614,6 +1621,9 @@ msgid ""
 "designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt."
 msgstr ""
+"Comunique-se com clientes na tarefa utilizando o gateway de e-mail. Anexe "
+"designs de logo à tarefa, de forma que informações fluam rapidamente entre\n"
+"      designers e responsável pela impressão da camiseta."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -1688,7 +1698,7 @@ msgstr "Número de contato"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_convert_project_to_template_cog_menu/project_convert_project_to_template_cog_menu.xml:0
 msgid "Convert Project to Template"
-msgstr ""
+msgstr "Converter Projeto em Modelo"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -1740,13 +1750,13 @@ msgstr "Data de criação"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Criar projeto"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/wizard/project_template_create_wizard.py:0
 msgid "Create Project (Template: %s)"
-msgstr ""
+msgstr "Criar projetos (Modelo: %s)"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_res_partner
@@ -1756,7 +1766,7 @@ msgstr "Criar um cliente"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project_template
 msgid "Create a Project Template"
-msgstr ""
+msgstr "Criar modelo de projeto"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_project_task
@@ -1925,6 +1935,9 @@ msgid ""
 "you can\n"
 "      communicate on the task directly."
 msgstr ""
+"Clientes oferecem feedback por e-mail; o Odoo cria tarefas automaticamente, "
+"e você pode\n"
+"      se comunicar diretamente na tarefa."
 
 #. module: project
 #. odoo-python
@@ -2368,7 +2381,7 @@ msgstr "Erro! Não é possível criar uma hierarquia recorrente de tarefas."
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr ""
+msgstr "Todos podem propor ideias, e o editor marca as melhores como"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_02
@@ -2429,7 +2442,7 @@ msgstr "Dobrado"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Follow"
-msgstr ""
+msgstr "Seguir"
 
 #. module: project
 #: model:portal.entry,description:project.portal_tasks
@@ -2544,6 +2557,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them "
 "in the chatter of the tasks."
 msgstr ""
+"Organize ideias com as tarefas do seu novo projeto e debata-as no chatter "
+"das tarefas."
 
 #. module: project
 #. odoo-javascript
@@ -2568,7 +2583,7 @@ msgstr "Tem mensagens"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_project_template
 msgid "Has Project Template"
-msgstr ""
+msgstr "Possui modelo de projeto de projetos"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
@@ -3068,7 +3083,7 @@ msgstr "Design do logo"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Look for the"
-msgstr ""
+msgstr "Procurar por"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -3089,6 +3104,9 @@ msgid ""
 "acquired projects,\n"
 "      assign them and use the"
 msgstr ""
+"Gerencie o ciclo de vida de seu projeto usando a visão Kanban. Adicione "
+"projetos recém-adquiridos,\n"
+"            atribua-os e use a função"
 
 #. module: project
 #. odoo-javascript
@@ -3439,7 +3457,7 @@ msgstr "Nenhuma função de projeto encontrada. Vamos criar uma!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_template
 msgid "No project templates found. Let's create one!"
-msgstr ""
+msgstr "Nenhum modelo de projeto foi encontrado. Vamos criar um!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3611,7 +3629,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Organize priorities amongst orders using the"
-msgstr ""
+msgstr "Organize prioridades entre pedidos usando"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3787,7 +3805,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Prioritize your tasks by marking important ones using the"
-msgstr ""
+msgstr "Dê prioridade às tarefas importantes marcando-as com"
 
 #. module: project
 #. odoo-python
@@ -3814,6 +3832,8 @@ msgid ""
 "Private (non-template) tasks cannot be converted into sub-tasks. Please set "
 "a project on the task to gain access to this feature."
 msgstr ""
+"Tarefas privadas (que não sejam modelos) não podem ser convertidas em "
+"subtarefas. Defina um projeto na tarefa para ter acesso a esse recurso."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -4150,7 +4170,7 @@ msgstr "Descrição do projeto…"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project name"
-msgstr ""
+msgstr "Nome do projeto"
 
 #. module: project
 #: model:ir.model,name:project.model_project_template_role_to_users_map
@@ -4592,7 +4612,7 @@ msgstr "Apodrecendo em"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.xml:0
 msgid "SAVE"
-msgstr ""
+msgstr "SALVAR"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -4626,6 +4646,8 @@ msgid ""
 "                    Standardize workflows and ensure consistency across "
 "projects."
 msgstr ""
+"Economize tempo usando modelos de projeto com detalhes pré-preenchidos.<br>\n"
+"Padronize os fluxos de trabalho e garanta a consistência entre as projeto."
 
 #. module: project
 #. odoo-javascript
@@ -4801,7 +4823,7 @@ msgstr "Definições"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
 msgid "Share Link"
-msgstr ""
+msgstr "Compartilhar link"
 
 #. module: project
 #. odoo-python
@@ -4826,12 +4848,14 @@ msgstr "Compartilhar tarefa"
 #: code:addons/project/models/project_task.py:0
 msgid "Sharing is not available with this project visibility setting."
 msgstr ""
+"O compartilhamento não está disponível com esta configuração de visibilidade "
+"dos Projetos."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Show Sub-Tasks"
-msgstr ""
+msgstr "Mostrar subtarefas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4908,6 +4932,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
+"Classifique suas tarefas por sprint usando marcos, marcadores ou uma "
+"propriedade dedicada. No final de cada sprint, basta escolher as tarefas "
+"restantes em sua lista e movê-las todas de uma vez para a próxima sprint, "
+"editando o marco, o marcador ou a propriedade."
 
 #. module: project
 #. odoo-javascript
@@ -5255,7 +5283,7 @@ msgstr "Tarefa concluída"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Task templates cannot be shared."
-msgstr ""
+msgstr "Os modelos de tarefas não podem ser compartilhados."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
@@ -5317,7 +5345,7 @@ msgstr "Estágio de tarefas"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.js:0
 msgid "Tasks Templates"
-msgstr ""
+msgstr "Modelos de tarefas"
 
 #. module: project
 #. odoo-python
@@ -5366,7 +5394,7 @@ msgstr "Modelo criado a partir de %s."
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Template for Tasks"
-msgstr ""
+msgstr "Modelo para tarefas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -5492,6 +5520,7 @@ msgstr "A descrição da tarefa estava vazia no momento."
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 msgid "The view must be grouped by date and by Stage - Burndown chart"
 msgstr ""
+"A visualização deve ser agrupada por data e por fase – Gráfico de burndown"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -5659,7 +5688,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/depend_on_ids_one2many/depend_on_ids_list_renderer.xml:0
 msgid "This task is currently blocked by"
-msgstr ""
+msgstr "Essa tarefa está atualmente bloqueada por"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -5806,7 +5835,7 @@ msgstr "Atividades de hoje"
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_control_panel/project_task_control_panel.xml:0
 msgid "Top Menu"
-msgstr ""
+msgstr "Menu superior"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5888,7 +5917,7 @@ msgstr "Desfazer"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/portal_chatter_patch.xml:0
 msgid "Unfollow"
-msgstr ""
+msgstr "Deixar de seguir"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -5993,7 +6022,7 @@ msgstr "Usar etiquetas para categorizar suas tarefas."
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Use the"
-msgstr ""
+msgstr "Use"
 
 #. module: project
 #. odoo-javascript
@@ -6049,7 +6078,7 @@ msgstr "Configurações do usuário"
 #. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
-msgstr ""
+msgstr "Usuário: Pode gerenciar tarefas em projetos compartilhados com ele."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -6060,7 +6089,7 @@ msgstr "Visualização"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 msgid "View More"
-msgstr ""
+msgstr "Ver mais"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -6204,7 +6233,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "Escreva uma mensagem…"
 
 #. module: project
 #. odoo-javascript
@@ -6352,7 +6381,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
-msgstr ""
+msgstr "Seus gerentes decidem qual feedback será aceito"
 
 #. module: project
 #. odoo-javascript
@@ -6375,7 +6404,7 @@ msgstr "analítico"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "and"
-msgstr ""
+msgstr "e"
 
 #. module: project
 #. odoo-javascript
@@ -6384,6 +6413,8 @@ msgid ""
 "and which feedback is\n"
 "      moved to the \"Refused\" column."
 msgstr ""
+"e qual feedback será\n"
+"movido para a coluna “Recusado”."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_card
@@ -6394,7 +6425,7 @@ msgstr "responsáveis"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "button."
-msgstr ""
+msgstr "botão."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_role_view_list
@@ -6466,7 +6497,7 @@ msgstr "ex.: Lançamento de produto"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "ícone para organizar suas atividades diárias."
 
 #. module: project
 #. odoo-javascript
@@ -6475,12 +6506,15 @@ msgid ""
 "icon to see tasks waiting on other ones. Once a task is marked as complete "
 "or cancelled, all of its dependencies will be unblocked."
 msgstr ""
+"para ver as tarefas que estão aguardando outras. Quando uma tarefa for "
+"marcada como concluída ou cancelada, todas as suas dependências serão "
+"desbloqueadas."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "icon."
-msgstr ""
+msgstr "ícone."
 
 #. module: project
 #. odoo-python
@@ -6499,6 +6533,8 @@ msgstr "pronto para ser marcado como alcançado"
 msgid ""
 "state to indicate a request for changes or a need for discussion on a task."
 msgstr ""
+"situação para indicar uma solicitação de alteração ou a necessidade de "
+"debate em uma tarefa."
 
 #. module: project
 #. odoo-javascript
@@ -6506,24 +6542,26 @@ msgstr ""
 msgid ""
 "state to inform your colleagues that a task is approved for the next stage."
 msgstr ""
+"situação para informar seus colegas que uma tarefa foi aprovada para o "
+"próximo estágio."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as cancelled."
-msgstr ""
+msgstr "situação para marcar a tarefa como cancelada."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
-msgstr ""
+msgstr "situação para marcar a tarefa como concluída."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_task_name_with_subtask_count_char_field/project_task_name_with_subtask_count_char_field.xml:0
 msgid "sub-tasks)"
-msgstr ""
+msgstr "subtarefas)"
 
 #. module: project
 #. odoo-python
@@ -6538,12 +6576,14 @@ msgid ""
 "to define if the project is\n"
 "      ready for the next step."
 msgstr ""
+"para definir se o projeto está\n"
+"pronto para a próxima etapa."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "to signalize what is the current status of your Idea."
-msgstr ""
+msgstr "para sinalizar qual é o status atual da ideia."
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
@@ -6571,50 +6611,3 @@ msgstr "👤 Não atribuído"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Privado"
-
-#~ msgid " All internal users and invited portal users"
-#~ msgstr " Todos os usuários internos e usuários convidados do portal"
-
-#~ msgid ""
-#~ "Add project-specific property fields on tasks to customize your project "
-#~ "management process."
-#~ msgstr ""
-#~ "Adicione campos de propriedade específicos do projeto nas tarefas para "
-#~ "personalizar seu processo de gerenciamento de projetos."
-
-#~ msgid ""
-#~ "Create tasks by sending an email to the email address of your project."
-#~ msgstr ""
-#~ "Crie tarefas enviando um e-mail para o endereço de e-mail de seu projeto."
-
-#~ msgid "Emails sent to"
-#~ msgstr "E-mails enviados para"
-
-#~ msgid ""
-#~ "Quickly check the status of tasks for approvals or change requests and "
-#~ "identify those on hold until dependencies are resolved with the hourglass "
-#~ "icon."
-#~ msgstr ""
-#~ "Verifique rapidamente o status das tarefas para aprovações ou "
-#~ "solicitações de alteração e identifique aquelas em espera até que as "
-#~ "dependências sejam resolvidas com o ícone de ampulheta."
-
-#~ msgid "Tip: Use task states to keep track of your tasks' progression"
-#~ msgstr ""
-#~ "Dica: use a situação das tarefas para acompanhar a progressão das suas "
-#~ "tarefas"
-
-#~ msgid "Tip: Your Own Personal Kanban"
-#~ msgstr "Dica: Seu próprio Kanban pessoal"
-
-#~ msgid ""
-#~ "Use personal stages to organize your tasks and create your own workflow."
-#~ msgstr ""
-#~ "Use estágios pessoais para organizar suas tarefas e criar seu próprio "
-#~ "fluxo de trabalho."
-
-#~ msgid "project."
-#~ msgstr "projeto."
-
-#~ msgid "will generate tasks in your"
-#~ msgstr "gerará tarefas em seu"

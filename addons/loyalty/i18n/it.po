@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 02:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-24 07:16+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "loyalty/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -102,7 +102,7 @@ msgstr "(imposta esclusa)"
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "-> View History"
-msgstr ""
+msgstr "-> Visualizza cronologia"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
@@ -340,6 +340,12 @@ msgid ""
 "                            Generate\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"not will_send_mail\">\n"
+"                            Genera e invia\n"
+"                        </span>\n"
+"                        <span invisible=\"will_send_mail\">\n"
+"                            Genera \n"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.portal_loyalty_history_breadcrumbs
@@ -568,7 +574,7 @@ msgstr "Attiva carte fedeltà"
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Aggiungi"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1491,7 +1497,7 @@ msgstr "Limite"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__limit_usage
 msgid "Limit Usage"
-msgstr "Limitare Uso"
+msgstr "Limite d'uso"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2021,7 +2027,7 @@ msgstr "La data di fine è inclusa nel periodo di validità del programma"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 msgid "The expiry date cannot be in the past. Please select a valid date."
-msgstr ""
+msgstr "La data di scadenza non può essere passata. Seleziona una data valida."
 
 #. module: loyalty
 #. odoo-python
@@ -2200,7 +2206,7 @@ msgstr "Valido fino al"
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 msgid "Valid until"
-msgstr ""
+msgstr "Valido fino al"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form

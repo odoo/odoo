@@ -10,15 +10,15 @@
 # Malaz Abuidris <msea@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 11:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/stock/"
+"PO-Revision-Date: 2026-08-19 13:47+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -444,8 +444,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "/day"
-msgstr ""
+msgstr "/يوم"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -585,6 +586,53 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        مرحباً <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،"
+"<br/><br/>\n"
+"        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
+"== 'in_store'\">\n"
+"            تم استلام طلبك.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            يسعدنا إعلامك بأن طلبك قد تم شحنه.\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            رقم التتبع المرجعي الخاص بك هو\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        يرجى الاطلاع على أمر التسليم المرفق للحصول على مزيد من التفاصيل.<br/"
+"><br/>\n"
+"        مع وافر الشكر والتقدير،\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">ميتشل آدمن</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -617,7 +665,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<span class=\"mt0 float-start\">No assigned package</span>"
-msgstr ""
+msgstr "<span class=\"mt0 float-start\">لم يتم تعيين طرد</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -691,8 +739,9 @@ msgstr "<span class=\"o_stat_text\">الخارج:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Packages</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">الطرود</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -707,8 +756,9 @@ msgstr "<span class=\"o_stat_text\">المسارات</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">مخلفات التصنيع</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -818,8 +868,9 @@ msgstr "<strong>جهة الاتصال</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#, fuzzy
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>العميل</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1072,8 +1123,9 @@ msgstr "زخرفة استثناء النشاط"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "خطط النشاط"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1379,8 +1431,9 @@ msgstr "أي فئة"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_request_count_form_view
+#, fuzzy
 msgid "Anyone"
-msgstr ""
+msgstr "أي شخص"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1482,8 +1535,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__res_company__picking_policy__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__direct
+#, fuzzy
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "في أقرب وقت ممكن، مع الطلبات المتأخرة"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__ask
@@ -1853,10 +1907,13 @@ msgstr "لم نتمكن من إيجاد أي مسار عام %s."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_package.py:0
+#, fuzzy
 msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
+"لا يمكن نقل حاوية تحتوي على طرود موجودة في موقع آخر (%(old_location)s) إلى "
+"موقع مختلف (%(new_location)s)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2144,13 +2201,15 @@ msgstr "تأكيد"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "تأكيد الطلب"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Confirmation Email"
-msgstr ""
+msgstr "البريد الإلكتروني للتأكيد "
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2202,8 +2261,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
+#, fuzzy
 msgid "Container"
-msgstr ""
+msgstr "حاوية"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_ids
@@ -2625,12 +2685,17 @@ msgstr "التاريخ الذي تمت معالجة الشحنة فيه أو إ�
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__deadline_date
+#, fuzzy
 msgid ""
 "Date before which you should order to avoid falling below the minimum. If "
 "you have nothing to order while a deadline is found, it may be because a "
 "future arrival is expected after the minimum quantity is reached (potential "
 "stockout). Check the Forecast Report."
 msgstr ""
+"التاريخ الذي يجب أن تقوم بالطلب قبله لتجنب النزول عن الحد الأدنى. إذا لم يكن "
+"لديك ما تطلبه عند تحديد الموعد النهائي، فقد يكون ذلك بسبب توقع وصول شحنة "
+"مستقبلية بعد الوصول إلى الحد الأدنى للكمية (احتمال نفاد المخزون). تحقق من "
+"تقرير التوقعات."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
@@ -3179,8 +3244,9 @@ msgstr "الفرق"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
+#, fuzzy
 msgid "Digest"
-msgstr ""
+msgstr "الموجز "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3494,14 +3560,16 @@ msgstr "الاستثناء (الاستثناءات):"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Exchange"
-msgstr ""
+msgstr "تبادل"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "المتوقع"
 
 #. module: stock
 #. odoo-python
@@ -4286,10 +4354,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__set_package_type
+#, fuzzy
 msgid ""
 "If ticked, you will be able to select which package or package type to use "
 "in a put in pack"
 msgstr ""
+"إذا تم تحديد هذا الخيار، فستتمكن من تحديد التغليف أو نوع العبوة التي تريد "
+"استخدامها في التعبئة"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__active
@@ -5315,8 +5386,9 @@ msgstr "تم تغيير موقع رقم المجموعة/الرقم التسلس
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
+#, fuzzy
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "أرقام الدفعات/الأرقام التسلسلية"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5679,8 +5751,9 @@ msgstr "المسارات متعددة الخطوات"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+#, fuzzy
 msgid "Multiple"
-msgstr ""
+msgstr "متعدد"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -5981,8 +6054,9 @@ msgstr "لم يتم العثور على شحنة. فلنقم بإنشاء واح
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "لا شيء"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6078,6 +6152,7 @@ msgstr "أكتوبر"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
 "print instantly,\n"
@@ -6086,6 +6161,12 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"يقوم أودو بفتح معاينة PDF بشكل افتراضي. إذا كنت (مستخدمي أودو للمؤسسات فقط) "
+"ترغب في الطباعة فوراً،\n"
+"                                        قم بتثبيت تطبيق IoT على جهاز الحاسوب "
+"الخاص بك الموجود في نفس الشبكة المحلية\n"
+"                                        كمشغل الباركود، وقم بتهيئة مسارات "
+"التقارير."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6777,8 +6858,9 @@ msgstr "الإرشادات الخاصة بالشركاء"
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
+#, fuzzy
 msgid "Pay now"
-msgstr ""
+msgstr "ادفع الآن"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
@@ -6852,8 +6934,9 @@ msgstr "عمليات الانتقاء"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
+#, fuzzy
 msgid "Picking Policy"
-msgstr ""
+msgstr "سياسة الاستلام"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -6901,8 +6984,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "Preceding operations"
-msgstr ""
+msgstr "العمليات السابقة"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -6917,8 +7001,9 @@ msgstr "المسار المفضل"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "القيمة السابقة لسجل للتسلسل"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -7737,8 +7822,9 @@ msgstr "مرجع التسلسل"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_reference
+#, fuzzy
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "المرجع بين مستندات المخزون"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_picking_name_uniq
@@ -7993,8 +8079,9 @@ msgstr "طريقة الحجز"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "حجز"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8147,8 +8234,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
+#, fuzzy
 msgid "Revert"
-msgstr ""
+msgstr "العودة"
 
 #. module: stock
 #. odoo-python
@@ -8321,8 +8409,9 @@ msgstr "البيانات التجريبية"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "حفظ"
 
 #. module: stock
 #. odoo-python
@@ -8422,8 +8511,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, fuzzy
 msgid "Scrapped"
-msgstr ""
+msgstr "مخلفات التصنيع "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -10345,8 +10435,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
+#, fuzzy
 msgid "Transit"
-msgstr ""
+msgstr "العبور"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -10592,8 +10683,9 @@ msgstr "تصديق"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "تصديق المخزون"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10784,8 +10876,9 @@ msgstr "مسارات المستودع"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
+#, fuzzy
 msgid "Warehouse:"
-msgstr ""
+msgstr "المستودع:"
 
 #. module: stock
 #. odoo-javascript
@@ -10977,8 +11070,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "When to start shipping"
-msgstr ""
+msgstr "موعد بدء الشحن"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -11413,6 +11507,7 @@ msgstr "لقد حاولت إنشاء سجل موجود بالفعل. تم تعد
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
+#, fuzzy
 msgid ""
 "You'll find here smart replenishment propositions based on inventory "
 "forecasts.\n"
@@ -11421,6 +11516,11 @@ msgid ""
 "            some products, and automate these rules to create RFQs or "
 "Manufacturing Orders."
 msgstr ""
+"ستجد هنا مقترحات ذكية لتجديد المخزون بناءً على توقعات المخزون.\n"
+"            أنشئ قواعد جديدة لتجديد المخزون إذا كنت ترغب في الحفاظ على "
+"مستويات مخزون في حدها الأدنى\n"
+"            بالنسبة لبعض المنتجات، وقم بأتمتة هذه القواعد لإنشاء طلبات عروض "
+"الأسعار أو أوامر التصنيع."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1
@@ -11644,8 +11744,9 @@ msgstr "من"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "planned on"
-msgstr ""
+msgstr "مخطط في"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11719,278 +11820,239 @@ msgstr ""
 "{{ object.company_id.name }} أمر توصيل (المرجع {{ object.name or 'غير "
 "متاح' }})"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d يوم (أيام)"
+msgid "Andrwep"
+msgstr "Andrwep"
 
-#~ msgid "Close"
-#~ msgstr "إغلاق"
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
 
-#~ msgid ""
-#~ "Creation date of this move line until updated due to: quantity being "
-#~ "increased, 'picked' status has updated, or move line is done."
-#~ msgstr ""
-#~ "تاريخ إنشاء بند الحركة هذا حتى يتم تحديثه بسبب: زيادة الكمية، أو تحديث "
-#~ "حالة 'تم الانتقاء'، أو تم الانتهاء من بند الحركة."
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
-#~ msgid ""
-#~ "Estimate the sales volume for the period based on past period or order "
-#~ "the forecasted quantity for that period."
-#~ msgstr ""
-#~ "قدِّر حجم المبيعات للفترة بناءً على الفترة الماضية أو اطلب الكمية المتوقعة "
-#~ "لتلك الفترة."
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAME"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "أيقونة من Font awesome مثال: fa-tasks"
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUCT_DISPLAY_NAME"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "معلومات تجديد مخزون المزوّد"
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
 
-#~ msgid "Choose your date"
-#~ msgstr "اختر تاريخك"
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
-#~ msgid "Location Barcode"
-#~ msgstr "باركود الموقع"
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
 
-#~ msgid "Product Catalog Mixin"
-#~ msgstr "Mixin كتالوج المنتجات"
+msgid "Demo Display Name"
+msgstr "اسم العرض التجريبي"
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "سجل كمية المخزون"
+msgid "Dispatch Management System"
+msgstr "نظام إدارة الشحنات"
 
-#~ msgid "Andrwep"
-#~ msgstr "Andrwep"
+msgid "Expected Delivery:"
+msgstr "التوصيل المتوقع:"
 
-#~ msgid "DEMO_DATE"
-#~ msgstr "DEMO_DATE"
+msgid ""
+"If this checkbox is ticked, Odoo will automatically show the reception "
+"report (if there are moves to allocate to) when validating."
+msgstr ""
+"إذا كان مربع الاختيار هذا محدداً، سيقوم أودو تلقائياً بإظهار تقرير الاستلام "
+"(إذا كان هناك حركات لتخصيصها إليه) عند التصديق."
 
-#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
-#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+msgid "No %s selected or a delivery order selected"
+msgstr "ليس هناك %s محدد أو أمر توصيل محدد"
+
+msgid "Print Label"
+msgstr "طباعة بطاقة العنوان"
+
+msgid "Reason"
+msgstr "السبب"
 
-#~ msgid "DEMO_PARTNER_NAME"
-#~ msgstr "DEMO_PARTNER_NAME"
+msgid "Show Reception Report at Validation"
+msgstr "إظهار تقرير الاستلام عند التصديق"
 
-#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
-#~ msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+msgid "Stock Reception Report"
+msgstr "تقرير استلام المخزون"
 
-#~ msgid "DEMO_QUANTITY"
-#~ msgstr "DEMO_QUANTITY"
+msgid "This report cannot be used for done and not done %s at the same time"
+msgstr ""
+"لا يمكن استخدام هذا التقرير للـ%s المنتهية وغير المنتهية في الوقت ذاته."
 
-#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
-#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
+msgid "Transport management: organize packs in your fleet, or carriers."
+msgstr "إدارة النقل: قم بتنظيم الطرود لدى أسطولك أو شركات الشحن التابعة لك."
 
-#~ msgid "DEMO_UOM"
-#~ msgstr "DEMO_UOM"
+msgid "Use Reception Report"
+msgstr "استخدام تقرير الاستلام"
 
-#~ msgid "Demo Display Name"
-#~ msgstr "اسم العرض التجريبي"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                لم نتمكن من حجز كافة المنتجات. اضغط على زر "
+"\"التحقق من التوافر\" لمحاولة حجز المنتجات."
 
-#~ msgid "Dispatch Management System"
-#~ msgstr "نظام إدارة الشحنات"
+msgid "Check Availability"
+msgstr "التحقق من التوافر"
 
-#~ msgid "Expected Delivery:"
-#~ msgstr "التوصيل المتوقع:"
+msgid "Click or press enter to add a description"
+msgstr "اضغط على زر إدخال (Enter) لإضافة وصف"
 
-#~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically show the reception "
-#~ "report (if there are moves to allocate to) when validating."
-#~ msgstr ""
-#~ "إذا كان مربع الاختيار هذا محدداً، سيقوم أودو تلقائياً بإظهار تقرير الاستلام "
-#~ "(إذا كان هناك حركات لتخصيصها إليه) عند التصديق."
+msgid "Compute shipping costs and ship with DHL"
+msgstr "حساب تكاليف الشحن والشحن عبر DHL"
 
-#~ msgid "No %s selected or a delivery order selected"
-#~ msgstr "ليس هناك %s محدد أو أمر توصيل محدد"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"احسب تكاليف الشحن والشحن بواسطة DHL<br/>\n"
+"                                    <strong>(يرجى الانتقال إلى الصفحة "
+"الرئيسية>التطبيقات المراد تثبيتها)</strong>"
 
-#~ msgid "Print Label"
-#~ msgstr "طباعة بطاقة العنوان"
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "حساب تكاليف الشحن والشحن من خلال Easypost"
 
-#~ msgid "Reason"
-#~ msgstr "السبب"
+msgid "Compute shipping costs and ship with Envia.com"
+msgstr "حساب تكاليف الشحن والشحن من خلال Envia.com"
 
-#~ msgid "Show Reception Report at Validation"
-#~ msgstr "إظهار تقرير الاستلام عند التصديق"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "حساب تكاليف الشحن والشحن عبر FedEx"
 
-#~ msgid "Stock Reception Report"
-#~ msgstr "تقرير استلام المخزون"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"احسب تكاليف الشحن والشحن بواسطة FedEx<br/>\n"
+"                                    <strong>(يرجى الانتقال إلى الصفحة "
+"الرئيسية>التطبيقات المراد تثبيتها)</strong>"
 
-#~ msgid "This report cannot be used for done and not done %s at the same time"
-#~ msgstr ""
-#~ "لا يمكن استخدام هذا التقرير للـ%s المنتهية وغير المنتهية في الوقت ذاته."
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "حساب تكاليف الشحن والشحن عبر Sendcloud"
 
-#~ msgid "Transport management: organize packs in your fleet, or carriers."
-#~ msgstr "إدارة النقل: قم بتنظيم الطرود لدى أسطولك أو شركات الشحن التابعة لك."
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "حساب تكاليف الشحن والشحن عبر Shiprocket"
 
-#~ msgid "Use Reception Report"
-#~ msgstr "استخدام تقرير الاستلام"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                All products could not be reserved. Click "
-#~ "on the \"Check Availability\" button to try to reserve products."
-#~ msgstr ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                لم نتمكن من حجز كافة المنتجات. اضغط على "
-#~ "زر \"التحقق من التوافر\" لمحاولة حجز المنتجات."
-
-#~ msgid "Check Availability"
-#~ msgstr "التحقق من التوافر"
-
-#~ msgid "Click or press enter to add a description"
-#~ msgstr "اضغط على زر إدخال (Enter) لإضافة وصف"
-
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "حساب تكاليف الشحن والشحن عبر DHL"
-
-#~ msgid ""
-#~ "Compute shipping costs and ship with DHL<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "احسب تكاليف الشحن والشحن بواسطة DHL<br/>\n"
-#~ "                                    <strong>(يرجى الانتقال إلى الصفحة "
-#~ "الرئيسية>التطبيقات المراد تثبيتها)</strong>"
-
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "حساب تكاليف الشحن والشحن من خلال Easypost"
-
-#~ msgid "Compute shipping costs and ship with Envia.com"
-#~ msgstr "حساب تكاليف الشحن والشحن من خلال Envia.com"
-
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "حساب تكاليف الشحن والشحن عبر FedEx"
-
-#~ msgid ""
-#~ "Compute shipping costs and ship with FedEx<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "احسب تكاليف الشحن والشحن بواسطة FedEx<br/>\n"
-#~ "                                    <strong>(يرجى الانتقال إلى الصفحة "
-#~ "الرئيسية>التطبيقات المراد تثبيتها)</strong>"
-
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "حساب تكاليف الشحن والشحن عبر Sendcloud"
-
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "حساب تكاليف الشحن والشحن عبر Shiprocket"
-
-#~ msgid "Compute shipping costs and ship with Starshipit"
-#~ msgstr "حساب تكاليف الشحن والشحن من خلال Starshipit"
+msgid "Compute shipping costs and ship with Starshipit"
+msgstr "حساب تكاليف الشحن والشحن من خلال Starshipit"
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "حساب تكاليف الشحن والشحن عبر UPS"
+msgid "Compute shipping costs and ship with UPS"
+msgstr "حساب تكاليف الشحن والشحن عبر UPS"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with UPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "احسب تكاليف الشحن والشحن بواسطة UPS<br/>\n"
-#~ "                                    <strong>(يرجى الانتقال إلى الصفحة "
-#~ "الرئيسية>التطبيقات المراد تثبيتها)</strong>"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"احسب تكاليف الشحن والشحن بواسطة UPS<br/>\n"
+"                                    <strong>(يرجى الانتقال إلى الصفحة "
+"الرئيسية>التطبيقات المراد تثبيتها)</strong>"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "حساب تكاليف الشحن والشحن عبر USPS"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "حساب تكاليف الشحن والشحن عبر USPS"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with USPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "احسب تكاليف الشحن والشحن بواسطة USPS<br/>\n"
-#~ "                                    <strong>(يرجى الانتقال إلى الصفحة "
-#~ "الرئيسية>التطبيقات المراد تثبيتها)</strong>"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"احسب تكاليف الشحن والشحن بواسطة USPS<br/>\n"
+"                                    <strong>(يرجى الانتقال إلى الصفحة "
+"الرئيسية>التطبيقات المراد تثبيتها)</strong>"
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "حساب تكاليف الشحن والشحن عبر bpost"
+msgid "Compute shipping costs and ship with bpost"
+msgstr "حساب تكاليف الشحن والشحن عبر bpost"
 
-#~ msgid "DHL Connector"
-#~ msgstr "موصل شحن DHL"
+msgid "DHL Connector"
+msgstr "موصل شحن DHL"
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "موصل شحن DHL السريع"
+msgid "DHL Express Connector"
+msgstr "موصل شحن DHL السريع"
 
-#~ msgid "Default Return Name"
-#~ msgstr "اسم عملية الإرجاع الافتراضي"
+msgid "Default Return Name"
+msgstr "اسم عملية الإرجاع الافتراضي"
 
-#~ msgid "Demo Address and Name"
-#~ msgstr "الاسم والعنوان التجريبيين"
+msgid "Demo Address and Name"
+msgstr "الاسم والعنوان التجريبيين"
 
-#~ msgid "Easypost Connector"
-#~ msgstr "موصل Easypost"
+msgid "Easypost Connector"
+msgstr "موصل Easypost"
 
-#~ msgid "Envia.com Connector"
-#~ msgstr "موصل شحن Envia.com"
+msgid "Envia.com Connector"
+msgstr "موصل شحن Envia.com"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "موصل FedEx"
+msgid "FedEx Connector"
+msgstr "موصل FedEx"
 
-#~ msgid "Generate Serials/Lots"
-#~ msgstr "إنشاء أرقام تسلسلية/أرقام مجموعات"
+msgid "Generate Serials/Lots"
+msgstr "إنشاء أرقام تسلسلية/أرقام مجموعات"
 
-#~ msgid "Import Serials/Lots"
-#~ msgstr "استيراد الأرقام التسلسلية/أرقام المجموعات"
+msgid "Import Serials/Lots"
+msgstr "استيراد الأرقام التسلسلية/أرقام المجموعات"
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "لا يوجد شيء للتحقق من توافره"
+msgid "Nothing to check the availability for."
+msgstr "لا يوجد شيء للتحقق من توافره"
 
-#~ msgid ""
-#~ "Please put this document inside your return parcel.<br/>\n"
-#~ "                                Your parcel must be sent to this address:"
-#~ msgstr ""
-#~ "يُرجى وضع هذا المستند داخل الطرد المراد إرجاعه.<br/>\n"
-#~ "                                يجب أن يتم إرسال طردك إلى هذا العنوان:"
+msgid ""
+"Please put this document inside your return parcel.<br/>\n"
+"                                Your parcel must be sent to this address:"
+msgstr ""
+"يُرجى وضع هذا المستند داخل الطرد المراد إرجاعه.<br/>\n"
+"                                يجب أن يتم إرسال طردك إلى هذا العنوان:"
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "موصل شحن Sendcloud"
+msgid "Sendcloud Connector"
+msgstr "موصل شحن Sendcloud"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "موصلو الشحن"
+msgid "Shipping Connectors"
+msgstr "موصلو الشحن"
 
-#~ msgid "Shiprocket Connector"
-#~ msgstr "موصل شحن Shiprocket"
+msgid "Shiprocket Connector"
+msgstr "موصل شحن Shiprocket"
 
-#~ msgid "Starshipit Connector"
-#~ msgstr "Starshipit Connector"
+msgid "Starshipit Connector"
+msgstr "Starshipit Connector"
 
-#~ msgid ""
-#~ "Technical field used to compute whether the button \"Check Availability\" "
-#~ "should be displayed."
-#~ msgstr ""
-#~ "حقل تقني يٌستخدم لتحديد ما إذا كان زر \"التحقق من التوافر\" يجب عرضه."
+msgid ""
+"Technical field used to compute whether the button \"Check Availability\" "
+"should be displayed."
+msgstr "حقل تقني يٌستخدم لتحديد ما إذا كان زر \"التحقق من التوافر\" يجب عرضه."
 
-#~ msgid "UPS Connector"
-#~ msgstr "موصل UPS"
+msgid "UPS Connector"
+msgstr "موصل UPS"
 
-#~ msgid "USPS Connector"
-#~ msgstr "موصل USPS"
+msgid "USPS Connector"
+msgstr "موصل USPS"
 
-#~ msgid "Website Messages"
-#~ msgstr "رسائل الموقع الإلكتروني"
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني"
 
-#~ msgid "Website communication history"
-#~ msgstr "سجل تواصل الموقع الإلكتروني"
+msgid "Website communication history"
+msgstr "سجل تواصل الموقع الإلكتروني"
 
-#~ msgid "bpost Connector"
-#~ msgstr "موصل bpost"
+msgid "bpost Connector"
+msgstr "موصل bpost"
 
-#~ msgid "Demo Lot/SN"
-#~ msgstr "رقم المجموعة/الرقم التسلسلي التجريبي"
+msgid "Demo Lot/SN"
+msgstr "رقم المجموعة/الرقم التسلسلي التجريبي"
 
-#~ msgid "Demo Product"
-#~ msgstr "منتج تجريبي"
+msgid "Demo Product"
+msgstr "منتج تجريبي"
 
-#~ msgid "Final Location"
-#~ msgstr "الموقع النهائي"
+msgid "Final Location"
+msgstr "الموقع النهائي"
 
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr ""
-#~ "تقوم العملية بإحضار المنتجات إلى الموقع الوسيط، ولكن هذه العملية هي جزء "
-#~ "من سلسلة من العمليات التي تستهدف الموقع النهائي."
+msgid ""
+"The operation brings the products to the intermediate location.But this "
+"operation is part of a chain of operations targeting the final location."
+msgstr ""
+"تقوم العملية بإحضار المنتجات إلى الموقع الوسيط، ولكن هذه العملية هي جزء من "
+"سلسلة من العمليات التي تستهدف الموقع النهائي."
 
-#~ msgid "On hand:"
-#~ msgstr "الكمية في اليد:"
+msgid "On hand:"
+msgstr "الكمية في اليد:"
 
-#~ msgid "Real Quantity"
-#~ msgstr "الكمية الفعلية"
+msgid "Real Quantity"
+msgstr "الكمية الفعلية"

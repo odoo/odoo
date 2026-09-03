@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 11:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-22 00:08+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-master/website/zh_Hant/>\n"
+"projects/odoo-s19-4/website/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -315,7 +315,7 @@ msgstr "\" 已在使用中。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 msgid "'. Showing results for '"
-msgstr "'.顯示結果 '"
+msgstr "」。顯示以下結果：「"
 
 #. module: website
 #. odoo-javascript
@@ -2504,6 +2504,10 @@ msgid ""
 "&gt;= 2\">Install multiple languages to enable translation across your "
 "website.</span>"
 msgstr ""
+"<span invisible=\"website_language_count &lt; 2\">網站訪客看到的語言版本，會"
+"與其瀏覽器語言相符。若無可用版本，會顯示預設語言。</span>\n"
+"                                <span invisible=\"website_language_count "
+"&gt;= 2\">你可安裝多種語言，以啟用網站全站翻譯。</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_big_number
@@ -4182,7 +4186,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Arrow Position"
-msgstr ""
+msgstr "箭嘴位置"
 
 #. module: website
 #. odoo-javascript
@@ -4304,7 +4308,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__publish_on
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__publish_on
 msgid "Auto publish on"
-msgstr ""
+msgstr "自動發佈於"
 
 #. module: website
 #. odoo-javascript
@@ -4841,19 +4845,19 @@ msgstr "下方"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Bottom Center"
-msgstr ""
+msgstr "底部置中"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Bottom Left"
-msgstr ""
+msgstr "左下"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Bottom Right"
-msgstr ""
+msgstr "右下"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -5137,7 +5141,7 @@ msgstr "行動呼籲"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Camera"
-msgstr "攝像頭"
+msgstr "相機"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__can_publish
@@ -6447,7 +6451,7 @@ msgstr "建立"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Create New"
-msgstr "建立新的"
+msgstr "建立新一項"
 
 #. module: website
 #. odoo-javascript
@@ -6613,7 +6617,7 @@ msgstr "自訂比例"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Custom Text"
-msgstr "自訂文字"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -7517,6 +7521,8 @@ msgid ""
 "Display a customizable cookies bar on your website. Please ensure your site "
 "is GDPR-compliant (e.g. Google Fonts usage)."
 msgstr ""
+"在你的網站顯示可自訂的 Cookie 通知列。請確保你的網站符合歐盟 GDPR 規定（例"
+"如：使用 Google Fonts 字體的方式）。"
 
 #. module: website
 #. odoo-python
@@ -7545,12 +7551,12 @@ msgstr "在網站上顯示此標誌。"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website for this web address"
-msgstr "為此網址顯示此網站"
+msgstr "使用以下網址時，顯示此網站"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
-msgstr "當使用者連至此網域時顯示這個網站"
+msgstr "訪客存取以下網域時，顯示此網站"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
@@ -7610,7 +7616,7 @@ msgstr "推軌變焦"
 #: model:ir.model.fields,field_description:website.field_website_controller_page__record_domain
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Domain"
-msgstr "篩選範圍"
+msgstr "網域"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__record_domain
@@ -8781,7 +8787,7 @@ msgstr "我們優勝過人的特色"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_option.xml:0
 msgid "Fetched Elements"
-msgstr "已讀取元素"
+msgstr "顯示項目數量"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_model_fields
@@ -9345,7 +9351,7 @@ msgstr "全螢幕"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/snippet_model.js:0
 msgid "Full-Screen"
-msgstr ""
+msgstr "全螢幕"
 
 #. module: website
 #. odoo-javascript
@@ -10988,7 +10994,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Inside"
-msgstr ""
+msgstr "內部"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_boxed
@@ -11204,7 +11210,7 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Inverted colors"
-msgstr ""
+msgstr "反轉顏色"
 
 #. module: website
 #. odoo-javascript
@@ -13292,12 +13298,12 @@ msgstr "電子報"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter Aside"
-msgstr ""
+msgstr "旁附電子通訊"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Newsletter Benefits"
-msgstr ""
+msgstr "電子通訊優勢"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -14151,7 +14157,7 @@ msgstr "有效地組織及展示關鍵資訊，可大大提升訪客轉化為客
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 #: code:addons/website/static/src/snippets/s_website_form/add_other_option.js:0
 msgid "Other"
-msgstr ""
+msgstr "其他"
 
 #. module: website
 #. odoo-python
@@ -14953,7 +14959,7 @@ msgstr "請正確填寫表單."
 msgid ""
 "Please fill in the form correctly. The file “%(fileName)s” is too large. "
 "(Maximum %(max)s MB)"
-msgstr ""
+msgstr "請正確填寫表單。檔案「%(fileName)s」過大，最大上限為 %(max)s MB。"
 
 #. module: website
 #. odoo-javascript
@@ -15447,7 +15453,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__published_date
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__published_date
 msgid "Published date"
-msgstr ""
+msgstr "發佈日期"
 
 #. module: website
 #. odoo-javascript
@@ -16209,7 +16215,7 @@ msgstr "我們提供全天候協助，確保問題能快速解決，助你保持
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Rounded"
-msgstr "圓"
+msgstr "圓角"
 
 #. module: website
 #. odoo-javascript
@@ -17157,6 +17163,8 @@ msgid ""
 "Showing results for\n"
 "                '"
 msgstr ""
+"顯示以下結果：\n"
+"                「"
 
 #. module: website
 #. odoo-javascript
@@ -17204,7 +17212,7 @@ msgstr "簡單"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Simple and privacy-friendly Google Analytics alternative"
-msgstr ""
+msgstr "簡單、重視私隱的 Google Analytics 分析替代方案"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_block
@@ -17225,7 +17233,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/dynamic_snippet_carousel_option.xml:0
 msgid "Single"
-msgstr "單身"
+msgstr "單項"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_site
@@ -17880,13 +17888,13 @@ msgstr "提交"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
 msgid "Subtle"
-msgstr "微妙"
+msgstr "淺色"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 msgid "Subtle colors"
-msgstr ""
+msgstr "淺色"
 
 #. module: website
 #. odoo-javascript
@@ -19010,7 +19018,7 @@ msgstr "自上次網頁檢視以來的時間.例如: 2分鐘前"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.xml:0
 msgid "Time's up! You can now visit"
-msgstr ""
+msgstr "時間到！你現在可以訪問"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_grid
@@ -21395,7 +21403,7 @@ msgstr "你未有提供有效的 Facebook 連結"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.xml:0
 msgid "You do not have the necessary permissions to create new content pages."
-msgstr ""
+msgstr "你沒有建立新內容頁面所需的權限。"
 
 #. module: website
 #. odoo-python
@@ -21427,7 +21435,7 @@ msgstr "您已將此頁面從搜尋結果中隱藏.此頁面將不會被搜尋�
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "You have uploaded too many files(Maximum %s files)."
-msgstr ""
+msgstr "你上載了太多檔案。最多只可上載 %s 個檔案。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -21478,6 +21486,8 @@ msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provide enough options to retrieve its content.<br/>"
 msgstr ""
+"你的動態小摘要將在此處顯示。系統現時顯示此訊息，是因為你未有提供足夠的選項去"
+"讀取其內容。<br/>"
 
 #. module: website
 #. odoo-javascript
@@ -21615,7 +21625,7 @@ msgstr ""
 msgid ""
 "Your upload is too large for the server to accept. Please choose smaller "
 "files."
-msgstr ""
+msgstr "你上載的檔案過大，伺服器未能接收。請選擇檔案大小較小的檔案。"
 
 #. module: website
 #. odoo-javascript
@@ -22841,7 +22851,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_searchbar/000.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 msgid "result(s)"
-msgstr ""
+msgstr "項結果"
 
 #. module: website
 #. odoo-javascript
@@ -23159,643 +23169,3 @@ msgstr "✽ 披薩/薄餅"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽ 我們提供的服務"
-
-#~ msgid "Accounts are usable across all your multiple websites"
-#~ msgstr "帳戶可在你所有網站上使用"
-
-#~ msgid "CTA, button, btn, action, engagement, link, offer, appeal"
-#~ msgstr ""
-#~ "CTA, 行動呼籲, 按鈕, btn, 動作, 行動, 操作, 互動, 吸引, 連結, 優惠, 呼籲"
-
-#~ msgid ""
-#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
-#~ "action, prompt, interact, trigger"
-#~ msgstr ""
-#~ "CTA, 行動呼籲, 按鈕, btn, 動作, 行動, 操作, 互動, 吸引, 連結, 優惠, 呼籲, "
-#~ "提示, 快速, 觸發"
-
-#~ msgid ""
-#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
-#~ "action, prompt, interact, trigger, items, checklists, entries, sequences, "
-#~ "bullets, points, list, group, benefits, features, advantages"
-#~ msgstr ""
-#~ "CTA, 行動呼籲, 按鈕, btn, 動作, 行動, 操作, 互動, 吸引, 連結, 優惠, 呼籲, "
-#~ "提示, 快速, 觸發, 項目, 清單, 檢查清單, 列表, 條目, 記項, 序列, 項目符號, "
-#~ "點列, 要點, 群組, 組別, 好處, 功能, 優勢, 特色"
-
-#~ msgid ""
-#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
-#~ "action, prompt, interact, trigger, mockup"
-#~ msgstr ""
-#~ "CTA, 行動呼籲, 按鈕, btn, 動作, 行動, 操作, 互動, 吸引, 連結, 優惠, 呼籲, "
-#~ "提示, 快速, 觸發, 模擬, 範例"
-
-#~ msgid ""
-#~ "CTA, button, btn, action, engagement, link, offer, appeal, call to "
-#~ "action, prompt, interact, trigger, mockups"
-#~ msgstr ""
-#~ "CTA, 行動呼籲, 按鈕, btn, 動作, 行動, 操作, 互動, 吸引, 連結, 優惠, 呼籲, "
-#~ "提示, 快速, 觸發, 模擬, 範例"
-
-#~ msgid "Catalog"
-#~ msgstr "目錄"
-
-#~ msgid "Full-Width"
-#~ msgstr "全寬"
-
-#~ msgid "Narrow"
-#~ msgstr "窄"
-
-#~ msgid "Places API"
-#~ msgstr "地點 API"
-
-#~ msgid "TIP:"
-#~ msgstr "提示："
-
-#~ msgid "This is a small title related to the current image"
-#~ msgstr "這是與目前圖片相關的小標題"
-
-#~ msgid "Why Our Product is the Future of Innovation"
-#~ msgstr "為甚麼我們的產品，走在創新未來的尖端"
-
-#~ msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
-#~ msgstr ""
-#~ "區塊, 方塊, 部落格, 網誌, 帖文, 文章, 目錄, 產品目錄, 提要, 訊息流, 項目, "
-#~ "條目, 記項, 集合, 系列"
-
-#~ msgid ""
-#~ "cite, slogan, tagline, mantra, catchphrase, statements, sayings, "
-#~ "comments, mission, citations, maxim, quotes, principle, ethos, values"
-#~ msgstr ""
-#~ "引用, 口號, 標語, 口頭禪, 流行語, 陳述句, 諺語, 俗語, 評論, 使命, 引文, 格"
-#~ "言, 引言, 原則, 精神, 價值觀"
-
-#~ msgid ""
-#~ "cite, testimonials, endorsements, reviews, feedback, statements, "
-#~ "references, sayings, comments, appreciations, citations, carousel"
-#~ msgstr ""
-#~ "引用, 推薦, 認可, 評價, 回饋, 意見, 陳述, 參考, 評言, 名言, 評論, 讚賞, 引"
-#~ "文, 輪播, 圖片輪播, 循環播放"
-
-#~ msgid ""
-#~ "columns, gallery, pictures, photos, media, text, content, album, "
-#~ "showcase, visuals, portfolio, arrangement, collection, visual-grid, "
-#~ "split, alignment, added value"
-#~ msgstr ""
-#~ "欄, 直欄, 圖庫, 照片庫, 相冊, 相簿, 圖片, 照片, 相片, 媒體, 多媒體, 文字, "
-#~ "文本, 內容, 展示, 視覺效果, 作品集, 排列, 集合, 系列, 視覺網格, 分割, 對"
-#~ "齊, 增值, 附加價值"
-
-#~ msgid ""
-#~ "common answers, common questions, faq, QA, collapse, expandable, toggle, "
-#~ "collapsible, hide-show, movement, information, image, picture, photo, "
-#~ "illustration, media, visual"
-#~ msgstr ""
-#~ "常見問答, 常見答案, 常見問題, 常見疑難, 問答, 解答, 摺疊, 可展開, 切換, 可"
-#~ "摺疊, 隱藏及顯示, 動畫, 資訊, 圖像, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, "
-#~ "視覺"
-
-#~ msgid ""
-#~ "comparison, price, pricing, engage, call to action, cta, box, shop, "
-#~ "table, cart, product, cost, charges, fees, tariffs, prices, expenses"
-#~ msgstr ""
-#~ "比較, 價錢, 價格, 定價, 互動, 吸引, 行動呼籲, cta, 方格, 方塊, 區塊, 商"
-#~ "店, 網店, 桌子, 購物車, 產品, 成本, 收費, 費用, 關稅, 開支, 支出"
-
-#~ msgid ""
-#~ "contact, collect, submission, input, fields, questionnaire, survey, "
-#~ "registration, request"
-#~ msgstr ""
-#~ "聯絡, 聯繫, 聯絡人, 收集, 提交, 輸入, 欄位, 問卷, 調查, 註冊, 登記, 報名, "
-#~ "請求, 要求, 索取"
-
-#~ msgid ""
-#~ "contact, collect, submission, input, fields, questionnaire, survey, "
-#~ "registration, request, image, picture, photo, illustration, media, visual"
-#~ msgstr ""
-#~ "聯絡, 聯繫, 聯絡人, 收集, 提交, 輸入, 欄位, 問卷, 調查, 註冊, 登記, 報名, "
-#~ "請求, 要求, 索取, 圖片, 圖像, 照片, 相片, 插圖, 媒體, 多媒體, 視覺"
-
-#~ msgid ""
-#~ "contact, collect, submission, input, fields, questionnaire, survey, "
-#~ "registration, request, image, picture, photo, illustration, media, "
-#~ "visual, company, organization, address, phone, email, location, get-in-"
-#~ "touch"
-#~ msgstr ""
-#~ "聯絡, 聯繫, 聯絡人, 收集, 提交, 輸入, 欄位, 問卷, 調查, 註冊, 登記, 報名, "
-#~ "請求, 要求, 索取, 圖片, 圖像, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 公司, "
-#~ "組織, 機構, 地址, 電話, 電子郵件, 電郵, 電郵地址, 位置, 地點, 接觸"
-
-#~ msgid ""
-#~ "contact, collect, submission, input, fields, questionnaire, survey, "
-#~ "registration, request, image, picture, photo, illustration, media, "
-#~ "visual, get-in-touch"
-#~ msgstr ""
-#~ "聯絡, 聯繫, 聯絡人, 收集, 提交, 輸入, 欄位, 問卷, 調查, 註冊, 登記, 報名, "
-#~ "請求, 要求, 索取, 圖片, 圖像, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 接觸, "
-#~ "聯絡我們"
-
-#~ msgid "content, paragraph, article, body, description, information"
-#~ msgstr "內容, 段落, 文章, 內文, 描述, 說明, 資料, 資訊"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination"
-#~ msgstr "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, engage, call to action, cta, box, showcase"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 互動, "
-#~ "吸引, 行動呼籲, cta, 方塊, 區塊, 展示"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, heading, headline"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 標題, "
-#~ "小標題, 大標題"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, more, hexagon, geometric"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 更多, "
-#~ "六邊形, 六角形, 幾何"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, network, relationships, interactions, connectivity, "
-#~ "collaborations"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 網絡, "
-#~ "關係, 互動, 連結, 連繫, 協作, 合作"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, trendy, pattern, design"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 潮流, "
-#~ "時尚, 圖案, 設計"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, trendy, pattern, design, shape, geometric, patterned"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 潮流, "
-#~ "時尚, 圖案, 設計, 形狀, 幾何, 花樣, 圖案式樣, 圖樣"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
-#~ "contrast"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 潮流, "
-#~ "時尚, 圖案, 設計, 形狀, 幾何, 花樣, 圖案式樣, 圖樣, 對比"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, article, story, "
-#~ "combination, trendy, pattern, design, shape, geometric, patterned, "
-#~ "contrast, collage, arrangement, gallery, creative, mosaic"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 潮流, "
-#~ "時尚, 圖案, 設計, 形狀, 幾何, 花樣, 圖案式樣, 圖樣, 對比, 拼貼, 排列, 圖"
-#~ "庫, 照片庫, 相冊, 相簿, 創意, 馬賽克"
-
-#~ msgid ""
-#~ "content, picture, photo, illustration, media, visual, focus, in-depth, "
-#~ "analysis, more, contact, detailed, mockup, explore, insight"
-#~ msgstr ""
-#~ "內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 專注, 深入, 分析, 更多, "
-#~ "聯絡, 詳細, 模擬, 探索, 洞見, 見解"
-
-#~ msgid ""
-#~ "description, containers, layouts, structures, multi-columns, modules, "
-#~ "boxes"
-#~ msgstr "描述, 說明, 容器, 版面, 佈局, 結構, 多欄, 直欄, 模組, 方塊, 區塊"
-
-#~ msgid ""
-#~ "description, containers, layouts, structures, multi-columns, modules, "
-#~ "boxes, content, picture, photo, illustration, media, visual, article, "
-#~ "story, combination, showcase, announcement, reveal"
-#~ msgstr ""
-#~ "描述, 說明, 容器, 版面, 佈局, 結構, 多欄, 直欄, 模組, 方塊, 區塊, 內容, 圖"
-#~ "片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 展示, 宣佈, 公"
-#~ "告, 發佈, 揭示"
-
-#~ msgid ""
-#~ "description, containers, layouts, structures, multi-columns, modules, "
-#~ "boxes, content, picture, photo, illustration, media, visual, article, "
-#~ "story, combination, showcase, announcement, reveal, trendy, design, "
-#~ "shape, geometric, engage, call to action, cta, button"
-#~ msgstr ""
-#~ "描述, 說明, 容器, 版面, 佈局, 結構, 多欄, 直欄, 模組, 方塊, 區塊, 內容, 圖"
-#~ "片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事, 組合, 展示, 宣佈, 公"
-#~ "告, 發佈, 揭示, 潮流, 時尚, 設計, 形狀, 幾何, 互動, 吸引, 行動呼籲, cta, "
-#~ "按鈕"
-
-#~ msgid ""
-#~ "four sections, column, grid, division, split, segments, pictures, "
-#~ "illustration, media, photos, tiles, arrangement, gallery, images-grid, "
-#~ "mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
-#~ "thumbnails, engage, call to action, cta, showcase"
-#~ msgstr ""
-#~ "四部分, 欄, 直欄, 網格, 劃分, 分割, 部份, 圖片, 照片, 相片, 插圖, 媒體, 多"
-#~ "媒體, 瓷磚, 方塊, 方格, 排列, 圖庫, 照片庫, 相冊, 相簿, 圖片網格, 混合, 集"
-#~ "合, 堆疊, 視覺網格, 展示, 視覺效果, 作品集, 縮圖, 互動, 吸引, 行動呼籲, "
-#~ "cta"
-
-#~ msgid ""
-#~ "gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
-#~ "thumbnails, slideshow"
-#~ msgstr ""
-#~ "圖庫, 照片庫, 相冊, 相簿, 循環播放, 輪播, 圖片, 照片, 相片, 展示, 視覺效"
-#~ "果, 作品集, 縮圖, 幻燈片, 簡報, 演示"
-
-#~ msgid ""
-#~ "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
-#~ "rotating, swipe, transition, media-carousel, movement"
-#~ msgstr ""
-#~ "圖庫, 照片庫, 相冊, 相簿, 循環播放, 輪播, 滑動, 幻燈片, 簡報, 演示, 圖片, "
-#~ "照片, 相片, 圖片滑動, 旋轉, 擦過, 過場, 媒體輪播, 動作, 動畫"
-
-#~ msgid ""
-#~ "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
-#~ "rotating, swipe, transition, media-carousel, movement, cta, engagement, "
-#~ "call to action"
-#~ msgstr ""
-#~ "圖庫, 照片庫, 相冊, 相簿, 循環播放, 輪播, 滑動, 幻燈片, 簡報, 演示, 圖片, "
-#~ "照片, 相片, 圖片滑動, 旋轉, 擦過, 過場, 媒體輪播, 動作, 動畫, cta, 互動, "
-#~ "吸引, 行動呼籲, 呼籲"
-
-#~ msgid ""
-#~ "graph, table, diagram, pie, plot, bar, metrics, figures, data-"
-#~ "visualization, statistics, stats, analytics, infographic, skills, report"
-#~ msgstr ""
-#~ "圖表, 表格, 示意圖, 圓形圖, 繪製圖表, 點陣圖, 棒形圖, 指標, 數據, 數據視覺"
-#~ "化, 統計, 統計數據, 分析, 資訊圖表, 技巧, 報告, 報表"
-
-#~ msgid ""
-#~ "grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
-#~ "mosaic, collage, arrangement, collection, visual-grid"
-#~ msgstr ""
-#~ "網格, 圖庫, 照片庫, 相冊, 相簿, 圖片, 照片, 相片, 展示, 視覺效果, 作品集, "
-#~ "馬賽克, 拼貼, 排列, 集合, 系列, 視覺網格"
-
-#~ msgid ""
-#~ "grid, gallery, pictures, photos, media, text, content, album, showcase, "
-#~ "visuals, portfolio, mosaic, collage, arrangement, collection, visual-"
-#~ "grid, split, alignment"
-#~ msgstr ""
-#~ "網格, 圖庫, 照片庫, 相冊, 相簿, 圖片, 照片, 相片, 媒體, 多媒體, 文字, 文"
-#~ "本, 內容, 展示, 視覺效果, 作品集, 馬賽克, 拼貼, 排列, 集合, 系列, 視覺網"
-#~ "格, 分割, 對齊"
-
-#~ msgid ""
-#~ "header, introduction, home, content, introduction, overview, spotlight, "
-#~ "presentation, welcome, context, description, primary, highlight, lead"
-#~ msgstr ""
-#~ "標題, 主題, 頁首, 介紹, 簡介, 主頁, 首頁, 內容, 概覽, 焦點, 演示, 簡報, 歡"
-#~ "迎, 背景, 描述, 說明, 主要, 焦點, 引旨"
-
-#~ msgid ""
-#~ "heading, h1, headline, header, main, top, caption, introductory, "
-#~ "principal, key"
-#~ msgstr ""
-#~ "標題, h1, 大標題, 小標題, 頁首, 主頁, 首頁, 圖片說明, 介紹, 主要, 關鍵"
-
-#~ msgid ""
-#~ "headline, header, content, picture, photo, illustration, media, visual, "
-#~ "article, combination, trendy, pattern, design, bold, impactful, vibrant, "
-#~ "standout"
-#~ msgstr ""
-#~ "標題, 頁首, 內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 組合, "
-#~ "潮流, 時尚, 圖案, 設計, 大膽, 有力, 活力, 突出"
-
-#~ msgid ""
-#~ "headline, header, content, picture, photo, illustration, media, visual, "
-#~ "combination"
-#~ msgstr "標題, 頁首, 內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 組合"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, branding, intro, home, showcase, "
-#~ "spotlight, lead, welcome, announcement, splash, top, main"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 品牌, 介紹, 簡介, "
-#~ "主頁, 首頁, 展示, 焦點, 引旨, 歡迎, 宣佈, 公告, 初始頁, 著陸頁"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, branding, intro, home, showcase, "
-#~ "spotlight, main, landing, presentation, top, splash, parallax"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 品牌, 介紹, 簡介, "
-#~ "主頁, 首頁, 展示, 焦點, 著陸頁, 演示, 簡報, 初始頁, 啟始頁, 視差"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, intro, home, content, description, "
-#~ "primary, highlight, lead"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 介紹, 簡介, 主頁, "
-#~ "首頁, 內容, 描述, 說明, 主要, 焦點, 引旨"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, introduction, home, content, "
-#~ "introduction, overview, spotlight, presentation, welcome, context, "
-#~ "description, primary, highlight, lead"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 介紹, 簡介, 主頁, "
-#~ "首頁, 內容, 概覽, 焦點, 演示, 簡報, 歡迎, 背景, 描述, 說明, 主要, 焦點, 引"
-#~ "旨"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, introduction, home, content, "
-#~ "introduction, overview, spotlight, presentation, welcome, context, "
-#~ "description, primary, highlight, lead, CTA, promote, promotion"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 介紹, 簡介, 主頁, "
-#~ "首頁, 內容, 概覽, 焦點, 演示, 簡報, 歡迎, 背景, 描述, 說明, 主要, 焦點, 引"
-#~ "旨, CTA, 行動呼籲, 推廣, 宣傳, 促銷"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, introduction, home, content, "
-#~ "introduction, overview, spotlight, presentation, welcome, context, "
-#~ "description, primary, highlight, lead, discover, exploration, reveal"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 介紹, 簡介, 主頁, "
-#~ "首頁, 內容, 概覽, 焦點, 演示, 簡報, 歡迎, 背景, 描述, 說明, 主要, 焦點, 引"
-#~ "旨, 發現, 發掘, 探索, 揭示"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, introduction, home, content, "
-#~ "introduction, overview, spotlight, presentation, welcome, context, "
-#~ "description, primary, highlight, lead, journey, skills, expertises, "
-#~ "experts, accomplishments, knowledge"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 介紹, 簡介, 主頁, "
-#~ "首頁, 內容, 概覽, 焦點, 演示, 簡報, 歡迎, 背景, 描述, 說明, 主要, 焦點, 引"
-#~ "旨, 旅程, 技巧, 專業知識, 專家, 成就, 知識, 知識庫"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
-#~ "photo, illustration, media, visual, article, combination, trendy, "
-#~ "pattern, design"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 介紹, 簡介, 主頁, "
-#~ "首頁, 內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 組合, 潮流, "
-#~ "時尚, 圖案, 設計"
-
-#~ msgid ""
-#~ "hero, jumbotron, headline, header, introduction, home, content, picture, "
-#~ "photo, illustration, media, visual, article, combination, trendy, "
-#~ "pattern, design, centered"
-#~ msgstr ""
-#~ "大圖, 大相, 主頁橫幅, 大電視, 大銀幕, 標題, 主題, 頁首, 介紹, 簡介, 主頁, "
-#~ "首頁, 內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 組合, 潮流, "
-#~ "時尚, 圖案, 設計, 居中, 置中"
-
-#~ msgid ""
-#~ "history, story, events, milestones, chronology, sequence, progression, "
-#~ "achievements"
-#~ msgstr ""
-#~ "歷史, 故事, 事件, 活動, 里程碑, 編年表, 時序, 順序, 進度, 進展, 發展, 成就"
-
-#~ msgid ""
-#~ "history, story, events, milestones, chronology, sequence, progression, "
-#~ "achievements, changelog, updates, announcements, recent, latest"
-#~ msgstr ""
-#~ "歷史, 故事, 事件, 活動, 里程碑, 編年表, 時序, 順序, 進度, 進展, 發展, 成"
-#~ "就, 變更記錄, 更新記錄, 更新, 新消息, 宣佈, 公告, 最近, 最新"
-
-#~ msgid ""
-#~ "history, story, events, milestones, chronology, sequence, progression, "
-#~ "achievements, changelog, updates, announcements, recent, latest, picture, "
-#~ "photo, illustration, media, visual"
-#~ msgstr ""
-#~ "歷史, 故事, 事件, 活動, 里程碑, 編年表, 時序, 順序, 進度, 進展, 發展, 成"
-#~ "就, 變更記錄, 更新記錄, 更新, 新消息, 宣佈, 公告, 最近, 最新, 圖片, 圖像, "
-#~ "照片, 相片, 插圖, 媒體, 多媒體, 視覺"
-
-#~ msgid ""
-#~ "journey, exploration, travel, outdoor, excitement, quest, start, "
-#~ "onboarding, discovery, thrill"
-#~ msgstr "旅程, 探索, 旅行, 戶外, 興奮, 刺激, 探究, 開始, 新手, 入門, 發現"
-
-#~ msgid ""
-#~ "masonry, grid, column, pictures, photos, album, showcase, visuals, "
-#~ "portfolio, mosaic, collage, arrangement, collection, visual-grid"
-#~ msgstr ""
-#~ "石匠, 石工, 網格, 欄, 直欄, 圖片, 照片, 相片, 展示, 視覺效果, 作品集, 馬賽"
-#~ "克, 拼貼, 排列, 集合, 系列, 視覺網格"
-
-#~ msgid ""
-#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-#~ "prices, expenses"
-#~ msgstr ""
-#~ "菜單, 餐牌, 定價, 價錢, 價格, 商店, 桌子, 購物車, 產品, 成本, 收費, 費用, "
-#~ "收費率, 開支, 支出"
-
-#~ msgid ""
-#~ "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
-#~ "prices, expenses, columns"
-#~ msgstr ""
-#~ "菜單, 餐牌, 定價, 價錢, 價格, 商店, 桌子, 購物車, 產品, 成本, 收費, 費用, "
-#~ "收費率, 開支, 支出, 欄, 直欄"
-
-#~ msgid "navigation, index, outline, chapters, sections, overview, menu, tab"
-#~ msgstr "導航, 導覽, 索引, 大綱, 章節, 部份, 概述, 概覽, 選單, 分頁"
-
-#~ msgid ""
-#~ "organization, company, people, column, members, staffs, profiles, bios, "
-#~ "roles, personnel, crew"
-#~ msgstr ""
-#~ "組織, 機構, 公司, 人員, 職員, 欄, 直欄, 成員, 員工, 簡介, 個人檔案, 履歷, "
-#~ "背景, 角色, 職能, 人事, 僱員, 工作人員, 團隊"
-
-#~ msgid ""
-#~ "organization, company, people, members, staffs, profiles, bios, roles, "
-#~ "personnel, crew, patterned"
-#~ msgstr ""
-#~ "組織, 機構, 公司, 人員, 職員, 成員, 員工, 簡介, 個人檔案, 履歷, 背景, 角"
-#~ "色, 職能, 人事, 僱員, 工作人員, 團隊, 圖案, 模式"
-
-#~ msgid ""
-#~ "organization, company, people, members, staffs, profiles, bios, roles, "
-#~ "personnel, crew, patterned, trendy"
-#~ msgstr ""
-#~ "組織, 機構, 公司, 人員, 職員, 成員, 員工, 簡介, 個人檔案, 履歷, 背景, 角"
-#~ "色, 職能, 人事, 僱員, 工作人員, 團隊, 圖案, 模式, 潮流, 時尚"
-
-#~ msgid ""
-#~ "organization, company, people, members, staffs, profiles, bios, roles, "
-#~ "personnel, crew, patterned, trendy, social"
-#~ msgstr ""
-#~ "組織, 機構, 公司, 人員, 職員, 成員, 員工, 簡介, 個人檔案, 履歷, 背景, 角"
-#~ "色, 職能, 人事, 僱員, 工作人員, 團隊, 圖案, 模式, 潮流, 時尚, 社交媒體, 社"
-#~ "群媒體"
-
-#~ msgid ""
-#~ "organization, structure, people, team, name, role, position, image, "
-#~ "portrait, photo, employees, shapes"
-#~ msgstr ""
-#~ "組織, 機構, 架構, 人員, 職員, 團隊, 名稱, 姓名, 角色, 職能, 職位, 圖像, 圖"
-#~ "片, 肖像, 照片, 相片, 員工, 形狀"
-
-#~ msgid ""
-#~ "picture, photo, illustration, media, visual, start, launch, commencement, "
-#~ "initiation, opening, kick-off, kickoff, beginning, events, parallax"
-#~ msgstr ""
-#~ "圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 開始, 啟動, 起始, 發起, 開幕, "
-#~ "啟始, 起動, 活動, 事件, 視差"
-
-#~ msgid ""
-#~ "pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
-#~ "competitive, overview"
-#~ msgstr ""
-#~ "定價, 價錢, 價格, 促銷, 推廣, 優惠, 功能比較, 並排比較, 評估, 競爭, 對手, "
-#~ "概覽"
-
-#~ msgid ""
-#~ "process, progression, guide, workflow, sequence, instructions, stages, "
-#~ "procedure, roadmap"
-#~ msgstr ""
-#~ "流程, 進度, 進展, 指南, 指引, 工作流程, 工序, 順序, 說明, 指示, 階段, 程"
-#~ "序, 路線圖"
-
-#~ msgid ""
-#~ "promotion, characteristic, quality, highlights, specs, advantages, "
-#~ "functionalities, exhibit, details, capabilities, attributes, promotion"
-#~ msgstr ""
-#~ "推廣, 宣傳, 促銷, 特性, 特色, 特質, 品質, 質素, 焦點, 規格, 好處, 功能, 展"
-#~ "示, 詳細, 詳情, 能力, 屬性"
-
-#~ msgid ""
-#~ "promotion, characteristic, quality, highlights, specs, advantages, "
-#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
-#~ "headline, content, overview, spotlight"
-#~ msgstr ""
-#~ "推廣, 宣傳, 促銷, 特性, 特色, 特質, 品質, 質素, 焦點, 規格, 好處, 功能, 展"
-#~ "示, 詳細, 詳情, 能力, 屬性, 標題, 內容, 概覽"
-
-#~ msgid ""
-#~ "promotion, characteristic, quality, highlights, specs, advantages, "
-#~ "functionalities, exhibit, details, capabilities, attributes, promotion, "
-#~ "presentation, demo, feature"
-#~ msgstr ""
-#~ "推廣, 宣傳, 促銷, 特性, 特色, 特質, 品質, 質素, 焦點, 規格, 好處, 功能, 展"
-#~ "示, 詳細, 詳情, 能力, 屬性, 演示, 簡報, 示範, 特色功能"
-
-#~ msgid ""
-#~ "promotion, characteristic, quality, highlights, specs, advantages, "
-#~ "functionalities, features, exhibit, details, capabilities, attributes, "
-#~ "promotion, headline, content, overview, spotlight"
-#~ msgstr ""
-#~ "推廣, 宣傳, 促銷, 特性, 特色, 特質, 品質, 質素, 焦點, 規格, 好處, 功能, 特"
-#~ "色功能, 展示, 詳細, 詳情, 能力, 屬性, 標題, 內容, 概覽"
-
-#~ msgid ""
-#~ "questions, answers, common answers, common questions, faq, help, support, "
-#~ "information, knowledge, guide, troubleshooting, assistance, QA, terms of "
-#~ "services"
-#~ msgstr ""
-#~ "問題, 答案, 常見解答, 常見問題, 常見問答, 幫助, 支援, 資訊, 知識, 指南, 指"
-#~ "引, 故障排解, 疑難排解, 除錯, 幫助, 協助, 問答, 服務條款"
-
-#~ msgid ""
-#~ "questions, answers, common answers, common questions, faq, help, support, "
-#~ "information, knowledge, guide, troubleshooting, assistance, columns, QA"
-#~ msgstr ""
-#~ "問題, 答案, 常見解答, 常見問題, 常見問答, 幫助, 支援, 資訊, 知識, 指南, 指"
-#~ "引, 故障排解, 疑難排解, 除錯, 幫助, 協助, 欄, 直欄, 問答"
-
-#~ msgid ""
-#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
-#~ "photo, illustration, media, visual, article, combination"
-#~ msgstr ""
-#~ "發佈, 揭示, 展示, 發表, 啟動, 演示, 簡報, 宣佈, 公告, 內容, 圖片, 照片, 相"
-#~ "片, 插圖, 媒體, 多媒體, 視覺, 文章, 組合"
-
-#~ msgid ""
-#~ "reveal, showcase, launch, presentation, announcement, content, picture, "
-#~ "photo, illustration, media, visual, combination"
-#~ msgstr ""
-#~ "發佈, 揭示, 展示, 發表, 啟動, 演示, 簡報, 宣佈, 公告, 內容, 圖片, 照片, 相"
-#~ "片, 插圖, 媒體, 多媒體, 視覺, 組合"
-
-#~ msgid ""
-#~ "scrolling, depth, effect, background, layer, visual, movement, parallax"
-#~ msgstr "滾動, 捲動, 深度, 效果, 背景, 圖層, 視覺, 運動, 動畫, 視差"
-
-#~ msgid ""
-#~ "shop, group, list, card, cart, products, inventory, catalog, merchandise, "
-#~ "goods"
-#~ msgstr ""
-#~ "商店, 網店, 群組, 組別, 清單, 列表, 卡片, 購物車, 產品, 貨品, 庫存, 存貨, "
-#~ "目錄, 產品目錄, 商品"
-
-#~ msgid ""
-#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
-#~ "figures, performance, achievements, benchmarks, milestones, indicators, "
-#~ "data, measurements, reports, trends, results"
-#~ msgstr ""
-#~ "統計, 統計數據, KPI, 績效, 量化, 數據指標, dashboard, 儀錶板, 分析, 焦點, "
-#~ "摘要, 數字, 表現, 成就, 基準, 里程碑, 指標, 數據, 量度, 報告, 報表, 趨勢, "
-#~ "結果"
-
-#~ msgid ""
-#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
-#~ "figures, performance, achievements, benchmarks, milestones, indicators, "
-#~ "data, measurements, reports, trends, results, analytics, summaries, "
-#~ "summary"
-#~ msgstr ""
-#~ "統計, 統計數據, KPI, 量度指標, 量化, 數據指標, dashboard, 儀錶板, 概覽, 分"
-#~ "析, 焦點, 摘要, 數字, 表現, 績效, 成就, 基準, 里程碑, 指標, 數據, 量度, 報"
-#~ "告, 報表, 趨勢, 結果, 總結, 提要, 概要"
-
-#~ msgid ""
-#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
-#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
-#~ "measurements, reports, trends, results"
-#~ msgstr ""
-#~ "統計, 統計數據, KPI, 績效, 量化, 數據指標, dashboard, 儀錶板, 分析, 焦點, "
-#~ "摘要, 數字, 技巧, 成就, 基準, 里程碑, 指標, 數據, 量度, 報告, 報表, 趨勢, "
-#~ "結果"
-
-#~ msgid ""
-#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
-#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
-#~ "measurements, reports, trends, results, analytics, cta, call to action, "
-#~ "button"
-#~ msgstr ""
-#~ "統計, 統計數據, KPI, 績效, 量化, 數據指標, dashboard, 儀錶板, 分析, 焦點, "
-#~ "摘要, 數字, 技巧, 成就, 基準, 里程碑, 指標, 數據, 量度, 報告, 報表, 趨勢, "
-#~ "結果, cta, 行動呼籲, 按鈕"
-
-#~ msgid ""
-#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
-#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
-#~ "measurements, reports, trends, results, analytics, summaries, summary"
-#~ msgstr ""
-#~ "統計, 統計數據, KPI, 績效, 量化, 數據指標, dashboard, 儀錶板, 分析, 焦點, "
-#~ "摘要, 數字, 技巧, 成就, 基準, 里程碑, 指標, 數據, 量度, 報告, 報表, 趨勢, "
-#~ "結果, 總結, 提要, 概要"
-
-#~ msgid ""
-#~ "statistics, stats, KPI, metrics, dashboard, analytics, highlights, "
-#~ "figures, skills, achievements, benchmarks, milestones, indicators, data, "
-#~ "measurements, reports, trends, results, analytics, summaries, summary, "
-#~ "large-figures, prominent, standout"
-#~ msgstr ""
-#~ "統計, 統計數據, KPI, 績效, 量化, 數據指標, dashboard, 儀錶板, 分析, 焦點, "
-#~ "摘要, 數字, 技巧, 成就, 基準, 里程碑, 指標, 數據, 量度, 報告, 報表, 趨勢, "
-#~ "結果, 總結, 提要, 概要, 大數字, 大數據, 顯著, 突出"
-
-#~ msgid ""
-#~ "stores, button, engagement, appeal, mockup, text, content, picture, "
-#~ "photo, illustration, media, visual, article, story"
-#~ msgstr ""
-#~ "電商, 網店, 商城, 市集, 按鈕, 互動, 吸引, 號召, 小樣, 樣板, 樣辦, 文字, 文"
-#~ "本, 內容, 圖片, 照片, 相片, 插圖, 媒體, 多媒體, 視覺, 文章, 故事"
-
-#~ msgid "⌙ Style"
-#~ msgstr "⌙ 樣式"

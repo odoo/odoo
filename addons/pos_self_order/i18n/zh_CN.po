@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 06:34+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-13 09:12+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/pos_self_order/zh_Hans/>\n"
+"projects/odoo-s19-4/pos_self_order/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -172,6 +172,34 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                   <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/> \n"
+"                   <div>\n"
+"                        <t t-if=\"client_name\"> 您好<t t-"
+"out=\"client_name\">客户名称</t>,</t>\n"
+"                        <t t-else=\"\">您好，</t>\n"
+"                    </div>\n"
+"                   <br/>\n"
+"                    <div> 您的订单<t t-out=\"object.tracking_number\">...</"
+"t> 金额为<t t-out=\"format_amount(object.amount_total,object.currency_id)"
+"\">$xx.xx</t> 已确认。<span t-if=\"object.preset_time\">订单将于<t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
+"                    <br/> \n"
+"                   <div> 准备就绪。</div>\n"
+"                    <br/>\n"
+"                   <div t-if=\"object.state == 'paid'\">\n"
+"                        <div> 随信附上您的收据</div>\n"
+"                        <br/>\n"
+"                   </div>\n"
+"                    <t t-out=\"store_name\"> 商店名称</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -190,7 +218,7 @@ msgstr "生效"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -201,7 +229,7 @@ msgstr "添加语言"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Add Media"
-msgstr ""
+msgstr "添加媒体"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -219,7 +247,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Add an order note"
-msgstr ""
+msgstr "添加订单备注"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -252,7 +280,7 @@ msgstr "下午"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -276,7 +304,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/cancel_popup/cancel_popup.xml:0
 msgid "Are you sure you want to cancel this order?"
-msgstr ""
+msgstr "确实要注销此订单吗？"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -641,7 +669,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Do not refresh the page."
-msgstr ""
+msgstr "请勿刷新页面。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -734,7 +762,7 @@ msgstr "输入您的追踪链接编号"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Error while creating the order. Please try again."
-msgstr ""
+msgstr "创建订单时发生错误。请重试。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -786,7 +814,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Full Day"
-msgstr ""
+msgstr "全天"
 
 #. module: pos_self_order
 #. odoo-python
@@ -973,7 +1001,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "It seems that the network connection was lost."
-msgstr ""
+msgstr "网络连接似乎已中断。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1042,7 +1070,7 @@ msgstr "正在加载... 稍安勿躁"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_from_longitude
 msgid "Longitude"
-msgstr ""
+msgstr "经度"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1072,12 +1100,12 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__delivery_max_distance_km
 msgid "Max radius"
-msgstr ""
+msgstr "最大半径"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_preset__delivery_max_distance_km
 msgid "Maximum delivery distance, in the unit shown next to the field."
-msgstr ""
+msgstr "最大配送距离，单位为此字段旁显示的计量单位。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1089,7 +1117,7 @@ msgstr "餐点"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_home_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_home_ids
 msgid "Media items to display on the self order screen"
-msgstr ""
+msgstr "在自助点餐界面展示的媒体素材"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1351,22 +1379,23 @@ msgstr "POS配置"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "POS 订单"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_line
+#, fuzzy
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "POS 销售订单明细"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "POS 销售订单收据生成器"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "POS 销售点付款方式"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -1397,7 +1426,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Powered by Google"
-msgstr ""
+msgstr "由 Google 提供技术支持"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1896,7 +1925,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid ""
 "The shop is currently closed but you can still place an order for later."
-msgstr ""
+msgstr "该商店目前已关闭，但您仍可下单以便稍后取货。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1909,7 +1938,7 @@ msgstr "用户必须是 POS 用户"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "This combination does not exist."
-msgstr ""
+msgstr "此组合不存在。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1927,13 +1956,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/models/pos_preset.js:0
 msgid "Today"
-msgstr ""
+msgstr "今天"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/models/pos_preset.js:0
 msgid "Tommorrow"
-msgstr ""
+msgstr "明天"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1980,7 +2009,7 @@ msgstr "验证您的选择"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Validating..."
-msgstr ""
+msgstr "正在验证..."
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_ir_ui_view
@@ -1998,7 +2027,7 @@ msgstr "警告消息"
 msgid ""
 "We couldn't locate this address. Please enter a complete address with a "
 "street number."
-msgstr ""
+msgstr "我们无法找到此地址。请输入包含门牌号的完整地址。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2006,7 +2035,7 @@ msgstr ""
 msgid ""
 "We invite you to get the receipt at the counter. Please remember your order "
 "number:"
-msgstr ""
+msgstr "请您到柜台领取收据。请记住您的订单号："
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2030,7 +2059,7 @@ msgstr "我们目前已关闭"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/self_order_index.xml:0
 msgid "We're currently closed."
-msgstr ""
+msgstr "我们目前已关闭。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2065,7 +2094,7 @@ msgstr "是"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "You are back online. You can complete your order now."
-msgstr ""
+msgstr "您已恢复在线状态。现在可以完成订单了。"
 
 #. module: pos_self_order
 #. odoo-python
@@ -2167,7 +2196,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__delivery_distance_unit__mi
 msgid "mi"
-msgstr ""
+msgstr "mi"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -2211,12 +2240,3 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr ""
-
-#~ msgid "Reset QR Codes"
-#~ msgstr "重置二维码"
-
-#~ msgid "Table Tracker:"
-#~ msgstr "跟踪表"
-
-#~ msgid "You cannot add cash payment methods in kiosk mode."
-#~ msgstr "您无法在自助终端模式下添加现金支付方式。"

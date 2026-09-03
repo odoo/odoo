@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 00:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 10:09+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_peppol/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_peppol
 #: model:ir.module.module,description:base.module_account_peppol
@@ -45,7 +45,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " (%(eas)s fehlt/fehlen)"
 
 #. module: account_peppol
 #. odoo-python
@@ -77,6 +77,8 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
 msgstr ""
+"%(processed)s Peppol-Dokument(e) verarbeitet, %(deleted)s Dokument(e) "
+"gelöscht"
 
 #. module: account_peppol
 #. odoo-python
@@ -88,7 +90,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authenticate</b>"
-msgstr ""
+msgstr "<b>Authentifizieren</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -121,7 +123,7 @@ msgstr "<span><strong>Von Peppol getrennt!</strong></span>"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "<span>This information will be sent with your response.</span>"
-msgstr ""
+msgstr "<span>Diese Informationen werden mit Ihrer Antwort gesendet.</span>"
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -306,6 +308,8 @@ msgid ""
 "A Peppol response was sent to the Peppol Access Point declaring you %"
 "(status)s this document."
 msgstr ""
+"Eine Peppol-Antwort wurde an den Peppol-Zugangspunkt gesendet, in der "
+"angegeben wird, dass Sie dieses Dokuments %(status)s haben."
 
 #. module: account_peppol
 #. odoo-python
@@ -336,7 +340,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "Es besteht bereits eine Verbindung zu „%s“."
 
 #. module: account_peppol
 #. odoo-python
@@ -450,12 +454,12 @@ msgstr "Für Peppol verwendetes Konto"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ab
 msgid "Acknowledgement"
-msgstr ""
+msgstr "Bestätigung"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Actions to suggest"
-msgstr ""
+msgstr "Vorgeschlagene Maßnahmen"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -608,6 +612,8 @@ msgid ""
 "An error occurred while responding to this invoice's expeditor.%(br)sStatus: "
 "%(status)s - %(error)s"
 msgstr ""
+"Bei der Beantwortung des Absenders dieser Rechnung ist ein Fehler "
+"aufgetreten.%(br)sStatus: %(status)s - %(error)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -641,12 +647,12 @@ msgstr "Ein interner Fehler ist aufgetreten"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ap
 msgid "Approval"
-msgstr ""
+msgstr "Genehmigung"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ap
 msgid "Approved"
-msgstr ""
+msgstr "Genehmigt"
 
 #. module: account_peppol
 #. odoo-python
@@ -654,12 +660,14 @@ msgstr ""
 #: code:addons/account_peppol/wizard/peppol_rejection_wizard.py:0
 msgid "At least one reason must be given when rejecting a Peppol invoice."
 msgstr ""
+"Bei der Ablehnung einer Peppol-Rechnung muss mindestens ein Grund angegeben "
+"werden."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "Authentifizierung abgebrochen"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -688,12 +696,12 @@ msgstr "Verfügbare Peppol-Versandmethoden"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "Basishilfmittel für UBL"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_response
 msgid "Business Level Responses for Peppol"
-msgstr ""
+msgstr "Antworten auf Geschäftsebene für Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -719,7 +727,7 @@ msgstr "Kann senden, ausstehende Registrierung zum Empfangen"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "Stornieren"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -749,7 +757,7 @@ msgstr "Partner prüfen"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__code
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_common
@@ -774,7 +782,7 @@ msgstr "Name des Unternehmens"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ca
 msgid "Conditionally accepted"
-msgstr ""
+msgstr "Bedingt akzeptiert"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_config_settings
@@ -817,7 +825,7 @@ msgstr "Kunden erstellen"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Create, send and receive e-invoices for free."
-msgstr ""
+msgstr "Erstellen, senden und empfangen Sie elektronische Rechnungen gratis."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__create_uid
@@ -850,7 +858,7 @@ msgstr "Demo"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__description
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -911,19 +919,19 @@ msgstr "Auswahl von „Übergeordnete Verbindung verwenden“ anzeigen"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "Möchten Sie fortfahren?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "Dokument erfolgreich storniert"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "Dokument erfolgreich auf Entwurf zurückgesetzt"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -933,6 +941,10 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Über Peppol gesendete oder empfangene Dokumente können nicht gelöscht "
+"werden.\n"
+"\n"
+"Möchten Sie stattdessen dieses Dokument stornieren?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -942,11 +954,15 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Über Peppol gesendete oder empfangene Dokumente können nicht gelöscht "
+"werden.\n"
+"\n"
+"Möchten Sie dieses Dokument stattdessen auf den Entwurfsstatus zurücksetzen?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Does not support Invoice Responses"
-msgstr ""
+msgstr "Unterstützt keine Rechnungsantworten"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -979,7 +995,7 @@ msgstr "EDi-Benutzer"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "EDI-Benutzer sollten einem der folgenden Typen angehören: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -1029,7 +1045,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "Frankreich – E-Rechnungsstellung (zugelassene Plattform)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1101,7 +1117,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
 msgid "In Process"
-msgstr ""
+msgstr "In Bearbeitung"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1113,6 +1129,8 @@ msgstr "Eingehendes Buchhaltungsjournal"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
+"Die Rechnungsdatei „%s“ überschreitet die Größenbeschränkung von 64 MB für "
+"den Versand über Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1149,7 +1167,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__list_identifier
 msgid "List identifier"
-msgstr ""
+msgstr "Listenkennung"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__prod
@@ -1176,7 +1194,7 @@ msgstr "Migrationsschlüssel"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Miscellaneous:"
-msgstr ""
+msgstr "Sonstiges:"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -1199,12 +1217,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__move_ids
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__move_id
 msgid "Move"
-msgstr ""
+msgstr "Buchung"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__name
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #. module: account_peppol
 #. odoo-python
@@ -1222,12 +1240,12 @@ msgstr "Es wurde kein gültiger AS4-Endpunkt für den Teilnehmer gefunden."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "Nein, behalten!"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__peppol_state__not_serviced
 msgid "Not Serviced"
-msgstr ""
+msgstr "Nicht bedient"
 
 #. module: account_peppol
 #. odoo-python
@@ -1253,12 +1271,12 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_clarification__list_identifier__opstatusaction
 msgid "OPStatusAction"
-msgstr ""
+msgstr "OPStatusAction"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_clarification__list_identifier__opstatusreason
 msgid "OPStatusReason"
-msgstr ""
+msgstr "OPStatusReason"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1274,13 +1292,13 @@ msgstr "Odoo-Demo-ID"
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_iap_connector.py:0
 msgid "Odoo Peppol Proxy returned an invalid response."
-msgstr ""
+msgstr "Der Odoo-Peppol-Proxy hat eine ungültige Antwort zurückgegeben."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with the new regulation."
-msgstr ""
+msgstr "Odoo hält Sie bezüglich der neusten Vorschriften auf dem Laufenden."
 
 #. module: account_peppol
 #. odoo-python
@@ -1299,7 +1317,7 @@ msgstr "PEPPOL-Status"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__pd
 msgid "Paid"
-msgstr ""
+msgstr "Bezahlt"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
@@ -1364,7 +1382,7 @@ msgstr "Peppol kann senden"
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_can_send_response
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_can_send_response
 msgid "Peppol Can Send Response"
-msgstr ""
+msgstr "Peppol kann Antwort senden"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1381,18 +1399,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Peppol-Dokumente können nicht gelöscht werden"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Peppol-Dokumente: Rechnung kann nicht gelöscht werden"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "Peppol-EAS"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1431,13 +1449,13 @@ msgstr "Die Peppol-ID sollte sich vom Hauptunternehmen unterscheiden."
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_identifier
 msgid "Peppol Identifier"
-msgstr ""
+msgstr "Peppol-Kennung"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppol wird gesendet"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
@@ -1484,32 +1502,32 @@ msgstr "Peppol-Registrierung"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_rejection_wizard
 msgid "Peppol Rejection wizard"
-msgstr ""
+msgstr "Assistent zur Peppol-Ablehnung"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_response_ids
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_response_ids
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_response_view_form
 msgid "Peppol Response"
-msgstr ""
+msgstr "Peppol-Antwort"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_response_support
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_response_support
 msgid "Peppol Response Service"
-msgstr ""
+msgstr "Peppol-Antwortdienst"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_response_view_list
 msgid "Peppol Responses"
-msgstr ""
+msgstr "Peppol-Antworten"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__peppol_message_uuid
 msgid "Peppol UUID"
-msgstr ""
+msgstr "Peppol-UUID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
@@ -1522,17 +1540,19 @@ msgstr "Verwendung des übergeordneten Unternehmens in Peppol"
 msgid ""
 "Peppol allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"Peppol ermöglicht die vollständige Automatisierung zum Versenden und "
+"Empfangen von elektronischen Rechnungen."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol business response error: %s"
-msgstr ""
+msgstr "Peppol-Geschäftsantwortfehler: %s"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_clarification
 msgid "Peppol clarifications used for rejection"
-msgstr ""
+msgstr "Peppol-Erläuterungen zur Ablehnung"
 
 #. module: account_peppol
 #. odoo-python
@@ -1548,7 +1568,7 @@ msgstr "Peppol E-Adresse (EAS)"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Peppol info"
-msgstr ""
+msgstr "Peppol-Info"
 
 #. module: account_peppol
 #. odoo-python
@@ -1562,6 +1582,8 @@ msgstr "Peppol-Rechnung erhalten"
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppol ist der sichere Standard für elektronische Rechnungen in der EU und "
+"in der ganzen Welt."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -1603,7 +1625,7 @@ msgstr "Peppol: Registrierungsaktualisierung"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_auto_register_services_ir_actions_server
 msgid "Peppol: auto register services"
-msgstr ""
+msgstr "Peppol: Dienste automatisch registrieren"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
@@ -1644,7 +1666,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Please fill in the company's routing identification."
-msgstr ""
+msgstr "Bitte geben Sie die Routing-Identifikation des Unternehmens ein."
 
 #. module: account_peppol
 #. odoo-python
@@ -1715,18 +1737,18 @@ msgstr "Bereit zum Senden"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Reasons"
-msgstr ""
+msgstr "Gründe"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Reasons:"
-msgstr ""
+msgstr "Gründe:"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ab
 msgid "Received"
-msgstr ""
+msgstr "Erhalten"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1754,7 +1776,7 @@ msgstr "Registrierung abgelehnt."
 #: code:addons/account_peppol/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Reject Peppol Document"
-msgstr ""
+msgstr "Peppol-Dokument ablehnen"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__re
@@ -1765,44 +1787,44 @@ msgstr "Abgelehnt"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__re
 msgid "Rejection"
-msgstr ""
+msgstr "Ablehnung"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__action_ids
 msgid "Rejection actions"
-msgstr ""
+msgstr "Ablehnungsmaßnahmen"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__reason_ids
 msgid "Rejection reasons"
-msgstr ""
+msgstr "Ablehnungsgründe"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "Auf Entwurf zurücksetzen"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__response_code
 msgid "Response Code"
-msgstr ""
+msgstr "Antwortcode"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "Routing-Endpunkt"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__routing_scheme
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__routing_scheme
 msgid "Routing ID"
-msgstr ""
+msgstr "Routing-ID"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_scheme
 msgid "Routing Scheme"
-msgstr ""
+msgstr "Routing-Schema"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
@@ -1834,7 +1856,7 @@ msgstr "Assistent zum Versand von Rechnungen"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Send Rejection"
-msgstr ""
+msgstr "Ablehnung senden"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1890,18 +1912,18 @@ msgstr "Mit Ihrer Anfrage ist etwas schiefgelaufen"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Suggested actions:"
-msgstr ""
+msgstr "Vorgeschlagene Maßnahmen:"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_supported_documents
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_supported_documents
 msgid "Supported Peppol Documents"
-msgstr ""
+msgstr "Unterstützte Peppol-Dokumente"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Supports Invoice Responses"
-msgstr ""
+msgstr "Unterstützt Rechnungsantworten"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1987,18 +2009,23 @@ msgid ""
 "The Peppol receiver of this document has rejected it with the following "
 "information:%(br)s%(rejection_message)s"
 msgstr ""
+"Der Peppol-Empfänger dieses Dokuments hat es mit folgenden Informationen "
+"abgelehnt:%(br)s%(rejection_message)s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has accepted it."
 msgstr ""
+"Der Peppol-Empfänger dieses Dokuments hat geantwortet, dass er es akzeptiert "
+"hat."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has received it."
 msgstr ""
+"Der Peppol-Empfänger dieses Dokuments hat bestätigt, dass er es erhalten hat."
 
 #. module: account_peppol
 #. odoo-python
@@ -2048,6 +2075,10 @@ msgid ""
 "document to be accepted when sent again (eventually). These will be sent to "
 "the document's sender. Not mandatory."
 msgstr ""
+"Die Maßnahmen, die dem Absender des Dokuments vorgeschlagen werden sollen, "
+"damit das Dokument bei einer erneuten Übermittlung (eventuell) akzeptiert "
+"wird. Diese werden an den Absender des Dokuments gesendet. Nicht "
+"obligatorisch."
 
 #. module: account_peppol
 #. odoo-python
@@ -2142,6 +2173,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Die folgenden %s Peppol-Dokumente werden auf den Entwurf zurückgesetzt: \n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2151,6 +2185,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Die folgenden %s Peppol-Dokumente im Entwurf werden storniert:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -2204,12 +2241,14 @@ msgid ""
 "The reasons to reject the received PEPPOL document. These will be sent to "
 "the document's sender."
 msgstr ""
+"Die Gründe für die Ablehnung des erhaltenen PEPPOL-Dokuments. Diese werden "
+"an den Absender des Dokuments gesendet."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "Die übrigen %s Dokumente werden gelöscht."
 
 #. module: account_peppol
 #. odoo-python
@@ -2385,6 +2424,8 @@ msgstr ""
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"Um die zugelassene Plattform für die elektronische Rechnungsstellung in "
+"Frankreich zu nutzen, installieren Sie das Modul"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2405,7 +2446,7 @@ msgstr "Nicht geprüft"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__uq
 msgid "Under query"
-msgstr ""
+msgstr "In Prüfung"
 
 #. module: account_peppol
 #. odoo-python
@@ -2440,7 +2481,7 @@ msgstr "Auswahl der übergeordneten Verbindung verwenden"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "Überprüfung ausstehend"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2483,7 +2524,7 @@ msgstr "Was ist Peppol und warum ist es so toll?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "Warum sollte ich die französische E-Rechnungsstellung nutzen?"
 
 #. module: account_peppol
 #. odoo-python
@@ -2501,13 +2542,13 @@ msgstr "Warum sollte ich es nutzen?"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "Ja, stornieren"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Ja, fortfahren"
 
 #. module: account_peppol
 #. odoo-python
@@ -2652,6 +2693,8 @@ msgid ""
 "Your details are being verified. There is nothing else to do on your end: "
 "your Peppol registration will be finalized automatically."
 msgstr ""
+"Ihre Angaben werden derzeit überprüft. Sie müssen nichts weiter tun: Ihre "
+"Peppol-Registrierung wird automatisch abgeschlossen."
 
 #. module: account_peppol
 #. odoo-python
@@ -2702,7 +2745,7 @@ msgstr "Ihre Anfrage wird derzeit bearbeitet."
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "accepted"
-msgstr ""
+msgstr "akzeptiert"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2725,19 +2768,19 @@ msgstr "konnte nicht per Peppol versendet werden"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "id"
-msgstr ""
+msgstr "Id"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "received"
-msgstr ""
+msgstr "erhalten"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "rejected"
-msgstr ""
+msgstr "abgelehnt"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -2759,72 +2802,59 @@ msgstr ", um Rechnungen zu verwenden, aber diese"
 msgid "uses"
 msgstr "verwendet"
 
-#~ msgid "Verify Peppol"
-#~ msgstr "Peppol verifizieren"
+msgid " (no access)"
+msgstr " (kein Zugriff)"
 
-#~ msgid "<b>Authentify with itsme</b>"
-#~ msgstr "<b>Mit Itsme authentifizieren</b>"
+msgid ""
+"Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
+msgstr ""
+"Code zur Identifizierung des Endpoint für BIS Billing 3.0 und seine "
+"Ableitungen.\n"
+"              Liste verfügbar unter https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 
-#~ msgid "Activate Electronic Invoicing"
-#~ msgstr "Elektronische Rechnungsstellung aktivieren"
+msgid "EDI user should be of type Peppol"
+msgstr "EDI-Benutzer sollte den Typ „Peppol“ haben"
 
-#~ msgid "Itsme"
-#~ msgstr "Itsme"
+msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgstr ""
+"Die Rechnung %s ist zu groß, um sie über Peppol zu versenden (Limit von 64 "
+"MB)"
 
-#~ msgid " (no access)"
-#~ msgstr " (kein Zugriff)"
+msgid "Please fill in the EAS code and the Participant ID code."
+msgstr "Bitte geben Sie den EAS-Code und den ID-Code des Teilnehmers ein."
 
-#~ msgid ""
-#~ "Code used to identify the Endpoint for BIS Billing 3.0 and its "
-#~ "derivatives.\n"
-#~ "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
-#~ "codelist/eas/"
-#~ msgstr ""
-#~ "Code zur Identifizierung des Endpoint für BIS Billing 3.0 und seine "
-#~ "Ableitungen.\n"
-#~ "              Liste verfügbar unter https://docs.peppol.eu/poacc/billing/"
-#~ "3.0/codelist/eas/"
+msgid "The Peppol endpoint identification number is not correct."
+msgstr "Die Identifikationsnummer des Peppol-Endpunkts ist nicht korrekt."
 
-#~ msgid "EDI user should be of type Peppol"
-#~ msgstr "EDI-Benutzer sollte den Typ „Peppol“ haben"
+msgid "UBL BIS Billing 3.0.12"
+msgstr "UBL BIS Billing 3.0.12"
 
-#~ msgid "Invoice %s is too big to send via peppol (64MB limit)"
-#~ msgstr ""
-#~ "Die Rechnung %s ist zu groß, um sie über Peppol zu versenden (Limit von "
-#~ "64 MB)"
+msgid ""
+"Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
+"known as 'Endpoint ID'."
+msgstr ""
+"Eindeutige Kennung, die von BIS Billing 3.0 und Ableitungen verwendet wird, "
+"auch bekannt als „Endpunkt-ID“."
 
-#~ msgid "Please fill in the EAS code and the Participant ID code."
-#~ msgstr "Bitte geben Sie den EAS-Code und den ID-Code des Teilnehmers ein."
+msgid "You are not allowed to send invoice on behalf of %s."
+msgstr "Sie dürfen keine Rechnungen im Namen von %s versenden."
 
-#~ msgid "The Peppol endpoint identification number is not correct."
-#~ msgstr "Die Identifikationsnummer des Peppol-Endpunkts ist nicht korrekt."
+msgid ""
+"[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
+"customer '%s'."
+msgstr ""
+"[PEPPOL-EN16931-R010] Eine elektronische Adresse (EAS) muss für den Kunden "
+"„%s“ angegeben werden."
 
-#~ msgid "UBL BIS Billing 3.0.12"
-#~ msgstr "UBL BIS Billing 3.0.12"
+msgid ""
+"[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
+"company '%s'."
+msgstr ""
+"[PEPPOL-EN16931-R020] Eine elektronische Adresse (EAS) muss für das "
+"Unternehmen „%s“ angegeben werden."
 
-#~ msgid ""
-#~ "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
-#~ "known as 'Endpoint ID'."
-#~ msgstr ""
-#~ "Eindeutige Kennung, die von BIS Billing 3.0 und Ableitungen verwendet "
-#~ "wird, auch bekannt als „Endpunkt-ID“."
-
-#~ msgid "You are not allowed to send invoice on behalf of %s."
-#~ msgstr "Sie dürfen keine Rechnungen im Namen von %s versenden."
-
-#~ msgid ""
-#~ "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
-#~ "customer '%s'."
-#~ msgstr ""
-#~ "[PEPPOL-EN16931-R010] Eine elektronische Adresse (EAS) muss für den "
-#~ "Kunden „%s“ angegeben werden."
-
-#~ msgid ""
-#~ "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
-#~ "company '%s'."
-#~ msgstr ""
-#~ "[PEPPOL-EN16931-R020] Eine elektronische Adresse (EAS) muss für das "
-#~ "Unternehmen „%s“ angegeben werden."
-
-#~ msgid "UBL 2.0"
-#~ msgstr "UBL 2.0"
+msgid "UBL 2.0"
+msgstr "UBL 2.0"

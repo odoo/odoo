@@ -8,15 +8,15 @@
 # Sarah Park, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 04:41+0000\n"
+"PO-Revision-Date: 2026-07-21 20:36+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/stock/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -583,6 +583,52 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요 <t t-out=\"object.partner_id.name or ''\">Brandon "
+"Freeman</t>님,<br/><br/>\n"
+"        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
+"== 'in_store'\">\n"
+"            주문 품목이 준비되었습니다.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            주문 품목이 발송되었음을 알려드립니다.\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            배송 조회 번호:\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        자세한 내용은 첨부된 배송주문서를 확인하시기 바랍니다.<br/><br/>\n"
+"        감사합니다,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -705,8 +751,9 @@ msgstr "<span class=\"o_stat_text\">경로</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">폐기물</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -2136,8 +2183,9 @@ msgstr "승인"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "주문 확인"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3484,8 +3532,9 @@ msgstr "교환"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "예상"
 
 #. module: stock
 #. odoo-python
@@ -5290,8 +5339,9 @@ msgstr "Lot/일련 번호 재배치"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
+#, fuzzy
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "LOT/일련번호"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -6049,6 +6099,7 @@ msgstr "10월"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
 "print instantly,\n"
@@ -6057,6 +6108,11 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"Odoo는 기본적으로 PDF 미리 보기를 엽니다. 즉시 인쇄하려면(유료 버전 사용자만 "
+"해당)\n"
+"                                        바코드 운영자와 동일한 로컬 네트워크"
+"에 있는 컴퓨터에 IoT 앱을 설치하고 \n"
+"                                        보고서의 라우팅을 설정하세요."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6747,8 +6803,9 @@ msgstr "파트너별 지침"
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
+#, fuzzy
 msgid "Pay now"
-msgstr ""
+msgstr "지금 결제하기"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
@@ -6871,8 +6928,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "Preceding operations"
-msgstr ""
+msgstr "선행 작업"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -6887,8 +6945,9 @@ msgstr "선호 경로"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "시퀀스 레코드 접두사 값"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -7773,8 +7832,9 @@ msgstr "제거"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
+#, fuzzy
 msgid "Remove lines"
-msgstr ""
+msgstr "라인 제거"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -7961,8 +8021,9 @@ msgstr "예약 방법"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "예약"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -9164,8 +9225,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "Stock To Reserve:"
-msgstr ""
+msgstr "보관하려는 재고:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
@@ -9964,8 +10026,9 @@ msgstr "투자 기간"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+#, fuzzy
 msgid "Time to replenish:"
-msgstr ""
+msgstr "보충 시간:"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -10043,8 +10106,9 @@ msgstr "직접 주문"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_to_max
+#, fuzzy
 msgid "To Order to Reach Max"
-msgstr ""
+msgstr "최대량이 되도록 주문"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -10549,8 +10613,9 @@ msgstr "승인"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "재고조사 승인"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10741,8 +10806,9 @@ msgstr "창고의 경로"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
+#, fuzzy
 msgid "Warehouse:"
-msgstr ""
+msgstr "창고:"
 
 #. module: stock
 #. odoo-javascript
@@ -11541,8 +11607,9 @@ msgstr "예: 2단계 수취"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "expected on"
-msgstr ""
+msgstr "예상 날짜"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -11594,8 +11661,9 @@ msgstr "of"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "planned on"
-msgstr ""
+msgstr "예정일"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11658,8 +11726,9 @@ msgstr "단위"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
@@ -11668,290 +11737,243 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 배송 주문서 (Ref {{ object.name or 'n/a' }})"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d일"
+msgid "Andrwep"
+msgstr "Andrwep"
 
-#~ msgid "Close"
-#~ msgstr "닫기"
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
 
-#~ msgid ""
-#~ "Creation date of this move line until updated due to: quantity being "
-#~ "increased, 'picked' status has updated, or move line is done."
-#~ msgstr ""
-#~ "이 이동 항목의 생성 날짜는 수량 증가, '피킹됨' 상태 업데이트 또는 이동 항"
-#~ "목이 완료된 경우로 인해 업데이트됩니다."
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
-#~ msgid ""
-#~ "Estimate the sales volume for the period based on past period or order "
-#~ "the forecasted quantity for that period."
-#~ msgstr ""
-#~ "지난 기간을 기준으로 해당 기간에 대한 판매량을 예측하거나 예상되는 수량을 "
-#~ "주문하세요."
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAME"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "멋진 아이콘 폰트 예: fa-tasks"
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUCT_DISPLAY_NAME"
 
-#~ msgid "In %s day(s)"
-#~ msgstr "%s 일 후"
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
 
-#~ msgid "Min - Max"
-#~ msgstr "최소 - 최대"
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
-#~ msgid "Ordering Frequency: On demand"
-#~ msgstr "주문 빈도: 주문 시"
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "재고 공급업체 보충 정보"
+msgid "Demo Display Name"
+msgstr "데모용 표시명"
 
-#~ msgid "Choose your date"
-#~ msgstr "날짜 선택"
+msgid "Dispatch Management System"
+msgstr "배차 관리 시스템"
 
-#~ msgid "Location Barcode"
-#~ msgstr "위치 바코드"
+msgid "Expected Delivery:"
+msgstr "예상 배송일:"
 
-#~ msgid "Product Catalog Mixin"
-#~ msgstr "품목 카탈로그 믹스인"
+msgid ""
+"If this checkbox is ticked, Odoo will automatically show the reception "
+"report (if there are moves to allocate to) when validating."
+msgstr ""
+"이 체크박스를 선택하면, Odoo에서 유효성 검사 시 수신된 보고서 (할당된 이동 내"
+"역이 있는 경우)를 자동으로 표시합니다."
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "재고 수량 이력"
+msgid "No %s selected or a delivery order selected"
+msgstr "%s 선택된 내용이 없거나 배송주문서를 선택하였습니다."
 
-#~ msgid "Andrwep"
-#~ msgstr "Andrwep"
+msgid "Print Label"
+msgstr "라벨 인쇄"
 
-#~ msgid "DEMO_DATE"
-#~ msgstr "DEMO_DATE"
+msgid "Reason"
+msgstr "사유"
 
-#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
-#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+msgid "Show Reception Report at Validation"
+msgstr "승인 시 수취 보고서 표시"
 
-#~ msgid "DEMO_PARTNER_NAME"
-#~ msgstr "DEMO_PARTNER_NAME"
+msgid "Stock Reception Report"
+msgstr "재고 수취 보고서"
 
-#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
-#~ msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+msgid "This report cannot be used for done and not done %s at the same time"
+msgstr "이 보고서는 %s 항목을 동시에 완료 및 미완료로 사용할 수 없습니다."
 
-#~ msgid "DEMO_QUANTITY"
-#~ msgstr "DEMO_QUANTITY"
+msgid "Transport management: organize packs in your fleet, or carriers."
+msgstr "운송 관리: 차량 또는 화물 운송업체를 통해 소포를 정리하세요."
 
-#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
-#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
+msgid "Use Reception Report"
+msgstr "수취 보고서 사용"
 
-#~ msgid "DEMO_UOM"
-#~ msgstr "DEMO_UOM"
+msgid "View and allocate received quantities"
+msgstr "입고 수량을 확인 후 할당합니다"
 
-#~ msgid "Demo Display Name"
-#~ msgstr "데모용 표시명"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                모든 품목을 예약할 수 없습니다. 품목 예약을 "
+"시도하려면 \"사용 가능 확인\" 버튼을 클릭합니다."
 
-#~ msgid "Dispatch Management System"
-#~ msgstr "배차 관리 시스템"
+msgid "Check Availability"
+msgstr "사용 가능 확인"
 
-#~ msgid "Expected Delivery:"
-#~ msgstr "예상 배송일:"
+msgid "Click or press enter to add a description"
+msgstr "클릭하거나 엔터키를 눌러 설명을 추가합니다."
 
-#~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically show the reception "
-#~ "report (if there are moves to allocate to) when validating."
-#~ msgstr ""
-#~ "이 체크박스를 선택하면, Odoo에서 유효성 검사 시 수신된 보고서 (할당된 이"
-#~ "동 내역이 있는 경우)를 자동으로 표시합니다."
+msgid "Compute shipping costs and ship with DHL"
+msgstr "DHL로 배송비를 계산 및 배송합니다."
 
-#~ msgid "No %s selected or a delivery order selected"
-#~ msgstr "%s 선택된 내용이 없거나 배송주문서를 선택하였습니다."
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"배송비 계산 후 DHL로 발송하세요.<br/>\n"
+"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
+"요)</strong>"
 
-#~ msgid "Print Label"
-#~ msgstr "라벨 인쇄"
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "Easypost로 배송비를 계산 및 배송합니다."
 
-#~ msgid "Reason"
-#~ msgstr "사유"
+msgid "Compute shipping costs and ship with Envia.com"
+msgstr "배송비 계산 후 Envia.com으로 배송하기"
 
-#~ msgid "Show Reception Report at Validation"
-#~ msgstr "승인 시 수취 보고서 표시"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "FedEx로 배송비를 계산 및 배송합니다."
+
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"배송비 계산 후 FedEx로 발송하세요.<br/>\n"
+"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
+"요)</strong>"
 
-#~ msgid "Stock Reception Report"
-#~ msgstr "재고 수취 보고서"
-
-#~ msgid "This report cannot be used for done and not done %s at the same time"
-#~ msgstr "이 보고서는 %s 항목을 동시에 완료 및 미완료로 사용할 수 없습니다."
-
-#~ msgid "Transport management: organize packs in your fleet, or carriers."
-#~ msgstr "운송 관리: 차량 또는 화물 운송업체를 통해 소포를 정리하세요."
-
-#~ msgid "Use Reception Report"
-#~ msgstr "수취 보고서 사용"
-
-#~ msgid "View and allocate received quantities"
-#~ msgstr "입고 수량을 확인 후 할당합니다"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                All products could not be reserved. Click "
-#~ "on the \"Check Availability\" button to try to reserve products."
-#~ msgstr ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                모든 품목을 예약할 수 없습니다. 품목 예약"
-#~ "을 시도하려면 \"사용 가능 확인\" 버튼을 클릭합니다."
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Sendcloud로 배송비를 계산 및 배송합니다."
 
-#~ msgid "Check Availability"
-#~ msgstr "사용 가능 확인"
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "Shiprocket으로 배송비를 계산 및 배송합니다."
 
-#~ msgid "Click or press enter to add a description"
-#~ msgstr "클릭하거나 엔터키를 눌러 설명을 추가합니다."
+msgid "Compute shipping costs and ship with Starshipit"
+msgstr "Starshipit로 배송비 계산 및 배송"
 
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "DHL로 배송비를 계산 및 배송합니다."
-
-#~ msgid ""
-#~ "Compute shipping costs and ship with DHL<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "배송비 계산 후 DHL로 발송하세요.<br/>\n"
-#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
-#~ "세요)</strong>"
+msgid "Compute shipping costs and ship with UPS"
+msgstr "UPS로 배송비를 계산 및 배송합니다."
 
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "Easypost로 배송비를 계산 및 배송합니다."
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"배송비 계산 후 UPS로 발송하세요.<br/>\n"
+"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
+"요)</strong>"
 
-#~ msgid "Compute shipping costs and ship with Envia.com"
-#~ msgstr "배송비 계산 후 Envia.com으로 배송하기"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "USPS로 배송비를 계산 및 배송합니다."
 
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "FedEx로 배송비를 계산 및 배송합니다."
-
-#~ msgid ""
-#~ "Compute shipping costs and ship with FedEx<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "배송비 계산 후 FedEx로 발송하세요.<br/>\n"
-#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
-#~ "세요)</strong>"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"배송비 계산 후 USPS로 발송하세요.<br/>\n"
+"                                    <strong>(홈&gt;앱 으로 이동하여 설치하세"
+"요)</strong>"
 
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "Sendcloud로 배송비를 계산 및 배송합니다."
+msgid "Compute shipping costs and ship with bpost"
+msgstr "bpost로 배송비를 계산 및 배송합니다."
 
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "Shiprocket으로 배송비를 계산 및 배송합니다."
+msgid "DHL Connector"
+msgstr "DHL 커넥터"
 
-#~ msgid "Compute shipping costs and ship with Starshipit"
-#~ msgstr "Starshipit로 배송비 계산 및 배송"
+msgid "DHL Express Connector"
+msgstr "DHL 익스프레스 배송"
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "UPS로 배송비를 계산 및 배송합니다."
+msgid "Default Return Name"
+msgstr "반품명 기본값"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with UPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "배송비 계산 후 UPS로 발송하세요.<br/>\n"
-#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
-#~ "세요)</strong>"
+msgid "Demo Address and Name"
+msgstr "데모용 주소 및 이름"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "USPS로 배송비를 계산 및 배송합니다."
+msgid "Easypost Connector"
+msgstr "Easypost 배송"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with USPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "배송비 계산 후 USPS로 발송하세요.<br/>\n"
-#~ "                                    <strong>(홈&gt;앱 으로 이동하여 설치하"
-#~ "세요)</strong>"
+msgid "Envia.com Connector"
+msgstr "Envia.com 커넥터"
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "bpost로 배송비를 계산 및 배송합니다."
+msgid "FedEx Connector"
+msgstr "FedEx 배송"
 
-#~ msgid "DHL Connector"
-#~ msgstr "DHL 커넥터"
+msgid "Generate Serials/Lots"
+msgstr "일련번호/로트 생성"
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "DHL 익스프레스 배송"
+msgid "Import Serials/Lots"
+msgstr "일련번호 및 로트번호 가져오기"
 
-#~ msgid "Default Return Name"
-#~ msgstr "반품명 기본값"
+msgid "Nothing to check the availability for."
+msgstr "사용 가능한 재고가 없습니다."
 
-#~ msgid "Demo Address and Name"
-#~ msgstr "데모용 주소 및 이름"
+msgid ""
+"Please put this document inside your return parcel.<br/>\n"
+"                                Your parcel must be sent to this address:"
+msgstr ""
+"이 문서를 반품 택배 안에 동봉하여 주십시오.<br/>\n"
+"                                반품 주소:"
 
-#~ msgid "Easypost Connector"
-#~ msgstr "Easypost 배송"
+msgid "Sendcloud Connector"
+msgstr "Sendcloud 배송"
 
-#~ msgid "Envia.com Connector"
-#~ msgstr "Envia.com 커넥터"
+msgid "Shipping Connectors"
+msgstr "배송업체"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "FedEx 배송"
+msgid "Shiprocket Connector"
+msgstr "Shiprocket 배송"
 
-#~ msgid "Generate Serials/Lots"
-#~ msgstr "일련번호/로트 생성"
+msgid "Starshipit Connector"
+msgstr "Starshipit 커넥터"
 
-#~ msgid "Import Serials/Lots"
-#~ msgstr "일련번호 및 로트번호 가져오기"
+msgid ""
+"Technical field used to compute whether the button \"Check Availability\" "
+"should be displayed."
+msgstr ""
+"\"가용성 확인\" 버튼을 표시해야 하는지 여부를 계산하는 데 사용되는 기술 필드"
+"입니다."
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "사용 가능한 재고가 없습니다."
+msgid "UPS Connector"
+msgstr "UPS 배송"
 
-#~ msgid ""
-#~ "Please put this document inside your return parcel.<br/>\n"
-#~ "                                Your parcel must be sent to this address:"
-#~ msgstr ""
-#~ "이 문서를 반품 택배 안에 동봉하여 주십시오.<br/>\n"
-#~ "                                반품 주소:"
+msgid "USPS Connector"
+msgstr "USPS 배송"
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "Sendcloud 배송"
+msgid "Website Messages"
+msgstr "웹사이트 메시지"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "배송업체"
+msgid "Website communication history"
+msgstr "웹사이트 대화 이력"
 
-#~ msgid "Shiprocket Connector"
-#~ msgstr "Shiprocket 배송"
+msgid "bpost Connector"
+msgstr "bpost 배송"
 
-#~ msgid "Starshipit Connector"
-#~ msgstr "Starshipit 커넥터"
+msgid "Demo Lot/SN"
+msgstr "데모 로트/일련번호"
 
-#~ msgid ""
-#~ "Technical field used to compute whether the button \"Check Availability\" "
-#~ "should be displayed."
-#~ msgstr ""
-#~ "\"가용성 확인\" 버튼을 표시해야 하는지 여부를 계산하는 데 사용되는 기술 필"
-#~ "드입니다."
+msgid "Demo Product"
+msgstr "데모용 품목"
 
-#~ msgid "UPS Connector"
-#~ msgstr "UPS 배송"
+msgid "Final Location"
+msgstr "최종 위치"
 
-#~ msgid "USPS Connector"
-#~ msgstr "USPS 배송"
+msgid ""
+"The operation brings the products to the intermediate location.But this "
+"operation is part of a chain of operations targeting the final location."
+msgstr ""
+"이 작업은 제품을 중간 위치로 이동합니다. 그러나 이 작업은 최종 위치에 도달하"
+"기 위한 일련의 작업 중 일부입니다."
 
-#~ msgid "Website Messages"
-#~ msgstr "웹사이트 메시지"
+msgid "On hand:"
+msgstr "보유 :"
 
-#~ msgid "Website communication history"
-#~ msgstr "웹사이트 대화 이력"
-
-#~ msgid "bpost Connector"
-#~ msgstr "bpost 배송"
-
-#~ msgid "Demo Lot/SN"
-#~ msgstr "데모 로트/일련번호"
-
-#~ msgid "Demo Product"
-#~ msgstr "데모용 품목"
-
-#~ msgid "Final Location"
-#~ msgstr "최종 위치"
-
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr ""
-#~ "이 작업은 제품을 중간 위치로 이동합니다. 그러나 이 작업은 최종 위치에 도달"
-#~ "하기 위한 일련의 작업 중 일부입니다."
-
-#~ msgid "On hand:"
-#~ msgstr "보유 :"
-
-#~ msgid "Real Quantity"
-#~ msgstr "실수량"
+msgid "Real Quantity"
+msgstr "실수량"

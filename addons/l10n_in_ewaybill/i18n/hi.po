@@ -7,17 +7,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:10+0000\n"
-"PO-Revision-Date: 2025-11-17 03:12+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19-l10n/"
+"POT-Creation-Date: 2026-08-28 18:20+0000\n"
+"PO-Revision-Date: 2026-07-21 09:07+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-4/"
 "l10n_in_ewaybill/hi/>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_in_ewaybill
+#: model:ir.module.module,description:base.module_l10n_in_ewaybill
+msgid ""
+"\n"
+"Indian - E-waybill\n"
+"====================================\n"
+"To submit E-waybill through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
+"\n"
+"Step 1: First you need to create an API username and password in the E-"
+"waybill portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting "
+"-> Configration -> Settings -> Indian Electronic WayBill or find \"E-"
+"waybill\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a "
+"multi-company with the same GST number then perform step 1 for the first "
+"company only.\n"
+msgstr ""
 
 #. module: l10n_in_ewaybill
 #. odoo-python
@@ -1075,11 +1095,6 @@ msgid "Followers (Partners)"
 msgstr "फ़ॉलोवर (पार्टनर)"
 
 #. module: l10n_in_ewaybill
-#: model:ir.model.fields,help:l10n_in_ewaybill.field_l10n_in_ewaybill__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "फॉन्ट के बेहतरीन आइकॉन जैसे, फा-टॉस्क"
-
-#. module: l10n_in_ewaybill
 #. odoo-python
 #: code:addons/l10n_in_ewaybill/models/error_codes.py:0
 msgid "For Category EWB03 procdt is mandatory"
@@ -1317,6 +1332,11 @@ msgstr ""
 #: code:addons/l10n_in_ewaybill/models/res_config_settings.py:0
 msgid ""
 "Incorrect username or password, or the GST number on company does not match."
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#: model:ir.module.module,shortdesc:base.module_l10n_in_ewaybill
+msgid "Indian - E-waybill"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -1916,6 +1936,11 @@ msgstr "इन्होंने आखिरी बार अपडेट क�
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill_type__write_date
 msgid "Last Updated on"
 msgstr "आखिरी बार अपडेट हुआ"
+
+#. module: l10n_in_ewaybill
+#: model:ir.model.fields,help:l10n_in_ewaybill.field_l10n_in_ewaybill__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
 
 #. module: l10n_in_ewaybill
 #: model:ir.model.fields,field_description:l10n_in_ewaybill.field_l10n_in_ewaybill__message_has_error
@@ -2576,6 +2601,14 @@ msgstr ""
 
 #. module: l10n_in_ewaybill
 #. odoo-python
+#: code:addons/l10n_in_ewaybill/models/account_move.py:0
+msgid ""
+"This documents (%s) cannot be deleted since it already has a generated E-"
+"waybill."
+msgstr ""
+
+#. module: l10n_in_ewaybill
+#. odoo-python
 #: code:addons/l10n_in_ewaybill/models/error_codes.py:0
 msgid "This e-Way Bill does not have Oxygen items"
 msgstr ""
@@ -3207,7 +3240,7 @@ msgstr ""
 
 #. module: l10n_in_ewaybill
 #: model_terms:ir.ui.view,arch_db:l10n_in_ewaybill.report_ewaybill
-msgid "eway Bill No:"
+msgid "eWay Bill No:"
 msgstr ""
 
 #. module: l10n_in_ewaybill
@@ -3282,8 +3315,8 @@ msgid ""
 "total quantity is exceeding from multi vehicle movement initiation quantity"
 msgstr ""
 
-#~ msgid "Website Messages"
-#~ msgstr "वेबसाइट मैसेज"
+msgid "Website Messages"
+msgstr "वेबसाइट मैसेज"
 
-#~ msgid "Website communication history"
-#~ msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"
+msgid "Website communication history"
+msgstr "वेबसाइट कम्यूनिकेशन हिस्ट्री"

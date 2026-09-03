@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 00:48+0000\n"
+"PO-Revision-Date: 2026-07-22 00:25+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/stock_account/zh_Hans/>\n"
+"projects/odoo-s19-4/stock_account/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,7 +89,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
 msgid "AVCO Value"
-msgstr ""
+msgstr "加权平均成本值"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_account
@@ -532,7 +532,7 @@ msgstr "ID"
 msgid ""
 "If checked, the product will be valued using the Anglo-Saxon accounting "
 "method."
-msgstr ""
+msgstr "如果勾选，产品将使用英美法会计方法进行估值。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
@@ -553,7 +553,7 @@ msgstr "期初余额"
 #. odoo-python
 #: code:addons/stock_account/models/stock_location.py:0
 msgid "Invalid search operator or value"
-msgstr ""
+msgstr "无效的搜索运算符或值"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
@@ -1198,13 +1198,13 @@ msgstr ""
 msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
-msgstr ""
+msgstr "采用永续盘存计价方式时，该科目用于核算标准价与单据价格之间的差额。"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "You can only adjust valuation for one move at a time."
-msgstr ""
+msgstr "您一次只能调整一个移动的估值。"
 
 #. module: stock_account
 #. odoo-python
@@ -1227,7 +1227,7 @@ msgstr ""
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
 "a locked fiscal period."
-msgstr ""
+msgstr "您无法修改操作 %s 的计划日期，因为该日期在已锁定的会计期间内。"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
@@ -1239,12 +1239,12 @@ msgstr "stock_move_id"
 msgid "units"
 msgstr "单位"
 
-#~ msgid ""
-#~ "Value of the product (automatically computed in AVCO).\n"
-#~ "        Used to value the product when the purchase cost is not known "
-#~ "(e.g. inventory adjustment).\n"
-#~ "        Used to compute margins on sale orders."
-#~ msgstr ""
-#~ "产品价值（在AVCO中自动计算）。\n"
-#~ "        用于在采购成本未知情况下对产品进行估价（例如库存调整）。\n"
-#~ "        用于计算销售订单的利润。"
+msgid ""
+"Value of the product (automatically computed in AVCO).\n"
+"        Used to value the product when the purchase cost is not known (e.g. "
+"inventory adjustment).\n"
+"        Used to compute margins on sale orders."
+msgstr ""
+"产品价值（在AVCO中自动计算）。\n"
+"        用于在采购成本未知情况下对产品进行估价（例如库存调整）。\n"
+"        用于计算销售订单的利润。"

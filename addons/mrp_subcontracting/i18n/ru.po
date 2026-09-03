@@ -4,15 +4,16 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 17:42+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 11:31+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "mrp_subcontracting/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -54,9 +55,8 @@ msgstr "Все"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production_serials
-#, fuzzy
 msgid "Assign serial numbers to production order"
-msgstr "Назначить серийные номера производственному заказу"
+msgstr "Присвоить серийные номера производственному заказу"
 
 #. module: mrp_subcontracting
 #. odoo-javascript
@@ -105,9 +105,8 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
-#, fuzzy
 msgid "Company"
-msgstr "Компания"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
@@ -123,7 +122,7 @@ msgstr "Контакты"
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js:0
 msgid "Create New Production"
-msgstr ""
+msgstr "Создать новое производство"
 
 #. module: mrp_subcontracting
 #: model:ir.model,website_form_label:mrp_subcontracting.model_res_partner
@@ -226,9 +225,8 @@ msgstr "Входящий перевод"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_location
-#, fuzzy
 msgid "Inventory Location"
-msgstr "Расположение запасов"
+msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
@@ -309,6 +307,8 @@ msgstr "Заказ"
 msgid ""
 "Please set a lot/serial for the currently opened subcontracting MO first."
 msgstr ""
+"Сначала укажите партию/серийный номер для открытого заказа на производство "
+"по субподряду."
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -338,9 +338,8 @@ msgstr "Продукция"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_quant
-#, fuzzy
 msgid "Quant"
-msgstr "Квант"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -460,7 +459,7 @@ msgstr "Места расположения субподрядчиков"
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #: code:addons/mrp_subcontracting/models/stock_picking.py:0
 msgid "Subcontracting MOs"
-msgstr ""
+msgstr "Производственные заказы (Субподряд)"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
@@ -485,7 +484,7 @@ msgstr "Портал субконтрактов"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Subcontracting Productions"
-msgstr ""
+msgstr "Производственные операции (Субподряд)"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
@@ -495,9 +494,8 @@ msgstr "Субконтрактация Тип операции по пополн
 #. module: mrp_subcontracting
 #. odoo-javascript
 #: code:addons/mrp_subcontracting/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
-#, fuzzy
 msgid "Subcontracting:"
-msgstr "Субподрядные работы:"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -556,7 +554,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0
 msgid "The subcontracted goods have already been received."
-msgstr ""
+msgstr "Субподрядные товары уже получены."
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
@@ -588,9 +586,8 @@ msgstr "Склад"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_workorder
-#, fuzzy
 msgid "Work Order"
-msgstr "Заказ-наряд"
+msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -631,8 +628,8 @@ msgstr "например, PO0032"
 msgid "state"
 msgstr "статус"
 
-#~ msgid "Check Availability"
-#~ msgstr "Проверить наличие"
+msgid "Check Availability"
+msgstr "Проверить наличие"
 
-#~ msgid "Has been recorded?"
-#~ msgstr "Записано?"
+msgid "Has been recorded?"
+msgstr "Записано?"

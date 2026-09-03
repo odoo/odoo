@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 16:17+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-10 07:57+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/cloud_storage_migration/zh_Hans/>\n"
+"projects/odoo-s19-4/cloud_storage_migration/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "All Attachments"
-msgstr ""
+msgstr "所有附件"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_to_migrate
@@ -40,7 +40,7 @@ msgstr "附件"
 msgid ""
 "Attachment (%s) does not have a stored filename and cannot be migrated to "
 "cloud storage."
-msgstr ""
+msgstr "附件（%s ）未存储文件名，无法迁移至云端存储空间。"
 
 #. module: cloud_storage_migration
 #. odoo-python
@@ -59,7 +59,7 @@ msgstr "附件报告"
 #: model:ir.module.module,shortdesc:base.module_cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Cloud Storage Migration"
-msgstr ""
+msgstr "云存储空间迁移"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_models
@@ -69,220 +69,220 @@ msgstr "云存储迁移 所有型号"
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_cron
 msgid "Cloud Storage Migration Cron"
-msgstr ""
+msgstr "云存储空间迁移 cron"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_models
 msgid "Cloud Storage Migration Message Models"
-msgstr ""
+msgstr "云存储迁移消息模型"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.act_window,name:cloud_storage_migration.action_cloud_storage_migration_report
 #: model:ir.model,name:cloud_storage_migration.model_cloud_storage_migration_report
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.view_cloud_storage_migration_report_list
 msgid "Cloud Storage Migration Report"
-msgstr ""
+msgstr "云存储迁移报告"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "Cloud storage provider is not configured"
-msgstr ""
+msgstr "云存储提供商未配置"
 
 #. module: cloud_storage_migration
 #: model:ir.model,name:cloud_storage_migration.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "配置设定"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Cron Job"
-msgstr ""
+msgstr "Cron 工作"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__display_name
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "显示名称"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "Failed to upload attachment %(id)s to cloud storage: %(code)s"
-msgstr ""
+msgstr "无法将附件%(id)s 上传至云存储：%(code)s"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
 msgid "Has Attachment Field"
-msgstr ""
+msgstr "包含附件字段"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__id
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_ir_attachment__id
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_to_migrate
 msgid ""
 "Indicates whether all attachments associated with this model are scheduled "
 "for cloud storage migration"
-msgstr ""
+msgstr "表示是否所有与此模型关联的附件，都已安排进行云端存储空间迁移"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
 msgid ""
 "Indicates whether attachments linked to mail messages for this model are "
 "scheduled for cloud storage migration"
-msgstr ""
+msgstr "表示此模型连接至邮件消息的附件，是否都已安排作云端存储空间迁移"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__has_attachment_rel
 msgid ""
 "Indicates whether this model has a relational field linking to ir.attachment "
 "model"
-msgstr ""
+msgstr "表示此模型是否有链接到 ir.attachment 模型的关系字段"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
 msgid "Largest Attachment (MB)"
-msgstr ""
+msgstr "最大附件大小（MB）"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Message Attachments"
-msgstr ""
+msgstr "消息附件"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Message Attachments Count"
-msgstr ""
+msgstr "消息附件数量"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_to_migrate
 msgid "Message Attachments Migration"
-msgstr ""
+msgstr "消息附件迁移"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
 msgid "Message Attachments Size (MB)"
-msgstr ""
+msgstr "消息附件大小（MB）"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
 msgid "Message Largest Attachment (MB)"
-msgstr ""
+msgstr "消息最大附件（MB）"
 
 #. module: cloud_storage_migration
 #: model:ir.actions.server,name:cloud_storage_migration.ir_cron_manual_migrate_local_to_cloud_storage_ir_actions_server
 msgid "Migrate Local Attachment Binaries to Cloud Storage"
-msgstr ""
+msgstr "将本地附件二进制文件迁移至云端存储空间"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_all_model_ids
 msgid "Migrate Models' All Attachments"
-msgstr ""
+msgstr "迁移模型的所有附件"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_message_model_ids
 msgid "Migrate Models' Message Attachments"
-msgstr ""
+msgstr "迁移模型的消息附件"
 
 #. module: cloud_storage_migration
 #: model:ir.module.module,summary:base.module_cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Migrate local attachments to cloud storage"
-msgstr ""
+msgstr "将本地附件迁移到云存储"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Migration Progress"
-msgstr ""
+msgstr "迁移进度"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model
 msgid "Model"
-msgstr ""
+msgstr "模型"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__res_model_name
 msgid "Model Name"
-msgstr ""
+msgstr "模型名称"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
 msgid "No attachment data found"
-msgstr ""
+msgstr "未找到附件数据"
 
 #. module: cloud_storage_migration
 #. odoo-python
 #: code:addons/cloud_storage_migration/models/ir_attachment.py:0
 msgid "No model for cloud storage migration"
-msgstr ""
+msgstr "没有云存储空间迁移模型"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.ui.view,arch_db:cloud_storage_migration.cloud_storage_migration_config_settings_view_form
 msgid "Parameters"
-msgstr ""
+msgstr "参数"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_res_config_settings__cloud_storage_migration_progress
 msgid "Shows the progress of cloud storage migration (current/total)"
-msgstr ""
+msgstr "显示云端存储资料迁移进度（目前/总计）"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_max_size
 msgid ""
 "Size in megabytes of the largest attachment associated with any record of "
 "this model"
-msgstr ""
+msgstr "与此模型中任何记录关联的最大附件的大小（以MB为单位）"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_max_size
 msgid ""
 "Size in megabytes of the largest attachment linked to mail messages for this "
 "model"
-msgstr ""
+msgstr "此模型中关联至邮件消息的最大附件的大小（以MB为单位）"
 
 #. module: cloud_storage_migration
 #: model_terms:ir.actions.act_window,help:cloud_storage_migration.action_cloud_storage_migration_report
 msgid ""
 "This report shows statistics about attachments that could be migrated to "
 "cloud storage."
-msgstr ""
+msgstr "这份报告展示了可迁移至云存储空间的附件的统计数据。"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total Attachments Count"
-msgstr ""
+msgstr "附件总数"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,field_description:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
 msgid "Total Attachments Size (MB)"
-msgstr ""
+msgstr "附件总大小（MB）"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_count
 msgid "Total number of attachments associated with all records of this model"
-msgstr ""
+msgstr "与此模型所有记录相关的附件总数"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_count
 msgid "Total number of attachments linked to mail messages for this model"
-msgstr ""
+msgstr "此模型中关联至邮件信息的附件总数"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__all_sum_size
 msgid ""
 "Total size in megabytes of all attachments associated with records of this "
 "model"
-msgstr ""
+msgstr "与此模型记录的所有附件的总大小（以MB为单位）"
 
 #. module: cloud_storage_migration
 #: model:ir.model.fields,help:cloud_storage_migration.field_cloud_storage_migration_report__message_sum_size
 msgid ""
 "Total size in megabytes of all attachments linked to mail messages for this "
 "model"
-msgstr ""
+msgstr "此模型中关联至邮件消息的所有附件的总大小（以 MB 为单位）"

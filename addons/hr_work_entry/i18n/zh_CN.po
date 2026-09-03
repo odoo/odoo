@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 05:24+0000\n"
+"PO-Revision-Date: 2026-07-20 11:35+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/hr_work_entry/zh_Hans/>\n"
+"projects/odoo-s19-4/hr_work_entry/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +35,10 @@ msgid ""
 "(country)s\".\n"
 "                    "
 msgstr ""
+"\n"
+"无法插入“%(insert_name)s ”：\n"
+"国家/地区“%(country)s ”下已存在代码“%(code)s ”对应的时间类型“%(name)s ”。\n"
+"                    "
 
 #. module: hr_work_entry
 #. odoo-python
@@ -117,12 +121,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_company
 msgid "AFP"
-msgstr ""
+msgstr "AFP"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_adoption_legal
 msgid "AFU"
-msgstr ""
+msgstr "AFU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.be_work_entry_type_additional_hours
@@ -142,7 +146,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_common_law_illness_ami
 msgid "AMI"
-msgstr ""
+msgstr "AMI"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_additional_paid
@@ -157,12 +161,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry_type__count_as__absence
 msgid "Absence"
-msgstr ""
+msgstr "缺勤"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Absence Time"
-msgstr ""
+msgstr "缺勤时间"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction
@@ -229,7 +233,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry_type.py:0
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -430,7 +434,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_common_law_illness_after_legal_period
 msgid "CLA"
-msgstr ""
+msgstr "CLA"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_compassionate_leave
@@ -678,7 +682,7 @@ msgstr "国家/地区代码"
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
 msgid "Create a new Time type"
-msgstr ""
+msgstr "创建新的时间类型"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_uid
@@ -979,7 +983,7 @@ msgstr "额外法定休假"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal_public_holiday
 msgid "Extra-legal Public Holiday"
-msgstr ""
+msgstr "法定以外的公共假日"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_extra_legal_sectoral_holiday
@@ -1015,7 +1019,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_lu_work_entry_type_family_reason_leave
 msgid "Family Reason Time Off"
-msgstr ""
+msgstr "家庭原因休息时间"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_family_domestic_violence_leave
@@ -1103,7 +1107,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.tr_work_entry_type_leave
 #: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_leave
 msgid "GTO"
-msgstr ""
+msgstr "GTO"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness
@@ -1181,7 +1185,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.uae_work_entry_type_home_working
 #: model:hr.work.entry.type,display_code:hr_work_entry.us_work_entry_type_home_working
 msgid "HW"
-msgstr ""
+msgstr "HW"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_hajj
@@ -1189,7 +1193,7 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_hajj
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_hajj
 msgid "Hajj Leave"
-msgstr ""
+msgstr "朝觐假"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__has_message
@@ -1644,14 +1648,14 @@ msgstr "产假（75% 支薪）"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "Maternity leave"
-msgstr ""
+msgstr "产假"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity_time_off_converted
 msgid ""
 "Maternity leave or maternity leave converted in the event of death or "
 "hospitalization of the mother"
-msgstr ""
+msgstr "产妇身故或住院情形下的产假及产假折算"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_prophylactic_time_off_maternity_protection
@@ -1691,7 +1695,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_militia_obligation
 msgid "Militia obligation (Unpaid)"
-msgstr ""
+msgstr "民兵役义务（无薪酬）"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1942,7 +1946,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_occupational_disease_unpaid
 msgid "Occupational Disease (Unpaid)"
-msgstr ""
+msgstr "职业病（无薪）"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__10
@@ -1980,7 +1984,7 @@ msgstr ""
 #: model:hr.work.entry.type,display_code:hr_work_entry.tr_hr_work_entry_type_out_of_contract
 #: model:hr.work.entry.type,display_code:hr_work_entry.uae_hr_work_entry_type_out_of_contract
 msgid "OoC"
-msgstr ""
+msgstr "OoC"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_other_presence
@@ -3673,72 +3677,45 @@ msgstr ""
 msgid "workentries_"
 msgstr ""
 
-#~ msgid "Type of Work"
-#~ msgstr "工作类型"
+msgid "Brief Holiday (Birth)"
+msgstr "短暂休假（分娩）"
 
-#~ msgid "YSO"
-#~ msgstr "YSO"
+msgid "Double Time Hours"
+msgstr "双倍薪金工时"
 
-#~ msgid "Cash Out of Leave in Service"
-#~ msgstr "在职期间休假折算现金"
+msgid "Prophylactic Time Off"
+msgstr "预防性休假"
 
-#~ msgid "Other Paid Leave"
-#~ msgstr "其他带薪休假"
+msgid "Retro Overtime Hours"
+msgstr "追溯加班工时"
 
-#~ msgid "Overtime: Public Time Off"
-#~ msgstr "加班：公共假期"
+msgid "Retro Regular Pay Hours"
+msgstr "追溯正常工资工时"
 
-#~ msgid "Overtime: Regular"
-#~ msgstr "加班：常规"
+msgid "Small Unemployment (Brief Holiday)"
+msgstr "短暂失业（短暂休假）"
 
-#~ msgid "Overtime: Saturday & Public Time Off"
-#~ msgstr "加班：周六和公共假期"
+msgid "VY1"
+msgstr "VY1"
 
-#~ msgid "Overtime: Sunday & Public Time Off"
-#~ msgstr "加班：周日和公共假期"
+msgid "VY2"
+msgstr "VY2"
 
-#~ msgid "Unused Leave on Termination"
-#~ msgstr "终止雇用时未用假期"
+msgid ""
+"Vacation that a worker was unable to take due to certain suspensions and "
+"which is taken during the first year following the vacation year"
+msgstr "因各类中止情形未能休完、于休假年度后第一年内补休的假期"
 
-#~ msgid "Brief Holiday (Birth)"
-#~ msgstr "短暂休假（分娩）"
+msgid ""
+"Vacation that a worker was unable to take due to certain suspensions and "
+"which is taken during the second year following the vacation year"
+msgstr "因各类中止情形未能休完、于休假年度后第二年内补休的假期"
 
-#~ msgid "Double Time Hours"
-#~ msgstr "双倍薪金工时"
+msgid "Work Entry Type"
+msgstr "工作条目类型"
 
-#~ msgid "Prophylactic Time Off"
-#~ msgstr "预防性休假"
+msgid "Configuration"
+msgstr "配置"
 
-#~ msgid "Retro Overtime Hours"
-#~ msgstr "追溯加班工时"
-
-#~ msgid "Retro Regular Pay Hours"
-#~ msgstr "追溯正常工资工时"
-
-#~ msgid "Small Unemployment (Brief Holiday)"
-#~ msgstr "短暂失业（短暂休假）"
-
-#~ msgid "VY1"
-#~ msgstr "VY1"
-
-#~ msgid "VY2"
-#~ msgstr "VY2"
-
-#~ msgid ""
-#~ "Vacation that a worker was unable to take due to certain suspensions and "
-#~ "which is taken during the first year following the vacation year"
-#~ msgstr "因各类中止情形未能休完、于休假年度后第一年内补休的假期"
-
-#~ msgid ""
-#~ "Vacation that a worker was unable to take due to certain suspensions and "
-#~ "which is taken during the second year following the vacation year"
-#~ msgstr "因各类中止情形未能休完、于休假年度后第二年内补休的假期"
-
-#~ msgid "Work Entry Type"
-#~ msgstr "工作条目类型"
-
-#~ msgid "Configuration"
-#~ msgstr "配置"
-
-#~ msgid "Working Schedules"
-#~ msgstr "工作安排"
+msgid "Working Schedules"
+msgstr "工作安排"

@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 18:54+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-14 09:42+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_edi_ubl_cii/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr "%(invoice_name)s - Odooにより生成"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "%s should have a KVK or OIN number set."
-msgstr ""
+msgstr "%s には、KVKまたはOIN番号が設定されている必要があります。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -63,6 +63,8 @@ msgstr ""
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
 msgstr ""
+"%s 追加の識別子(BE_EN)として、有効なKBO/BCE番号が設定されている必要がありま"
+"す。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -78,6 +80,11 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        プレビュー\n"
+"                   </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -88,7 +95,7 @@ msgstr "A"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
-msgstr ""
+msgstr "購買オーダ参照番号またはオーダ参照番号を必ず入力してください。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -166,7 +173,7 @@ msgstr "オーストリア VOKZ"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__available_routing_schemes
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__available_routing_schemes
 msgid "Available Routing Schemes"
-msgstr ""
+msgstr "対応可能なルーティング方式"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__b
@@ -212,7 +219,7 @@ msgstr "ビジネス登録ネットワーク"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "Cannot decode origin file, try by importing it again"
-msgstr ""
+msgstr "元のファイルをデコードできません。再度インポートしてみてください"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -245,7 +252,7 @@ msgstr "EDIドキュメントの共通機能：データの生成、制約など
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "会社"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -272,6 +279,8 @@ msgid ""
 "Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
 "partner was created."
 msgstr ""
+"同じVATを持つ'%s' に対応する取引先を取得できませんでした。新しい取引先が作成"
+"されました。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -430,7 +439,7 @@ msgstr "EAN ロケーションコード"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_identifier
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_identifier
 msgid "EDI Routing Address"
-msgstr ""
+msgstr "EDI ルーティング先住所"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_bis3
@@ -538,7 +547,7 @@ msgstr "ドキュメントをインポートする際に使用される形式: %
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Format used to import the invoice: %s"
-msgstr ""
+msgstr "請求書をインポートするのに使用されるフォーマット：%s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -592,19 +601,19 @@ msgstr "GS1 識別キー"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "GS1 identification keys for supply chain management."
-msgstr ""
+msgstr "サプライチェーン管理のためのGS1識別キー。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General discount"
-msgstr ""
+msgstr "全体割引"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General upsell"
-msgstr ""
+msgstr "全体アップセル"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0246
@@ -657,7 +666,7 @@ msgstr "ハンガリー VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "IBAN"
-msgstr ""
+msgstr "IBAN"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_edi_common__id
@@ -710,7 +719,7 @@ msgstr "Chorus Pro をインストール"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/tools/partner_identifiers.py:0
 msgid "International Bank Account Number, used as an EDI identifier."
-msgstr ""
+msgstr "国際銀行口座番号(IBAN)：EDI識別子として使用されます。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -748,7 +757,7 @@ msgstr "UBLフォーマット"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__is_unece_code_supported
 msgid "Is Unece Code Supported"
-msgstr ""
+msgstr "UNECEコードのサポート"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
@@ -955,7 +964,7 @@ msgstr "ポルトガルVAT"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "プロダクト単位"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -990,7 +999,7 @@ msgstr "端数丸め単位"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__routing_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "ルーティングエンドポイント"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_company__routing_scheme
@@ -998,13 +1007,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__routing_scheme
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Routing ID"
-msgstr ""
+msgstr "ルーティングID"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/res_partner.py:0
 msgid "Routing identifier should be in the format 'SCHEME:ENDPOINT'."
 msgstr ""
+"ルーティング識別子は「SCHEME:エンドポイント」の形式である必要があります。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_category_code__s
@@ -1136,7 +1146,7 @@ msgstr "免税理由コード"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.layout_invoices_generated_by_odoo
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
-msgstr ""
+msgstr "登録番号(税ID)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1155,11 +1165,13 @@ msgid ""
 "Taxes of category 'Service outside scope of tax' shall not be mixed with tax "
 "from other categories. You should split your invoice in two"
 msgstr ""
+"「課税対象外のサービス」カテゴリの税額は、他のカテゴリの税額と混在させてはな"
+"りません。請求書を2つに分割する必要があります"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.constraint,message:account_edi_ubl_cii.constraint_uom_uom_unece_code_unique
 msgid "The UN/ECE code already exists!"
-msgstr ""
+msgstr "UN/ECEコードはすでに存在します!"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1169,6 +1181,9 @@ msgid ""
 "line for product '%(product)s' because it is not compatible with the "
 "product's Unit of Measure '%(product_uom)s'. The UoM was left empty."
 msgstr ""
+"プロダクト「%(product)s 」の明細において、単位「%(uom)s 」（単位コード「%"
+"(code)s 」由来）は、プロダクトの単位「%(product_uom)s 」と互換性がないため無"
+"視されました。単位は空欄のままとなりました。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_tax__ubl_cii_tax_category_code
@@ -1201,7 +1216,7 @@ msgstr "銀行口座を取得できませんでした: %s"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "The code element for units of measurement (UoM) as specified by UN/ECE"
-msgstr ""
+msgstr "国連欧州経済委員会(UN/ECE)が規定する測定単位(UoM)のコード要素"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1264,6 +1279,9 @@ msgid ""
 "                    <strong style=\"color: #495057;\">It is not an official "
 "document.</strong>"
 msgstr ""
+"これは XML コンテンツを視覚的に表現したものです。<br/>\n"
+"                    <strong style=\"color: #495057;\">これは公式ドキュメント"
+"ではありません。</strong>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9952
@@ -1293,17 +1311,17 @@ msgstr "UBL BIS Billing 3.0.12"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
 msgid "UBL CEN-EN16931"
-msgstr ""
+msgstr "UBL CEN-EN16931"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
 msgid "UBL PINT"
-msgstr ""
+msgstr "UBL PINT"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
 msgid "UBL PINT-EU Layer"
-msgstr ""
+msgstr "UBL PINT-EU レイヤー"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0193
@@ -1325,7 +1343,7 @@ msgstr "UBL/CII ファイル名"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_uom_uom__unece_code
 msgid "UN/ECE Code"
-msgstr ""
+msgstr "UN/ECEコード"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9959
@@ -1352,7 +1370,7 @@ msgstr "イギリス VAT"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/wizard/account_move_send_wizard.py:0
 msgid "Unsupported file type via %s"
-msgstr ""
+msgstr "%sではサポートされていないファイル形式です"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
@@ -2000,7 +2018,7 @@ msgstr "X.400 アドレス (メールテキスト用)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You can only (un)group lines of a draft invoice"
-msgstr "ドラフト請求書の明細行は、グループ化またはグループ解除のみ可能です"
+msgstr "請求書(ドラフト)の明細行は、グループ化またはグループ解除のみ可能です"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2038,6 +2056,7 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] 顧客の「%s 」には、電子アドレス(EAS)の入力が必要です。"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -2046,6 +2065,7 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] 企業の「%s 」には、電子アドレス(EAS)の入力が必要です。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__invoice_edi_format
@@ -2068,91 +2088,80 @@ msgstr "fx"
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 
-#~ msgid "Unspported file type via %s"
-#~ msgstr "サポートされていないファイル形式%s"
+msgid ""
+"%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
+"address (EAS code 0106 or 0190)."
+msgstr ""
+"会社IDフィールドまたは Peppol電子アドレス(EASコード 0106 または 0190)として、"
+"%sはhKVKまたはOIN番号が必要です。"
 
-#~ msgid "Unknown partner"
-#~ msgstr "不明な取引先"
+msgid "%s should have a valid KBO/BCE number in the Company ID field"
+msgstr "%s の「会社ID」欄には、有効なKBO/BCE番号を入力してください"
 
-#~ msgid "Untaxed"
-#~ msgstr "税抜金額"
+msgid "<span class=\"text-muted\">FROM</span>"
+msgstr "<span class=\"text-muted\">発行元</span>"
 
-#~ msgid ""
-#~ "%s should have a KVK or OIN number set in Company ID field or as Peppol e-"
-#~ "address (EAS code 0106 or 0190)."
-#~ msgstr ""
-#~ "会社IDフィールドまたは Peppol電子アドレス(EASコード 0106 または 0190)とし"
-#~ "て、%sはhKVKまたはOIN番号が必要です。"
+msgid "<span class=\"text-muted\">TO</span>"
+msgstr "<span class=\"text-muted\">宛先</span>"
 
-#~ msgid "%s should have a valid KBO/BCE number in the Company ID field"
-#~ msgstr "%s の「会社ID」欄には、有効なKBO/BCE番号を入力してください"
+msgid "Available Peppol Eas"
+msgstr "利用可能な Peppol EA"
 
-#~ msgid "<span class=\"text-muted\">FROM</span>"
-#~ msgstr "<span class=\"text-muted\">発行元</span>"
+msgid ""
+"Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
+msgstr ""
+"BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用されるコー"
+"ド。\n"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/"
+"codelist/eas/"
 
-#~ msgid "<span class=\"text-muted\">TO</span>"
-#~ msgstr "<span class=\"text-muted\">宛先</span>"
+msgid "Export XML"
+msgstr "XMLをエクスポート"
 
-#~ msgid "Available Peppol Eas"
-#~ msgstr "利用可能な Peppol EA"
+msgid "Generated by Odoo"
+msgstr "Odooで生成"
 
-#~ msgid ""
-#~ "Code used to identify the Endpoint for BIS Billing 3.0 and its "
-#~ "derivatives.\n"
-#~ "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
-#~ "codelist/eas/"
-#~ msgstr ""
-#~ "BIS Billing 3.0およびその派生版のエンドポイントを識別するために使用される"
-#~ "コード。\n"
-#~ "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
-#~ "codelist/eas/"
+msgid "Is Peppol Edi Format"
+msgstr "Peppol Ediフォーマットか"
 
-#~ msgid "Export XML"
-#~ msgstr "XMLをエクスポート"
+msgid "Peppol Endpoint"
+msgstr "Peppolエンドポイント"
 
-#~ msgid "Generated by Odoo"
-#~ msgstr "Odooで生成"
+msgid "Peppol ID"
+msgstr "Peppol ID"
 
-#~ msgid "Is Peppol Edi Format"
-#~ msgstr "Peppol Ediフォーマットか"
+msgid ""
+"The Peppol endpoint (%s) is not valid. It should contain only letters and "
+"digit."
+msgstr ""
+"Peppolエンドポイント (%s) は無効です。文字と数字だけが含まれている必要があり"
+"ます。"
 
-#~ msgid "Peppol Endpoint"
-#~ msgstr "Peppolエンドポイント"
+msgid ""
+"The Peppol endpoint is not valid. It should contain exactly 10 digits "
+"(Company Registry number).The expected format is: 1234567890"
+msgstr ""
+"Peppol エンドポイントが無効です。10桁の数字(会社登記番号)が必要です。要求され"
+"ているフォーマット: 1234567890"
 
-#~ msgid "Peppol ID"
-#~ msgstr "Peppol ID"
+msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
+msgstr ""
+"Peppol エンドポイントは無効です。期待されるフォーマットは以下です: 0239843188"
 
-#~ msgid ""
-#~ "The Peppol endpoint (%s) is not valid. It should contain only letters and "
-#~ "digit."
-#~ msgstr ""
-#~ "Peppolエンドポイント (%s) は無効です。文字と数字だけが含まれている必要があ"
-#~ "ります。"
+msgid ""
+"The Peppol endpoint is not valid. The expected format is: 73282932000074"
+msgstr ""
+"Peppol エンドポイントは無効です。期待されるフォーマットは以下です: "
+"73282932000074"
 
-#~ msgid ""
-#~ "The Peppol endpoint is not valid. It should contain exactly 10 digits "
-#~ "(Company Registry number).The expected format is: 1234567890"
-#~ msgstr ""
-#~ "Peppol エンドポイントが無効です。10桁の数字(会社登記番号)が必要です。要求"
-#~ "されているフォーマット: 1234567890"
+msgid ""
+"Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
+"known as 'Endpoint ID'."
+msgstr ""
+"BIS Billing 3.0およびその派生版で使用される一意の識別子で、「エンドポイント"
+"ID」とも呼ばれます。"
 
-#~ msgid "The Peppol endpoint is not valid. The expected format is: 0239843188"
-#~ msgstr ""
-#~ "Peppol エンドポイントは無効です。期待されるフォーマットは以下です: "
-#~ "0239843188"
-
-#~ msgid ""
-#~ "The Peppol endpoint is not valid. The expected format is: 73282932000074"
-#~ msgstr ""
-#~ "Peppol エンドポイントは無効です。期待されるフォーマットは以下です: "
-#~ "73282932000074"
-
-#~ msgid ""
-#~ "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
-#~ "known as 'Endpoint ID'."
-#~ msgstr ""
-#~ "BIS Billing 3.0およびその派生版で使用される一意の識別子で、「エンドポイン"
-#~ "トID」とも呼ばれます。"
-
-#~ msgid "EN 16931"
-#~ msgstr "EN 16931"
+msgid "EN 16931"
+msgstr "EN 16931"

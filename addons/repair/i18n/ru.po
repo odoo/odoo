@@ -5,14 +5,15 @@
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 04:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 11:30+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "repair/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -234,7 +235,7 @@ msgstr "Разрешенная партия"
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_uom_ids
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Допустимая ед. изм."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__reserve_visible
@@ -259,6 +260,10 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Так как для этого товара уже использовались другие единицы измерения "
+"(например: %(problem_uom)s), отличные от %(uom)s, изменить их невозможно. "
+"Если вы хотите использовать новую единицу измерения, пожалуйста, архивируйте "
+"текущий товар и создайте новый."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -684,7 +689,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Элемент журнала"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -808,7 +813,7 @@ msgstr "Тип следующего действия"
 #. odoo-python
 #: code:addons/repair/models/stock_warehouse.py:0
 msgid "No location of type Inventory Loss found"
-msgstr ""
+msgstr "Не найдена локация с типом «Инвентаризация/Убытки»"
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -933,7 +938,7 @@ msgstr "Тип комплектации"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_type_visible
 msgid "Picking Type Visible"
-msgstr ""
+msgstr "Видимость типа складского перемещения"
 
 #. module: repair
 #. odoo-python
@@ -1168,7 +1173,7 @@ msgstr "Заказы на ремонт"
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 msgid "Repair Orders Analysis"
-msgstr ""
+msgstr "Анализ заказов на ремонт"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
@@ -1573,7 +1578,7 @@ msgstr "Перевод"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Transfer from which the product to be repaired is picked"
-msgstr ""
+msgstr "Складское перемещение, из которого забирается ремонтируемое изделие"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_line_type
@@ -1715,21 +1720,18 @@ msgstr "id"
 #. odoo-python
 #: code:addons/repair/models/sale_order.py:0
 msgid "sale_order_id"
-msgstr ""
+msgstr "sale_order_id"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "text"
 msgstr ""
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Значок Font Awesome, например, fa-tasks"
+msgid "Check availability"
+msgstr "Проверить доступность"
 
-#~ msgid "Check availability"
-#~ msgstr "Проверить доступность"
+msgid "Website Messages"
+msgstr "Веб-сайт сообщения"
 
-#~ msgid "Website Messages"
-#~ msgstr "Веб-сайт сообщения"
-
-#~ msgid "Website communication history"
-#~ msgstr "История общений с сайта"
+msgid "Website communication history"
+msgstr "История общений с сайта"

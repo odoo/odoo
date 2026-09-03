@@ -9,17 +9,18 @@
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # lpe <lpe@odoo.com>, 2025.
 # "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 19:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-20 05:58+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
 "stock/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -476,7 +477,7 @@ msgstr "1 Minggu"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7
 msgid "2 x 7"
-msgstr ""
+msgstr "2 x 7"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -497,7 +498,7 @@ msgstr "4 x 12 - Satu per unit"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7
 msgid "4 x 7"
-msgstr ""
+msgstr "4 x 7"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -598,6 +599,54 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Halo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
+"        <t t-if=\"hasattr(object, 'delivery_type') and object.delivery_type "
+"== 'in_store'\">\n"
+"            Pesanan Anda sudah diambil.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Dengan senang hati kami informasikan bahwa pesanan Anda sudah "
+"dikirim.\n"
+"        </t>\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Referensi pelacakan Anda adalah\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-"
+"as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Untuk detail selengkapnya, silakan lihat surat jalan yang terlampir."
+"<br/><br/>\n"
+"        Terima kasih,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -625,12 +674,12 @@ msgstr "<span class=\"col-6\">Menunggu</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span class=\"ms-1\">Products with no package assigned</span>"
-msgstr ""
+msgstr "<span class=\"ms-1\">Produk tanpa kemasan ditugaskan</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<span class=\"mt0 float-start\">No assigned package</span>"
-msgstr ""
+msgstr "<span class=\"mt0 float-start\">Tidak ada paket yang ditugaskan</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -656,7 +705,7 @@ msgstr "<span class=\"o_stat_text\">Lokasi</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "<span class=\"o_stat_text\">Locations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Lokasi</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -720,8 +769,9 @@ msgstr "<span class=\"o_stat_text\">Rute</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Buang</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -832,7 +882,7 @@ msgstr "<strong>Kontak</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Pelanggan</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -847,7 +897,7 @@ msgstr "<strong>Alamat Pengiriman:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>Alamat Pengiriman</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -873,7 +923,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>From:</strong>"
-msgstr ""
+msgstr "<strong>Dari:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1025,6 +1075,11 @@ msgid ""
 "Concerned package(s):\n"
 "%(package_names)s"
 msgstr ""
+"Kemasan tidak dapat dipindahkan beberapa kali dalam satu transfer atau "
+"dibagi ke beberapa lokasi.\n"
+"\n"
+"Kemasan yang dimaksud:\n"
+"%(package_names)s"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -1091,7 +1146,7 @@ msgstr "Dekorasi Pengecualian Aktivitas"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
 msgid "Activity Plans"
-msgstr "Rencana-Rencana Kegiatan"
+msgstr "Rencana Aktivitas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1367,7 +1422,7 @@ msgstr "Selalu"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Date"
-msgstr ""
+msgstr "Tanggal Inventaris Tahunan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
@@ -1404,7 +1459,7 @@ msgstr "Kategori Apa Pun"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_request_count_form_view
 msgid "Anyone"
-msgstr ""
+msgstr "Siapa pun"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1489,6 +1544,8 @@ msgid ""
 "Are you sure you want to proceed this transfer with moves that have no "
 "demand?"
 msgstr ""
+"Yakin ingin melanjutkan transfer ini dengan pergerakan yang tidak memiliki "
+"permintaan?"
 
 #. module: stock
 #. odoo-python
@@ -1826,6 +1883,7 @@ msgstr "Menurut Nomor Seri Unik"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "By default, next physical inventory will be scheduled at this date"
 msgstr ""
+"Secara default, inventaris fisik berikutnya akan dijadwalkan di tanggal ini"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__procure_method
@@ -2168,6 +2226,9 @@ msgid ""
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"Konfigurasi horizon Anda untuk memicu peraturan pemesanan ulang lebih dahulu "
+"agar memulai pemulihan lebih awal dan menghindari penundaan, atau picu tepat "
+"waktu ('0 hari') untuk menghindari overstocking."
 
 #. module: stock
 #: model:res.company,pay_later_label:stock.res_company_1
@@ -2185,12 +2246,12 @@ msgstr "Konfirmasi"
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
 msgid "Confirm Order"
-msgstr ""
+msgstr "Konfirmasi Order"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Confirmation Email"
-msgstr ""
+msgstr "Email Konfirmasi"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2376,6 +2437,9 @@ msgid ""
 "not\n"
 "                    process the remaining products."
 msgstr ""
+"Buat backorder bila Anda berencana untuk memproses produk\n"
+"                    sisa nanti. Jangan buat backorder bila Anda tidak akan\n"
+"                    memproses produk tersisa."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -2773,7 +2837,7 @@ msgstr "Barcode OBTRETU Default"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__default_stock_location_id
 msgid "Default Stock Location"
-msgstr ""
+msgstr "Lokasi Stok Default"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__reception_steps
@@ -3003,7 +3067,7 @@ msgstr "Pesanan pengiriman %s"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Demand"
-msgstr "Demand"
+msgstr "Permintaan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
@@ -3200,7 +3264,7 @@ msgstr "Operasi Detail"
 #: model:ir.actions.act_window,name:stock.stock_quant_action
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Detailed Stock"
-msgstr ""
+msgstr "Detail Stok"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3542,13 +3606,13 @@ msgstr "Pengecualian:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Exchange"
-msgstr ""
+msgstr "Exchange"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 msgid "Exp"
-msgstr ""
+msgstr "Exp"
 
 #. module: stock
 #. odoo-python
@@ -4402,7 +4466,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "In internal locations"
-msgstr "Di lokasi-lokasi internal"
+msgstr "Di lokasi internal"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -4659,12 +4723,12 @@ msgstr "Lokasi Stok Persediaan"
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss"
-msgstr "Stok Persediaan Hilang"
+msgstr "Kerugian Persediaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss Locations"
-msgstr ""
+msgstr "Lokasi Kerugian Persediaan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__inventory_name
@@ -4749,12 +4813,12 @@ msgstr "Apakah Tanggal Terjadwal Dapat Diedit"
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__is_scrap
 msgid "Is Scrap"
-msgstr ""
+msgstr "Merupakan Scrap"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__is_scrap
 msgid "Is Scrapped"
-msgstr ""
+msgstr "Dibuang"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -5384,7 +5448,7 @@ msgstr "Nomor Seri/Lot Direlokasi"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Nomor Seri/Lot"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5405,7 +5469,7 @@ msgstr "Nomor Seri & Lot akan muncul pada slip pengiriman"
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
 msgid "Lots / Serial Numbers"
-msgstr "Nomor-Nomor Seri / Lot"
+msgstr "Nomor Seri / Lot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -5429,7 +5493,7 @@ msgid ""
 "their use, as well as their composition."
 msgstr ""
 "Nomor Seri/Lot membantu Anda melacak jalan yang digunakan oleh produk Anda.\n"
-"            Dari laporan penelusuruan Anda akan melihat sejarah lengkap "
+"            Dari laporan penelusuruan Anda akan melihat riwayat lengkap "
 "penggunaan jalan mereka, sekaligus komposisinya."
 
 #. module: stock
@@ -5446,7 +5510,7 @@ msgstr "Aturan MTO"
 #: model_terms:ir.ui.view,arch_db:stock.package_history_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_search
 msgid "Main Packages"
-msgstr ""
+msgstr "Kemasan Utama"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -5672,7 +5736,7 @@ msgstr "Pergerakan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Move Date"
-msgstr ""
+msgstr "Tanggal Pindah"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -5739,7 +5803,7 @@ msgstr "Analisis Pergerakan"
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_pivot
 msgid "Moves History"
-msgstr "Sejarah Pergerakan"
+msgstr "Riwayat Pergerakan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -6054,7 +6118,7 @@ msgstr "Tidak ada transfer yang ditemukan. Ayo buat satu!"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "None"
-msgstr ""
+msgstr "Tidak Ada"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6158,6 +6222,12 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"Odoo membuka pratinjau PDF secara default. Bila Anda (hanya user Enterprise) "
+"ingin mencetak instan,\n"
+"                                        instal App IoT di komputer yang ada "
+"di jaringan lokal sama dengan\n"
+"                                        operator barcode dan konfigurasi "
+"routing laporan."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6737,8 +6807,8 @@ msgid ""
 "Packages %(duplicate_names)s are moved to different locations while being in "
 "the same container %(container_name)s."
 msgstr ""
-"Paket-Paket %(duplicate_names)s digerakkan ke lokasi-lokasi yang berbeda "
-"selagi berasal di container yang sama %(container_name)s."
+"Paket-Paket %(duplicate_names)s digerakkan ke lokasi yang berbeda selagi "
+"berasal di container yang sama %(container_name)s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__packages_count
@@ -6856,7 +6926,7 @@ msgstr "Instruksi Spesifik Partner"
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
 msgid "Pay now"
-msgstr ""
+msgstr "Bayar Sekarang"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
@@ -6980,7 +7050,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 msgid "Preceding operations"
-msgstr ""
+msgstr "Operasi sebelumnya"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -7001,7 +7071,7 @@ msgstr "Prefiks penomoran dari dokumen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the operation category."
-msgstr ""
+msgstr "Keberadaan tergantung pada kategori operasi."
 
 #. module: stock
 #. odoo-python
@@ -7888,7 +7958,7 @@ msgstr "Hapus"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Remove lines"
-msgstr ""
+msgstr "Hapus baris"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -8079,7 +8149,7 @@ msgstr "Metode Reservasi"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Reserve"
-msgstr ""
+msgstr "Cadangan"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8234,7 +8304,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
 msgid "Revert"
-msgstr ""
+msgstr "Kembalikan"
 
 #. module: stock
 #. odoo-python
@@ -8408,7 +8478,7 @@ msgstr "Data sampel"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Save"
-msgstr ""
+msgstr "Simpan"
 
 #. module: stock
 #. odoo-python
@@ -8451,7 +8521,7 @@ msgstr "Tanggal yang dijadwalkan atau tanggal proses"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Scheduled time for the first part of the shipment to be processed."
-msgstr ""
+msgstr "Waktu yang dijadwalkan untuk bagian pertama pengiriman untuk diproses."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__scheduled_date
@@ -8476,7 +8546,7 @@ msgstr "Pembuangan"
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid "Scrap %(lot_name)s"
-msgstr ""
+msgstr "Buang %(lot_name)s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__scrap_location_id
@@ -8506,18 +8576,18 @@ msgstr "Tag Alasan Scrap"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "Scrap of %s"
-msgstr ""
+msgstr "Scrap %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Scrapped"
-msgstr ""
+msgstr "Dibuang"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "Scrapped Lots"
-msgstr ""
+msgstr "Lot Dibuang"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_scrapped_moves_action
@@ -8529,7 +8599,7 @@ msgstr "Pembuangan"
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 msgid "Scraps of %s"
-msgstr ""
+msgstr "Scrap %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
@@ -8539,7 +8609,7 @@ msgstr "Cari Pengadaan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_search_view
 msgid "Search Reference"
-msgstr ""
+msgstr "Referensi Pencarian"
 
 #. module: stock
 #. odoo-python
@@ -8564,7 +8634,7 @@ msgstr "Pilih Rute"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_put_in_pack_form
 msgid "Select a Package Type"
-msgstr ""
+msgstr "Pilih Tipe Kemasan"
 
 #. module: stock
 #. odoo-javascript
@@ -8604,7 +8674,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Send an automatic confirmation Text Message when Delivery Orders are done"
-msgstr ""
+msgstr "Kirim konfirmasi otomatis Pesan Teks saat Surat Jalan selesai"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8704,7 +8774,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Serial numbers"
-msgstr "Nomor-nomor seri"
+msgstr "Nomor seri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
@@ -8840,7 +8910,7 @@ msgstr "Nama singkat yang digunakan untuk mengidentifikasi gudang Anda"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__should_replenish_scrapped
 msgid "Should Replenish"
-msgstr ""
+msgstr "Harus Dipulihkan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_allocation
@@ -8910,7 +8980,7 @@ msgstr "Tunjukkan Kuantitas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_return_picking_type
 msgid "Show Return Picking Type"
-msgstr ""
+msgstr "Tampilkan Tipe Picking Retur"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
@@ -8946,7 +9016,7 @@ msgstr "Tunjukkan lot_name"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_return
 msgid "Show return button"
-msgstr ""
+msgstr "Tampilkan tombol retur"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rules_report__warehouse_ids
@@ -9012,7 +9082,7 @@ msgstr "Snooze"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Some moves have zero demand quantity."
-msgstr ""
+msgstr "Beberapa pergerakan memiliki nol kuantitas permintaan."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_set_view
@@ -9098,7 +9168,7 @@ msgstr "Membintangi"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
 msgid "Start transferring goods to see references"
-msgstr ""
+msgstr "Mulai mentransfer barang untuk melihat referensi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -9249,7 +9319,7 @@ msgstr "Laporan Kuantitas Stok"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_stock_reference
 msgid "Stock Reference"
-msgstr ""
+msgstr "Referensi Stok"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_forecasted_product_product
@@ -9297,7 +9367,7 @@ msgstr "Validasi Teks Stok dengan pergerakan stok"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Stock To Reserve:"
-msgstr ""
+msgstr "Stok untuk Direservasi:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
@@ -9522,12 +9592,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 msgid "Template for Inventory Adjustments"
-msgstr ""
+msgstr "Template untuk Penyesuaian Inventaris"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Text Confirmation"
-msgstr ""
+msgstr "Konfirmasi Teks"
 
 #. module: stock
 #. odoo-python
@@ -9581,7 +9651,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
 msgid "The actual date when the transfer was processed."
-msgstr ""
+msgstr "Tanggal asli saat transfer diproses."
 
 #. module: stock
 #. odoo-python
@@ -10137,7 +10207,7 @@ msgstr "Time Horizon"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 msgid "Time to replenish:"
-msgstr ""
+msgstr "Waktu pemulihan:"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -10394,7 +10464,7 @@ msgstr "Lacak kuantitas stok Anda dengan membuat produk storable."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_view_inherit_stock
 msgid "Tracked Stock"
-msgstr ""
+msgstr "Stok yang Dilacak"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking
@@ -10547,8 +10617,8 @@ msgid ""
 "Unavailable Serial numbers. Please correct the serial numbers encoded: %"
 "(serial_numbers_to_locations)s"
 msgstr ""
-"Nomor-nomor Seri Tidak Tersedia. Silakan betulkan nomor seri yang di-encode: "
-"%(serial_numbers_to_locations)s"
+"Nomor Seri Tidak Tersedia. Silakan betulkan nomor seri yang di-encode: %"
+"(serial_numbers_to_locations)s"
 
 #. module: stock
 #. odoo-javascript
@@ -10603,6 +10673,8 @@ msgid ""
 "Unless previously specified by the source document, this will be the default "
 "shipping policy for this operation type."
 msgstr ""
+"Kecuali sebelumnya ditentukan oleh dokumen sumber, ini akan menjadi standar "
+"kebijakan pengiriman untuk tipe operasi ini."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -10727,24 +10799,24 @@ msgstr "Validasi"
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Validasi Inventarisasi"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor"
-msgstr "Pemasok"
+msgstr "Vendor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_supplier
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_supplier
 msgid "Vendor Location"
-msgstr "Lokasi Pemasok"
+msgstr "Lokasi Vendor"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Vendor Locations"
-msgstr "Lokasi Pemasok"
+msgstr "Lokasi Vendor"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -10788,7 +10860,7 @@ msgstr "Virtual"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Virtual Locations"
-msgstr ""
+msgstr "Lokasi Virtual"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -10919,7 +10991,7 @@ msgstr "Rute Gudang"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
 msgid "Warehouse:"
-msgstr ""
+msgstr "Gudang:"
 
 #. module: stock
 #. odoo-javascript
@@ -11113,7 +11185,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "When to start shipping"
-msgstr ""
+msgstr "Kapan untuk memulai mengirim"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -11234,8 +11306,8 @@ msgid ""
 "You are trying to put products going to different locations into the same "
 "package"
 msgstr ""
-"Anda sedang mencoba untuk menaruh produk yang akan pergi ke lokasi-lokasi "
-"berbeda dalam satu kemasan"
+"Anda sedang mencoba untuk menaruh produk yang akan pergi ke lokasi berbeda "
+"dalam satu kemasan"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -11515,7 +11587,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You must select a lot/serial number."
-msgstr ""
+msgstr "Anda harus memilih nomor seri/lot."
 
 #. module: stock
 #. odoo-python
@@ -11586,6 +11658,12 @@ msgid ""
 "            some products, and automate these rules to create RFQs or "
 "Manufacturing Orders."
 msgstr ""
+"Di sini, Anda akan menemukan proposisi pemulihan cerdas berdasarkan forecast "
+"inventaris.\n"
+"            Buat peraturan pemulihan baru bila Anda ingin mengelola tingkat "
+"stok minimal untuk\n"
+"            beberapa produk, dan mengotomatiskan peraturan tersebut untuk "
+"membuat RFQ atau MO."
 
 #. module: stock
 #: model_terms:res.company,lunch_notify_message:stock.res_company_1
@@ -11606,7 +11684,7 @@ msgstr ""
 msgid ""
 "Your product is missing a way to be replenished (Route, Vendor, Bill of "
 "Materials)."
-msgstr ""
+msgstr "Produk Anda tidak memiliki cara pemulihan (Rute, Vendor, BOM)."
 
 #. module: stock
 #. odoo-python
@@ -11638,14 +11716,14 @@ msgstr "Label ZPL - Satu per unit"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_zero_demand_confirmation
 msgid "Zero Demand Confirmation"
-msgstr ""
+msgstr "Konfirmasi Nol Permintaan"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.view_zero_demand_confirmation
 msgid "Zero Demand Warning"
-msgstr ""
+msgstr "Peringatan Nol Permintaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -11690,7 +11768,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Aisle 1"
-msgstr ""
+msgstr "contoh: Lorong 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -11741,7 +11819,7 @@ msgstr "contoh SN000001"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "e.g. Shelf 1"
-msgstr ""
+msgstr "contoh: Rak 1"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
@@ -11757,7 +11835,7 @@ msgstr "contoh Resepsi dua-langkah"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "expected on"
-msgstr ""
+msgstr "diharapkan pada"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -11810,7 +11888,7 @@ msgstr "dari"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
 msgid "planned on"
-msgstr ""
+msgstr "direncanakan pada"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11876,7 +11954,7 @@ msgstr "units"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
@@ -11885,256 +11963,204 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d hari"
+msgid "Andrwep"
+msgstr "Andrwep"
 
-#~ msgid "Close"
-#~ msgstr "Tutup"
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
 
-#~ msgid ""
-#~ "Creation date of this move line until updated due to: quantity being "
-#~ "increased, 'picked' status has updated, or move line is done."
-#~ msgstr ""
-#~ "Tanggal pembuatan baris pergerakan ini sampai diupdate oleh karena: "
-#~ "kuantitas ditingkatkan, status 'picked' telah diupdate, atau baris "
-#~ "pergerakan sudah selesai."
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
-#~ msgid ""
-#~ "Estimate the sales volume for the period based on past period or order "
-#~ "the forecasted quantity for that period."
-#~ msgstr ""
-#~ "Estimasikan volume sales untuk periode berdasarkan periode masa lalu atau "
-#~ "pesan kuantitas yang di-forecast untuk periode tersebut."
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAME"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Ikon font awesome, misalnya fa-tasks"
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUCT_DISPLAY_NAME"
 
-#~ msgid "In %s day(s)"
-#~ msgstr "Dalam %s hari"
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
 
-#~ msgid "Ordering Frequency: On demand"
-#~ msgstr "Frekuensi Pemesanan: Saat diminta"
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
-#~ msgid "Stock level to reach when replenishing."
-#~ msgstr "Tingkat stok untuk diraih saat memulihkan."
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "Stok informasi supplier replenishment"
+msgid "Demo Display Name"
+msgstr "Nama Tampilan Demo"
 
-#~ msgid "The minimum Stock level that will trigger a replenishment."
-#~ msgstr "Tingkat Stok minimal yang akan memicu pemulihan."
+msgid "Dispatch Management System"
+msgstr "Sistem Manajemen Dispatch"
 
-#~ msgid "Choose your date"
-#~ msgstr "Pilih tanggal"
+msgid "Expected Delivery:"
+msgstr "Pengiriman yang Diharapkan:"
 
-#~ msgid "Location Barcode"
-#~ msgstr "Barcode Lokasi"
+msgid ""
+"If this checkbox is ticked, Odoo will automatically show the reception "
+"report (if there are moves to allocate to) when validating."
+msgstr ""
+"Bila kotak ini dicentang, Odoo akan secara otomatis menunjukkan laporan "
+"reseipsi (bila tidak ada pegerakkan untuk dialokasikan) saat memvalidasi."
 
-#~ msgid "Product Catalog Mixin"
-#~ msgstr "Mixin Katalog Produk"
+msgid "No %s selected or a delivery order selected"
+msgstr "Tidak ada %s yang dipilih atau pesanan pengiriman yang dipilih"
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "Riwayat Kuantitas Stok"
+msgid "Print Label"
+msgstr "Cetak Labe"
 
-#~ msgid "Andrwep"
-#~ msgstr "Andrwep"
+msgid "Reason"
+msgstr "Alasan"
 
-#~ msgid "DEMO_DATE"
-#~ msgstr "DEMO_DATE"
+msgid "Show Reception Report at Validation"
+msgstr "Tunjukkan Laporan Resepsi pada Validasi"
 
-#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
-#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+msgid "Stock Reception Report"
+msgstr "Laporan Resepsi Stok"
 
-#~ msgid "DEMO_PARTNER_NAME"
-#~ msgstr "DEMO_PARTNER_NAME"
+msgid "This report cannot be used for done and not done %s at the same time"
+msgstr ""
+"Laporan ini tidak dapat digunakan untuk selesai dan tidak selesai %s pada "
+"saat yang sama"
 
-#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
-#~ msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+msgid "Transport management: organize packs in your fleet, or carriers."
+msgstr ""
+"Manajemen transport: atur kelompok-kelompok di armada atau carrier Anda."
 
-#~ msgid "DEMO_QUANTITY"
-#~ msgstr "DEMO_QUANTITY"
+msgid "Use Reception Report"
+msgstr "Gunakan Laporan Resepsi"
 
-#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
-#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Semua produk tidak dapat direservasi. Klik "
+"pada tombol \"Periksa Ketersediaan\" untuk mencoba mereservasi produk."
 
-#~ msgid "DEMO_UOM"
-#~ msgstr "DEMO_UOM"
+msgid "Check Availability"
+msgstr "Periksa Ketersediaan"
 
-#~ msgid "Demo Display Name"
-#~ msgstr "Nama Tampilan Demo"
+msgid "Click or press enter to add a description"
+msgstr "Klik atau pencet enter untuk menambahkan keterangan"
 
-#~ msgid "Dispatch Management System"
-#~ msgstr "Sistem Manajemen Dispatch"
+msgid "Compute shipping costs and ship with DHL"
+msgstr "Hitung ongkos pengiriman dan kirim dengan DHL"
 
-#~ msgid "Expected Delivery:"
-#~ msgstr "Pengiriman yang Diharapkan:"
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "Hitung ongkos pengiriman dan kirim dengan Easypost"
 
-#~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically show the reception "
-#~ "report (if there are moves to allocate to) when validating."
-#~ msgstr ""
-#~ "Bila kotak ini dicentang, Odoo akan secara otomatis menunjukkan laporan "
-#~ "reseipsi (bila tidak ada pegerakkan untuk dialokasikan) saat memvalidasi."
+msgid "Compute shipping costs and ship with Envia.com"
+msgstr "Hitung biaya pengiriman dan kirimkan dengan Envia.com"
 
-#~ msgid "No %s selected or a delivery order selected"
-#~ msgstr "Tidak ada %s yang dipilih atau pesanan pengiriman yang dipilih"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "Hitung ongkos pengiriman dan kirim dengan FedEx"
 
-#~ msgid "Print Label"
-#~ msgstr "Cetak Labe"
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Hitung ongkos pengiriman dan kirim dengan Sendcloud"
 
-#~ msgid "Reason"
-#~ msgstr "Alasan"
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "Hitung biaya pengiriman dan kirim dengan Shiprocket"
 
-#~ msgid "Show Reception Report at Validation"
-#~ msgstr "Tunjukkan Laporan Resepsi pada Validasi"
+msgid "Compute shipping costs and ship with Starshipit"
+msgstr "Hitung biaya pengiriman dan kirimkan dengan Starshipit"
 
-#~ msgid "Stock Reception Report"
-#~ msgstr "Laporan Resepsi Stok"
+msgid "Compute shipping costs and ship with UPS"
+msgstr "Hitung ongkos pengiriman dan kirim dengan UPS"
 
-#~ msgid "This report cannot be used for done and not done %s at the same time"
-#~ msgstr ""
-#~ "Laporan ini tidak dapat digunakan untuk selesai dan tidak selesai %s pada "
-#~ "saat yang sama"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "Hitung ongkos pengiriman dan kirim dengan USPS"
 
-#~ msgid "Transport management: organize packs in your fleet, or carriers."
-#~ msgstr ""
-#~ "Manajemen transport: atur kelompok-kelompok di armada atau carrier Anda."
+msgid "Compute shipping costs and ship with bpost"
+msgstr "Hitung ongkos pengiriman dan kirim dengan bpost"
 
-#~ msgid "Use Reception Report"
-#~ msgstr "Gunakan Laporan Resepsi"
+msgid "DHL Express Connector"
+msgstr "DHL Express Connector"
 
-#~ msgid ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                All products could not be reserved. Click "
-#~ "on the \"Check Availability\" button to try to reserve products."
-#~ msgstr ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                Semua produk tidak dapat direservasi. "
-#~ "Klik pada tombol \"Periksa Ketersediaan\" untuk mencoba mereservasi "
-#~ "produk."
+msgid "Default Return Name"
+msgstr "Nama Default Pengembalian"
 
-#~ msgid "Check Availability"
-#~ msgstr "Periksa Ketersediaan"
+msgid "Demo Address and Name"
+msgstr "Demo Alamat dan Nama"
 
-#~ msgid "Click or press enter to add a description"
-#~ msgstr "Klik atau pencet enter untuk menambahkan keterangan"
+msgid "Easypost Connector"
+msgstr "Easypost Connector"
 
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "Hitung ongkos pengiriman dan kirim dengan DHL"
+msgid "Envia.com Connector"
+msgstr "Connector Envia.com"
 
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "Hitung ongkos pengiriman dan kirim dengan Easypost"
+msgid "FedEx Connector"
+msgstr "FedEx Connector"
 
-#~ msgid "Compute shipping costs and ship with Envia.com"
-#~ msgstr "Hitung biaya pengiriman dan kirimkan dengan Envia.com"
+msgid "Generate Serials/Lots"
+msgstr "Buat Seri/Lot"
 
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "Hitung ongkos pengiriman dan kirim dengan FedEx"
+msgid "Import Serials/Lots"
+msgstr "Impor Seri/Lot"
 
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "Hitung ongkos pengiriman dan kirim dengan Sendcloud"
+msgid "Nothing to check the availability for."
+msgstr "Tidak ada yang bisa diperiksa ketersediaannya."
 
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "Hitung biaya pengiriman dan kirim dengan Shiprocket"
+msgid ""
+"Please put this document inside your return parcel.<br/>\n"
+"                                Your parcel must be sent to this address:"
+msgstr ""
+"Mohon masukkan dokumen ini di dalam parsel pengembalian.<br/>\n"
+"                                Parsel Anda harus dikirim ke alamat ini:"
 
-#~ msgid "Compute shipping costs and ship with Starshipit"
-#~ msgstr "Hitung biaya pengiriman dan kirimkan dengan Starshipit"
+msgid "Sendcloud Connector"
+msgstr "Sendcloud Connector"
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "Hitung ongkos pengiriman dan kirim dengan UPS"
+msgid "Shipping Connectors"
+msgstr "Konektor Pengiriman"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "Hitung ongkos pengiriman dan kirim dengan USPS"
+msgid "Shiprocket Connector"
+msgstr "Shiprocket Connector"
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "Hitung ongkos pengiriman dan kirim dengan bpost"
+msgid "Starshipit Connector"
+msgstr "Starshipit Connector"
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "DHL Express Connector"
+msgid ""
+"Technical field used to compute whether the button \"Check Availability\" "
+"should be displayed."
+msgstr ""
+"Field teknis yang digunakan untuk menghitung apakah tombol \"Periksa "
+"Ketersediaan\" akan ditampilkan."
 
-#~ msgid "Default Return Name"
-#~ msgstr "Nama Default Pengembalian"
+msgid "UPS Connector"
+msgstr "UPS Connector"
 
-#~ msgid "Demo Address and Name"
-#~ msgstr "Demo Alamat dan Nama"
+msgid "USPS Connector"
+msgstr "USPS Connector"
 
-#~ msgid "Easypost Connector"
-#~ msgstr "Easypost Connector"
+msgid "Website Messages"
+msgstr "Pesan situs"
 
-#~ msgid "Envia.com Connector"
-#~ msgstr "Connector Envia.com"
+msgid "Website communication history"
+msgstr "Sejarah komunikasi situs"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "FedEx Connector"
+msgid "bpost Connector"
+msgstr "bpost Connector"
 
-#~ msgid "Generate Serials/Lots"
-#~ msgstr "Buat Seri/Lot"
+msgid "Demo Lot/SN"
+msgstr "Demo Nomor Seri/Lot"
 
-#~ msgid "Import Serials/Lots"
-#~ msgstr "Impor Seri/Lot"
+msgid "Demo Product"
+msgstr "Demo Produk"
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "Tidak ada yang bisa diperiksa ketersediaannya."
+msgid "Final Location"
+msgstr "Lokasi Final"
 
-#~ msgid ""
-#~ "Please put this document inside your return parcel.<br/>\n"
-#~ "                                Your parcel must be sent to this address:"
-#~ msgstr ""
-#~ "Mohon masukkan dokumen ini di dalam parsel pengembalian.<br/>\n"
-#~ "                                Parsel Anda harus dikirim ke alamat ini:"
+msgid ""
+"The operation brings the products to the intermediate location.But this "
+"operation is part of a chain of operations targeting the final location."
+msgstr ""
+"Operasi membawa produk ke lokasi intermediat. Tapi operasi ini adalah bagian "
+"dari rantai operasi yang menarget lokasi final."
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "Sendcloud Connector"
+msgid "On hand:"
+msgstr "Di tangan:"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "Konektor Pengiriman"
-
-#~ msgid "Shiprocket Connector"
-#~ msgstr "Shiprocket Connector"
-
-#~ msgid "Starshipit Connector"
-#~ msgstr "Starshipit Connector"
-
-#~ msgid ""
-#~ "Technical field used to compute whether the button \"Check Availability\" "
-#~ "should be displayed."
-#~ msgstr ""
-#~ "Field teknis yang digunakan untuk menghitung apakah tombol \"Periksa "
-#~ "Ketersediaan\" akan ditampilkan."
-
-#~ msgid "UPS Connector"
-#~ msgstr "UPS Connector"
-
-#~ msgid "USPS Connector"
-#~ msgstr "USPS Connector"
-
-#~ msgid "Website Messages"
-#~ msgstr "Pesan situs"
-
-#~ msgid "Website communication history"
-#~ msgstr "Sejarah komunikasi situs"
-
-#~ msgid "bpost Connector"
-#~ msgstr "bpost Connector"
-
-#~ msgid "Demo Lot/SN"
-#~ msgstr "Demo Nomor Seri/Lot"
-
-#~ msgid "Demo Product"
-#~ msgstr "Demo Produk"
-
-#~ msgid "Final Location"
-#~ msgstr "Lokasi Final"
-
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr ""
-#~ "Operasi membawa produk ke lokasi intermediat. Tapi operasi ini adalah "
-#~ "bagian dari rantai operasi yang menarget lokasi final."
-
-#~ msgid "On hand:"
-#~ msgstr "Di tangan:"
-
-#~ msgid "Real Quantity"
-#~ msgstr "Kuantitas Nyata"
+msgid "Real Quantity"
+msgstr "Kuantitas Nyata"

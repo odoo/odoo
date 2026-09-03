@@ -12,15 +12,16 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 06:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
-"project/nl/>\n"
+"PO-Revision-Date: 2026-08-24 10:07+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/project/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -463,7 +464,7 @@ msgstr ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
 "color: #454748;\" groups=\"project.group_project_stages\">Je ontvangt deze e-"
 "mail omdat je project is verplaatst naar de fase <b t-"
-"out=\"object.stage_id.name or ''\">Gereed</b></span>\n"
+"out=\"object.stage_id.name or ''\">Voltooid</b></span>\n"
 "            "
 
 #. module: project
@@ -650,7 +651,7 @@ msgstr "<small class=\"text-muted\">Klant</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"fw-normal\"> Done</span>"
-msgstr "<span class=\"fw-normal\"> Gereed</span>"
+msgstr "<span class=\"fw-normal\"> Voltooid</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -853,7 +854,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private (non-template) task cannot have a parent."
-msgstr ""
+msgstr "Een privétaak (geen sjabloon) kan geen bovenliggende taak hebben."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -913,7 +914,7 @@ msgstr "Activiteiten van"
 #. module: project
 #: model:ir.model,name:project.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "Activiteit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
@@ -987,7 +988,7 @@ msgid ""
 "Progress - Done</i>."
 msgstr ""
 "Voeg kolommen toe om je taken in <b>fases</b> te ordenen, <i>bijv. Nieuw - "
-"In behandeling - Gereed</i>."
+"In behandeling - Voltooid</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1030,6 +1031,8 @@ msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
 msgstr ""
+"Beheerder: Kan projecten en fases beheren, met toegang tot rapportage en "
+"configuratie."
 
 #. module: project
 #. odoo-javascript
@@ -1094,7 +1097,7 @@ msgstr "Alle"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "All Projects"
-msgstr ""
+msgstr "Alle projecten"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
@@ -1483,6 +1486,8 @@ msgid ""
 "Cannot convert back to regular task because the task has no project defined "
 "but has a parent or sub-tasks."
 msgstr ""
+"Kan niet worden teruggezet naar een gewone taak omdat de taak geen project "
+"heeft, maar wel een bovenliggende taak of subtaken heeft."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
@@ -1690,7 +1695,7 @@ msgstr "Contactnummer"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_convert_project_to_template_cog_menu/project_convert_project_to_template_cog_menu.xml:0
 msgid "Convert Project to Template"
-msgstr ""
+msgstr "Project omzetten naar sjabloon"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -1744,13 +1749,13 @@ msgstr "Aanmaakdatum"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Project aanmaken"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/wizard/project_template_create_wizard.py:0
 msgid "Create Project (Template: %s)"
-msgstr ""
+msgstr "Project aanmaken (Sjabloon: %s)"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_res_partner
@@ -1760,7 +1765,7 @@ msgstr "Een klant aanmaken"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project_template
 msgid "Create a Project Template"
-msgstr ""
+msgstr "Projectsjabloon aanmaken"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_project_task
@@ -2257,7 +2262,7 @@ msgstr "Weergavenaam"
 #: model:project.task.type,name:project.project_stage_2
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 msgid "Done"
-msgstr "Gereed"
+msgstr "Voltooid"
 
 #. module: project
 #. odoo-javascript
@@ -3114,7 +3119,7 @@ msgstr "Kaart"
 #: code:addons/project/static/src/components/done_checkmark/task_done_checkmark.xml:0
 #: code:addons/project/static/src/components/project_task_state_selection/project_task_state_selection.xml:0
 msgid "Mark as done"
-msgstr "Markeren als gereed"
+msgstr "Markeren als voltooid"
 
 #. module: project
 #. odoo-javascript
@@ -3447,7 +3452,7 @@ msgstr "Geen projectrol gevonden. Laten we er een maken!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_template
 msgid "No project templates found. Let's create one!"
-msgstr ""
+msgstr "Geen projectsjablonen gevonden. Laten we er een maken!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3793,7 +3798,7 @@ msgstr "Delen via portaal"
 msgid ""
 "Portal users will be removed from the followers of the project and its tasks."
 msgstr ""
-"Portalgebruikers worden verwijderd uit de volgers van het project en zijn "
+"Portaalgebruikers worden verwijderd uit de volgers van het project en zijn "
 "taken."
 
 #. module: project
@@ -3827,6 +3832,8 @@ msgid ""
 "Private (non-template) tasks cannot be converted into sub-tasks. Please set "
 "a project on the task to gain access to this feature."
 msgstr ""
+"Privétaken (geen sjabloon-taken) kunnen niet worden omgezet in subtaken. "
+"Stel een project in voor de taak om toegang te krijgen tot deze functie."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -4636,6 +4643,10 @@ msgid ""
 "                    Standardize workflows and ensure consistency across "
 "projects."
 msgstr ""
+"Bespaar tijd door projectsjablonen te gebruiken met vooraf ingevulde details."
+"<br>\n"
+"                    Standaardiseer workflows en zorg voor consistentie "
+"tussen projecten."
 
 #. module: project
 #. odoo-javascript
@@ -5156,7 +5167,7 @@ msgstr "Taakafhankelijkheden"
 #: model:mail.message.subtype,name:project.mt_project_task_done
 #: model:mail.message.subtype,name:project.mt_task_done
 msgid "Task Done"
-msgstr "Taak is gereed"
+msgstr "Taak voltooid"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_in_progress
@@ -5265,7 +5276,7 @@ msgstr "Taak omgezet naar sjabloon"
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
 msgid "Task done"
-msgstr "Taak gereed"
+msgstr "Taak voltooid"
 
 #. module: project
 #. odoo-python
@@ -5333,7 +5344,7 @@ msgstr "Takenfases"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.js:0
 msgid "Tasks Templates"
-msgstr ""
+msgstr "Taaksjablonen"
 
 #. module: project
 #. odoo-python
@@ -6068,6 +6079,7 @@ msgstr "Gebruikersinstellingen"
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
 msgstr ""
+"Gebruiker: Kan taken beheren in projecten die met hem of haar zijn gedeeld."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -6078,7 +6090,7 @@ msgstr "Bekijk"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 msgid "View More"
-msgstr ""
+msgstr "Meer weergeven"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -6218,7 +6230,7 @@ msgstr "Wil je ook alle taken in deze fases dearchiveren?"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "Schrijf een bericht…"
 
 #. module: project
 #. odoo-javascript
@@ -6594,50 +6606,3 @@ msgstr "👤 Niet toegewezen"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
-
-#~ msgid " All internal users and invited portal users"
-#~ msgstr " Alle interne gebruikers en uitgenodigde portaalgebruikers"
-
-#~ msgid ""
-#~ "Add project-specific property fields on tasks to customize your project "
-#~ "management process."
-#~ msgstr ""
-#~ "Voeg projectspecifieke eigenschapsvelden toe aan taken om je "
-#~ "projectbeheerproces aan te passen."
-
-#~ msgid ""
-#~ "Create tasks by sending an email to the email address of your project."
-#~ msgstr ""
-#~ "Maak taken aan door een e-mail te sturen naar het e-mailadres van je "
-#~ "project."
-
-#~ msgid "Emails sent to"
-#~ msgstr "E-mails verstuurd naar"
-
-#~ msgid ""
-#~ "Quickly check the status of tasks for approvals or change requests and "
-#~ "identify those on hold until dependencies are resolved with the hourglass "
-#~ "icon."
-#~ msgstr ""
-#~ "Bekijk snel de status van taken voor goedkeuringen of wijzigingsverzoeken "
-#~ "en identificeer de taken die in de wacht staan todat afhankelijkheden "
-#~ "zijn opgelost met het zandlopersymbool."
-
-#~ msgid "Tip: Use task states to keep track of your tasks' progression"
-#~ msgstr ""
-#~ "Tip: Gebruik taakstatussen om de voortgang van je taken bij te houden"
-
-#~ msgid "Tip: Your Own Personal Kanban"
-#~ msgstr "Tip: Je eigen persoonlijke Kanban"
-
-#~ msgid ""
-#~ "Use personal stages to organize your tasks and create your own workflow."
-#~ msgstr ""
-#~ "Gebruik persoonlijke fasen om je taken te organiseren en je eigen "
-#~ "workflow te creëren."
-
-#~ msgid "project."
-#~ msgstr "projecteren."
-
-#~ msgid "will generate tasks in your"
-#~ msgstr "genereert taken in je"

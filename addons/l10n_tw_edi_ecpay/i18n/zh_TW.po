@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:12+0000\n"
-"PO-Revision-Date: 2026-03-07 13:21+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"POT-Creation-Date: 2026-08-28 18:23+0000\n"
+"PO-Revision-Date: 2026-07-21 05:20+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2-l10n/l10n_tw_edi_ecpay/zh_Hant/>\n"
+"projects/odoo-s19-4/l10n_tw_edi_ecpay/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: l10n_tw_edi_ecpay
 #: model:ir.model.fields,help:l10n_tw_edi_ecpay.field_account_bank_statement_line__l10n_tw_edi_carrier_type
@@ -39,6 +39,15 @@ msgstr ""
 "    - 悠遊卡 EasyCard 或 iPass 一卡通：電信商號碼是卡的隱藏代碼，電信商號碼 "
 "2 是卡的可見代碼。\n"
 "        "
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.module.module,description:base.module_l10n_tw_edi_ecpay
+msgid ""
+"\n"
+"Taiwan - E-invoicing\n"
+"=====================\n"
+"This module allows the user to send their invoices to the Ecpay system.\n"
+msgstr ""
 
 #. module: l10n_tw_edi_ecpay
 #: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__account_move__l10n_tw_edi_zero_tax_rate_reason__71
@@ -264,6 +273,11 @@ msgstr ""
 "售）：稅率為 5%。"
 
 #. module: l10n_tw_edi_ecpay
+#: model:ir.model,website_form_label:l10n_tw_edi_ecpay.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
 #: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_cancel__create_uid
 #: model:ir.model.fields,field_description:l10n_tw_edi_ecpay.field_l10n_tw_edi_invoice_print__create_uid
 msgid "Created by"
@@ -347,6 +361,11 @@ msgstr ""
 #: code:addons/l10n_tw_edi_ecpay/models/account_move.py:0
 msgid "Duty free with special tax type cannot be mixed with other tax types."
 msgstr "設定為特別稅種的免稅商品，不可與其他稅種混合使用。"
+
+#. module: l10n_tw_edi_ecpay
+#: model:ir.module.module,summary:base.module_l10n_tw_edi_ecpay
+msgid "E-invoicing using ECpay"
+msgstr ""
 
 #. module: l10n_tw_edi_ecpay
 #: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__res_partner__invoice_edi_format__tw_ecpay
@@ -851,6 +870,11 @@ msgid "Staging mode"
 msgstr "測試模式"
 
 #. module: l10n_tw_edi_ecpay
+#: model:ir.module.module,shortdesc:base.module_l10n_tw_edi_ecpay
+msgid "Taiwan - E-invoicing"
+msgstr ""
+
+#. module: l10n_tw_edi_ecpay
 #: model_terms:ir.ui.view,arch_db:l10n_tw_edi_ecpay.res_config_settings_view_form
 msgid "Taiwan Electronic Invoicing"
 msgstr "台灣電子發票"
@@ -988,6 +1012,3 @@ msgstr "使用熱敏紙列印"
 #: model:ir.model.fields.selection,name:l10n_tw_edi_ecpay.selection__l10n_tw_edi_invoice_print__print_format_b2c__1
 msgid "single-sided printing"
 msgstr "單面列印"
-
-#~ msgid "Create a Customer"
-#~ msgstr "建立客戶"

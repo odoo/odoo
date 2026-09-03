@@ -31,14 +31,15 @@
 # Kristina Pešehodko <kristina@avalah.ee>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Erik Köster <erik@officeplus.ee>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 18:20+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-29 10:11+0000\n"
+"Last-Translator: Erik Köster <erik@officeplus.ee>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
@@ -4177,9 +4178,8 @@ msgstr "Arvete automaatse postitamise viisard"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "AvaTax"
-msgstr "AvaTax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -11206,9 +11206,8 @@ msgstr "Informatsioon"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Initial Setup"
-msgstr "Algseadistus"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20934,7 +20933,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Valitud kanne on ümber pööratud %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21151,7 +21150,7 @@ msgstr "Arveks teha"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "To Pay"
-msgstr "Kinnitamata palgalehed"
+msgstr "Maksmata"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__todo
@@ -24015,127 +24014,3 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (koopia)"
-
-#~ msgid "(copy)"
-#~ msgstr "(kopeeri)"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-#~ msgstr "<span class=\"o_stat_text\">Andmiku kanded</span>"
-
-#~ msgid "<span title=\"Latest Statement\">Last Statement</span>"
-#~ msgstr "<span title=\"Latest Statement\">Viimane väljavõte</span>"
-
-#~ msgid "Cash Rounding"
-#~ msgstr "Raha ümardamine"
-
-#~ msgid "Cash Roundings"
-#~ msgstr "Sularaha ümardamised"
-
-#~ msgid "Create the first cash rounding"
-#~ msgstr "Loo esimene raha ümardus"
-
-#~ msgid "Define the smallest coinage of the currency used to pay by cash"
-#~ msgstr "Määrake väikseim mündi väärtus sularahaga maksmisel."
-
-#~ msgid "Not Due"
-#~ msgstr "Ei ole võlgnevusi"
-
-#~ msgid "Online Payments"
-#~ msgstr "Internetipõhised maksed"
-
-#~ msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
-#~ msgstr "Kõige väiksem kasutusel olev sent."
-
-#~ msgid "Rounding Precision"
-#~ msgstr "Ümardamise täpsus"
-
-#~ msgid "Rounding Strategy"
-#~ msgstr "Ümardamise strateegia"
-
-#~ msgid "Send invoices and payment follow-ups by post"
-#~ msgstr "Saatke arveid ja maksete meeldetuletusi postiga"
-
-#~ msgid ""
-#~ "Specify which way will be used to round the invoice amount to the "
-#~ "rounding precision"
-#~ msgstr ""
-#~ "Määra, mis moodi soovid kasutada ümardamist arvetel ning ümardamise "
-#~ "täpsust"
-
-#, fuzzy
-#~ msgid ""
-#~ "The IBAN does not seem to be correct. You should have entered something "
-#~ "like this %s\n"
-#~ "Where B = National bank code, S = Branch code, C = Account No, k = Check "
-#~ "digit"
-#~ msgstr ""
-#~ "IBAN kood ei tundu olevat korrektne. Te peaksite sisestama midagi sellist "
-#~ "%s,\n"
-#~ "kus B = riigi pangakood S = filiaali kood, C = pangakontonumber, k = "
-#~ "kontrollnumber"
-
-#, fuzzy
-#~ msgid "The IBAN is invalid, it should begin with the country code"
-#~ msgstr "IBAN number on vale. See peaks algama riigi koodiga"
-
-#~ msgid "The running balance (%s) doesn't match the specified ending balance."
-#~ msgstr "Jooksev saldo (%s) ei ole kooskõlas lõpliku saldoga."
-
-#~ msgid ""
-#~ "The starting balance doesn't match the ending balance of the previous "
-#~ "statement, or an earlier statement is missing."
-#~ msgstr ""
-#~ "Algsaldo ei võrdu eelmise väljavõtte lõppsaldoga või on varasem väljavõte "
-#~ "puudu."
-
-#~ msgid "The tie-breaking rule used for float rounding operations"
-#~ msgstr "Lüüsi reegel, mida kasutatakse ümardamise toimingutes"
-
-#, fuzzy
-#~ msgid "There is no IBAN code."
-#~ msgstr "IBAN kood puudub."
-
-#, fuzzy
-#~ msgid "This IBAN does not pass the validation check, please verify it."
-#~ msgstr ""
-#~ "See IBAN number ei pääse läbi valideerimiskontrollist. Palun kinnitage "
-#~ "esmalt see."
-
-#~ msgid "This Week"
-#~ msgstr "See nädal"
-
-#, fuzzy
-#~ msgid "Units"
-#~ msgstr "tk"
-
-#~ msgid ""
-#~ "You can not archive a journal containing draft journal entries.\n"
-#~ "\n"
-#~ "To proceed:\n"
-#~ "1/ click on the top-right button 'Journal Entries' from this journal "
-#~ "form\n"
-#~ "2/ then filter on 'Draft' entries\n"
-#~ "3/ select them all and post or delete them through the action menu"
-#~ msgstr ""
-#~ "Arhiveerida ei saa andmikku, mis sisaldab mustandis andmiku kandeid.\n"
-#~ "\n"
-#~ "Jätkamiseks:\n"
-#~ "1/ vali ülevalt paremalt \"Andmiku kanded\"\n"
-#~ "2/ filtreeri \"Mustand\" kanded\n"
-#~ "3/ vali kõik ning postita või kustuta need \"toiming\" menüüst."
-
-#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
-#~ msgstr "Ei saa muuta ainult loetavaid välju postitatud kandel: %s"
-
-#~ msgid "You cannot reset to draft a tax cash basis journal entry."
-#~ msgstr "Sa ei saa lähtestada mustandisse kassapõhist kannet."
-
-#~ msgid ""
-#~ "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/"
-#~ "a' }})"
-#~ msgstr ""
-#~ "{{ object.company_id.name }} Maksekviitung (Ref {{ object.name or 'n/"
-#~ "a' }})"

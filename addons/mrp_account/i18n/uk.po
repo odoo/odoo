@@ -6,15 +6,15 @@
 # Martin Trigaux, 2023
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 20:48+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-21 01:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-4/"
 "mrp_account/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
@@ -53,9 +53,8 @@ msgstr ""
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
-#, fuzzy
 msgid "%s - Labour"
-msgstr "% - Праця"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
@@ -104,9 +103,8 @@ msgstr "<span>Одиниця вимірювання</span>"
 
 #. module: mrp_account
 #: model:ir.model.constraint,message:mrp_account.constraint_mrp_account_wip_accounting_line_check_debit_credit
-#, fuzzy
 msgid "A single line cannot be both credit and debit."
-msgstr "Один рядок не може бути одночасно кредитним і дебетовим."
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__account_id
@@ -177,9 +175,8 @@ msgstr "Категорія"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_res_company
-#, fuzzy
 msgid "Company"
-msgstr "Компанія"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -386,9 +383,8 @@ msgstr "Підрахунок замовлень на виробництво"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-#, fuzzy
 msgid "Manufacturing WIP - %(orders_list)s"
-msgstr "Виробництво WIP - %(orders_list)s"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__mo_ids
@@ -403,29 +399,23 @@ msgstr "Рядок аналітичного рахунку Mo"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-#, fuzzy
 msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr ""
-"Будь ласка, переконайтеся, що загальна сума кредиту дорівнює загальній сумі "
-"дебету."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
-#, fuzzy
 msgid "Post Manufacturing WIP"
-msgstr "Публікація виробництва WIP"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
-#, fuzzy
 msgid "Post WIP"
-msgstr "Публікація WIP"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.actions.act_window,name:mrp_account.action_wip_accounting
-#, fuzzy
 msgid "Post WIP Accounting Entry"
-msgstr "Проводка публікації WIP"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -466,9 +456,8 @@ msgstr "Референс"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,field_description:mrp_account.field_account_move__wip_production_ids
-#, fuzzy
 msgid "Relevant WIP MOs"
-msgstr "Релевантний WIP MO"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reversal_date
@@ -478,9 +467,8 @@ msgstr "Дата сторнування"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-#, fuzzy
 msgid "Reversal date must be after the posting date."
-msgstr "Дата сторнування має бути після дати проводки."
+msgstr ""
 
 #. module: mrp_account
 #. odoo-python
@@ -506,26 +494,18 @@ msgstr "Оцінка складу"
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
 #: model:ir.model.fields,help:mrp_account.field_account_move__wip_production_ids
-#, fuzzy
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
 msgstr ""
-"Організаційні операції (MO), на яких базується цей запис у незавершеному "
-"процесі. Очікується, що їх буде встановлено під час створення запису у "
-"незавершеному процесі."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
-#, fuzzy
 msgid ""
 "The expense is accounted for when the manufacturing order is marked as done. "
 "If not set, it is the expense account of the final product that will be used "
 "instead."
 msgstr ""
-"Витрати враховуються, коли виробниче замовлення позначено як виконане. Якщо "
-"це не встановлено, замість цього використовуватиметься рахунок витрат "
-"кінцевого товару."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
@@ -553,16 +533,14 @@ msgstr "Всього дебет"
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-#, fuzzy
 msgid "WIP - Component Value"
-msgstr "WIP - Вартість компоненту"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-#, fuzzy
 msgid "WIP - Overhead"
-msgstr "WIP - Накладні витрати"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-python
@@ -578,9 +556,8 @@ msgstr ""
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/account_move.py:0
-#, fuzzy
 msgid "WIP MOs of %s"
-msgstr "WIP MO %s"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
@@ -589,15 +566,13 @@ msgstr "Звіт WIP для"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__line_ids
-#, fuzzy
 msgid "WIP accounting lines"
-msgstr "Рядки бухобліку WIP"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__wip_accounting_id
-#, fuzzy
 msgid "WIP accounting wizard"
-msgstr "Помічник бухобліку WIP"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.actions.report,name:mrp_account.wip_report
@@ -657,14 +632,14 @@ msgstr "Журнал продуктивності робочого центру"
 msgid "[WC] %s"
 msgstr "[WC] %s"
 
-#~ msgid "Acme Corp."
-#~ msgstr "Acme Corp."
+msgid "Acme Corp."
+msgstr "Acme Corp."
 
-#~ msgid "Laptop"
-#~ msgstr "Ноутбук"
+msgid "Laptop"
+msgstr "Ноутбук"
 
-#~ msgid "REF123"
-#~ msgstr "REF123"
+msgid "REF123"
+msgstr "REF123"
 
-#~ msgid "Units"
-#~ msgstr "Одиниці"
+msgid "Units"
+msgstr "Одиниці"

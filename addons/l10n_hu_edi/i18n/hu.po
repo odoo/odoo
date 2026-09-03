@@ -2,16 +2,16 @@
 # This file contains the translation of the following modules:
 # * l10n_hu_edi
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:10+0000\n"
-"PO-Revision-Date: 2026-06-12 03:41+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-master-"
-"l10n/l10n_hu_edi/hu/>\n"
+"POT-Creation-Date: 2026-08-28 18:20+0000\n"
+"PO-Revision-Date: 2026-07-21 13:57+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-s19-4/"
+"l10n_hu_edi/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +55,20 @@ msgstr ""
 "                0 az elutasított/megszakított számlák esetében, vagy ha még "
 "nem került megadásra.\n"
 "            "
+
+#. module: l10n_hu_edi
+#: model:ir.module.module,description:base.module_l10n_hu_edi
+msgid ""
+"\n"
+"* Electronically report invoices to the NAV (Hungarian Tax Agency) when "
+"issuing physical (paper) invoices.\n"
+"* Electronically receive vendor bills from the NAV.\n"
+"* Perform the Tax Audit Export (Adóhatósági Ellenőrzési Adatszolgáltatás) in "
+"NAV 3.0 format.\n"
+"* NAV Documentation: https://onlineszamla.nav.gov.hu/files/container/"
+"download/"
+"2025.10.09.%20EN_Online%20Invoice%20System%203.0%20Interface%20Specification%20.pdf\n"
+msgstr ""
 
 #. module: l10n_hu_edi
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.product_template_form_view_l10n_hu_edi
@@ -146,6 +160,12 @@ msgstr ""
 "lennie."
 
 #. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Amount mismatch detected."
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__code
 msgid "Annulment Code"
 msgstr "Technikai érvénytelenítési kód"
@@ -164,6 +184,18 @@ msgstr "A NAV 3.0-val történő hitelesítés sikeres."
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
 msgid "Bank Account:"
 msgstr "Bankszámla:"
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/l10n_hu_edi_receive_bills_wizard.py:0
+msgid "Bills received from NAV"
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/l10n_hu_edi_receive_bills_wizard.py:0
+msgid "Bills were successfully received from NAV."
+msgstr ""
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__l10n_hu_edi_tax_audit_export__selection_mode__date
@@ -256,9 +288,8 @@ msgstr "Bezárás"
 
 #. module: l10n_hu_edi
 #: model:ir.model,name:l10n_hu_edi.model_res_company
-#, fuzzy
 msgid "Company"
-msgstr "Vállalat"
+msgstr ""
 
 #. module: l10n_hu_edi
 #: model:ir.model,name:l10n_hu_edi.model_res_config_settings
@@ -321,13 +352,26 @@ msgid "Could not parse time of previous transaction"
 msgstr "Nem sikerült értelmezni az előző tranzakció idejét"
 
 #. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid "Could not retrieve the tax: %(tax_label)s for line '%(line)s'."
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model,website_form_label:l10n_hu_edi.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__create_uid
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__create_uid
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__create_uid
 msgid "Created by"
 msgstr "Létrehozta"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__create_date
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__create_date
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__create_date
 msgid "Created on"
 msgstr "Létrehozva"
@@ -358,6 +402,21 @@ msgid "Date To"
 msgstr "Dátumig"
 
 #. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__datetime_from
+msgid "Datetime From"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__datetime_to
+msgid "Datetime To"
+msgstr ""
+
+#. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_receive_bills_wizard_form
+msgid "Datetime range"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__uom_uom__l10n_hu_edi_code__day
 msgid "Day"
 msgstr "Nap"
@@ -368,6 +427,11 @@ msgid "Demo"
 msgstr "Demó"
 
 #. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_receive_bills_wizard_form
+msgid "Discard"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_debit_note__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__display_name
@@ -375,6 +439,7 @@ msgstr "Demó"
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__display_name
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_product_template__display_name
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__display_name
@@ -499,6 +564,11 @@ msgid "Export"
 msgstr "Exportálás"
 
 #. module: l10n_hu_edi
+#: model_terms:ir.ui.view,arch_db:l10n_hu_edi.l10n_hu_edi_receive_bills_wizard_form
+msgid "Fetch Bills"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__filename
 msgid "File name"
 msgstr "Fájlnév"
@@ -555,6 +625,11 @@ msgid "Hungary"
 msgstr "Magyarország"
 
 #. module: l10n_hu_edi
+#: model:ir.module.module,shortdesc:base.module_l10n_hu_edi
+msgid "Hungary - E-invoicing"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_chart_template__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_debit_note__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move__id
@@ -562,6 +637,7 @@ msgstr "Magyarország"
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_move_send__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__id
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_product_template__id
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_res_company__id
@@ -762,12 +838,14 @@ msgstr ""
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__write_uid
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__write_uid
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__write_uid
 msgid "Last Updated by"
 msgstr "Legutóbb frissítette"
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_cancellation__write_date
+#: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_receive_bills_wizard__write_date
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__write_date
 msgid "Last Updated on"
 msgstr "Legutóbb frissítve"
@@ -948,6 +1026,12 @@ msgstr "Számlaszámtól"
 #: model:ir.model.fields,field_description:l10n_hu_edi.field_l10n_hu_edi_tax_audit_export__name_to
 msgid "Name To"
 msgstr "Számlaszámig"
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/l10n_hu_edi_receive_bills_wizard.py:0
+msgid "No bills received from NAV."
+msgstr ""
 
 #. module: l10n_hu_edi
 #. odoo-python
@@ -1140,6 +1224,11 @@ msgstr ""
 "rendelkezne"
 
 #. module: l10n_hu_edi
+#: model:ir.model,name:l10n_hu_edi.model_l10n_hu_edi_receive_bills_wizard
+msgid "Receive Bills Wizard"
+msgstr ""
+
+#. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__rejected
 msgid "Rejected"
 msgstr "Visszautasított"
@@ -1196,6 +1285,13 @@ msgstr "Aláírási kulcs"
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__res_company__l10n_hu_tax_regime__sb
 msgid "Small Business"
 msgstr "Kisadózó"
+
+#. module: l10n_hu_edi
+#. odoo-javascript
+#: code:addons/l10n_hu_edi/static/src/views/sync_with_nav_btn/sync_with_nav_btn.js:0
+#: code:addons/l10n_hu_edi/static/src/views/sync_with_nav_btn/sync_with_nav_btn.xml:0
+msgid "Sync with NAV"
+msgstr ""
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_tax__l10n_hu_tax_type__tam
@@ -1338,6 +1434,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_hu_edi/models/account_move.py:0
 msgid ""
+"The gross total on the bill received from NAV and computed is not the same. "
+"Please check XML file in 'NAV 3.0' tab."
+msgstr ""
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/models/account_move.py:0
+msgid ""
 "The invoice was accepted by the NAV, but warnings were reported. To reverse, "
 "create a credit note / debit note."
 msgstr ""
@@ -1385,6 +1489,14 @@ msgstr "A számla kiállítója <u>áfa körön kívüli</u>."
 #: model_terms:ir.ui.view,arch_db:l10n_hu_edi.report_invoice_document
 msgid "The issuer of the invoice is <u>Small taxpayer</u>."
 msgstr "A számla kiállítója <u>kisadózó</u>."
+
+#. module: l10n_hu_edi
+#. odoo-python
+#: code:addons/l10n_hu_edi/wizard/l10n_hu_edi_receive_bills_wizard.py:0
+msgid ""
+"The length of the interval specified by the query parameter can be up to 35 "
+"days."
+msgstr ""
 
 #. module: l10n_hu_edi
 #: model:ir.model.fields.selection,name:l10n_hu_edi.selection__account_move__l10n_hu_edi_state__cancel_timeout
@@ -1487,7 +1599,3 @@ msgid ""
 msgstr ""
 "Az Ön vállalatának speciális adórendelkezései, ha ezek közül bármelyik "
 "vonatkozik cégére."
-
-#, fuzzy
-#~ msgid "Create a Customer"
-#~ msgstr "Ügyfél létrehozása"

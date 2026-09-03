@@ -2,16 +2,16 @@
 # This file contains the translation of the following modules:
 # * l10n_it_stock_ddt
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 18:19+0000\n"
-"PO-Revision-Date: 2025-12-20 09:33+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-19-l10n/"
+"POT-Creation-Date: 2026-08-28 18:21+0000\n"
+"PO-Revision-Date: 2026-07-22 01:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "l10n_it_stock_ddt/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,29 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_it_stock_ddt
+#: model:ir.module.module,description:base.module_l10n_it_stock_ddt
+msgid ""
+"\n"
+"Documento di Trasporto (DDT)\n"
+"\n"
+"Whenever goods are transferred between A and B, the DDT serves\n"
+"as a legitimation e.g. when the police would stop you.\n"
+"\n"
+"When you want to print an outgoing picking in an Italian company,\n"
+"it will print you the DDT instead.  It is like the delivery\n"
+"slip, but it also contains the value of the product,\n"
+"the transportation reason, the carrier, ... which make it a DDT.\n"
+"\n"
+"We also use a separate sequence for the DDT as the number should not\n"
+"have any gaps and should only be applied at the moment the goods are sent.\n"
+"\n"
+"When invoices are related to their sale order and the sale order with the\n"
+"delivery, the system will automatically calculate the linked DDTs for every\n"
+"invoice line to export in the FatturaPA XML.\n"
+msgstr ""
 
 #. module: l10n_it_stock_ddt
 #. odoo-python
@@ -169,6 +191,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: l10n_it_stock_ddt
+#: model:ir.module.module,shortdesc:base.module_l10n_it_stock_ddt
+msgid "Italy - Stock DDT"
+msgstr ""
+
+#. module: l10n_it_stock_ddt
 #: model:ir.model,name:l10n_it_stock_ddt.model_account_move
 msgid "Journal Entry"
 msgstr "Registrazione contabile"
@@ -275,8 +302,9 @@ msgstr "Data trasporto"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model,name:l10n_it_stock_ddt.model_stock_picking
+#, fuzzy
 msgid "Stock Picking - Delivery Guide (Uruguay)"
-msgstr ""
+msgstr "Prelievo scorte - Guida alla consegna (Uruguay)"
 
 #. module: l10n_it_stock_ddt
 #: model:ir.model.fields.selection,name:l10n_it_stock_ddt.selection__stock_picking__l10n_it_transport_reason__transfer

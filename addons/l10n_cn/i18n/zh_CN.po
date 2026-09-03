@@ -8,17 +8,47 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 18:17+0000\n"
-"PO-Revision-Date: 2026-04-09 14:17+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"POT-Creation-Date: 2026-08-28 18:18+0000\n"
+"PO-Revision-Date: 2026-07-22 01:46+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-s19-2-l10n/l10n_cn/zh_Hans/>\n"
+"projects/odoo-s19-4/l10n_cn/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_cn
+#: model:ir.module.module,description:base.module_l10n_cn
+msgid ""
+"\n"
+"Includes the following data for the Chinese localization\n"
+"========================================================\n"
+"\n"
+"Account Type/科目类型\n"
+"\n"
+"State Data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计"
+"凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    增加大企业会计科目表\n"
+"\n"
+"We added the option to print a voucher which will also\n"
+"print the amount in words (special Chinese characters for numbers)\n"
+"correctly when the cn2an library is installed. (e.g. with pip3 install "
+"cn2an)\n"
+msgstr ""
 
 #. module: l10n_cn
 #: model:ir.actions.report,print_report_name:l10n_cn.account_voucher_cn
@@ -37,6 +67,11 @@ msgstr "<span>记账凭证</span>"
 
 #. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
+msgid "<span>Amount in Currency</span>"
+msgstr ""
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Balance</span>"
 msgstr "<span>摘要</span>"
 
@@ -44,6 +79,11 @@ msgstr "<span>摘要</span>"
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
 msgid "<span>Credit</span>"
 msgstr "<span>贷方</span>"
+
+#. module: l10n_cn
+#: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
+msgid "<span>Currency</span>"
+msgstr ""
 
 #. module: l10n_cn
 #: model_terms:ir.ui.view,arch_db:l10n_cn.report_voucher_document
@@ -107,6 +147,11 @@ msgstr "小型企业会计准则"
 #: code:addons/l10n_cn/models/template_cn_common.py:0
 msgid "Cash"
 msgstr "现金"
+
+#. module: l10n_cn
+#: model:ir.module.module,shortdesc:base.module_l10n_cn
+msgid "China - Accounting"
+msgstr ""
 
 #. module: l10n_cn
 #. odoo-python

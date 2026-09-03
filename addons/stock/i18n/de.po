@@ -17,16 +17,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 01:40+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/stock/"
+"PO-Revision-Date: 2026-08-28 13:58+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/stock/"
 "de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -161,7 +161,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__return_count
 msgid "# Returns"
-msgstr "# Retouren"
+msgstr "Anzahl Retouren"
 
 #. module: stock
 #. odoo-python
@@ -809,7 +809,7 @@ msgstr "<span class=\"text-muted small\"> Vorrätig</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
 msgid "<span class=\"text-muted\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Vorrätig</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
@@ -1110,7 +1110,7 @@ msgstr "Aktionsbezeichnung"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__active
@@ -1138,7 +1138,7 @@ msgstr "Aktivitäten von"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitätsausnahme-Dekoration"
+msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
@@ -1177,7 +1177,7 @@ msgstr "Produkt hinzufügen"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Add a description"
-msgstr ""
+msgstr "Beschreibung hinzufügen"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -1327,7 +1327,7 @@ msgstr "Alle Unterpakete"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.ir_module_module_action_delivery_provider_modules
 msgid "All Delivery Providers"
-msgstr ""
+msgstr "Alle Versanddienstleister"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -1365,7 +1365,7 @@ msgstr "Alle Retouren"
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: model:ir.actions.client,name:stock.allocation_report_action
 msgid "Allocation Report"
-msgstr ""
+msgstr "Zuteilungsbericht"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1391,6 +1391,8 @@ msgstr "Gemischte Produkte erlauben"
 #: model:ir.model.fields,help:stock.field_stock_picking_type__allocated_location_id
 msgid "Allow to define the location where allocated products should be sent."
 msgstr ""
+"Ermöglichen Sie es, den Lagerort festzulegen, dem die zugewiesenen Produkte "
+"zugeteilt werden sollen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1866,7 +1868,7 @@ msgstr "Schüttgewicht"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.ir_module_module_action_delivery_provider_modules
 msgid "Buy Odoo Enterprise now to get more providers."
-msgstr ""
+msgstr "Erwerben Sie jetzt Odoo Enterprise, um weitere Anbieter zu erhalten."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_template__tracking__lot
@@ -2211,7 +2213,7 @@ msgstr "Konfiguration"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "Methoden konfigurieren"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__horizon_days
@@ -2638,7 +2640,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 msgid "Current stock"
-msgstr ""
+msgstr "Aktueller Bestand"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -3096,7 +3098,7 @@ msgstr "Bedarf"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
 msgid "Demand in Product UoM"
-msgstr ""
+msgstr "Nachfrage in Produkt-Mengeneinheit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__daily_demand
@@ -3694,7 +3696,7 @@ msgstr "Gefilterter Standort"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Einen Versanddienstleister finden"
 
 #. module: stock
 #: model:product.removal,name:stock.removal_fifo
@@ -3722,7 +3724,7 @@ msgstr "Erste Seriennummer"
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/stock_traceability_report_backend.xml:0
 msgid "Fold"
-msgstr ""
+msgstr "Einklappen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_follower_ids
@@ -3740,7 +3742,7 @@ msgstr "Follower (Partner)"
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 msgid "For"
-msgstr ""
+msgstr "Für"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -3821,7 +3823,7 @@ msgstr "Prognostizierter Bestand"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecasted_location_id
 msgid "Forecasted Location"
-msgstr ""
+msgstr "Prognostizierter Lagerort"
 
 #. module: stock
 #. odoo-python
@@ -3977,7 +3979,7 @@ msgstr "Losnummern generieren"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Lots"
-msgstr ""
+msgstr "Lose generieren"
 
 #. module: stock
 #. odoo-javascript
@@ -3989,7 +3991,7 @@ msgstr "Seriennummern generieren"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Generate Serials"
-msgstr ""
+msgstr "Seriennummern generieren"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -4055,7 +4057,7 @@ msgstr "Hat Zeilen ohne resultierendes Paket"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__has_message
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_message
 msgid "Has Message"
-msgstr "Hat eine Nachricht"
+msgstr "Hat Nachricht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__has_scrap_move
@@ -4375,6 +4377,9 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically show the allocation "
 "report (if there are moves to allocate to) when validating."
 msgstr ""
+"Wenn dieses Kontrollkästchen aktiviert ist, zeigt Odoo bei der Validierung "
+"automatisch den Zuteilungsbericht an (wenn es Bewegungen gibt, die "
+"zuzuordnen sind)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__show_operations
@@ -5365,12 +5370,12 @@ msgstr "Lagerorttyp"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__allocated_location_id
 msgid "Location for allocation"
-msgstr ""
+msgstr "Lagerort für Zuteilung"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__forecasted_location_id
 msgid "Location used in the computation of the forecast."
-msgstr ""
+msgstr "Lagerort, der bei der Prognosenberechnung verwendet wurde."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -6079,6 +6084,8 @@ msgstr "Kein Zuweisungsbedarf gefunden."
 #: code:addons/stock/models/stock_picking.py:0
 msgid "No backorder has been planned for undelivered demanded quantities: %s"
 msgstr ""
+"Für die nicht gelieferten angeforderten Mengen wurde kein Lieferrückstand "
+"geplant: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.help_message_template
@@ -6227,7 +6234,7 @@ msgstr "Anzahl Serien-/Losnummern"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
@@ -6330,6 +6337,8 @@ msgid ""
 "Only %(nbr_done)s %(uom)s of %(product)s delivered in contrast to the "
 "expected %(nbr_demanded)s %(uom)s"
 msgstr ""
+"Im Gegensatz zu den erwarteten %(nbr_demanded)s %(uom)s wurde(n) nur %"
+"(nbr_done)s %(uom)s von %(product)s bereitgestellt."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6376,7 +6385,7 @@ msgstr "Vorgangsarten"
 #. odoo-python
 #: code:addons/stock/report/stock_allocation_report.py:0
 msgid "Operation not found"
-msgstr ""
+msgstr "Vorgang nicht gefunden"
 
 #. module: stock
 #. odoo-python
@@ -6491,6 +6500,8 @@ msgid ""
 "Organize deliveries by dock, assign drivers and vehicles, and print "
 "consignment notes."
 msgstr ""
+"Organisieren Sie Lieferungen nach Laderampe, weisen Sie Fahrer und Fahrzeuge "
+"zu und drucken Sie Frachtbriefe aus."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -7096,7 +7107,7 @@ msgstr "Bitte erstellen Sie ein Lagerhaus für das Unternehmen %s."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "Please put this document inside your return parcel.<br/>"
-msgstr ""
+msgstr "Legen Sie dieses Dokument Ihrem Retourenpaket bei.<br/>"
 
 #. module: stock
 #. odoo-javascript
@@ -7316,7 +7327,7 @@ msgstr "Filter für Produktlose"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Produktbewegungen (Lagerbuchung)"
+msgstr "Produktbewegungen (Lagerbuchungszeile)"
 
 #. module: stock
 #. odoo-python
@@ -8249,7 +8260,7 @@ msgstr "Teilverpackungen reservieren"
 #: code:addons/stock/static/src/allocation_report/allocation_report.xml:0
 #: code:addons/stock/static/src/allocation_report/out_line/out_line.js:0
 msgid "Reserved"
-msgstr ""
+msgstr "Reserviert"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__reserved_quantity
@@ -8703,7 +8714,7 @@ msgstr "Pakettyp auswählen"
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 msgid "Select a date..."
-msgstr ""
+msgstr "Datum auswählen …"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -9291,7 +9302,7 @@ msgstr "Bestand"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_allocation_report
 msgid "Stock Allocation Report"
-msgstr ""
+msgstr "Bericht zur Bestandszuteilung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_barcode_barcodelookup
@@ -9665,6 +9676,8 @@ msgid ""
 "Technical field used to compute whether the button \"Reserve\" should be "
 "displayed."
 msgstr ""
+"Technisches Feld zur Berechnung, ob die Schaltfläche „Reservieren“ angezeigt "
+"werden soll."
 
 #. module: stock
 #. odoo-python
@@ -10011,7 +10024,7 @@ msgstr "Es sind keine Bestandsaufnahmen rückgängig zu machen."
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "There is nothing to reserve."
-msgstr ""
+msgstr "Es gibt nichts zu reservieren."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -10258,6 +10271,8 @@ msgid ""
 "This report cannot be used for done and not done %(doc_type)s at the same "
 "time"
 msgstr ""
+"Dieser Bericht kann nicht gleichzeitig für erledigte und nichterledigte %"
+"(doc_type)s verwendet werden."
 
 #. module: stock
 #. odoo-python
@@ -10584,7 +10599,7 @@ msgstr "Transfer"
 #. module: stock
 #: model:mail.message.subtype,name:stock.mt_picking_state
 msgid "Transfer Status"
-msgstr ""
+msgstr "Transferstatus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_tree
@@ -10656,7 +10671,7 @@ msgstr "Umschlagslager"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_fleet
 msgid "Transport Management"
-msgstr ""
+msgstr "Transportverwaltung"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10698,7 +10713,7 @@ msgstr "Typ"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "Vorgangsart"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
@@ -10936,7 +10951,7 @@ msgstr "Diagramm ansehen"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 msgid "View Forecast"
-msgstr ""
+msgstr "Prognose anzeigen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__view_location_id
@@ -10947,7 +10962,7 @@ msgstr "Lagerort ansehen"
 #. odoo-javascript
 #: code:addons/stock/static/src/allocation_report/product_line/product_line.xml:0
 msgid "View more"
-msgstr ""
+msgstr "Mehr anzeigen"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
@@ -11797,7 +11812,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.return_label_header
 msgid "Your parcel must be sent to this address:"
-msgstr ""
+msgstr "Ihr Paket muss an diese Adresse gesendet werden:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -12063,7 +12078,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/report/stock_allocation_report.py:0
 msgid "transfers"
-msgstr ""
+msgstr "Transfers"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -12083,339 +12098,257 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Lieferauftrag (Ref {{ object.name or 'k. A.' }})"
 
-#~ msgid ""
-#~ "), a replenishment must be done to reach the maximum level of stock ("
-#~ msgstr ""
-#~ ") liegt, muss eine Auffüllung erfolgen, um den maximalen Lagerbestand zu "
-#~ "erreichen ("
+msgid "Andrwep"
+msgstr "Andrwep"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d Tag(e)"
+msgid "Assign"
+msgstr "Zuweisen"
 
-#~ msgid "Average Stock:"
-#~ msgstr "Durchschnittsbestand:"
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
 
-#~ msgid "Close"
-#~ msgstr "Schließen"
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
-#~ msgid ""
-#~ "Creation date of this move line until updated due to: quantity being "
-#~ "increased, 'picked' status has updated, or move line is done."
-#~ msgstr ""
-#~ "Erstelldatum dieser Buchungszeile bis Aktualisierung aus folgendem Grund: "
-#~ "Menge wurde erhöht, „kommissionierter“ Status wurde aktualisiert oder "
-#~ "Buchungszeile ist erledigt."
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAME"
 
-#~ msgid "Daily Demand:"
-#~ msgstr "Tagesbedarf:"
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUCT_DISPLAY_NAME"
 
-#~ msgid ""
-#~ "Estimate the sales volume for the period based on past period or order "
-#~ "the forecasted quantity for that period."
-#~ msgstr ""
-#~ "Schätzen Sie das Verkaufsvolumen für den Zeitraum auf der Grundlage "
-#~ "vergangener Zeiträume oder bestellen Sie die prognostizierte Menge für "
-#~ "diesen Zeitraum."
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "FontAwesome-Icon, z. B. fa-tasks"
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
-#~ msgid "In %s day(s)"
-#~ msgstr "In %s Tagen"
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
 
-#~ msgid "Lead Time:"
-#~ msgstr "Vorlaufzeit:"
+msgid "Demo Display Name"
+msgstr "Demo-Anzeigename"
 
-#~ msgid "Min - Max"
-#~ msgstr "Min. - Max."
+msgid "Dispatch Management System"
+msgstr "Versandmanagementsystem"
 
-#~ msgid "Ordering Frequency:"
-#~ msgstr "Bestellhäufigkeit:"
+msgid "Expected Delivery:"
+msgstr "Erwartetes Lieferdatum:"
 
-#~ msgid "Ordering Frequency: On demand"
-#~ msgstr "Bestellhäufigkeit: Nach Bedarf"
+msgid ""
+"If this checkbox is ticked, Odoo will automatically show the reception "
+"report (if there are moves to allocate to) when validating."
+msgstr ""
+"Wenn dieses Kontrollkästchen aktiviert ist, zeigt Odoo bei der Validierung "
+"automatisch den Empfangsbericht an (wenn es Bewegungen gibt, die zuzuordnen "
+"sind)."
 
-#~ msgid "Stock level to reach when replenishing."
-#~ msgstr "Bei Auffüllung zu erreichendes Bestandslevel"
+msgid "No %s selected or a delivery order selected"
+msgstr "Keine %s ausgewählt oder ein Lieferauftrag ausgewählt"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "Informationen über die Auffüllung der Lagerbestände von Lieferanten"
+msgid "Print Label"
+msgstr "Etikett drucken"
 
-#~ msgid "The minimum Stock level that will trigger a replenishment."
-#~ msgstr "Das Mindestbestandslevel, das eine Auffüllung auslöst."
+msgid "Reason"
+msgstr "Grund"
 
-#~ msgid "When the stock level at the forecasted date is below the minimum ("
-#~ msgstr ""
-#~ "Wenn der Lagerbestand zum prognostizierten Datum unter dem Mindestbestand "
-#~ "("
+msgid "Show Reception Report at Validation"
+msgstr "Empfangsbericht bei der Validierung anzeigen"
+
+msgid "Stock Reception Report"
+msgstr "Bestandsempfangsbericht"
+
+msgid "This report cannot be used for done and not done %s at the same time"
+msgstr ""
+"Dieser Bericht kann nicht gleichzeitig für erledigte und nichterledigte %s "
+"verwendet werden."
+
+msgid "Transport management: organize packs in your fleet, or carriers."
+msgstr ""
+"Transportmanagement: Organisieren Sie die Pakete in Ihrem Fuhrpark oder bei "
+"Spediteuren."
 
-#~ msgid "day(s)"
-#~ msgstr "Tag(e)"
+msgid "Unassign"
+msgstr "Zuweisung aufheben"
 
-#~ msgid "Choose your date"
-#~ msgstr "Wählen Sie ein Datum"
+msgid "Use Reception Report"
+msgstr "Empfangsbericht verwenden"
 
-#~ msgid "Location Barcode"
-#~ msgstr "Lagerort-Barcode"
+msgid "View and allocate received quantities"
+msgstr "Zeigen Sie die erhaltenen Mengen an und ordnen Sie sie zu."
 
-#~ msgid "Product Catalog Mixin"
-#~ msgstr "Mixin des Produktkatalogs"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Es konnten nicht alle Produkte reserviert "
+"werden. Klicken Sie auf die Schaltfläche „Verfügbarkeit prüfen“, um zu "
+"versuchen, Produkte zu reservieren."
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "Historie der Bestandsmenge"
+msgid "Check Availability"
+msgstr "Verfügbarkeit prüfen"
 
-#~ msgid "Andrwep"
-#~ msgstr "Andrwep"
+msgid "Click or press enter to add a description"
+msgstr ""
+"Auf Enter klicken oder Enter drücken, um eine Beschreibung hinzuzufügen"
 
-#~ msgid "Assign"
-#~ msgstr "Zuweisen"
+msgid "Compute shipping costs and ship with DHL"
+msgstr "Versandkosten für DHL berechnen und versenden"
 
-#~ msgid "DEMO_DATE"
-#~ msgstr "DEMO_DATE"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit DHL<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
+
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "Versandkosten für Easypost berechnen und versenden"
+
+msgid "Compute shipping costs and ship with Envia.com"
+msgstr "Versandkosten für Envia.com berechnen und versenden"
 
-#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
-#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "Versandkosten für FedEx berechnen und versenden"
+
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit FedEx<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
 
-#~ msgid "DEMO_PARTNER_NAME"
-#~ msgstr "DEMO_PARTNER_NAME"
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Versandkosten für Sendcloud berechnen und versenden"
 
-#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
-#~ msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "Versandkosten für Shiprocket berechnen und versenden"
 
-#~ msgid "DEMO_QUANTITY"
-#~ msgstr "DEMO_QUANTITY"
-
-#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
-#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
-
-#~ msgid "DEMO_UOM"
-#~ msgstr "DEMO_UOM"
-
-#~ msgid "Demo Display Name"
-#~ msgstr "Demo-Anzeigename"
-
-#~ msgid "Dispatch Management System"
-#~ msgstr "Versandmanagementsystem"
-
-#~ msgid "Expected Delivery:"
-#~ msgstr "Erwartetes Lieferdatum:"
+msgid "Compute shipping costs and ship with Starshipit"
+msgstr "Versandkosten für Starshipit berechnen und versenden"
 
-#~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically show the reception "
-#~ "report (if there are moves to allocate to) when validating."
-#~ msgstr ""
-#~ "Wenn dieses Kontrollkästchen aktiviert ist, zeigt Odoo bei der "
-#~ "Validierung automatisch den Empfangsbericht an (wenn es Bewegungen gibt, "
-#~ "die zuzuordnen sind)."
-
-#~ msgid "No %s selected or a delivery order selected"
-#~ msgstr "Keine %s ausgewählt oder ein Lieferauftrag ausgewählt"
-
-#~ msgid "Print Label"
-#~ msgstr "Etikett drucken"
-
-#~ msgid "Reason"
-#~ msgstr "Grund"
-
-#~ msgid "Show Reception Report at Validation"
-#~ msgstr "Empfangsbericht bei der Validierung anzeigen"
-
-#~ msgid "Stock Reception Report"
-#~ msgstr "Bestandsempfangsbericht"
-
-#~ msgid "This report cannot be used for done and not done %s at the same time"
-#~ msgstr ""
-#~ "Dieser Bericht kann nicht gleichzeitig für erledigte und nichterledigte "
-#~ "%s verwendet werden."
-
-#~ msgid "Transport management: organize packs in your fleet, or carriers."
-#~ msgstr ""
-#~ "Transportmanagement: Organisieren Sie die Pakete in Ihrem Fuhrpark oder "
-#~ "bei Spediteuren."
-
-#~ msgid "Unassign"
-#~ msgstr "Zuweisung aufheben"
-
-#~ msgid "Use Reception Report"
-#~ msgstr "Empfangsbericht verwenden"
-
-#~ msgid "View and allocate received quantities"
-#~ msgstr "Zeigen Sie die erhaltenen Mengen an und ordnen Sie sie zu."
-
-#~ msgid ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                All products could not be reserved. Click "
-#~ "on the \"Check Availability\" button to try to reserve products."
-#~ msgstr ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                Es konnten nicht alle Produkte reserviert "
-#~ "werden. Klicken Sie auf die Schaltfläche „Verfügbarkeit prüfen“, um zu "
-#~ "versuchen, Produkte zu reservieren."
+msgid "Compute shipping costs and ship with UPS"
+msgstr "Versandkosten für UPS berechnen und versenden"
 
-#~ msgid "Check Availability"
-#~ msgstr "Verfügbarkeit prüfen"
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit UPS<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
 
-#~ msgid "Click or press enter to add a description"
-#~ msgstr ""
-#~ "Auf Enter klicken oder Enter drücken, um eine Beschreibung hinzuzufügen"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "Versandkosten für USPS berechnen und versenden"
 
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "Versandkosten für DHL berechnen und versenden"
-
-#~ msgid ""
-#~ "Compute shipping costs and ship with DHL<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Berechnen Sie die Versandkosten und versenden Sie mit DHL<br/>\n"
-#~ "                                    <strong>(gehen Sie zur Installation "
-#~ "zu Start&gt;Apps)</strong>"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Berechnen Sie die Versandkosten und versenden Sie mit USPS<br/>\n"
+"                                    <strong>(gehen Sie zur Installation zu "
+"Start&gt;Apps)</strong>"
 
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "Versandkosten für Easypost berechnen und versenden"
+msgid "Compute shipping costs and ship with bpost"
+msgstr "Versandkosten für bpost berechnen und versenden"
 
-#~ msgid "Compute shipping costs and ship with Envia.com"
-#~ msgstr "Versandkosten für Envia.com berechnen und versenden"
+msgid "DHL Connector"
+msgstr "DHL-Konnektor"
 
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "Versandkosten für FedEx berechnen und versenden"
+msgid "DHL Express Connector"
+msgstr "DHL-Express-Konnektor"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with FedEx<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Berechnen Sie die Versandkosten und versenden Sie mit FedEx<br/>\n"
-#~ "                                    <strong>(gehen Sie zur Installation "
-#~ "zu Start&gt;Apps)</strong>"
+msgid "Default Return Name"
+msgstr "Standardretourenname"
 
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "Versandkosten für Sendcloud berechnen und versenden"
+msgid "Demo Address and Name"
+msgstr "Demo-Adresse und Name"
 
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "Versandkosten für Shiprocket berechnen und versenden"
+msgid "Easypost Connector"
+msgstr "Easypost-Konnektor"
 
-#~ msgid "Compute shipping costs and ship with Starshipit"
-#~ msgstr "Versandkosten für Starshipit berechnen und versenden"
+msgid "Envia.com Connector"
+msgstr "Envia.com-Konnektor"
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "Versandkosten für UPS berechnen und versenden"
+msgid "FedEx Connector"
+msgstr "FedEx-Konnektor"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with UPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Berechnen Sie die Versandkosten und versenden Sie mit UPS<br/>\n"
-#~ "                                    <strong>(gehen Sie zur Installation "
-#~ "zu Start&gt;Apps)</strong>"
+msgid "Generate Serials/Lots"
+msgstr "Serien/Lose generieren"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "Versandkosten für USPS berechnen und versenden"
+msgid "Import Serials/Lots"
+msgstr "Serien/Lose importieren"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with USPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Berechnen Sie die Versandkosten und versenden Sie mit USPS<br/>\n"
-#~ "                                    <strong>(gehen Sie zur Installation "
-#~ "zu Start&gt;Apps)</strong>"
+msgid "Nothing to check the availability for."
+msgstr "Es müssen keine Verfügbarkeiten geprüft werden."
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "Versandkosten für bpost berechnen und versenden"
+msgid ""
+"Please put this document inside your return parcel.<br/>\n"
+"                                Your parcel must be sent to this address:"
+msgstr ""
+"Bitte legen Sie dieses Dokument in Ihr Retourenpaket.<br/>\n"
+"                                Ihr Paket muss an diese Adresse geschickt "
+"werden:"
 
-#~ msgid "DHL Connector"
-#~ msgstr "DHL-Konnektor"
+msgid "Sendcloud Connector"
+msgstr "Sendcloud-Konnektor"
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "DHL-Express-Konnektor"
+msgid "Shipping Connectors"
+msgstr "Versandkonnektoren"
 
-#~ msgid "Default Return Name"
-#~ msgstr "Standardretourenname"
+msgid "Shiprocket Connector"
+msgstr "Shiprocket-Konnektor"
 
-#~ msgid "Demo Address and Name"
-#~ msgstr "Demo-Adresse und Name"
+msgid "Starshipit Connector"
+msgstr "Starshipit-Konnektor"
 
-#~ msgid "Easypost Connector"
-#~ msgstr "Easypost-Konnektor"
+msgid ""
+"Technical field used to compute whether the button \"Check Availability\" "
+"should be displayed."
+msgstr ""
+"Technisches Feld, über das bestimmt wird, ob die Schaltfläche „Verfügbarkeit "
+"prüfen“ angezeigt werden soll."
 
-#~ msgid "Envia.com Connector"
-#~ msgstr "Envia.com-Konnektor"
+msgid "UPS Connector"
+msgstr "UPS-Konnektor"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "FedEx-Konnektor"
+msgid "USPS Connector"
+msgstr "USPS-Konnektor"
 
-#~ msgid "Generate Serials/Lots"
-#~ msgstr "Serien/Lose generieren"
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
 
-#~ msgid "Import Serials/Lots"
-#~ msgstr "Serien/Lose importieren"
+msgid "Website communication history"
+msgstr "Website-Kommunikationsverlauf"
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "Es müssen keine Verfügbarkeiten geprüft werden."
+msgid "bpost Connector"
+msgstr "bpost-Konnektor"
 
-#~ msgid ""
-#~ "Please put this document inside your return parcel.<br/>\n"
-#~ "                                Your parcel must be sent to this address:"
-#~ msgstr ""
-#~ "Bitte legen Sie dieses Dokument in Ihr Retourenpaket.<br/>\n"
-#~ "                                Ihr Paket muss an diese Adresse geschickt "
-#~ "werden:"
+msgid "Demo Lot/SN"
+msgstr "Demo-Los/SN"
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "Sendcloud-Konnektor"
+msgid "Demo Product"
+msgstr "Demo-Produkt"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "Versandkonnektoren"
+msgid "Final Location"
+msgstr "Endgültiger Standort"
 
-#~ msgid "Shiprocket Connector"
-#~ msgstr "Shiprocket-Konnektor"
+msgid ""
+"The operation brings the products to the intermediate location.But this "
+"operation is part of a chain of operations targeting the final location."
+msgstr ""
+"Der Vorgang bringt die Produkte an den Übergangsort, aber dieser Vorgang ist "
+"Teil einer Kette von Vorgängen, die auf den endgültigen Standort abzielen."
 
-#~ msgid "Starshipit Connector"
-#~ msgstr "Starshipit-Konnektor"
+msgid "On hand:"
+msgstr "Vorrätig:"
 
-#~ msgid ""
-#~ "Technical field used to compute whether the button \"Check Availability\" "
-#~ "should be displayed."
-#~ msgstr ""
-#~ "Technisches Feld, über das bestimmt wird, ob die Schaltfläche "
-#~ "„Verfügbarkeit prüfen“ angezeigt werden soll."
-
-#~ msgid "UPS Connector"
-#~ msgstr "UPS-Konnektor"
-
-#~ msgid "USPS Connector"
-#~ msgstr "USPS-Konnektor"
-
-#~ msgid "Website Messages"
-#~ msgstr "Website-Nachrichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Website-Kommunikationsverlauf"
-
-#~ msgid "bpost Connector"
-#~ msgstr "bpost-Konnektor"
-
-#~ msgid "Demo Lot/SN"
-#~ msgstr "Demo-Los/SN"
-
-#~ msgid "Demo Product"
-#~ msgstr "Demo-Produkt"
-
-#~ msgid "Final Location"
-#~ msgstr "Endgültiger Standort"
-
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr ""
-#~ "Der Vorgang bringt die Produkte an den Übergangsort, aber dieser Vorgang "
-#~ "ist Teil einer Kette von Vorgängen, die auf den endgültigen Standort "
-#~ "abzielen."
-
-#~ msgid "On hand:"
-#~ msgstr "Vorrätig:"
-
-#~ msgid "Real Quantity"
-#~ msgstr "Tatsächliche Menge"
+msgid "Real Quantity"
+msgstr "Tatsächliche Menge"

@@ -19,17 +19,17 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-21 17:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-17 09:11+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "sale_stock/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -85,8 +85,9 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "1 Quotation"
-msgstr ""
+msgstr "1 Tarjous"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
@@ -180,6 +181,13 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Tuotteen asetusten perusteella toimitettavan määrän voi laskea "
+"automaattisesti:\n"
+"  - Manuaalisesti: määrä määritetään manuaalisesti riville\n"
+"  - Analyyttisesti kuluista: määrä on kirjattujen kulujen summa\n"
+"  - Työaikakirjaukset: määrä on tähän riviin linkitettyihin tehtäviin "
+"kirjattujen tuntien summa\n"
+"  - Varastoliikkeistä: määrä perustuu vahvistettuihin keräilyihin\n"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
@@ -211,8 +219,9 @@ msgstr "Käytä tiettyjä reittejä"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
+#, fuzzy
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "Mahdollisimman pian, jälkitoimituksilla"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -234,8 +243,9 @@ msgstr "Saatavilla"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Available in stock"
-msgstr ""
+msgstr "Saatavilla varastossa"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_replenishment_info__sale_delay
@@ -251,8 +261,9 @@ msgstr "Valitse käyttääksesi myytitilausriveihin tiettyjä reittejä."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Yritys"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
@@ -476,8 +487,9 @@ msgstr "Incotermien tiedot"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
+#, fuzzy
 msgid "Inventory Route"
-msgstr ""
+msgstr "Varastoinnin reitti"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -486,8 +498,10 @@ msgstr "On tilausohjautuva"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+#, fuzzy
 msgid "It specifies goods to be deliver partially or all at once"
 msgstr ""
+"Määrittää tuotteet toimitettavaksi osittaistoimituksina tai kaikki kerralla."
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_damaged_product
@@ -592,8 +606,9 @@ msgstr "Ei vielä toimitusta! Automatisoi ne myyntitilauksilla."
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "No future availability"
-msgstr ""
+msgstr "Ei tulevaa saatavuutta"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -614,8 +629,9 @@ msgstr "Ei toimitettu"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Not enough future availability"
-msgstr ""
+msgstr "Tulevaisuuden saatavuus ei ole riittävä"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -627,8 +643,9 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "pvm"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
@@ -682,8 +699,9 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "Quotations"
-msgstr ""
+msgstr "Tarjoukset"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__name
@@ -719,8 +737,9 @@ msgstr "Viitteet"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Jäljellä oleva kysyntä saatavilla"
 
 #. module: sale_stock
 #. odoo-python
@@ -921,12 +940,12 @@ msgstr "Varaston täydennyksen raportti"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Varaston sääntö"
+msgstr "Varastosääntö"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr "Varaston sääntöjen raportti"
+msgstr "Varastosääntöraportti"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_replenishment_info
@@ -941,8 +960,9 @@ msgstr "Varastosääntöjen raportti"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+#, fuzzy
 msgid "The delivery"
-msgstr ""
+msgstr "Toimitus"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -951,8 +971,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered. "
 "Instead, create a return in your inventory."
 msgstr ""
-"Tilattua määrää ei voi pienentää jo toimitettua määrää pienemmäksi. Luo sen "
-"sijaan palautus varastoon."
+"Tilattua määrää ei voi vähentää jo toimitettua määrää pienemmäksi. Luo sen "
+"sijaan palautus varastointi-sovelluksessa."
 
 #. module: sale_stock
 #. odoo-python
@@ -993,8 +1013,9 @@ msgstr "Käyttäjä"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "View Forecast"
-msgstr ""
+msgstr "Katso ennuste"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -1054,35 +1075,30 @@ msgstr "tilattu sen sijasta"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr "käsitelty"
+msgstr "käsitelty tämän sijaan:"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+#, fuzzy
 msgid "will be late."
+msgstr "tulee olemaan myöhässä."
+
+msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>Peruutettu"
+
+msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Valmistelu"
+
+msgid ""
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"oi oi-fw\" data-"
+"icon=\"local_shipping\"/> Shipped\n"
+"                                    </span>"
 msgstr ""
-
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>Peruutettu"
-
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Valmistelu"
-
-#~ msgid ""
-#~ "<span class=\"small badge rounded-pill text-bg-success "
-#~ "orders_label_text_align\">\n"
-#~ "                                        <i class=\"oi oi-fw\" data-"
-#~ "icon=\"local_shipping\"/> Shipped\n"
-#~ "                                    </span>"
-#~ msgstr ""
-#~ "<span class=\"small badge rounded-pill text-bg-success "
-#~ "orders_label_text_align\">\n"
-#~ "                                        <i class=\"oi oi-fw\" data-"
-#~ "icon=\"local_shipping\"/> Lähetetty\n"
-#~ "                                    </span>"
-
-#~ msgid "Date:"
-#~ msgstr "Päiväys:"
-
-#~ msgid "Last Delivery Orders"
-#~ msgstr "Viimeiset toimitustilaukset"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"oi oi-fw\" data-"
+"icon=\"local_shipping\"/> Lähetetty\n"
+"                                    </span>"

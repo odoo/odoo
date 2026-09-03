@@ -9,14 +9,15 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
+# Camille Dantinne <cmd@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 20:55+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 09:02+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
 "portal/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: portal
 #: model:ir.module.module,description:base.module_portal
@@ -179,6 +180,13 @@ msgid ""
 "                    operation.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    No se permite cambiar de país una vez que se han emitido "
+"documentos\n"
+"                    para tu cuenta. Ponte en contacto con nosotros "
+"directamente para realizar esta\n"
+"                    operación.\n"
+"               </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -265,7 +273,7 @@ msgstr "Añadir una nota"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
 msgid "Add an address"
-msgstr ""
+msgstr "Añadir una dirección"
 
 #. module: portal
 #. odoo-javascript
@@ -286,7 +294,7 @@ msgstr "Añadir contenido adicional para mostrar en el correo electrónico"
 #. module: portal
 #: model:portal.entry,description:portal.portal_entry_addresses
 msgid "Add, remove or modify your addresses"
-msgstr "Agregar, eliminar o modificar sus direcciones"
+msgstr "Añadir, eliminar o modificar tus direcciones"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -367,6 +375,9 @@ msgid ""
 "Changing your country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"No se permite cambiar el país una vez que se han emitido los documentos de "
+"tu cuenta. Ponte en contacto con nosotros directamente para efectuar esta "
+"operación."
 
 #. module: portal
 #. odoo-javascript
@@ -402,7 +413,7 @@ msgstr "Cerrar"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.message_thread
 msgid "Communication History"
-msgstr ""
+msgstr "Historial de comunicación"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -469,7 +480,7 @@ msgstr "Contactos"
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
 msgid "Could not save file %s"
-msgstr ""
+msgstr "No se ha podido guardar el archivo %s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -479,7 +490,7 @@ msgstr "País"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Country..."
-msgstr ""
+msgstr "País..."
 
 #. module: portal
 #: model:ir.model,website_form_label:portal.model_res_partner
@@ -669,7 +680,7 @@ msgstr "¿Olvidó su contraseña?"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "Give a duration for the key's validity"
-msgstr ""
+msgstr "Proporcione la duración para la validez de la clave"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -704,6 +715,9 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Esta es su clave de API nueva, úsela en lugar de la contraseña para ingresar "
+"al RPC.\n"
+"Para darle un uso interactivo, inicie sesión."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -806,6 +820,8 @@ msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Es muy importante que esta descripción sea clara\n"
+"                y esté completa"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__write_uid
@@ -847,7 +863,7 @@ msgstr "Cerrar sesión en todos los dispositivos"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Main Address"
-msgstr ""
+msgstr "Dirección principal"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -924,7 +940,7 @@ msgstr "Solo usuarios internos y del portal pueden crear claves API"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "¡Uy! Ocurrió un error. Intente actualizar la página e inicie sesión."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__partner_ids
@@ -1046,7 +1062,7 @@ msgstr "Modelo de documento relacionado"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
 msgid "Remove this address"
-msgstr ""
+msgstr "Eliminar esta dirección"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1161,7 +1177,7 @@ msgstr "Algunos campos obligatorios están vacíos."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "State / Province"
-msgstr "Provincia"
+msgstr "Estado/Provincia"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -1176,7 +1192,7 @@ msgstr "Estado"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "Street and Number"
-msgstr "Número y calle"
+msgstr "Calle y número"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_entry__url
@@ -1257,13 +1273,13 @@ msgstr "El contacto \"%s\" tiene el mismo correo que un usuario existente"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "La clave no se puede recuperar después y ofrece"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "The key will be deleted once this period has elapsed."
-msgstr ""
+msgstr "La clave se eliminará después de este periodo."
 
 #. module: portal
 #. odoo-python
@@ -1363,7 +1379,7 @@ msgstr "Usuario"
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 msgid "User Dashboard"
-msgstr ""
+msgstr "Tablero del usuario"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -1417,7 +1433,7 @@ msgstr "Escribir un mensaje..."
 #. odoo-javascript
 #: code:addons/portal/static/src/chatter/portal/composer_patch.js:0
 msgid "Write a message…"
-msgstr "Escriba un mensaje…"
+msgstr "Escribe un mensaje…"
 
 #. module: portal
 #. odoo-javascript
@@ -1452,7 +1468,7 @@ msgstr "No puede dejar ninguna contraseña vacía."
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "You must be"
-msgstr ""
+msgstr "Debe estar"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1527,33 +1543,15 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 msgid "to post a comment."
-msgstr ""
+msgstr "para escribir un comentario."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "a su cuenta de usuario, es muy importante que guarde bien la clave."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
 msgid "your account details"
 msgstr "los detalles de su cuenta"
-
-#~ msgid ""
-#~ "Changing VAT number is not allowed once document(s) have been issued for "
-#~ "your account. Please contact us directly for this operation."
-#~ msgstr ""
-#~ "No se permite cambiar el número de IVA una vez que se han emitido los "
-#~ "documentos de su cuenta. Póngase en contacto con nosotros directamente "
-#~ "para esta operación."
-
-#~ msgid "Send message"
-#~ msgstr "Enviar mensaje"
-
-#~ msgid "The %(field_name)s is managed on your company account."
-#~ msgstr "El %(field_name)s se gestiona en la cuenta de su compañía."
-
-#~ msgid "The %(field_name)s is managed on your main account address."
-#~ msgstr ""
-#~ "El %(field_name)s se gestiona en la dirección principal de su cuenta."

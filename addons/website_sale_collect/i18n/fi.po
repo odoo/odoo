@@ -3,15 +3,16 @@
 # * website_sale_collect
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-18 22:54+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-28 16:57+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "website_sale_collect/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -49,15 +50,17 @@ msgstr ""
 
 #. module: website_sale_collect
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.unavailable_products_warning
+#, fuzzy
 msgid "<span class=\"small\">|</span>"
-msgstr ""
+msgstr "<span class=\"small\">|</span>"
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
+#, fuzzy
 msgid "Available"
-msgstr ""
+msgstr "Saatavilla"
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -94,13 +97,15 @@ msgstr "Räätälöintitila"
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
+#, fuzzy
 msgid "Delivery"
-msgstr ""
+msgstr "Toimitus"
 
 #. module: website_sale_collect
 #: model:ir.model,name:website_sale_collect.model_delivery_carrier
+#, fuzzy
 msgid "Delivery Method"
-msgstr ""
+msgstr "Toimitustapa"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -144,7 +149,7 @@ msgstr "Tunnus"
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_website__in_store_dm_id
 msgid "In-store Delivery Method"
-msgstr "Toimitus myymälään toimitustapa"
+msgstr "Nouto myymälästä -toimitustapa"
 
 #. module: website_sale_collect
 #. odoo-python
@@ -156,8 +161,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.in_store_delivery_method
+#, fuzzy
 msgid "Not available"
-msgstr ""
+msgstr "Ei saatavilla"
 
 #. module: website_sale_collect
 #: model:ir.model.fields,field_description:website_sale_collect.field_stock_warehouse__opening_hours
@@ -167,8 +173,9 @@ msgstr "Aukioloajat"
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
+#, fuzzy
 msgid "Out of stock"
-msgstr ""
+msgstr "Loppu varastosta"
 
 #. module: website_sale_collect
 #: model:payment.provider,name:website_sale_collect.payment_provider_on_site
@@ -274,20 +281,20 @@ msgstr "Joitakin tuotteita ei ole saatavilla valitussa myymälässä."
 #: model:ir.model.fields,field_description:website_sale_collect.field_delivery_carrier__warehouse_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_collect.delivery_carrier_form
 msgid "Stores"
-msgstr "Kaupat"
+msgstr "Myymälät"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method and a warehouse must share the same company"
-msgstr "Toimitustavan ja varaston on oltava samassa yrityksessä"
+msgstr "Toimitustavalla ja varastolla on oltava sama yritys"
 
 #. module: website_sale_collect
 #. odoo-python
 #: code:addons/website_sale_collect/models/delivery_carrier.py:0
 msgid "The delivery method must have at least one warehouse to be published."
 msgstr ""
-"Toimitustavalla on oltava vähintään yksi varasto, jotta se voidaan julkaista."
+"Toimitustavalla on oltava vähintään yksi varasto, jotta sen voi julkaista."
 
 #. module: website_sale_collect
 #. odoo-javascript
@@ -346,7 +353,7 @@ msgstr ""
 #. module: website_sale_collect
 #: model_terms:payment.provider,auth_msg:website_sale_collect.payment_provider_on_site
 msgid "Your payment has been authorized."
-msgstr "Maksusuorituksesi on hyväksytty."
+msgstr "Maksusi on hyväksytty."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,cancel_msg:website_sale_collect.payment_provider_on_site
@@ -355,24 +362,26 @@ msgstr "Maksusi on peruutettu."
 
 #. module: website_sale_collect
 #: model_terms:payment.provider,pending_msg:website_sale_collect.payment_provider_on_site
+#, fuzzy
 msgid "Your payment has been processed but is waiting for approval."
-msgstr ""
+msgstr "Maksusi on käsitelty, mutta se odottaa hyväksyntää."
 
 #. module: website_sale_collect
 #. odoo-javascript
 #: code:addons/website_sale_collect/static/src/js/click_and_collect_availability/click_and_collect_availability.xml:0
 #: code:addons/website_sale_collect/static/src/js/location_selector/location/location.xml:0
+#, fuzzy
 msgid "in stock"
-msgstr ""
+msgstr "varastossa"
 
-#~ msgid "%(available_qty)s/%(line_qty)s available at this location"
-#~ msgstr "%(available_qty)s/%(line_qty)s saatavilla tässä sijainnissa"
+msgid "%(available_qty)s/%(line_qty)s available at this location"
+msgstr "%(available_qty)s/%(line_qty)s saatavilla tässä sijainnissa"
 
-#~ msgid "Sorry, we are unable to ship your order."
-#~ msgstr "Valitettavasti emme voi lähettää tilaustasi."
+msgid "Sorry, we are unable to ship your order."
+msgstr "Valitettavasti emme voi lähettää tilaustasi."
 
-#~ msgid "Your payment has been processed."
-#~ msgstr "Maksusi on käsitelty."
+msgid "Your payment has been processed."
+msgstr "Maksusi on käsitelty."
 
-#~ msgid "no in-store delivery methods available"
-#~ msgstr "myymälätoimitus ei ole saatavilla"
+msgid "no in-store delivery methods available"
+msgstr "myymälätoimitus ei ole saatavilla"

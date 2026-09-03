@@ -8,16 +8,17 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 17:19+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
-"product/nl/>\n"
+"PO-Revision-Date: 2026-08-12 13:58+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/product/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -110,7 +111,6 @@ msgstr "%(percentage)s %% korting op verkoopprijs"
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label4x12_gs1
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label4x7
 #: model_terms:ir.ui.view,arch_db:product.report_simple_label_dymo
-#, fuzzy
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
 
@@ -307,7 +307,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "<span class=\"text-muted\">On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Aanwezig</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -580,7 +580,7 @@ msgstr "Alle categorieën"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "All Companies"
-msgstr ""
+msgstr "Alle bedrijven"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
@@ -686,7 +686,6 @@ msgstr "Gearchiveerd"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
-#, fuzzy
 msgid "Archived Products"
 msgstr "Gearchiveerde producten"
 
@@ -862,7 +861,7 @@ msgstr "Barcodes"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
 msgid "Barcodes can be configured on"
-msgstr ""
+msgstr "Barcodes kunnen worden geconfigureerd op"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_label_base
@@ -1381,7 +1380,7 @@ msgstr "Ref. klant"
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr "Verstelbaar bureau"
+msgstr "Personaliseerbaar bureau"
 
 #. module: product
 #: model:product.attribute,name:product.pa_customization
@@ -1581,7 +1580,7 @@ msgstr "Weergave toegepast op"
 #: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_type
@@ -1704,6 +1703,8 @@ msgid ""
 "End date can't be earlier than the start date. Please check dates for vendor "
 "pricelist: %s"
 msgstr ""
+"De einddatum mag niet eerder zijn dan de startdatum. Controleer de data voor "
+"de prijslijst van de leverancier: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
@@ -2560,7 +2561,6 @@ msgstr "Bordeaux"
 
 #. module: product
 #: model:product.attribute,name:product.pa_material
-#, fuzzy
 msgid "Material"
 msgstr "Materiaal"
 
@@ -2806,7 +2806,7 @@ msgstr "Geluiddempende panelen voor open ruimtes"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "None"
-msgstr ""
+msgstr "Geen"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__zpl_template__normal
@@ -3034,7 +3034,7 @@ msgstr "Pantene"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "Parent"
-msgstr ""
+msgstr "Bovenliggend"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -3048,7 +3048,6 @@ msgstr "Bovenliggend pad"
 
 #. module: product
 #: model:product.attribute,name:product.pa_pattern
-#, fuzzy
 msgid "Pattern"
 msgstr "Patroon"
 
@@ -3762,13 +3761,11 @@ msgstr "Verwijder aantal"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_access_read
-#, fuzzy
 msgid "Res Access Read"
-msgstr "Leestoegang op een resource"
+msgstr "Resource leestoegang"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_access_write
-#, fuzzy
 msgid "Res Access Write"
 msgstr "Schrijftoegang op een resource"
 
@@ -5124,6 +5121,9 @@ msgid ""
 "You cannot change the company of %(categories)s as they hold products shared "
 "between companies or belonging to other companies."
 msgstr ""
+"Je kunt het bedrijf van %(categories)s niet wijzigen, aangezien zij "
+"producten aanbieden die door meerdere bedrijven worden gedeeld of die aan "
+"andere bedrijven toebehoren."
 
 #. module: product
 #. odoo-python
@@ -5132,6 +5132,9 @@ msgid ""
 "You cannot change the company of %(category)s as it holds products shared "
 "between companies or belonging to other companies."
 msgstr ""
+"Je kunt het bedrijf van %(category)s niet wijzigen, aangezien dit producten "
+"bevat die door meerdere bedrijven worden gedeeld of aan andere bedrijven "
+"toebehoren."
 
 #. module: product
 #. odoo-python
@@ -5434,7 +5437,7 @@ msgstr "Bijv. USD handelaren"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
 msgid "each variant"
-msgstr ""
+msgstr "elke variant"
 
 #. module: product
 #. odoo-python
@@ -5489,12 +5492,3 @@ msgstr "aan"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (kopie)"
-
-#~ msgid "Remove"
-#~ msgstr "Verwijderen"
-
-#~ msgid "barcodelookup.com"
-#~ msgstr "barcodelookup.com"

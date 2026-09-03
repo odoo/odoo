@@ -8,16 +8,17 @@
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 04:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-17 11:08+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_attendance/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +48,7 @@ msgstr "เวลา \"เช็คเอาท์\" ต้องไม่ก่
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
 msgid "%(nb_hours)d h / %(period)s"
-msgstr ""
+msgstr "%(nb_hours)d ชม /%(period)s"
 
 #. module: hr_attendance
 #. odoo-python
@@ -59,19 +60,19 @@ msgstr "%(worked_hours)s (%(check_in)s-%(check_out)s)"
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_ruleset.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (สำเนา)"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "'Buy an RFID Device'"
-msgstr ""
+msgstr "'ซื้ออุปกรณ์ RFID'"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "'Read the Documentation'"
-msgstr ""
+msgstr "'อ่านเอกสารประกอบ'"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -82,6 +83,10 @@ msgid ""
 "tolerance) is recorded. Further check-ins are allowed only after an "
 "automatic check-out.</span>"
 msgstr ""
+"<br/>\n"
+"                                    <span class=\"text-muted\">เมื่อเปิดใช้งาน "
+"จะบันทึกการเช็คอินครั้งแรกภายในเวลาทำงานที่กำหนด (รวมถึงช่วงความคลาดเคลื่อน) เท่านั้น "
+"การเช็คอินเพิ่มเติมจะได้รับอนุญาตก็ต่อเมื่อมีการเช็คเอาต์อัตโนมัติแล้วเท่านั้น</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -103,11 +108,13 @@ msgid ""
 "<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
 "in ['work_days', 'non_work_days']\">Between</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible=\"base_off != 'timing' or timing_type not "
+"in ['work_days', 'non_work_days']\">ระหว่าง</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Based on</span>"
-msgstr ""
+msgstr "<span class=\"me-2\">นับจาก</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -122,7 +129,7 @@ msgstr "<span class=\"me-2\">ระยะเวลา</span>"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Time</span>"
-msgstr ""
+msgstr "<span class=\"me-2\">เวลา</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -152,6 +159,9 @@ msgid ""
 "                                Monthly Hours\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                ชั่วโมงต่อเดือน\n"
+"                           </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
@@ -160,6 +170,9 @@ msgid ""
 "                            Monthly Hours\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            ชั่วโมงต่อเดือน\n"
+"                        </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -168,6 +181,8 @@ msgid ""
 "                                    <span class=\"o_stat_text\">Employees</"
 "span>"
 msgstr ""
+"<span class=\"o_stat_value\">เพิ่ม</span>\n"
+"                                    <span class=\"o_stat_text\">พนักงาน</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -195,6 +210,8 @@ msgid ""
 "<span colspan=\"2\" class=\"mb-3 fw-bold\">The hours will be considered "
 "extra and submitted to approval.</span>"
 msgstr ""
+"<span colspan=\"2\" class=\"mb-3 fw-"
+"bold\">ชั่วโมงดังกล่าวจะถือเป็นชั่วโมงเพิ่มเติมและต้องส่งไปเพื่อขออนุมัติ</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -245,12 +262,12 @@ msgstr "พนักงานที่ทำงาน"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/hr_version_list_view.xml:0
 msgid "Add"
-msgstr ""
+msgstr "เพิ่ม"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
 msgid "Add Employees"
-msgstr ""
+msgstr "เพิ่มพนักงาน"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -271,7 +288,7 @@ msgstr "ผู้ดูแลระบบ"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
 msgid "All"
-msgstr ""
+msgstr "ทั้งหมด"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -304,16 +321,18 @@ msgid ""
 "Allow the collection of GPS location, IP address, and browser/device details "
 "used to track employee access and attendance"
 msgstr ""
+"อนุญาตให้เก็บข้อมูลตำแหน่ง GPS ที่อยู่ IP และรายละเอียดเบราว์เซอร์/อุปกรณ์ "
+"เพื่อติดตามการเข้าถึงและการเข้างานของพนักงาน"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__rule_ids
 msgid "Applied Rules"
-msgstr ""
+msgstr "กฎที่นำไปใช้"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_line__ruleset_id
 msgid "Applied Rulesets"
-msgstr ""
+msgstr "ชุดกฎที่นำไปใช้"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -329,7 +348,7 @@ msgstr "อนุมัติชั่วโมงพิเศษ"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Approve all overtimes for the same employee and date"
-msgstr ""
+msgstr "อนุมัติเวลาทำงานล่วงเวลาทั้งหมดสำหรับพนักงานและวันที่เดียวกัน"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__approved
@@ -359,7 +378,7 @@ msgstr "พนักงานที่ถูกเก็บถาวร"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "Assign Badge"
-msgstr ""
+msgstr "กำหนดตราสัญลักษณ์"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -369,7 +388,7 @@ msgstr "ที่ทำงาน"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_filter
 msgid "At least one rule"
-msgstr ""
+msgstr "อย่างน้อยหนึ่งกฎ"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_attachment_count
@@ -391,13 +410,13 @@ msgstr "การเข้าร่วม"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_manager_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_manager_id
 msgid "Attendance Approver"
-msgstr ""
+msgstr "ผู้อนุมัติการเข้าร่วม"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance Error"
-msgstr ""
+msgstr "ข้อผิดพลาดในการเข้าร่วม"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_from_systray
@@ -431,12 +450,12 @@ msgstr "โหมดการเข้าร่วม"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime_line
 msgid "Attendance Overtime Line"
-msgstr ""
+msgstr "รายการลงเวลาทำงานล่วงเวลา"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendance Rules & Enforcement"
-msgstr ""
+msgstr "กฎการเข้าร่วมและมาตรการบังคับใช้"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
@@ -488,12 +507,12 @@ msgstr "การเข้าร่วมจากการทำงานเบ
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out_mode
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_mode
 msgid "Auto Check Out Mode"
-msgstr ""
+msgstr "โหมดตรวจสอบอัตโนมัติ"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_specific_time
 msgid "Auto Check Out Specific Time"
-msgstr ""
+msgstr "ตรวจสอบเวลาที่เฉพาะเจาะจงโดยอัตโนมัติ"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
@@ -533,8 +552,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
+#, fuzzy
 msgid "Back"
-msgstr ""
+msgstr "กลับ"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__back
@@ -627,8 +647,9 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__can_edit
+#, fuzzy
 msgid "Can Edit"
-msgstr ""
+msgstr "สามารถแก้ไข"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -732,8 +753,9 @@ msgstr "เช็คอิน"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#, fuzzy
 msgid "Checked in at"
-msgstr ""
+msgstr "เช็คอินที่"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_out
@@ -743,8 +765,9 @@ msgstr "เช็คเอาท์"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#, fuzzy
 msgid "Checked out at"
-msgstr ""
+msgstr "เช็คเอาท์ที่"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -754,8 +777,9 @@ msgstr "เลือกระยะเวลาที่จะแสดงข้
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+#, fuzzy
 msgid "Choose how to record attendances"
-msgstr ""
+msgstr "เลือกวิธีการบันทึกการเข้างาน"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -805,8 +829,9 @@ msgstr "ยืนยัน"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+#, fuzzy
 msgid "Connect an RFID reader, and scan a token."
-msgstr ""
+msgstr "เชื่อมต่อเครื่องอ่าน RFID และสแกนโทเค็น"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1102,14 +1127,16 @@ msgstr "การตรวจสอบเวลาเพิ่มเติม"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_calendar/attendance_calendar_overview.xml:0
+#, fuzzy
 msgid "Extra Time"
-msgstr ""
+msgstr "เวลาเพิ่มเติม"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#, fuzzy
 msgid "Extra hours"
-msgstr ""
+msgstr "ชั่วโมงเพิ่มเติม"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1136,8 +1163,9 @@ msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/badge_scanner/badge_scanner.xml:0
+#, fuzzy
 msgid "For"
-msgstr ""
+msgstr "สำหรับ"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__4
@@ -1223,8 +1251,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_calendar/attendance_calendar_overview.xml:0
+#, fuzzy
 msgid "Hours"
-msgstr ""
+msgstr "ชั่วโมง"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
@@ -1251,8 +1280,9 @@ msgstr "ชั่วโมงก่อนหน้านี้ของวัน
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#, fuzzy
 msgid "Hours Previously Today:"
-msgstr ""
+msgstr "ชั่วโมงก่อนหน้านี้วันนี้:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
@@ -1263,8 +1293,9 @@ msgstr "ชั่วโมงวันนี้"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#, fuzzy
 msgid "Hours Today:"
-msgstr ""
+msgstr "ชั่วโมงวันนี้:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
@@ -1496,8 +1527,9 @@ msgstr "ตัวอย่าง ข้อมูล"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "Load sample data"
-msgstr ""
+msgstr "โหลดข้อมูลตัวอย่าง"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
@@ -1707,8 +1739,9 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
+#, fuzzy
 msgid "OK"
-msgstr ""
+msgstr "โอเค"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1922,8 +1955,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
+#, fuzzy
 msgid "Please enter your PIN to"
-msgstr ""
+msgstr "โปรดป้อน PIN ของคุณไปที่"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1942,8 +1976,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
+#, fuzzy
 msgid "Powered by"
-msgstr ""
+msgstr "สนับสนุนโดย"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1954,8 +1989,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
+#, fuzzy
 msgid "Print"
-msgstr ""
+msgstr "พิมพ์"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1966,8 +2002,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
+#, fuzzy
 msgid "Proceed Anyway"
-msgstr ""
+msgstr "ดำเนินการต่อ"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_ruleset_view_form
@@ -2035,8 +2072,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "Ready to track attendances ?"
-msgstr ""
+msgstr "พร้อมที่จะติดตามการลงเวลาแล้วหรือยัง?"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -2078,8 +2116,9 @@ msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_list_view_enhanced_hr_attendance
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "นำออก"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
@@ -2304,8 +2343,9 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "The attendance records of your employees will be displayed here."
-msgstr ""
+msgstr "บันทึกการลงเวลาทำงานของพนักงานของคุณจะแสดงที่นี่"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_management_action
@@ -2497,20 +2537,23 @@ msgstr "ลองใช้คีออสก์"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "Try the backend and reporting:"
-msgstr ""
+msgstr "ลองใช้การทำงานส่วนหลังและการรายงาน:"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "Try the kiosk"
-msgstr ""
+msgstr "ลองใช้คีออสก์"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "Try the top"
-msgstr ""
+msgstr "ลองด้านบน"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__1
@@ -2575,8 +2618,9 @@ msgstr "ข้อผิดพลาดในการตรวจสอบคว
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__version_ids
+#, fuzzy
 msgid "Version"
-msgstr ""
+msgstr "เวอร์ชัน"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_ruleset__versions_count
@@ -2660,8 +2704,9 @@ msgstr "ชั่วโมงการทำงานในเดือนนี
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_version_search_view_enhanced_hr_attendance
+#, fuzzy
 msgid "Working Hours"
-msgstr ""
+msgstr "ชั่วโมงทำงาน"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__resource_calendar_id
@@ -2778,19 +2823,22 @@ msgstr "ชั่วโมง"
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "icon (e.g for work from home)"
-msgstr ""
+msgstr "ไอคอน (เช่น สำหรับการทำงานจากที่บ้าน)"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
+#, fuzzy
 msgid "or"
-msgstr ""
+msgstr "หรือ"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_ir_websocket
+#, fuzzy
 msgid "websocket message handling"
-msgstr ""
+msgstr "การจัดการข้อความของ websocket"
 
 #. module: hr_attendance
 #. odoo-python
@@ -2808,12 +2856,3 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "ด้วยรหัส PIN เสริม"
-
-#~ msgid "Balance"
-#~ msgstr "ยอดคงเหลือ"
-
-#~ msgid "Difference"
-#~ msgstr "ส่วนต่าง"
-
-#~ msgid "Over Time"
-#~ msgstr "ล่วงเวลา"
