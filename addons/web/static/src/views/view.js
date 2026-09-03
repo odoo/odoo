@@ -1,30 +1,33 @@
-import { render, useSubEnv } from "@web/owl2/utils";
+import {
+    applyDefaults,
+    Component,
+    computed,
+    markRaw,
+    onWillStart,
+    proxy,
+    signal,
+    t,
+    toRaw,
+    useOnChange,
+    usePlugin,
+    useProps,
+} from "@odoo/owl";
+import { loadBundle } from "@web/core/assets";
+import { cookie } from "@web/core/browser/cookie";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useService } from "@web/core/utils/hooks";
 import { deepCopy, pick } from "@web/core/utils/objects";
 import { nbsp } from "@web/core/utils/strings";
 import { parseXML } from "@web/core/utils/xml";
+import { render, useSubEnv } from "@web/owl2/utils";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch, withSearchProps } from "@web/search/with_search/with_search";
+import { session } from "@web/session";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
-import { loadBundle } from "@web/core/assets";
-import { cookie } from "@web/core/browser/cookie";
-import {
-    Component,
-    markRaw,
-    onWillUpdateProps,
-    onWillStart,
-    proxy,
-    useProps,
-    toRaw,
-    t,
-    applyDefaults,
-} from "@odoo/owl";
-import { session } from "@web/session";
+import { ViewPlugin } from "./view_plugin";
 
 /**
  * @typedef Config
@@ -192,8 +195,9 @@ const STANDARD_PROPS = [
 ];
 
 const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
+const VIEW_UPDATE_PROPS = ["arch", "type", "resModel"];
+const WITH_SEARCH_UPDATE_PROPS = ["context", "domain", "groupBy", "orderBy"];
 
-/** @extends {Component<ViewProps, import("@web/env").OdooEnv>} */
 export const viewProps = {
     display: t.any().optional({}),
     context: t.any().optional({}),
@@ -201,6 +205,7 @@ export const viewProps = {
     loadIrFilters: t.any().optional(false),
     className: t.any().optional(""),
 };
+/** @type {ViewProps} */
 const viewPropsType = t.object(viewProps);
 
 export class View extends Component {
@@ -209,13 +214,22 @@ export class View extends Component {
     static components = { WithSearch };
     static searchMenuTypes = ["filter", "groupBy", "favorite"];
     static canOrderByCount = false;
-    // View accepts any prop (owl3 validation is loose); only the keys with
-    // defaults are declared here.
-    props = useProps();
+
+    viewPlugin = usePlugin(ViewPlugin);
+    keepLast = new KeepLast();
+
+    // View accepts any props
+    propsWithoutDefault = useProps();
+    props = computed(() => applyDefaults({ ...this.propsWithoutDefault }, viewPropsType));
+
+    /** @type {import("@odoo/owl").ComponentConstructor} */
+    Controller = signal(null);
+    componentProps = signal.Object({});
+    /** @type {typeof withSearchProps} */
+    withSearchProps = signal.Object({});
 
     setup() {
-        this.props = this.applyViewDefaults(this.props);
-        const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
+        const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props();
         if (!resModel) {
             throw Error(`View props should have a "resModel" key`);
         }
@@ -229,9 +243,6 @@ export class View extends Component {
             throw new Error(`"searchViewArch" and "searchViewFields" props must be given together`);
         }
 
-        this.viewService = useService("view");
-        this.withSearchProps = null;
-
         useSubEnv({
             keepLast: new KeepLast(),
             config: {
@@ -239,14 +250,26 @@ export class View extends Component {
                 ...this.env.config,
             },
             ...Object.fromEntries(
-                CALLBACK_RECORDER_NAMES.map((name) => [name, this.props[name] || null])
+                CALLBACK_RECORDER_NAMES.map((name) => [name, this.props()[name] || null])
             ),
         });
 
         this.handleActionLinks = useActionLinks(resModel, () => render(this));
 
-        onWillStart(() => this.loadView(this.props));
-        onWillUpdateProps((nextProps) => this.onWillUpdateProps(nextProps));
+        onWillStart(() => this.loadView(this.props()));
+        useOnChange(
+            () => VIEW_UPDATE_PROPS.map((key) => this.propsWithoutDefault[key]),
+            () => this.loadView(this.props()),
+            { initialRun: false }
+        );
+        useOnChange(
+            () => WITH_SEARCH_UPDATE_PROPS.map((key) => this.propsWithoutDefault[key]),
+            () => {
+                const { context, domain, groupBy, orderBy } = this.props();
+                Object.assign(this.withSearchProps(), { context, domain, groupBy, orderBy });
+            },
+            { initialRun: false }
+        );
 
         useDebugCategory("view", { component: this });
     }
@@ -254,16 +277,8 @@ export class View extends Component {
     /**
      * @param {ViewProps} props
      */
-    applyViewDefaults(props) {
-        return applyDefaults(props, viewPropsType);
-    }
-
-    /**
-     * @param {ViewProps} props
-     */
     async loadView(props) {
         const type = props.type;
-
         if (!session.view_info[type]) {
             throw new Error(`Invalid view type: ${type}`);
         }
@@ -320,7 +335,9 @@ export class View extends Component {
                 options.embeddedActionId = this.env.config.currentEmbeddedActionId;
                 options.embeddedParentResId = context.active_id;
             }
-            const result = await this.viewService.loadViews({ context, resModel, views }, options);
+            const result = await this.keepLast.add(
+                this.viewPlugin.loadViews({ context, resModel, views }, options)
+            );
             // Note: if props.views is different from views, the cached descriptions
             // will certainly not be reused! (but for the standard flow this will work as
             // before)
@@ -436,12 +453,12 @@ export class View extends Component {
         viewProps.searchMenuTypes = searchMenuTypes;
         const canOrderByCount = descr.canOrderByCount || this.constructor.canOrderByCount;
 
-        const finalProps = descr.props ? descr.props(viewProps, descr, this.env.config) : viewProps;
-        // prepare the WithSearch component props
-        this.Controller = descr.Controller;
-        this.componentProps = finalProps;
-        this.withSearchProps = {
-            ...toRaw(props),
+        // prepare WithSearch props and component props
+        this.Controller.set(descr.Controller);
+        this.componentProps.set(descr.props?.(viewProps, descr, this.env.config) ?? viewProps);
+
+        const wsProps = {
+            ...pick(toRaw(props), ...Object.keys(withSearchProps)),
             hideCustomGroupBy: props.hideCustomGroupBy || descr.hideCustomGroupBy,
             searchMenuTypes,
             canOrderByCount,
@@ -449,14 +466,14 @@ export class View extends Component {
         };
 
         if (searchViewId !== undefined) {
-            this.withSearchProps.searchViewId = searchViewId;
+            wsProps.searchViewId = searchViewId;
         }
         if (searchViewArch) {
-            this.withSearchProps.searchViewArch = searchViewArch;
-            this.withSearchProps.searchViewFields = searchViewFields;
+            wsProps.searchViewArch = searchViewArch;
+            wsProps.searchViewFields = searchViewFields;
         }
         if (irFilters) {
-            this.withSearchProps.irFilters = irFilters;
+            wsProps.irFilters = irFilters;
         }
 
         if (descr.display) {
@@ -464,7 +481,7 @@ export class View extends Component {
             // the View's default props (shared object), in which case, modifying
             // it in place would have unwanted effects.
             const viewDisplay = deepCopy(descr.display);
-            const display = { ...this.withSearchProps.display };
+            const display = { ...wsProps.display };
             for (const key in viewDisplay) {
                 if (typeof display[key] === "object") {
                     Object.assign(display[key], viewDisplay[key]);
@@ -472,33 +489,13 @@ export class View extends Component {
                     display[key] = viewDisplay[key];
                 }
             }
-            this.withSearchProps.display = display;
+            wsProps.display = display;
         }
 
         if (defaultGroupBy && defaultGroupBy.length) {
-            this.withSearchProps.defaultGroupBy = defaultGroupBy;
+            wsProps.defaultGroupBy = defaultGroupBy;
         }
 
-        for (const key in this.withSearchProps) {
-            if (!(key in withSearchProps)) {
-                delete this.withSearchProps[key];
-            }
-        }
-    }
-
-    /**
-     * @param {ViewProps} nextProps
-     */
-    onWillUpdateProps(nextProps) {
-        nextProps = this.applyViewDefaults(nextProps);
-        const oldProps = pick(this.props, "arch", "type", "resModel");
-        const newProps = pick(nextProps, "arch", "type", "resModel");
-        if (JSON.stringify(oldProps) !== JSON.stringify(newProps)) {
-            return this.loadView(nextProps);
-        }
-        // we assume that nextProps can only vary in the search keys:
-        // context, domain, groupBy, orderBy
-        const { context, domain, groupBy, orderBy } = nextProps;
-        Object.assign(this.withSearchProps, { context, domain, groupBy, orderBy });
+        this.withSearchProps.set(wsProps);
     }
 }
