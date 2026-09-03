@@ -2,12 +2,32 @@
 <odoo>
     <data>
         <template id="pos_bancontact_pay.pos_order_receipt_footer" inherit_id="point_of_sale.pos_order_receipt_footer">
-            <div name="footer" position="inside">
-                <div t-if="extra_data.get('processed_by_bancontact')">
-                    <div class="text-center">This transaction is processed by Bancontact Company</div>
-                    <div class="text-center"><img t-att-src="image['bancontact_logo']" class="w-50" /></div>
+            <div name="footer_powered_by" position="before">
+                <div t-if="extra_data.get('processed_by_bancontact')" class="my-3">
+                    <!-- <div class="text-center">This transaction is processed by Bancontact Company</div> -->
+                    <div class="text-center"><img t-att-src="image['bancontact_logo']" class="w-25" /></div>
                 </div>
             </div>
         </template>
     </data>
 </odoo>
+
+
+<!-- <?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_bancontact_pay.pos_order_receipt_footer" inherit_id="point_of_sale.pos_order_receipt_footer">
+            <div name="footer_powered_by" position="before">
+                <table t-if="extra_data.get('processed_by_bancontact')" class="w-100 mb-2">
+                    <tbody>
+                        <tr>
+                            <td style="width: 65%;" class="text-start text-small">This transaction is processed by Bancontact Company</td>
+                            <td style="width: 10%;"/>
+                            <td style="width: 25%;" class="text-end"><img t-att-src="image['bancontact_logo']" class="w-100" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+    </data>
+</odoo> -->
