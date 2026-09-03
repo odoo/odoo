@@ -29,6 +29,7 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 
 const { DateTime } = luxon;
 export class Message extends Record {
+    /** @type {"mail.message"} */
     static _name = "mail.message";
 
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
