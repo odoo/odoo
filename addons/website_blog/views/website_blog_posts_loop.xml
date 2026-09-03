@@ -270,29 +270,31 @@ according to the enabled options.
     <div class="col-12 m-0">
         <article class="o_wblog_post position-relative d-flex flex-column h-100" name="blog_post">
             <div class="row">
-                <div t-attf-class="d-flex align-items-start #{opt_blog_simple_list_view and 'justify-content-between flex-row-reverse mb-3 gap-2' or 'gap-3'}">
+                <div t-attf-class="d-flex align-items-baseline gap-3 #{opt_blog_simple_list_view and 'mb-3'}">
                     <!-- 'Unpublished' badge -->
-                    <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="mb-2 order-last order-lg-first"/>
-                    <!-- Date -->
-                    <t t-if="opt_blog_simple_list_view">
+                    <t t-call="website_blog.post_unpublished_badge" is_mobile_icon="opt_blog_simple_list_view"/>
+                    <!-- Date (Compact) -->
+                    <t t-if="opt_blog_compact_list_view">
+                        <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
+                        <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0"/>
+                    </t>
+
+                    <!-- Compact -->
+                    <div t-if="opt_blog_compact_list_view" t-attf-class="d-flex flex-grow-1 flex-wrap align-items-baseline gap-1 gap-lg-3 #{opt_blog_sidebar_show and 'flex-xl-nowrap' or 'flex-lg-nowrap'}">
+                        <!-- Title -->
+                        <div t-attf-class="w-100 #{opt_posts_loop_show_tags and (opt_blog_sidebar_show and 'w-xl-75' or 'w-lg-75')}">
+                            <t t-call="website_blog.post_heading" _heading_classes.f="h6" posts_list_show_parent_blog="False"/>
+                        </div>
+                        <!-- Tags -->
+                        <t t-if="opt_posts_loop_show_tags" t-call="website_blog.post_tags" _tags_classes.f="w-100 #{opt_blog_sidebar_show and 'justify-content-xl-end w-xl-25' or 'justify-content-lg-end w-lg-25'}"/>
+                    </div>
+                    <!-- Minimal -->
+                    <div t-elif="opt_blog_simple_list_view" class="d-flex flex-grow-1 justify-content-between align-items-baseline gap-3">
+                        <!-- Title -->
+                        <t t-call="website_blog.post_heading" _heading_classes.f="h6 small mb-0" posts_list_show_parent_blog="False"/>
+                        <!-- Date -->
                         <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
                         <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
-                    </t>
-                    <t t-elif="opt_blog_compact_list_view">
-                        <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
-                        <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
-                    </t>
-                    
-                    <div t-attf-class="#{opt_blog_compact_list_view and 'd-flex flex-grow-1 flex-wrap justify-content-between align-items-start gap-1'}">
-                        <!-- Title -->
-                        <t t-if="opt_blog_simple_list_view">
-                            <t t-call="website_blog.post_heading" _heading_classes.f="h6 small mb-0"/>
-                        </t>
-                        <t t-elif="opt_blog_compact_list_view">
-                            <t t-call="website_blog.post_heading" _link_classes.f="flex-grow-1" _heading_classes.f="h6"/>
-                        </t>
-                        <!-- Tags -->
-                        <t t-if="opt_blog_compact_list_view and opt_posts_loop_show_tags" t-call="website_blog.post_tags" _tags_classes.f="'p-0'"/>
                     </div>
                 </div>
             </div>
@@ -357,8 +359,12 @@ according to the enabled options.
     <t t-if="blog_post.publish_on" t-set="state" t-value="'Scheduled'"/>
     <t t-elif="not blog_post.website_published" t-set="state" t-value="'Unpublished'"/>
     <t t-else="" t-set="state" t-value="False"/>
-    <small t-if="state" t-attf-class="badge w-auto h-auto o_not_editable #{state == 'Scheduled' and 'bg-warning' or 'bg-danger'} #{_badge_classes}">
+    <small t-if="state" t-attf-class="badge w-auto h-auto o_not_editable #{state == 'Scheduled' and 'bg-warning' or 'bg-danger'} #{is_mobile_icon and 'd-none d-lg-block'} #{_badge_classes}">
         <i class="oi me-2" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="presentation"/><t t-out="state"/>
+    </small>
+    <!-- Only display the icon on mobile if asked -->
+    <small t-if="state and is_mobile_icon" t-attf-class="badge w-auto h-auto o_not_editable d-lg-none #{state == 'Scheduled' and 'bg-warning' or 'bg-danger'} #{_badge_classes}">
+        <i class="oi" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="presentation" t-att-title="state"/>
     </small>
 </template>
 
