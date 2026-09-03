@@ -60,7 +60,7 @@
         --gradient: none;
     }
 
-    .btn[title=Reset] {
+    .btn.o_color_picker_reset {
         @include button-variant(
             $background: $o-we-bg-light,
             $border: transparent,
@@ -103,9 +103,6 @@
     }
 
     .color-combination-button {
-        border-radius: 3px;
-        box-shadow: inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.3);
-
         &.selected {
             box-shadow: inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.3), 0 0 0 2px var(--o-color-picker-active-color);
 

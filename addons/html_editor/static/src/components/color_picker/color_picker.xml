@@ -22,14 +22,14 @@
             </t>
             <t t-else="">
                 <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
-                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
+                    <button t-attf-class="btn btn-sm text-truncate btn-tab me-1 #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
                         t-on-click="() => this.setTab(tab.id)">
                         <t t-out="tab.name" />
                     </button>
                 </t>
             </t>
             <div class="flex-grow-1" />
-            <button t-attf-class="btn btn-sm oi oi-filled #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'}"
+            <button t-attf-class="btn btn-sm oi oi-filled o_color_picker_reset #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'}"
                     data-icon="delete"
                     title="Reset"
                     t-on-click="this.onColorApply"
