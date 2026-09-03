@@ -23,7 +23,7 @@ class AccountMoveSend(models.AbstractModel):
 
     @api.model
     def _display_attachments_widget(self, edi_format, sending_methods):
-        return edi_format == 'it_edi_xml' and 'it_edi_send' in sending_methods or super()._display_attachments_widget(edi_format, sending_methods)
+        return 'it_edi_send' in sending_methods or super()._display_attachments_widget(edi_format, sending_methods)
 
     # -------------------------------------------------------------------------
     # ALERTS
@@ -90,7 +90,7 @@ class AccountMoveSend(models.AbstractModel):
             pdf_values = invoice_data['pdf_attachment_values']
             invoice_data['l10n_it_edi_values'] = invoice._l10n_it_edi_get_attachment_values(
                 pdf_values=pdf_values,
-                extra_attachments=[attachment for attachment in invoice_data['mail_attachments_widget'] if attachment.get('manual')],
+                extra_attachments=[attachment for attachment in invoice_data.get('mail_attachments_widget', []) if attachment.get('manual')],
             )
 
     def _call_web_service_after_invoice_pdf_render(self, invoices_data):
