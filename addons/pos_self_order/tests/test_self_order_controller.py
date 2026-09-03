@@ -473,6 +473,46 @@ class TestSelfOrderController(SelfOrderCommonTest):
         data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
         self.assertNotIn('pos.payment.method', data)
 
+    def test_should_send_to_preparation_for_pay_after_meal(self):
+        """A 'pay after meal' self-order must be sent to preparation as soon as it
+        is synced, even before it is paid, so kitchen printers are triggered."""
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_service_mode': 'table',
+            'self_ordering_pay_after': 'meal',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'state': 'draft',
+            'amount_total': 2.2,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [Command.create({
+                'product_id': self.cola.id,
+                'qty': 1,
+                'price_unit': 2.2,
+                'price_subtotal': 2.2,
+                'price_subtotal_incl': 2.2,
+            })],
+        })
+
+        with patch.object(self.env.registry['pos.config'], 'has_valid_self_payment_method', return_value=True):
+            self.assertTrue(
+                order._should_send_to_preparation(),
+                "Draft self-orders in 'pay after meal' mode must be sent to preparation immediately, "
+                "even with a valid self-payment method configured"
+            )
+
+            self.pos_config.self_ordering_pay_after = 'each'
+            self.assertFalse(
+                order._should_send_to_preparation(),
+                "Draft self-orders in 'pay after each' mode with a valid payment method must wait for payment"
+            )
+
     def test_config_session_loaded_fields(self):
         self.pos_config.write({
             'use_presets': False,

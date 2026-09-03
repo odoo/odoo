@@ -273,7 +273,7 @@ class PosOrderReceipt(models.AbstractModel):
             if not has_prepa_category:
                 continue
 
-            quantity = orderline.prep_line_ids.quantity - orderline.prep_line_ids.cancelled
+            quantity = sum(pl.quantity - pl.cancelled for pl in orderline.prep_line_ids)
             quantity_diff = orderline.qty - quantity
 
             if quantity_diff != 0:
