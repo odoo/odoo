@@ -79,7 +79,7 @@ export function editSearchView({ accessRights, component }) {
     if (!accessRights.canEditView) {
         return null;
     }
-    const { searchViewId } = component.componentProps.info;
+    const { searchViewId } = component.componentProps().info;
     if (searchViewId === undefined) {
         return null;
     }
