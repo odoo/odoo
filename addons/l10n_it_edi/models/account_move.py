@@ -497,7 +497,7 @@ class AccountMove(models.Model):
             # Down payment lines:
             # If there was a down paid amount that has been deducted from this move,
             # we need to put a reference to the down payment invoice in the DatiFattureCollegate tag
-            description = line._get_product_name_and_description()
+            description = (line.with_context(display_default_code=False).label or "").replace("\n", " ")
             if not is_downpayment and price_subtotal < 0:
                 downpayment_moves = line._get_downpayment_lines().move_id
                 if downpayment_moves:
@@ -1884,9 +1884,6 @@ class AccountMove(models.Model):
         if line_elements:
             move_line.sequence = int(line_elements[0].text)
 
-        # Name.
-        move_line.name = " ".join(get_text(element, './/Descrizione').split())
-
         # Product.
         company_domain = self.env['res.company']._check_company_domain(company)
         if elements_code := element.xpath('.//CodiceArticolo'):
@@ -1928,6 +1925,19 @@ class AccountMove(models.Model):
             fitting_account = predicted_values.get('account_id')
             if fitting_account:
                 move_line.account_id = fitting_account
+
+        # Name.
+        if not move_line.name:
+            description = get_text(element, './/Descrizione')
+            prefix = (
+                f'{move_line.product_id.with_context(display_default_code=False).display_name} '
+                if move_line.product_id
+                else None
+            )
+            if prefix and description.startswith(prefix):
+                move_line.name = description.removeprefix(prefix)
+            else:
+                move_line.name = description
 
         # Quantity.
         move_line.quantity = float(get_text(element, './/Quantita') or '1')

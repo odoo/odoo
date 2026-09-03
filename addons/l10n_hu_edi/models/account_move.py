@@ -891,7 +891,7 @@ class AccountMove(models.Model):
                 'lineNumberReference': base_invoice != self and line_number,
                 'lineExpressionIndicator': line.product_id and line.product_uom_id,
                 'lineNatureIndicator': {False: 'OTHER', 'service': 'SERVICE'}.get(line.product_id.type, 'PRODUCT'),
-                'lineDescription': line._get_product_name_and_description(),
+                'lineDescription': (line.label or '').replace('\n', ' '),
             }
 
             if 'is_downpayment' in line and line.is_downpayment:
@@ -1410,6 +1410,9 @@ class AccountMove(models.Model):
                     ))
             if product := product_values.get('product'):
                 line_vals['product_id'] = product.id
+                prefix = f'{product.display_name} '
+                if line_vals['name'].startswith(prefix):
+                    line_vals['name'] = line_vals['name'].removeprefix(prefix)
             move_vals['invoice_line_ids'].append(Command.create(line_vals))
 
         post_process_data = {

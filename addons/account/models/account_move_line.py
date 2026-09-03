@@ -679,22 +679,26 @@ class AccountMoveLine(models.Model):
             if not line.name or line._origin.name == get_name(line._origin) or line.product_id != line._origin.product_id:
                 line.name = get_name(line)
 
+    @api.depends_context("display_default_code")
     @api.depends("product_id", "name")
     def _compute_label(self):
         for line in self:
-            lang_line = line.with_context(lang=line.move_id._get_lang())
+            lang_line = line.with_context(
+                lang=line.move_id._get_lang(),
+                display_default_code=self.env.context.get("display_default_code", True),
+            )
             if lang_line.product_id and lang_line.name:
-                lang_line.label = lang_line.product_id.display_name + "\n" + lang_line.name
+                line.label = lang_line.product_id.display_name + "\n" + lang_line.name
             elif lang_line.product_id and not lang_line.name:
-                lang_line.label = lang_line.product_id.display_name
+                line.label = lang_line.product_id.display_name
             else:
-                lang_line.label = lang_line.name
+                line.label = lang_line.name
 
     def _inverse_label(self):
         for line in self:
             if line.product_id and line.label:
                 lang_line = line.with_context(lang=line.move_id._get_lang())
-                lang_line.name = lang_line.label.removeprefix(
+                line.name = lang_line.label.removeprefix(
                     lang_line.product_id.display_name
                 ).removeprefix("\n")
             else:
@@ -4004,11 +4008,6 @@ class AccountMoveLine(models.Model):
         )
         to_reset.invalidate_recordset([fname])
         self.env.add_to_compute(field, to_reset)
-
-    def _get_product_name_and_description(self, with_newline=False):
-        self.ensure_one()
-        combination = "\n".join(filter(None, [self.product_id.name, self.name]))
-        return combination if with_newline else combination.replace('\n', ' ')
 
     # -------------------------------------------------------------------------
     # HOOKS

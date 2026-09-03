@@ -319,7 +319,7 @@ class AccountEdiFormat(models.Model):
             discount_amount = self._l10n_eg_edi_round(price_subtotal_before_discount - abs(line.balance))
             item_code = line.product_id.l10n_eg_eta_code or line.product_id.barcode
             lines.append({
-                'description': line._get_product_name_and_description(with_newline=True),
+                'description': line.with_context(display_default_code=False).label,
                 'itemType': item_code.startswith('EG') and 'EGS' or 'GS1',
                 'itemCode': item_code,
                 'unitType': line.product_uom_id.l10n_eg_unit_code_id.code,

@@ -557,8 +557,8 @@ class AccountMove(models.Model):
             'OthChrg': in_round(tax_details_by_code.get('other_amount', 0.00)),
             'TotItemVal': in_round((sign * line.balance) + line_tax_details.get('tax_amount', 0.00)),
         }
-        if line_description := line._get_product_name_and_description():
-            line_details['PrdDesc'] = line_description[:300]
+        if line.label:
+            line_details['PrdDesc'] = line.label.replace("\n", " ")[:300]
         return line_details
 
     def _l10n_in_edi_generate_invoice_json_managing_negative_lines(self, json_payload):
