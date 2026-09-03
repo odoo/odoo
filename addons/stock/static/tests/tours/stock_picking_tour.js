@@ -166,6 +166,125 @@ registry.category("web_tour.tours").add('test_generate_serial_1', {  steps: () =
     },
 ]});
 
+registry.category("web_tour.tours").add('test_generate_serial_paged', {  steps: () => [
+    {
+        trigger: '.o_field_x2many_list_row_add > a',
+        run: "click",
+    },
+    {
+        trigger: ".o_field_widget[name=product_id] input",
+        run: "edit Serial",
+    },
+    {
+        trigger: ".ui-menu-item > a:contains('Product Serial')",
+        run: "click",
+    },
+    {
+        trigger: ".btn-primary[name=action_confirm]",
+        run: "click",
+    },
+    {
+        trigger: ".o_list_renderer .fa-list",
+        run: "click",
+    },
+    {
+        trigger: "h4:contains('Stock move')",
+        run: "click",
+    },
+    // Generating more lines than the list holds in a page only renders the first
+    // page, the rest is reachable through the pager.
+    {
+        trigger: '.o_widget_generate_serials > button',
+        run: "click",
+    },
+    {
+        trigger: ".modal h4:contains('Generate Serial numbers')",
+        run: "click",
+    },
+    {
+        trigger: ".modal div[name=next_serial] input",
+        run: "edit sn_a_1",
+    },
+    {
+        trigger: ".modal div[name=next_serial_count] input",
+        run: "edit 50 && click body",
+    },
+    {
+        trigger: ".modal .modal-footer button.btn-primary:contains(Generate)",
+        run: "click",
+    },
+    {
+        trigger: ".modal .o_cp_pager .o_pager_value:contains('1-40')",
+    },
+    {
+        trigger: ".modal .o_cp_pager .o_pager_limit:contains('50')",
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
+            if (nbLines !== 40) {
+                console.error("wrong number of move lines rendered. " + nbLines + " instead of 40");
+            }
+        },
+    },
+    {
+        trigger: ".modal .o_cp_pager .o_pager_next",
+        run: "click",
+    },
+    {
+        trigger: ".modal .o_cp_pager .o_pager_value:contains('41-50')",
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
+            if (nbLines !== 10) {
+                console.error("wrong number of move lines rendered on the last page. " + nbLines + " instead of 10");
+            }
+        },
+    },
+    // Regenerating fewer lines while on the last page must bring the list back
+    // to its first page, and not leave it on a now out of range one.
+    {
+        trigger: ".modal .o_widget_generate_serials > button",
+        run: "click",
+    },
+    {
+        trigger: ".modal h4:contains('Generate Serial numbers')",
+        run: "click",
+    },
+    {
+        trigger: ".modal div[name=next_serial] input",
+        run: "edit sn_b_1",
+    },
+    {
+        trigger: ".modal div[name=next_serial_count] input",
+        run: "edit 5 && click body",
+    },
+    {
+        trigger: ".modal .modal-footer button.btn-primary:contains(Generate)",
+        run: "click",
+    },
+    {
+        trigger: ".modal:not(:has(.o_cp_pager))",
+        run: () => {
+            const nbLines = document.querySelectorAll(".o_field_cell[name=lot_name]").length;
+            if (nbLines !== 5) {
+                console.error("wrong number of move lines rendered. " + nbLines + " instead of 5");
+            }
+        },
+    },
+    {
+        trigger: ".modal button:contains(save)",
+        run: "click",
+    },
+    {
+        trigger: "body:not(:has(.modal))",
+    },
+    {
+        trigger: ".o_form_view .o_form_button_save",
+        run: "click",
+    },
+    {
+        trigger: ".o_form_renderer.o_form_saved",
+    },
+]});
+
 registry.category("web_tour.tours").add('test_generate_serial_2', {  steps: () => [
     {
         trigger: '.o_field_x2many_list_row_add > a',
