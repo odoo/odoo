@@ -970,7 +970,35 @@ class NumberToWords_BG(Num2Word_Base):
         return ret_minus + ''.join(ret)
 
 
+<<<<<<< ff8d3195fd8cd14a5f3711a5a60d61acb85bb48c
 def patch_module():
+||||||| 5d5f5381c27f67a8655a1c18bf1802c877d4cae2
+def patch_num2words():
+=======
+SPANISH_APOCOPE_RE = re.compile(r'\b(veinti)?uno(?=\s+(?:mil|\w+ll(?:ón|ones))\b)')
+
+
+def _spanish_apocope_classes():
+    from num2words.lang_ES import Num2Word_ES  # noqa: PLC0415
+    from num2words.lang_ES_CO import Num2Word_ES_CO  # noqa: PLC0415
+    from num2words.lang_ES_VE import Num2Word_ES_VE  # noqa: PLC0415
+
+    class Num2Word_ES_Fixed(Num2Word_ES):
+        def to_cardinal(self, value):
+            result = super().to_cardinal(value)
+            return SPANISH_APOCOPE_RE.sub(lambda m: "veintiún" if m.group(1) else "un", result)
+
+    class Num2Word_ES_CO_Fixed(Num2Word_ES_Fixed, Num2Word_ES_CO):
+        pass
+
+    class Num2Word_ES_VE_Fixed(Num2Word_ES_Fixed, Num2Word_ES_VE):
+        pass
+
+    return Num2Word_ES_Fixed, Num2Word_ES_CO_Fixed, Num2Word_ES_VE_Fixed
+
+
+def patch_num2words():
+>>>>>>> 72e0ee9cbcef49b2db5d5a3816aa34da1431eae7
     try:
         import num2words  # noqa: PLC0415
     except ImportError:
@@ -984,3 +1012,7 @@ def patch_module():
     if 'cz' in num2words.CONVERTER_CLASSES and not 'cs' in num2words.CONVERTER_CLASSES:
         # There is a mistake in the Czech language code in versions < 0.5.14. Map it to the correct code here.
         num2words.CONVERTER_CLASSES['cs'] = num2words.CONVERTER_CLASSES['cz']
+    es_fixed, es_co_fixed, es_ve_fixed = _spanish_apocope_classes()
+    num2words.CONVERTER_CLASSES["es"] = es_fixed()
+    num2words.CONVERTER_CLASSES["es_CO"] = es_co_fixed()
+    num2words.CONVERTER_CLASSES["es_VE"] = es_ve_fixed()
