@@ -1,4 +1,4 @@
-import { Component, onPatched, signal } from "@odoo/owl";
+import { Component, onPatched, signal, t, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -11,12 +11,13 @@ export class HierarchyRenderer extends Component {
     static components = {
         HierarchyCard,
     };
-    static props = {
-        model: Object,
-        openRecord: Function,
-        archInfo: Object,
-    };
     static template = "web_hierarchy.HierarchyRenderer";
+
+    props = useProps({
+        model: t.object(),
+        openRecord: t.function(),
+        archInfo: t.object(),
+    });
 
     rendererRef = signal.ref();
 
