@@ -98,7 +98,11 @@ class AccountJournal(models.Model):
             else 'current'
         )
 
-        balances = dict(self.env['account.move.line'].sudo().with_context(currency_translation=currency_translation)._read_group(
+        balances = dict(self.env['account.move.line'].sudo().with_context(
+            currency_translation=currency_translation,
+            date_from=fiscal_year['date_from'],
+            date_to=fiscal_year['date_to'],
+        )._read_group(
             domain=[
                 ('parent_state', '=', 'posted'),
                 ('date', '>=', fiscal_year['date_from']),
@@ -163,11 +167,16 @@ class AccountJournal(models.Model):
 
     @api.model
     def _get_cashflow_kpi_amounts(self):
+        today = fields.Date.context_today(self)
         date_from = fields.Date.subtract(
-            fields.Date.context_today(self),
+            today,
             months=12,
         )
-        query = self.env['account.move.line']._search([
+        query = self.env['account.move.line'].with_context(
+            currency_translation='current',
+            date_from=date_from,
+            date_to=today,
+        )._search([
             ('company_id', 'in', self.env.companies.ids),
             ('journal_id.type', 'in', ('bank', 'cash', 'credit')),
             ('date', '>=', date_from),
