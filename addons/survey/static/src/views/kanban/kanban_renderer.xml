@@ -6,5 +6,11 @@
                 <SurveySurveyActionHelper/>
             </t>
         </ActionHelper>
+        <xpath expr="//KanbanRecord[@record='record']" position="attributes">
+            <attribute name="isGrouped">this.props.list.isGrouped</attribute>
+        </xpath>
+        <xpath expr="//KanbanRecord[@record='groupOrRecord.record']" position="attributes">
+            <attribute name="isGrouped">this.props.list.isGrouped</attribute>
+        </xpath>
     </t>
 </templates>
