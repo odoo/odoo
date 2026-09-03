@@ -6818,7 +6818,7 @@ class AccountMove(models.Model):
             error_msg = self.partner_bank_id._get_error_messages_for_qr(self.qr_code_method, self.partner_id, self.currency_id)
             if error_msg:
                 raise UserError(error_msg)
-        else:
+        elif not float_is_zero(self.amount_residual, precision_digits=2):
             # Else we find one that's eligible and assign it to the invoice
             for candidate_method, _candidate_name in self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
                 error_msg = self.partner_bank_id._get_error_messages_for_qr(candidate_method, self.partner_id, self.currency_id)
