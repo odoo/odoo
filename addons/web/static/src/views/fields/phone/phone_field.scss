@@ -7,21 +7,3 @@ body:not(.o_touch_device) .o_field_phone {
 
     word-break: keep-all !important;
 }
-.o_field_phone {
-    button[data-icon="more_vert"] {
-        display: none;
-        :first-child {
-            margin-inline-start: auto;
-        }
-    }
-    @include media-breakpoint-down(md) {
-        &:has(.o_phone_form_link:nth-child(2)) {
-            .o_phone_form_link {
-                display: none;
-            }
-            button[data-icon="more_vert"] {
-                display: unset;
-            }
-        }
-    }
-}

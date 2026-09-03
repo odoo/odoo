@@ -20,7 +20,7 @@ patch(PhoneField.prototype, {
         return [
             ...super.actionButtons,
             {
-                icon: "smartphone",
+                icon: "chat_bubble",
                 onSelected: async () => {
                     await this.props.record.save();
                     this.action.doAction(
