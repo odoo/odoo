@@ -310,7 +310,6 @@ test("dropdown: focus dropdown items on keyboard navigation after hotkey trigger
 
     class SimpleDropdownWithHotkey extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = ["*"];
         static template = xml`
             <Dropdown>
                 <button class="btn btn-primary dropdown-toggle" data-hotkey="c" accesskey="c">Dropdown</button>

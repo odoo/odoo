@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { expect, test } from "@odoo/hoot";
 import {
     contains,
@@ -66,7 +66,7 @@ test("Copy button is hidden on empty field", async () => {
 test("does not crash when the field is locally updated to false", async () => {
     class ClearButton extends Component {
         static template = xml`<button class="o_test_clear_button" t-on-click="() => this.onClick()">Clear</button>`;
-        static props = ["*"];
+        props = useProps();
         onClick() {
             this.props.record.update({ [this.props.name]: false });
         }
