@@ -11,6 +11,15 @@
 }
 
 .o_cc_preview_wrapper {
+    .color-combination-button > div > {
+        h1, p  {
+            min-width: 15%;
+        }
+        span {
+            max-width: 25%;
+        }
+    }
+
     @for $index from 1 through 5 {
         .o_cc#{$index} {
             --PreviewAlphaBg-background-size: 32px;
