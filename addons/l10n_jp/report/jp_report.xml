@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="external_layout_jis_standard">
+            <t t-set="jp_recipient_partner" t-value="(o and 'partner_id' in o and o.partner_id) or False"/>
+            <t t-set="jp_recipient_lang" t-value="(jp_recipient_partner and jp_recipient_partner.lang) or company.partner_id.lang or ''"/>
+            <t t-set="jp_honorific" t-value="jp_recipient_lang.startswith('ja') and (' 御中' if jp_recipient_partner and jp_recipient_partner.is_company else ' 様') or ''"/>
+            <t t-set="jp_document_date"
+               t-value="(o and 'invoice_date' in o and o.invoice_date) or (o and 'date_order' in o and o.date_order) or (o and 'date' in o and o.date) or (o and 'scheduled_date' in o and o.scheduled_date) or False"/>
+
+            <div t-attf-class="o_company_#{company.id}_layout o_jp_standard_header header">
+                <div class="o_jp_document_heading mb-3">
+                    <h2 class="mb-1" t-if="layout_document_title" t-out="layout_document_title"/>
+                    <div class="text-muted" t-if="jp_document_date">
+                        <span t-out="jp_document_date" t-options='{"widget": "date"}'/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 pe-4">
+                        <div class="o_jp_recipient_block">
+                            <div class="o_jp_recipient_name fw-bold" t-if="jp_recipient_partner and jp_recipient_partner.name">
+                                <span t-out="jp_recipient_partner.name"/><span t-out="jp_honorific"/>
+                            </div>
+                            <div class="o_jp_recipient_address mb-0" t-out="address or jp_recipient_partner.address"/>
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        <div class="o_jp_sender_block">
+                            <img t-if="company.logo" class="o_company_logo_big mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                            <t t-call="web.company_address_list"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <t t-call="web.external_layout_body" hide_recipient_address="True" hide_title="True">
+                <div class="mb-3" t-if="information_block" t-out="information_block"/>
+                <t t-out="0"/>
+            </t>
+
+            <div t-attf-class="footer o_company_#{company.id}_layout {{report_type != 'pdf' and 'mt-auto'}}">
+                <t t-call="web.external_layout_footer_content" footer_content_classes="'border-top pt-2'"/>
+            </div>
+        </template>
+
+        <template id="jp_standard_css" inherit_id="web.styles_company_report">
+            <xpath expr="//t[@t-elif]" position="before">
+                <t t-elif="layout == 'l10n_jp.external_layout_jis_standard'">
+                    &amp;.o_jp_standard_header {
+                        .o_jp_recipient_block {
+                            margin-top: 0;
+                        }
+
+                        .o_jp_recipient_name {
+                            margin-bottom: 4mm;
+                            font-size: 1.05rem;
+                        }
+
+                        .o_jp_sender_block {
+                            margin-top: 8mm;
+                        }
+                    }
+
+                    &amp;.article {
+                        .o_jp_document_heading h2 {
+                            color: <t t-out="primary"/>;
+                        }
+                    }
+                </t>
+            </xpath>
+        </template>
+
+        <template id="document_tax_totals_template" inherit_id="account.document_tax_totals_template">
+            <xpath expr="//t[@t-set='same_tax_base']" position="after">
+                <t t-set="jp_layout_selected" t-value="company and company.external_report_layout_id.key == 'l10n_jp.external_layout_jis_standard'"/>
+            </xpath>
+            <xpath expr='//span[@t-out="tax_group[&apos;group_name&apos;]"]' position="attributes">
+                <attribute name="t-out">('%s対象額' % tax_group['group_name']) if jp_layout_selected else tax_group['group_name']</attribute>
+            </xpath>
+            <xpath expr="//span[normalize-space()='on']" position="attributes">
+                <attribute name="t-if">not jp_layout_selected</attribute>
+            </xpath>
+            <xpath expr='//span[@t-out="tax_group[&apos;display_base_amount_currency&apos;]"]' position="attributes">
+                <attribute name="t-if">not jp_layout_selected</attribute>
+            </xpath>
+        </template>
+    </data>
+</odoo>
