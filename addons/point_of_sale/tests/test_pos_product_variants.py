@@ -293,3 +293,34 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
 
         self.assertNotEqual(template_available_qty, selected_variant_qty)
         self.assertEqual(warehouse_info['available_quantity'], template_available_qty)
+
+    def test_product_variant_combination_available(self):
+        product_template = self.env['product.template'].create({
+            'name': 'A combination product',
+            'taxes_id': False,
+            'available_in_pos': True,
+            'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': self.size_attribute.id,
+            'value_ids': [Command.set([self.size_attribute_s.id, self.size_attribute_m.id, self.size_attribute_l.id])],
+        })
+
+        template_size_attribute_m = self.env['product.template.attribute.value'].search([
+            ('attribute_line_id', '=', product_template.attribute_line_ids[0].id),
+            ('product_attribute_value_id', '=', self.size_attribute_m.id)
+        ])
+        template_size_attribute_l = self.env['product.template.attribute.value'].search([
+            ('attribute_line_id', '=', product_template.attribute_line_ids[0].id),
+            ('product_attribute_value_id', '=', self.size_attribute_l.id)
+        ])
+
+        variant_l = product_template.product_variant_ids[2]
+        variant_l.update({
+            "product_template_attribute_value_ids": [template_size_attribute_m.id, template_size_attribute_l.id],
+            "active": False
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_variant_combination_available', login="pos_user")
