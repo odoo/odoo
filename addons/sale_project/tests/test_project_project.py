@@ -29,3 +29,33 @@ class TestProjectProject(TransactionCase):
         )[0]
         projects_to_make_billable += non_billable_projects
         self.assertEqual(projects_to_make_billable, project1 + project2)
+
+    def test_make_project_non_billable_unlinks_products(self):
+        project = self.env['project.project'].create({
+            'name': 'Billable project',
+            'allow_billable': True,
+        })
+        product, template_product = self.env['product.template'].create([
+            {
+                'name': 'Task in project',
+                'type': 'service',
+                'service_tracking': 'task_global_project',
+                'project_id': project.id,
+            },
+            {
+                'name': 'Project from template',
+                'type': 'service',
+                'service_tracking': 'project_only',
+                'project_template_id': project.id,
+            },
+        ])
+
+        project.write({'allow_billable': False})
+        self.assertFalse(
+            product.project_id,
+            'Making the project non-billable should unlink it from products that create tasks in it.',
+        )
+        self.assertFalse(
+            template_product.project_template_id,
+            'Making the project non-billable should unlink it from products that use it as a template.',
+        )
