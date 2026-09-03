@@ -45,5 +45,8 @@
             </div>
             </t>
         </xpath>
+        <xpath expr="//SaleDetailsButton/parent::button" position="attributes">
+            <attribute name="t-if">showPrintReport</attribute>
+        </xpath>
     </t>
 </templates>
