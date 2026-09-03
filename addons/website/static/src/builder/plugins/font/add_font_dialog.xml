@@ -51,10 +51,11 @@
                             <a target="_blank" href="https://www.odoo.com/forum/help-1/how-to-use-google-fonts-and-respecting-german-requirements-214049">?</a>
                         </sup>
                     </label>
-                    <label class="o_switch col-form-label col-md-8" t-att-class="{'o_switch_disabled': !this.state.googleFontFamily}" for="google_font_serve">
-                        <input type="checkbox" class="visually-hidden" id="google_font_serve" t-model.proxy="this.state.googleServe"/>
-                        <span/>
-                    </label>
+                    <Switch extraClasses="'col-form-label col-md-8'"
+                        id="'google_font_serve'"
+                        value="this.state.googleServe"
+                        disabled="!this.state.googleFontFamily"
+                        onChange="(checked) => this.state.googleServe = checked"/>
                 </div>
                 <hr/>
                 <!-- Upload font -->
