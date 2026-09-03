@@ -640,6 +640,37 @@ class TestComposerForm(TestMailComposer):
 class TestComposerInternals(TestMailComposer):
 
     @users('employee')
+    def test_mail_composer_allow_header(self):
+        """
+        Test that the 'email_notification_allow_header' field on the mail
+        composer controls whether the email header is visible.
+        """
+        for composition_mode, allow_header in product(['comment', 'mass_mail'], [True, False]):
+            with self.subTest(composition_mode=composition_mode, allow_header=allow_header):
+                composer = self.env['mail.compose.message'].with_context(
+                    self._get_web_context(self.test_record, default_composition_mode=composition_mode)
+                ).create({
+                    'body': '<p>Test Header Visibility</p>',
+                    'email_layout_xmlid': 'mail.test_layout',
+                    'email_notification_allow_header': allow_header,
+                    'partner_ids': [(4, self.partner_employee_2.id)],
+                })
+
+                with self.mock_mail_gateway():
+                    composer._action_send_mail()
+
+                user_email = self._find_sent_email(
+                    self.env.user.email_formatted,
+                    [self.partner_employee_2.email_formatted],
+                )
+                if allow_header:
+                    self.assertIn('HEADER', user_email['body'],
+                                    'Header should be visible when email_notification_allow_header is True')
+                else:
+                    self.assertNotIn('HEADER', user_email['body'],
+                                        'Header should be hidden when email_notification_allow_header is False')
+
+    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_mail_composer_attachments(self):
         """ Test attachments management in both comment and mass mail mode. """
