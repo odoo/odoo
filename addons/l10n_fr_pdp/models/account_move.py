@@ -560,15 +560,25 @@ class AccountMove(models.Model):
     def _get_l10n_fr_pdp_errors(self, lazy=False):
         """Return the list of validation errors for this move in the context of PDP reporting."""
         self.ensure_one()
-        if self.state != 'posted' or self.l10n_fr_pdp_flow_10_report_type == 'payment':  # all the checks concerns transactions properties
+        if self.state != 'posted' or self.l10n_fr_pdp_flow_10_report_type != 'transaction':
             return []
 
         def check():
+            if not self.company_id.partner_id._l10n_fr_pdp_get_siren():
+                yield _("The company SIREN is missing or invalid.")
+
             if transaction_type == 'b2bi':
                 try:
                     self.commercial_partner_id.check_vat()
                 except ValidationError:
                     yield _("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
+                # G2.19 limits Flow 10 VAT identifiers to 18 characters.
+                for partner in (self.company_id.partner_id, self.commercial_partner_id):
+                    if len(partner.vat or '') > 18:
+                        yield _(
+                            "VAT number for %s must not exceed 18 characters.",
+                            partner.display_name,
+                        )
 
             for move in (self + self._l10n_fr_pdp_get_referenced_documents()):
                 if not move or move.move_type == 'entry':
@@ -577,14 +587,28 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield _("Move name is not valid%s.", ref_move)
                 if transaction_type == 'b2bi':
+                    partner_country_code = drom_com_territories.map_country_code_for_ppf(
+                        move.commercial_partner_id.country_id.code
+                    )
+                    if not partner_country_code or len(partner_country_code) != 2 or not partner_country_code.isalpha():
+                        yield _("Partner country code must contain two letters%s.", ref_move)
+
                     if not move.partner_shipping_id.street:
                         yield _("Missing address street (line 1)%s.", ref_move)
                     if not move.partner_shipping_id.city:
                         yield _("Missing address city%s.", ref_move)
                     if not move.partner_shipping_id.zip:
                         yield _("Missing address zip code%s.", ref_move)
+                    elif len(move.partner_shipping_id.zip) > 10:
+                        yield _("Address zip code must not exceed 10 characters%s.", ref_move)
                     if not move.partner_shipping_id.country_id:
                         yield _("Missing address country%s.", ref_move)
+                    else:
+                        country_code = drom_com_territories.map_country_code_for_ppf(
+                            move.partner_shipping_id.country_id.code
+                        )
+                        if not country_code or len(country_code) != 2 or not country_code.isalpha():
+                            yield _("Address country code must contain two letters%s.", ref_move)
 
         transaction_type = self._l10n_fr_pdp_get_transaction_type()
         if lazy:
