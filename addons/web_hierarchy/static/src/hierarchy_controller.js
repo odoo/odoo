@@ -1,4 +1,4 @@
-import { Component, signal } from "@odoo/owl";
+import { Component, signal, t, useProps } from "@odoo/owl";
 
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
@@ -18,14 +18,15 @@ export class HierarchyController extends Component {
         SearchBar,
         ActionHelper,
     };
-    static props = {
-        ...standardViewProps,
-        Model: Function,
-        Renderer: Function,
-        buttonTemplate: String,
-        archInfo: Object,
-    };
     static template = "web_hierarchy.HierarchyView";
+
+    props = useProps({
+        ...standardViewProps,
+        Model: t.function(),
+        Renderer: t.function(),
+        buttonTemplate: t.string(),
+        archInfo: t.object(),
+    });
 
     rootRef = signal.ref();
 
