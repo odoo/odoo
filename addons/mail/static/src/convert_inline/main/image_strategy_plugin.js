@@ -210,25 +210,28 @@ export class ImageStrategyPlugin extends Plugin {
             }
             return layout;
         }
-        let needsFullWidthSpacing = false;
-        if (width) {
-            needsFullWidthSpacing = true;
-        }
-        const spacingNodeArgs = needsFullWidthSpacing
-            ? { refs: { root: { style: { width: "100%" } } } }
-            : {};
-        // TODO EGGMAIL: padding node can also be supported in case the
-        // image is the only child of a paragraphRelatedElement (as for margins)
-        // the padding values should be merged with the margin values
-        const paddingNode = this.buildPaddingNode(emailNode, spacingNodeArgs);
-        if (paddingNode) {
-            // image padding behaves like a margin (space around the image)
-            emailNode.marginNode = paddingNode;
-            // recover border from the image email node and put it on the
-            // spacing node
-            neutralizeBorder((propertyName, propertyInfo) => {
-                paddingNode.layout.getRef("cell").styleInfo.set(propertyName, propertyInfo);
-            });
+        if (!emailNode.analysis.facts.isFontIcon) {
+            // FontIcons have their padding included in the image
+            let needsFullWidthSpacing = false;
+            if (width) {
+                needsFullWidthSpacing = true;
+            }
+            const spacingNodeArgs = needsFullWidthSpacing
+                ? { refs: { root: { style: { width: "100%" } } } }
+                : {};
+            // TODO EGGMAIL: padding node can also be supported in case the
+            // image is the only child of a paragraphRelatedElement (as for margins)
+            // the padding values should be merged with the margin values
+            const paddingNode = this.buildPaddingNode(emailNode, spacingNodeArgs);
+            if (paddingNode) {
+                // image padding behaves like a margin (space around the image)
+                emailNode.marginNode = paddingNode;
+                // recover border from the image email node and put it on the
+                // spacing node
+                neutralizeBorder((propertyName, propertyInfo) => {
+                    paddingNode.layout.getRef("cell").styleInfo.set(propertyName, propertyInfo);
+                });
+            }
         }
         return layout;
     }
@@ -278,6 +281,7 @@ export class ImageStrategyPlugin extends Plugin {
         if (detectionResult) {
             analysis.facts.imageNode = detectionResult.imageNode;
             analysis.facts.linkNode = detectionResult.linkNode;
+            analysis.facts.isFontIcon = detectionResult.isFontIcon;
             analysis.facts.isImageLink = true;
             analysis.parsingFacts.canMerge = true;
             analysis.parsingFacts.canParentMerge = false;
@@ -292,6 +296,7 @@ export class ImageStrategyPlugin extends Plugin {
                 layout = this.buildImageLayout(detectionResult);
             }
             analysis.facts.imageNode = detectionResult.imageNode;
+            analysis.facts.isFontIcon = detectionResult.isFontIcon;
             analysis.facts.isImage = true;
             analysis.parsingFacts.canMerge = false;
         }
@@ -548,6 +553,7 @@ export class ImageStrategyPlugin extends Plugin {
                     imageNode: imageNode,
                     linkNode: referenceNode,
                     shouldBeBlock: this.shouldBeBlock(referenceNode),
+                    isFontIcon: this.isFontIcon({ referenceNode: visibleChildNodes[0] }),
                 };
             }
         }
@@ -558,6 +564,7 @@ export class ImageStrategyPlugin extends Plugin {
             return {
                 imageNode: referenceNode,
                 shouldBeBlock: this.shouldBeBlock(referenceNode),
+                isFontIcon: this.isFontIcon({ referenceNode }),
             };
         }
     }
