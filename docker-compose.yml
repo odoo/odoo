@@ -1,0 +1,32 @@
+services:
+  odoo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+      - "8072:8072"
+    environment:
+      - HOST=${DB_HOST:-db}
+      - USER=${DB_USER:-odoo}
+      - PASSWORD=${DB_PASSWORD:-odoo}
+    volumes:
+      - odoo-data:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=${DB_USER:-odoo}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-odoo}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  odoo-data:
+  db-data:
