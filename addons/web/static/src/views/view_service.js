@@ -40,6 +40,17 @@ import { UPDATE_METHODS } from "@web/core/orm_service";
  * @property {boolean} loadIrFilters
  */
 
+const ACTION_MODELS = [
+    "ir.actions.actions",
+    "ir.actions.act_window",
+    "ir.actions.report",
+    "ir.actions.server",
+];
+
+// create_action/unlink_action are the "Create/Remove Contextual Action" buttons: they
+// change the bindings through call_button, so they are not part of UPDATE_METHODS.
+const ACTION_UPDATE_METHODS = [...UPDATE_METHODS, "create_action", "unlink_action"];
+
 export const viewService = {
     dependencies: ["orm"],
     async: ["loadViews"],
@@ -48,6 +59,12 @@ export const viewService = {
             const { model, method } = ev.detail.data.params;
             if (["ir.ui.view", "ir.filters"].includes(model)) {
                 if (UPDATE_METHODS.includes(method)) {
+                    rpcBus.trigger("CLEAR-CACHES", "get_views");
+                }
+            } else if (ACTION_MODELS.includes(model)) {
+                // get_views embeds the toolbar built from the action bindings, so
+                // binding an action to a model invalidates the cached get_views too.
+                if (ACTION_UPDATE_METHODS.includes(method)) {
                     rpcBus.trigger("CLEAR-CACHES", "get_views");
                 }
             }
