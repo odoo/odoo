@@ -180,6 +180,63 @@ class AccountJournal(models.Model):
         ))[0]
         return {'cash_in': cash_in, 'cash_out': cash_out}
 
+    def _action_open_profit_and_loss_journal_items(self, report_line):
+        if not self.env.user.has_group('account.group_account_basic'):
+            raise AccessError(self.env._("You do not have access to the Accounting Dashboard."))
+
+        report = self.env.ref('account_reports.profit_and_loss')
+        today = fields.Date.context_today(self)
+        fiscal_year = self.env.company.compute_fiscalyear_dates(today)
+        options = report.get_options({
+            'selected_variant_id': report.id,
+            'forced_companies': self.env.companies.ids,
+            'date': {
+                'date_from': fiscal_year['date_from'],
+                'date_to': fiscal_year['date_to'],
+                'period_type': 'custom',
+            },
+        })
+        return report.dispatch_report_action(options, 'action_audit_cell', {
+            'report_line_id': report_line.id,
+            'expression_label': 'balance',
+            'calling_line_dict_id': report._get_generic_line_id(
+                'account.report.line',
+                report_line.id,
+            ),
+            'column_group_index': 0,
+        })
+
+    @api.model
+    def action_open_income_journal_items(self):
+        return self._action_open_profit_and_loss_journal_items(
+            self.env.ref('account_reports.account_financial_report_revenue0')
+        )
+
+    @api.model
+    def action_open_expense_journal_items(self):
+        return self._action_open_profit_and_loss_journal_items(
+            self.env.ref('account_reports.account_financial_report_expense0')
+        )
+
+    @api.model
+    def action_open_unpaid_items(self):
+        if not self.env.user.has_group('account.group_account_basic'):
+            raise AccessError(self.env._("You do not have access to the Accounting Dashboard."))
+
+        action = self.env['ir.actions.actions']._for_xml_id(
+            'account_reports.action_account_report_followup'
+        )
+        action['params'] = {
+            'options': {
+                'account_type': [
+                    {'id': 'trade_receivable', 'selected': True},
+                    {'id': 'trade_payable', 'selected': True},
+                ],
+            },
+            'ignore_session': True,
+        }
+        return action
+
     @api.model
     def get_account_dashboard_kpis(self):
         if not self.env.user.has_group('account.group_account_basic'):
@@ -199,8 +256,8 @@ class AccountJournal(models.Model):
             'account_reports.action_account_report_pl',
             raise_if_not_found=False,
         )
-        partner_ledger_action = self.env.ref(
-            'account_reports.action_account_report_partner_ledger',
+        open_items_action = self.env.ref(
+            'account_reports.action_account_report_followup',
             raise_if_not_found=False,
         )
         cashflow_analysis_action = self.env.ref(
@@ -209,13 +266,15 @@ class AccountJournal(models.Model):
         )
         invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
 
-        def build_profit_and_loss_card(kpi_id, name, amount):
+        def build_profit_and_loss_card(kpi_id, name, amount, action_method):
             return {
                 'id': kpi_id,
                 'name': name,
+                'period': self.env._('Current FY'),
                 'has_total': True,
                 'value': format_amount(amount),
                 'action_id': profit_and_loss_action.id if profit_and_loss_action else False,
+                'action_method': action_method,
             }
 
         unpaid_amounts = self._get_sale_purchase_kpi_amounts()
@@ -225,25 +284,34 @@ class AccountJournal(models.Model):
 
         cards = [
             build_profit_and_loss_card(
-                'gross_margin',
-                self.env._('Gross Margin'),
-                income - expenses,
-            ),
-            build_profit_and_loss_card(
-                'revenue',
-                self.env._('Revenue'),
+                'income',
+                self.env._('Income'),
                 income,
-            ),
-            build_profit_and_loss_card(
-                'net_margin',
-                self.env._('Net Margin'),
-                income + other_income - expenses,
+                'action_open_income_journal_items',
             ),
             build_profit_and_loss_card(
                 'expenses',
                 self.env._('Expenses'),
                 expenses,
+                'action_open_expense_journal_items',
             ),
+            {
+                'id': 'margins',
+                'name': self.env._('Margins'),
+                'period': self.env._('Current FY'),
+                'has_total': False,
+                'values': [
+                    {
+                        'label': self.env._('Gross'),
+                        'value': format_amount(income - expenses),
+                    },
+                    {
+                        'label': self.env._('Net'),
+                        'value': format_amount(income + other_income - expenses),
+                    },
+                ],
+                'action_id': profit_and_loss_action.id if profit_and_loss_action else False,
+            },
             {
                 'id': 'unpaid',
                 'name': self.env._('Unpaid'),
@@ -258,7 +326,8 @@ class AccountJournal(models.Model):
                         'value': format_amount(supplier_unpaid),
                     },
                 ],
-                'action_id': partner_ledger_action.id if partner_ledger_action else False,
+                'action_id': open_items_action.id if open_items_action else False,
+                'action_method': 'action_open_unpaid_items',
             },
             {
                 'id': 'cashflow',

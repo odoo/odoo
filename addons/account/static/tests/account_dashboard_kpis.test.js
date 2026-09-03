@@ -8,20 +8,30 @@ import { AccountDashboardKpis } from "@account/components/account_dashboard_kpis
 defineMailModels();
 
 test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
+    const incomeAction = {
+        type: "ir.actions.act_window",
+        res_model: "account.move.line",
+    };
     mockService("orm", {
         async call(model, method, args) {
-            expect.step("load kpis");
             expect(model).toBe("account.journal");
-            expect(method).toBe("get_account_dashboard_kpis");
             expect(args).toEqual([]);
 
+            if (method === "action_open_income_journal_items") {
+                expect.step("load income action");
+                return incomeAction;
+            }
+
+            expect.step("load kpis");
+            expect(method).toBe("get_account_dashboard_kpis");
             return [
                 {
-                    id: "gross_margin",
-                    name: "Gross Margin",
+                    id: "income",
+                    name: "Income",
                     has_total: true,
-                    value: "$ 60.00",
+                    value: "$ 100.00",
                     action_id: 42,
+                    action_method: "action_open_income_journal_items",
                 },
                 {
                     id: "unpaid",
@@ -44,8 +54,13 @@ test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
     });
 
     mockService("action", {
-        doAction(actionId) {
-            expect.step(`open action ${actionId}`);
+        doAction(action) {
+            if (typeof action === "object") {
+                expect(action).toBe(incomeAction);
+                expect.step("open income action");
+            } else {
+                expect.step(`open action ${action}`);
+            }
         },
     });
 
@@ -57,10 +72,10 @@ test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
 
     expect(".o_account_dashboard_kpi_card").toHaveCount(2);
     expect(".o_account_dashboard_kpi_card:eq(0) .o_account_dashboard_kpi_name").toHaveText(
-        "Gross Margin"
+        "Income"
     );
     expect(".o_account_dashboard_kpi_card:eq(0) .o_account_dashboard_kpi_value").toHaveText(
-        "$ 60.00"
+        "$ 100.00"
     );
 
     expect(".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_name").toHaveText(
@@ -86,5 +101,5 @@ test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
     await contains(".o_account_dashboard_kpi_card:eq(0)").click();
     await contains(".o_account_dashboard_kpi_card:eq(1)").click();
 
-    expect.verifySteps(["open action 42", "open action 43"]);
+    expect.verifySteps(["load income action", "open income action", "open action 43"]);
 });

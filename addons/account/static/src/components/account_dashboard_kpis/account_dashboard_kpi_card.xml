@@ -10,7 +10,14 @@
             t-on-click="this.onClick"
         >
             <span class="o_account_dashboard_kpi_content">
-                <span class="o_account_dashboard_kpi_name" t-out="this.props.card.name"/>
+                <span class="o_account_dashboard_kpi_header">
+                    <span class="o_account_dashboard_kpi_name" t-out="this.props.card.name"/>
+                    <span
+                        t-if="this.props.card.period"
+                        class="o_account_dashboard_kpi_period"
+                        t-out="this.props.card.period"
+                    />
+                </span>
                 <span
                     t-if="this.props.card.has_total"
                     class="o_account_dashboard_kpi_value"
