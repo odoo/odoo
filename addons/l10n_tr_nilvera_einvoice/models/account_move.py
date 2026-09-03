@@ -1,12 +1,14 @@
 import uuid
 from base64 import b64decode
+from urllib.parse import quote, urlencode, urlparse
+
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
-from urllib.parse import quote, urlencode, urlparse
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import SQL
+
 from odoo.addons.l10n_tr_nilvera.const import NILVERA_ERROR_CODE_MESSAGES
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -81,13 +83,15 @@ class AccountMove(models.Model):
             return self.env['account.edi.xml.ubl.tr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
-    def button_draft(self):
-        # EXTENDS account
+    def _l10n_tr_nilvera_check_reset_to_draft(self):
         for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type == 'out_invoice'):
             if move.l10n_tr_nilvera_send_status == 'error':
                 move.message_post(body=_("To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue."))
             elif move.l10n_tr_nilvera_send_status != 'not_sent':
                 raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
+
+    def button_draft(self):
+        self._l10n_tr_nilvera_check_reset_to_draft()
         return super().button_draft()
 
     def _post(self, soft=True):
