@@ -1,5 +1,6 @@
 import { Component, onWillRender, useState } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_hook";
+import { useBus } from "@web/core/utils/hooks";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/l10n/translation";
@@ -156,6 +157,14 @@ export class DateTimeField extends Component {
         // Subscribes to changes made on the picker state
         this.state = useState(dateTimePicker.state);
         this.openPicker = dateTimePicker.open;
+
+        // The picker can hold a value that has not been applied to the record yet:
+        // the user picked it, but did not close the popover. Saving the record from
+        // anywhere else (a dialog footer button, "control+enter"...) must not leave
+        // that value behind.
+        useBus(this.props.record.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) =>
+            detail.proms.push(dateTimePicker.commitValue())
+        );
 
         onWillRender(() => this.triggerIsDirty());
     }
