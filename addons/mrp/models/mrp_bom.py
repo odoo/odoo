@@ -422,6 +422,15 @@ class MrpBom(models.Model):
 
         return boms_done, lines_done
 
+    def get_explodable_variants(self):
+        # Return set of variants containing variants whose bom has to be exploded.
+        explodable_variants = set()
+        for bom in self:
+            for line in bom.bom_line_ids:
+                if line.bom_product_template_attribute_value_ids:
+                    explodable_variants.update(set(line.bom_product_template_attribute_value_ids.ptav_product_variant_ids))
+        return explodable_variants
+
     @api.model
     def get_import_templates(self):
         return [{
