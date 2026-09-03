@@ -1,23 +1,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from freezegun import freeze_time
 from itertools import product
-from markupsafe import escape, Markup
 from unittest.mock import patch
 
-from odoo import tools
+from freezegun import freeze_time
+from markupsafe import Markup, escape
+
+from odoo import Command, tools
+from odoo.exceptions import AccessError
+from odoo.fields import Domain
+from odoo.service.model import call_kw
+from odoo.tests import tagged
+from odoo.tests.common import users
+from odoo.tools import email_normalize, formataddr, mute_logger
+
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
+from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
-from odoo.service.model import call_kw
-from odoo.exceptions import AccessError
-from odoo.fields import Domain
-from odoo.tests import tagged
-from odoo.tools import email_normalize, formataddr, mute_logger
-from odoo.tests.common import users
 
 
 class TestMessagePostCommon(MailCommon, TestRecipients):
@@ -1298,6 +1301,35 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     [self.partner_1],
                     email_to=expected_to,
                 )
+
+    def test_message_post_recipients_several_users(self):
+        """ Test a mentioned partner is notified on each of its active users. """
+        partner = self.env["res.partner"].create({"name": "Two Users"})
+        group_ids = [Command.set([self.env.ref("base.group_user").id])]
+        first_user, second_user = self.env["res.users"].create([
+            {
+                "group_ids": group_ids,
+                "login": "two_users_a",
+                "notification_type": "inbox",
+                "partner_id": partner.id,
+            },
+            {
+                "group_ids": group_ids,
+                "login": "two_users_b",
+                "notification_type": "inbox",
+                "partner_id": partner.id,
+            },
+        ])
+        with self.assertBus([
+            BusResult(first_user, "mail.message/inbox"),
+            BusResult(second_user, "mail.message/inbox"),
+        ]):
+            self.test_record.with_user(self.user_employee).message_post(
+                body="Test",
+                message_type="comment",
+                partner_ids=partner.ids,
+                subtype_xmlid="mail.mt_comment",
+            )
 
     @users('employee')
     def test_message_post_recipients_to_email_address(self):
