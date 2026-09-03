@@ -4,7 +4,7 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
-import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import { negateStep, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 
 registry.category("web_tour.tours").add("BarcodeScanningTour", {
@@ -180,12 +180,25 @@ registry.category("web_tour.tours").add("test_dynamic_barcode_extra", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            scan_barcode("1234567890"),
+            // Searching the variant barcode resolves the variant without opening the
+            // configurator, just like scanning it.
+            ProductScreen.searchProduct("1234567890"),
+            ProductScreen.productIsDisplayed("Wall Shelf Unit").map(negateStep),
+            ProductScreen.clickDisplayedProduct("Dynamic Product"),
             inLeftSide(
                 Order.hasLine({
                     productName: "Dynamic Product",
                     attributeLine: "L",
                     price: "40.0",
+                })
+            ),
+            scan_barcode("1234567890"),
+            inLeftSide(
+                Order.hasLine({
+                    productName: "Dynamic Product",
+                    attributeLine: "L",
+                    quantity: "2",
+                    price: "80.0",
                 })
             ),
         ].flat(),

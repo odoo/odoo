@@ -824,8 +824,10 @@ export class PosStore extends WithLazyGetterTrap {
         return {
             attribute_value_ids: attributeLinesValues.map((values) => values[0].id),
             attribute_custom_values: [],
+            // Only no_variant extras have to be carried by the line: the extras of
+            // variant-creating attributes are already part of the variant lst_price.
             price_extra: attributeLinesValues
-                .filter((attr) => attr[0].attribute_id.create_variant !== "always")
+                .filter((attr) => attr[0].attribute_id.create_variant === "no_variant")
                 .reduce((acc, values) => acc + values[0].price_extra, 0),
             quantity: 1,
         };
@@ -1282,7 +1284,7 @@ export class PosStore extends WithLazyGetterTrap {
             if (values.product_id.product_template_variant_value_ids.length > 0) {
                 // Verify price extra of variant products
                 const priceExtra = values.product_id.product_template_variant_value_ids
-                    .filter((attr) => attr.attribute_id.create_variant !== "always" && !opts.code)
+                    .filter((attr) => attr.attribute_id.create_variant === "no_variant")
                     .reduce((acc, attr) => acc + attr.price_extra, 0);
 
                 values.price_extra += priceExtra;
