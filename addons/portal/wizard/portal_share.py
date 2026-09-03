@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class PortalShare(models.TransientModel):
@@ -64,36 +64,64 @@ class PortalShare(models.TransientModel):
             share_link = self.resource_ref.get_base_url() + self.resource_ref._get_share_url(redirect=True, pid=partner.id)
             saved_lang = self.env.lang
             self = self.with_context(lang=partner.lang)
-            self.resource_ref.message_post_with_source(
-                'portal.portal_share_template',
-                render_values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
-                        'share_link': share_link,
-                        'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
-                subject=_("Invitation to access %s", self.resource_ref.display_name),
-                subtype_xmlid='mail.mt_note',
+            render_values = {
+                'partner': partner,
+                'note': self.note,
+                'record': self.resource_ref,
+                'share_link': share_link,
+                'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower(),
+                'user': self.env.user,
+                'company': self.env.company,
+            }
+            body_html = self.env['ir.qweb']._render('portal.portal_share_template', render_values)
+            self.resource_ref.message_notify(
+                partner_ids=partner.ids,
+                subject=self.env._("Invitation to access %s", self.resource_ref.display_name),
+                body=body_html,
                 email_layout_xmlid='mail.mail_notification_light',
-                partner_ids=partner.ids)
+            )
             self = self.with_context(lang=saved_lang)
+
+        self._log_share_message(partners)
 
     def _send_signup_link(self, partners=None):
         if partners is None:
             partners = self.partner_ids.filtered(lambda partner: not partner.user_ids)
         for partner in partners:
-            #  prepare partner for signup and send singup url with redirect url
             partner.signup_get_auth_param()
             share_link = partner._get_signup_url_for_action(action='/mail/view', res_id=self.res_id, model=self.res_model)[partner.id]
             saved_lang = self.env.lang
             self = self.with_context(lang=partner.lang)
-            self.resource_ref.message_post_with_source(
-                'portal.portal_share_template',
-                render_values={'partner': partner, 'note': self.note, 'record': self.resource_ref,
-                        'share_link': share_link,
-                        'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower()},
-                subject=_("Invitation to access %s", self.resource_ref.display_name),
-                subtype_xmlid='mail.mt_note',
+            render_values = {
+                'partner': partner,
+                'note': self.note,
+                'record': self.resource_ref,
+                'share_link': share_link,
+                'model_description': self.env['ir.model']._get(self.resource_ref._name).display_name.lower(),
+                'user': self.env.user,
+                'company': self.env.company,
+            }
+            body_html = self.env['ir.qweb']._render('portal.portal_share_template', render_values)
+            self.resource_ref.message_notify(
+                partner_ids=partner.ids,
+                subject=self.env._("Invitation to access %s", self.resource_ref.display_name),
+                body=body_html,
                 email_layout_xmlid='mail.mail_notification_light',
-                partner_ids=partner.ids)
+            )
             self = self.with_context(lang=saved_lang)
+
+        self._log_share_message(partners)
+
+    def _log_share_message(self, partners):
+        if partners:
+            model_name = self.env['ir.model']._get(self.resource_ref._name).display_name
+            partner_names = ", ".join(
+                f"{p.name} ({p.email})" if p.email else p.name
+                for p in partners
+            )
+            self.resource_ref._message_log(
+                body=self.env._("%(model_name)s shared with %(partner_names)s", model_name=model_name, partner_names=partner_names)
+            )
 
     def action_send_mail(self):
         signup_enabled = self.env['ir.config_parameter'].sudo().get_str('auth_signup.invitation_scope') or 'b2c' == 'b2c'
@@ -107,4 +135,14 @@ class PortalShare(models.TransientModel):
         # when partner not user send individual mail with signup token
         self._send_signup_link(self.partner_ids - partner_ids)
 
-        return {'type': 'ir.actions.act_window_close'}
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': self.env._("Shared successfully"),
+                'message': self.env._("An email invitation has been sent to the selected users."),
+                'type': 'success',
+                'sticky': False,
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
