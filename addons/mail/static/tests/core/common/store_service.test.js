@@ -25,6 +25,19 @@ test("destroying the app disposes the store", async () => {
     await expect.waitForSteps(["store disposed"]);
 });
 
+test("destroying the app disposes the records of the store", async () => {
+    await start();
+    const store = getService("mail.store");
+    const message = store["mail.message"].insert({ id: 1 });
+    message.onChange(
+        () => [],
+        () => () => expect.step("record disposed")
+    );
+    await expect.waitForSteps([]);
+    destroyApp();
+    await expect.waitForSteps(["record disposed"]);
+});
+
 test("store.insert can delete record", async () => {
     await start();
     const store = getService("mail.store");

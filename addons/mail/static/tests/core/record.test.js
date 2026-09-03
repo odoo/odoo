@@ -56,7 +56,6 @@ async function start() {
     await start2();
     /** @type {Store} */
     const store = getService("store");
-    after(() => store._runDisposeFns());
     return store;
 }
 

@@ -49,17 +49,17 @@ function observeField(recordProxy, fieldName, callback) {
 }
 
 /**
- * Owner of the owl computeds of one record. owl attaches a computed to the
- * scope that is active when it is created and disposes it with that scope, so
- * without a scope of its own a record loses its computeds as soon as the
- * component that happened to create them is destroyed.
+ * Owner of the owl computeds and of the effects of one record. owl attaches a
+ * computed to the scope that is active when it is created and disposes it with
+ * that scope, so without a scope of its own a record loses its computeds as
+ * soon as the component that happened to create them is destroyed. An effect
+ * has no such link at all, so it registers its stop function here.
  */
 class RecordScope extends Scope {
     /** @param {Record} record */
     constructor(record) {
         super(record._rawStore._.app);
         this.record = record;
-        record._registerDisposeFn(() => this.destroy());
     }
 
     destroy() {
@@ -90,16 +90,8 @@ export class RecordInternal {
      */
     isConstructing = signal(true);
     /**
-     * All dispose functions for this record.
-     * For the store, this stores the dispose functions of all records.
-     * Useful to automatically call the dispose functions when the record is deleted or in-between each tests.
-     *
-     * @type {Set<Function>}
-     */
-    disposeFns = new Set();
-    /**
-     * Scope holding the owl computeds of this record, made on the first one and
-     * disposed with the record.
+     * Scope holding the owl computeds and the effects of this record, made on
+     * the first one and disposed with the record.
      *
      * @type {RecordScope}
      */
@@ -285,7 +277,7 @@ export class RecordInternal {
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                record._registerDisposeFn(
+                this.ensureScope().onDestroy(
                     observeField(record._proxy, fieldName, () => {
                         if (this.fieldsComputing.get(fieldName)) {
                             /**
@@ -496,10 +488,7 @@ export class RecordInternal {
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
         }
-        const prevStopFn = this.fieldsComputeStop.get(fieldName);
-        if (prevStopFn) {
-            record._runDisposeFn(prevStopFn);
-        }
+        this.fieldsComputeStop.get(fieldName)?.();
         let triggered = false;
         const stopFn = untrack(() =>
             immediateEffect(() => {
@@ -523,8 +512,10 @@ export class RecordInternal {
                 this.fieldsComputing.delete(fieldName);
             })
         );
+        if (!this.fieldsComputeStop.has(fieldName)) {
+            this.ensureScope().onDestroy(() => this.fieldsComputeStop.get(fieldName)?.());
+        }
         this.fieldsComputeStop.set(fieldName, stopFn);
-        record._registerDisposeFn(stopFn);
         if (fromInNeed) {
             this.fieldsComputeInNeed.set(fieldName, true);
         }
