@@ -399,7 +399,7 @@ class TestTimesheet(TestCommonTimesheet):
         project_manager = self.env['res.users'].create({
             'name': 'user_project_manager',
             'login': 'user_project_manager',
-            'group_ids': [(6, 0, [self.ref('project.group_project_manager')])],
+            'group_ids': [(6, 0, [self.ref('project.group_project_manager'), self.ref('hr_timesheet.group_hr_timesheet_approver')])],
         })
 
         project = self.env['project.project'].create({
