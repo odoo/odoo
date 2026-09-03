@@ -6,8 +6,9 @@ import {
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { before, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, hover, press, tick, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, hover, press, queryAll, tick, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import { getIframeInput } from "@html_editor/../tests/_helpers/iframe_input";
@@ -486,4 +487,36 @@ test("should apply theme and update preview using CSS variables", async () => {
         "style",
         "background-color: var(--hb-cp-o-cc1-bg); background-image: var(--hb-cp-o-cc1-bg-gradient);"
     );
+});
+
+test("all gradients used in the editor are shown in gradient picker", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker enabledTabs="['solid', 'custom', 'gradient']" styleAction="'background-color'"/>`,
+    });
+    await setupHTMLBuilder(
+        `<div class="test-options-target" style="background-color: transparent; background-image: linear-gradient(135deg, rgb(255, 51, 51) 0%, rgb(51, 221, 255) 100%);">
+            <font style="background-image: linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%);">test</font>
+            <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%);">test</font>
+        </div>`
+    );
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await animationFrame();
+    await click(".btn:contains('Gradient')");
+    await animationFrame();
+    await contains(".o_custom_gradient_button").click();
+    await expectElementCount(".o_colorpicker_widget", 1);
+
+    const usedGradientButtons = queryAll(".o_used_gradients_section button[data-color]");
+    expect(usedGradientButtons).toHaveCount(3);
+
+    const gradients = usedGradientButtons.map((button) => button.style.backgroundImage);
+    expect(gradients).toMatchObject([
+        "linear-gradient(135deg, rgb(141, 223, 124) 0%, rgb(130, 53, 53) 100%)",
+        "linear-gradient(135deg, rgb(223, 124, 196) 0%, rgb(108, 53, 130) 100%)",
+        "linear-gradient(135deg, rgb(255, 51, 51) 0%, rgb(51, 221, 255) 100%)",
+    ]);
+    expect(usedGradientButtons[2]).toHaveClass("selected");
 });
