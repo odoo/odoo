@@ -72,6 +72,7 @@ class HrEmployee(models.Model):
             employee_id: {
                 'worked_hours': 0,
                 'overtime_hours': 0,
+                'entries': [],
             }
             for employee_id in self.ids
         }
@@ -89,6 +90,23 @@ class HrEmployee(models.Model):
             data['worked_hours'] += worked_hours
             if time_rule:
                 data['overtime_hours'] += worked_hours
+
+        # per work entry type aggregation for the overview cards
+        by_wet = self.env['hr.attendance']._read_group(
+            domain=[
+                ('employee_id', 'in', self.ids),
+                ('check_in', '<', date_stop),
+                ('check_out', '>', date_start),
+            ],
+            groupby=['employee_id', 'work_entry_type_id'],
+            aggregates=['worked_hours:sum'],
+        )
+        for employee, wet, worked_hours in by_wet:
+            attendance_data[employee.id]['entries'].append({
+                'name': wet.name if wet else self.env._('Attendance'),
+                'worked_hours': worked_hours,
+                'color': wet.color if wet else 0,
+            })
 
         return attendance_data
 

@@ -116,7 +116,10 @@
                 date_start="check_in"
                 date_stop="check_out"
                 quick_create_view_id="%(hr_attendance.hr_attendance_create_view_form)d"
-                mode="month">
+                mode="month"
+                color="wet_color">
+                <field name="wet_color" invisible="1"/>
+                <field name="work_entry_type_id" filters="1" color="color"/>
                 <field name="worked_hours" widget="float_time"/>
             </calendar>
         </field>

@@ -11,7 +11,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.http import request
-from odoo.tools import convert, float_compare, format_datetime, format_duration, format_time
+from odoo.tools import convert, float_compare, float_is_zero, format_datetime
 from odoo.tools.date_utils import float_to_time, sum_intervals, time_to_float
 from odoo.tools.intervals import Intervals
 
@@ -86,9 +86,17 @@ class HrAttendance(models.Model):
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
     break_duration = fields.Float(string="Break Duration", tracking=True, help="Extra unpaid break duration (hours)")
     work_entry_type_id = fields.Many2one(
-        'hr.work.entry.type', string="Time Type", index=True,
+        'hr.work.entry.type', string="Time Type", index=True, required=True,
         default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
     )
+    # used by the calendar view; subtracts 1 to align o_calendar_color_N (0-indexed over $o-colors)
+    # with bg-color-N-light (1-indexed over same list)
+    wet_color = fields.Integer(compute='_compute_wet_color', export_string_translation=False)
+
+    @api.depends('work_entry_type_id.color')
+    def _compute_wet_color(self):
+        for att in self:
+            att.wet_color = att.work_entry_type_id.color or 0
 
     active = fields.Boolean(default=True)
 
@@ -103,6 +111,8 @@ class HrAttendance(models.Model):
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
     source_attendance_id = fields.Many2one('hr.attendance', index=True)
     overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
+    # set to True on surviving output records when their source is modified or deleted
+    source_stale = fields.Boolean(default=False, copy=False, export_string_translation=False)
 
     @api.depends('date')
     def _compute_day_of_date(self):
@@ -128,22 +138,19 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('employee_id', 'check_in', 'check_out')
+    @api.depends('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'source_stale')
     def _compute_display_name(self):
-        tz = request.httprequest.cookies.get('tz') if request else None
         for attendance in self:
+            wet = attendance.work_entry_type_id
+            wet_name = wet.display_code or wet.name or ''
             if not attendance.check_out:
-                attendance.display_name = _(
-                    "From %s",
-                    format_time(self.env, attendance.check_in, time_format=None, tz=tz, lang_code=self.env.lang),
-                )
+                name = wet_name or _("In Progress")
             else:
-                attendance.display_name = _(
-                    "%(worked_hours)s (%(check_in)s-%(check_out)s)",
-                    worked_hours=format_duration(attendance.worked_hours),
-                    check_in=format_time(self.env, attendance.check_in, time_format=None, tz=tz, lang_code=self.env.lang),
-                    check_out=format_time(self.env, attendance.check_out, time_format=None, tz=tz, lang_code=self.env.lang),
-                )
+                total_mins = round(attendance.worked_hours * 60)
+                h, m = divmod(total_mins, 60)
+                dur = f"{h}h {m}m" if m else f"{h}h"
+                name = f"{wet_name} - {dur}" if wet_name else dur
+            attendance.display_name = f"⚠ {name}" if attendance.source_stale else name
 
     @api.depends_context('uid')
     @api.depends('employee_id')
@@ -268,16 +275,35 @@ class HrAttendance(models.Model):
                                                        empl_name=attendance.employee_id.name,
                                                        datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
 
+    # fields whose change on a source attendance should warn surviving outputs
+    _STALE_TRIGGER_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id', 'work_entry_type_id'})
+
     def write(self, vals):
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
+        # snapshot existing output ids before the pipeline runs so that newly
+        # created outputs (fresh, accurate) are not incorrectly marked stale
+        stale_targets = self.env['hr.attendance']
+        if self._STALE_TRIGGER_FIELDS & vals.keys():
+            stale_targets = self.sudo().mapped('overtime_attendance_ids').filtered('id')
         result = super().write(vals)
+        if stale_targets:
+            stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
         if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
             self._update_tolerance_state()
         return result
+
+    @api.ondelete(at_uninstall=False)
+    def _mark_outputs_stale_on_delete(self):
+        outputs = self.sudo().mapped('overtime_attendance_ids').filtered('id')
+        if outputs:
+            outputs.with_context(skip_time_rules=True).write({'source_stale': True})
+
+    def action_mark_reviewed(self):
+        self.with_context(skip_time_rules=True).write({'source_stale': False})
 
     def copy(self, default=None):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))
@@ -612,6 +638,13 @@ class HrAttendance(models.Model):
                     'This attendance was automatically checked out based on company specific time configuration.',
                 ))
 
+    def _get_localized_times(self):
+        self.ensure_one()
+        tz = ZoneInfo(self.employee_id.sudo()._get_version(self.check_in.date()).tz)
+        localized_start = self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        localized_end = self.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        return localized_start, localized_end
+
     def _get_break_duration_within_period(self, start, stop):
         attendances = self.filtered(lambda attendance: attendance.check_out and attendance.break_duration)
         if not attendances:
@@ -663,8 +696,11 @@ class HrAttendance(models.Model):
     def _get_source_extra_fields_domain(self):
         return [('state', '=', 'validated')]
 
+    def _get_time_rule_break_hours(self):
+        return self.break_duration or 0.0
+
     def _get_write_source_extra_source_fields(self):
-        return {'work_entry_type_id', 'state'}
+        return {'work_entry_type_id', 'state', 'break_duration'}
 
     def _update_tolerance_state(self):
         to_validate = self.browse()

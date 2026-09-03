@@ -2600,6 +2600,122 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(alloc.number_of_days, 0.75, places=5,
                                msg="6h total / 8h per day = 0.75d; not 0.25d + 0.75d = 1.0d")
 
+    def _make_deficit_alloc_rule(self, gap_type, comp_type):
+        self.time_rule.write({
+            'threshold_operator': 'less_than',
+            'work_entry_type_id': gap_type.id,
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+
+    def _make_validated_allocation(self, employee, comp_type, days):
+        alloc = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create({
+            'employee_id': employee.id,
+            'work_entry_type_id': comp_type.id,
+            'number_of_days': days,
+            'date_to': False,
+            'state': 'confirm',
+        })
+        alloc.with_context(leave_skip_state_check=True).action_approve()
+        return alloc
+
+    def test_deficit_alloc_skipped_when_insufficient(self):
+        """Deficit deduction exceeding the available allocation balance is suppressed entirely.
+
+        4h deficit on an 8h-day rule needs 0.5d deduction (4h * 100% / 8h_per_day).
+        Allocation only has 0.3d available:
+          - no output attendance created
+          - allocation balance unchanged
+        """
+        gap_type = self.env['hr.work.entry.type'].create({
+            'name': 'Under Time Skip', 'code': 'UTSKIP',
+            'count_as': 'absence', 'requires_allocation': False,
+        })
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Skip', 'code': 'CPSKIP',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self._make_deficit_alloc_rule(gap_type, comp_type)
+        alloc = self._make_validated_allocation(self.cal_emp, comp_type, 0.3)
+
+        # work morning only (4h) on 8h day → 4h deficit → needs 0.5d but only 0.3d available
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 12),
+        })
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertFalse(output_atts,
+                         "Deficit exceeds allocation: no output attendance should be created")
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.3, places=5,
+                               msg="Allocation must be untouched when deficit is skipped")
+
+    def test_deficit_alloc_proceeds_when_sufficient(self):
+        """Deficit deduction within the available allocation proceeds normally.
+
+        4h deficit needs 0.5d; allocation has 1.0d:
+          - output attendance created for the 4h unworked slot
+          - allocation reduced by 0.5d
+        """
+        gap_type = self.env['hr.work.entry.type'].create({
+            'name': 'Under Time OK', 'code': 'UTOK',
+            'count_as': 'absence', 'requires_allocation': False,
+        })
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp OK', 'code': 'CPOK',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self._make_deficit_alloc_rule(gap_type, comp_type)
+        alloc = self._make_validated_allocation(self.cal_emp, comp_type, 1.0)
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 12),
+        })
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertEqual(len(output_atts), 1,
+                         "Deficit within allocation: output attendance must be created")
+        self.assertAlmostEqual(output_atts.worked_hours, 4.0, places=5,
+                               msg="Output covers the full 4h unworked afternoon slot")
+        self.assertEqual(output_atts.work_entry_type_id, gap_type)
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.5, places=5,
+                               msg="1.0d - (4h * 100% / 8h_per_day) = 0.5d remaining")
+
+    def test_deficit_alloc_no_allocation_skips(self):
+        gap_type = self.env['hr.work.entry.type'].create({
+            'name': 'Under Time No Alloc', 'code': 'UTNOAL',
+            'count_as': 'absence', 'requires_allocation': False,
+        })
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp No Alloc', 'code': 'CPNOAL',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        self._make_deficit_alloc_rule(gap_type, comp_type)
+
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 12),
+        })
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertFalse(output_atts,
+                         "No allocation at all → treated as insufficient → no output created")
+
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline')
 class TestTimeRuleCronBehavior(TransactionCase):
@@ -3818,5 +3934,47 @@ class TestTimeRulePipelineLeaves(TransactionCase):
             allocation.invalidate_recordset()
             self.assertAlmostEqual(allocation.number_of_days, 10.0, places=5,
                                    msg="combined 8h meets threshold → no deficit → prior deduction reversed → 10.0d")
+        finally:
+            rule.write({'active': False})
+
+    def test_deficit_alloc_leave_skipped_when_insufficient(self):
+        """Leave-based deficit: deduction exceeding the available balance is suppressed.
+
+        6h leave on an 8h threshold → 2h deficit → 0.25d deduction needed.
+        Allocation only has 0.1d → filter blocks the deficit:
+          - no output leave created
+          - allocation balance unchanged
+        """
+        comp_type = self.env['hr.work.entry.type'].create({
+            'name': 'Comp Leave Skip', 'code': 'CLSKIP',
+            'requires_allocation': True, 'time_off_selectable': True,
+            'leave_validation_type': 'no_validation',
+        })
+        alloc = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create({
+            'employee_id': self.emp.id,
+            'work_entry_type_id': comp_type.id,
+            'number_of_days': 0.1,   # needs 0.25d → insufficient
+            'date_to': False,
+            'state': 'confirm',
+        })
+        alloc.with_context(leave_skip_state_check=True).action_approve()
+
+        rule = self.env['hr.time.rule'].create({
+            'name': 'Deficit 8h/day leave alloc skip',
+            'working_hours_mode': 'day',
+            'threshold_operator': 'less_than',
+            'expected_hours': 8.0,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+            'leave_compensation_rate': 1.0,
+            'allocation_type_id': comp_type.id,
+        })
+        try:
+            leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))  # 6h
+            self.assertFalse(self._outputs(leave),
+                             "2h deficit needs 0.25d but only 0.1d available → skip → no output leave")
+            alloc.invalidate_recordset()
+            self.assertAlmostEqual(alloc.number_of_days, 0.1, places=5,
+                                   msg="Allocation must be untouched when deficit is skipped")
         finally:
             rule.write({'active': False})

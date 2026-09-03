@@ -1,5 +1,4 @@
 import { Component, proxy, useEffect } from "@odoo/owl";
-import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 
@@ -11,18 +10,21 @@ export class AttendanceCalendarOverview extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.floatTime = registry.category("formatters").get("float_time");
         this.state = proxy({
-            workedHours: 0,
-            extraHours: 0,
+            entries: [],
         });
         useEffect(() => {
             this.loadData();
         });
     }
 
-    get displayExtraHours() {
-        return true;
+    formatHours(hours) {
+        return `${Math.floor(Math.round(hours * 60) / 60)}h`;
+    }
+
+    formatMins(hours) {
+        const m = Math.round(hours * 60) % 60;
+        return m > 0 ? `${m}m` : "";
     }
 
     async loadData() {
@@ -45,7 +47,6 @@ export class AttendanceCalendarOverview extends Component {
         );
         const data = attendace_data[employeeId];
         if (!data) return;
-        this.state.workedHours = data.worked_hours;
-        this.state.extraHours = data.overtime_hours;
+        this.state.entries = data.entries || [];
     }
 }

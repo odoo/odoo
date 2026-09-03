@@ -74,7 +74,8 @@
                 <span class="o_form_label" invisible="condition_is_hourly">Allocate <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can grant time to the employee in compensation for each matching record.">?</sup></span>
                 <div class="d-flex gap-3 align-items-baseline">
                     <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:6ch"/>
-                    <span class="text-muted" invisible="not leave_compensation_rate">to</span>
+                    <span class="text-muted" invisible="not leave_compensation_rate or threshold_operator == 'less_than'">to</span>
+                    <span class="text-muted" invisible="not leave_compensation_rate or threshold_operator != 'less_than'">from</span>
                     <field name="allocation_type_id" nolabel="1"
                         invisible="not leave_compensation_rate"
                         placeholder="Choose a Time Off Type"

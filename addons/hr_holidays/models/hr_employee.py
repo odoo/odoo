@@ -422,7 +422,7 @@ class HrEmployee(models.Model):
         employee = self._get_contextual_employee()
         allocations = self.env['hr.leave.allocation'].search([
             ('employee_id', '=', employee.id),
-            ('state', '=', 'confirm'),
+            ('state', 'in', ['confirm', 'validate1']),
         ])
         return len(allocations)
 

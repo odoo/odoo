@@ -51,6 +51,9 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     def _get_write_source_extra_source_fields(self):
         return set()
 
+    def _get_time_rule_break_hours(self):
+        return 0.0
+
     def _get_time_rule_end_write_vals(self, end_utc, stop_local):
         """Write vals dict for updating the span-end field.
 

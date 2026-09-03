@@ -37,6 +37,13 @@
                 <field name="write_date" optional="hidden"/>
                 <field name="color" column_invisible="1"/>
                 <field name="is_time_rule_output" column_invisible="1"/>
+                <field name="source_stale" column_invisible="1"/>
+                <button name="action_mark_reviewed" type="object"
+                        icon="warning"
+                        title="Source changed — click to mark as reviewed"
+                        class="text-warning p-0"
+                        invisible="not source_stale or not is_time_rule_output"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
             </list>
         </field>
     </record>
@@ -48,6 +55,8 @@
             <kanban class="o_kanban_mobile" sample="1">
                 <field name="check_in"/>
                 <field name="check_out"/>
+                <field name="source_stale"/>
+                <field name="is_time_rule_output"/>
                 <templates>
                     <t t-name="card">
                         <field name="employee_id" widget="many2one_avatar_employee" options="{'display_avatar_name': True}" class="fs-5 fw-bold mb-2"/>
@@ -55,6 +64,10 @@
                         <div>
                             <i class="oi oi-filled me-1" data-icon="calendar_today" aria-label="Period" role="img" title="Period"></i>
                             <field name="check_in" /> - <field name="check_out" />
+                        </div>
+                        <div t-if="record.source_stale.raw_value and record.is_time_rule_output.raw_value"
+                             class="text-warning small mt-1">
+                            <i class="oi me-1" data-icon="warning"/>Source changed
                         </div>
                     </t>
                 </templates>
@@ -82,6 +95,23 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
                 </header>
                 <sheet>
+                    <!-- invisible fields needed for the stale-source warning -->
+                    <field name="source_stale" invisible="1"/>
+                    <field name="source_attendance_id" invisible="1"/>
+                    <field name="time_rule_id" invisible="1"/>
+                    <div class="alert alert-warning mb-3 d-flex align-items-center gap-3" role="alert"
+                         invisible="not source_stale or not time_rule_id">
+                        <div class="flex-grow-1">
+                            <i class="oi me-1" data-icon="warning"/>
+                            <strong invisible="source_attendance_id">Source attendance deleted -</strong>
+                            <strong invisible="not source_attendance_id">Source attendance modified -</strong>
+                            this record may be outdated and should be reviewed.
+                        </div>
+                        <button name="action_mark_reviewed" type="object"
+                                icon="check" title="Mark as Reviewed"
+                                class="btn btn-success btn-sm"
+                                groups="hr_attendance.group_hr_attendance_officer"/>
+                    </div>
                     <group>
                         <group colspan="2">
                             <group col="1" name="group_employee">
@@ -277,8 +307,13 @@
                 mode="week"
                 quick_create="0"
                 event_open_popup="true"
+                color="wet_color"
                 form_view_id="%(hr_attendance.hr_attendance_my_form_view)d">
-                <field name="worked_hours" widget="float_time"/>
+                <field name="wet_color" invisible="1"/>
+                <field name="work_entry_type_id" filters="1" color="color"/>
+                <field name="break_duration" widget="float_time"/>
+                <field name="source_stale" invisible="1"/>
+                <field name="source_attendance_id" invisible="1"/>
             </calendar>
         </field>
     </record>
@@ -574,6 +609,14 @@
     <menuitem id="menu_hr_attendance_configuration" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
 
     <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" parent="menu_hr_attendance_configuration" sequence="100" groups="hr.group_hr_user"/>
+
+    <menuitem
+        id="menu_hr_attendance_work_entry_type"
+        name="Time Types"
+        parent="menu_hr_attendance_configuration"
+        action="hr_work_entry.hr_work_entry_type_action"
+        groups="hr_attendance.group_hr_attendance_manager"
+        sequence="10"/>
 
     <menuitem
         id="menu_hr_attendance_time_rules"

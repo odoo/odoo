@@ -368,10 +368,7 @@ class HrAttendance(http.Controller):
             or attendance.employee_id != employee
             or attendance != employee.last_attendance_id
             or not attendance.check_out
-            or (
-                attendance.overtime_status == 'approved'
-                and company.attendance_overtime_validation == 'by_manager'
-            )
+            or attendance.state == 'validated'
         ):
             return {}
         attendance.write({'break_duration': break_duration})

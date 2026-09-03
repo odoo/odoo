@@ -9,10 +9,9 @@ class HrTimeRuleAllocationLog(models.Model):
     # one row per (source record, allocation) credit produced by the engine.
     # used to reverse credits precisely when the source record is modified or deleted.
 
-    source_model = fields.Char(required=True, index='btree_not_null')
-    source_id = fields.Integer(required=True, index='btree_not_null')
-    # pseudo-reference instead of a real Many2one so the table works for both
-    # hr.attendance and hr.leave sources.
+    res_model = fields.Char("Model", required=True, index='btree_not_null')
+    res_id = fields.Many2oneReference("Record", model_field='res_model', required=True, index='btree_not_null')
+    # polymorphic reference; works for both hr.attendance and hr.leave sources.
 
     allocation_id = fields.Many2one(
         'hr.leave.allocation', required=True, ondelete='cascade', index=True,

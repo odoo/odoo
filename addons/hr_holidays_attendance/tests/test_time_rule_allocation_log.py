@@ -95,8 +95,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
         logs = self._logs()
         self.assertEqual(len(logs), 1, "Exactly one log entry expected")
-        self.assertEqual(logs.source_model, 'hr.attendance')
-        self.assertEqual(logs.source_id, att.id,
+        self.assertEqual(logs.res_model, 'hr.attendance')
+        self.assertEqual(logs.res_id, att.id,
                          "Log source must point to the (in-place) source record itself")
         self.assertAlmostEqual(logs.days, 0.5, places=5,
                                msg="4h * 100% / 8h = 0.5 days")
@@ -115,8 +115,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
         logs = self._logs()
         self.assertEqual(len(logs), 1, "Exactly one log entry expected")
-        self.assertEqual(logs.source_model, 'hr.attendance')
-        self.assertEqual(logs.source_id, children.id,
+        self.assertEqual(logs.res_model, 'hr.attendance')
+        self.assertEqual(logs.res_id, children.id,
                          "Log source must point to the OUTPUT child, not the source att")
         self.assertAlmostEqual(logs.days, 3 / 8, places=5,
                                msg="3h excess (11h worked - 8h expected) * 100% / 8h = 0.375 days")
@@ -131,7 +131,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
         logs = self._logs()
         self.assertEqual(len(logs), 1)
-        self.assertEqual(logs.source_id, att.id,
+        self.assertEqual(logs.res_id, att.id,
                          "PP-only log source must be the source attendance")
 
     def test_log_source_acc_displaced(self):
@@ -176,8 +176,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
             ('allocation_id.work_entry_type_id', '=', alloc_r1.id),
         ])
         self.assertEqual(len(log_r1), 1, "R1 acc credit must produce one log entry")
-        self.assertEqual(log_r1.source_model, 'hr.attendance')
-        self.assertEqual(log_r1.source_id, att.id,
+        self.assertEqual(log_r1.res_model, 'hr.attendance')
+        self.assertEqual(log_r1.res_id, att.id,
                          "Acc-displaced credit must log against the SOURCE, not any output")
         self.assertAlmostEqual(log_r1.days, 0.5, places=5,
                                msg="4h * 100% / 8h = 0.5 days for acc-displaced R1")

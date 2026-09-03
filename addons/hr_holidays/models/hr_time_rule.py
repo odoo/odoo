@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import UTC
+from datetime import UTC, timedelta
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
@@ -213,15 +213,88 @@ class HrTimeRule(models.Model):
             allocation = alloc_by_key.get((employee, alloc_type))
             if allocation and days:
                 log_vals.append({
-                    'source_model': source_model,
-                    'source_id': source_id,
+                    'res_model': source_model,
+                    'res_id': source_id,
                     'allocation_id': allocation.id,
                     'days': days,
                 })
         if log_vals:
             self.env['hr.time.rule.allocation.log'].sudo().create(log_vals)
 
+    def _filter_deficit_exceeding_allocation(self, deficit):
+        """drops deficit intervals whose total deduction would exceed the available allocation
+
+        When a (employee, alloc_type) pair would be over-drawn, ALL deficit intervals
+        tied to that pair are removed, which also prevents the corresponding output
+        records from being created.
+        """
+        search_domain = [('state', '=', 'validate'), ('date_to', '=', False)]
+
+        # first pass: total deduction per (employee, alloc_type)
+        total_deduct = defaultdict(float)
+        for employee, by_source in deficit.items():
+            hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
+            for source, intervals in by_source.items():
+                by_period = defaultdict(list)
+                for iv_start, iv_end, rule in intervals:
+                    if not rule.work_entry_type_id or iv_end <= iv_start:
+                        continue
+                    if rule.quantity_period == 'week':
+                        ws = int(rule.week_start or '0')
+                        days_to_end = ((ws - 1) % 7 - iv_start.weekday()) % 7
+                        period_key = iv_start.date() + timedelta(days=days_to_end)
+                    else:
+                        period_key = iv_start.date()
+                    by_period[period_key].append((iv_start, iv_end, rule))
+                for _period_key, period_ivs in by_period.items():
+                    winning_rule = min(period_ivs, key=lambda t: t[2].sequence)[2]
+                    for iv_start, iv_end, rule in period_ivs:
+                        if rule != winning_rule:
+                            continue
+                        if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id):
+                            continue
+                        deficit_hours = (iv_end - iv_start).total_seconds() / 3600
+                        deduct = deficit_hours * rule.leave_compensation_rate / hours_per_day
+                        if deduct > 0:
+                            total_deduct[employee, rule.allocation_type_id] += deduct
+
+        if not total_deduct:
+            return deficit
+
+        # second pass: check which keys lack sufficient balance
+        skip_keys = set()
+        for (employee, alloc_type), deduct in total_deduct.items():
+            allocation = self.env['hr.leave.allocation'].sudo().search([
+                ('employee_id', '=', employee.id),
+                ('work_entry_type_id', '=', alloc_type.id),
+                *search_domain,
+            ], limit=1)
+            available = allocation.number_of_days if allocation else 0.0
+            if deduct > available:
+                skip_keys.add((employee, alloc_type))
+
+        if not skip_keys:
+            return deficit
+
+        # third pass: rebuild deficit without intervals tied to over-drawn keys
+        filtered = {}
+        for employee, by_source in deficit.items():
+            filtered_by_source = {}
+            for source, intervals in by_source.items():
+                kept = [
+                    (iv_start, iv_end, rule)
+                    for iv_start, iv_end, rule in intervals
+                    if not (rule.leave_compensation_rate > 0 and rule.allocation_type_id)
+                    or (employee, rule.allocation_type_id) not in skip_keys
+                ]
+                if kept:
+                    filtered_by_source[source] = kept
+            if filtered_by_source:
+                filtered[employee] = filtered_by_source
+        return filtered
+
     def _apply_leave_output(self, excess, deficit, active_iv=None):
+        deficit = self._filter_deficit_exceeding_allocation(deficit)
         new_records, all_source_ids, excess_alloc, deficit_alloc = self._apply_output(excess, deficit, active_iv=active_iv)
         self._apply_allocation_credits(
             excess_alloc, deficit_alloc,
@@ -239,8 +312,8 @@ class HrTimeRule(models.Model):
             return
         Log = self.env['hr.time.rule.allocation.log'].sudo()
         logs = Log.search([
-            ('source_model', '=', source_model),
-            ('source_id', 'in', list(source_ids)),
+            ('res_model', '=', source_model),
+            ('res_id', 'in', list(source_ids)),
         ])
         if not logs:
             return

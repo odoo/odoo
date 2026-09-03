@@ -753,7 +753,29 @@ class HrTimeRule(models.Model):
         total_worked = Intervals()
         for src_intervals in intervals_by_source.values():
             total_worked |= src_intervals
-        excess_amount = sum_intervals(total_worked) - expected_duration
+
+        # prorate each source's break across the fraction of its span in this window.
+        # e.g. a 2h break in an 8h attendance contributes 1h to a 4h timing window.
+        # the break stays entirely on the source record; output child records carry no break.
+        total_break = 0.0
+        src_span_secs_cache = {}
+        for source, src_intervals in intervals_by_source.items():
+            break_hours = source._get_time_rule_break_hours()
+            if not break_hours:
+                continue
+            start_f = source._time_rule_span_start_field
+            end_f = source._time_rule_span_end_field
+            src_start_utc = source[start_f]
+            src_end_utc = source[end_f]
+            span_secs = (src_end_utc - src_start_utc).total_seconds() if src_start_utc and src_end_utc else 0
+            src_span_secs_cache[source] = span_secs
+            if span_secs <= 0:
+                continue
+            for iv_s, iv_e, _ in src_intervals:
+                total_break += (iv_e - iv_s).total_seconds() / span_secs * break_hours
+
+        effective_worked = sum_intervals(total_worked) - total_break
+        excess_amount = effective_worked - expected_duration
 
         if self.threshold_operator == 'less_than':
             deficit_amount = -excess_amount
@@ -762,7 +784,7 @@ class HrTimeRule(models.Model):
                 "rule '%s' (id=%d) period %s→%s: worked=%.4fh expected=%.4fh "
                 "deficit=%.4fh tolerance=%.4fh → %s",
                 self.name, self.id, start.date(), stop.date(),
-                sum_intervals(total_worked), expected_duration,
+                effective_worked, expected_duration,
                 deficit_amount, tolerance,
                 "DEFICIT" if float_compare(deficit_amount, tolerance, 5) == 1 else "below tolerance",
             )
@@ -777,6 +799,13 @@ class HrTimeRule(models.Model):
                 extra_outside = sum_intervals(total_worked) - sum_intervals(total_worked & schedule & period_window)
                 if extra_outside > 0:
                     gap = _trim_hours_from_start(gap, extra_outside)
+                # append a synthetic trailing interval for breaks.
+                if total_break > 0:
+                    absence_hours = sum((e - s).total_seconds() / 3600 for s, e, _ in gap)
+                    break_deficit = deficit_amount - absence_hours
+                    if break_deficit > 1e-6:
+                        dummy = self.env['resource.calendar']
+                        gap.append((stop - timedelta(hours=break_deficit), stop, dummy))
                 return {}, {last_source: [(s, e, self) for s, e, _ in gap]}
             else:
                 gap_iv = period_window - total_worked
@@ -791,7 +820,7 @@ class HrTimeRule(models.Model):
             "rule '%s' (id=%d) period %s→%s: worked=%.4fh expected=%.4fh "
             "excess=%.4fh tolerance=%.4fh → %s",
             self.name, self.id, start.date(), stop.date(),
-            sum_intervals(total_worked), expected_duration,
+            effective_worked, expected_duration,
             excess_amount, tolerance,
             "EXCESS" if float_compare(excess_amount, tolerance, 5) == 1 else "below tolerance",
         )
@@ -806,12 +835,18 @@ class HrTimeRule(models.Model):
             key=lambda r: min(s for s, _, _ in intervals_by_source[r]),
         )
         for source in sorted_sources:
+            break_hours = source._get_time_rule_break_hours()
+            span_secs = src_span_secs_cache.get(source, 0)
             for r_start, r_stop, _ in intervals_by_source[source]:
-                interval_duration = (r_stop - r_start).total_seconds() / 3600
-                if remaining_expected >= interval_duration:
-                    remaining_expected -= interval_duration
+                iv_secs = (r_stop - r_start).total_seconds()
+                # effective duration: subtract prorated break so it stays in the source portion
+                effective_iv = iv_secs / 3600 - (
+                    iv_secs / span_secs * break_hours if span_secs > 0 and break_hours else 0.0
+                )
+                if remaining_expected >= effective_iv:
+                    remaining_expected -= effective_iv
                     continue
-                excess_duration = interval_duration - remaining_expected if remaining_expected else interval_duration
+                excess_duration = effective_iv - remaining_expected if remaining_expected else effective_iv
                 excess_start = r_stop - timedelta(hours=excess_duration)
                 remaining_expected = 0
                 excess_by_source[source].append((excess_start, r_stop, self))
