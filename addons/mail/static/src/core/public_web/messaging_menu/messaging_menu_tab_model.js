@@ -38,14 +38,20 @@ import { _t } from "@web/core/l10n/translation";
 /**
  * Defines a messaging menu tab with:
  * - `actions`: buttons shown near the search bar
- * - `filters`: options to narrow the content
+ * - `filters`: chip options to narrow the content, rendered next to the search bar
  * - content: tab records loaded lazily through `counter`/`loadMore`
+ *
+ * Content can also be narrowed by any number of plugin filters (`pluginFilters`), that
+ * can be provided by any addon under its own key (`setPluginFilter`). Display is up to
+ * the addon. Every active plugin filter and the chip filter is ANDed together and goes
+ * through the same `loadMore` flow.
  *
  * Content is always filtered server-side using the tab `id` in `MessagingMenuController`.
  *
  * To configure a tab:
  * - Add its `id` to `_get_menu_tab_domain` to define which records it contains.
- * - Add `(tab id, filter id)` to `_get_menu_tab_filter_domain` to define filter results.
+ * - Add `(tab id, filter id)` to `_get_menu_tab_filter_domain` to define filter (chip or
+ *   plugin) results.
  * - Add its `id` to `_get_menu_tab_priority_domain` to load specific records first.
  *
  * Tabs or filters without matching server-side cases receive no data.
@@ -193,36 +199,52 @@ export class MessagingMenuTab extends Record {
     }
 
     /**
-     * @param {object} [filter] the active filter, if any
-     * @returns {"new"|"idle"|"loading"|"loaded"}
+     * Deterministic key for a given combination of active filters: the chip filter, if
+     * any and every currently active plugin filter.
+     *
+     * @param {MessagingMenuTabFilter} [filter] The active chip filter, if any.
+     * @param {MessagingMenuTabFilter[]} [pluginFilters=[]] The active plugin filters.
+     * @returns {string}
      */
-    getLoadStatus(filter) {
-        if (this.loadStatusByFilterId["_base"] === "loaded") {
-            return "loaded";
-        }
-        return this.loadStatusByFilterId[filter?.id ?? "_base"] ?? "new";
+    _filterKey(filter, pluginFilters = []) {
+        const ids = [filter?.id, ...pluginFilters.map((f) => f.id)].filter(Boolean).sort();
+        return ids.length ? ids.join("__") : "_base";
     }
 
     /**
-     * Fetch the next page of records for this tab, optionally scoped to a filter and/or a
-     * search term.
+     * @param {MessagingMenuTabFilter} [filter] The active chip filter, if any.
+     * @param {MessagingMenuTabFilter[]} [pluginFilters=[]] The active plugin filters.
+     * @returns {"new"|"idle"|"loading"|"loaded"}
+     */
+    getLoadStatus(filter, pluginFilters = []) {
+        if (this.loadStatusByFilterId["_base"] === "loaded") {
+            return "loaded";
+        }
+        return this.loadStatusByFilterId[this._filterKey(filter, pluginFilters)] ?? "new";
+    }
+
+    /**
+     * Fetch the next page of records for this tab, optionally scoped to a chip filter, any
+     * number of plugin filters, and/or a search term. All active filters are ANDed together
+     * server-side (see `MessagingMenuController._get_menu_tab_full_domain`).
      *
      * @param {object} [options]
      * @param {MessagingMenuTabFilter} [options.filter]
+     * @param {MessagingMenuTabFilter[]} [options.pluginFilters]
      * @param {string} [options.searchTerm]
      */
-    async loadMore({ filter, searchTerm } = {}) {
-        if (!["new", "idle"].includes(this.getLoadStatus(filter))) {
+    async loadMore({ filter, pluginFilters = [], searchTerm } = {}) {
+        if (!["new", "idle"].includes(this.getLoadStatus(filter, pluginFilters))) {
             return;
         }
-        const key = filter?.id ?? "_base";
+        const key = this._filterKey(filter, pluginFilters);
         this.loadStatusByFilterId[key] = "loading";
         try {
             const result = await this.store.fetchStoreData(
                 `/mail/messaging_menu/${this.recordType}/load_more`,
                 {
                     tab_id: this.id,
-                    filter_id: filter?.id,
+                    filter_ids: [filter?.id, ...pluginFilters.map((f) => f.id)].filter(Boolean),
                     exclude_ids: this.loadMoreExcludeIds,
                     limit: MessagingMenuTab.LOAD_MORE_LIMIT,
                     search_term: searchTerm,

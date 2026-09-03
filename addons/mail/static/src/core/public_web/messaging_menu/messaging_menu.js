@@ -25,11 +25,14 @@ export class MessagingMenu extends Component {
 
     isIosPwa = isIOS() && isDisplayStandalone();
     filteredMessages = computed(() => {
-        const messages = this.activeTab().sortedMessages;
-        if (!this.state().selectedFilter?.includesMessage) {
-            return messages;
+        const filters = [...this.state().activePluginFilters];
+        if (this.state().selectedFilter) {
+            filters.push(this.state().selectedFilter);
         }
-        return messages.filter((m) => this.state().selectedFilter?.includesMessage(m));
+        const messages = this.activeTab().sortedMessages;
+        return messages.filter((m) =>
+            filters.every((f) => !f.includesMessage || f.includesMessage(m))
+        );
     });
     messages = computed(() => {
         if (this.searchTerm()) {
@@ -48,6 +51,7 @@ export class MessagingMenu extends Component {
             fetch: (term) =>
                 this.activeTab().loadMore({
                     filter: this.state().selectedFilter,
+                    pluginFilters: this.state().activePluginFilters,
                     searchTerm: term,
                 }),
             filter: (term) =>
@@ -76,7 +80,10 @@ export class MessagingMenu extends Component {
         // Bound once so `onClickMessage` is a stable (useProps.static) handler.
         this.onClickMessage = this.onClickMessage.bind(this);
         useOnBottomScrolled(this.tabContentRef, () =>
-            this.activeTab().loadMore({ filter: this.state().selectedFilter })
+            this.activeTab().loadMore({
+                filter: this.state().selectedFilter,
+                pluginFilters: this.state().activePluginFilters,
+            })
         );
         // On search term change: update the search state.
         useEffect(() => {

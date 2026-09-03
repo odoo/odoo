@@ -66,8 +66,8 @@
                 />
                 <t t-if="this.isEmpty">
                     <MessagingMenuEmpty t-if="this.noSearchResultText" title="this.noSearchResultText"/>
-                    <t t-elif="this.activeTab().getLoadStatus(this.state().selectedFilter) === 'loaded'">
-                        <MessagingMenuEmpty t-if="this.state().selectedFilter and !this.state().selectedFilter.isDefault" title="this.noFilterResultText"/>
+                    <t t-elif="this.activeTab().getLoadStatus(this.state().selectedFilter, this.state().activePluginFilters) === 'loaded'">
+                        <MessagingMenuEmpty t-if="(this.state().selectedFilter and !this.state().selectedFilter.isDefault) or this.state().activePluginFilters.length" title="this.noFilterResultText"/>
                         <t t-elif="this.activeTab().emptyState">
                             <t t-set="emptyState" t-value="this.activeTab().emptyState"/>
                             <t t-if="emptyState.component" t-component="emptyState.component" tab="this.activeTab()" title="emptyState.title" subtitle="emptyState.subtitle" close="this.close"/>
