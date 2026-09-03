@@ -17,19 +17,19 @@ export class EventStateSelection extends StateSelectionField {
         this.icons = {
             normal: "",
             done: "",
-            blocked: "error",
+            blocked: "priority_high",
             cancel: "cancel",
         };
         this.classIcons = {
             normal: "o_status",
             done: "o_status o_status_green",
-            blocked: "oi-filled",
+            blocked: "o_status oi-filled",
             cancel: "oi-filled",
         };
         this.colorIcons = {
             normal: "",
             done: "text-success",
-            blocked: "o_status_blocked",
+            blocked: "o_status_changes_requested",
             cancel: "text-danger",
         };
     }

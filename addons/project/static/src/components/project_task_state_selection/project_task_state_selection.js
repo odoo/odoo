@@ -27,13 +27,13 @@ export class ProjectTaskStateSelection extends StateSelectionField {
             isStateButtonHighlighted: false,
         });
         this.icons = {
-            "02_changes_requested": "error",
+            "02_changes_requested": "priority_high",
             "1_done": "check_circle",
             "1_canceled": "cancel",
             "04_waiting_normal": "hourglass_empty",
         };
         this.classIcons = {
-            "02_changes_requested": "oi oi-filled",
+            "02_changes_requested": "oi oi-filled o_status",
             "1_done": "oi oi-filled",
             "1_canceled": "oi oi-filled",
             "04_waiting_normal": "oi",

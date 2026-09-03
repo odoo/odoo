@@ -19,14 +19,14 @@ export class MaintenanceRequestStateSelection extends StateSelectionField {
         this.uiService = useService("ui");
         this.icons = {
             normal: "",
-            changes_requested: "error",
+            changes_requested: "priority_high",
             approved: "",
             done: "check_circle",
             cancelled: "cancel",
         };
         this.classIcons = {
             normal: "o_status",
-            changes_requested: "",
+            changes_requested: "o_status",
             approved: "o_status o_status_green",
             done: "oi-filled",
             cancelled: "oi-filled",

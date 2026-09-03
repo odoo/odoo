@@ -81,6 +81,9 @@
         background-color: map-get($theme-colors, "danger");
     }
 
+    &.o_status_changes_requested {
+        background-color: map-get($theme-colors, "warning");
+    }
 }
 
 .state_selection_field_menu .dropdown-item {
@@ -90,5 +93,16 @@
         font-size: $o-bubble-color-size;
         transform: translateX(-50%);
         text-align: center;
+    }
+}
+
+.o_status_changes_requested {
+    color: $warning;
+    &.o_status {
+        color: $white;
+        &::before {
+            // Adjust the exclamation mark to fit the status circle
+            transform: scale(0.7);
+        }
     }
 }
