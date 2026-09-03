@@ -311,8 +311,6 @@ export class DomPlugin extends Plugin {
         const refBlock = closestBlock(sel.anchorNode);
         const editableContext = closestElement(sel.focusNode, "[contenteditable=true]");
         const isEditableBlock = isBlock(editableContext);
-        const doesEditableAllowParagraphRelatedElements =
-            allowsParagraphRelatedElements(editableContext);
         const isInEmpty = !isTextNode(sel.focusNode) && isEmpty(sel.focusNode);
         const isSelectionAtStart =
             isInEmpty || (firstLeaf(refBlock) === sel.anchorNode && sel.anchorOffset === 0);
@@ -390,7 +388,7 @@ export class DomPlugin extends Plugin {
             }
             // B. Unwrap blocks if we're trying to insert in a context that
             // doesn't allow them.
-            else if (wasBlock && !isEditableBlock && !doesEditableAllowParagraphRelatedElements) {
+            else if (wasBlock && !isEditableBlock) {
                 if (this.dependencies.split.isUnsplittable(node)) {
                     shouldSkip = true;
                 } else {
