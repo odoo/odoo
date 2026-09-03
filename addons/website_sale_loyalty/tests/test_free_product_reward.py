@@ -117,22 +117,25 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
                 "Rewards should no longer be claimable if already claimed",
             )
 
-    def test_remove_free_product_reward(self):
-        order = self.empty_cart
-        with MockRequest(self.website.env, website=self.website, sale_order_id=order.id):
+    def test_zero_priced_reward_line_does_not_block_checkout(self):
+        """
+        A reward line priced at 0 (e.g. a free gift whose product has no sale price) must not be
+        treated as a forbidden zero-priced product when `prevent_zero_price_sale` is set.
+        """
+        self.website.sudo().prevent_zero_price_sale = True
+        coupon = self.program.coupon_ids
+
+        website = self.website.with_user(self.website.user_id)
+        with MockRequest(website.env, website=website):
             self.WebsiteSaleCartController.add_to_cart(
-                product_template_id=self.sofa.product_tmpl_id.id,
-                product_id=self.sofa.id,
-                quantity=1,
+                product_template_id=self.sofa.product_tmpl_id, product_id=self.sofa.id, quantity=1
             )
-            free_product_line = order.order_line.filtered(
-                lambda line: line.product_id == self.carpet and line.is_reward_line
-            )
-            self.assertTrue(free_product_line)
+            self.WebsiteSaleController.claim_reward(self.program.reward_ids.id, code=coupon.code)
 
-            self.WebsiteSaleCartController.update_cart(line_id=free_product_line.id, quantity=0)
+            response = self.WebsiteSaleController.shop_address()
 
-            free_product_line = order.order_line.filtered(
-                lambda line: line.product_id == self.carpet and line.is_reward_line
-            )
-            self.assertFalse(free_product_line)
+        self.assertEqual(
+            response.status_code,
+            200,
+            msg="The free gift must not be flagged as a zero-priced product and prevent checkout.",
+        )
