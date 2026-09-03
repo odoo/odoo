@@ -1047,12 +1047,18 @@ class ProductTemplate(models.Model):
 
         # perf: temporal solution to avoid slowness when product have many variants and pricelist rules
         limit = self.env['ir.config_parameter'].sudo().get_param('website_sale.markup_data_limit_variants', False)
+        variants_prices_cache = {}
         if limit:
             product_variant_ids = self.product_variant_ids[:int(limit)]
         else:
             product_variant_ids = self.product_variant_ids
 
+        product_variant_ids = product_variant_ids.with_context(variants_prices_cache=variants_prices_cache)
         base_url = website.get_base_url()
+        price_by_variant = request.pricelist._get_products_price(product_variant_ids, quantity=1, currency=website.currency_id)
+        for product, price in price_by_variant.items():
+            variants_prices_cache[product] = price
+
         markup_data = {
             '@context': 'https://schema.org/',
             '@type': 'ProductGroup',

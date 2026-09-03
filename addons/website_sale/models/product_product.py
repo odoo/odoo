@@ -165,8 +165,10 @@ class ProductProduct(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-
-        product_price = request.pricelist._get_product_price(
+        if 'variants_prices_cache' in self.env.context:
+            product_price = self.env.context['variants_prices_cache'].get(self, 0.0)
+        else:
+            product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
         )
         # Use sudo to access cross-company taxes.
