@@ -160,7 +160,7 @@ def _request_ciusro_download_answer(company, key_download, session):
                 'name': ``str``,
                 'amount_total': ``float``,
                 'due_date': ``datetime``,
-                'attachment_raw': ``str``,
+                'attachment_raw': ``bytes``,
             } -> When the invoice is accepted
         }
     """
