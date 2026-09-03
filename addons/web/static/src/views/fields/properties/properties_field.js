@@ -121,11 +121,14 @@ export class PropertiesField extends Component {
         });
 
         useEffect(() => {
-            // subscribe to the definition record changing
+            // subscribe to the definition record changing, and to the edit mode
+            // being turned on after this setup (a subclass may force it)
             void this.props.record.data[this.definitionRecordField];
+            const isEditable =
+                !this.props.readonly && (this.state.isInEditMode || this.props.editMode);
             untrack(() => {
                 // when the field has a new definition record:
-                if (this.props.readonly || (!this.state.isInEditMode && !this.props.editMode)) {
+                if (!isEditable) {
                     return;
                 }
                 this.checkDefinitionWriteAccess().then((canChangeDefinition) => {

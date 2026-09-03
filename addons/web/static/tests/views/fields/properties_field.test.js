@@ -412,6 +412,43 @@ test("properties: access to parent", async () => {
 });
 
 /**
+ * The edit mode can be turned on after the setup of the field, in which case
+ * the write access on the definition record should still be checked.
+ */
+test("properties: edit mode enabled after the setup", async () => {
+    onRpc("has_access", () => true);
+
+    patchWithCleanup(PropertiesField.prototype, {
+        setup() {
+            super.setup();
+            this.state.isInEditMode = true;
+        },
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    await click(".o_property_field:first-child .o_field_property_open_popover");
+    await animationFrame();
+
+    expect(".o_field_property_definition_type input").toHaveValue("Text", {
+        message: "the definition popover must be editable, not readonly",
+    });
+});
+
+/**
  * Test the creation of a new property.
  */
 test("properties: add a new property", async () => {
