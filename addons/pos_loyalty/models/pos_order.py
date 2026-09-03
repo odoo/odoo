@@ -55,12 +55,10 @@ class PosOrder(models.Model):
             report_by_card = {}
             for line in self.lines:
                 card = line.card_id
-                if (card and card.source_pos_order_id in self
-                        and card.program_id.program_type == 'gift_card'
-                        and not (line.gift_card_vals or {}).get('code')
+                if (card and card.program_id.program_type == 'gift_card'
+                        and card.points > 0
                         and card.program_id.pos_report_print_id):
                     report_by_card[card.id] = card.program_id.pos_report_print_id.id
-
             for card_data in result['loyalty.card']:
                 if card_data['id'] in barcode_by_card:
                     card_data['_barcode_base64'] = barcode_by_card[card_data['id']]
@@ -232,9 +230,10 @@ class PosOrder(models.Model):
         if history_vals:
             self.env['loyalty.history'].create(history_vals)
 
-        new_cards = credited_cards.filtered(lambda c: c.source_pos_order_id == self)
-        if new_cards:
-            new_cards._send_creation_communication()
+        gift_cards = credited_cards.filtered(lambda c: c.program_id.program_type == 'gift_card' and c.points > 0)
+        if gift_cards:
+            gift_cards._send_creation_communication()
+
         return credited_cards
 
     def _get_mail_attachments(self, name, ticket, basic_ticket):
