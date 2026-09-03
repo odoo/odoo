@@ -4794,6 +4794,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 allocation._update_accrual()
                 self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
 
+    @freeze_time('2024-01-08')
     def test_hr_leave_after_adding_accrual_plan_levels(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan 1 start',
