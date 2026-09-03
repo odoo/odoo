@@ -221,7 +221,7 @@ export class ProductTemplateAccounting extends Base {
             let cheaps;
             const items = combo.combo_item_ids;
 
-            if (combo.qty_free === 0) {
+            if (combo.included_qty === 0) {
                 cheaps = [...items].sort((a, b) => a.product_id.lst_price - b.product_id.lst_price);
             } else {
                 cheaps = [...items].sort((a, b) => a.extra_price - b.extra_price);
@@ -251,11 +251,11 @@ export class ProductTemplateAccounting extends Base {
 
             const data = {
                 combo_item_id: item,
-                qty: combo.qty_free || 1,
+                qty: combo.included_qty || 1,
                 configuration: configuration,
             };
 
-            if (combo.qty_free === 0) {
+            if (combo.included_qty === 0) {
                 extraChoices.push(data);
             } else {
                 choices.push(data);
