@@ -46,17 +46,16 @@ class StockTraceabilityReport(models.TransientModel):
         record_id = kw and kw['record_id'] or context.get('active_id')
         level = kw and kw['level'] or 1
         if record_id and model == 'mrp.production':
-            production = self.env[model].browse(record_id)
-            lines = (production.move_raw_ids + production.move_finished_ids).move_line_ids.filtered(lambda m: m.state == 'done')
-            return self._get_production_lines(move_lines=lines, level=level)
+            return self._get_production_lines(record_id=record_id, level=level)
         return super().get_lines(line_type=line_type, **kw)
 
     @api.model
-    def _get_production_lines(self, move_lines=None, level=0):
+    def _get_production_lines(self, record_id=0, level=0):
         """ If we come from a production order, the component lines are processed as parent
         lines and the final product lines are processed as child lines. """
         final_vals = []
-        lines = move_lines or []
+        production = self.env['mrp.production'].browse(record_id)
+        lines = (production.move_raw_ids + production.move_finished_ids).move_line_ids.filtered(lambda m: m.state == 'done')
         for line in lines:
             line_type = 'child' if line.consume_line_ids else 'parent'
             unfoldable = self._is_unfoldable(line, line_type)
