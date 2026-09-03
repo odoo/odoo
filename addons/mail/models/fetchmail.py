@@ -239,8 +239,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         except Exception:
                             _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                             failed += 1
-                        imap_server.store(num, '+FLAGS', '\\Seen')
                         self._cr.commit()
+                        imap_server.store(num, '+FLAGS', '\\Seen')
                         count += 1
                     _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", count, server.server_type, server.name, (count - failed), failed)
                 except Exception as e:
@@ -269,12 +269,13 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                             res_id = None
                             try:
                                 res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, message, save_original=server.original, strip_attachments=(not server.attach))
-                                pop_server.dele(num)
                             except Exception:
                                 _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                                 failed += 1
                                 failed_in_loop += 1
                             self.env.cr.commit()
+                            if res_id:
+                                pop_server.dele(num)
                         _logger.info("Fetched %d email(s) on %s server %s; %d succeeded, %d failed.", num, server.server_type, server.name, (num - failed_in_loop), failed_in_loop)
                         # Stop if (1) no more message left or (2) all messages have failed
                         if num_messages < MAX_POP_MESSAGES or failed_in_loop == num:
