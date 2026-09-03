@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from datetime import datetime
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
@@ -559,3 +561,41 @@ class TestMrpValuationStandard(TestBomPriceCommon):
             {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id,    'debit': 0.0, 'credit': 10.0},
             {'account_id': variation_account.id,                                              'debit': 0.0, 'credit': 10.0},
         ])
+
+    def test_operation_cost_matches_labour_je_overlapping_loss_types(self):
+        """Test that the MO Overview operation cost equals the posted labour
+        journal entry when time logs with different loss types overlap on the
+        same work order.
+        """
+        workcenter = self.env['mrp.workcenter'].create({'name': 'Assembly', 'costs_hour': 60})
+        self.bom_1.operation_ids = [Command.create({
+            'name': 'Assemble',
+            'workcenter_id': workcenter.id,
+            'time_mode': 'manual',
+            'time_cycle_manual': 60,
+        })]
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        workorder = mo.workorder_ids
+        # overlapping time, productive 10:00 -> 11:00 and reduced speed 10:30 -> 11:30
+        self.env['mrp.workcenter.productivity'].create([{
+            'workorder_id': workorder.id,
+            'workcenter_id': workcenter.id,
+            'loss_id': self.env.ref('mrp.block_reason7').id,
+            'date_start': datetime(2020, 1, 1, 10, 0),
+            'date_end': datetime(2020, 1, 1, 11, 0),
+        }, {
+            'workorder_id': workorder.id,
+            'workcenter_id': workcenter.id,
+            'loss_id': self.env.ref('mrp.block_reason4').id,
+            'date_start': datetime(2020, 1, 1, 10, 30),
+            'date_end': datetime(2020, 1, 1, 11, 30),
+        }])
+        workorder.button_finish()
+        mo.button_mark_done()
+
+        # workcenter occupied 10:00 -> 11:30 = 1.5h * 60 = 90 (not 2 * 1h * 60 = 120)
+        report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(report['data']['operations']['summary']['real_cost'], 90)
+        labour_je = self.env['account.move'].search([('ref', '=', '%s - Labour' % mo.name)])
+        self.assertEqual(sum(labour_je.line_ids.filtered('debit').mapped('debit')), 90)
