@@ -1,13 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import contextlib
 
 from datetime import datetime
 from freezegun import freeze_time
 from lxml import etree
 from pytz import timezone
 from odoo import Command
+from unittest.mock import patch
 
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tests import tagged
 from odoo.tools import misc
 from odoo.addons.l10n_sa_edi.tests.common import TestSaEdiCommon
@@ -797,4 +799,64 @@ class TestEdiZatca(TestSaEdiCommon):
         self.assertRegex(
             journal.l10n_sa_csr_errors,
             r"Please make sure the following fields are shorter than 64 bytes.*Company Name",
+        )
+
+    def test_zatca_submission_not_resent_when_user_lacks_journal_write(self):
+        """If a user with only Invoicing rights (read-only on journals) successfully submits
+        to ZATCA, then recording the result writes to journal.l10n_sa_latest_submission_hash.
+        If that write is not done with sudo it raises AccessError after ZATCA already
+        accepted the invoice, the transaction is rolled back, and the invoice is
+        resubmitted, resulting in a duplicate on ZATCA's side.
+        """
+
+        def _mock_l10n_sa_api_clearance(journal_self, inv, xml_content, PCSID_data):
+            return {
+                'reportingStatus': 'REPORTED',
+                'validationResults': {'status': 'PASS'},
+                'status_code': 200,
+            }
+
+        journal = self.customer_invoice_journal
+
+        if not journal.l10n_sa_chain_sequence_id:
+            journal.sudo().l10n_sa_chain_sequence_id = journal.sudo()._l10n_sa_edi_create_new_chain()
+
+        # Invoicing user with read-only on account.journal
+        restricted_user = self.env['res.users'].create({
+            'name': 'ZATCA Billing User',
+            'login': 'zatca_billing_user',
+            'email': 'zatca_billing_user@example.com',
+            'company_id': self.company.id,
+            'company_ids': [Command.set(self.company.ids)],
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('account.group_account_invoice').id,
+            ])],
+        })
+
+        move_data = {
+            'name': 'INV/2026/00001',
+            'invoice_date': '2026-07-28',
+            'partner_id': self.partner_sa_simplified,
+            'invoice_line_ids': [{
+                'product_id': self.product_burger.id,
+                'price_unit': self.product_burger.standard_price,
+                'quantity': 1,
+                'tax_ids': self.tax_15.ids,
+            }],
+        }
+
+        invoice = self._create_test_invoice(**move_data)
+
+        invoice.action_post()
+        zatca_doc = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
+
+        # Mocked _l10n_sa_api_clearance to simulate a successful ZATCA response
+        with patch.object(self.env.registry["account.journal"], '_l10n_sa_api_clearance', _mock_l10n_sa_api_clearance):
+            with contextlib.suppress(AccessError):
+                invoice.with_user(restricted_user).action_process_edi_web_services()
+
+        self.assertEqual(
+            zatca_doc.state, 'sent',
+            "The ZATCA document should be marked 'sent' after a successful submission.",
         )
