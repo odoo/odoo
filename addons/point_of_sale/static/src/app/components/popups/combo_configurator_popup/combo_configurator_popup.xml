@@ -5,7 +5,7 @@
             <div t-foreach="this.props.productTemplate.combo_ids" t-as="combo" t-key="combo.id" t-att-class="'d-flex flex-column my-3' + (combo_index > 0 ? ' mt-4' : '')">
                 <div class="d-flex align-items-center mb-3">
                     <h3 class="mb-0" t-out="combo.name"></h3>
-                    <t t-if="combo.qty_free > 0">
+                    <t t-if="combo.included_qty > 0">
                         <h5 class="text-muted ms-2 mb-0">
                             <t t-out="this.getSelectedComboItemsText(combo)"/>
                             <span class="fst-italic"> included</span>
