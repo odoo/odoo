@@ -7,6 +7,7 @@ import { normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";
+import { useEnv } from "@web/owl2/utils";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
@@ -278,7 +279,8 @@ export class DiscussCommandPalette {
 
 commandProviderRegistry.add("find_or_start_conversation", {
     namespace: "@",
-    async provide(env, options) {
+    async provide(options) {
+        const env = useEnv();
         const palette = new DiscussCommandPalette(env, options);
         await palette.fetch();
         palette.buildResults();

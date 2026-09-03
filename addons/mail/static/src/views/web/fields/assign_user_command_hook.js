@@ -53,7 +53,7 @@ export function useAssignUserCommand() {
         }
     };
 
-    const provide = async (env, options) => {
+    const provide = async (options) => {
         const value = options.searchValue.trim();
         let domain = getFieldDomain(compProps.record, compProps.name, compProps.domain);
         const context = compProps.context;

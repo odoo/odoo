@@ -8,7 +8,7 @@ import { registry } from "@web/core/registry";
 const commandProviderRegistry = registry.category("command_provider");
 
 commandProviderRegistry.add("debug", {
-    provide: (env, options) => {
+    provide(options) {
         const debugMode = usePlugin(DebugModePlugin);
         const result = [];
         if (debugMode.isActive()) {

@@ -356,7 +356,7 @@ registry.category("services").add("tour_service", {
 });
 
 registry.category("command_provider").add("tour_recorder", {
-    provide: (env, options) => {
+    provide(options) {
         const tour = useService("tour_service");
         const result = [];
         if (options.searchValue.toLowerCase() === "record") {
