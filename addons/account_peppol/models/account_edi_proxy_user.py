@@ -17,12 +17,17 @@ class AccountEdiProxyClientUser(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+    @api.model
+    def _account_peppol_get_endpoints(self, mode):
+        return {
+            'prod': 'https://peppol.api.odoo.com',
+            'test': 'https://peppol.test.odoo.com',
+            'demo': 'demo',
+        }[mode]
+
     def _get_server_url_new(self, edi_format=None):
         if (edi_format or self.edi_format_id).code == 'peppol':
-            return {
-                'prod': 'https://peppol.api.odoo.com',
-                'test': 'https://peppol.test.odoo.com',
-            }.get(self._get_demo_state(), 'demo')
+            return self._account_peppol_get_endpoints(self._get_demo_state())
         return super()._get_server_url_new(edi_format=edi_format)
 
     def _get_route(self, action, edi_format=None):
