@@ -236,8 +236,6 @@ export class SplitPlugin extends Plugin {
                 // TODO ABD: add test
                 return;
             } else if (node.nodeType === Node.TEXT_NODE && !isVisible(node)) {
-                const parent = node.parentElement;
-                node.remove();
                 fillEmptyElement(parent);
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 if (node.hasAttribute("data-oe-zws-empty-inline")) {

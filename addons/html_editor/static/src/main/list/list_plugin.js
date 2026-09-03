@@ -234,11 +234,8 @@ export class ListPlugin extends Plugin {
             }
         },
         can_hold_selection_after_insertion_predicates: isListPredicate,
-        is_parent_compatible_for_insertion_predicates: (parent, blockToInsert) => {
-            if (
-                isListItemElement(parent) &&
-                !this.dependencies.split.isUnsplittable(blockToInsert)
-            ) {
+        is_parent_compatible_for_insertion_predicates: (parent) => {
+            if (isListItemElement(parent)) {
                 return false;
             }
         },

@@ -387,7 +387,7 @@ export class FontTypePlugin extends Plugin {
                     baseContainer.setAttribute("dir", dir);
                 }
                 splitResult.after.replaceWith(baseContainer);
-                baseContainer.replaceChildren(this.document.createElement("br"));
+                baseContainer.append(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
                 return { ...splitResult, after: baseContainer };
             }

@@ -8,7 +8,6 @@ import {
     removeStyle,
 } from "../utils/dom";
 import {
-    allowsParagraphRelatedElements,
     isEmptyBlock,
     isListItemElement,
     isParagraphRelatedElement,
@@ -17,7 +16,6 @@ import {
     isPhrasingContent,
     isVisible,
     isEditionBoundary,
-    isPhrasingContainer,
     isTextNode,
     isElement,
     isContentEditable,
@@ -29,7 +27,6 @@ import {
     children,
     closestElement,
     descendants,
-    findDownTo,
     firstLeaf,
     getConnectedParents,
     lastLeaf,
@@ -102,7 +99,7 @@ const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NO
  * @typedef {((element: HTMLElement, isFirst: boolean) => Element)[]} edge_block_to_unwrap_processors
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  *
- * @typedef {((parent: HTMLElement, blockToInsert: HTMLElement) => boolean | void)[]} is_parent_compatible_for_insertion_predicates
+ * @typedef {((parent: HTMLElement) => boolean | void)[]} is_parent_compatible_for_insertion_predicates
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
  *
  * @typedef {string[]} system_attributes
@@ -462,35 +459,70 @@ export class DomPlugin extends Plugin {
      * @param {Node[]} nodes
      * @param {Node} targetNode
      * @param {number} targetOffset
-     * @param {Object} [options]
-     * @param {boolean} [options.preserveInlineContext = false]
      * @returns {Node[]}
      */
-    insertNodesAt(nodes, targetNode, targetOffset, { preserveInlineContext = false } = {}) {
+    insertNodesAt(nodes, targetNode, targetOffset) {
         const marker = createMarkerNode(targetNode, targetOffset);
 
         // Insert the nodes.
         const insertedContent = [];
-        const firstNode = isFragment(nodes[0]) ? nodes[0].firstChild : nodes[0];
         for (const [index, item] of nodes.entries()) {
             const insertedNodes = [];
             const previousItem = index > 0 && nodes[index - 1];
             const itemNodes = isFragment(item) ? childNodes(item) : [item];
             for (const [nodeIndex, node] of itemNodes.entries()) {
                 // A root marker may still point into the block on its right.
-                const referenceBlock = closestBlock(firstLeaf(marker.nextSibling) || marker);
                 if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
-                    const addedNodes = this.splitBeforeInsertion(marker, { preserveInlineContext });
+                    const addedNodes = this.splitBeforeInsertion(marker);
                     insertedNodes.push(...addedNodes);
                 }
-                if (this.moveMarkerToNextPosition(node, marker, { preserveInlineContext })) {
-                    const shouldReplaceEmptyBlock =
-                        node === firstNode &&
-                        isEmptyBlock(referenceBlock) &&
-                        findDownTo(node, isPhrasingContainer);
+                if (marker.isConnected) {
                     const next = marker.nextSibling;
                     const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
-                    marker.before(node);
+                    let parent = marker.parentElement;
+                    if (isBlock(node) && !this.canInsertBlockAt(parent)) {
+                        if (this.isAtBlockEdge(marker, "start")) {
+                            // TODO AGE: should probably not check block
+                            // edge but just whether edge of parent. Would
+                            // likely involve loop to insert before parent while
+                            // checking if can insert.
+                            closestBlock(marker).before(node);
+                        } else {
+                            let target = marker;
+                            let offset = childNodeIndex(marker);
+                            let shouldSkip = false;
+                            while (parent && !shouldSkip && !this.canInsertBlockAt(parent)) {
+                                if (this.dependencies.split.isUnsplittable(parent)) {
+                                    // We can't insert the node but we also
+                                    // can't split.
+                                    // TODO AGE: should probably not check block
+                                    // edge but just whether edge of parent.
+                                    if (this.isAtBlockEdge(marker, "end")) {
+                                        // At the end of the block, we try to
+                                        // insert after it.
+                                        parent.after(marker);
+                                        parent = marker.parentElement;
+                                        offset = childNodeIndex(marker);
+                                    } else {
+                                        // Nothing we can do ¯\_(ツ)_/¯
+                                        shouldSkip = true;
+                                    }
+                                } else {
+                                    target = this.dependencies.split.splitElement(
+                                        parent,
+                                        offset
+                                    )[1];
+                                    offset = childNodeIndex(target);
+                                    parent = target.parentElement;
+                                }
+                            }
+                            if (!shouldSkip) {
+                                target.before(node);
+                            }
+                        }
+                    } else {
+                        marker.before(node);
+                    }
                     insertedNodes.push(node);
                     const didInsertBlock = isBlock(node);
                     if (wasBeforeFakeLineBreak && !didInsertBlock) {
@@ -498,19 +530,17 @@ export class DomPlugin extends Plugin {
                         // will make it real. Remove it.
                         next.remove();
                     }
-                    if (shouldReplaceEmptyBlock && !referenceBlock.contains(node)) {
-                        // A block was inserted outside the original empty block.
-                        // The original empty block has been replaced entirely.
-                        referenceBlock.before(marker);
-                        referenceBlock.remove();
-                    } else if (didInsertBlock) {
-                        this.moveMarkerToNextPosition(node, marker, { preserveInlineContext });
-                    }
                 }
             }
             insertedContent.push(...insertedNodes);
         }
+        let markerParent = marker.parentElement;
         marker.remove();
+        while (isEmpty(markerParent)) {
+            const nextMarkerParent = markerParent.parentElement;
+            markerParent.remove();
+            markerParent = nextMarkerParent;
+        }
 
         return insertedContent;
     }
@@ -520,11 +550,9 @@ export class DomPlugin extends Plugin {
      *
      * @see insert
      * @param {Node} marker
-     * @param {Object} [options]
-     * @param {boolean} [options.preserveInlineContext = false]
      * @returns {HTMLBRElement[]} line breaks that were inserted if any
      */
-    splitBeforeInsertion(marker, { preserveInlineContext = false } = {}) {
+    splitBeforeInsertion(marker) {
         const [targetNode, targetOffset] = leftPos(marker);
         const split = this.dependencies.split.splitBlockNode({
             targetNode,
@@ -540,69 +568,16 @@ export class DomPlugin extends Plugin {
             }
             return split.lineBreaks;
         }
-        if (split.type === SPLIT_OPERATION_TYPES.BLOCK) {
-            const reference = preserveInlineContext
-                ? firstLeaf(split.after)
-                : split.after.firstChild;
-            if (reference !== marker) {
-                reference.before(marker);
-            }
-        }
         return [];
     }
 
-    /**
-     * Move the marker to the position where the given node should be inserted.
-     *
-     * @see insert
-     * @param {Node} node
-     * @param {Node} marker
-     * @param {Object} [options]
-     * @param {boolean} [options.preserveInlineContext = false]
-     * @returns {Node | undefined}
-     */
-    moveMarkerToNextPosition(node, marker, { preserveInlineContext = false } = {}) {
-        // Move to the next deepest position after inserting a block.
-        if (node.nextSibling === marker) {
-            let next = marker.nextSibling;
-            while (
-                next &&
-                isElement(next) &&
-                (isBlock(next) || preserveInlineContext) &&
-                !isSelfClosingElement(next) &&
-                isContentEditable(next)
-            ) {
-                next.prepend(marker);
-                next = marker.nextSibling;
-            }
-            return marker;
+    canInsertBlockAt(parent) {
+        if (!isBlock(parent) || isParagraphRelatedElement(parent)) {
+            return false;
         }
-
-        const parent = marker.parentElement;
-        const checkPredicates = () =>
-            this.checkPredicates("is_parent_compatible_for_insertion_predicates", parent, node);
-        if (
-            !isBlock(node) ||
-            (allowsParagraphRelatedElements(parent) && (checkPredicates() ?? true)) ||
-            isEditionBoundary(parent, this.editable)
-        ) {
-            return marker;
-        }
-        if (this.isAtBlockEdge(marker, "start")) {
-            parent.before(marker);
-            return this.moveMarkerToNextPosition(node, marker);
-        }
-        if (this.isAtBlockEdge(marker, "end")) {
-            parent.after(marker);
-            return this.moveMarkerToNextPosition(node, marker);
-        }
-        if (!this.dependencies.split.isUnsplittable(parent)) {
-            const [, after] = this.dependencies.split.splitElement(parent, childNodeIndex(marker));
-            // `splitElement` moved the marker into `after`. Place it between
-            // the two sides.
-            after.before(marker);
-            return this.moveMarkerToNextPosition(node, marker);
-        }
+        return (
+            this.checkPredicates("is_parent_compatible_for_insertion_predicates", parent) ?? true
+        );
     }
 
     /**
