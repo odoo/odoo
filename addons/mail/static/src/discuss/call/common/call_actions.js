@@ -1,4 +1,10 @@
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import {
+    Action,
+    ACTION_TAGS,
+    IS_ACTION_DEFINITION_SYM,
+    useAction,
+    UseActions,
+} from "@mail/core/common/action";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -28,7 +34,7 @@ export const CALL_ICON_MUTED = "mic_off";
  * @param {CallActionDefinition} definition
  */
 export function registerCallAction(id, definition) {
-    callActionsRegistry.add(id, definition);
+    callActionsRegistry.add(id, Object.assign(definition, { [IS_ACTION_DEFINITION_SYM]: true }));
 }
 
 /** @type {CallActionDefinition} */

@@ -16,6 +16,9 @@ export const ACTION_TAGS = Object.freeze({
     JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
 });
 
+export const IS_ACTION_DEFINITION_SYM = Symbol("isActionDefinition");
+export const IS_ACTION_GROUP_DESCRIPTION_SYM = Symbol("isActionGroupDescription");
+
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("@mail/model/record").Record} Record */
 /** @typedef {Component|Record} ActionOwner */
@@ -43,6 +46,11 @@ export const ACTION_TAGS = Object.freeze({
  * @template UseActions_T
  * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, store: import("models").Store, owner: ActionOwner}} ActionParams
  */
+
+/** @typedef {number} ActionGroupId id of group is a number that also represents its sequence between groups! */
+
+/** @typedef {{ name: string }} ActionGroupDescriptionDefinition */
+/** @typedef {ActionGroupDescriptionDefinition & {id: ActionGroupId }} ActionGroupDescription */
 
 /**
  * @template ActionParams_T
@@ -85,8 +93,8 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [nameClass]
  * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
  * @property {number|(params: ActionParams_T) => number} [sequence]
- * @property {boolean|(params: ActionParams_T) => boolean} [sequenceGroup]
- * @property {boolean|(params: ActionParams_T) => boolean} [sequenceQuick]
+ * @property {ActionGroupId|(params: ActionParams_T) => ActionGroupId} [sequenceGroup]
+ * @property {number|(params: ActionParams_T) => number} [sequenceQuick]
  * @property {(params: ActionParams_T) => void} [setup]
  * @property {string|string[]|(params: ActionParams_T) => string|string[]} [tags]
  */
@@ -620,7 +628,7 @@ export class Action {
         return this._sequenceComputed();
     }
 
-    /** @param {Action} action @returns {number|undefined} */
+    /** @param {Action} action @returns {ActionGroupId|undefined} */
     _sequenceGroup(action) {}
     _computeSequenceGroup() {
         return (
@@ -683,6 +691,8 @@ export class UseActions extends Reactive {
     component;
     /** @type {Map<string, Action_T>} */
     moreActions = new Map();
+    /** @type {Map<ActionGroupId, ActionGroupDescription>} */
+    actionGroupDescriptions = new Map();
     /** @type {Action<ActionParams_T>[]} */
     transformedActions;
     /** @type {import("models").Store} */
@@ -826,17 +836,27 @@ function useActionState({ UseActionClass, component }) {
 export function useAction(actionRegistry, UseActionClass, ActionClass, actionClassParams) {
     const component = useScope().component;
     const actions = useActionState({ UseActionClass, component });
-    /** @type {Action_T[]} */
-    const transformedActions = actionRegistry.getEntries().map(
-        ([id, definition]) =>
-            new ActionClass({
-                actions,
-                owner: component,
-                id,
-                definition,
-                ...actionClassParams,
-            })
+    actions.actionGroupDescriptions = new Map(
+        actionRegistry
+            .getEntries()
+            .filter(([id, definition]) => definition?.[IS_ACTION_GROUP_DESCRIPTION_SYM])
+            .map(([id, definition]) => [Number(id), { id, ...definition }])
     );
+
+    /** @type {Action_T[]} */
+    const transformedActions = actionRegistry
+        .getEntries()
+        .filter(([id, definition]) => definition?.[IS_ACTION_DEFINITION_SYM])
+        .map(
+            ([id, definition]) =>
+                new ActionClass({
+                    actions,
+                    owner: component,
+                    id,
+                    definition,
+                    ...actionClassParams,
+                })
+        );
     for (const action of transformedActions) {
         action.setup();
     }
