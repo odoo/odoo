@@ -85,15 +85,15 @@
     // Default KanbanView values
 
     --Kanban-background: #{$o-kanban-background};
-    --Kanban-gap: 0;
+    --Kanban-gap: unset;
     --Kanban-padding: 0;
 
     --KanbanGroup-background: var(--Kanban-background);
     --KanbanGroup-padding-h: #{$o-kanban-group-padding};
     --KanbanGroup-padding-bottom: #{$o-kanban-group-padding};
 
-    --KanbanRecord-margin-v: 0;
-    --KanbanRecord-margin-h: 0;
+    --KanbanRecord-margin-v: #{$o-kanban-record-margin};
+    --KanbanRecord-margin-h: #{$o-kanban-record-margin};
     --KanbanRecord-gap-v: #{$o-kanban-inner-hmargin};
     --KanbanRecord-width: #{$o-kanban-default-record-width}; 
     --KanbanRecord--small-width: #{$o-kanban-small-record-width};
@@ -338,8 +338,7 @@
         min-height: 100%;
 
         @include media-breakpoint-up(md) {
-            --Kanban-padding: 0 #{map-get($spacers, 3)} #{map-get($spacers, 3)};
-            --Kanban-gap: #{$o-kanban-record-margin * 2};
+            --Kanban-padding: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
         }
 
         .o_kanban_record {
@@ -363,7 +362,7 @@
     }
 
     .o_search_panel_resize + &, .o_search_panel_sidebar + & {
-        --Kanban-padding: 0 #{map-get($spacers, 3)} #{map-get($spacers, 3)} 0;
+        --Kanban-padding: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h) var(--KanbanRecord-margin-v) 0;
     }
 }
 
