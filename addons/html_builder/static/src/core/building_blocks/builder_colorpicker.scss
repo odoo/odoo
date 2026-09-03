@@ -25,6 +25,7 @@
 
     &:has(.theme-tab){
         width: 250px;
+        min-width: max-content;
     }
 
     & > div:first-child {
@@ -55,7 +56,7 @@
         }
     }
 
-    .btn[title=Reset] {
+    .btn.o_color_picker_reset {
         @include button-variant(
             $background: $o-we-bg-light,
             $border: transparent,
