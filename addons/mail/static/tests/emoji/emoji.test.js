@@ -10,9 +10,9 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, getFixture, test } from "@odoo/hoot";
+import { describe, expect, getFixture, test } from "@odoo/hoot";
 
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -214,7 +214,7 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji", { shiftKey: true, text: "👺" });
-    await contains(".o-EmojiPicker-navbar [title='Frequently used']");
+    await contains(".o-EmojiPicker-navbar [title='Smileys & Emotion']");
     await contains(".o-EmojiPicker");
     await contains(".o-mail-Composer-input", { value: "👺" });
 });
@@ -232,4 +232,41 @@ test("Emoji picker shows failure to load emojis", async () => {
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await contains(".o-EmojiPicker", { text: "😵‍💫Failed to load emojis..." });
+});
+
+test("Frequently used category only appears when the emoji picker is reopened", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[aria-label='Emojis']");
+    await click(".o-EmojiPicker-content .o-Emoji:text('😀')", { shiftKey: true });
+    await contains(".o-mail-Composer-input", { value: "😀" });
+    await click(".o-EmojiPicker-content .o-Emoji:text('😝')", { shiftKey: true });
+    await contains(".o-mail-Composer-input", { value: "😀😝" });
+    await contains(".o-EmojiPicker-sectionIcon", { count: 8 });
+    expect(queryAllTexts(".o-EmojiPicker-sectionIcon + span")).toEqual([
+        "SMILEYS & EMOTION",
+        "PEOPLE & BODY",
+        "ANIMALS & NATURE",
+        "FOOD & DRINK",
+        "TRAVEL & PLACES",
+        "ACTIVITIES",
+        "OBJECTS",
+        "SYMBOLS",
+    ]);
+    triggerHotkey("Escape");
+    await click("button[aria-label='Emojis']");
+    await contains(".o-EmojiPicker-sectionIcon", { count: 9 });
+    expect(queryAllTexts(".o-EmojiPicker-sectionIcon + span")).toEqual([
+        "FREQUENTLY USED",
+        "SMILEYS & EMOTION",
+        "PEOPLE & BODY",
+        "ANIMALS & NATURE",
+        "FOOD & DRINK",
+        "TRAVEL & PLACES",
+        "ACTIVITIES",
+        "OBJECTS",
+        "SYMBOLS",
+    ]);
 });

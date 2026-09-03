@@ -193,10 +193,19 @@ class AccountMove(models.Model):
         for move in self:
             move.pdp_is_sent = move.peppol_is_sent and move.pdp_uses_pdp
 
-    def _pdp_get_paid_amount(self):
+    def _pdp_get_reconciled_amls(self):
         self.ensure_one()
         counterpart_move_type = 'out_invoice' if self.move_type == 'out_refund' else 'out_refund'
-        reconciled_amls = self._get_reconciled_amls().filtered(lambda l: l.move_id.move_type != counterpart_move_type)
+        return self._get_reconciled_amls().filtered(lambda l: l.move_id.move_type != counterpart_move_type)
+
+    def _pdp_get_payment_date(self):
+        reconciled_amls = self._pdp_get_reconciled_amls()
+        if not reconciled_amls:
+            return None
+        return max(aml.date for aml in reconciled_amls)
+
+    def _pdp_get_paid_amount(self):
+        reconciled_amls = self._pdp_get_reconciled_amls()
         return self.direction_sign * sum(reconciled_amls.mapped('balance'))
 
     def _pdp_get_paid_lifecycle_total_amount(self):

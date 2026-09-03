@@ -182,14 +182,16 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
      * @private
      */
     _fetchBoothsAndUpdateUI() {
-        if (this.boothCache[this.activeBoothCategoryId] === undefined) {
-            var self = this;
+        const boothCategoryId = this.activeBoothCategoryId;
+        if (this.boothCache[boothCategoryId] === undefined) {
             rpc('/event/booth_category/get_available_booths', {
                 event_id: this.eventId,
-                booth_category_id: this.activeBoothCategoryId,
-            }).then(function (result) {
-                self.boothCache[self.activeBoothCategoryId] = result;
-                self._updateUiAfterBoothCategoryChange();
+                booth_category_id: boothCategoryId,
+            }).then((result) => {
+                this.boothCache[boothCategoryId] = result;
+                if (this.activeBoothCategoryId === boothCategoryId) {
+                    this._updateUiAfterBoothCategoryChange();
+                }
             });
         } else {
             this._updateUiAfterBoothCategoryChange();

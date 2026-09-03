@@ -31,7 +31,8 @@ class User(models.Model):
     def _clean_attendance_officers(self):
         attendance_officers = self.env['hr.employee'].search(
             [('attendance_manager_id', 'in', self.ids)]).attendance_manager_id
-        officers_to_remove_ids = self - attendance_officers
+        attendance_managers = self.env.ref('hr_attendance.group_hr_attendance_manager').users
+        officers_to_remove_ids = self - attendance_officers - attendance_managers
         if officers_to_remove_ids:
             self.env.ref('hr_attendance.group_hr_attendance_officer').users = [(3, user.id) for user in
                                                                                officers_to_remove_ids]

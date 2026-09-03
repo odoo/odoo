@@ -330,8 +330,14 @@ class AccountMoveLine(models.Model):
         return super()._get_exchange_journal(company)
 
     def _get_exchange_account(self, company, amount):
+        layers = self.move_id.sudo().stock_valuation_layer_ids if self else False
+
+        is_return_or_refund = layers and any(
+            layer.stock_move_id.returned_move_ids for layer in layers
+        )
+
         if (
-            self and self.move_id.sudo().stock_valuation_layer_ids and
+            layers and not is_return_or_refund and
             self.product_id.categ_id.property_cost_method != 'standard' and
             self.product_id.categ_id.property_valuation == 'real_time'
         ):

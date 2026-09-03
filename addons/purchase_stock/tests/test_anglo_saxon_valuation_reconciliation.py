@@ -746,3 +746,86 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         svls = self.env['stock.valuation.layer'].search([])
         self.assertRecordValues(svls, [{'value': 4809.92, 'remaining_value': 4809.92}])
         self.assertAlmostEqual(svls.unit_cost, 0.87452999)
+
+    @freeze_time('2024-01-01')
+    def test_exchange_rate_return_after_reception(self):
+        """ Buy a product valuated in real time (FIFO here, AVCO works the same way) in a
+        foreign currency, receive it, change the currency rate, then return the goods.
+
+        The rate change between the reception and the return should not be treated as a
+        realized currency gain/loss (it shouldn't hit the default currency exchange
+        journal); any adjustment belongs to the stock valuation flow instead.
+        """
+
+        stock_journal_id = self.test_product_order.categ_id.property_stock_journal.id
+        exchange_journal_id = self.env.company.currency_exchange_journal_id.id
+        stock_val_account = self.test_product_order.categ_id.property_stock_valuation_account_id
+        stock_val_account.reconcile = False
+
+        foreign_currency = self.other_currency
+        date_po_receipt = '2024-01-01'
+        rate_po_receipt = 2.0
+        date_return = '2024-02-01'
+        rate_return = 3.0
+
+        relevant_amls = self.env['account.move.line'].search([
+            ('journal_id', 'in', (stock_journal_id, exchange_journal_id)),
+        ], order='id asc')
+
+        self.env['res.currency.rate'].create([
+            {
+                'name': date_po_receipt,
+                'rate': rate_po_receipt,
+                'currency_id': foreign_currency.id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': date_return,
+                'rate': rate_return,
+                'currency_id': foreign_currency.id,
+                'company_id': self.env.company.id,
+            },
+        ])
+
+        purchase_order = self._create_purchase(
+            self.test_product_order, date_po_receipt, quantity=10, price_unit=100, currency=foreign_currency)
+        self._process_pickings(purchase_order.picking_ids, date=date_po_receipt)
+        receipt = purchase_order.picking_ids
+
+        # Return the goods we just received, at the new rate.
+        with freeze_time(date_return):
+            stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+                active_ids=receipt.ids, active_id=receipt.id, active_model='stock.picking'))
+            stock_return_picking = stock_return_picking_form.save()
+            stock_return_picking.product_return_moves.quantity = 10.0
+            stock_return_picking_action = stock_return_picking.action_create_returns()
+            return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+            return_pick.move_ids.quantity = 10
+            return_pick.move_ids.picked = True
+            return_pick._action_done()
+
+        stock_val_account = self.test_product_order.categ_id.property_stock_valuation_account_id
+        stock_in_account = self.test_product_order.categ_id.property_stock_account_input_categ_id
+
+        relevant_amls = self.env['account.move.line'].search([
+            ('journal_id', 'in', (stock_journal_id, exchange_journal_id)),
+            ('date', '>=', date_po_receipt)
+        ], order='id asc')
+
+        moves = relevant_amls.move_id
+        self.assertEqual(len(moves), 3, "There should be exactly 3 moves: Receipt, Return, and one Exchange Difference.")
+
+        exchange_move = moves[2]
+
+        valuation_amls = relevant_amls.filtered(lambda l: l.account_id == stock_val_account)
+        self.assertEqual(
+            len(valuation_amls), 2
+        )
+
+        self.assertFalse(
+            exchange_move.line_ids.filtered(lambda l: l.account_id == stock_val_account)
+        )
+
+        self.assertTrue(
+            exchange_move.line_ids.filtered(lambda l: l.account_id == stock_in_account)
+        )
