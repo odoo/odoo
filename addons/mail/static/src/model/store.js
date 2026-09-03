@@ -100,7 +100,7 @@ export class Store extends Record {
                     const record = RD_QUEUE.keys().next().value;
                     RD_QUEUE.delete(record);
                     record._.isDeleted.set(true);
-                    record._runDisposeFns();
+                    record._.scope?.destroy();
                     record.Model.records.delete(record.localId);
                     for (const [usingRecord, names] of record._.uses.data.entries()) {
                         for (const [name2, count] of names.entries()) {
