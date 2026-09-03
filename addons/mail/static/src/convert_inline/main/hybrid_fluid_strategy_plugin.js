@@ -238,10 +238,11 @@ export class HybridFluidStrategyPlugin extends Plugin {
             verticalAlign = "top";
         }
         return this.fillTableContainer(emailNode, rowMeasures, {
-            builders:
-                verticalAlign && !emailNode.analysis.facts.isResponsiveElement
-                    ? this.hybridBuilders
-                    : this.tableBuilders,
+            builders: this.tableBuilders,
+            // TODO EGGMAIL: remove hybridFluidStrategy completely? -> removes a lot of code and does not need custom MSO implementation
+            // verticalAlign && !emailNode.analysis.facts.isResponsiveElement
+            //     ? this.hybridBuilders
+            // : this.tableBuilders,
         });
     }
 
