@@ -18,7 +18,8 @@
                                     <t t-if="barcode_index &lt; len(page_docs)">
                                         <t t-set="o" t-value="page_docs[barcode_index]"/>
                                         <td>
-                                            <div class="o_label_full" style="width:47mm;height:37.1mm;border: 1px solid black;">
+                                            <div class="o_label_full" style="width:47mm;height:37.1mm;position:relative;overflow:visible;">
+                                                <t t-call="product.report_label_contour_marks"/>
                                                 <div class="o_label_name text-center">
                                                     <strong><span t-field="o.name">WH/Stock</span></strong>
                                                 </div>
