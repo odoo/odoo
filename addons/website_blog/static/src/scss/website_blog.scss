@@ -64,6 +64,10 @@
             @include o-position-absolute(0, 0, auto, auto);
         }
 
+        .o_wblog_mobile_badge {
+            --badge-padding-x: 0.4em;
+        }
+
         .o_wblog_split_grid_sticky {
             @include media-breakpoint-up(xl) {
                 height: calc(100vh - var(--wblog-sticky-top, 0px));
