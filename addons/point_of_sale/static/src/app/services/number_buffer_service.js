@@ -285,7 +285,8 @@ class NumberBuffer extends EventBus {
             if (isEmpty(buffer)) {
                 this.state.buffer = null;
             } else {
-                const nCharToRemove = buffer[buffer.length - 1] === this.decimalPoint ? 2 : 1;
+                const patterns = ["0" + this.decimalPoint, "-" + "0" + this.decimalPoint];
+                const nCharToRemove = patterns.includes(buffer) ? 2 : 1;
                 this.state.buffer = buffer.substring(0, buffer.length - nCharToRemove);
             }
         } else if (input === "+") {
