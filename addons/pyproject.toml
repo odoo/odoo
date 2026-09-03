@@ -1,0 +1,29 @@
+# Use the hatchling build backend, with the hatch-odoo plugin.
+[build-system]
+requires = ["hatchling", "hatch-odoo", "setuptools"]
+build-backend = "hatchling.build"
+
+[project]
+name = "odoo-addons"
+version = "18.0"
+readme = "README.md"
+requires-python = ">=3.8"
+# Dependencies are dynamic because they will be generated from Odoo addons manifests.
+dynamic = ["dependencies"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["odoo-addons"]
+
+# Enable the hatch-odoo metadata hook to generate dependencies from addons manifests.
+#[tool.hatch.metadata.hooks.odoo-addons-dependencies]
+# Enable the hatch-odoo build hook to package the Odoo addons into odoo/addons.
+[tool.hatch.build.hooks.odoo-addons-dirs]
+
+[tool.hatch-odoo]
+# If our addons have non standard version numbers, let's help hatch-odoo discover the Odoo version.
+odoo_version_override = "18.0"
+# Let's add additional dependencies that are not declared in addons manifests.
+dependencies = []
+# Our addons are in the project root directory.
+addons_dirs = ["."]
+
