@@ -1633,9 +1633,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         # Update the partner with all the information
         self._include_country_and_state_in_address(billing_address)
+<<<<<<< 4d4c1ee9293f3d6e2121189c0aef1c4399c77e35
         billing_address, _side_values = self._parse_form_data(billing_address)
         if order_sudo._is_anonymous_cart():
 
+||||||| 3851c66b896e3c5cd5034603356c88ebbb64b6b4
+        if order_sudo.partner_id == public_partner:
+            billing_partner_id = self._create_or_edit_partner(billing_address, type='invoice')
+            order_sudo.partner_id = billing_partner_id
+=======
+        if order_sudo.partner_id == public_partner:
+            fpos_before = order_sudo.fiscal_position_id
+            billing_partner_id = self._create_or_edit_partner(billing_address, type='invoice')
+            order_sudo.partner_id = billing_partner_id
+>>>>>>> 7eee8bf654e5a6137e30e8d4fc9c8c0fac65d50d
             # Pricelist are recomputed every time the partner is changed. We don't want to recompute
             # the price with another pricelist at this state since the customer has already accepted
             # the amount and validated the payment.
@@ -1645,12 +1656,33 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 use_delivery_as_billing=False,
                 order_sudo=order_sudo,
             )
+<<<<<<< 4d4c1ee9293f3d6e2121189c0aef1c4399c77e35
             with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
 
             # Add the new partner as follower of the cart
             order_sudo._message_subscribe(order_sudo.partner_id.ids)
         elif not self._are_same_addresses(billing_address, order_sudo.partner_invoice_id):
+||||||| 3851c66b896e3c5cd5034603356c88ebbb64b6b4
+            order_sudo.message_partner_ids = request.env['res.partner'].browse(billing_partner_id)
+        elif any(billing_address[k] != order_sudo.partner_invoice_id[k] for k in billing_address):
+=======
+            order_sudo.message_partner_ids = request.env['res.partner'].browse(billing_partner_id)
+            if order_sudo.fiscal_position_id != fpos_before:
+                # The customer approved a total in the express payment sheet for the previous fiscal
+                # position; recompute the taxes and abort rather than silently charge a different
+                # amount. The JS reloads the page so the updated prices are re-accepted.
+                try:
+                    order_sudo.with_context(is_express_checkout_flow=True)._recompute_taxes()
+                except UserError:
+                    pass  # Don't block the flow if the external tax computation (e.g. Avatax) fails.
+                order_sudo.shop_warning = _(
+                    "Taxes have been updated based on your address."
+                    " Your payment method has not been charged."
+                )
+                return False
+        elif any(billing_address[k] != order_sudo.partner_invoice_id[k] for k in billing_address):
+>>>>>>> 7eee8bf654e5a6137e30e8d4fc9c8c0fac65d50d
             # Check if a child partner doesn't already exist with the same informations. The
             # phone isn't always checked because it isn't sent in shipping information with
             # Google Pay.

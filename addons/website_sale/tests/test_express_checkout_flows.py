@@ -88,6 +88,91 @@ class TestWebsiteSaleExpressCheckoutFlows(HttpCaseWithUserDemo):
             self.express_checkout_billing_values,
         )
 
+    def test_express_checkout_public_user_aborts_on_fpos_change(self):
+        """ Test that finalizing an anonymous cart via express checkout aborts the
+            payment when the billing address resolves to a different fiscal position.
+
+            Express checkout assigns ``partner_id`` directly (bypassing the address
+            update), so the fiscal position recomputes via its stored compute but
+            the line ``tax_id`` would otherwise be stranded with the previous
+            geoip-derived mapping. The customer already approved a total in the
+            native payment sheet, so instead of silently charging a different
+            amount, the endpoint recomputes the taxes and returns ``False`` so the
+            JS reloads the page and shows a warning.
+        """
+        company = self.env.company
+        country = company.country_id or self.env.ref('base.be')
+
+        domestic_tax = self.env['account.tax'].create({
+            'name': 'Test Domestic Sale 21%',
+            'amount': 21.0,
+            'type_tax_use': 'sale',
+            'country_id': country.id,
+            'company_id': company.id,
+        })
+        ec_tax = self.env['account.tax'].create({
+            'name': 'Test EC Sale 0%',
+            'amount': 0.0,
+            'type_tax_use': 'sale',
+            'country_id': country.id,
+            'company_id': company.id,
+        })
+        # Fiscal position that maps the domestic tax to the 0% EC tax, as a
+        # geoip-derived "Extra-Community" position would.
+        fpos_geoip = self.env['account.fiscal.position'].create({
+            'name': 'Test Extra-Community',
+            'company_id': company.id,
+            'tax_ids': [Command.create({
+                'tax_src_id': domestic_tax.id,
+                'tax_dest_id': ec_tax.id,
+            })],
+        })
+
+        self.sale_order.order_line.product_id.taxes_id = [Command.set(domestic_tax.ids)]
+        self.sale_order.fiscal_position_id = fpos_geoip.id
+        self.sale_order.order_line._compute_tax_id()
+
+        line = self.sale_order.order_line
+        self.assertEqual(
+            line.tax_id, ec_tax,
+            "Setup: the cart line should carry the EC tax via the geoip fpos mapping.",
+        )
+
+        session = self.authenticate(None, None)
+        session['sale_order_id'] = self.sale_order.id
+        root.session_store.save(session)
+
+        result = self.make_jsonrpc_request(
+            WebsiteSaleController._express_checkout_route,
+            params={'billing_address': dict(self.express_checkout_billing_values)},
+        )
+
+        self.assertFalse(
+            result,
+            "The endpoint must return a falsy value to signal the JS to abort the "
+            "payment and reload the page.",
+        )
+
+        self.sale_order.invalidate_recordset()
+        self.assertNotEqual(
+            self.sale_order.fiscal_position_id, fpos_geoip,
+            "The billing address should resolve to a different fiscal position.",
+        )
+        expected_tax = self.sale_order.fiscal_position_id.map_tax(domestic_tax)
+        self.assertEqual(
+            line.tax_id, expected_tax,
+            "The line tax must be recomputed to stay consistent with the order's "
+            "fiscal position; a stale EC tax here is the bug.",
+        )
+        self.assertTrue(
+            self.sale_order.shop_warning,
+            "A warning must be set to explain the payment was not charged.",
+        )
+        self.assertNotIn(
+            'sale_last_order_id', root.session_store.get(session.sid),
+            "The order must not be finalized: the payment is aborted.",
+        )
+
     def test_express_checkout_registered_user(self):
         """ Test that when you use express checkout as a registered user and the address sent by the
             express checkout form exactly matches the one registered in odoo, we do not create a new
