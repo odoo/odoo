@@ -818,6 +818,7 @@ export class SelectionPlugin extends Plugin {
         }
         restore();
 
+        this.trigger("on_selection_set_handlers", this.activeSelection);
         return this.activeSelection;
     }
 

@@ -11,8 +11,9 @@ import { DIRECTIONS } from "@html_editor/utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { SPLIT_OPERATION_TYPES } from "@html_editor/core/split_plugin";
 
-/** @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors */
+/** @typedef {((insertedNode: Node) => insertedNode)[]} fragment_to_insert_within_pre_processors */
 
 const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
@@ -52,7 +53,7 @@ export class CodeBlockPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        before_insert_processors: this.handleInsertWithinPre.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
     };
 
     blockFormatIsAvailable(selection) {
@@ -83,34 +84,38 @@ export class CodeBlockPlugin extends Plugin {
             isEmptyBlock(closestBlockNode)
         ) {
             // Remove the last empty block node within pre tag
-            const [beforeElement, afterElement] = this.dependencies.split.splitElementBlock({
+            const splitResult = this.dependencies.split.splitElementBlock({
                 targetNode,
                 targetOffset,
                 blockToSplit: closestBlockNode,
             });
-            const isPreBlock = beforeElement.nodeName === "PRE";
+            if (splitResult.type !== SPLIT_OPERATION_TYPES.BLOCK) {
+                return splitResult;
+            }
+            const isPreBlock = splitResult.before.nodeName === "PRE";
             const baseContainer = isPreBlock
                 ? this.dependencies.baseContainer.createBaseContainer({
-                      children: [...afterElement.childNodes],
+                      children: [...splitResult.after.childNodes],
                   })
-                : afterElement;
+                : splitResult.after;
             if (isPreBlock) {
-                afterElement.replaceWith(baseContainer);
+                splitResult.after.replaceWith(baseContainer);
             } else {
-                beforeElement.remove();
-                closestPre.after(afterElement);
+                splitResult.before.remove();
+                closestPre.after(splitResult.after);
             }
             const dir = closestBlockNode.getAttribute("dir") || closestPre.getAttribute("dir");
             if (dir) {
                 baseContainer.setAttribute("dir", dir);
             }
             this.dependencies.selection.setCursorStart(baseContainer);
+            return true;
         } else {
             const lineBreak = this.document.createElement("br");
             targetNode.insertBefore(lineBreak, targetNode.childNodes[targetOffset]);
             this.dependencies.selection.setCursorEnd(lineBreak);
+            return { type: SPLIT_OPERATION_TYPES.LINE, lineBreaks: [lineBreak] };
         }
-        return true;
     }
 
     handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
@@ -133,14 +138,12 @@ export class CodeBlockPlugin extends Plugin {
         return true;
     }
 
-    handleInsertWithinPre(insertContainer, block) {
+    processFragmentToInsert(fragment) {
+        const block = closestBlock(this.dependencies.selection.getEditableSelection().anchorNode);
         if (block.nodeName !== "PRE") {
-            return insertContainer;
+            return fragment;
         }
-        insertContainer = this.processThrough(
-            "before_insert_within_pre_processors",
-            insertContainer
-        );
+        fragment = this.processThrough("fragment_to_insert_within_pre_processors", fragment);
         const isDeepestBlock = (node) =>
             isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
         let linebreak;
@@ -157,9 +160,9 @@ export class CodeBlockPlugin extends Plugin {
                 processNode(child);
             }
         };
-        for (const node of childNodes(insertContainer)) {
+        for (const node of childNodes(fragment)) {
             processNode(node);
         }
-        return insertContainer;
+        return fragment;
     }
 }

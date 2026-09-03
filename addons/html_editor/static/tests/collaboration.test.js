@@ -30,7 +30,7 @@ import {
 } from "./_helpers/collaboration";
 import { cleanHints } from "./_helpers/dispatch";
 import { unformat } from "./_helpers/format";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import {
     commit,
     deleteBackward,
@@ -240,14 +240,16 @@ describe("history insertRemoteCommit", () => {
             peerIds: ["c1", "c2"],
             contentBefore: `<p>i[c1}{c1][c2}{c2]</p>`,
         });
-        peerInfos.c1.editor.shared.dom.insert("b");
-        insert(peerInfos.c2.editor, "a");
+        peerInfos.c1.editor.shared.dom.insert("a");
+        expect(getContent(peerInfos.c1.editor.editable)).toBe(`<p>ia[]</p>`);
+        insert(peerInfos.c2.editor, "b");
+        expect(getContent(peerInfos.c2.editor.editable)).toBe(`<p>ib[]</p>`);
         mergePeersCommits(peerInfos);
         peerInfos.c1.editor.shared.history.commit();
         mergePeersCommits(peerInfos);
         cleanHints(peerInfos.c1.editor);
         cleanHints(peerInfos.c2.editor);
-        // TODO @phoenix c1 editable should be `<p>iab[]</p>`, but its selection
+        // TODO @phoenix c2 editable should be `<p>iab[]</p>`, but its selection
         // was not adjusted properly when receiving the remote commit
         expect(getContent(peerInfos.c1.editor.editable)).toBe(`<p>ia[]b</p>`);
         expect(getContent(peerInfos.c2.editor.editable)).toBe(`<p>ia[]b</p>`);
@@ -726,10 +728,10 @@ describe("data-oe-protected", () => {
                 <p data-selection-placeholder=""><br></p>
                 <div contenteditable="false" data-oe-protected="true">
                     <div contenteditable="true" data-oe-protected="false">
-                        <p>d</p>
+                        <p>d[]</p>
                     </div>
                 </div>
-                <p>[]a</p>
+                <p>a</p>
             `)
         );
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
@@ -821,9 +823,13 @@ describe("Collaboration with embedded components", () => {
         );
         validateSameHistory(peerInfos);
         cleanHints(e2);
+        // The selection placeholder was added when we committed, but the
+        // selection is not yet updated because it requires us to wait for the
+        // `selectionchange` event to resolve.
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-            `<p data-selection-placeholder=""><br></p><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div><p>[]<br></p>`
+            `<p data-selection-placeholder=""><br></p><div contenteditable="false" data-embedded="counter" data-oe-protected="true"></div>[]<p><br></p>`
         );
+        // Waiting to fill the embedded component and fix the selection.
         await animationFrame();
         cleanHints(e1);
         cleanHints(e2);
@@ -1008,10 +1014,14 @@ describe("Collaboration with embedded components", () => {
                     <p>deep12</p>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep12", "deep[]12")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
         await animationFrame();
         // After mount:
         editable = unformat(`
@@ -1025,10 +1035,14 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep12", "deep[]12")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
         deep1.append(e1.document.createTextNode("3"));
         e1.shared.history.commit();
         mergePeersCommits(peerInfos);
@@ -1046,10 +1060,14 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep1234", "deep[]1234")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
     });
 
     test("editableDescendants for components are collaborative (with different template shapes)", async () => {
@@ -1112,13 +1130,13 @@ describe("Collaboration with embedded components", () => {
                         <div class="switched">
                             <div class="deep">
                                 <div contenteditable="true" data-embedded-editable="deep" data-oe-protected="false">
-                                    <p>deep12</p>
+                                    <p>deep[]12</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <p>[]a</p>
+                <p>a</p>
             `)
         );
         expect(getContent(e2.editable, { sortAttrs: true })).toBe(
@@ -1170,6 +1188,8 @@ describe("Collaboration with embedded components", () => {
         await ensureDistinctHistoryCommit();
         mergePeersCommits(peerInfos);
         await animationFrame();
+        // Move the selection to <p>[]a</p> to delete the embedding backward.
+        setSelection({ anchorNode: e1.editable.lastChild, anchorOffset: 0 });
         deleteBackward(e1);
         mergePeersCommits(peerInfos);
         expect(getContent(e1.editable, { sortAttrs: true })).toBe(`<p>[]a</p>`);
@@ -1266,10 +1286,14 @@ describe("Collaboration with embedded components", () => {
                     </div>
                 </div>
             </div>
-            <p>[]a</p>
+            <p>a</p>
         `);
-        expect(getContent(e1.editable, { sortAttrs: true })).toBe(editable);
-        expect(getContent(e2.editable, { sortAttrs: true })).toBe(editable);
+        expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            editable.replace("deep98", "deep[]98")
+        );
+        expect(getContent(e2.editable, { sortAttrs: true })).toBe(
+            editable.replace("<p>a</p>", "<p>[]a</p>")
+        );
     });
 
     describe("Embedded state", () => {
@@ -1521,14 +1545,14 @@ describe("Collaboration with embedded components", () => {
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(`<p>abc[]</p>`);
             mergePeersCommits(peerInfos);
             await animationFrame();
-            // TODO @phoenix: selection should be at the end of the span for e2,
-            // but it was not correctly updated after remote commits. To update
-            // when the selection is properly handled in collaboration.
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>abc[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]bc</p>`
             );
+            // TODO: e1 inserted "bc", yet ends up before "bc" after merging the
+            // commits. The selection should never end up before the content
+            // inserted by the user.
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>abc[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]bc</p>`
             );
         });
 

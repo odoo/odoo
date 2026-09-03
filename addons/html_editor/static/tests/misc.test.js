@@ -94,7 +94,7 @@ test("no arrow key press or mouse click should keep selection near a contentedit
     await testEditor({
         contentBefore: '[]<hr contenteditable="false">',
         contentAfterEdit:
-            `<p data-selection-placeholder="" style="margin: 8px 0px -9px;" o-we-hint-text='Type "/" for commands' class="o-we-hint o-horizontal-caret">[]<br></p>` +
+            `<p data-selection-placeholder="" style="margin: 8px 0px -9px;" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>` +
             '<hr contenteditable="false">' +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: "[]<hr>",

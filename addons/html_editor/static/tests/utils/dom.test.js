@@ -367,9 +367,9 @@ describe("wrapInlinesInBlocks", () => {
             unformat(`
                 <p data-selection-placeholder=""><br></p>
                 <div>
-                    <div contenteditable="false" style="display: inline;">inline</div>[]
+                    <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
-                <p data-selection-placeholder=""><br></p>
+                <p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
@@ -399,9 +399,9 @@ describe("wrapInlinesInBlocks", () => {
             unformat(`
                 <div class="o-paragraph">text</div>
                 <div>
-                    <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>[]
+                    <div contenteditable="false" style="display: inline;">inline</div><span class="a">span</span>
                 </div>
-                <p data-selection-placeholder=""><br></p>
+                <p data-selection-placeholder="" class="o-horizontal-caret o-we-hint" o-we-hint-text='Type "/" for commands'>[]<br></p>
                 <div>
                     text
                     <div contenteditable="false" style="display: inline;">inline</div>
@@ -435,9 +435,9 @@ describe("wrapInlinesInBlocks", () => {
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
                 <p>
-                    <span class="a">span</span>[]
+                    <span class="a">span</span>
                 </p>
-                <div class="o-paragraph">text</div>
+                <div class="o-paragraph">[]text</div>
                 <div>
                     <div contenteditable="false" style="display: inline;">inline</div>
                 </div>
