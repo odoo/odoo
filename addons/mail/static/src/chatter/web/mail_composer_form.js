@@ -9,6 +9,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
+import { useMailComposerAttachmentsUploader } from "@mail/core/web/mail_composer_attachment_hook";
 
 export class MailComposerFormController extends formView.Controller {
     props = useProps({
@@ -97,27 +98,31 @@ export class MailComposerFormRenderer extends formView.Renderer {
         // Add file dropzone on full mail composer:
         this.attachmentUploadService = useService("mail.attachment_upload");
         this.operations = useX2ManyCrud(() => this.props.record.data["attachment_ids"], true);
-
+        
+        const doUpload = useMailComposerAttachmentsUploader();
         useCustomDropzone(this.rootRef, MailAttachmentDropzone, {
             /** @param {Event} event */
             onDrop: async (event) => {
-                for (const thread of getActiveMailThreads()) {
-                    // Use an isolated composer object instead of thread.composer to
-                    // avoid pushing into the main thread's composer.attachments list,
-                    // which is observed by the chatter.
-                    const composer =
-                        this.props.record.resModel === "mail.scheduled.message"
-                            ? { attachments: [] }
-                            : thread.composer;
-                    for (const file of event.dataTransfer.files) {
-                        const attachment = await this.attachmentUploadService.upload(
-                            thread,
-                            composer,
-                            file
-                        );
-                        await this.operations.saveRecord([attachment.id]);
+                const uploadFiles = async () => {
+                    for (const thread of getActiveMailThreads()) {
+                        // Use an isolated composer object instead of thread.composer to
+                        // avoid pushing into the main thread's composer.attachments list,
+                        // which is observed by the chatter.
+                        const composer =
+                            this.props.record.resModel === "mail.scheduled.message"
+                                ? { attachments: [] }
+                                : thread.composer;
+                        for (const file of event.dataTransfer.files) {
+                            const attachment = await this.attachmentUploadService.upload(
+                                thread,
+                                composer,
+                                file
+                            );
+                            await this.operations.saveRecord([attachment.id]);
+                        }
                     }
-                }
+                };
+                await doUpload(uploadFiles());
             },
         });
 
