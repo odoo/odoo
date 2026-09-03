@@ -90,7 +90,7 @@ class IrModuleModule(models.Model):
 
                 if module.state in ['to install', 'to upgrade']:
                     websites_to_update = module._theme_get_stream_website_ids()
-                    if module.state == 'to upgrade' and (website_restriction := int(self.env['ir.config_parameter'].sudo().set_int('website.apply_new_theme', 0))):
+                    if module.state == 'to upgrade' and (website_restriction := int(self.env['ir.config_parameter'].sudo().get_int('website.apply_new_theme', 0))):
                         if website_restriction in websites_to_update.ids:
                             websites_to_update = websites_to_update.browse(website_restriction)
                         else:
