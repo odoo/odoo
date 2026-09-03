@@ -1,4 +1,4 @@
-import { EventBus } from "@odoo/owl";
+import { EventBus, reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -18,7 +18,7 @@ export class AttachmentUploadService {
         this.nextId = -1;
         this.abortByAttachmentId = new Map();
         this.deferredByAttachmentId = new Map();
-        this.uploadingAttachmentIds = new Set();
+        this.uploadingAttachmentIds = reactive(new Set());
         this._fileUploadBus = new EventBus();
         /** @type {Map<number, {composer: import("models").Composer, thread: import("models").Thread}>} */
         this.targetsByTmpId = new Map();

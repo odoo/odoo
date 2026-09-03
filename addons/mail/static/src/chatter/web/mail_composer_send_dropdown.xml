@@ -5,7 +5,7 @@
     <div class="btn-group">
         <button class="btn btn-primary w-auto o_mail_send"
             t-on-click="onClickSend"
-            t-att-disabled="buttonState.disabled"
+            t-att-disabled="uploadingAttachments.size > 0 || buttonState.disabled"
             data-hotkey="q">
             <t t-if="props.record.data.subtype_is_log">
                 Log
