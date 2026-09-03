@@ -94,10 +94,10 @@ class AccountAnalyticLine(models.Model):
             return Domain('task_id', 'in', task_ids)
         return Domain.FALSE
 
-    @api.depends('project_id.message_partner_ids', 'task_id.message_partner_ids')
+    @api.depends('task_id.message_partner_ids')
     def _compute_message_partner_ids(self):
         for line in self:
-            line.message_partner_ids = line.task_id.message_partner_ids | line.project_id.message_partner_ids
+            line.message_partner_ids = line.task_id.message_partner_ids
 
     @api.depends('project_id', 'task_id')
     def _compute_display_name(self):
