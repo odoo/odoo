@@ -1942,6 +1942,24 @@ class SaleOrder(models.Model):
         # when using coupon and delivery
         return True
 
+    def _recompute_tax_dependent_prices(self):
+        """Recompute prices that depend on external tax rates.
+
+        Overridden by modules whose line prices are back-solved from a tax-inclusive
+        total. After external tax computation completes and final tax rates are
+        determined, this method refreshes those dependent prices.
+        """
+        return
+
+    def _ensure_final_taxes(self):
+        """Ensure final tax rates are applied to order lines.
+
+        Overridden by modules that delegate tax computation to an external
+        service, so that amounts derived from tax-inclusive totals are computed
+        on the definitive rates.
+        """
+        return
+
     #=== TOOLING ===#
 
     def _is_readonly(self):
