@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import logging
 from datetime import datetime
 from unittest.mock import patch
@@ -457,3 +458,86 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             ],
         })
         self.assertEqual(order.order_receipt_generate_data()['extra_data']['total_item_count'], 5)
+
+    def _create_order(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        product = self.example_simple_product.product_variant_id
+        return self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'state': 'paid',
+            'amount_total': product.lst_price,
+            'amount_paid': product.lst_price,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'lines': [
+                Command.create({
+                    'product_id': product.id,
+                    'qty': 1,
+                    'price_unit': product.lst_price,
+                    'price_subtotal': product.lst_price,
+                    'price_subtotal_incl': product.lst_price,
+                }),
+            ],
+        })
+
+    def _create_receipt_printer(self, **vals):
+        return self.env['pos.printer'].create({
+            'name': 'Receipt Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'receipt',
+            **vals,
+        })
+
+    def test_receipt_print_data_without_printer(self):
+        """
+        Without a receipt printer, the backend can only use the browser printing flow.
+        """
+        data = self._create_order().get_receipt_print_data()
+        self.assertFalse(data['printers'])
+        self.assertIn('pos-receipt', data['receipt_html'])
+
+    def test_receipt_print_data_with_printers(self):
+        """
+        Each usable printer gets a receipt, ready to be sent to it by the client.
+        """
+        printer = self._create_receipt_printer(paper_size='58')
+        label_printer = self._create_receipt_printer(name='Label Printer', paper_size='label')
+        self.main_pos_config.write({
+            'receipt_printer_ids': [Command.set((printer + label_printer).ids)],
+        })
+
+        data = self._create_order().get_receipt_print_data()
+
+        self.assertEqual(
+            [p['id'] for p in data['printers']], printer.ids,
+            "Label printers expect ZPL, they can't print the receipt template",
+        )
+        self.assertEqual(data['printers'][0]['printer_ip'], '0.0.0.0')
+        self.assertIn('<epos-print', data['printers'][0]['receipt'])
+        self.assertIn('pos-receipt', data['receipt_html'])
+
+    def test_receipt_print_format(self):
+        """
+        Printers behind an IoT box are given an image, the ePOS ones a document.
+        """
+        order = self._create_order()
+        self.assertIn('<epos-print', order._order_receipt_generate_for_format('epos', '80'))
+        self.assertTrue(
+            base64.b64decode(order._order_receipt_generate_for_format('image', '80')),
+            "An IoT box expects the receipt as a base64 image",
+        )
+
+    def test_receipt_paper_style(self):
+        """
+        The receipt is rendered for the paper size of the printer it is sent to.
+        """
+        order = self._create_order()
+        self.assertIn('width: 360px', order._order_receipt_paper_style_css('58'))
+        self.assertIn('width: 512px', order._order_receipt_paper_style_css('80'))
+        self.assertIn('width: 240px', order._order_receipt_paper_style_css('tm_l100_40'))
+        self.assertIn(
+            'width: 512px', order._order_receipt_paper_style_css(False),
+            "An unknown paper size falls back on the size the receipt is designed for",
+        )

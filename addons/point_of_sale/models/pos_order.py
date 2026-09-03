@@ -803,12 +803,33 @@ class PosOrder(models.Model):
         last_order = self.env['pos.order'].search([], order='id desc', limit=1)
         return last_order.order_receipt_generate_data()
 
-    def action_pos_order_receipt(self):
+    def get_receipt_print_data(self):
+        """Return what the backend needs to print the receipt of this order.
+
+        The receipts are rendered server side, as the client only has to forward
+        them to the printers it can reach: an ePOS document for the printers on
+        its local network, an image for the ones behind an IoT box. Rendering is
+        done once per format and paper size, printers sharing both share theirs.
+        The receipt html is always returned to allow the browser printing flow,
+        used when no printer is configured or when they all failed to print.
+        """
         self.ensure_one()
+        order = self.with_company(self.company_id)
+        printers = order.config_id.receipt_printer_ids.filtered(
+            lambda printer: printer._can_print_backend_receipt()
+        )
+        receipts = {}
+        printers_data = []
+        for printer in printers:
+            key = (printer._get_backend_receipt_format(), printer.paper_size)
+            if key not in receipts:
+                receipts[key] = order._order_receipt_generate_for_format(*key)
+            if receipts[key]:
+                printers_data.append({**printer._get_backend_print_data(), 'receipt': receipts[key]})
         return {
-            "type": "ir.actions.act_url",
-            "url": f"/pos/receipt/{self.id}?company_id={self.company_id.id}",
-            "target": "new",
+            'printers': printers_data,
+            'receipt_html': order.order_receipt_generate_html(),
+            'config_id': order.config_id.id,
         }
 
     def _get_invoice_post_context(self):
