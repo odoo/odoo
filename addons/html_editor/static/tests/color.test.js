@@ -180,6 +180,25 @@ test("should apply color with default text color on block when applying backgrou
     });
 });
 
+test("should apply background color to single selected cell", async () => {
+    const defaultTextColor = "color: rgb(1, 10, 100);";
+    const styleContent = `* { ${defaultTextColor} }`;
+    await testEditor({
+        contentBefore: unformat(`
+            <table><tbody>
+                <tr><td class="o_selected_td">[]<br></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter: unformat(`
+            <table><tbody>
+                <tr><td class="o_selected_td" style="background-color: rgb(255, 0, 0); ${defaultTextColor}">[]<br></td></tr>
+            </tbody></table>
+        `),
+        styleContent,
+    });
+});
+
 test("should remove color from block when removing background color", async () => {
     const defaultTextColor = "color: rgb(1, 10, 100);";
     const styleContent = `* {${defaultTextColor}}`;
