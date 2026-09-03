@@ -637,20 +637,25 @@ class DiscussChannelMember(models.Model):
             )
             devices, private_key, public_key = self.channel_id._web_push_get_partners_parameters(members.partner_id.ids)
             if devices:
-                if self.channel_id.channel_type != 'chat':
+                user, guest = self.env["res.users"]._get_current_persona()
+                caller = guest or user.partner_id
+                icon = f"/web/image/{caller._name}/{caller.id}/avatar_128"
+                if self.channel_id.channel_type == "group":
                     icon = f"/web/image/discuss.channel/{self.channel_id.id}/avatar_128"
-                elif guest := self.env["mail.guest"]._get_guest_from_context():
-                    icon = f"/web/image/mail.guest/{guest.id}/avatar_128"
-                elif partner := self.env.user.partner_id:
-                    icon = f"/web/image/res.partner/{partner.id}/avatar_128"
                 languages = [partner.lang for partner in devices.partner_id]
                 payload_by_lang = {}
                 for lang in languages:
+                    if self.channel_id.channel_type == "chat":
+                        title = caller.name
+                    elif self.channel_id.channel_type == "channel":
+                        title = f"#{self.channel_id.display_name}"
+                    else:
+                        title = self.channel_id.with_context(lang=lang).display_name
                     env_lang = self.with_context(lang=lang).env
                     payload_by_lang[lang] = {
-                        "title": env_lang._("Incoming call"),
+                        "title": title,
                         "options": {
-                            "body": env_lang._("Conference: %s", self.channel_id.display_name),
+                            "body": env_lang._("Incoming call"),
                             "icon": icon,
                             "vibrate": [100, 50, 100],
                             "requireInteraction": True,
