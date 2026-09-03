@@ -33,7 +33,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
             "04_waiting_normal": "hourglass_empty",
         };
         this.classIcons = {
-            "02_changes_requested": "oi oi-filled",
+            "02_changes_requested": "oi oi-filled bolded",
             "1_done": "oi oi-filled",
             "1_canceled": "oi oi-filled",
             "04_waiting_normal": "oi",
