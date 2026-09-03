@@ -8,7 +8,7 @@ from odoo.tools.bank_account_number import validate_iban
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    employee_id = fields.Many2many('hr.employee', 'Employee', compute="_compute_employee_id", search="_search_employee_id")
+    employee_id = fields.Many2many('hr.employee', compute="_compute_employee_id", search="_search_employee_id")
     employee_salary_amount = fields.Float(string='Salary Allocation', compute='_compute_salary_amount', digits=(16, 4), readonly=True, store=False)
     employee_salary_amount_is_percentage = fields.Boolean(compute='_compute_salary_amount', readonly=True, store=False)
     currency_symbol = fields.Char(related='employee_id.currency_id.symbol')
