@@ -184,6 +184,8 @@ class ResCompany(models.Model):
         self.write({
             'l10n_fr_pdp_send_to_ppf': True,
             'l10n_fr_pdp_annuaire_start_date': False,
+            'pdp_kyc_status': False,
+            'pdp_authentication_uuid': False,
         })
         super()._reset_peppol_configuration()
 
