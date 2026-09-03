@@ -14,7 +14,7 @@ import {
     queryRect,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, xml, proxy, useProps } from "@odoo/owl";
 
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
@@ -986,7 +986,7 @@ test("input disables browser autocomplete by default", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
-        static props = [];
+        props = useProps([]);
 
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
@@ -999,7 +999,7 @@ test("browser autocomplete attribute can be overridden via prop", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autocomplete="'name'"/>`;
-        static props = [];
+        props = useProps([]);
 
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
@@ -1012,7 +1012,7 @@ test("dropdown minWidth should match input width", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
-        static props = [];
+        props = useProps([]);
 
         sources = buildSources(() => [item("World"), item("Hello")]);
     }

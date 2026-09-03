@@ -1,4 +1,4 @@
-import { Component, proxy, xml } from "@odoo/owl";
+import { Component, proxy, useProps, xml } from "@odoo/owl";
 import { expect, test, getFixture } from "@odoo/hoot";
 import { click, press, keyDown, keyUp, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -310,7 +310,7 @@ test("dropdown: focus dropdown items on keyboard navigation after hotkey trigger
 
     class SimpleDropdownWithHotkey extends Component {
         static components = { Dropdown, DropdownItem };
-        static props = ["*"];
+        props = useProps();
         static template = xml`
             <Dropdown>
                 <button class="btn btn-primary dropdown-toggle" data-hotkey="c" accesskey="c">Dropdown</button>

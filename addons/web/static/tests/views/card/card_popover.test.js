@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, useProps, xml } from "@odoo/owl";
 import { defineModels, fields, models, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { parseXML } from "@web/core/utils/xml";
@@ -44,7 +44,7 @@ async function mountCardPopover(props = {}) {
     };
     class Parent extends Component {
         static components = { CardPopover };
-        static props = ["cardPopoverProps"];
+        props = useProps(["cardPopoverProps"]);
         static template = xml`
             <CardPopover t-props="this.props.cardPopoverProps">
                 <t t-set-slot="footer">

@@ -554,7 +554,7 @@ describe("useTimer", () => {
     test("progress starts at 0 and reaches 1 after the duration", async () => {
         class TestComponent extends Component {
             static template = xml`<div/>`;
-            static props = ["*"];
+            props = useProps();
             setup() {
                 this.timer = useTimer(1000);
             }
@@ -570,7 +570,7 @@ describe("useTimer", () => {
     test("stop halts the animation at the current progress", async () => {
         class TestComponent extends Component {
             static template = xml`<div/>`;
-            static props = ["*"];
+            props = useProps();
             setup() {
                 this.timer = useTimer(1000);
             }
@@ -589,7 +589,7 @@ describe("useTimer", () => {
     test("reset restarts the timer from 0", async () => {
         class TestComponent extends Component {
             static template = xml`<div/>`;
-            static props = ["*"];
+            props = useProps();
             setup() {
                 this.timer = useTimer(1000);
             }
@@ -610,7 +610,7 @@ describe("useTimer", () => {
     test("resume continues from the current progress", async () => {
         class TestComponent extends Component {
             static template = xml`<div/>`;
-            static props = ["*"];
+            props = useProps();
             setup() {
                 this.timer = useTimer(1000);
             }
@@ -632,7 +632,7 @@ describe("useTimer", () => {
     test("stops on component destroy", async () => {
         class TestComponent extends Component {
             static template = xml`<div/>`;
-            static props = ["*"];
+            props = useProps();
             setup() {
                 this.timer = useTimer(1000);
             }

@@ -227,7 +227,7 @@ test("save custom favorite filter on enter", async () => {
     class TestComponent extends Component {
         static components = { SearchBar };
         static template = xml`<div><SearchBar/></div>`;
-        static props = ["*"];
+        props = useProps();
 
         setup() {
             useSetupAction({

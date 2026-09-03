@@ -86,7 +86,7 @@ test("onExpand middleClick", async () => {
                 Hello!
             </Dialog>
         `;
-        static props = ["*"];
+        props = useProps();
         onExpand(_ev, middleClick) {
             expect.step("middleClick: " + middleClick);
         }
