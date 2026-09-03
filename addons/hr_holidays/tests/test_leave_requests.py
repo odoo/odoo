@@ -148,6 +148,53 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                     'request_date_to': time.strftime('2022-02-05'),
                 })
 
+    def test_accrual_not_exceeding_consumption(self):
+        with freeze_time('2022-01-05'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'name': 'Accrual Plan For Backdated Request Test',
+                'is_based_on_worked_time': False,
+                'accrued_gain_time': 'start',
+                'carryover_date': 'allocation',
+                'level_ids': [Command.create({
+                    'start_count': 0,
+                    'added_value_type': 'day',
+                    'added_value': 12,
+                    'frequency': 'yearly',
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
+                'name': 'Accrual allocation',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'allocation_type': 'accrual',
+                'accrual_plan_id': accrual_plan.id,
+                'date_from': date(2022, 1, 1),
+                'number_of_days': 12,
+            })
+            allocation.action_validate()
+
+            # This request consumes the full accrual entitlement at a later date.
+            self.env['hr.leave'].with_user(self.user_employee_id).create({
+                'name': 'February leave',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': self.holidays_type_2.id,
+                'request_date_from': date(2022, 2, 1),
+                'request_date_to': date(2022, 2, 16),
+            })
+
+            # A backdated request should then be rejected as it exceeds total accrual.
+            with self.assertRaisesRegex(
+                ValidationError,
+                r'.* does not have a valid allocation for the leave type .* to cover that request\.',
+            ):
+                self.env['hr.leave'].with_user(self.user_employee_id).create({
+                    'name': 'January leave',
+                    'employee_id': self.employee_emp_id,
+                    'holiday_status_id': self.holidays_type_2.id,
+                    'request_date_from': date(2022, 1, 10),
+                    'request_date_to': date(2022, 1, 10),
+                })
+
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_limited_type_days_left(self):
         """  Employee creates a leave request in a limited category and has enough days left  """
