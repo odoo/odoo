@@ -2,7 +2,6 @@ import { editInput, startServer } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAll, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { defineSMSModels } from "@sms/../tests/sms_test_helpers";
 import { contains, MockServer, mockService, mountView } from "@web/../tests/web_test_helpers";
 
@@ -10,17 +9,18 @@ defineSMSModels();
 
 async function showButtons() {
     const isReadOnlyForm = queryAll(".o_form_readonly").length === 1;
-    const numberOfAction = queryAll("span > .o_phone_form_link").length;
-    if (hasTouch() && numberOfAction > 1) {
-        await contains(".o_field_phone .dropdown-toggle").click();
-        await animationFrame();
-    } else if (!hasTouch() && !isReadOnlyForm) {
+    // The buttons are only displayed while the field is hovered or focused,
+    // hence the click on its input. A readonly form has none, and does not
+    // hide them either.
+    if (!isReadOnlyForm) {
         await contains(".o_field_phone .o_input").click();
     }
 }
 
 async function getSMSButton() {
-    return queryFirst(hasTouch() ? ".o_bottom_sheet .dropdown-item:contains(SMS)" : ".o_field_phone .o_phone_form_link:contains(SMS)");
+    // Matched on the title rather than on the text, which is only displayed
+    // from the "md" breakpoint up.
+    return queryFirst(".o_field_phone .o_phone_form_link[title='SMS']");
 }
 
 beforeEach(async () => {
