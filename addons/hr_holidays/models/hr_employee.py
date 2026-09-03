@@ -222,7 +222,7 @@ class HrEmployee(models.Model):
                         ) for p in period if p[2] == calendar]
                         if work_interval:
                             collect_employees({employee_id: work_interval})
-            remaining = self.filtered(lambda e: e.id not in result)
+            remaining = remaining.filtered(lambda e: e.id not in result)
             if not remaining:
                 return result
 
@@ -238,7 +238,7 @@ class HrEmployee(models.Model):
                     self.env['resource.resource'].browse(resource_id).employee_id.id: interval
                     for resource_id, interval in work_intervals.items()
                 })
-            remaining = self.filtered(lambda e: e.id not in result)
+            remaining = remaining.filtered(lambda e: e.id not in result)
             if not remaining:
                 return result
         return result
