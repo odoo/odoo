@@ -176,7 +176,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
 
         reverse_exchange_move = exchange_move.line_ids.matched_credit_ids.credit_move_id.move_id
         self.assertRecordValues(reverse_exchange_move, [{
-            'date': fields.Date.from_string('2017-02-12'),
+            'date': fields.Date.from_string('2017-02-01'),
             'amount_total_signed': 200.0,
         }])
 
@@ -226,7 +226,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         reverse_exchange_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)]) - caba_move
 
         self.assertRecordValues(reverse_exchange_move, [{
-            'date': fields.Date.from_string('2017-02-28'),
+            'date': fields.Date.from_string('2017-02-02'),
             'amount_total_signed': 440.0,
         }])
 
@@ -283,6 +283,91 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 # The sale lock date does not matter for the caba move, since it is not in a sale journal
                 self.assertEqual(caba_move.journal_id.type, 'general')
                 self.assertEqual(caba_move.date.isoformat(), '2023-01-30')
+
+    @freezegun.freeze_time('2026-05-10')
+    def test_caba_reverse_date_monthless_sequence(self):
+        """ Test that resequenced cash-basis journal entries without explicit month
+            can still create the reversal CABA entry in the same period as the origin entry
+        """
+        self.env.company.tax_exigibility = True
+
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+
+        invoice = self._create_invoice_with_date(
+            'out_invoice', '2026-02-01',
+            invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
+        )
+        payment = self._create_payment('2026-02-15', amount=invoice.amount_total)
+        invoice.action_post()
+
+        receivable_lines = (invoice + payment.move_id).line_ids\
+            .filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+
+        receivable_lines.reconcile()
+        caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
+
+        # Resequence CABA entry and unreconcile
+        caba_move.name = 'CABA/2026/00001'
+        receivable_lines.remove_move_reconcile()
+        self.assertEqual(
+            caba_move.reversal_move_ids.date, caba_move.date,
+            "The reversal should follow the origin's period."
+        )
+
+    @freezegun.freeze_time('2026-05-10')
+    def test_caba_reverse_date_monthless_sequence_with_lock_date(self):
+        """ Test that when the origin period is closed by a tax lock date, the reversal
+            CABA entry is moved to the first open period
+        """
+        self.env.company.tax_exigibility = True
+
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+
+        invoice = self._create_invoice_with_date(
+            'out_invoice', '2026-02-01',
+            invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
+        )
+        payment = self._create_payment('2026-02-15', amount=invoice.amount_total)
+        invoice.action_post()
+
+        receivable_lines = (invoice + payment.move_id).line_ids\
+            .filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+
+        receivable_lines.reconcile()
+        caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
+
+        # Resequence CABA entry, lock the origin period through a tax lock date and unreconcile
+        caba_move.name = 'CABA/2026/00001'
+        self.env.company.sudo().tax_lock_date = fields.Date.from_string('2026-02-28')
+        receivable_lines.remove_move_reconcile()
+        self.assertEqual(
+            caba_move.reversal_move_ids.date, fields.Date.to_date('2026-03-01'),
+            "The reversal should move to the first open period when the origin period is locked.",
+        )
 
     @freezegun.freeze_time('2024-08-05')
     def test_lock_date_exceptions(self):
