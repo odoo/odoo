@@ -1,12 +1,28 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, describe, hover } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
-import { click, queryOne, waitFor } from "@odoo/hoot-dom";
+import { click, press, queryOne, waitFor } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
 import { setFontFamily, undo, redo, insertText } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { animationFrame } from "@odoo/hoot-mock";
 import { expandToolbar } from "../_helpers/toolbar";
 import { expectElementCount } from "../_helpers/ui_expectations";
+
+async function setupFontFamilyDropdown(content) {
+    const { el } = await setupEditor(content);
+
+    await expandToolbar();
+    expect(queryOne(".btn[name='font_family']")).toHaveCount(1);
+
+    await click(".btn[name='font_family']");
+    await animationFrame();
+    expectElementCount(".o_font_family_selector_menu", 1);
+    return { el };
+}
+
+function getFontFamilyItem(name) {
+    return queryOne(`.o_font_family_selector_menu .o-dropdown-item[name='${name}']`);
+}
 
 test("should give a few characters a fontFamily", async () => {
     await testEditor({
@@ -165,9 +181,178 @@ test("font-family should be preserved when replacing HTML element text", async (
     await click(".o_font_family_selector_menu .o-dropdown-item:nth-child(2)");
     await animationFrame();
     expect(el).toBeFocused();
-    expect(getContent(el)).toBe(`<p><span style="font-family: Arial, sans-serif;">[test]</span></p>`);
+    expect(getContent(el)).toBe(
+        `<p><span style="font-family: Arial, sans-serif;">[test]</span></p>`
+    );
 
     await insertText(editor, "a");
     await animationFrame();
     expect(getContent(el)).toBe(`<p><span style="font-family: Arial, sans-serif;">a[]</span></p>`);
+});
+
+describe("Font family preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different font families on hover", async () => {
+        const { el } = await setupFontFamilyDropdown("<p>a[bc]d</p>");
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(getFontFamilyItem("Verdana"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Verdana, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(getFontFamilyItem("Tahoma"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying font family (no initial font family)", async () => {
+        const { el } = await setupFontFamilyDropdown("<p>a[bc]d</p>");
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(el);
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying font family (existing font family)", async () => {
+        const { el } = await setupFontFamilyDropdown(
+            '<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>'
+        );
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await hover(el);
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Tahoma");
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+});
+
+describe("Font family preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different font families while navigating with keyboard", async () => {
+        const { el } = await setupFontFamilyDropdown("<p>a[bc]d</p>");
+
+        await press("ArrowDown"); // Default font
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("ArrowDown"); // Arial
+        expect(getFontFamilyItem("Arial")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("ArrowDown"); // Verdana
+        expect(getFontFamilyItem("Verdana")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Verdana, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (no initial font family)", async () => {
+        const { el } = await setupFontFamilyDropdown("<p>a[bc]d</p>");
+        await press("ArrowDown"); // Default font
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("ArrowDown"); // Arial
+        expect(getFontFamilyItem("Arial")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("Escape");
+        await animationFrame();
+        await animationFrame();
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Default font");
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing font family)", async () => {
+        const { el } = await setupFontFamilyDropdown(
+            '<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>'
+        );
+
+        await press("ArrowDown"); // Default font
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("ArrowDown"); // Arial
+        expect(getFontFamilyItem("Arial")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("Escape");
+        await animationFrame();
+        await animationFrame();
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Tahoma");
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+});
+
+describe("Font family preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard focus", async () => {
+        const { el } = await setupFontFamilyDropdown("<p>a[bc]d</p>");
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        getFontFamilyItem("Verdana").focus();
+        expect(getFontFamilyItem("Verdana")).toBeFocused();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Verdana, sans-serif;">[bc]</span>d</p>`
+        );
+    });
+
+    test.tags("desktop");
+    test("should revert preview when pressing Escape after switching from hover to keyboard focus", async () => {
+        const { el } = await setupFontFamilyDropdown(
+            '<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>'
+        );
+
+        await hover(getFontFamilyItem("Arial"));
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Arial, sans-serif;">[bc]</span>d</p>`
+        );
+
+        getFontFamilyItem("Verdana").focus();
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Verdana, sans-serif;">[bc]</span>d</p>`
+        );
+
+        await press("Escape");
+        await animationFrame();
+        await animationFrame();
+
+        expect(queryOne(".btn[name='font_family']").textContent).toBe("Tahoma");
+        expect(getContent(el)).toBe(
+            `<p>a<span style="font-family: Tahoma, sans-serif;">[bc]</span>d</p>`
+        );
+    });
 });

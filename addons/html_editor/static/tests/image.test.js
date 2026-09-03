@@ -1,7 +1,9 @@
-import { expect, mockFetch, test } from "@odoo/hoot";
+import { describe, expect, mockFetch, test } from "@odoo/hoot";
 import {
     click,
     dblclick,
+    hover,
+    press,
     queryOne,
     waitFor,
     manuallyDispatchProgrammaticEvent,
@@ -14,6 +16,10 @@ import { getContent, moveSelectionOutsideEditor } from "./_helpers/selection";
 import { undo } from "./_helpers/user_actions";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { getMimetype } from "@html_editor/utils/image";
+
+const imageHtml = `<p><img class="img-fluid" src="${base64Img}"></p>`;
+const imageP2Html = `<p><img class="img-fluid p-2" src="${base64Img}"></p>`;
+const imageFloatHtml = `<p><img class="img-fluid float-start" src="${base64Img}"></p>`;
 
 test("image can be selected", async () => {
     const { plugins } = await setupEditor(`
@@ -454,4 +460,397 @@ test("test order of image options in image toolbar", async () => {
             b.getAttribute("title")
         )
     ).toMatchObject(["Resize image", "Preview image"]);
+});
+
+async function setupImageDropdown(content, buttonName) {
+    const { el } = await setupEditor(content);
+
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click(`.o-we-toolbar button[name='${buttonName}']`);
+
+    return { el };
+}
+
+function getDropdownItem(label) {
+    return queryOne(`.o-dropdown-item:contains('${label}')`);
+}
+
+describe("Image size preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different image sizes on hover", async () => {
+        await setupImageDropdown(`<p><img src="/web/static/img/logo2.png"></p>`, "image_size");
+        await expectElementCount(".image_size_selector", 1);
+        await hover(getDropdownItem("100%"));
+        expect(queryOne("img").style.width).toBe("100%");
+
+        await hover(getDropdownItem("50%"));
+        expect(queryOne("img").style.width).toBe("50%");
+
+        await hover(getDropdownItem("25%"));
+        expect(queryOne("img").style.width).toBe("25%");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying image size (default size)", async () => {
+        const { el } = await setupImageDropdown(
+            `<p><img src="/web/static/img/logo2.png"></p>`,
+            "image_size"
+        );
+        await expectElementCount(".image_size_selector", 1);
+        await hover(getDropdownItem("50%"));
+        expect(queryOne("img").style.width).toBe("50%");
+
+        await hover(el);
+        expect(queryOne("img").style.width).toBe("");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying image size (existing size)", async () => {
+        const { el } = await setupImageDropdown(
+            `<p><img src="/web/static/img/logo2.png" style="width: 50%;"></p>`,
+            "image_size"
+        );
+        await expectElementCount(".image_size_selector", 1);
+        await hover(getDropdownItem("25%"));
+        expect(queryOne("img").style.width).toBe("25%");
+
+        await hover(el);
+        expect(queryOne("img").style.width).toBe("50%");
+    });
+});
+
+describe("Image size preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different image sizes while navigating with keyboard", async () => {
+        await setupImageDropdown(`<p><img src="/web/static/img/logo2.png"></p>`, "image_size");
+        await expectElementCount(".image_size_selector", 1);
+        await press("ArrowDown");
+        expect(getDropdownItem("Default")).toBeFocused();
+
+        await press("ArrowDown");
+        expect(getDropdownItem("100%")).toBeFocused();
+        expect(queryOne("img").style.width).toBe("100%");
+
+        await press("ArrowDown");
+        expect(getDropdownItem("50%")).toBeFocused();
+        expect(queryOne("img").style.width).toBe("50%");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (default size)", async () => {
+        await setupImageDropdown(`<p><img src="/web/static/img/logo2.png"></p>`, "image_size");
+        await expectElementCount(".image_size_selector", 1);
+        await press("ArrowDown");
+        await press("ArrowDown");
+
+        expect(getDropdownItem("100%")).toBeFocused();
+        expect(queryOne("img").style.width).toBe("100%");
+
+        await press("Escape");
+        await animationFrame();
+        expect(queryOne("img").style.width).toBe("");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing size)", async () => {
+        await setupImageDropdown(
+            `<p><img src="/web/static/img/logo2.png" style="width: 50%;"></p>`,
+            "image_size"
+        );
+        await expectElementCount(".image_size_selector", 1);
+        await press("ArrowDown");
+        await press("ArrowDown");
+
+        expect(getDropdownItem("100%")).toBeFocused();
+        expect(queryOne("img").style.width).toBe("100%");
+
+        await press("Escape");
+        await animationFrame();
+        expect(queryOne("img").style.width).toBe("50%");
+    });
+});
+
+describe("Image size preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard navigation", async () => {
+        await setupImageDropdown(`<p><img src="/web/static/img/logo2.png"></p>`, "image_size");
+        await expectElementCount(".image_size_selector", 1);
+        await hover(getDropdownItem("100%"));
+        expect(queryOne("img").style.width).toBe("100%");
+
+        await press("ArrowDown");
+        expect(getDropdownItem("50%")).toBeFocused();
+        expect(queryOne("img").style.width).toBe("50%");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when pressing Escape after switching from hover to keyboard navigation", async () => {
+        await setupImageDropdown(
+            `<p><img src="/web/static/img/logo2.png" style="width: 50%;"></p>`,
+            "image_size"
+        );
+        await expectElementCount(".image_size_selector", 1);
+        await hover(getDropdownItem("25%"));
+        expect(queryOne("img").style.width).toBe("25%");
+
+        await press("ArrowDown");
+        expect(getDropdownItem("Default")).toBeFocused();
+        expect(queryOne("img").style.width).toBe("");
+
+        await press("Escape");
+        await animationFrame();
+        expect(queryOne("img").style.width).toBe("50%");
+    });
+});
+
+describe("Image padding preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different image paddings on hover", async () => {
+        await setupImageDropdown(imageHtml, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await hover(getDropdownItem("Small"));
+        expect("img").toHaveClass("p-1");
+
+        await hover(getDropdownItem("Medium"));
+        expect("img").toHaveClass("p-2");
+
+        await hover(getDropdownItem("Large"));
+        expect("img").toHaveClass("p-3");
+
+        await hover(getDropdownItem("XL"));
+        expect("img").toHaveClass("p-5");
+
+        await hover(getDropdownItem("None"));
+        expect("img").toHaveClass("p-0");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying image padding (no initial padding)", async () => {
+        const { el } = await setupImageDropdown(imageHtml, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await hover(getDropdownItem("Medium"));
+        expect("img").toHaveClass("p-2");
+
+        await hover(el);
+        expect("img").not.toHaveClass("p-2");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying image padding (existing padding)", async () => {
+        const { el } = await setupImageDropdown(imageP2Html, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await hover(getDropdownItem("Large"));
+        expect("img").toHaveClass("p-3");
+        await hover(el);
+        expect("img").toHaveClass("p-2");
+    });
+});
+
+describe("Image padding preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different image paddings while navigating with keyboard", async () => {
+        await setupImageDropdown(imageHtml, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await press("ArrowDown");
+        expect(getDropdownItem("None")).toBeFocused();
+
+        await press("ArrowDown");
+        expect(getDropdownItem("Small")).toBeFocused();
+        expect("img").toHaveClass("p-1");
+
+        await press("ArrowDown");
+        expect(getDropdownItem("Medium")).toBeFocused();
+        expect("img").toHaveClass("p-2");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (no initial padding)", async () => {
+        await setupImageDropdown(imageHtml, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await press("ArrowDown");
+        await press("ArrowDown");
+
+        expect(getDropdownItem("Small")).toBeFocused();
+        expect("img").toHaveClass("p-1");
+        await press("Escape");
+        await animationFrame();
+        expect("img").not.toHaveClass("p-1");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing padding)", async () => {
+        await setupImageDropdown(imageP2Html, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await press("ArrowDown");
+        await press("ArrowDown");
+
+        expect(getDropdownItem("Small")).toBeFocused();
+        expect("img").toHaveClass("p-1");
+        await press("Escape");
+        await animationFrame();
+        expect("img").toHaveClass("p-2");
+    });
+});
+
+describe("Image padding preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard navigation", async () => {
+        await setupImageDropdown(imageHtml, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await hover(getDropdownItem("Medium"));
+        expect("img").toHaveClass("p-2");
+
+        await press("ArrowDown");
+        expect(getDropdownItem("Large")).toBeFocused();
+        expect("img").toHaveClass("p-3");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when pressing Escape after switching from hover to keyboard navigation", async () => {
+        await setupImageDropdown(imageP2Html, "image_padding");
+        await expectElementCount(".image_padding_selector", 1);
+        await hover(getDropdownItem("Large"));
+
+        await press("ArrowDown");
+
+        expect(getDropdownItem("XL")).toBeFocused();
+        expect("img").toHaveClass("p-5");
+        await press("Escape");
+        await animationFrame();
+        expect("img").toHaveClass("p-2");
+    });
+});
+
+describe("Image alignment preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different image alignments on hover", async () => {
+        await setupImageDropdown(imageHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await hover(queryOne(`.o-dropdown-item[title="Wrap text"]`));
+        expect("img").toHaveClass("float-start");
+
+        await hover(queryOne(`.o-dropdown-item[title="Break text"]`));
+        expect("img").toHaveClass("d-block");
+
+        await hover(queryOne(`.o-dropdown-item[title="Inline"]`));
+        expect("img").not.toHaveClass("float-start");
+        expect("img").not.toHaveClass("d-block");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying image alignment (default)", async () => {
+        const { el } = await setupImageDropdown(imageHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await hover(queryOne(`.o-dropdown-item[title="Wrap text"]`));
+        await animationFrame();
+        expect("img").toHaveClass("float-start");
+
+        await hover(el);
+        await animationFrame();
+        expect(queryOne(`.o-dropdown-item[title="Inline"]`)).toHaveClass("active");
+        expect("img").not.toHaveClass("float-start");
+        expect("img").not.toHaveClass("d-block");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying image alignment (existing alignment)", async () => {
+        const { el } = await setupImageDropdown(imageFloatHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await hover(queryOne(`.o-dropdown-item[title="Break text"]`));
+        await animationFrame();
+        expect("img").toHaveClass("d-block");
+
+        await hover(el);
+        await animationFrame();
+        expect(queryOne(`.o-dropdown-item[title="Wrap text"]`)).toHaveClass("active");
+        expect("img").toHaveClass("float-start");
+        expect("img").not.toHaveClass("d-block");
+    });
+});
+
+describe("Image alignment preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different image alignments while navigating with keyboard", async () => {
+        await setupImageDropdown(imageHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await press("ArrowDown");
+        expect(queryOne(`.o-dropdown-item[title="Inline"]`)).toBeFocused();
+
+        await press("ArrowDown");
+        expect(queryOne(`.o-dropdown-item[title="Wrap text"]`)).toBeFocused();
+        expect("img").toHaveClass("float-start");
+
+        await press("ArrowDown");
+        expect(queryOne(`.o-dropdown-item[title="Break text"]`)).toBeFocused();
+        expect("img").toHaveClass("d-block");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (default)", async () => {
+        await setupImageDropdown(imageHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await press("ArrowDown");
+        await press("ArrowDown");
+        expect("img").toHaveClass("float-start");
+
+        await press("Escape");
+        await animationFrame();
+        expect("img").not.toHaveClass("float-start");
+        expect("img").not.toHaveClass("d-block");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing alignment)", async () => {
+        await setupImageDropdown(imageFloatHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await press("ArrowDown");
+        await press("ArrowDown");
+        expect("img").toHaveClass("float-start");
+
+        await press("Escape");
+        await animationFrame();
+        expect("img").toHaveClass("float-start");
+        expect("img").not.toHaveClass("d-block");
+    });
+});
+
+describe("Image alignment preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard navigation", async () => {
+        await setupImageDropdown(imageHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await hover(queryOne(`.o-dropdown-item[title="Wrap text"]`));
+        expect("img").toHaveClass("float-start");
+
+        await press("ArrowDown");
+        expect(queryOne(`.o-dropdown-item[title="Break text"]`)).toBeFocused();
+        expect("img").toHaveClass("d-block");
+    });
+
+    test.tags("desktop");
+    test("should revert preview when pressing Escape after switching from hover to keyboard navigation", async () => {
+        await setupImageDropdown(imageFloatHtml, "image_align");
+        await expectElementCount(".o-we-toolbar-dropdown", 1);
+
+        await hover(queryOne(`.o-dropdown-item[title="Break text"]`));
+        expect("img").toHaveClass("d-block");
+
+        await press("ArrowDown");
+        expect(queryOne(`.o-dropdown-item[title="Inline"]`)).toBeFocused();
+        expect("img").not.toHaveClass("float-start");
+        expect("img").not.toHaveClass("d-block");
+
+        await press("Escape");
+        await animationFrame();
+        expect("img").toHaveClass("float-start");
+        expect("img").not.toHaveClass("d-block");
+    });
 });

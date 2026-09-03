@@ -161,7 +161,7 @@ export const DISABLED_NAMESPACE = "disabled";
 
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
-    static dependencies = ["overlay", "selection", "userCommand"];
+    static dependencies = ["overlay", "selection", "userCommand", "history"];
     static shared = ["getToolbarInfo", "getIsToolbarOpen"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -411,6 +411,11 @@ export class ToolbarPlugin extends Plugin {
         // editable's document is detached and `defaultView` is null, which would
         // crash in `getFilteredTargetedNodes`. Bail out early in that case.
         if (this.isDestroyed || !this.document.isConnected) {
+            return;
+        }
+        // Ignore toolbar updates while a preview is active. The toolbar will be
+        // updated once the preview is committed or reverted.
+        if (this.dependencies.history.getIsPreviewing()) {
             return;
         }
         // Prevent toolbar to open if the selection is not in the editable area,

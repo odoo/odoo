@@ -1,15 +1,19 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImageToolbarDropdown">
-        <Dropdown state="this.dropdown" menuClass="`${this.props.name}_selector`" menuRef="this.menuRef" focusToggleOnClosed="false">
-            <button t-ref="this.imageToolbarBtn" t-att-title="this.props.title" class="btn btn-light">
+        <Dropdown navigationOptions="this.preview.navigationOptions" state="this.dropdown" menuClass="`${this.props.name}_selector`" menuRef="this.menuRef" focusToggleOnClosed="false">
+            <button t-ref="this.imageToolbarBtn" t-att-title="this.props.title" class="btn btn-light" t-att-name="this.props.name">
                 <t t-if="this.props.icon.includes('.')" t-call="{{ this.props.icon }}"/>
                 <i t-else="" class="oi oi-fw" t-att-data-icon="this.props.icon"/>
                 <t t-if="this.state &amp;&amp; this.state.displayName" t-out="this.state.displayName"/>
             </button>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
+                <div data-prevent-closing-overlay="true" t-on-mouseleave="this.onItemHoverOut">
                     <t t-foreach="this.items" t-as="item" t-key="item_index">
-                        <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected(item)">
+                        <DropdownItem class="'user-select-none'"
+                            attrs="{ 'data-preview-index': item_index }"
+                            t-on-pointerdown.prevent="() => {}"
+                            onSelected="() => this.onSelected(item)"
+                        >
                             <t t-out="item.name"/>
                         </DropdownItem>
                     </t>

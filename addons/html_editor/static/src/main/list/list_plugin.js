@@ -150,6 +150,7 @@ export class ListPlugin extends Plugin {
                 props: {
                     getButtons: () => this.listSelectorButtons,
                     getListMode: this.getListMode.bind(this),
+                    previewable: () => this.previewableToggleList,
                 },
                 isAvailable: this.canToggleList.bind(this),
             }),
@@ -248,6 +249,9 @@ export class ListPlugin extends Plugin {
         this.canToggleListMemoized = weakMemoize(
             (selection) =>
                 isHtmlContentSupported(selection) && this.getBlocksToToggleList().length > 0
+        );
+        this.previewableToggleList = this.dependencies.history.makePreviewableOperation((item) =>
+            item.run()
         );
     }
 

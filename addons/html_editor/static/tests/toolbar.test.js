@@ -447,8 +447,14 @@ test("move focus in list dropdown on Tab, Escape returns focus to dropdown butto
     expect(queryOne("button[name='bulleted_list']")).toBeFocused();
 
     // Closes dropdown and move focus to the toolbar list button
-    await press("Escape");
+    await manuallyDispatchProgrammaticEvent(document, "keydown", {
+        key: "Escape",
+    });
+    await animationFrame();
     await expectElementCount(".o-we-toolbar-dropdown button[name='bulleted_list']", 0);
+    await manuallyDispatchProgrammaticEvent(document, "keyup", {
+        key: "Escape",
+    });
     expect(queryOne("button[name='list_selector']")).toBeFocused();
 
     // Move focus from toolbar to editbale

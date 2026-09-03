@@ -6,6 +6,7 @@ import { useDebounced } from "@web/core/utils/timing";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import {
     useDropdownAutoVisibility,
+    useToolbarDropdownPreview,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
@@ -18,7 +19,6 @@ export class FontSizeSelector extends Component {
         getItems: t.function(),
         getDisplay: t.function(),
         onFontSizeInput: t.function(),
-        onSelected: t.function(),
         onBlur: t.function().optional(),
         document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
         maxFontSize: t.number().optional(MAX_FONT_SIZE),
@@ -26,6 +26,7 @@ export class FontSizeSelector extends Component {
         title: t.or([t.string(), t.function()]),
         getSelection: t.function(),
         isDisabled: t.boolean(),
+        previewable: t.function().optional(),
     });
     static components = { Dropdown, DropdownItem, IframeInput };
 
@@ -39,8 +40,16 @@ export class FontSizeSelector extends Component {
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
         this.iframeContentRef = signal.ref();
         this.fontSizeInputRef = signal.ref();
-        this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput.bind(this), 200);
+        this.debouncedCustomFontSizeInput = useDebounced(
+            this.onCustomFontSizeInput.bind(this),
+            200
+        );
         useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
+        this.preview = useToolbarDropdownPreview({
+            dropdown: this.dropdown,
+            getItems: () => this.items,
+            previewable: this.props.previewable,
+        });
         const htmlStyle = getHtmlStyle(document);
         this.fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
     }
@@ -107,6 +116,10 @@ export class FontSizeSelector extends Component {
     }
 
     onSelected(item) {
-        this.props.onSelected(item);
+        this.preview.commit(item);
+    }
+
+    onItemHoverOut() {
+        this.preview.reset();
     }
 }

@@ -729,8 +729,18 @@ export class DomPlugin extends Plugin {
                 (isCollapsed || block !== lastTargetedNode) &&
                 this.isRetaggingSafe(block) &&
                 !descendants(block).some((descendant) => targetedBlocks.includes(descendant)) &&
-                block.isContentEditable
+                (block.isContentEditable || this.isSupportedNonEditableBlock(block))
         );
+    }
+
+    /**
+     * A block that is not itself content-editable (e.g. an embedded component
+     * host) can still be converted if a plugin knows how to retag it (see
+     * `on_will_set_tag_handlers`). This is notably required to convert a code
+     * block whose embedded component is not (yet) mounted.
+     */
+    isSupportedNonEditableBlock(block) {
+        return this.getResource("set_tag_target_predicates").some((p) => p(block));
     }
 
     canSetBlock() {
@@ -766,7 +776,8 @@ export class DomPlugin extends Plugin {
                 isParagraphRelatedElement(block) ||
                 isListItemElement(block) ||
                 isPhrasingContent(block) ||
-                block.nodeName === "BLOCKQUOTE"
+                block.nodeName === "BLOCKQUOTE" ||
+                this.isSupportedNonEditableBlock(block)
             ) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;

@@ -1,8 +1,25 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, click, describe, expect, hover, test, waitFor } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { toggleOrderedList, toggleUnorderedList, toggleCheckList } from "../_helpers/user_actions";
 import { expandToolbar } from "../_helpers/toolbar";
+import { getContent } from "../_helpers/selection";
+import { press, queryOne } from "@odoo/hoot-dom";
+
+async function setupListDropdown(content) {
+    const { el } = await setupEditor(content);
+
+    await expandToolbar();
+    await waitFor(".btn[name='list_selector']");
+    await click(".btn[name='list_selector']");
+    await waitFor(".o-we-toolbar-dropdown button[name='bulleted_list']");
+
+    return { el };
+}
+
+function getListItem(name) {
+    return queryOne(`.o-we-toolbar-dropdown button[name='${name}']`);
+}
 
 describe("Mixed", () => {
     test("should turn an ordered list into an unordered list (1)", async () => {
@@ -447,5 +464,143 @@ describe("availability", () => {
         );
         await expandToolbar();
         expect(".btn[name='list_selector']").toHaveCount(0);
+    });
+});
+
+describe("List type preview with mouse hover", () => {
+    test.tags("desktop");
+    test("should preview different list types on hover when no list is applied", async () => {
+        const { el } = await setupListDropdown("<p>a[bc]d</p>");
+
+        await hover(getListItem("bulleted_list"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+
+        await hover(getListItem("numbered_list"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ol><li>a[bc]d</li></ol>`);
+
+        await hover(getListItem("checklist"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul class="o_checklist"><li>a[bc]d</li></ul>`);
+    });
+
+    test.tags("desktop");
+    test("should preview different list types on hover when a list is already applied", async () => {
+        const { el } = await setupListDropdown("<ol><li>a[bc]d</li></ol>");
+
+        await hover(getListItem("bulleted_list"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+
+        await hover(getListItem("numbered_list"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await hover(getListItem("checklist"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul class="o_checklist"><li>a[bc]d</li></ul>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when mouse leaves without applying list type", async () => {
+        const { el } = await setupListDropdown("<p>a[bc]d</p>");
+
+        await hover(getListItem("bulleted_list"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+
+        await hover(el);
+
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+});
+
+describe("List type preview with keyboard", () => {
+    test.tags("desktop");
+    test("should preview different list types while navigating with keyboard", async () => {
+        const { el } = await setupListDropdown("<p>a[bc]d</p>");
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getListItem("bulleted_list")).toBeFocused();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getListItem("numbered_list")).toBeFocused();
+        expect(getContent(el)).toBe(`<ol><li>a[bc]d</li></ol>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getListItem("checklist")).toBeFocused();
+        expect(getContent(el)).toBe(`<ul class="o_checklist"><li>a[bc]d</li></ul>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (no initial list)", async () => {
+        const { el } = await setupListDropdown("<p>a[bc]d</p>");
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getListItem("bulleted_list")).toBeFocused();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+
+        await press("Escape");
+        await animationFrame();
+
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when Escape closes the dropdown (existing list)", async () => {
+        const { el } = await setupListDropdown("<ul><li>a[bc]d</li></ul>");
+
+        await press("ArrowDown");
+        await animationFrame();
+        expect(getListItem("bulleted_list")).toBeFocused();
+        expect(getContent(el)).toBe(`<p>a[bc]d</p>`);
+
+        await press("Escape");
+        await animationFrame();
+
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+    });
+});
+
+describe("List type preview with mixed interactions", () => {
+    test.tags("desktop");
+    test("should update preview when switching from hover to keyboard navigation", async () => {
+        const { el } = await setupListDropdown("<p>a[bc]d</p>");
+
+        await hover(getListItem("bulleted_list"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+
+        expect(getListItem("numbered_list")).toBeFocused();
+        expect(getContent(el)).toBe(`<ol><li>a[bc]d</li></ol>`);
+    });
+
+    test.tags("desktop");
+    test("should revert preview when pressing Escape after switching from hover to keyboard navigation", async () => {
+        const { el } = await setupListDropdown("<ol><li>a[bc]d</li></ol>");
+
+        await hover(getListItem("checklist"));
+        await animationFrame();
+        expect(getContent(el)).toBe(`<ul class="o_checklist"><li>a[bc]d</li></ul>`);
+
+        await press("ArrowDown");
+        await animationFrame();
+
+        expect(getListItem("bulleted_list")).toBeFocused();
+        expect(getContent(el)).toBe(`<ul><li>a[bc]d</li></ul>`);
+
+        await press("Escape");
+        await animationFrame();
+
+        expect(getContent(el)).toBe(`<ol><li>a[bc]d</li></ol>`);
     });
 });
