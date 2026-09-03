@@ -286,21 +286,23 @@
                             <field name="name"/>
                         </div>
                         <footer>
-                            <i class="oi me-1" data-icon="hourglass_bottom" title="time remaining"/>
-                            <div class="o_kanban_workorder_remaining" data-tooltip="Remaining Time" t-att-class="record.remaining_time.raw_value &lt; 0 ? 'o_wo_red' : ''">
-                                <field name="remaining_time" class="mx-1" widget="float_time" options="{'unit': 'minutes'}"/>
-                            </div>
-                            <t t-set="start_datetime" t-value="luxon.DateTime.fromISO(record.date_start.raw_value)"/>
-                            <div class="o_kanban_workorder_date" invisible="not date_start"
-                                t-att-class="{'o_wo_orange': start_datetime.hasSame(luxon.DateTime.now(), 'day'),
-                                     'o_wo_red': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
-                                     '': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
-                                 }">
-                                <i class="oi me-1 my-auto" data-icon="schedule" title="planned date start"></i>
-                                <div data-tooltip="Scheduled Date">
-                                    <field name="date_start" class="pe-2"/>
+                            <t invisible="state in ('done', 'cancel')">
+                                <i class="oi me-1" data-icon="hourglass_bottom" title="time remaining"/>
+                                <div class="o_kanban_workorder_remaining" data-tooltip="Remaining Time" t-att-class="record.remaining_time.raw_value &lt; 0 ? 'o_wo_red' : ''">
+                                    <field name="remaining_time" class="mx-1" widget="float_time" options="{'unit': 'minutes'}"/>
                                 </div>
-                            </div>
+                                <t t-set="start_datetime" t-value="luxon.DateTime.fromISO(record.date_start.raw_value)"/>
+                                <div class="o_kanban_workorder_date" invisible="not date_start"
+                                    t-att-class="{'o_wo_orange': start_datetime.hasSame(luxon.DateTime.now(), 'day'),
+                                        'o_wo_red': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
+                                        '': start_datetime.toISODate() &lt; luxon.DateTime.now().toISODate(),
+                                    }">
+                                    <i class="oi me-1 my-auto" data-icon="schedule" title="planned date start"></i>
+                                    <div data-tooltip="Scheduled Date">
+                                        <field name="date_start" class="pe-2"/>
+                                    </div>
+                                </div>
+                            </t>
                             <div class="d-flex ms-auto">
                                 <field name="last_working_user_id" widget="many2one_avatar_user"/>
                                 <div data-tooltip="Status">
