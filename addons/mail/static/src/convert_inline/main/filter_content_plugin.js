@@ -166,6 +166,10 @@ export class FilterContentPlugin extends Plugin {
         rules.allow("word-spacing");
         rules.allow("white-space");
         rules.allow("color");
+        rules.fix("font-family", {
+            when: ({ referenceNode }) => referenceNode.nodeName === "A",
+            how: () => ({ propertyPriority: "important" }),
+        });
     }
 
     genericBackgroundStyleRules(rules) {
