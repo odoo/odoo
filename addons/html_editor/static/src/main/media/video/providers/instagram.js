@@ -2,7 +2,7 @@ import { AbstractThirdPartyVideo } from "@html_editor/main/media/video/abstract_
 
 export class Instagram extends AbstractThirdPartyVideo {
     static id = "instagram";
-    static name = "Intagram";
+    static name = "Instagram";
 
     static urlMatcher =
         /^(?:https?:\/\/)?(?:(.*)instagram\.com|instagr\.am)(?:\/([a-zA-Z0-9\-_\\.]+))?\/(?:p|reels?)\/(?<id>[a-zA-Z0-9\-_\\.]+)(?:\/embed)?\/?$/i;
