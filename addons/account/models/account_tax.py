@@ -3275,19 +3275,18 @@ class AccountTax(models.Model):
 
         factors = self._normalize_target_factors(target_factors)
 
-        new_taxes_data = []
+        new_taxes_data = [None] * len(factors)
 
         # Distribution of raw amounts.
-        for _index, factor in factors:
-            new_taxes_data.append({
+        for index, factor in factors:
+            new_taxes_data[index] = {
                 **tax_data,
                 'raw_tax_amount_currency': factor * tax_data['raw_tax_amount_currency'],
                 'raw_tax_amount': factor * tax_data['raw_tax_amount'],
                 'raw_base_amount_currency': factor * tax_data['raw_base_amount_currency'],
                 'raw_base_amount': factor * tax_data['raw_base_amount'],
-            })
+            }
 
-        # Distribution of rounded amounts.
         new_target_factors = [
             {
                 'factor': target_factor['factor'],
@@ -3331,11 +3330,11 @@ class AccountTax(models.Model):
 
         factors = self._normalize_target_factors(target_factors)
 
-        new_tax_details_list = []
+        new_tax_details_list = [None] * len(factors)
 
         # Distribution of raw amounts.
-        for _index, factor in factors:
-            new_tax_details_list.append({
+        for index, factor in factors:
+            new_tax_details_list[index] = {
                 'raw_total_excluded_currency': factor * tax_details['raw_total_excluded_currency'],
                 'raw_total_excluded': factor * tax_details['raw_total_excluded'],
                 'raw_total_included_currency': factor * tax_details['raw_total_included_currency'],
@@ -3343,7 +3342,7 @@ class AccountTax(models.Model):
                 'delta_total_excluded_currency': 0.0,
                 'delta_total_excluded': 0.0,
                 'taxes_data': [],
-            })
+            }
 
         # Manage 'taxes_data'.
         for tax_data in tax_details['taxes_data']:
@@ -3410,7 +3409,8 @@ class AccountTax(models.Model):
 
         # Split 'base_line'.
         new_base_lines = [None] * len(factors)
-        for (index, factor), new_tax_details, target_factor in zip(factors, new_tax_details_list, target_factors):
+        for index, factor in factors:
+            new_tax_details, target_factor = new_tax_details_list[index], target_factors[index]
             kwargs = {
                 'price_unit': factor * base_line['price_unit'],
                 'tax_details': new_tax_details,
