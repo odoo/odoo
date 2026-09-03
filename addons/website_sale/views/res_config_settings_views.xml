@@ -81,7 +81,7 @@
                     <field name="sale_automatic_invoice"/>
                     <div invisible="not sale_automatic_invoice">
                         <label for="invoice_mail_template_id" class="o_light_label me-2"/>
-                        <field name="invoice_mail_template_id" class="oe_inline"/>
+                        <field name="invoice_mail_template_id" class="oe_inline" context="{'default_model': 'account.move'}"/>
                     </div>
                 </setting>
                 <setting
@@ -229,7 +229,7 @@
                                 for="confirmation_email_template_id"
                                 class="o_light_label col-lg-3"
                             />
-                            <field name="confirmation_email_template_id"/>
+                            <field name="confirmation_email_template_id" context="{'default_model': 'sale.order'}"/>
                         </div>
                     </div>
                 </setting>
@@ -288,6 +288,7 @@
                             name="rating_email_template_id"
                             class="oe_inline"
                             style="min-width: 16rem;"
+                            context="{'default_model': 'sale.order'}"
                         />
                     </div>
                 </setting>
