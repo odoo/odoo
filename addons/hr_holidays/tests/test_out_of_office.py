@@ -100,6 +100,22 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         employees.invalidate_recordset(["leave_date_to"])
         self.assertEqual(employees.mapped("leave_date_to"), [date(2024, 6, 7), date(2024, 6, 6)])
 
+    @freeze_time("2024-06-05")
+    def test_public_holiday_ooo(self):
+        self.assertFalse(self.employee_hruser.leave_date_to, "user should not be on leave")
+        self.env["resource.calendar.leaves"].create({
+            "name": "Public Holiday",
+            "resource_id": False,
+            "company_id": self.employee_hruser.company_id.id,
+            "date_from": datetime(2024, 6, 5, 0, 0, 0),
+            "date_to": datetime(2024, 6, 5, 23, 59, 59),
+        })
+        employee = self.employee_hruser
+        employee.invalidate_recordset(["leave_date_to"])
+        self.assertTrue(employee.leave_date_to, "correspondent should be back on office after the public holiday")
+        user = employee.user_id
+        user.invalidate_recordset(["leave_date_to"])
+        self.assertTrue(user.leave_date_to, "correspondent should be back on office after the public holiday")
 
 @tagged('out_of_office')
 @tagged('at_install', '-post_install')  # LEGACY at_install, fails post install

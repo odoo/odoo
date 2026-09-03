@@ -196,33 +196,68 @@ class HrEmployee(models.Model):
 
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
-        holidays = self.env['hr.leave'].sudo().search([
+        now = fields.Datetime.now()
+        leaves = self.env['hr.leave'].sudo().search([
             ('employee_id', 'in', self.ids),
-            ('date_from', '<=', fields.Datetime.now()),
-            ('date_to', '>=', fields.Datetime.now()),
+            ('date_from', '<=', now),
+            ('date_to', '>=', now),
             ('state', '=', 'validate'),
         ], order='date_to desc')
 
-        employee_holidays = holidays.grouped('employee_id')
-        employee_back_on = holidays.employee_id._get_first_working_interval_batch({
-            employee.id: holiday[0].date_to
-            for employee, holiday in employee_holidays.items()
+        employee_leaves = leaves.grouped('employee_id')
+        employee_back_on = leaves.employee_id._get_first_working_interval_batch({
+            employee.id: emp_leaves[0].date_to
+            for employee, emp_leaves in employee_leaves.items()
         })
 
-        for employee, emp_holidays in employee_holidays.items():
-            latest_emp_holiday = emp_holidays[0]
-            employee.leave_date_from = min(emp_holidays.mapped('date_from')).date()
-            employee.leave_date_to = employee_back_on.get(employee.id, latest_emp_holiday.date_to).date()
-            employee.current_leave_state = latest_emp_holiday.state
-            employee.is_absent = any(e_h.work_entry_type_id.count_as == 'absence' for e_h in emp_holidays)
+        for employee, emp_leaves in employee_leaves.items():
+            latest_emp_leave = emp_leaves[0]
+            employee.leave_date_from = min(emp_leaves.mapped('date_from')).date()
+            employee.leave_date_to = employee_back_on.get(employee.id, latest_emp_leave.date_to).date()
+            employee.current_leave_state = latest_emp_leave.state
+            employee.is_absent = any(leave.work_entry_type_id.count_as == 'absence' for leave in emp_leaves)
 
-        no_data = self - holidays.employee_id
+        no_data = self - leaves.employee_id
         no_data.update({
             'leave_date_from': False,
             'leave_date_to': False,
             'current_leave_state': False,
             'is_absent': False,
         })
+
+        # Public holidays aren't hr.leave records, but the employee should still be considered on leave.
+        # sudo: resource.calendar.leaves - accessing public holidays is allowed for all users
+        public_holiday_end = {
+            (company.id, calendar.id): date_to
+            for company, calendar, date_to in self.env['resource.calendar.leaves'].sudo()._read_group([
+                ('resource_id', '=', False),
+                ('count_as', '=', 'absence'),
+                ('company_id', 'in', no_data.company_id.ids),
+                ('date_from', '<=', now),
+                ('date_to', '>=', now),
+            ], ['company_id', 'calendar_id'], ['date_to:max'])
+        }
+        if not public_holiday_end:
+            return
+
+        leave_end_by_employee = {}
+        for employee in no_data:
+            calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
+            ends = [
+                public_holiday_end[key]
+                for key in {(employee.company_id.id, False), (employee.company_id.id, calendar.id)}
+                if key in public_holiday_end
+            ]
+            if ends:
+                leave_end_by_employee[employee.id] = max(ends)
+
+        if not leave_end_by_employee:
+            return
+
+        on_public_holiday = self.browse(leave_end_by_employee)
+        back_on = on_public_holiday._get_first_working_interval_batch(leave_end_by_employee)
+        for employee in on_public_holiday:
+            employee.leave_date_to = back_on.get(employee.id, leave_end_by_employee[employee.id]).date()
 
     @api.depends('parent_id')
     def _compute_leave_manager(self):
