@@ -66,10 +66,6 @@ class ResConfigSettings(models.TransientModel):
     def _inverse_l10n_fr_pdp_pilot_phase(self):
         pass
 
-    def _peppol_allows_document_reception(self):
-        self.ensure_one()
-        return super()._peppol_allows_document_reception() and self.country_code != 'FR'
-
     # TODO: remove in master
     @api.model
     def _pdp_ensure_selection_value(self, model_name, field_name, new_value):
