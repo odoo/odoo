@@ -327,6 +327,15 @@ class BlogPost(models.Model):
         res['default_meta_description'] = self.subtitle
         return res
 
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == 'create'
+            and self.env.user._is_public()
+            and not self.env['website'].is_view_active('website_blog.opt_blog_post_comment')
+        ):
+            return dict.fromkeys(self, 'write')
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)
+
     @api.model
     def _search_get_detail(self, website, order, options):
         with_description = options['displayDescription']

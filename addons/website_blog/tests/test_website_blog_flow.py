@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
+from werkzeug.exceptions import NotFound
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import users, HttpCase, tagged
 from odoo.addons.http_routing.tests.common import MockRequest
@@ -118,6 +119,43 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
         self.test_blog_post.content = "<h2>Test Content</h2>"
 
         self.assertEqual(self.test_blog_post.teaser, "Test Content...")
+
+    @users('cedric')
+    def test_blog_post_comment_permissions(self):
+        """ Test that public users are prevented from posting comments via RPC
+        when comments are disabled in the website editor options. """
+        comment_option_view = self.env.ref('website_blog.opt_blog_post_comment').sudo()
+        with self.assertRaises(NotFound), MockRequest(self.env):
+            ThreadController().mail_message_post(
+                "blog.post",
+                self.test_blog_post.id,
+                {
+                    "body": "<p>UNAUTHENTICATED_BOT_SPAM_TEST</p>",
+                    "message_type": "comment",
+                    "subtype_xmlid": "mail.mt_comment",
+                },
+            )
+        spam_message = self.env['mail.message'].search([
+            ('model', '=', 'blog.post'),
+            ('res_id', '=', self.test_blog_post.id),
+        ])
+        self.assertFalse(spam_message)
+        comment_option_view.active = True
+        with MockRequest(self.env):
+            ThreadController().mail_message_post(
+                "blog.post",
+                self.test_blog_post.id,
+                {
+                    "body": "<p>ALLOWED_PUBLIC_COMMENT</p>",
+                    "message_type": "comment",
+                    "subtype_xmlid": "mail.mt_comment",
+                },
+            )
+        valid_message = self.env['mail.message'].search([
+            ('model', '=', 'blog.post'),
+            ('res_id', '=', self.test_blog_post.id),
+        ])
+        self.assertTrue(valid_message)
 
 
 @tagged('-at_install', 'post_install')
