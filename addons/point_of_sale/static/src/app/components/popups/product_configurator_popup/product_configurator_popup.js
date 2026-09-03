@@ -12,6 +12,7 @@ export class BaseProductAttribute extends Component {
         "customValue",
         "setCustomValue",
         "allSelectedValues",
+        "showExtraPrice",
     ];
 
     setup() {
@@ -92,6 +93,7 @@ export class ProductConfiguratorPopup extends Component {
         hideAlwaysVariants: { type: Boolean, optional: true },
         forceVariantValue: { type: Object, optional: true },
         line: { type: Object, optional: true },
+        comboItem: { type: Object, optional: true },
     };
 
     setup() {
@@ -277,6 +279,22 @@ export class ProductConfiguratorPopup extends Component {
         return this.selectedValues
             .filter((value) => value.attribute_id.create_variant === "no_variant")
             .reduce((acc, val) => acc + val.price_extra, 0);
+    }
+
+    get showExtraPrice() {
+        // Combo items add their extras on top of the combo price, always.
+        if (this.props.comboItem) {
+            return true;
+        }
+        // A fixed pricelist rule replaces the whole price of the product, attribute
+        // extra prices included, so those extras must not be advertised either.
+        const template = this.props.productTemplate;
+        const pricelist = this.pos.getOrder()?.pricelist_id;
+        const variant = this.product || false;
+        return (
+            template.getPrice(pricelist, 1, 1, false, variant) !==
+            template.getPrice(pricelist, 1, 0, false, variant)
+        );
     }
 
     confirm() {
