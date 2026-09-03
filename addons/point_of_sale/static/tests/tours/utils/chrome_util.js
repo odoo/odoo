@@ -61,7 +61,7 @@ export function endTour() {
 }
 export function isSyncStatusConnected() {
     return {
-        trigger: negate(".oe_status", ".pos-rightheader .status-buttons"),
+        trigger: negate(".oe_status_unsync", ".pos-rightheader .status-buttons"),
     };
 }
 export function clickPlanButton() {
