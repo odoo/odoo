@@ -22,15 +22,21 @@
             </t>
             <t t-else="">
                 <t t-foreach="this.tabs" t-as="tab" t-key="tab.id">
-                    <button t-attf-class="btn btn-sm text-truncate btn-tab #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
+                    <button t-attf-class="btn btn-sm text-truncate btn-tab me-1 #{tab.id}-tab #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'} #{this.state.activeTab === tab.id ? 'active' : ''}"
                         t-on-click="() => this.setTab(tab.id)">
                         <t t-out="tab.name" />
                     </button>
                 </t>
             </t>
             <div class="flex-grow-1" />
+<<<<<<< b2177296fcf38d9235e5cee033d5c34487cc1c80:addons/html_editor/static/src/components/color_picker/color_picker.xml
             <button t-attf-class="btn btn-sm oi oi-filled #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'}"
                     data-icon="delete"
+||||||| ed5cc1bcbfa0b5fb2305a64c1eb62724b8c78b79:addons/web/static/src/core/color_picker/color_picker.xml
+            <button t-attf-class="btn btn-sm fa fa-trash #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'}"
+=======
+            <button t-attf-class="btn btn-sm fa fa-trash o_color_picker_reset #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'}"
+>>>>>>> dc2c5ac86e0a9a565554da6597f62c378b94f01d:addons/web/static/src/core/color_picker/color_picker.xml
                     title="Reset"
                     t-on-click="this.onColorApply"
                     t-on-mouseover="this.onColorHover"
