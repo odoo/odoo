@@ -18,10 +18,10 @@ test("selectCashier", async () => {
     store.models["hr.employee"].forEach(
         (employee) => ![2, 3].includes(employee.id) && employee.delete()
     );
-    const result = await store.accessRight.selectCashier();
+    const result = await store.selectCashier();
     expect(result.name).toBe("Employee1");
     expect(result.id).toBe(3);
-    store.accessRight.setCashier(result);
+    store.setCashier(result);
     const value = store.accessRight.loggedCashier;
     expect(value.name).toBe("Employee1");
     expect(value.id).toBe(3);

@@ -24,6 +24,6 @@ patch(CashierName.prototype, {
         if (!this.pos.config.module_pos_hr) {
             return;
         }
-        return this.pos.accessRight.selectCashier(false, true, true);
+        return this.pos.selectCashier(false, true, true);
     },
 });

@@ -51,22 +51,6 @@ export class PosRouterPlugin extends Plugin {
         this.config = config;
     }
 
-    get openOrder() {
-        return (
-            this.config.models["pos.order"].find((o) => o.state === "draft") ||
-            window.posmodel?.addNewOrder()
-        );
-    }
-
-    get defaultPage() {
-        return {
-            page: "ProductScreen",
-            params: {
-                orderUuid: this.openOrder?.uuid,
-            },
-        };
-    }
-
     initRegisteredRoutes() {
         const pages = registry.category("pos_pages").getAll();
         for (const { name, route } of pages) {

@@ -17,13 +17,13 @@ test("selectCashier", async () => {
     store.accessRight.resetCashier();
     const emp = store.models["hr.employee"].get(2);
     // with correct pin
-    const selected = await store.accessRight.selectCashier("1234", true);
+    const selected = await store.selectCashier("1234", true);
     expect(selected.id).toBe(emp.id);
     expect(store.accessRight.hasLoggedIn()).toBe(true);
     expect(store.accessRight.loggedCashier.id).toBe(selected.id);
 
     // with wrong pin
     store.accessRight.resetCashier();
-    const result = await store.accessRight.selectCashier("wrongpin", true);
+    const result = await store.selectCashier("wrongpin", true);
     expect(result).toBeEmpty();
 });

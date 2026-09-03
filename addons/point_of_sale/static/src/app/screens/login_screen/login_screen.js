@@ -29,7 +29,7 @@ export class LoginScreen extends Component {
         const selectedScreen =
             this.pos.previousScreen && this.pos.previousScreen !== "LoginScreen"
                 ? this.pos.previousScreen
-                : this.pos.router.defaultPage;
+                : this.pos.defaultPage;
         const order = this.pos.getOrder();
         if (!order && selectedScreen.page === "ProductScreen") {
             this.pos.addNewOrder();
@@ -40,7 +40,7 @@ export class LoginScreen extends Component {
         this.pos.accessRight.hasLoggedIn.set(true);
     }
     selectOneCashier(cashier) {
-        this.pos.accessRight.setCashier(cashier);
+        this.pos.setCashier(cashier);
         this.cashierLogIn();
     }
     get backBtnName() {

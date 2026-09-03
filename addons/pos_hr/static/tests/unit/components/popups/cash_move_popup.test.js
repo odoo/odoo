@@ -21,6 +21,6 @@ test("partnerId", async () => {
         props: { close: () => {} },
     });
     const emp = store.models["hr.employee"].get(2);
-    store.accessRight.setCashier(emp);
+    store.setCashier(emp);
     expect(comp.partnerId).toBe(emp.work_contact_id.id);
 });

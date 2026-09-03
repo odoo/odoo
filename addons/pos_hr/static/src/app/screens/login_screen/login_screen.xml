@@ -14,7 +14,7 @@
                         data-enable-barcode="true"
                         class="form-control form-control-lg rounded flex-grow-1"
                         placeholder="Enter your PIN" />
-                    <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.pos.accessRight.selectCashier(false, true)">
+                    <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.pos.selectCashier(false, true)">
                         <i class="oi oi-filled" data-icon="group" aria-hidden="true"></i>
                     </button>
                     <button class="btn btn-secondary mobile-scanner px-4" t-if="this.pos.config.module_pos_hr">

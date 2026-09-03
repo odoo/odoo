@@ -19,7 +19,7 @@ patch(LoginScreen.prototype, {
             useAutofocus({ ref: this.autofocusRef });
             useListener(window, "keypress", async (ev) => {
                 if (this.pos.login && ev.key === "Enter" && this.state.pin) {
-                    await this.pos.accessRight.selectCashier(this.state.pin, true);
+                    await this.pos.selectCashier(this.state.pin, true);
                 }
             });
 
@@ -28,9 +28,7 @@ patch(LoginScreen.prototype, {
                     cashier: this.barcodeCashierAction.bind(this),
                 },
                 // exclusive
-                this.pos &&
-                    this.pos.router.currentScreen() === "LoginScreen" &&
-                    this.pos.config.module_pos_hr
+                this.pos.router.currentScreen() === "LoginScreen"
             );
         }
 
@@ -51,7 +49,7 @@ patch(LoginScreen.prototype, {
             employee !== this.loggedCashier &&
             (!employee._pin || (await this.pos.accessRight.checkPin(employee)))
         ) {
-            this.pos.accessRight.setCashier(employee);
+            this.pos.setCashier(employee);
             this.cashierLogIn();
         }
         return employee;
@@ -73,7 +71,7 @@ patch(LoginScreen.prototype, {
             this.state.pin = "";
             this.pos.login = false;
         } else {
-            const employee = await this.pos.accessRight.selectCashier();
+            const employee = await this.pos.selectCashier();
             if (employee && employee.user_id?.id === this.pos.user.id) {
                 super.clickBack();
                 return;

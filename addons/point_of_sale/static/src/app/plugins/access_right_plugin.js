@@ -15,15 +15,6 @@ export class PosAccessRightPlugin extends Plugin {
         this.cashier = null;
     }
 
-    setCashier(user) {
-        if (!user) {
-            return;
-        }
-
-        this.cashier = user;
-        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
-    }
-
     resetCashier() {
         this.cashier = false;
         sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
@@ -35,13 +26,6 @@ export class PosAccessRightPlugin extends Plugin {
             return this.data.models["res.users"].get(cashier_id);
         }
         return false;
-    }
-
-    checkPreviousLoggedCashier() {
-        const savedCashier = this._getConnectedCashier();
-        if (savedCashier) {
-            this.setCashier(savedCashier);
-        }
     }
 
     get config() {
@@ -172,7 +156,7 @@ export class PosAccessRightPlugin extends Plugin {
     }
 
     get disablePriceButton() {
-        return false;
+        return this.config.restrict_price_control || this.loggedCashier?._role !== "manager";
     }
 
     get canCancelOrder() {

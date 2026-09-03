@@ -384,6 +384,15 @@ export class PosStore extends WithLazyGetterTrap {
         this.navigate(page, params);
     }
 
+    get defaultPage() {
+        return {
+            page: "ProductScreen",
+            params: {
+                orderUuid: this.openOrder.uuid,
+            },
+        };
+    }
+
     get firstPage() {
         if (odoo.from_backend) {
             // Remove from_backend params in the URL but keep the rest
@@ -392,15 +401,13 @@ export class PosStore extends WithLazyGetterTrap {
             window.history.replaceState({}, "", url);
 
             if (!this.config.module_pos_hr) {
-                this.accessRight.setCashier(this.user);
+                this.setCashier(this.user);
             }
         } else {
             this.accessRight.resetCashier();
         }
 
-        return !this.accessRight.cashier
-            ? { page: "LoginScreen", params: {} }
-            : this.router.defaultPage;
+        return !this.accessRight.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
     }
 
     get idleTimeout() {
@@ -472,7 +479,7 @@ export class PosStore extends WithLazyGetterTrap {
         const process = await this.afterProcessServerData();
 
         if (this.router.currentScreen() !== "LoginScreen" && !this.config.module_pos_hr) {
-            this.accessRight.setCashier(this.user);
+            this.setCashier(this.user);
         }
 
         const page =
@@ -529,6 +536,22 @@ export class PosStore extends WithLazyGetterTrap {
         }, 3000);
     }
 
+    checkPreviousLoggedCashier() {
+        const savedCashier = this.accessRight._getConnectedCashier();
+        if (savedCashier) {
+            this.setCashier(savedCashier);
+        }
+    }
+
+    setCashier(user) {
+        if (!user) {
+            return;
+        }
+
+        this.accessRight.cashier = user;
+        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
+    }
+
     get session() {
         return this.data.models["pos.session"].get(odoo.pos_session_id);
     }
@@ -566,7 +589,7 @@ export class PosStore extends WithLazyGetterTrap {
         await this.deviceSync.readDataFromServer();
 
         // Check cashier
-        this.accessRight.checkPreviousLoggedCashier();
+        this.checkPreviousLoggedCashier();
 
         // Add Payment Interface to Payment Method
         for (const pm of this.config.payment_method_ids) {
@@ -856,7 +879,7 @@ export class PosStore extends WithLazyGetterTrap {
             if (order) {
                 this.setOrder(order);
             } else {
-                const next = this.router.defaultPage;
+                const next = this.defaultPage;
                 this.router.navigate(next.page, next.params);
             }
         } else {
@@ -1551,6 +1574,9 @@ export class PosStore extends WithLazyGetterTrap {
         } else {
             return this.addNewOrder();
         }
+    }
+    get openOrder() {
+        return this.models["pos.order"].find((o) => o.state === "draft") || this.addNewOrder();
     }
     getDefaultPartnerId() {
         return null;
@@ -2401,7 +2427,7 @@ export class PosStore extends WithLazyGetterTrap {
     async onClickBackButton() {
         if (this.router.currentScreen() === "TicketScreen") {
             if (this.ticket_screen_mobile_pane == "left") {
-                const next = this.router.defaultPage;
+                const next = this.defaultPage;
                 this.navigate(next.page, next.params);
             } else {
                 this.ticket_screen_mobile_pane = "left";
@@ -2711,7 +2737,7 @@ export class PosStore extends WithLazyGetterTrap {
     orderDone(order) {
         order.setScreenData({ name: "" });
         this.searchProductWord = "";
-        const { page, params } = this.router.defaultPage;
+        const { page, params } = this.defaultPage;
         this.navigate(
             page,
             page === "ProductScreen" ? { orderUuid: this.getEmptyOrder().uuid } : params

@@ -28,7 +28,25 @@ patch(PosStore.prototype, {
 
         return screen.page === "LoginScreen"
             ? { page: "LoginScreen", params: {} }
-            : this.router.defaultPage;
+            : this.defaultPage;
+    },
+    get openOrder() {
+        if (this.config.module_pos_restaurant) {
+            return (
+                this.models["pos.order"].find((o) => o.state === "draft" && o.isDirectSale) ||
+                this.addNewOrder()
+            );
+        }
+        return super.openOrder;
+    },
+    get defaultPage() {
+        if (this.config.module_pos_restaurant && this.config.default_screen === "tables") {
+            return {
+                page: "FloorScreen",
+                params: {},
+            };
+        }
+        return super.defaultPage;
     },
     saveIfOrder() {
         if (!this.config.module_pos_restaurant) {
@@ -401,7 +419,7 @@ patch(PosStore.prototype, {
         return this.getOrder()?.table_id;
     },
     showDefault() {
-        const page = this.router.defaultPage;
+        const page = this.defaultPage;
         this.navigate(page.page, page.params);
     },
     async handleUrlParams(event) {

@@ -11,7 +11,7 @@ test("allowProductEdition", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const admin = store.models["hr.employee"].get(2);
-    store.accessRight.setCashier(admin);
+    store.setCashier(admin);
     const product = store.models["product.template"].get(5);
     const info = await store.getProductInfo(product, 1);
     await mountWithCleanup(ProductInfoPopup, {
@@ -23,7 +23,7 @@ test("allowProductEdition", async () => {
     });
     expect(store.accessRight.allowProductEdition).toBe(true);
     const emp = store.models["hr.employee"].get(3);
-    store.accessRight.setCashier(emp);
+    store.setCashier(emp);
     expect(store.accessRight.allowProductEdition).toBe(false);
 });
 
@@ -41,17 +41,17 @@ test("financials for all employee", async () => {
     });
 
     const admin = store.models["hr.employee"].get(2);
-    store.accessRight.setCashier(admin);
+    store.setCashier(admin);
     await animationFrame();
     expect(".financials-order").toHaveCount(1);
 
     const restrictiveEmployee = store.models["hr.employee"].get(4);
-    store.accessRight.setCashier(restrictiveEmployee);
+    store.setCashier(restrictiveEmployee);
     await animationFrame();
     expect(".financials-order").toHaveCount(0);
 
     const supervisedEmployee = store.models["hr.employee"].get(5);
-    store.accessRight.setCashier(supervisedEmployee);
+    store.setCashier(supervisedEmployee);
     await animationFrame();
 
     expect(".financials-order").toHaveCount(0);

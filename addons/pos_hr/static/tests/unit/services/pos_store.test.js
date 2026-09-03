@@ -15,7 +15,7 @@ test("createNewOrder", async () => {
 test("employeeIsAdmin", async () => {
     const store = await setupPosEnv();
     const emp = store.models["hr.employee"].get(2);
-    store.accessRight.setCashier(emp);
+    store.setCashier(emp);
     expect(store.employeeIsAdmin).toBe(true);
 });
 test("_getConnectedCashier", async () => {
@@ -26,30 +26,30 @@ test("shouldShowOpeningControl", async () => {
     const store = await setupPosEnv();
     store.models["pos.session"].getFirst().state = "opening_control";
     const emp = store.models["hr.employee"].get(2);
-    store.accessRight.setCashier(emp);
+    store.setCashier(emp);
     store.accessRight.hasLoggedIn.set(true);
     expect(store.shouldShowOpeningControl()).toBe(true);
 });
 test("hasProductCreationAccess", async () => {
     const store = await setupPosEnv();
     const admin = store.models["hr.employee"].get(2);
-    store.accessRight.setCashier(admin);
+    store.setCashier(admin);
     expect(await store.hasProductCreationAccess).toBe(true);
     const emp = store.models["hr.employee"].get(3);
-    store.accessRight.setCashier(emp);
+    store.setCashier(emp);
     expect(await store.hasProductCreationAccess).toBe(false);
     const restrictive = store.models["hr.employee"].get(4);
-    store.accessRight.setCashier(restrictive);
+    store.setCashier(restrictive);
     expect(await store.hasProductCreationAccess).toBe(false);
     const supervised = store.models["hr.employee"].get(5);
-    store.accessRight.setCashier(supervised);
+    store.setCashier(supervised);
     expect(await store.hasProductCreationAccess).toBe(false);
 });
 test("addLineToCurrentOrder", async () => {
     const store = await setupPosEnv();
     store.addNewOrder();
     const admin = store.models["hr.employee"].get(2);
-    store.accessRight.setCashier(admin);
+    store.setCashier(admin);
     const product_id = store.models["product.product"].get(5);
     const result = await store.addLineToCurrentOrder({
         product_id: product_id,
@@ -96,13 +96,13 @@ test("keybordInputRights", async () => {
     );
     expect(line.qty).toBe(3);
     const emp = store.models["hr.employee"].get(4);
-    store.accessRight.setCashier(emp);
+    store.setCashier(emp);
 
     const orderSummary = await mountWithCleanup(OrderSummary, { props: {} });
     orderSummary.numberBuffer._handleInput("-");
     expect(line.qty).toBe(3);
     const cashier = store.models["hr.employee"].get(3);
-    store.accessRight.setCashier(cashier);
+    store.setCashier(cashier);
     orderSummary.numberBuffer._handleInput("-");
     expect(line.qty).toBe(-3);
 });

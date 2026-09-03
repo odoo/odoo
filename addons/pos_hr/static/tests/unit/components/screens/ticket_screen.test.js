@@ -17,10 +17,10 @@ test("showSubPads", async () => {
 
     order.state = "paid";
     ticketScreen.onClickOrder(order);
-    store.accessRight.setCashier(admin);
+    store.setCashier(admin);
     await animationFrame();
     expect(store.accessRight.canShowPads).toBe(true);
-    store.accessRight.setCashier(restrictiveEmp);
+    store.setCashier(restrictiveEmp);
     ticketScreen.onClickOrder(order);
     await animationFrame();
     expect(store.accessRight.canShowPads).toBe(false);
