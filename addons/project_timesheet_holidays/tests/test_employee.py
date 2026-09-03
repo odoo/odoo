@@ -42,6 +42,9 @@ class TestEmployee(TransactionCase):
             ('employee_id', '=', employee.id),
             ('global_leave_id', '=', self.global_leave.id),
         ])
+        self.assertEqual(timesheet.name, 'Time Off (1/1)',
+            "The timesheet name should be `Time Off (1/1)` for the employee's global leave."
+        )
         self.assertEqual(len(timesheet), 1, 'A timesheet should have been created for the global leave of the employee')
         self.assertEqual(str(timesheet.date), '2020-01-01', 'The timesheet should be created for the correct date')
         self.assertEqual(timesheet.unit_amount, 8, 'The timesheet should be created for the correct duration')
