@@ -365,6 +365,20 @@ describe("formatting normalization", () => {
             contentAfter: `<p><small>text</small></p>`,
         });
     });
+
+    test("should not unwrap font-weight: normal inside a bold parent", async () => {
+        await testEditor({
+            contentBefore: `<p class="boldClass">a<span style="font-weight: normal;">b</span>c</p>`,
+            contentAfter: `<p class="boldClass">a<span style="font-weight: normal;">b</span>c</p>`,
+        });
+    });
+
+    test("should not unwrap intermediate color style override", async () => {
+        await testEditor({
+            contentBefore: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
+            contentAfter: `<p><font style="color: red;"><span style="color: blue;"><font style="color: red;">text</font></span></font></p>`,
+        });
+    });
 });
 
 describe("table normalization", () => {

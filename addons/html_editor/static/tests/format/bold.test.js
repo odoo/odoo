@@ -178,9 +178,9 @@ test("should remove a bold tag that was redondant with different tags while perf
         stepFunction: bold,
         contentAfter: unformat(`<p>
                 a
-                <span style="font-weight: bolder;">b<strong>c</strong></span>
+                <span style="font-weight: bolder;">bc</span>
                 [d]
-                <span style="font-weight: bolder;"><strong>e</strong>f</span>
+                <span style="font-weight: bolder;">ef</span>
                 g
             </p>`),
     });
