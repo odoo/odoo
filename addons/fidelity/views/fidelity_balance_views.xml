@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_balance_view_list" model="ir.ui.view">
+        <field name="name">fidelity.balance.view.list</field>
+        <field name="model">fidelity.balance</field>
+        <field name="arch" type="xml">
+            <list string="Balances" edit="false" delete="false">
+                <field name="program_id" readonly="1" />
+                <field name="nb_transactions" string="Usage" readonly="1"/>
+                <field name="balance_display" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="fidelity_balance_view_form" model="ir.ui.view">
+        <field name="name">fidelity.balance.view.form</field>
+        <field name="model">fidelity.balance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="card_id" class="oe_edit_only"/>
+                        <h1><field name="card_id" readonly="1" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" />
+                            <field name="nb_transactions" />
+                        </group>
+                        <group>
+                            <field name="point_unit" />
+                            <field name="balance_display" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="transactions" string="Transactions">
+                            <field name="transaction_ids" create="0" edit="0" delete="0">
+                                <list string="Transactions">
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
