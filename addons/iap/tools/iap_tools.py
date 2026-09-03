@@ -123,6 +123,8 @@ def iap_jsonrpc(url, method='call', params=None, timeout=15, raise_user_error=Fa
 
     try:
         return _iap_jsonrpc(url, method, params, timeout)
+    except UserError as e:
+        raise e
     except Exception as e:
         if raise_user_error:
             raise UserError(_("An error occurred while reaching %s. Please contact Odoo support if this error persists.", url)) from e
@@ -146,10 +148,16 @@ def _iap_jsonrpc(url, method, params, timeout):
         _logger.info("iap jsonrpc %s responded in %.3f seconds", url, req.elapsed.total_seconds())
         if 'error' in response:
             name = response['error']['data'].get('name').rpartition('.')[-1]
+            error_message = response['error']['data'].get('message')
             if name == 'InsufficientCreditError':
                 credit_error = InsufficientCreditError(response['error']['data'].get('message'))
                 credit_error.data = response['error']['data']
                 raise credit_error
+            elif name == 'IdAuthProviderError' and error_message == 'err_invalid_input field(s): [subscriber.siren]':
+                raise UserError(_("""
+The SIREN you are trying to register doesn't exist on the annuaire. 
+Check with \"les services des impôts des entreprises (SIE)\" or call the DGFIP: +33 140 04 04 04.
+                    """))
             else:
                 _logger.warning("iap jsonrpc %s failed, an error occurred on the IAP server")
                 raise IAPServerError("An error occurred on the IAP server")
