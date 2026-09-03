@@ -424,5 +424,15 @@ export function getAllUsedColors(el, noTransparency = false) {
         }
     }
 
+    const collectGradientColors = (gradient) => {
+        usedCustomColors.add(normalizeCSSColor(gradient));
+    };
+
+    for (const bgEl of selectElements(el, '[style*="background-image"]')) {
+        const parts = backgroundImageCssToParts(bgEl.style.backgroundImage);
+        if (!parts.url && parts.gradient) {
+            collectGradientColors(parts.gradient);
+        }
+    }
     return usedCustomColors;
 }
