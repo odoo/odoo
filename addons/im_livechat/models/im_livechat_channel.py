@@ -632,6 +632,15 @@ class Im_LivechatChannelRule(models.Model):
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
 
+    @api.constrains("regex_url")
+    def _check_regex_url(self):
+        for rule in self:
+            if rule.regex_url:
+                try:
+                    re.compile(rule.regex_url)
+                except re.error:
+                    raise ValidationError(_("The URL Regex '%(regex)s' is not valid.", regex=rule.regex_url))
+
     def match_rule(self, channel_id, url, country_id=False):
         """ determine if a rule of the given channel matches with the given url
             :param channel_id : the identifier of the channel_id
