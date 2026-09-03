@@ -77,6 +77,9 @@ class SaleOrder(models.Model):
             coupon.points += change
         res = super().action_confirm()
         self._send_reward_coupon_mail()
+        for order in self:
+            if order.should_update_program_and_rewards():
+                order._update_programs_and_rewards()
         return res
 
     def _action_cancel(self):

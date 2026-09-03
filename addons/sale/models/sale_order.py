@@ -1942,6 +1942,11 @@ class SaleOrder(models.Model):
         # when using coupon and delivery
         return True
 
+    def should_update_program_and_rewards(self):
+        # Override for correct avatax computation
+        # when using loyalty programs and rewards
+        return False
+
     #=== TOOLING ===#
 
     def _is_readonly(self):
