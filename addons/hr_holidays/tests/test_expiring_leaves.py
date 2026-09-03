@@ -29,6 +29,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         })
         cls.accrual_plan_with_accrual_validity = cls.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan With Accrual Validity',
+            'work_entry_type_id': cls.work_entry_type.id,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',
@@ -54,6 +55,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         })
         cls.accrual_plan_one_lvl_monthly_validity_10days = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Test Accrual Plan - expiring_leaves 1',
+            'work_entry_type_id': cls.work_entry_type.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -68,24 +70,6 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'accrual_validity': True,
                 'accrual_validity_count': 10,
-            })],
-        })
-        cls.accrual_plan_one_lvl_monthly_maxcarryover_10days = cls.env['hr.leave.accrual.plan'].create({
-            'name': 'Test Accrual Plan - expiring_leaves 2',
-            'is_based_on_worked_time': False,
-            'accrued_gain_time': 'start',
-            'can_be_carryover': True,
-            'carryover_date': 'other',
-            'carryover_day': '15',
-            'carryover_month': '10',
-            'level_ids': [Command.create({
-                'milestone_date': 'creation',
-                'added_value': 3,
-                'added_value_type': 'day',
-                'frequency': 'monthly',
-                'action_with_unused_accruals': 'all',
-                'carryover_options': 'limited',
-                'max_carriedover_duration': 10,
             })],
         })
 
@@ -109,6 +93,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         number_of_accrued_days = 10
         accrual_plan = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 31,
@@ -181,6 +166,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         carryover_limit = 10
         accrual_plan = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 31,
@@ -267,6 +253,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         carryover_limit = 10
         accrual_plan_1 = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 31,
@@ -290,6 +277,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
 
         accrual_plan_2 = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan With All Leaves Carried Over',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [
                 (0, 0, {
@@ -369,6 +357,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         number_of_accrued_days = 10
         accrual_plan = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 31,
@@ -436,6 +425,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         with freeze_time('2024-01-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].sudo().create({
                 'name': 'Test Accrual Plan',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'carryover_date': 'year_start',
                 'level_ids': [
@@ -494,6 +484,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
 
         accrual_plan = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -567,6 +558,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         number_of_accrued_days = 10
         accrual_plan = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 31,
@@ -645,6 +637,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         number_of_accrued_days = 10
         accrual_plan = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 31,
@@ -728,6 +721,7 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
         """
         accrual_plan_without_accrual_validity = self.env['hr.leave.accrual.plan'].sudo().create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '4',

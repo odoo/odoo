@@ -23,6 +23,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         cls.accrual_plan = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Test Seniority Plan',
+            'work_entry_type_id': cls.work_entry_type.id,
             'level_ids': [
                 (0, 0, {
                     'milestone_date': 'after',
