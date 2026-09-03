@@ -852,6 +852,7 @@ export class PosStore extends WithLazyGetterTrap {
                 hideAlwaysVariants: opts.hideAlwaysVariants,
                 forceVariantValue,
                 line: opts.line,
+                comboItem: opts.comboItem,
             });
         }
         return {
