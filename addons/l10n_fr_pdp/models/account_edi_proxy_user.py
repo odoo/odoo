@@ -608,13 +608,13 @@ class AccountEdiProxyClientUser(models.Model):
                 main_message = _(
                     "Failed to process incoming response for status %(ref_status_info)s with Response Code '%(response_code)s' issued on %(issue_date)s.",
                     ref_status_info=(ref_status_code_description or origin_ref_status_code),
-                    response_code=response_code_description,
+                    response_code=response_code_description or response_code,
                     issue_date=format_date(self.env, issue_date),
                 )
             else:
                 main_message = _(
                     "Failed to process incoming response with Response Code '%(response_code)s' issued on %(issue_date)s.",
-                    response_code=response_code_description,
+                    response_code=response_code_description or response_code,
                     issue_date=format_date(self.env, issue_date),
                 )
             self._pdp_log_einvoicing_chatter(
