@@ -554,11 +554,21 @@ class AccountMove(models.Model):
             return []
 
         def check():
+            if not self.company_id.partner_id._l10n_fr_pdp_get_siren():
+                yield self.env._("The company SIREN is missing or invalid.")
+
             if transaction_type == 'b2bi':
                 try:
                     self.commercial_partner_id._check_vat()
                 except ValidationError:
                     yield self.env._("Invalid partner VAT (%(vat)s).", vat=self.commercial_partner_id.vat)
+                # G2.19 limits Flow 10 VAT identifiers to 18 characters.
+                for partner in (self.company_id.partner_id, self.commercial_partner_id):
+                    if len(partner.vat or '') > 18:
+                        yield self.env._(
+                            "VAT number for %s must not exceed 18 characters.",
+                            partner.display_name,
+                        )
 
             for move in (self + self._l10n_fr_pdp_get_referenced_documents()):
                 if not move or move.move_type == 'entry':
@@ -567,14 +577,28 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield self.env._("Move name is not valid%s.", ref_move)
                 if transaction_type == 'b2bi':
+                    partner_country_code = drom_com_territories.map_country_code_for_ppf(
+                        move.commercial_partner_id.country_id.code
+                    )
+                    if not partner_country_code or len(partner_country_code) != 2 or not partner_country_code.isalpha():
+                        yield self.env._("Partner country code must contain two letters%s.", ref_move)
+
                     if not move.partner_shipping_id.street:
                         yield self.env._("Missing address street (line 1)%s.", ref_move)
                     if not move.partner_shipping_id.city:
                         yield self.env._("Missing address city%s.", ref_move)
                     if not move.partner_shipping_id.zip:
                         yield self.env._("Missing address zip code%s.", ref_move)
+                    elif len(move.partner_shipping_id.zip) > 10:
+                        yield self.env._("Address zip code must not exceed 10 characters%s.", ref_move)
                     if not move.partner_shipping_id.country_id:
                         yield self.env._("Missing address country%s.", ref_move)
+                    else:
+                        country_code = drom_com_territories.map_country_code_for_ppf(
+                            move.partner_shipping_id.country_id.code
+                        )
+                        if not country_code or len(country_code) != 2 or not country_code.isalpha():
+                            yield self.env._("Address country code must contain two letters%s.", ref_move)
 
         transaction_type = self._l10n_fr_pdp_get_transaction_type()
         if lazy:
