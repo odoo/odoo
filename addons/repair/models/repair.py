@@ -709,6 +709,16 @@ class RepairOrder(models.Model):
         self.move_ids._create_repair_sale_order_line()
         return sale_orders
 
+    def _add_reference(self, references):
+        """ link the given references to the list of references. """
+        self.ensure_one()
+        self.reference_ids = [Command.link(reference.id) for reference in references]
+
+    def _remove_reference(self, references):
+        """ remove the given references from the list of references. """
+        self.ensure_one()
+        self.reference_ids = [Command.unlink(reference.id) for reference in references]
+
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
