@@ -1787,7 +1787,11 @@ class AccountMove(models.Model):
                 self.l10n_it_payment_method = False
                 for payment_info in payments_info['info']:
                     # Search / Create the bank account only on incoming docs
-                    if self.move_type not in ('out_invoice', 'in_refund') and (iban := payment_info.get('acc_number')):
+                    if (
+                        self.move_type not in ('out_invoice', 'in_refund')
+                        and payment_info.get('payment_mode') != 'MP12'
+                        and (iban := payment_info.get('acc_number'))
+                    ):
                         self.env['account.edi.common'].with_company(company)._import_partner_bank(self, [iban])
                     # Set payment data on the bill
                     self.payment_reference = self.payment_reference or payment_info.get('payment_code', False)
