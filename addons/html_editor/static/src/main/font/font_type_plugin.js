@@ -1,10 +1,8 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { unwrapContents } from "@html_editor/utils/dom";
 import {
     isParagraphRelatedElement,
-    isRedundantElement,
     isEmptyBlock,
     isVisibleTextNode,
     isStylable,
@@ -16,7 +14,6 @@ import {
     childNodes,
     closestElement,
     descendants,
-    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 import { FontTypeSelector } from "./font_type_selector";
@@ -222,7 +219,7 @@ export class FontTypePlugin extends Plugin {
         on_history_commit_undone_handlers: this.updateFontTypeSelectorParams.bind(this),
         on_history_commit_redone_handlers: this.updateFontTypeSelectorParams.bind(this),
         on_all_formats_removed_handlers: this.updateFontTypeSelectorParams.bind(this),
-        normalize_processors: this.normalize.bind(this),
+        redundant_element_selectors: "strong, b, span[style*='font-weight: bolder']",
 
         /** Overrides */
         split_element_block_overrides: [
@@ -264,18 +261,6 @@ export class FontTypePlugin extends Plugin {
                 !SUPPORTED_BASE_CONTAINER_NAMES.includes(tagName.toUpperCase()) ||
                 this.config.baseContainers.includes(tagName.toUpperCase())
         );
-    }
-
-    normalize(root) {
-        for (const el of selectElements(
-            root,
-            "strong, b, span[style*='font-weight: bolder'], small"
-        )) {
-            if (isRedundantElement(el)) {
-                unwrapContents(el);
-            }
-        }
-        return root;
     }
 
     get fontTypeName() {

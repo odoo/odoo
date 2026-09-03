@@ -1,13 +1,12 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { removeClass, unwrapContents } from "@html_editor/utils/dom";
-import { headingTags, isRedundantElement } from "@html_editor/utils/dom_info";
+import { removeClass } from "@html_editor/utils/dom";
+import { headingTags } from "@html_editor/utils/dom_info";
 import {
     closestElement,
     closestPath,
     descendants,
     findNode,
-    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import {
     convertNumericToUnit,
@@ -119,7 +118,7 @@ export class FontSizePlugin extends Plugin {
         on_collapsed_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
         on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
         on_all_formats_removed_handlers: this.updateFontSizeSelectorParams.bind(this),
-        normalize_processors: this.normalize.bind(this),
+        redundant_element_selectors: "small",
 
         is_format_class_predicates: (className, targetClassName) => {
             if (
@@ -242,15 +241,6 @@ export class FontSizePlugin extends Plugin {
     setup() {
         this.fontSize = proxy({ displayName: "" });
         this.isTypingFontSize = false;
-    }
-
-    normalize(root) {
-        for (const el of selectElements(root, "small")) {
-            if (isRedundantElement(el)) {
-                unwrapContents(el);
-            }
-        }
-        return root;
     }
 
     get fontSizeName() {
