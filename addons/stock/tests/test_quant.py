@@ -871,6 +871,25 @@ class TestStockQuant(TestStockCommon):
         quant.invalidate_recordset(['quantity'])
         self.assertEqual(quant.quantity, 11)
 
+    def test_scheduler_respects_skip_quant_tasks_param(self):
+        """ StockQuant._get_quants_action and .action_view_inventory already skip the
+        (expensive, full-table) quant merge when the 'stock.skip_quant_tasks' system
+        parameter is set (see opw-2574152 / opw-4226821). StockRule._run_scheduler_tasks
+        has its own unconditional call to the same merge and should honor it too, since
+        on a large stock.quant table this query is a full scan/aggregate with no
+        supporting index and can time out when the scheduler runs frequently. """
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+
+        IrConfigParameter.set_param('stock.skip_quant_tasks', True)
+        with patch.object(self.env.registry['stock.quant'], '_quant_tasks') as mocked_quant_tasks:
+            self.env['stock.rule']._run_scheduler_tasks()
+            mocked_quant_tasks.assert_not_called()
+
+        IrConfigParameter.set_param('stock.skip_quant_tasks', False)
+        with patch.object(self.env.registry['stock.quant'], '_quant_tasks') as mocked_quant_tasks:
+            self.env['stock.rule']._run_scheduler_tasks()
+            mocked_quant_tasks.assert_called_once()
+
     def test_quant_display_name(self):
         """ Check the display name of a quant. """
         self.env.user.group_ids += self.env.ref('stock.group_production_lot')
