@@ -4,6 +4,7 @@
         color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
         border-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
     }
+
     .btn-#{$type}:hover {
         background-color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type});
         color: var(--hb-cp-o-cc#{$ccIndex}-btn-#{$type}-text);
@@ -11,6 +12,21 @@
 }
 
 .o_cc_preview_wrapper {
+    // Keep labels readable across translations. As a baseline, English and
+    // French labels must remain fully visible, including for selected presets.
+    .color-combination-button > div > {
+        h1, p  {
+            min-width: 15%;
+        }
+        span {
+            max-width: 26%;
+
+            > span {
+                font-size: 12px !important;
+            }
+        }
+    }
+
     @for $index from 1 through 5 {
         .o_cc#{$index} {
             --PreviewAlphaBg-background-size: 32px;
@@ -33,6 +49,7 @@
             }
         }
     }
+
     &.o_we_has_btn_outline_primary {
         .o_cc_preview_wrapper {
             @for $index from 1 through 5 {
@@ -42,6 +59,7 @@
             }
         }
     }
+
     &.o_we_has_btn_outline_secondary {
         .o_cc_preview_wrapper {
             @for $index from 1 through 5 {
@@ -50,5 +68,10 @@
                 }
             }
         }
+    }
+
+    .o_cc_preview, .color-combination-button {
+        border-radius: 3px;
+        box-shadow: inset 0 0 0 $o-we-border-width rgba($o-we-fg-light, 0.3);
     }
 }
