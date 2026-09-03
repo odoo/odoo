@@ -19,7 +19,7 @@
                         <td class="text-end">
                             <b t-out='this.props.record.data.virtual_available_at_date'
                             t-att-class="this.props.record.data.virtual_available_at_date &lt; this.props.calcData.leftToDeliver ? 'text-danger': ''"/>
-                            <t t-out='this.props.record.data.product_uom_id[1]'/>
+                            <span class="ms-1" t-out='this.props.calcData.product_uom_name'/>
                         </td>
                     </tr>
                     <tr>
@@ -30,7 +30,7 @@
                         <td class="text-end">
                             <b t-out='this.props.record.data.qty_available_today'
                              t-att-class="this.props.record.data.qty_available_today &lt; this.props.calcData.leftToDeliver ? 'text-danger': ''"/>
-                            <t t-out='this.props.record.data.product_uom_id[1]'/>
+                            <span class="ms-1" t-out='this.props.calcData.product_uom_name'/>
                         </td>
                     </tr>
                 </tbody>

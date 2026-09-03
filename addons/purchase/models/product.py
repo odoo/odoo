@@ -96,8 +96,9 @@ class ProductProduct(models.Model):
                 Domain('order_id.date_planned', '<=', self.env.context.get("to_date").date())
             ])
         order_lines = self.env['purchase.order.line'].sudo()._read_group(domain, ['product_id', 'uom_id'], ['product_uom_qty:sum', 'qty_received:sum'])
-        for product, line_uom, qty_ordered, qty_received in order_lines:
-            to_receive = (qty_ordered - qty_received) * line_uom.factor / product.uom_id.factor
+        for product, line_uom, qty_ordered, qty_received_line_uom in order_lines:
+            qty_received = qty_received_line_uom * line_uom.factor / product.uom_id.factor
+            to_receive = qty_ordered - qty_received
             res[product.id]['incoming_qty'] += to_receive
             res[product.id]['virtual_available'] += to_receive
         return res
