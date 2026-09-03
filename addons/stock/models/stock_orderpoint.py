@@ -132,6 +132,10 @@ class StockWarehouseOrderpoint(models.Model):
         critical_orderpoints = self.filtered(lambda o: o.qty_on_hand < o.product_min_qty)
         critical_orderpoints.deadline_date = fields.Date.today()
         orderpoints_to_compute = self - critical_orderpoints
+        # In case of a global recompute, we need to filter out the orderpoints which already have a deadline date within the horizon in order to ease the perf
+        if self.env.context.get('global_horizon_days', False):
+            horizon_date = fields.Date.today() + relativedelta.relativedelta(days=self.env.context.get('global_horizon_days'))
+            orderpoints_to_compute = orderpoints_to_compute.filtered(lambda o: not o.deadline_date or o.deadline_date > horizon_date)
         if not orderpoints_to_compute:
             return
 
@@ -512,7 +516,7 @@ class StockWarehouseOrderpoint(models.Model):
         # Remove previous automatically created orderpoint that has been refilled.
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
-        if self.env.context.get('force_orderpoint_recompute', False):
+        if self.env.context.get('global_horizon_days', False):
             orderpoints._compute_qty_to_order_computed()
             orderpoints._compute_deadline_date()
         to_refill = defaultdict(float)
