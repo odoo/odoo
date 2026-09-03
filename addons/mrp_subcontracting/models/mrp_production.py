@@ -43,7 +43,18 @@ class MrpProduction(models.Model):
                 move = production._get_move_raw_values(product_id, qty, product_id.uom_id)
                 move['additional'] = True
                 production.move_raw_ids = [(0, 0, move)]
+<<<<<<< cb731ca8720cd01a5719890cf6c5e140dc551546
                 production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
+||||||| 427d398880c381981e088f7001f855a10d1cd581
+                production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
+        self.env['stock.move.line'].browse(line_ids_to_delete).unlink()
+=======
+                move = production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1]
+                lines_to_delete = move.move_line_ids - lines
+                line_ids_to_delete.update(lines_to_delete.ids)
+                move.move_line_ids = lines
+        self.env['stock.move.line'].browse(line_ids_to_delete).unlink()
+>>>>>>> 2b380a4ec0392dd2e6fcfb4ff6280a6c744e8b8a
 
     def write(self, vals):
         if self.env.user._is_portal() and not self.env.su:
