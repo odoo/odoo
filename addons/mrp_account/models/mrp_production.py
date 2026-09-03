@@ -4,7 +4,7 @@ from ast import literal_eval
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.tools import float_round
+from odoo.tools import float_is_zero, float_round
 
 
 class MrpProduction(models.Model):
@@ -12,7 +12,7 @@ class MrpProduction(models.Model):
 
     extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
-    wip_move_ids = fields.Many2many('account.move', 'wip_move_production_rel', 'production_id', 'move_id')
+    wip_move_ids = fields.Many2many('account.move', 'wip_move_production_rel', 'production_id', 'move_id', copy=False)
     wip_move_count = fields.Integer("WIP Journal Entry Count", compute='_compute_wip_move_count')
 
     def _compute_show_valuation(self):
@@ -60,29 +60,37 @@ class MrpProduction(models.Model):
         super()._cal_price(consumed_moves)
 
         work_center_cost = 0
-        finished_move = self.move_finished_ids.filtered(
-            lambda x: x.product_id == self.product_id and x.state not in ('done', 'cancel') and x.quantity > 0)
-        if finished_move:
-            if finished_move.product_id.cost_method not in ('fifo', 'average'):
-                finished_move.price_unit = finished_move.product_id.standard_price
-                return True
-            finished_move.ensure_one()
+        # A production can have several finished moves.
+        finished_moves = self.move_finished_ids.filtered(
+            lambda m: m.product_id == self.product_id and m.state not in ('done', 'cancel')
+            and m.product_uom.compare(m.quantity, 0) > 0)
+        if finished_moves:
             for work_order in self.workorder_ids:
                 work_center_cost += work_order._cal_cost()
-            quantity = finished_move.product_uom._compute_quantity(
-                finished_move.quantity, finished_move.product_id.uom_id)
+            quantity = sum(
+                move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
+                for move in finished_moves)
             extra_cost = self.extra_cost * quantity
-
             total_cost = sum(move.value for move in consumed_moves) + work_center_cost + extra_cost
-            byproduct_moves = self.move_byproduct_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity > 0)
+
+            byproduct_moves = self.move_byproduct_ids.filtered(
+                lambda m: m.state not in ('done', 'cancel')
+                and m.product_uom.compare(m.quantity, 0) > 0)
             byproduct_cost_share = 0
             for byproduct in byproduct_moves:
-                if byproduct.cost_share == 0:
-                    continue
                 byproduct_cost_share += byproduct.cost_share
                 if byproduct.product_id.cost_method in ('fifo', 'average'):
-                    byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct.product_uom._compute_quantity(byproduct.quantity, byproduct.product_id.uom_id)
-            finished_move.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / quantity
+                    if float_is_zero(byproduct.cost_share, precision_digits=2):
+                        continue
+                    byproduct_qty = byproduct.product_uom._compute_quantity(byproduct.quantity, byproduct.product_id.uom_id)
+                    byproduct.price_unit = total_cost * byproduct.cost_share / 100 / byproduct_qty if byproduct_qty else 0
+                else:
+                    byproduct.price_unit = byproduct.product_id.standard_price
+
+            if finished_moves.product_id.cost_method not in ('fifo', 'average'):
+                finished_moves.price_unit = finished_moves.product_id.standard_price
+            else:
+                finished_moves.price_unit = total_cost * float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001) / quantity
         return True
 
     def _get_backorder_mo_vals(self):
@@ -92,7 +100,7 @@ class MrpProduction(models.Model):
 
     def _post_labour(self):
         for mo in self:
-            production_location = self.product_id.with_company(self.company_id).property_stock_production
+            production_location = mo.product_id.with_company(mo.company_id).property_stock_production
             if mo.with_company(mo.company_id).product_id.valuation != 'real_time' or not production_location.valuation_account_id:
                 continue
 

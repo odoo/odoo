@@ -39,6 +39,7 @@ import {
     mountWithCleanup,
     mountWithSearch,
     onRpc,
+    patchWithCleanup,
     removeFacet,
     selectGroup,
     serverState,
@@ -2036,4 +2037,40 @@ test("search on full query without waiting for display synchronisation", async (
     expect(".o-dropdown-item:first").toHaveText("Search Foo for: 01234");
     await keyDown("Enter");
     expect(searchBar.env.searchModel.domain).toEqual([["foo", "ilike", "0123456"]]);
+});
+
+test("default non existent many2one", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => {
+            expect.step(`console.error: "${msg}"`);
+        },
+    });
+    Partner._records = [];
+    onRpc("partner", "read", ({ args }) => {
+        expect.step(`partner read`);
+        expect(args).toEqual([45, ["display_name"]]);
+    });
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        expect(kwargs.domain).toEqual([["bar", "!=", false]]);
+        expect.step(`web_search_read`);
+    });
+
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="bar"/>
+            </search>
+        `,
+        context: {
+            search_default_bar: [45],
+        },
+    });
+    expect.verifySteps([
+        "partner read",
+        `console.error: "The autocomplete value for bar has not been found: the record with id 45 doesn't seem to exist"`,
+    ]);
+    expect(searchBar.env.searchModel.domain).toEqual([]);
+    expect(".o_searchview_facet").toHaveCount(0);
 });

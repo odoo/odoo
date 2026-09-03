@@ -20,15 +20,16 @@
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2023
 # João Neves, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-11-08 18:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-08-02 17:51+0000\n"
+"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/sale/"
 "pt/>\n"
 "Language: pt\n"
@@ -37,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -186,14 +187,13 @@ msgstr ""
 "        O pagamento com referência         <span style=\"font-weight:bold;\" "
 "t-out=\"transaction_sudo.reference or ''\">SOOO49</span>\n"
 "        e valor\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">R$ "
-"10,00</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">R$ 10,00</span>\n"
 "        do pedido\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            está pendente.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -204,9 +204,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Uma vez confirmado, restarão\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">R$ 10,00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">R$ 10,00</span>\n"
 "                a pagar.\n"
 "            </t>\n"
 "        </t>\n"
@@ -215,9 +215,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"               Resta <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, "
-"object.currency_id) or ''\">R$ 10,00</span>\n"
+"               Resta <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid, object.currency_id) or ''\">R$ "
+"10,00</span>\n"
 "                a pagar.\n"
 "            </t>\n"
 "        </t>\n"
@@ -653,9 +653,9 @@ msgstr ""
 "        <t t-if=\"object.origin\">\n"
 "            (com referência: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
-"        no valor de <span style=\"font-weight: bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">R$ "
-"10,00</span> está disponível.\n"
+"        no valor de <span style=\"font-weight: bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">R$ 10,00</span> está "
+"disponível.\n"
 "        <br/><br/>\n"
 "        Não hesite em entrar em contato conosco se tiver alguma dúvida.\n"
 "        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-"
@@ -1739,11 +1739,6 @@ msgid "Connect with your software!"
 msgstr "Conecte-se com seu software!"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Conecte seu software"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
 msgstr "Conectores"
@@ -2146,8 +2141,7 @@ msgstr "Desconto %(percent)s%%"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%- On products with the following taxes %(taxes)s"
-msgstr ""
-"Desconto %(percent)s%%- Em produtos com os seguintes impostos %(taxes)s"
+msgstr "Desconto %(percent)s%%- Em produtos com os seguintes impostos %(taxes)s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__discount
@@ -4924,7 +4918,7 @@ msgstr "Sem impostos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
-msgstr "CPF/CNPJ"
+msgstr "NIF"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5942,11 +5936,6 @@ msgid "sale order"
 msgstr "pedido de venda"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "para criar cotações automaticamente."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "para conhecer todas as maneiras de conectar seu software com"
@@ -5955,11 +5944,6 @@ msgstr "para conhecer todas as maneiras de conectar seu software com"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "unidades"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "com"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -6000,6 +5984,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Cotação' or 'Pedido' }} (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "Connect your software"
+#~ msgstr "Conecte seu software"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "para criar cotações automaticamente."
+
+#~ msgid "with"
+#~ msgstr "com"
 
 #~ msgid "2023-12-31"
 #~ msgstr "31-12-2023"

@@ -3,6 +3,7 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_bis3 import CHOR
 
 
 class TestUblCiiCommonChorusPro(TestUblCiiCommon):
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

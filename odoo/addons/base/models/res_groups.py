@@ -364,10 +364,10 @@ class ResGroups(models.Model):
     def _get_group_definitions(self):
         """ Return the definition of all the groups as a :class:`~odoo.tools.SetDefinitions`. """
         groups = self.sudo().search([], order='id')
-        id_to_ref = groups.get_external_id()
+        id_to_refs = groups._get_external_ids()
         data = {
             group.id: {
-                'ref': id_to_ref[group.id] or str(group.id),
+                'refs': id_to_refs[group.id] or [str(group.id)],
                 'supersets': group.implied_ids.ids,
                 'disjoints': group.disjoint_ids.ids,
             }

@@ -125,6 +125,12 @@
             </t>
         </xpath>
 
+        <xpath expr="//div[hasclass('row')]" position="after">
+            <div t-if="l10n_in_report_title" style="position:absolute;left:0;right:0;opacity:0.15;font-size:3em;color:#666666;width:100%;text-align:center;z-index:1000;-webkit-transform:rotate(-45deg);">
+                <t t-out="l10n_in_report_title"/>
+            </div>
+        </xpath>
+
     </template>
 
     <!-- Workaround for Studio reports, see odoo/odoo#60660 -->
@@ -140,6 +146,25 @@
         <div t-if="o.company_id.l10n_in_is_gst_registered and o.l10n_in_state_id">
             Place of supply: <span t-out="o.l10n_in_state_id.name" />
         </div>
+    </template>
+
+    <template id="l10n_in_invoice_document_duplicate">
+        <t t-call="l10n_in.document_renderer" copies_to_print="['ORIGINAL FOR RECIPIENT', 'DUPLICATE FOR SUPPLIER']"/>
+    </template>
+
+    <template id="l10n_in_invoice_document_triplicate">
+        <t t-call="l10n_in.document_renderer" copies_to_print="['ORIGINAL FOR RECIPIENT', 'DUPLICATE FOR TRANSPORTER', 'TRIPLICATE FOR SUPPLIER']"/>
+    </template>
+
+    <template id="document_renderer">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-foreach="copies_to_print" t-as="l10n_in_report_title">
+                    <t t-set="lang" t-value="o.partner_id.lang"/>
+                    <t t-call="l10n_in.l10n_in_report_invoice_document_inherit" t-lang="lang"/>
+                </t>
+            </t>
+        </t>
     </template>
 
 </odoo>

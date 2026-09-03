@@ -2,7 +2,9 @@ from base64 import b64decode
 from ssl import SSLError
 
 import requests
-from OpenSSL.crypto import FILETYPE_PEM, load_certificate, load_privatekey
+from cryptography.hazmat.primitives.serialization import load_pem_private_key
+from cryptography.x509 import load_pem_x509_certificate
+from OpenSSL.crypto import FILETYPE_PEM, load_certificate
 from OpenSSL.crypto import Error as CryptoError
 from urllib3.contrib.pyopenssl import inject_into_urllib3
 from urllib3.util.ssl_ import create_urllib3_context
@@ -34,6 +36,14 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
                 except (TypeError, CryptoError) as e:
                     raise SSLError(f"CA certificate {cert.name} is invalid: {e.message}")
 
+        def patched_load_cert_chain(certificate, keyfile=None, password=None):
+            certificate = certificate.sudo()
+            pem, key = map(b64decode, (certificate.pem_certificate, certificate.private_key_id.pem_key))
+            context._ctx.use_certificate(load_pem_x509_certificate(pem))
+            context._ctx.use_privatekey(load_pem_private_key(key, password=None))
+
+        context.load_cert_chain = patched_load_cert_chain
+
         kwargs['ssl_context'] = context
         super().init_poolmanager(*args, **kwargs)
 
@@ -46,18 +56,3 @@ class CertificateAdapter(requests.adapters.HTTPAdapter):
         super().cert_verify(conn, url, verify, None)
         conn.cert_file = cert
         conn.key_file = None
-
-    def get_connection(self, url, proxies=None):
-        """ Reads the certificate from a certificate.certificate rather than from the filesystem """
-        # OVERRIDE
-        conn = super().get_connection(url, proxies=proxies)
-        context = conn.conn_kw['ssl_context']
-
-        def patched_load_cert_chain(certificate, keyfile=None, password=None):
-            certificate = certificate.sudo()
-            pem, key = map(b64decode, (certificate.pem_certificate, certificate.private_key_id.pem_key))
-            context._ctx.use_certificate(load_certificate(FILETYPE_PEM, pem))
-            context._ctx.use_privatekey(load_privatekey(FILETYPE_PEM, key))
-
-        context.load_cert_chain = patched_load_cert_chain
-        return conn

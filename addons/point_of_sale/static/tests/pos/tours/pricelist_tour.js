@@ -21,6 +21,9 @@ registry.category("web_tour.tours").add("pos_pricelist", {
             Pricelist.waitForUnitTest(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
             ProductScreen.clickPriceList("Fixed", true, "Public Pricelist"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Acme Corporation"),
@@ -156,5 +159,34 @@ registry.category("web_tour.tours").add("test_pricelists_in_pos", {
             ...test_pricelists_in_pos_steps,
             refresh(), // Check pricelist sorting after a refresh
             ...test_pricelists_in_pos_steps,
+        ].flat(),
+});
+
+const searchAndLoadProduct = (name) => [
+    ...ProductScreen.searchProduct(name),
+    {
+        content: `Wait for the search of '${name}' to be applied`,
+        trigger: `.product-screen p:contains("No products found") b:contains("${name}")`,
+    },
+    {
+        content: "Load the product from the server",
+        trigger: ".search-more-button > button",
+        run: "click",
+    },
+];
+
+registry.category("web_tour.tours").add("test_pricelist_categ_rule_on_late_loaded_product", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // The category of this product is already known by the PoS
+            searchAndLoadProduct("Late Product"),
+            ProductScreen.clickDisplayedProduct("Late Product"),
+            ProductScreen.selectedOrderlineHas("Late Product", "1", "500.0"),
+            // The category of this one was created after the PoS was opened
+            searchAndLoadProduct("Newer Product"),
+            ProductScreen.clickDisplayedProduct("Newer Product"),
+            ProductScreen.selectedOrderlineHas("Newer Product", "1", "700.0"),
         ].flat(),
 });

@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     def _l10n_es_is_foreign(self):
         self.ensure_one()
 
-        return self.country_id.code not in ('ES', False) or (self.vat or '').startswith("ESN")
+        return self.country_id.code not in ('ES', False) or (self.vat or '').upper().startswith(("ESN", "N"))
 
     def _l10n_es_edi_get_partner_info(self):
         """ Used in SII and Veri*factu"""

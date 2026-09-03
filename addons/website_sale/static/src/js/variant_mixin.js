@@ -236,7 +236,8 @@ const VariantMixin = {
      */
     _disableInput(parent, attributeValueId, excludedBy, attributeNames, productName) {
         const input = parent.querySelector(
-            `option[value="${attributeValueId}"], input[value="${attributeValueId}"]`
+            `select.js_variant_change option[value="${attributeValueId}"],
+            input.js_variant_change[value="${attributeValueId}"]`
         );
         input.classList.add('css_not_available')
         input.closest('label')?.classList?.add('css_not_available');
@@ -299,6 +300,26 @@ const VariantMixin = {
             );
         }
         const addToCart = parent.querySelector('#add_to_cart_wrap');
+        const ctaWrapper = parent.querySelector('#o_wsale_cta_wrapper');
+        if (ctaWrapper?.querySelector('.product_price')) {
+            const showBox =
+                !combination.prevent_zero_price_sale
+                || !!parent.querySelector('#product_option_block').children.length;
+            const boxClasses = ['o_wsale_cta_wrapper_boxed', 'border', 'rounded', 'p-3'];
+            if (showBox) {
+                ctaWrapper.classList.add(...boxClasses);
+            } else {
+                ctaWrapper.classList.remove(...boxClasses);
+            }
+            ctaWrapper.classList.toggle('pt-3', !showBox);
+
+            const boxedPriceContainer = ctaWrapper.querySelector('.product_price')?.closest('.order-first');
+            if (boxedPriceContainer) {
+                const showPrice = !combination.prevent_zero_price_sale;
+                boxedPriceContainer.classList.toggle('d-none', !showPrice);
+                boxedPriceContainer.classList.toggle('d-flex',  showPrice);
+            }
+        }
         const contactUsButton = parent.closest('#product_details')
             ?.querySelector('#contact_us_wrapper');
         const quantity = parent.querySelector('.css_quantity');

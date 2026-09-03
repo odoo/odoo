@@ -8,16 +8,16 @@
 # Rémi CAZENAVE, 2022
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-07 15:52+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"PO-Revision-Date: 2026-08-03 02:43+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/product/"
 "fr/>\n"
 "Language: fr\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product
 #. odoo-python
@@ -62,8 +62,8 @@ msgid ""
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 msgstr ""
-"%(base)s avec une remise de %(discount)s %% %(discount_type)s et %"
-"(surcharge)s des frais supplémentaires\n"
+"%(base)s avec une remise de %(discount)s %% %(discount_type)s et %(surcharge)"
+"s des frais supplémentaires\n"
 "Exemple : %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
 "(total_amount)s"
 
@@ -142,8 +142,8 @@ msgstr "- %(amount)s de rabais"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- Code-barres \"%(barcode)s\" déjà attribué au(x) produit(s) :%"
-"(product_list)s"
+"- Code-barres \"%(barcode)s\" déjà attribué au(x) produit(s) :%(product_list)"
+"s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -244,8 +244,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
-"o_translate_inline\">Contactez-nous</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\">"
+"Contactez-nous</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2115,10 +2115,8 @@ msgstr "Kilogrammes (kg)"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_l
-#, fuzzy
-#| msgid "LG"
 msgid "L"
-msgstr "LG"
+msgstr "L"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
@@ -2294,7 +2292,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_m
 msgid "M"
-msgstr ""
+msgstr "M"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -2320,7 +2318,7 @@ msgstr "Marges"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr "Marge commerciale"
+msgstr "Majoration"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_maroon
@@ -3484,10 +3482,8 @@ msgstr "Règle astuces"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_s
-#, fuzzy
-#| msgid "XS"
 msgid "S"
-msgstr "XS"
+msgstr "S"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3826,9 +3822,9 @@ msgid ""
 "is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
 "(id)s\""
 msgstr ""
-"Le produit existant a une valeur d’attribut différente. \"%"
-"(imported_values)s\" n’est pas équivalent à \"%(existing_values)s\" pour \"%"
-"(external_id)s\", \"%(id)s\""
+"Le produit existant a une valeur d’attribut différente. \"%(imported_values)"
+"s\" n’est pas équivalent à \"%(existing_values)s\" pour \"%(external_id)s\", "
+"\"%(id)s\""
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -4851,7 +4847,7 @@ msgstr "id"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "markup"
-msgstr "marge commerciale"
+msgstr "majoration"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form

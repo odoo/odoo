@@ -37,7 +37,7 @@
                 <button t-if="props.hasAttachmentPreview and state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action" t-on-click="popoutAttachment">
                     <i class="fa fa-window-restore" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
-                <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded="onUploaded(undefined, { thread: state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="state.thread.localId" >
                     <t t-set-slot="toggler">
                         <t t-call="mail.Chatter.attachFiles"/>
                     </t>
@@ -87,7 +87,7 @@
                             attachments="attachments"
                             unlinkAttachment.bind="unlinkAttachment"
                         />
-                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
+                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="onUploaded(undefined, { thread: state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="state.thread.localId" >
                             <t t-set-slot="toggler">
                                 <button class="btn btn-link" type="button" t-att-disabled="!state.thread.canPostMessage">
                                     <i class="fa fa-plus-square"/>

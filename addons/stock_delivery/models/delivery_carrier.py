@@ -216,6 +216,7 @@ class DeliveryCarrier(models.Model):
                 amount=rounded_qty,
                 monetary_value=line.price_reduce_taxinc,
                 country_of_origin=country_of_origin,
+                unrounded_quantity=unit_quantity,
             ))
 
         return commodities
@@ -233,7 +234,7 @@ class DeliveryCarrier(models.Model):
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
             unit_price = sum(line.sale_price for line in lines) / rounded_qty
-            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
+            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin, unrounded_quantity=unit_quantity))
 
         return commodities
 

@@ -10,17 +10,18 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# 何彬 <vnsoft.he@gmail.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# 何彬 <vnsoft.he@gmail.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "feihu.zhang" <feihu.zhang@live.com>, 2025.
 # colgrave34 <colgrave.idir@simplelogin.co>, 2026.
+# 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-01-23 07:34+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 17:19+0000\n"
 "Last-Translator: colgrave34 <colgrave.idir@simplelogin.co>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/project/zh_Hans/>\n"
@@ -29,12 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " 所有内部用户和受邀门户用户"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -290,8 +286,8 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
@@ -369,23 +365,23 @@ msgstr ""
 "        </td></tr>\n"
 "        <tr><td><br/>此致，敬礼！</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">您的公司</"
-"t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">您的公司</t>"
+"\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -422,14 +418,14 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
-"color: #454748;\" groups=\"project.group_project_stages\">您收到这封电子邮"
-"件，是因为项目已移至 “<b t-out=\"object.stage_id.name or ''\">完成</b>” 阶"
-"段。</span>\n"
+"color: #454748;\" groups=\"project.group_project_stages\">您收到这封电子邮件"
+"，是因为项目已移至 “<b t-out=\"object.stage_id.name or ''\">完成</b>” 阶段"
+"。</span>\n"
 "            "
 
 #. module: project
@@ -469,8 +465,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -489,8 +485,8 @@ msgstr ""
 "<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" "
 "invisible=\"rating_avg &lt; 3.66\" title=\"满意\"/>\n"
 "<i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" "
-"invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"一般\"/"
-">\n"
+"invisible=\"rating_avg &lt; 2.33 or rating_avg &gt;= 3.66\" title=\"一般\"/>"
+"\n"
 "<i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" "
 "invisible=\"rating_avg &gt;= 2.33\" title=\"不满意\"/>"
 
@@ -873,8 +869,10 @@ msgstr "管理员"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "管理员可以管理员工的日程安排"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -945,6 +943,11 @@ msgstr "所有任务"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "所有内部用户"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -1313,8 +1316,8 @@ msgid ""
 "Choose a <b>name</b> for your project. <i>It can be anything you want: the "
 "name of a customer, of a product, of a team, of a construction site, etc.</i>"
 msgstr ""
-"为您的项目选择 1 个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名"
-"称、团队名称、建筑工地名称等。</i>"
+"为您的项目选择 1 个<b>名称</b>。<i>可以是任何您想要的名称：客户名称、产品名称"
+"、团队名称、建筑工地名称等。</i>"
 
 #. module: project
 #. odoo-javascript
@@ -1797,8 +1800,7 @@ msgstr "该项目结束的日期。在查看项目的计划时，会考虑到项
 msgid ""
 "Date on which this task was last assigned (or unassigned). Based on this, "
 "you can get statistics on the time it usually takes to assign tasks."
-msgstr ""
-"该任务上次指派（或未指派）的日期。据此，您可以统计出指派任务通常所需的时间。"
+msgstr "该任务上次指派（或未指派）的日期。据此，您可以统计出指派任务通常所需的时间。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
@@ -2522,8 +2524,8 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
-"启用后，此阶段在看板和列表视图中将显示为折叠状态，且其中的项目将被视为已关"
-"闭。"
+"启用后，此阶段在看板和列表视图中将显示为折叠状态，且其中的项目将被视为已关闭"
+"。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -3442,8 +3444,8 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例"
-"如：project(parent_model) 和任务 (模型)）"
+"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例如"
+"：project(parent_model) 和任务 (模型)）"
 
 #. module: project
 #. odoo-python
@@ -5029,8 +5031,7 @@ msgstr "项目和相关合作伙伴必须与同一家公司有关联。"
 msgid ""
 "The project's company cannot be changed if its analytic account has analytic "
 "lines or if more than one project is linked to it."
-msgstr ""
-"如果项目的分析账户有分析项目，或者有多个项目与之关联，则不能更改项目的公司。"
+msgstr "如果项目的分析账户有分析项目，或者有多个项目与之关联，则不能更改项目的公司。"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -5165,8 +5166,8 @@ msgid ""
 "records to align them under the same company."
 msgstr ""
 "该项目与%(project_company)s相关联，而所选阶段属于%(stage_company)s。有几个选"
-"项可以考虑：要么从项目或阶段中删除公司名称。或者，可以更新这些记录的公司信"
-"息，使它们归属于同一个公司。"
+"项可以考虑：要么从项目或阶段中删除公司名称。或者，可以更新这些记录的公司信息"
+"，使它们归属于同一个公司。"
 
 #. module: project
 #. odoo-python
@@ -5226,8 +5227,7 @@ msgstr "这将存档以下项目中的阶段及其包含的所有任务："
 msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Send email\")."
-msgstr ""
-"这些代表了你必须做的不同类别的事情（例如：\"打电话 \"或 \"发送电子邮件\"）"
+msgstr "这些代表了你必须做的不同类别的事情（例如：\"打电话 \"或 \"发送电子邮件\"）"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5595,8 +5595,8 @@ msgstr "用户设置"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "用户可使用您的员工日程安排"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5818,16 +5818,14 @@ msgstr "不能删除包含项目的阶段。您应首先删除阶段内的所有
 msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
-msgstr ""
-"您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
+msgstr "您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
-msgstr ""
-"您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
+msgstr "您不能删除包含任务的阶段。 您可以存档它们，也可以先删除它们的所有任务。"
 
 #. module: project
 #. odoo-python
@@ -6101,8 +6099,7 @@ msgstr "将创建任务在您的"
 msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
-msgstr ""
-"{{ object.project_id.company_id.name or user.env.company.name }}: 满意度调查"
+msgstr "{{ object.project_id.company_id.name or user.env.company.name }}: 满意度调查"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -6121,6 +6118,15 @@ msgstr "👤 未指派"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " 所有内部用户和受邀门户用户"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "管理员可以管理员工的日程安排"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "用户可使用您的员工日程安排"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "无效的字段: "

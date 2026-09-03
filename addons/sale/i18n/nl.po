@@ -5,16 +5,16 @@
 # Translators:
 # Jolien De Paepe, 2023
 # Martin Trigaux, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-03-06 17:47+0000\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-08-17 15:23+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/sale/nl/>\n"
 "Language: nl\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -177,14 +177,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        ter waarde van\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">€ "
-"10,00</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">€ 10,00</span>\n"
 "        voor je bestelling\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            .\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -195,9 +194,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Na bevestiging blijft er nog\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">€ 10,00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">€ 10,00</span>\n"
 "                te betalen.\n"
 "            </t>\n"
 "        </t>\n"
@@ -575,8 +574,8 @@ msgstr ""
 "            </t>\n"
 "        </t>\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
-">\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -611,8 +610,8 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; "
 "border-collapse: collapse; white-space: nowrap;\">\n"
 "            <tr style=\"border-bottom: 2px solid #dee2e6;\">\n"
-"                <td style=\"width: 150px;\"><span style=\"font-weight:bold;"
-"\">Producten</span></td>\n"
+"                <td style=\"width: 150px;\"><span style=\"font-"
+"weight:bold;\">Producten</span></td>\n"
 "                <td/>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-"
 "weight:bold;\">Hoeveelheid</span></td>\n"
@@ -634,8 +633,8 @@ msgstr ""
 "            <t t-set=\"line_subtotal\" t-value=\"                     "
 "line.price_subtotal                     if hasattr(object, 'website_id') and "
 "object.website_id.show_line_subtotals_tax_selection == "
-"'tax_excluded'                     else line.price_total                 \"/"
-">\n"
+"'tax_excluded'                     else line.price_total                 \"/>"
+"\n"
 "            <t t-set=\"current_subtotal\" t-value=\"current_subtotal + "
 "line_subtotal\"/>\n"
 "            <t t-if=\"(not hasattr(line, 'is_delivery') or not "
@@ -658,8 +657,8 @@ msgstr ""
 "out=\"line.name or ''\">Cursus boomverzorging</span>\n"
 "                                <t t-set=\"current_section\" t-"
 "value=\"line\"/>\n"
-"                                <t t-set=\"current_subtotal\" t-value=\"0\"/"
-">\n"
+"                                <t t-set=\"current_subtotal\" t-value=\"0\"/>"
+"\n"
 "                            </t>\n"
 "                            <t t-elif=\"line.display_type == 'line_note'\">\n"
 "                                <i t-out=\"line.name or ''\">Cursus "
@@ -680,9 +679,9 @@ msgstr ""
 "                        <t t-set=\"loop_cycle_number\" t-"
 "value=\"loop_cycle_number + 1\"/>\n"
 "                        <td style=\"width: 150px;\">\n"
-"                            <img t-attf-src=\"/web/image/product.product/"
-"{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: "
-"{{hasattr(object, 'website_id') and object.website_id and "
+"                            <img t-attf-src=\"/web/image/product.product/{{ "
+"line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: {"
+"{hasattr(object, 'website_id') and object.website_id and "
 "object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
 "cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                        </td>\n"
@@ -694,28 +693,24 @@ msgstr ""
 "weight:bold; white-space: nowrap;\">\n"
 "                        <t t-if=\"hasattr(object, 'website_id') and "
 "object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
-"                            <t t-"
-"out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">€ "
-"10,00</t>\n"
+"                            <t t-out=\"format_amount"
+"(line.price_reduce_taxexcl, object.currency_id) or ''\">€ 10,00</t>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
-"                            <t t-"
-"out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">€ "
-"10,00</t>\n"
+"                            <t t-out=\"format_amount"
+"(line.price_reduce_taxinc, object.currency_id) or ''\">€ 10,00</t>\n"
 "                        </t>\n"
 "                        </span></td>\n"
 "                    </tr>\n"
 "                </table>\n"
 "            </t>\n"
-"            <t t-if=\"current_section and "
-"(                     line_last                     or "
-"object.order_line[line_index+1].display_type in ('line_section', "
-"'line_subsection')                     or "
+"            <t t-if=\"current_section and (                     line_last"
+"                     or object.order_line[line_index+1].display_type in "
+"('line_section', 'line_subsection')                     or "
 "object.order_line[line_index+1].product_type == 'combo'                     "
 "or (                         line.combo_item_id                         and "
-"not "
-"object.order_line[line_index+1].combo_item_id                     )                 ) "
-"and not line.is_downpayment\">\n"
+"not object.order_line[line_index+1].combo_item_id                     )"
+"                 ) and not line.is_downpayment\">\n"
 "                <t t-set=\"current_section\" t-value=\"None\"/>\n"
 "                <table width=\"100%\" style=\"color: #454748; font-size: "
 "12px; border-collapse: collapse;\">\n"
@@ -819,8 +814,8 @@ msgstr ""
 "                        <t t-out=\"tx_sudo.token_id.display_name or ''\"/>\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
-"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/"
-">\n"
+"                        <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>"
+"\n"
 "                    </t>\n"
 "                    (<t t-out=\"format_amount(tx_sudo.amount, "
 "object.currency_id) or ''\">€ 10,00</t>)\n"
@@ -835,10 +830,10 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
-"                    <span style=\"font-weight:bold;\">Verzenden naar:</"
-"span>\n"
-"                    <t t-out=\"object.partner_shipping_id.street or "
-"''\">1201 S Figueroa St</t>\n"
+"                    <span style=\"font-weight:bold;\">Verzenden naar:</span>"
+"\n"
+"                    <t t-out=\"object.partner_shipping_id.street or ''\">"
+"1201 S Figueroa St</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.city or ''\">Los "
 "Angeles</t>\n"
 "                    <t t-out=\"object.partner_shipping_id.state_id.name or "
@@ -942,8 +937,8 @@ msgstr ""
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">€ "
 "10,00</span> staat klaar voor bevestiging.\n"
 "        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/"
-">\n"
+"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>"
+"\n"
 "        <t t-if=\"documents\">\n"
 "            <br/>\n"
 "            <t t-if=\"len(documents)&gt;1\">\n"
@@ -1013,8 +1008,8 @@ msgstr ""
 "        Hallo,\n"
 "        <br/><br/>\n"
 "        Je proformafactuur voor <t t-out=\"doc_name or ''\">offerte</t> "
-"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</"
-"span>\n"
+"<span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>"
+"\n"
 "        <t t-if=\"object.origin\">\n"
 "            (met referentie: <t t-out=\"object.origin or ''\"/> )\n"
 "        </t>\n"
@@ -1164,7 +1159,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>1.00 Units</span>"
-msgstr "<span>1.00 Eenheden</span>"
+msgstr "<span>1,00 Stuk</span>"
 
 #. module: sale
 #: model_terms:web_tour.tour,rainbow_man_message:sale.sale_tour
@@ -1321,7 +1316,7 @@ msgstr "Offerte accepteren en betalen"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Sign Quotation"
-msgstr "Bekijk offerte"
+msgstr "Offerte aanvaarden & ondertekenen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1414,13 +1409,13 @@ msgstr "Activiteitsfase"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Activiteitensoorten"
+msgstr "Activiteitstypes"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
@@ -1436,7 +1431,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Activity type"
-msgstr "Soort activiteit"
+msgstr "Activiteitstype"
 
 #. module: sale
 #. odoo-javascript
@@ -1510,8 +1505,7 @@ msgstr "Toegestane maateenheid"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr ""
-"Geeft je de mogelijkheid om proforma facturen te sturen naar je klanten"
+msgstr "Geeft je de mogelijkheid om proforma facturen te sturen naar je klanten"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
@@ -1985,7 +1979,7 @@ msgstr "Bedrijf"
 #. module: sale
 #: model:ir.model,name:sale.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Bedrijf document lay-out"
+msgstr "Lay-out van bedrijfsdocumenten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2103,11 +2097,6 @@ msgstr "Bevestigingsbericht"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
 msgstr "Maak verbinding met je software!"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
-msgstr "Verbind je software"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2594,7 +2583,7 @@ msgstr "Toon waarschuwing conceptfactuur"
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -3786,8 +3775,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Als de offerte wordt bevestigd door de klant wordt het een verkooporder."
-"<br>Je kunt er daarna een factuur van maken en de betaling verwerken."
+"Als de offerte wordt bevestigd door de klant wordt het een verkooporder.<br>"
+"Je kunt er daarna een factuur van maken en de betaling verwerken."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -4075,7 +4064,7 @@ msgstr "Betaling Ref."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
 msgid "Payment Terms"
-msgstr "Betaalvoorwaarden"
+msgstr "Betalingsvoorwaarden"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_token_menu
@@ -4100,7 +4089,7 @@ msgstr "Bedrag betaaltransacties"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
-msgstr "Betaalvoorwaarden"
+msgstr "Betalingsvoorwaarden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
@@ -4997,9 +4986,9 @@ msgid ""
 "and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
 "Het verzenden van een e-mail is handig als je specifieke informatie of "
-"inhoud over een product wilt delen (instructies, regels, links, media, "
-"etc.). Maak en stel een e-mailsjabloon in op het productformulier (in het "
-"tabblad Boekhouding)."
+"inhoud over een product wilt delen (instructies, regels, links, media, etc.)"
+". Maak en stel een e-mailsjabloon in op het productformulier (in het tabblad "
+"Boekhouding)."
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
@@ -6132,8 +6121,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
-"Je kunt een vergrendelde order niet annuleren. Ontgrendelen deze eerst."
+msgstr "Je kunt een vergrendelde order niet annuleren. Ontgrendelen deze eerst."
 
 #. module: sale
 #. odoo-python
@@ -6322,11 +6310,6 @@ msgid "sale order"
 msgstr "verkooporder"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr "om automatisch offertes aan te maken."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr "om alle manieren te leren om je software te verbinden met"
@@ -6338,13 +6321,8 @@ msgstr "eenheden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "met"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -6380,6 +6358,15 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Offerte' or 'Order' }} (Ref {{ object.name or 'n.v.t.' }})"
+
+#~ msgid "Connect your software"
+#~ msgstr "Verbind je software"
+
+#~ msgid "to create quotes automatically."
+#~ msgstr "om automatisch offertes aan te maken."
+
+#~ msgid "with"
+#~ msgstr "met"
 
 #~ msgid "2023-12-31"
 #~ msgstr "2023-12-31"

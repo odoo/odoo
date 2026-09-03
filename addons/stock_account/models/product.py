@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from bisect import bisect
 from collections import defaultdict
 from datetime import date, datetime, time
 
@@ -62,19 +61,22 @@ class ProductTemplate(models.Model):
     @api.depends('categ_id.property_cost_method')
     def _compute_cost_method(self):
         for product_template in self:
+            company = product_template.company_id
+            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
+                company = self.env.company
             product_template.cost_method = (
-                product_template.categ_id.with_company(
-                    product_template.company_id
-                ).property_cost_method
-                or (product_template.company_id or self.env.company).cost_method
+                product_template.categ_id.with_company(company).property_cost_method
+                or company.cost_method
             )
 
     @api.depends_context('company')
     @api.depends('categ_id.property_valuation')
     def _compute_valuation(self):
         for product_template in self:
-            product_template.valuation = product_template.categ_id.with_company(
-                product_template.company_id).property_valuation or self.env.company.inventory_valuation
+            company = product_template.company_id
+            if not company or self.env.company.filtered_domain([('id', 'child_of', company.id)]):
+                company = self.env.company
+            product_template.valuation = product_template.categ_id.with_company(company).property_valuation or company.inventory_valuation
 
     def write(self, vals):
         product_ids_to_update = set()
@@ -195,6 +197,7 @@ class ProductProduct(models.Model):
         std_price_by_company_id = {}
         total_value_by_company_id = {}
         lot_valuated_products_ids = {p.id for p in self if p.lot_valuated}
+        valued_quantity_by_product_id = defaultdict(float)
         for company in self.env.companies:
             std_price_by_product_id = defaultdict(float)
             total_value_by_product_id = defaultdict(float)
@@ -208,7 +211,7 @@ class ProductProduct(models.Model):
 
             if lot_valuated_products_ids:
                 domain = Domain([('product_id', 'in', lot_valuated_products_ids)])
-                if not self.env.context.get('warehouse_id'):
+                if not at_date and not self.env.context.get('warehouse_id'):
                     domain &= Domain([('product_qty', '!=', 0)])
                 lots_by_product = env['stock.lot']._read_group(
                     domain,
@@ -249,14 +252,14 @@ class ProductProduct(models.Model):
                 product_ids_grouped_by_cost_method[product.cost_method].add(product.id)
 
             for cost_method, product_ids in product_ids_grouped_by_cost_method.items():
-                products = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
+                products_to_value = products.env['product.product'].browse(product_ids).with_context(warehouse_id=False)
                 # To remove once price_unit isn't truncate in sql anymore (no need of force_recompute)
                 if cost_method == 'standard':
-                    std_prices, total_values = products._run_standard_batch(at_date=at_date)
+                    std_prices, total_values = products_to_value._run_standard_batch(at_date=at_date)
                 elif cost_method == 'average':
-                    std_prices, total_values = products._run_average_batch(at_date=at_date)
+                    std_prices, total_values = products_to_value._run_average_batch(at_date=at_date)
                 else:
-                    std_prices, total_values = products._run_fifo_batch(at_date=at_date)
+                    std_prices, total_values = products_to_value._run_fifo_batch(at_date=at_date)
 
                 std_price_by_product_id.update(std_prices)
                 total_value_by_product_id.update(total_values)
@@ -264,13 +267,15 @@ class ProductProduct(models.Model):
             for product in products:
                 total_value = total_value_by_product_id.get(product.id, 0)
                 total_value_by_product_id[product.id] = total_value * ratio_by_product_id.get(product.id, 1)
+                valued_quantity_by_product_id[product.id] += product.qty_available
 
             std_price_by_company_id[company.id] = std_price_by_product_id
             total_value_by_company_id[company.id] = total_value_by_product_id
 
         for product in self:
-            product.total_value = sum(total_value_by_company_id[c.id].get(product.id, 0) for c in self.env.companies)
-            product.avg_cost = product.total_value / product.qty_available if product.qty_available else std_price_by_company_id[self.env.company.id].get(product.id, product.standard_price)
+            product.total_value = sum(c.currency_id._convert(total_value_by_company_id[c.id].get(product.id, 0), self.env.company.currency_id) for c in self.env.companies)
+            valued_quantity = valued_quantity_by_product_id[product.id]
+            product.avg_cost = product.total_value / valued_quantity if valued_quantity else std_price_by_company_id[self.env.company.id].get(product.id, product.standard_price)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -359,18 +364,29 @@ class ProductProduct(models.Model):
         return last_in
 
     def _with_valuation_context(self):
-        valued_locations = self.env['stock.location'].search([('is_valued_internal', '=', True)])
+        valued_locations = self.env['stock.location'].with_context(active_test=False).search(
+            [('is_valued_internal', '=', True)]
+        )
         return self.with_context(location=valued_locations.ids, owners=[False, self.env.company.partner_id.id], strict=True)
 
     def _get_remaining_moves(self):
         moves_qty_by_product = {}
         for product in self:
-            moves, remaining_qty = product._run_fifo_get_stack()
-            moves = self.env['stock.move'].concat(*moves)
-            if not moves:
+            qty_by_move = defaultdict(float)
+            lots = [None]
+            if product.lot_valuated:
+                lots = product.stock_quant_ids.filtered(
+                    lambda q: q.lot_id and q.company_id == self.env.company and q.location_id.is_valued_internal and q.quantity > 0
+                ).lot_id or [None]
+            for lot in lots:
+                moves, remaining_qty = product._run_fifo_get_stack(lot=lot)
+                if not moves:
+                    continue
+                qty_by_move[moves[0]] += remaining_qty
+                for move in moves[1:]:
+                    qty_by_move[move] += move._get_valued_qty(lot)
+            if not qty_by_move:
                 continue
-            qty_by_move = {m: m.quantity for m in moves[1:]}
-            qty_by_move[moves[0]] = remaining_qty
             moves_qty_by_product[product] = qty_by_move
         return moves_qty_by_product
 
@@ -415,12 +431,17 @@ class ProductProduct(models.Model):
         if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
+        product_ids_by_manual_value_date = defaultdict(list)
+        if not lot:
+            for manual_value in last_manual_value_by_product.values():
+                product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
+
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
             if lot:
                 quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
             else:
-                quantity = product.with_context(to_date=manual_value.date).qty_available
+                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
@@ -434,6 +455,10 @@ class ProductProduct(models.Model):
             field_names=['id'],
             order='product_id, date, id'
         )
+
+        if self.env['stock.move'].search_count(moves_domain & Domain('is_dropship', '=', True), limit=1):
+            self._get_moves_with_manual_value(product_ids=self.ids)
+
         # PERF avoid memoryerror
         move_fields = ['date', 'is_dropship', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
@@ -441,7 +466,7 @@ class ProductProduct(models.Model):
         product, valuation_from_date = False, False
         batch_size = 50000
 
-        move_ids_by_product = defaultdict(list)
+        product_move_ids = []
         # Limit the memory usage since it's possible to have millions of stock.move
         for moves_batch in split_every(batch_size, moves.ids):
             moves_batch = self.env['stock.move'].browse(moves_batch)
@@ -453,58 +478,58 @@ class ProductProduct(models.Model):
                     valuation_from_date = date_by_product_id.get(product.id)
                 if valuation_from_date and move.date <= valuation_from_date:
                     continue
-                move_ids_by_product[product].append(move.id)
+                product_move_ids.append(move.id)
 
             self.env['stock.move'].invalidate_model()
 
-        for product, move_ids in move_ids_by_product.items():
-            product_moves = self.env['stock.move'].browse(move_ids)
+        for moves_batch in split_every(batch_size, product_move_ids):
+            moves_batch = self.env['stock.move'].browse(moves_batch)
+            moves_batch.fetch(move_fields)
+            moves_batch.move_line_ids.fetch(move_line_fields)
+            for move in moves_batch:
+                quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
+                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                value = value_by_product_id.get(move.product_id.id, 0.0)
+                if move.is_in or move.is_dropship:
+                    in_qty = move._get_valued_qty()
+                    in_value = move.value
+                    if move.is_dropship:
+                        ignore_manual_update = False
+                        if self.env.cr.cache.get('moves_with_manual_value', {}).get((at_date, move.product_id)):
+                            ignore_manual_update = move.id not in self.env.cr.cache['moves_with_manual_value'][at_date, move.product_id]
+                        in_value = move.sudo()._get_value(at_date=at_date, forced_std_price=average_cost, ignore_manual_update=ignore_manual_update)
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        in_value = (in_value * lot_qty / in_qty) if in_qty else 0
+                        in_qty = lot_qty
+                    previous_qty = quantity
+                    quantity += in_qty
+                    # Regular case, value from accumulation
+                    if previous_qty > 0:
+                        value += in_value
+                        average_cost = value / quantity
+                    # From negative quantity case, value from last_in
+                    elif previous_qty <= 0:
+                        average_cost = in_value / in_qty if in_qty else average_cost
+                        value = average_cost * quantity
+                if move.is_out or move.is_dropship:
+                    out_qty = move._get_valued_qty()
+                    out_value = out_qty * average_cost
+                    if lot:
+                        lot_qty = move._get_valued_qty(lot)
+                        out_value = (out_value * lot_qty / out_qty) if out_qty else 0
+                        out_qty = lot_qty
+                    value -= out_value
+                    quantity -= out_qty
 
-            first_move = product_moves[0]
-            quantity = quantity_by_product_id.get(product.id, 0)
-            average_cost = std_price_by_product_id.get(product.id, first_move.value / first_move._get_valued_qty() if first_move._get_valued_qty() else 0)
-            value = value_by_product_id.get(product.id, 0)
+                quantity_by_product_id[move.product_id.id] = quantity
+                std_price_by_product_id[move.product_id.id] = average_cost
+                value_by_product_id[move.product_id.id] = value
 
-            for moves_batch in split_every(batch_size, product_moves.ids):
-                moves_batch = self.env['stock.move'].browse(moves_batch)
-                moves_batch.fetch(move_fields)
-                moves_batch.move_line_ids.fetch(move_line_fields)
-                for move in moves_batch:
-                    if move.is_in or move.is_dropship:
-                        in_qty = move._get_valued_qty()
-                        in_value = move.value
-                        if at_date or move.is_dropship:
-                            in_value = move._get_value(at_date=at_date, forced_std_price=average_cost)
-                        if lot:
-                            lot_qty = move._get_valued_qty(lot)
-                            in_value = (in_value * lot_qty / in_qty) if in_qty else 0
-                            in_qty = lot_qty
-                        previous_qty = quantity
-                        quantity += in_qty
-                        # Regular case, value from accumulation
-                        if previous_qty > 0:
-                            value += in_value
-                            average_cost = value / quantity
-                        # From negative quantity case, value from last_in
-                        elif previous_qty <= 0:
-                            average_cost = in_value / in_qty if in_qty else average_cost
-                            value = average_cost * quantity
-                    if move.is_out or move.is_dropship:
-                        out_qty = move._get_valued_qty()
-                        out_value = out_qty * average_cost
-                        if lot:
-                            lot_qty = move._get_valued_qty(lot)
-                            out_value = (out_value * lot_qty / out_qty) if out_qty else 0
-                            out_qty = lot_qty
-                        value -= out_value
-                        quantity -= out_qty
+            self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
+            self.env['stock.move.line'].invalidate_model()
 
-                self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
-                self.env['stock.move.line'].invalidate_model()
-
-            std_price_by_product_id[product.id] = average_cost
-            value_by_product_id[product.id] = value
-
+        self.env.cr.cache.pop('moves_with_manual_value', None)
         return std_price_by_product_id, value_by_product_id
 
     def _run_fifo_batch(self, at_date=None, lot=None, location=None):
@@ -525,10 +550,11 @@ class ProductProduct(models.Model):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
         self.ensure_one()
         if self.uom_id.compare(quantity, 0) <= 0:
+            std_price = lot.standard_price if lot else self.standard_price
             if at_date:
                 last_in = self._get_last_in(at_date)
-                return quantity * (last_in._get_price_unit() if last_in else self.standard_price)
-            return quantity * self.standard_price
+                return quantity * (last_in._get_price_unit() if last_in else std_price)
+            return quantity * std_price
         external_location = location and location.is_valued_external
 
         fifo_cost = 0
@@ -539,16 +565,17 @@ class ProductProduct(models.Model):
             move = fifo_stack.pop(0)
             last_move = move
             move_value = move.value
-            if at_date:
-                move_value = move._get_value(at_date=at_date)
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
                 in_value = move_value * in_qty / valued_qty
                 qty_on_first_move = 0
             else:
-                in_qty = move._get_valued_qty()
+                in_qty = move._get_valued_qty(lot=lot)
                 in_value = move_value
+                if lot:
+                    valued_qty = move._get_valued_qty()
+                    in_value = in_value * in_qty / valued_qty if valued_qty else 0
             if in_qty > quantity:
                 in_value = in_value * quantity / in_qty
                 in_qty = quantity
@@ -581,7 +608,7 @@ class ProductProduct(models.Model):
 
         moves_domain = Domain([
             ('product_id', '=', self.id),
-            ('company_id', '=', self.env.company.id)
+            ('company_id', 'in', self.env.companies.ids),
         ])
         if lot:
             moves_domain &= Domain([('move_line_ids.lot_id', 'in', lot.id)])
@@ -602,9 +629,9 @@ class ProductProduct(models.Model):
         current_offset = 0
         # Go to the bottom of the stack
         while self.uom_id.compare(fifo_stack_size, 0) > 0 and moves_in:
-            move = moves_in[0]
+            move = moves_in[0].with_prefetch(moves_in.ids)
             moves_in = moves_in[1:]
-            in_qty = move._get_valued_qty()
+            in_qty = move._get_valued_qty(lot=lot)
             fifo_stack.append(move)
             remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
             fifo_stack_size -= in_qty
@@ -616,17 +643,46 @@ class ProductProduct(models.Model):
         return fifo_stack, remaining_qty_on_first_stack_move
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
-        # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
+        """ Update the standard price of product in self.
+        :params extra_value dict: Additional value by product in case of in move in order to simply recompute
+        standard price base old quantity * standard price + extra_value / total quantity available
+        :params extra_quantity dict: Added quantity to the quantity available used to recompute the previous
+        quantity for the computation defined in extra_value params.
+        """
         products_by_cost_method = defaultdict(set)
         for product in self:
-            if product.lot_valuated:
+            if product.lot_valuated and product.cost_method != 'standard':
                 product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.avg_cost
                 continue
             products_by_cost_method[product.cost_method].add(product.id)
         for cost_method, product_ids in products_by_cost_method.items():
-            products = self.env['product.product'].browse(product_ids)
+            products = self.env['product.product'].sudo().browse(product_ids)
             if cost_method == 'standard':
                 continue
+
+            if extra_value is not None and extra_quantity is not None:
+                products_with_incremental_recompute = (
+                    self.env['product.product'].concat(*extra_value.keys()) & products
+                ).sudo().with_context(
+                    allowed_company_ids=self.env.company.ids
+                )._with_valuation_context()
+                products_with_incremental_recompute.fetch(['qty_available'])
+                for product in products_with_incremental_recompute:
+                    added_value = extra_value.get(product)
+                    added_qty = extra_quantity.get(product)
+                    previous_qty = product.qty_available - added_qty
+                    if (
+                            product.uom_id.compare(previous_qty, 0) > 0
+                            and product.uom_id.compare(product.qty_available, 0) > 0
+                    ):
+                        new_avg_cost = (previous_qty * product.standard_price + added_value) / product.qty_available
+                    elif not product.uom_id.is_zero(added_qty):
+                        new_avg_cost = added_value / added_qty
+                    else:
+                        continue
+                    product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_avg_cost
+                products = products - products_with_incremental_recompute
+
             if cost_method == 'fifo':
                 for product in products:
                     qty_available = product._with_valuation_context().qty_available
@@ -635,12 +691,33 @@ class ProductProduct(models.Model):
                     elif last_in := product._get_last_in():
                         if last_in_price_unit := last_in._get_price_unit():
                             product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
-                continue
-            if cost_method == 'average':
+
+            elif cost_method == 'average':
                 new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
+
+    def _get_moves_with_manual_value(self, product_ids, at_date=False):
+        """Get the move IDs with manual product.value to populate the cursor cache."""
+        if not product_ids:
+            return
+        if not self.env.cr.cache.get('moves_with_manual_value'):
+            self.env.cr.cache['moves_with_manual_value'] = {}
+        query = """
+            SELECT sm.product_id, array_agg(DISTINCT pv.move_id)
+            FROM product_value pv
+            JOIN stock_move sm ON pv.move_id = sm.id
+            WHERE pv.move_id IS NOT NULL
+            AND sm.product_id IN %s
+        """
+        params = [tuple(product_ids)]
+        if at_date:
+            query += " AND sm.date <= %s"
+            params.append(at_date)
+        query += " GROUP BY sm.product_id"
+        for product, moves in self.env.execute_query(SQL(query, *params)):
+            self.env.cr.cache['moves_with_manual_value'][at_date, product] = set(moves)
 
     # -------------------------------------------------------------------------
     # Old to remove

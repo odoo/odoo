@@ -1,285 +1,388 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_safaricom
+# * pos_safaricom
 #
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:38+0000\n"
-"PO-Revision-Date: 2026-03-13 18:38+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-05-01 17:36+0000\n"
+"PO-Revision-Date: 2026-08-08 04:29+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
+"Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
+"pos_safaricom/sl/>\n"
+"Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
+msgid "'Search by name or phone or transaction id...'"
+msgstr "Išči po imenu, telefonski številki ali ID-ju transakcije..."
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
+msgid "'Select M-Pesa Transaction'"
+msgstr "Izberite transakcijo M-Pesa"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
 msgid "Accept"
-msgstr ""
+msgstr "Sprejmi"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__amount
+#, fuzzy
 msgid "Amount"
-msgstr ""
+msgstr "Znesek"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
 msgid "Arrived at"
-msgstr ""
+msgstr "Prispel ob"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__business_short_code
+#, fuzzy
 msgid "Business Short Code"
-msgstr ""
+msgstr "Poslovna kratka koda"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+#, fuzzy
 msgid ""
-"C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to work.\n"
-"                            This happens automatically on creation, but you can re-register if you deleted them from the business portal."
+"C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to "
+"work.\n"
+"                        This happens automatically on creation, but you can "
+"re-register if you deleted them from the business portal."
 msgstr ""
+"URL-je povratnih klicev C2B je treba registrirati pri Safaricomu, da Lipa na "
+"M-PESA deluje.\n"
+"                        To se zgodi samodejno ob ustvarjanju, vendar jih "
+"lahko znova registrirate, če ste jih izbrisali s poslovnega portala."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
 msgid "Cancel"
-msgstr ""
+msgstr "Prekliči"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+#, fuzzy
 msgid "Cannot process transactions with float numbers. Round it please."
 msgstr ""
+"Transakcij s števili s plavajočo vejico ni mogoče obdelati. Prosimo, "
+"zaokrožite jih."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+#, fuzzy
 msgid "Cannot process transactions with negative amount."
-msgstr ""
+msgstr "Transakcij z negativnim zneskom ni mogoče obdelati."
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_key
+#, fuzzy
 msgid "Consumer Key"
-msgstr ""
+msgstr "Potrošniški ključ"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Consumer Key and Consumer Secret are required for Safaricom M-Pesa"
 msgstr ""
+"Potrošniški ključ in potrošniška skrivnost sta obvezna za Safaricom M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
+#, fuzzy
 msgid "Consumer Secret"
+msgstr "Skrivnost potrošnika"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+#, fuzzy
+msgid ""
+"Could not find base url. Please set up web.base.url to a valid https address"
 msgstr ""
+"Osnovnega URL-ja ni bilo mogoče najti. Nastavite web.base.url na veljaven "
+"naslov HTTPS"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_date
+#, fuzzy
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+#, fuzzy
 msgid "Failed to generate QR code"
-msgstr ""
+msgstr "Ustvarjanje kode QR ni uspelo"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
-msgid "Failed to register URLs"
-msgstr ""
-
-#. module: pos_safaricom
-#. odoo-python
-#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Failed to register URLs. Check your credentials and try again."
 msgstr ""
+"Registracija URL-jev ni uspela. Preverite svoje poverilnice in poskusite "
+"znova."
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
+#, fuzzy
+msgid "Failed to register URLs: %s"
+msgstr "Registracija URL-jev ni uspela: %s"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+#, fuzzy
 msgid "Failed to retrieve access token from Safaricom"
-msgstr ""
-
-#. module: pos_safaricom
-#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
-#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
-msgid "ID"
-msgstr ""
-
-#. module: pos_safaricom
-#. odoo-python
-#: code:addons/pos_safaricom/models/pos_payment_method.py:0
-msgid "Invalid phone number format. Please use format: 2547XXXXXXXX"
-msgstr ""
-
-#. module: pos_safaricom
-#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_uid
-msgid "Last Updated by"
-msgstr ""
-
-#. module: pos_safaricom
-#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_date
-msgid "Last Updated on"
-msgstr ""
-
-#. module: pos_safaricom
-#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__lipa_na_mpesa
-msgid "Lipa na M-PESA"
-msgstr ""
-
-#. module: pos_safaricom
-#: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
-msgid "Lipa na M-PESA Configuration"
-msgstr ""
-
-#. module: pos_safaricom
-#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__mpesa_express
-msgid "M-PESA Express"
-msgstr ""
-
-#. module: pos_safaricom
-#. odoo-javascript
-#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
-msgid "M-Pesa Phone Number"
-msgstr ""
+msgstr "Žetona za dostop iz Safaricoma ni bilo mogoče pridobiti"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+#, fuzzy
+msgid "Invalid phone number format. Please use format: 2547XXXXXXXX"
+msgstr "Neveljavna oblika telefonske številke. Uporabite obliko: 2547XXXXXXXX"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: pos_safaricom
+#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__lipa_na_mpesa
+#, fuzzy
+msgid "Lipa na M-PESA"
+msgstr "Plačaj z M-PESA"
+
+#. module: pos_safaricom
+#: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+#, fuzzy
+msgid "Lipa na M-PESA Configuration"
+msgstr "Konfiguracija Lipa na M-PESA"
+
+#. module: pos_safaricom
+#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__mpesa_express
+#, fuzzy
+msgid "M-PESA Express"
+msgstr "M-PESA Express"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+#, fuzzy
+msgid "M-Pesa Phone Number"
+msgstr "Telefonska številka M-Pesa"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
 msgid "M-Pesa QR Code"
-msgstr ""
+msgstr "QR-koda M-Pesa"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__name
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "Naziv"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__number
+#, fuzzy
 msgid "Number"
-msgstr ""
+msgstr "Številka"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__passkey
+#, fuzzy
 msgid "Passkey"
-msgstr ""
+msgstr "Geslo"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Payment Failed"
-msgstr ""
+msgstr "Plačilo ni uspelo"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_payment_type
+#, fuzzy
 msgid "Payment Type"
-msgstr ""
+msgstr "Način plačila"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+#, fuzzy
 msgid "Payment line not found"
-msgstr ""
+msgstr "Plačilna vrstica ni najdena"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Payment was not completed"
-msgstr ""
+msgstr "Plačilo ni dokončano"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+#, fuzzy
 msgid "Phone number is required for M-Pesa payment."
-msgstr ""
+msgstr "Telefonska številka je zahtevana za plačilo M-Pesa."
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_payment_method
+#, fuzzy
 msgid "Point of Sale Payment Methods"
-msgstr ""
+msgstr "Načini plačila prodajne točke"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__received_at
+#, fuzzy
 msgid "Received At"
-msgstr ""
+msgstr "Prejeto ob"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
 msgid "Refresh"
-msgstr ""
+msgstr "Osvežite"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+#, fuzzy
 msgid "Register URLs"
-msgstr ""
+msgstr "Registriraj URL-je"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+#, fuzzy
 msgid "Register or re-register C2B callback URLs with Safaricom"
 msgstr ""
+"Registrirajte ali ponovno registrirajte povratne URL-je C2B pri Safaricomu"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+#, fuzzy
 msgid "Safaricom M-Pesa Error"
-msgstr ""
+msgstr "Napaka Safaricom M-Pesa"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#, fuzzy
 msgid "Scan to Pay with M-Pesa"
-msgstr ""
+msgstr "Skenirajte za plačilo z M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_test_mode
+#, fuzzy
 msgid "Test Mode"
+msgstr "Testni način"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__business_short_code
+#, fuzzy
+msgid ""
+"The business short code and till number combination as 'shortcode-"
+"tillnumber' (ex: 123456-789012)"
 msgstr ""
+"Kombinacija poslovne kratke kode in številke blagajne v obliki 'kratka koda-"
+"številka blagajne' (npr.: 123456-789012)"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
+#, fuzzy
 msgid "The passkey is used to generate the password for the STK Push"
-msgstr ""
+msgstr "Ključ za dostop se uporablja za ustvarjanje gesla za STK Push"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__trans_id
+#, fuzzy
 msgid "Transaction ID"
-msgstr ""
+msgstr "ID transakcije"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_transaction_lipa_na_mpesa
+#, fuzzy
 msgid "Transaction Lipa na M-PESA"
-msgstr ""
+msgstr "Transakcija Lipa na M-PESA"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
+#, fuzzy
 msgid "Use sandbox environment"
-msgstr ""
+msgstr "Uporabite okolje peskovnika"

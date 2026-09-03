@@ -37,6 +37,7 @@ class SaleOrder(models.Model):
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
+    _mail_post_access = "read"
 
     _date_order_conditional_required = models.Constraint(
         "CHECK((state = 'sale' AND date_order IS NOT NULL) OR state != 'sale')",
@@ -134,7 +135,7 @@ class SaleOrder(models.Model):
 
     validity_date = fields.Date(
         string="Expiration",
-        help="Validity of the order, after that you will not able to sign & pay the quotation.",
+        help="Validity of the quotation. After this date, you will no longer be able to sign and pay it.",
         compute='_compute_validity_date',
         store=True, readonly=False, copy=False, precompute=True)
     journal_id = fields.Many2one(
@@ -551,6 +552,7 @@ class SaleOrder(models.Model):
                     quantity=1.0,
                     currency_id=currency,
                     sign=1,
+                    special_mode='total_excluded',
                     special_type='early_payment',
                     tax_ids=line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.amount_type != 'fixed'),
                 ))
@@ -560,6 +562,7 @@ class SaleOrder(models.Model):
                     quantity=1.0,
                     currency_id=currency,
                     sign=1,
+                    special_mode='total_excluded',
                     special_type='early_payment',
                 ))
         return epd_lines
@@ -783,7 +786,7 @@ class SaleOrder(models.Model):
     @api.depends('company_id', 'partner_id', 'amount_total')
     def _compute_partner_credit_warning(self):
         for order in self:
-            order.with_company(order.company_id)
+            order = order.with_company(order.company_id)
             order.partner_credit_warning = ''
             show_warning = order.state in ('draft', 'sent') and \
                            order.company_id.account_use_credit_limit
@@ -933,10 +936,11 @@ class SaleOrder(models.Model):
 
     @api.onchange('order_line')
     def _onchange_order_line(self):
+        linked_lines_by_line = self.order_line._get_linked_lines_by_line()
         for index, line in enumerate(self.order_line):
             if line.display_type == 'line_subsection' and not line.parent_id:
                 line.display_type = 'line_section'
-            combo_item_lines = line._get_linked_lines().filtered('combo_item_id')
+            combo_item_lines = linked_lines_by_line[line].filtered('combo_item_id')
             if line.product_template_id.type != 'combo':
                 if combo_item_lines:
                     # Delete any linked combo item lines if the line's product is no longer a combo
@@ -2139,7 +2143,7 @@ class SaleOrder(models.Model):
             downpayment_wizard = order.env['sale.advance.payment.inv'].create({
                 'sale_order_ids': order,
                 'advance_payment_method': 'fixed',
-                'fixed_amount': order.amount_paid,
+                'fixed_amount': self.env.context.get('downpayment_fixed_amount', order.amount_paid),
             })
             generated_invoices |= downpayment_wizard._create_invoices(order)
 

@@ -2129,6 +2129,35 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertFalse(leave_req_form.date_to)
 
+    def test_flexible_single_day_leave_on_public_holiday_include_in_duration(self):
+        """
+        Test that a single-day flexible leave on a public holiday counts
+        as 1 day when include_public_holidays_in_duration is True on the leave type.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible calendar',
+            'hours_per_day': 8,
+            'full_time_required_hours': 40,
+            'flexible_hours': True,
+        })
+        self.employee_emp.resource_calendar_id = calendar
+        self.env['resource.calendar.leaves'].create({
+            'date_from': datetime(2022, 3, 9, 0, 0, 0),
+            'date_to': datetime(2022, 3, 9, 23, 59, 59),
+            'calendar_id': calendar.id,
+            'company_id': self.employee_emp.company_id.id,
+            'resource_id': False,
+        })
+        self.holidays_type_1.include_public_holidays_in_duration = True
+        leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': date(2022, 3, 9),
+            'request_date_to': date(2022, 3, 9),
+        })
+        self.assertEqual(leave.number_of_days, 1)
+
     def test_flexible_schedule_full_day_off(self):
         """this tests checks that if the morning and afternoon have been selected as time off and the schedule type of
         the employee is flexible, the time considered off is a full day."""
@@ -2319,3 +2348,34 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         hourly_leave.invalidate_recordset()
         self.assertEqual(hourly_leave.state, 'validate')
+
+    def test_leave_request_both_notified_users(self):
+        """ Test the Fallback to Responsible Users are notified when a leave request is made
+        with ("both","By Employee's Approver and Time Off Officer") set for leave_validation_type,
+          even if the employee has no manager or time off officer. """
+        user_admin = self.env.ref('base.user_admin')
+        self.employee_emp.write({"parent_id": False, "leave_manager_id": False})
+        leave_type = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True)
+        holidays_type_5 = leave_type.create({
+            'name': 'Limited with 2 approvals and Responsible IDS',
+            'request_unit': 'hour',
+            'requires_allocation': False,
+            'employee_requests': 'yes',
+            'leave_validation_type': 'both',
+            "responsible_ids": [user_admin.id],
+        })
+
+        request = self.env['hr.leave'].with_user(self.employee_emp.user_id).create({
+            'name': '2 Approvers with no manager or time off Leave Request',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': holidays_type_5.id,
+            'request_unit_hours': True,
+            'request_date_from': '2026-02-24',
+            'request_date_to': '2026-02-24',
+            'request_hour_from': 8,
+            'request_hour_to': 12,
+        })
+        message_partner_ids = request.message_partner_ids
+        self.assertEqual(len(request.message_partner_ids), 2)
+        self.assertIn(self.employee_emp.user_id.partner_id, message_partner_ids)
+        self.assertIn(user_admin.partner_id, message_partner_ids)

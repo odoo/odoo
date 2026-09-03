@@ -28,16 +28,17 @@
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Martin Trigaux, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Michał Antoszczuk <michal.antoszczuk@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2026-03-25 11:49+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-05 05:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment/pl/>\n"
 "Language: pl\n"
@@ -47,7 +48,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -197,9 +198,9 @@ msgstr ""
 "object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "        <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
-"8px 16px; border-radius: 5px;\">Opis stanowiska</a>\n"
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Opis stanowiska</a>\n"
 "    </div>\n"
 "\n"
 "    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
@@ -210,10 +211,10 @@ msgstr ""
 "        <p>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Maciej Adminczak</"
 "strong><br/>\n"
-"            <span>Email: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t></span><br/>\n"
-"            <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+48 "
-"650-123-456</t></span>\n"
+"            <span>Email: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+48 650-"
+"123-456</t></span>\n"
 "        </p>\n"
 "        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
 "border: medium none; clear: both; display: block; font-size: 0px; min-"
@@ -264,8 +265,8 @@ msgstr ""
 "    </t>\n"
 "    <br/>\n"
 "    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"        <t t-out=\"object.job_id.address_id.country_id.name or "
-"''\">Argentina</t><br/>\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br/>\n"
 "        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.country_id.name)\"/>\n"
 "    </t>\n"
@@ -345,10 +346,10 @@ msgstr ""
 "            -- <br/>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Maciej Adminczak</"
 "strong><br/>\n"
-"            E-mail: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t><br/>\n"
-"            Telefon: <t t-out=\"object.user_id.phone or ''\">+48 "
-"650-123-456</t>\n"
+"            E-mail: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t><br/>\n"
+"            Telefon: <t t-out=\"object.user_id.phone or ''\">+48 650-123-"
+"456</t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            -- <br/> Zespół HR\n"
@@ -401,15 +402,15 @@ msgstr ""
 "                -- <br/>\n"
 "                <strong t-out=\"object.user_id.name or ''\">Marek Testowiak</"
 "strong><br/>\n"
-"                Email: <t t-out=\"object.user_id.email or "
-"''\">mark.brown23@example.com</t><br/>\n"
-"                Telefon: <t t-out=\"object.user_id.phone or ''\">+48 "
-"650-123-456</t>\n"
+"                Email: <t t-out=\"object.user_id.email or ''\">"
+"mark.brown23@example.com</t><br/>\n"
+"                Telefon: <t t-out=\"object.user_id.phone or ''\">+48 650-123-"
+"456</t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                -- <br/>\n"
-"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/"
-">\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
+"<br/>\n"
 "                Zespół HR<br/>\n"
 "            </t>\n"
 "        </div>\n"
@@ -540,27 +541,27 @@ msgstr ""
 "object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "            <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
-"8px 16px; border-radius: 5px;\">Opis stanowiska</a>\n"
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Opis stanowiska</a>\n"
 "        </div>\n"
 "\n"
 "        <t t-if=\"object.user_id\">\n"
 "            Skontaktuj się z Tobą:<br/>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Maciej Adminczak</"
 "strong><br/>\n"
-"            <span>Email: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t></span><br/>\n"
-"            <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+48 "
-"650-123-456</t></span>\n"
+"            <span>Email: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+48 650-"
+"123-456</t></span>\n"
 "            <br/><br/>\n"
 "        </t>\n"
 "        Do zobaczenia wkrótce,\n"
 "        <div style=\"font-size: 11px; color: grey;\">\n"
 "            -- <br/>\n"
 "            Zespół HR\n"
-"            <t t-if=\"'website_url' in object.job_id and "
-"hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"            <t t-if=\"'website_url' in object.job_id and hasattr"
+"(object.job_id, 'website_url') and object.job_id.website_url\">\n"
 "                Odkryj <a href=\"/jobs\" style=\"text-"
 "decoration:none;color:#717188;\">wszystkie nasze oferty</a>.<br/>\n"
 "            </t>\n"
@@ -609,8 +610,8 @@ msgstr ""
 "object.job_id.address_id.city)\"/>\n"
 "        </t>\n"
 "        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
-"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</"
-"t>,\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>"
+",\n"
 "            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.state_id.name)\"/>\n"
 "        </t>\n"
@@ -621,8 +622,8 @@ msgstr ""
 "        </t>\n"
 "        <br/>\n"
 "        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"            <t t-out=\"object.job_id.address_id.country_id.name or "
-"''\">Argentina</t><br/>\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br/>\n"
 "            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.country_id.name)\"/>\n"
 "        </t>\n"
@@ -638,9 +639,9 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
-"<div><b>Spróbuj wysłać wiadomość e-mail</b> do kandydata</div>: "
-"<div><i>Wszystkie wysłane lub odebrane wiadomości e-mail są zapisywane w "
-"historii w tym miejscu</i>"
+"<div><b>Spróbuj wysłać wiadomość e-mail</b> do kandydata</div>: <div><i>"
+"Wszystkie wysłane lub odebrane wiadomości e-mail są zapisywane w historii w "
+"tym miejscu</i>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1414,8 +1415,7 @@ msgstr "Stwórz plan działań rekrutacyjnych"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "Create a new rule to process emails from specific job boards."
-msgstr ""
-"Stwórz nową regułę do przetwarzania maili od konkretnych portali pracy."
+msgstr "Stwórz nową regułę do przetwarzania maili od konkretnych portali pracy."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1510,7 +1510,7 @@ msgstr "Dni do otwarcia"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__rotting_threshold_days
 msgid "Days to rot"
-msgstr "Dni przed uznaniem za bezczynne"
+msgstr "Dni do bezczynności"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
@@ -1522,8 +1522,7 @@ msgstr "Wartości domyślne"
 msgid ""
 "Define a regex: Extract the applicant's name from the email's subject or "
 "body."
-msgstr ""
-"Zdefiniuj regex: Wyciągnij nazwę kandydata z tematu lub treści e-maila."
+msgstr "Zdefiniuj regex: Wyciągnij nazwę kandydata z tematu lub treści e-maila."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1849,7 +1848,7 @@ msgstr "Doskonały"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Expected"
-msgstr "Spodziewany"
+msgstr "Oczekiwania"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_degree
@@ -1916,13 +1915,13 @@ msgstr "Zwinięty w lejku rekrutacyjnym:"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_follower_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_follower_ids
 msgid "Followers"
-msgstr "Obserwatorzy"
+msgstr "Obserwujący"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Obserwatorzy (partnerzy)"
+msgstr "Obserwujący (partnerzy)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
@@ -2098,8 +2097,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Możesz zgasić to pole, że jeśli nie chcesz widzieć zasobu bez usuwania."
+msgstr "Możesz zgasić to pole, że jeśli nie chcesz widzieć zasobu bez usuwania."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -2810,7 +2808,7 @@ msgstr "Stara aplikacja"
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__application_status__ongoing
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
-msgstr "Na bieżąco"
+msgstr "Bieżące"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_website_hr_recruitment
@@ -3246,7 +3244,7 @@ msgstr "Pakiet wynagrodzenia"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr "Wynagrodzenie proponowane przez organizacje"
+msgstr "Wynagrodzenie proponowane przez organizację"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed_extra
@@ -3272,7 +3270,7 @@ msgstr "Zapisz to!"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr "Zaplanuj wywiad"
+msgstr "Zaplanuj rozmowę kwalifikacyjną"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
@@ -3634,9 +3632,9 @@ msgid ""
 "job             position. The Recruiter is automatically added to all "
 "meetings with the Applicant."
 msgstr ""
-"Rekruter będzie domyślną wartością dla wszystkich kandydatów na "
-"tym                           stanowisku. Rekruter jest automatycznie "
-"dodawany do wszystkich spotkań z kandydatem."
+"Rekruter będzie domyślną wartością dla wszystkich kandydatów na tym"
+"                           stanowisku. Rekruter jest automatycznie dodawany "
+"do wszystkich spotkań z kandydatem."
 
 #. module: hr_recruitment
 #. odoo-python
@@ -4014,6 +4012,12 @@ msgstr ""
 "Nie można usunąć tych źródeł UTM, ponieważ są one powiązane z następującymi "
 "źródłami rekrutacji w Recruitment:\n"
 "%(recruitment_sources)s"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "You cannot duplicate the talent(s)."
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python

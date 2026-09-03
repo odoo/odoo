@@ -106,10 +106,12 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
                 # complete national number
                 ('0475000000', test_phone_records[0]),
                 # various international numbers
-                # ('32475110606', test_phone_records[6]),  # currently not supported, returns nothing
-                ('0032475110606', test_phone_records[6]),
-                ('+32475110606', test_phone_records[6]),
-                ('+32 475 11 06 06', test_phone_records[6]),
+                # Not supported yet: equal match expect a full prefix (e.g. +32).
+                # This should match `test_phone_records[6] | self.dupes` when supported.
+                ('32475110606', self.env['mail.test.sms.bl']),
+                ('0032475110606', test_phone_records[6] | self.dupes),
+                ('+32475110606', test_phone_records[6] | self.dupes),
+                ('+32 475 11 06 06', test_phone_records[6] | self.dupes),
             ]:
                 with self.subTest(source=source):
                     results = self.env['mail.test.sms.bl'].search([('phone_mobile_search', '=', source)])
@@ -128,8 +130,8 @@ class TestSMSActionsCommon(SMSCommon, TestSMSRecipients):
             ),
             ('101', test_phone_records[1], test_phone_records - test_phone_records[1]),
             # not ilike is not the inverse with formatting but hey, that's not easy to do
-            ('+32475', test_phone_records[5:8], test_phone_records),
-            ('0032475', test_phone_records[5:8], test_phone_records),
+            ('+32475110', test_phone_records[5:8] | self.dupes, test_phone_records),
+            ('0032475110', test_phone_records[5:8] | self.dupes, test_phone_records),
         ]:
             # test ilike search
             with self.subTest(source=source, operator="ilike"):

@@ -65,7 +65,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @param {string} fieldPath
      */
     addFieldPathToFetch(fieldPath) {
-        if (fieldPath && !this.alreadyFetchedFieldPaths.has(fieldPath)) {
+        if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
             this.fieldPathsToFetch.add(fieldPath);
         }
     }
@@ -149,7 +149,9 @@ export class ListDataSource extends OdooViewsDataSource {
     async _getReadSpec() {
         const allFieldPaths = await Promise.all(
             [...this.fieldPathsToFetch].map((fieldPath) =>
-                this.fieldService.loadPath(this._metaData.resModel, fieldPath)
+                fieldPath
+                    ? this.fieldService.loadPath(this._metaData.resModel, fieldPath)
+                    : { isInvalid: "path" }
             )
         );
         const validFieldPaths = allFieldPaths.filter((result) => !result.isInvalid);
@@ -177,6 +179,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {string | EvaluationError}
      */
     getListHeaderValue(fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -188,13 +191,17 @@ export class ListDataSource extends OdooViewsDataSource {
             return LOADING_ERROR;
         }
         if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
-            this.addFieldPathToFetch(fieldPath);
             this._triggerFetching();
             return LOADING_ERROR;
         }
         this.assertIsValid();
         const field = this.fieldPathsToFieldMap[fieldPath];
-        return field ? field.string : fieldPath;
+        if (!field) {
+            return new EvaluationError(
+                _t("The field %s does not exist or you do not have access to that field", fieldPath)
+            );
+        }
+        return field.string;
     }
 
     /**
@@ -222,6 +229,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {string|number|undefined|EvaluationError}
      */
     getListCellValue(position, fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -235,7 +243,6 @@ export class ListDataSource extends OdooViewsDataSource {
             return LOADING_ERROR;
         }
         if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
-            this.addFieldPathToFetch(fieldPath);
             this._triggerFetching();
             return LOADING_ERROR;
         }
@@ -256,8 +263,13 @@ export class ListDataSource extends OdooViewsDataSource {
         }
         const lastField = fieldPath.split(".").at(-1);
         if (Array.isArray(record)) {
+            if (record.length === 1) {
+                // avoid stringifying the value if there is only one record
+                return this._parseServerValue(field, record[0][lastField]);
+            }
+            // stringify to csv
+            // known limitation: the values are not localized.
             // remove duplicates?
-            // needs to be formatted...
             return record.map((r) => this._parseServerValue(field, r[lastField])).join(", ");
         }
         return this._parseServerValue(field, record[lastField]);
@@ -308,9 +320,7 @@ export class ListDataSource extends OdooViewsDataSource {
      */
     getListCurrency(position, fieldPath, currencyFieldName) {
         this.assertIsValid();
-        const currency = this._getRecordFromRelation(this.data[position], fieldPath)?.[
-            currencyFieldName
-        ];
+        const currency = this._getCurrency(position, fieldPath, currencyFieldName);
         if (!currency) {
             return undefined;
         }
@@ -329,6 +339,27 @@ export class ListDataSource extends OdooViewsDataSource {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * @param {object | object[]} recordOrRecords
+     * @param {string} currencyFieldName
+     * @returns {import("@spreadsheet/currency/currency_data_source").Currency | undefined}
+     */
+    _getCurrency(position, fieldPath, currencyFieldName) {
+        const recordOrRecords = this._getRecordFromRelation(this.data[position], fieldPath);
+        if (Array.isArray(recordOrRecords)) {
+            const currencyIds = new Set(
+                recordOrRecords.map((r) => r[currencyFieldName] && r[currencyFieldName].id)
+            );
+            if (currencyIds.size > 1) {
+                // if there are multiple currencies,
+                // we cannot know which one to use, so we return undefined
+                return undefined;
+            }
+            return recordOrRecords[0]?.[currencyFieldName];
+        }
+        return recordOrRecords?.[currencyFieldName];
+    }
 
     _formatDateTime(dateValue) {
         const date = deserializeDateTime(dateValue);

@@ -46,6 +46,23 @@ class TestImport(common.TransactionCase):
             'Test de traduction CSV depuis les données'
         )
 
+    def test_import_colliding_xmlids_later_overwrites(self):
+        """Two xmlids for the same record: later PO entry wins on overwrite.
+
+        fr.po maps record1 ("Tableware") -> "Assiettes", then record1_alias
+        ("Tableware Unused", artificial source) -> "Vaisselle". Both xmlids
+        resolve to the same res_id; import must keep the later value.
+        """
+        self.env['res.lang']._activate_lang('fr_FR')
+        record = self.env.ref('test_translation_import.test_translation_import_model1_record1')
+        alias = self.env.ref('test_translation_import.test_translation_import_model1_record1_alias')
+        self.assertEqual(record, alias)
+
+        self.env['ir.module.module']._load_module_terms(
+            ['test_translation_import'], ['fr_FR'], overwrite=True,
+        )
+        self.assertEqual(record.with_context(lang='fr_FR').name, 'Vaisselle')
+
     def test_import_model_term_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
@@ -278,7 +295,17 @@ class TestTranslationFlow(common.TransactionCase):
 
         with io.BytesIO(base64.b64decode(pot_file_data)) as pot_file:
             pot_file.name = f'{module_name}.pot'
-            for line1, line2 in zip(translation_file_reader(pot_file, 'po'), translation_file_reader(file_path(f'{module_name}/i18n/{module_name}.pot'), 'po')):
+            # "Tableware Unused" is an artificial source injected to simulate
+            # one module overriding another module's data on the same record:
+            #   module_A: ref(xmlid1_for_record_a).name = 'aaa'
+            #   module_B: ref(xmlid2_for_record_a).name = 'bbb'
+            # Importing translations for both modules then yields multiple
+            # references for that same record.
+            expected = (
+                line for line in translation_file_reader(file_path(f'{module_name}/i18n/{module_name}.pot'), 'po')
+                if line['src'] != 'Tableware Unused'
+            )
+            for line1, line2 in zip(translation_file_reader(pot_file, 'po'), expected):
                 self.assertEqual(line1, line2)
 
     def test_export_import(self):

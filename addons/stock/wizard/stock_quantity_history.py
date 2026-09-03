@@ -14,15 +14,16 @@ class StockQuantityHistory(models.TransientModel):
         default=fields.Datetime.now)
 
     def open_at_date(self):
-        tree_view_id = self.env.ref('stock.view_stock_product_tree').id
+        tree_view_id = self.env.ref('stock.product_product_stock_tree').id
         form_view_id = self.env.ref('stock.product_form_view_procurement_button').id
+        search_view_id = self.env.ref('stock.product_search_form_view_stock_report').id
         domain = Domain('is_storable', '=', True)
         product_id = self.env.context.get('product_id', False)
         product_tmpl_id = self.env.context.get('product_tmpl_id', False)
         if product_id:
             domain &= Domain('id', '=', product_id)
         elif product_tmpl_id:
-            domain = Domain('product_tmpl_id', '=', product_tmpl_id)
+            domain &= Domain('product_tmpl_id', '=', product_tmpl_id)
         # We pass `to_date` in the context so that `qty_available` will be computed across
         # moves until date.
         action = {
@@ -33,6 +34,7 @@ class StockQuantityHistory(models.TransientModel):
             'res_model': 'product.product',
             'domain': domain,
             'context': dict(self.env.context, to_date=self.inventory_datetime),
+            'search_view_id': [search_view_id],
             'display_name': format_datetime(self.env, self.inventory_datetime)
         }
         return action

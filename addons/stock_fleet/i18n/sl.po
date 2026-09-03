@@ -2,14 +2,17 @@
 # This file contains the translation of the following modules:
 # * stock_fleet
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:20+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:12+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "stock_fleet/sl/>\n"
 "Language: sl\n"
@@ -18,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_fleet
 #. odoo-python
@@ -40,31 +43,39 @@ msgstr "%(weight_capacity)s %(weight_uom)s"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
+#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" invisible=\"code !='outgoing'\">From</span>\n"
 "                        <span class=\"fw-bold\" invisible=\"code "
 "=='outgoing'\">To</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">Od</span>\n"
+"                        <span class=\"fw-bold\" invisible=\"code "
+"=='outgoing'\">Do</span>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
+#, fuzzy
 msgid "<strong>Dock:</strong>"
-msgstr ""
+msgstr "<strong>Nakladalna rampa:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
+#, fuzzy
 msgid "<strong>Vehicle Category:</strong>"
-msgstr ""
+msgstr "<strong>Kategorija vozila:</strong>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
+#, fuzzy
 msgid "<strong>Vehicle:</strong>"
-msgstr ""
+msgstr "<strong>Vozilo:</strong>"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
+#, fuzzy
 msgid "Allowed Docks"
-msgstr ""
+msgstr "Dovoljene nakladalne rampe"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
@@ -74,8 +85,9 @@ msgstr "Paketni prenos"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+#, fuzzy
 msgid "Batches by Route"
-msgstr ""
+msgstr "Serije po poti"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -90,8 +102,9 @@ msgstr "Kategorija modela"
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
+#, fuzzy
 msgid "Dispatch Management"
-msgstr ""
+msgstr "Upravljanje odpreme"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
@@ -99,29 +112,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazno ime"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
+#, fuzzy
 msgid "Dock"
-msgstr ""
+msgstr "Nakladna rampa"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+#, fuzzy
 msgid "Dock Dispatching"
-msgstr ""
+msgstr "Odprema na nakladalni rampi"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+#, fuzzy
 msgid "Dock Location"
-msgstr ""
+msgstr "Lokacija nakladalne rampe"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
+#, fuzzy
 msgid "Dock Locations"
-msgstr ""
+msgstr "Lokacije nakladalnih ramp"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
@@ -131,10 +149,13 @@ msgstr "Voznik"
 #. module: stock_fleet
 #: model:ir.model.fields,help:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,help:stock_fleet.field_stock_picking_type__dispatch_management
+#, fuzzy
 msgid ""
 "Enable this option to display dispatch management related details in the "
 "batch/wave form view and operations kanban overview."
 msgstr ""
+"Omogočite to možnost za prikaz podrobnosti, povezanih z upravljanjem "
+"odpreme, v obrazčnem pogledu paketov/valov in pregledu kanbana operacij."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
@@ -152,13 +173,15 @@ msgstr "Grafični prikaz"
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_warehouse__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+#, fuzzy
 msgid "Manage Batches"
-msgstr ""
+msgstr "Upravljanje serij"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity
@@ -167,8 +190,9 @@ msgstr "Največja glasnost"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_volume_capacity
+#, fuzzy
 msgid "Max Volume (m³)"
-msgstr ""
+msgstr "Največja glasnost (m³)"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity
@@ -177,8 +201,9 @@ msgstr "Največja teža"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+#, fuzzy
 msgid "Next 7 Days"
-msgstr ""
+msgstr "Naslednjih 7 dni"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -187,13 +212,15 @@ msgstr "Tip operacije"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+#, fuzzy
 msgid "Own Fleet"
-msgstr ""
+msgstr "Lastni vozni park"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking_type
+#, fuzzy
 msgid "Picking Type"
-msgstr ""
+msgstr "Tip zbirnika"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
@@ -207,8 +234,9 @@ msgstr "Zaporedje"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
+#, fuzzy
 msgid "Shipping Volume"
-msgstr ""
+msgstr "Prostornina pošiljke"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
@@ -222,8 +250,9 @@ msgstr "Statistike"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+#, fuzzy
 msgid "Third Party Carrier"
-msgstr ""
+msgstr "Tretji prevoznik"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
@@ -242,13 +271,15 @@ msgstr "Jutri"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
+#, fuzzy
 msgid "Total Shipping Volume"
-msgstr ""
+msgstr "Skupna prostornina pošiljke"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.vpicktree
+#, fuzzy
 msgid "Total Shipping Weight"
-msgstr ""
+msgstr "Skupna masa pošiljke"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_picking
@@ -262,13 +293,15 @@ msgstr "Transport"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
+#, fuzzy
 msgid "Transport Management"
-msgstr ""
+msgstr "Upravljanje transporta"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_weight_capacity
+#, fuzzy
 msgid "Vehcilce Payload Capacity"
-msgstr ""
+msgstr "Nosilnost vozila"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_id
@@ -279,8 +312,9 @@ msgstr "Vozilo"
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__vehicle_category_id
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_filter
+#, fuzzy
 msgid "Vehicle Category"
-msgstr ""
+msgstr "Kategorija vozila"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
@@ -289,8 +323,9 @@ msgstr "Prostornina"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_volume_percentage
+#, fuzzy
 msgid "Volume %"
-msgstr ""
+msgstr "Prostornina %"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__volume_capacity_uom_name
@@ -300,8 +335,9 @@ msgstr "Oznaka merske enote za prostornino"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_warehouse
+#, fuzzy
 msgid "Warehouse"
-msgstr ""
+msgstr "Skladišče"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
@@ -310,8 +346,9 @@ msgstr "Masa"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__used_weight_percentage
+#, fuzzy
 msgid "Weight %"
-msgstr ""
+msgstr "Masa %"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__weight_capacity_uom_name
@@ -326,8 +363,9 @@ msgstr "Poštna št."
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
+#, fuzzy
 msgid "semi-truck"
-msgstr ""
+msgstr "tovornjak s polpriklopnikom"
 
 #~ msgid "Inventory Locations"
 #~ msgstr "Lokacije inventure"

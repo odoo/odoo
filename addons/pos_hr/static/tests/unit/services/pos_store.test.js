@@ -1,7 +1,8 @@
 import { test, expect } from "@odoo/hoot";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { patchWithCleanup, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 
 definePosModels();
 
@@ -28,14 +29,14 @@ test("shouldShowOpeningControl", async () => {
     store.hasLoggedIn = true;
     expect(store.shouldShowOpeningControl()).toBe(true);
 });
-test("allowProductCreation", async () => {
+test("hasProductCreationAccess", async () => {
     const store = await setupPosEnv();
     const admin = store.models["hr.employee"].get(2);
     store.setCashier(admin);
-    expect(await store.allowProductCreation()).toBe(true);
+    expect(await store.hasProductCreationAccess).toBe(true);
     const emp = store.models["hr.employee"].get(3);
     store.setCashier(emp);
-    expect(await store.allowProductCreation()).toBe(false);
+    expect(await store.hasProductCreationAccess).toBe(false);
 });
 test("addLineToCurrentOrder", async () => {
     const store = await setupPosEnv();
@@ -83,4 +84,24 @@ test("handleUrlParams prevents unauthorized access when POS is locked with pos_h
 
     await store.handleUrlParams();
     expect(navigateCalledWithLoginScreen).toBe(true);
+});
+test("keybordInputRights", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+    const line = await store.addLineToOrder(
+        {
+            product_tmpl_id: product,
+            qty: 3,
+            note: '[{"text":"Test 1","colorIndex":0},{"text":"Test 2","colorIndex":0}]',
+        },
+        order
+    );
+    expect(line.qty).toBe(3);
+    const emp = store.models["hr.employee"].get(4);
+    store.setCashier(emp);
+
+    const orderSummary = await mountWithCleanup(OrderSummary, { props: {} });
+    orderSummary.numberBuffer._handleInput("-");
+    expect(line.qty).toBe(3);
 });

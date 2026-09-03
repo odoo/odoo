@@ -18,11 +18,13 @@ def get_demo_vendor_bill(user):
         'direction': 'incoming',
         'receiver': user.edi_identification,
         'uuid': f'{user.company_id.id}_demo_vendor_bill',
+        'origin_message_uuid': f'{user.company_id.id}_demo_vendor_bill',
         'accounting_supplier_party': '0208:2718281828',
         'state': 'done',
         'filename': f'{user.company_id.id}_demo_vendor_bill',
         'enc_key': file_open(DEMO_ENC_KEY, mode='rb').read(),
         'document': file_open(DEMO_BILL_PATH, mode='rb').read(),
+        'document_type': 'Invoice',
     }
 
 
@@ -42,7 +44,11 @@ def _mock_call_peppol_proxy(func, self, endpoint, params=None):
         message_uuid = params['message_uuids'][0]
         if message_uuid.endswith('_demo_vendor_bill'):
             return {message_uuid: get_demo_vendor_bill(user)}
-        return {message_uuid: {'state': 'done'}}
+        return {message_uuid: {
+            'state': 'done',
+            'origin_message_uuid': message_uuid,
+            'document_type': 'Invoice',
+        }}
 
     def _mock_send_document(user):
         # Trigger the reception of vendor bills

@@ -711,7 +711,7 @@ class CalendarEvent(models.Model):
                 detached_events = event.with_context(skip_contact_description=True)._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_invitation_emails()
+        events.attendee_ids._send_invitation_emails()
 
         # update activities based on calendar event data, unless already prepared
         # above manually. Heuristic: a new command (0, 0, vals) is considered as
@@ -849,12 +849,9 @@ class CalendarEvent(models.Model):
 
         current_attendees = self.filtered('active').attendee_ids
         skip_attendee_notification = self.env.context.get('skip_attendee_notification')
-        if not skip_attendee_notification and 'partner_ids' in values:
-            # we send to all partners and not only the new ones
-            (current_attendees - previous_attendees)._notify_attendees(
-                self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
-                force_send=True,
-            )
+        invited_attendees = self._get_new_invited_attendees(current_attendees, previous_attendees, vals)
+        if not skip_attendee_notification and invited_attendees:
+            invited_attendees._send_invitation_emails()
         if not skip_attendee_notification and not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
             # Only notify on future events
@@ -1230,7 +1227,8 @@ class CalendarEvent(models.Model):
                 if 'user_id' in fields:
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
-                    event.activity_ids.write(activity_values)
+                    # also protect against loops in case of ill-managed timezones
+                    event.activity_ids.with_context(calendar_event_meeting_update=True).write(activity_values)
 
     @api.model
     def _get_activity_deadline_from_start(self, start, allday):
@@ -1615,8 +1613,12 @@ class CalendarEvent(models.Model):
                 event.add('description').value = description
             if meeting.location:
                 event.add('location').value = meeting.location
+            if meeting.videocall_location:
+                event.add('url').value = meeting.videocall_location
             if meeting.rrule:
-                event.add('rrule').value = meeting.rrule
+                # meeting.rrule may be a full dateutil string: "DTSTART:...\nRRULE:FREQ=..."
+                # Take the last line and strip the "RRULE:" prefix if present.
+                event.add('rrule').value = meeting.rrule.splitlines()[-1].replace('RRULE:', '', 1)
 
             if meeting.alarm_ids:
                 for alarm in meeting.alarm_ids:
@@ -1631,7 +1633,7 @@ class CalendarEvent(models.Model):
                         delta = timedelta(hours=duration)
                     elif interval == 'minutes':
                         delta = timedelta(minutes=duration)
-                    trigger.value = delta
+                    trigger.value = -delta  # alarm duration is always towards the past, hence negative delta
                     valarm.add('DESCRIPTION').value = alarm.name or u'Odoo'
             for attendee in meeting.attendee_ids:
                 attendee_add = event.add('attendee')
@@ -1651,7 +1653,7 @@ class CalendarEvent(models.Model):
     @api.model
     def _get_contact_details_description(self, organizer, partners):
         """Build sanitized HTML with the organizer details and the details
-        of the contact partner (the first partner which is not the organizer).
+        of the contact partner (only when there is a single non-organizer attendee).
         """
         odoobot = self.env.ref('base.user_root')
         contact_description = []
@@ -1659,12 +1661,18 @@ class CalendarEvent(models.Model):
         if organizer and organizer != odoobot:
             contact_description.extend(self._prepare_partner_contact_details_html(_("Organized by"), organizer.partner_id))
         # First contact partner
-        first_partner = partners.filtered(lambda partner: partner not in (odoobot.partner_id + organizer.partner_id))[:1]
-        if first_partner:
+        contact_partners = partners.filtered(lambda partner: partner not in (odoobot.partner_id + organizer.partner_id))
+        if len(contact_partners) == 1:
             if contact_description:
                 contact_description.append("")  # To add a blank line between the organizer and partner details
-            contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), first_partner))
+            contact_description.extend(self._prepare_partner_contact_details_html(_("Contact Details"), contact_partners))
         return Markup("<br/>").join(contact_description)
+
+    @api.model
+    def _get_new_invited_attendees(self, current_attendees, previous_attendees, update_vals):
+        """Get the attendees who must receive an invitation for a modified calendar event. This method is meant
+        to be overridden."""
+        return current_attendees - previous_attendees
 
     @api.model
     def _prepare_partner_contact_details_html(self, section_title, partner):

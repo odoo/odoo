@@ -1,29 +1,36 @@
 import { patch } from "@web/core/utils/patch";
 import { SelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { session } from "@web/session";
+import { rpc } from "@web/core/network/rpc";
 
 patch(SelfOrder.prototype, {
     async setup(...args) {
         await super.setup(...args);
         this.onlinePaymentStatus = null;
-        this.data.connectWebSocket("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
-            if (
-                data["pos.order"].length === 0 ||
-                data["pos.order"][0].uuid !== this.currentOrder.uuid
-            ) {
+        this.data.connectWebSocket("ONLINE_PAYMENT_STATUS", ({ status, order_id }) => {
+            if (order_id !== this.currentOrder.id) {
                 return;
             }
-            this.models.connectNewData(data);
-            this.onlinePaymentStatus = status;
-            this.paymentError = status === "fail";
 
-            const order = this.models["pos.order"].find(
-                (o) => o.access_token === data["pos.order"][0].access_token
-            );
-            if (status === "success" && !this.currentOrder.access_token && order) {
-                this.confirmationPage("order", this.config.self_ordering_mode, order.access_token);
-            }
+            this.updateOnlinePaymentStatus(status);
         });
+    },
+    async updateOnlinePaymentStatus(status) {
+        const data = await rpc(`/pos-self-order/get-order/${this.currentOrder.id}`, {
+            access_token: this.access_token,
+            order_access_token: this.currentOrder.access_token,
+        });
+
+        this.models.connectNewData(data);
+        this.onlinePaymentStatus = status;
+        this.paymentError = status === "fail";
+
+        const order = this.models["pos.order"].find(
+            (o) => o.access_token === data["pos.order"][0].access_token
+        );
+        if (status === "success" && order.state === "paid") {
+            this.confirmationPage("order", this.config.self_ordering_mode, order.access_token);
+        }
     },
     getOnlinePaymentUrl(
         { id: order_id, access_token: order_access_token, config_id: order_pos_config_id },

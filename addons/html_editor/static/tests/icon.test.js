@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, hover, test } from "@odoo/hoot";
 import { click, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -170,18 +170,39 @@ test("Can spin an icon", async () => {
 });
 
 test("Can set icon color", async () => {
-    const { el } = await setupEditor(`<p><span class="fa fa-glass">[]</span></p>`);
+    const { el } = await setupEditor('<p><span class="fa fa-glass"></span></p>');
+    expect(getContent(el)).toBe(
+        `<p>\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</p>`
+    );
+    // A selection inside the font awesome is automatically converted to a
+    // selection around the font awesome, triggering the opening of the toolbar.
+    const fa = el.querySelector(".fa");
+    setSelection({ anchorNode: fa, anchorOffset: 0, focusNode: fa, focusOffset: 0 });
     await waitFor(".o-we-toolbar");
+    expect(getContent(el)).toBe(
+        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false">\u200b</span>]\ufeff</p>`
+    );
     expect(".o_font_color_selector").toHaveCount(0);
     await click(".o-select-color-foreground");
     await animationFrame();
-    const colorButton = await waitFor(".o_color_button[data-color='#6BADDE']");
-    colorButton.click();
+    await waitFor(".o_color_button[data-color='#6BADDE']");
+    await click(".o_color_button[data-color='#6BADDE']");
     await expectElementCount(".o_font_color_selector", 0); // selector closed
-    await waitFor(".o-we-toolbar .o-select-color-foreground [style*='#6badde']");
+    await waitFor(".o-we-toolbar .o-select-color-foreground [style*='#6BADDE']");
     expect(getContent(el)).toBe(
-        `<p>[<font style="color: rgb(107, 173, 222);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font>]</p>`
+        `<p>\ufeff[<span class="fa fa-glass" contenteditable="false" style="color: rgb(107, 173, 222);">\u200b</span>]\ufeff</p>`
     );
+});
+
+test("color picker should not close when hovering color", async () => {
+    await setupEditor(
+        `<div>[<span class="fa fa-signal" contenteditable="false">\u200b</span>]</div>`
+    );
+    await waitFor(".o-select-color-foreground");
+    await click(".o-select-color-foreground");
+    await waitFor(".o_color_button[data-color='#6BADDE']");
+    await hover(`[data-color="o-color-1"]`);
+    await expectElementCount(".o_font_color_selector", 1);
 });
 
 test("Can undo to 1x size after applying 2x size", async () => {

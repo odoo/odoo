@@ -125,11 +125,11 @@ class TestCommon(HttpCase):
             },
             "start": {
                 'dateTime': pytz.utc.localize(self.simple_event_values["start"]).isoformat(),
-                'timeZone': 'Europe/London'
+                'timeZone': 'UTC',
             },
             "end": {
                 'dateTime': pytz.utc.localize(self.simple_event_values["stop"]).isoformat(),
-                'timeZone': 'Europe/London'
+                'timeZone': 'UTC',
             },
             "isAllDay": False,
             "organizer": {
@@ -163,11 +163,11 @@ class TestCommon(HttpCase):
             },
             'start': {
                 'dateTime': self.start_date.strftime("%Y-%m-%dT%H:%M:%S+00:00"),
-                'timeZone': 'Europe/London'
+                'timeZone': 'UTC'
             },
             'end': {
                 'dateTime': self.end_date.strftime("%Y-%m-%dT%H:%M:%S+00:00"),
-                'timeZone': 'Europe/London'
+                'timeZone': 'UTC'
             },
             'isAllDay': False,
             'isOrganizer': True,

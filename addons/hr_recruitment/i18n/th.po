@@ -9,15 +9,16 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 19:06+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-04 01:23+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment/th/>\n"
 "Language: th\n"
@@ -25,12 +26,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
 msgid "# Talents"
-msgstr ""
+msgstr "# กลุ่มผู้สมัครศักยภาพสูง"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -171,9 +172,9 @@ msgstr ""
 "object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "        <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
-"8px 16px; border-radius: 5px;\">คำอธิบายงาน</a>\n"
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">คำอธิบายงาน</a>\n"
 "    </div>\n"
 "\n"
 "    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
@@ -184,10 +185,10 @@ msgstr ""
 "        <p>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
 "strong><br/>\n"
-"            <span>อีเมล: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t></span><br/>\n"
-"            <span>เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 "
-"650-123-4567</t></span>\n"
+"            <span>อีเมล: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 650-"
+"123-4567</t></span>\n"
 "        </p>\n"
 "        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
 "border: medium none; clear: both; display: block; font-size: 0px; min-"
@@ -196,8 +197,8 @@ msgstr ""
 "\n"
 "    <h3 style=\"color:#9A6C8E;\"><strong>ขั้นตอนต่อไปคืออะไร?</strong></h3>\n"
 "    โดยปกติแล้ว <strong>เราจะตอบกลับใบสมัครภายในไม่กี่วัน</strong><br/><br/>\n"
-"    <strong>โปรดติดต่อเราหากคุณต้องการคำตอบที่รวดเร็วยิ่งขึ้น</strong> "
-"หรือหากคุณไม่ได้รับการติดต่อจากเรา\n"
+"    <strong>โปรดติดต่อเราหากคุณต้องการคำตอบที่รวดเร็วยิ่งขึ้น</strong> หรือหากคุณไม่ได้รับการ"
+"ติดต่อจากเรา\n"
 "    อย่างรวดเร็วเพียงพอ (โดยการตอบกลับอีเมลนี้)\n"
 "\n"
 "    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
@@ -236,8 +237,8 @@ msgstr ""
 "    </t>\n"
 "    <br/>\n"
 "    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"        <t t-out=\"object.job_id.address_id.country_id.name or "
-"''\">Argentina</t><br/>\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br/>\n"
 "        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.country_id.name)\"/>\n"
 "    </t>\n"
@@ -293,8 +294,8 @@ msgstr ""
 "<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "    สวัสดีค่ะ<br/><br/>\n"
 "    ขอขอบคุณสำหรับความสนใจของคุณในการเข้าร่วมทีม\n"
-"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> "
-"หลังจากที่เราได้พิจารณาใบสมัครของคุณอย่างรอบคอบแล้ว ทางเราขอแจ้งให้ทราบว่า\n"
+"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> หลังจากที่เ"
+"ราได้พิจารณาใบสมัครของคุณอย่างรอบคอบแล้ว ทางเราขอแจ้งให้ทราบว่า\n"
 "    ในครั้งนี้ <b>เราได้ตัดสินใจเลือกผู้สมัครท่านอื่นที่ตรงกับความต้องการของตำแหน่งงานนี้มากกว่า</"
 "b>\n"
 "    <br/><br/>\n"
@@ -303,8 +304,8 @@ msgstr ""
 "    หากมีตำแหน่งงานอื่นที่เหมาะสมกับคุณในอนาคต\n"
 "    ทางเรายินดีที่จะติดต่อกลับอีกครั้ง\n"
 "    <br/><br/>\n"
-"    อย่างไรก็ตาม "
-"เราจะเก็บเรซูเม่ของคุณไว้เพื่อการติดต่อกลับเมื่อมีตำแหน่งที่เหมาะสมกับทักษะและประสบการณ์ของคุณ\n"
+"    อย่างไรก็ตาม เราจะเก็บเรซูเม่ของคุณไว้เพื่อการติดต่อกลับเมื่อมีตำแหน่งที่เหมาะสมกับทักษะและปร"
+"ะสบการณ์ของคุณ\n"
 "    <br/><br/>\n"
 "    \n"
 "    <br/><br/>\n"
@@ -314,10 +315,10 @@ msgstr ""
 "            -- <br/>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
 "strong><br/>\n"
-"            อีเมล: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t><br/>\n"
-"            เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 "
-"650-123-4567</t>\n"
+"            อีเมล: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t><br/>\n"
+"            เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            -- <br/>\n"
@@ -371,15 +372,15 @@ msgstr ""
 "                -- <br/>\n"
 "                <strong t-out=\"object.user_id.name or ''\">Marc Demo</"
 "strong><br/>\n"
-"                อีเมล: <t t-out=\"object.user_id.email or "
-"''\">mark.brown23@example.com</t><br/>\n"
-"                เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 "
-"650-123-4567</t>\n"
+"                อีเมล: <t t-out=\"object.user_id.email or ''\">"
+"mark.brown23@example.com</t><br/>\n"
+"                เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                -- <br/>\n"
-"                <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/"
-">\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
+"<br/>\n"
 "                ทีม HR<br/>\n"
 "            </t>\n"
 "        </div>\n"
@@ -509,27 +510,27 @@ msgstr ""
 "object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
 "            <a t-att-href=\"object.job_id.website_url\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; text-decoration: none; color: "
-"{{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px "
-"8px 16px; border-radius: 5px;\">คำอธิบายงาน</a>\n"
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">คำอธิบายงาน</a>\n"
 "        </div>\n"
 "\n"
 "        <t t-if=\"object.user_id\">\n"
 "            คุณจะได้รับการติดต่อในกลับในไม่ช้า:<br/>\n"
 "            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
 "strong><br/>\n"
-"            <span>อีเมล: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t></span><br/>\n"
-"            <span>เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 "
-"650-123-4567</t></span>\n"
+"            <span>อีเมล: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>เบอร์โทร: <t t-out=\"object.user_id.phone or ''\">+1 650-"
+"123-4567</t></span>\n"
 "            <br/><br/>\n"
 "        </t>\n"
 "        แล้วพบกันเร็วๆ นี้\n"
 "        <div style=\"font-size: 11px; color: grey;\">\n"
 "            -- <br/>\n"
 "            ทีม HR\n"
-"            <t t-if=\"'website_url' in object.job_id and "
-"hasattr(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"            <t t-if=\"'website_url' in object.job_id and hasattr"
+"(object.job_id, 'website_url') and object.job_id.website_url\">\n"
 "                ค้นพบ<a href=\"/jobs\" style=\"text-"
 "decoration:none;color:#717188;\">กิจกรรมทั้งหมดของเรา</a><br/>\n"
 "            </t>\n"
@@ -543,8 +544,8 @@ msgstr ""
 "        <br/><br/>\n"
 "        ขั้นตอนต่อไปคือการโทรหรือนัดการประชุมที่ออฟฟิศของเรา\n"
 "        <br/>\n"
-"        <strong>โปรดติดต่อเราหากคุณต้องการคำติชมที่รวดเร็วยิ่งขึ้น</strong> "
-"หรือหากคุณไม่ได้รับการติดต่อจากเราอย่างรวดเร็วเพียงพอ (โดยการตอบกลับอีเมลนี้)\n"
+"        <strong>โปรดติดต่อเราหากคุณต้องการคำติชมที่รวดเร็วยิ่งขึ้น</strong> หรือหากคุณไม่ได้รั"
+"บการติดต่อจากเราอย่างรวดเร็วเพียงพอ (โดยการตอบกลับอีเมลนี้)\n"
 "        <br/>\n"
 "\n"
 "        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
@@ -573,8 +574,8 @@ msgstr ""
 "object.job_id.address_id.city)\"/>\n"
 "        </t>\n"
 "        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
-"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</"
-"t>,\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>"
+",\n"
 "            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.state_id.name)\"/>\n"
 "        </t>\n"
@@ -585,8 +586,8 @@ msgstr ""
 "        </t>\n"
 "        <br/>\n"
 "        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
-"            <t t-out=\"object.job_id.address_id.country_id.name or "
-"''\">Argentina</t><br/>\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br/>\n"
 "            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
 "object.job_id.address_id.country_id.name)\"/>\n"
 "        </t>\n"
@@ -602,8 +603,8 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
-"<div><b>ลองส่งอีเมล</b> ถึงผู้สมัคร</div><div><i>ทิป: "
-"อีเมลที่ส่งหรือรับทั้งหมดจะถูกบันทึกไว้ในประวัติที่นี่</i>"
+"<div><b>ลองส่งอีเมล</b> ถึงผู้สมัคร</div><div><i>ทิป: อีเมลที่ส่งหรือรับทั้งหมดจะถูกบันทึกไว้ในป"
+"ระวัติที่นี่</i>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -649,7 +650,8 @@ msgstr ""
 "text-danger ps-3\">\n"
 "                                </span>\n"
 "                                <span class=\"text-danger\">\n"
-"                                    การสมัครทั้งหมดจะสูญเสียวันที่จ้างงานและสถานะการจ้างงาน\n"
+"                                    การสมัครทั้งหมดจะสูญเสียวันที่จ้างงานและสถานะการจ้า"
+"งงาน\n"
 "                                </span>\n"
 "                            </span>"
 
@@ -1039,7 +1041,8 @@ msgstr "การสมัคร"
 msgid ""
 "Applications received from this Email won't be linked to a contact.There "
 "will be no email address set on the Applicant either."
-msgstr "ใบสมัครที่ได้รับจากอีเมลนี้จะไม่เชื่อมโยงกับผู้ติดต่อ ผู้สมัครจะไม่มีการตั้งค่าที่อยู่อีเมลเช่นกัน"
+msgstr ""
+"ใบสมัครที่ได้รับจากอีเมลนี้จะไม่เชื่อมโยงกับผู้ติดต่อ ผู้สมัครจะไม่มีการตั้งค่าที่อยู่อีเมลเช่นกัน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
@@ -1184,9 +1187,8 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
-"โดยการตั้งค่านามแฝงให้กับตำแหน่งงาน อีเมลที่ส่งไปยังที่อยู่นี้จะสร้างการสมัครโดยอัตโนมัติ "
-"คุณยังสามารถใช้ตัวติดตามหลายตัวเพื่อรับสถิติตามแหล่งที่มาของการสมัคร: LinkedIn, Monster, "
-"Indeed เป็นต้น"
+"โดยการตั้งค่านามแฝงให้กับตำแหน่งงาน อีเมลที่ส่งไปยังที่อยู่นี้จะสร้างการสมัครโดยอัตโนมัติ คุณยังสามาร"
+"ถใช้ตัวติดตามหลายตัวเพื่อรับสถิติตามแหล่งที่มาของการสมัคร: LinkedIn, Monster, Indeed เป็นต้น"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -1477,8 +1479,8 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"กำหนดที่อยู่ติดต่อเฉพาะสำหรับตำแหน่งงานนี้ หากเว้นว่างไว้ "
-"ระบบจะใช้ที่อยู่อีเมลเริ่มต้นซึ่งอยู่ในการตั้งค่าทรัพยากรบุคคล"
+"กำหนดที่อยู่ติดต่อเฉพาะสำหรับตำแหน่งงานนี้ หากเว้นว่างไว้ ระบบจะใช้ที่อยู่อีเมลเริ่มต้นซึ่งอยู่ในการตั้งค่"
+"าทรัพยากรบุคคล"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -1567,7 +1569,8 @@ msgstr "ไดเจส"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your résumé to extract name and email automatically."
-msgstr "เปลี่ยนเรซูเม่ของคุณให้เป็นแบบดิจิทัลเพื่อดึงชื่อและอีเมลออกมาโดยอัตโนมัติ"
+msgstr ""
+"เปลี่ยนเรซูเม่ของคุณให้เป็นแบบดิจิทัลเพื่อดึงชื่อและอีเมลออกมาโดยอัตโนมัติ"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1973,7 +1976,8 @@ msgstr "ไอดี"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
-msgstr "ไอดีของบันทึกหลักที่มีนามแฝง (ตัวอย่าง: โปรเจ็กต์ที่มีนามแฝงในการสร้างงาน)"
+msgstr ""
+"ไอดีของบันทึกหลักที่มีนามแฝง (ตัวอย่าง: โปรเจ็กต์ที่มีนามแฝงในการสร้างงาน)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_icon
@@ -2012,14 +2016,16 @@ msgstr "หากเลือก ขั้นตอนนี้ใช้เพ�
 msgid ""
 "If set, a message is posted on the applicant using the template when the "
 "applicant is set to the stage."
-msgstr "หากตั้งค่าไว้ ข้อความจะถูกบันทึกบนผู้สมัครโดยใช้เทมเพลตเมื่อผู้สมัครตั้งค่าขั้นตอน"
+msgstr ""
+"หากตั้งค่าไว้ ข้อความจะถูกบันทึกบนผู้สมัครโดยใช้เทมเพลตเมื่อผู้สมัครตั้งค่าขั้นตอน"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
-msgstr "หากตั้งค่าไว้ เนื้อหานี้จะถูกส่งไปยังผู้ใช้ที่ไม่ได้รับอนุญาตโดยอัตโนมัติแทนข้อความเริ่มต้น"
+msgstr ""
+"หากตั้งค่าไว้ เนื้อหานี้จะถูกส่งไปยังผู้ใช้ที่ไม่ได้รับอนุญาตโดยอัตโนมัติแทนข้อความเริ่มต้น"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_is_active
@@ -2034,7 +2040,8 @@ msgstr ""
 msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
-msgstr "หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็นเท็จ ฟิลด์นี้จะอนุญาตให้คุณซ่อนเคสโดยไม่ต้องลบออก"
+msgstr ""
+"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็นเท็จ ฟิลด์นี้จะอนุญาตให้คุณซ่อนเคสโดยไม่ต้องลบออก"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__is_blacklisted
@@ -2050,8 +2057,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive "
 "mass mailing sms anymore, from any list"
 msgstr ""
-"หากหมายเลขโทรศัพท์ที่ถูกต้องอยู่ในบัญชีดำ ผู้ติดต่อจะไม่ได้รับ SMS ทางเมลกลุ่มจากรายการใด ๆ "
-"อีกต่อไป"
+"หากหมายเลขโทรศัพท์ที่ถูกต้องอยู่ในบัญชีดำ ผู้ติดต่อจะไม่ได้รับ SMS ทางเมลกลุ่มจากรายการใด ๆ อีกต่อ"
+"ไป"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2088,8 +2095,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"ระบุว่าหมายเลขโทรศัพท์ที่ถูกต้องในบัญชีดำเป็นหมายเลขโทรศัพท์หรือไม่ "
-"ช่วยแยกแยะว่าหมายเลขที่ถูกขึ้นบัญชีดำเมื่อมีฟิลด์มือถือและโทรศัพท์ในโมเดล"
+"ระบุว่าหมายเลขโทรศัพท์ที่ถูกต้องในบัญชีดำเป็นหมายเลขโทรศัพท์หรือไม่ ช่วยแยกแยะว่าหมายเลขที่ถูกขึ้นบั"
+"ญชีดำเมื่อมีฟิลด์มือถือและโทรศัพท์ในโมเดล"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__industry_id
@@ -2112,8 +2119,8 @@ msgid ""
 "Interviewer right will give access to all job position/applications where "
 "the employee is defined. It will allow to refuse, plan meetings."
 msgstr ""
-"สิทธิ์ของผู้สัมภาษณ์จะสามารถเข้าถึงตำแหน่งงาน/ใบสมัครงานทั้งหมดที่มีการระบุตัวพนักงานไว้ "
-"และสามารถปฏิเสธหรือวางแผนการประชุมได้"
+"สิทธิ์ของผู้สัมภาษณ์จะสามารถเข้าถึงตำแหน่งงาน/ใบสมัครงานทั้งหมดที่มีการระบุตัวพนักงานไว้ และสามาร"
+"ถปฏิเสธหรือวางแผนการประชุมได้"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
@@ -2365,8 +2372,8 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
-"มาสร้างตำแหน่งกันเถอะ อีเมลจะถูกตั้งค่าสำหรับการสมัครและรายละเอียดงานสาธารณะ "
-"หากคุณใช้แอปเว็บไซต์"
+"มาสร้างตำแหน่งกันเถอะ อีเมลจะถูกตั้งค่าสำหรับการสมัครและรายละเอียดงานสาธารณะ หากคุณใช้แอปเ"
+"ว็บไซต์"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2691,7 +2698,8 @@ msgstr "จํานวนข้อผิดพลาด"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
-msgstr "จำนวนพนักงานที่ได้รับการว่าจ้างสำหรับตำแหน่งงานนี้ ระหว่างกระบวนการสรรหา"
+msgstr ""
+"จำนวนพนักงานที่ได้รับการว่าจ้างสำหรับตำแหน่งงานนี้ ระหว่างกระบวนการสรรหา"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
@@ -2755,8 +2763,8 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ไอดีทางเลือกของเธรด (บันทึก) ที่จะแนบข้อความขาเข้าทั้งหมด แม้ว่าพวกเขาจะไม่ตอบกลับก็ตาม "
-"หากตั้งค่าไว้ การดำเนินการนี้จะปิดใช้งานการสร้างการบันทึกใหม่ทั้งหมด"
+"ไอดีทางเลือกของเธรด (บันทึก) ที่จะแนบข้อความขาเข้าทั้งหมด แม้ว่าพวกเขาจะไม่ตอบกลับก็ตาม หากตั้"
+"งค่าไว้ การดำเนินการนี้จะปิดใช้งานการสร้างการบันทึกใหม่ทั้งหมด"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__lang
@@ -3046,7 +3054,8 @@ msgstr "ปฏิเสธ"
 msgid ""
 "Refused automatically because this application has been identified as a "
 "duplicate of %(link)s"
-msgstr "ปฏิเสธโดยอัตโนมัติเนื่องจากแอปพลิเคชันนี้ได้รับการระบุว่าซ้ำกับ %(link)s"
+msgstr ""
+"ปฏิเสธโดยอัตโนมัติเนื่องจากแอปพลิเคชันนี้ได้รับการระบุว่าซ้ำกับ %(link)s"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
@@ -3222,7 +3231,8 @@ msgstr ""
 msgid ""
 "Select the location where the applicant will work. Addresses listed here are "
 "defined on the company's contact information."
-msgstr "เลือกสถานที่ที่ผู้สมัครจะทำงาน ที่อยู่ที่แสดงไว้ที่นี่ถูกกำหนดไว้ในข้อมูลติดต่อของบริษัท"
+msgstr ""
+"เลือกสถานที่ที่ผู้สมัครจะทำงาน ที่อยู่ที่แสดงไว้ที่นี่ถูกกำหนดไว้ในข้อมูลติดต่อของบริษัท"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -3303,7 +3313,8 @@ msgstr "ลำดับ"
 msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
-msgstr "ตั้งค่าเทมเพลตนี้เป็นขั้นตอนการรับสมัครเพื่อส่งเมื่อใบสมัครถึงขั้นตอนนั้น"
+msgstr ""
+"ตั้งค่าเทมเพลตนี้เป็นขั้นตอนการรับสมัครเพื่อส่งเมื่อใบสมัครถึงขั้นตอนนั้น"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -3395,7 +3406,8 @@ msgstr "การเปลี่ยนแปลงสถานะ"
 msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
-msgstr "ขั้นตอนของผู้สมัครก่อนที่จะอยู่ในขั้นตอนปัจจุบัน ใช้สำหรับการวิเคราะห์กรณีที่สูญหาย"
+msgstr ""
+"ขั้นตอนของผู้สมัครก่อนที่จะอยู่ในขั้นตอนปัจจุบัน ใช้สำหรับการวิเคราะห์กรณีที่สูญหาย"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -3519,9 +3531,9 @@ msgid ""
 "they can refuse him. You don't need to have Recruitment rights to be set as "
 "an interviewer."
 msgstr ""
-"ผู้สัมภาษณ์ที่ตั้งตำแหน่งงานสามารถดูผู้สมัครทั้งหมดที่อยู่ในนั้นได้ พวกเขาสามารถเข้าถึงข้อมูล "
-"เอกสารแนบ การจัดการการประชุม และสามารถปฏิเสธเขาได้ "
-"คุณไม่จำเป็นต้องมีสิทธิ์ในการสรรหาบุคลากรจึงจะกำหนดให้เป็นผู้สัมภาษณ์ได้"
+"ผู้สัมภาษณ์ที่ตั้งตำแหน่งงานสามารถดูผู้สมัครทั้งหมดที่อยู่ในนั้นได้ พวกเขาสามารถเข้าถึงข้อมูล เอกสารแน"
+"บ การจัดการการประชุม และสามารถปฏิเสธเขาได้ คุณไม่จำเป็นต้องมีสิทธิ์ในการสรรหาบุคลากรจึงจะกำ"
+"หนดให้เป็นผู้สัมภาษณ์ได้"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__user_id
@@ -3530,8 +3542,8 @@ msgid ""
 "job             position. The Recruiter is automatically added to all "
 "meetings with the Applicant."
 msgstr ""
-"ผู้สรรหาจะเป็นค่าเริ่มต้นสำหรับผู้สมัครทั้งหมดในตำแหน่งงานนี้ "
-"ผู้สรรหาจะถูกเพิ่มในการประชุมทั้งหมดกับผู้สมัครโดยอัตโนมัติ"
+"ผู้สรรหาจะเป็นค่าเริ่มต้นสำหรับผู้สมัครทั้งหมดในตำแหน่งงานนี้ ผู้สรรหาจะถูกเพิ่มในการประชุมทั้งหมดกับผู้"
+"สมัครโดยอัตโนมัติ"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3559,8 +3571,8 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"โมเดล (ชนิดเอกสาร Odoo) ซึ่งสอดคล้องกับนามแฝงนี้ อีเมลขาเข้าใดๆ "
-"ที่ไม่ตอบกลับบันทึกที่มีอยู่จะทำให้เกิดการสร้างบันทึกใหม่ของโมเดลนี้ (เช่น โปรเจ็กต์งาน)"
+"โมเดล (ชนิดเอกสาร Odoo) ซึ่งสอดคล้องกับนามแฝงนี้ อีเมลขาเข้าใดๆ ที่ไม่ตอบกลับบันทึกที่มีอยู่จะทำใ"
+"ห้เกิดการสร้างบันทึกใหม่ของโมเดลนี้ (เช่น โปรเจ็กต์งาน)"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
@@ -3586,8 +3598,8 @@ msgid ""
 "The regex facilitates to extract information from the subject or body of the "
 "received email to autopopulate the Applicant's name field"
 msgstr ""
-"regex "
-"อำนวยความสะดวกในการดึงข้อมูลจากหัวเรื่องหรือเนื้อหาของอีเมลที่ได้รับเพื่อเติมฟิลด์ชื่อของผู้สมัครโดยอัตโนมัติ"
+"regex อำนวยความสะดวกในการดึงข้อมูลจากหัวเรื่องหรือเนื้อหาของอีเมลที่ได้รับเพื่อเติมฟิลด์ชื่อของผู้สมั"
+"ครโดยอัตโนมัติ"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3595,14 +3607,16 @@ msgstr ""
 msgid ""
 "These job positions and all related applicants will be archived. Are you "
 "sure?"
-msgstr "ตำแหน่งงานเหล่านี้และผู้สมัครที่เกี่ยวข้องทั้งหมดจะถูกเก็บถาวร คุณแน่ใจหรือไม่?"
+msgstr ""
+"ตำแหน่งงานเหล่านี้และผู้สมัครที่เกี่ยวข้องทั้งหมดจะถูกเก็บถาวร คุณแน่ใจหรือไม่?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__medium_id
 msgid ""
 "This displays how the applicant has reached out, e.g. via Email, LinkedIn, "
 "Website, etc."
-msgstr "นี่แสดงให้เห็นว่าผู้สมัครได้ติดต่อมาอย่างไร เช่น ทางอีเมล LinkedIn เว็บไซต์ เป็นต้น"
+msgstr ""
+"นี่แสดงให้เห็นว่าผู้สมัครได้ติดต่อมาอย่างไร เช่น ทางอีเมล LinkedIn เว็บไซต์ เป็นต้น"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_normalized
@@ -3625,7 +3639,8 @@ msgstr ""
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
-msgstr "นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
+msgstr ""
+"นี่เป็นที่มาของลิงก์ เช่น เครื่องมือค้นหา โดเมนอื่นๆ หรือชื่อรายการอีเมล"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3634,7 +3649,8 @@ msgstr "นี่เป็นที่มาของลิงก์ เช่�
 #: code:addons/hr_recruitment/static/src/views/recruitment_list_controller.js:0
 msgid ""
 "This job position and all related applicants will be archived. Are you sure?"
-msgstr "ตำแหน่งงานนี้และผู้สมัครที่เกี่ยวข้องทั้งหมดจะถูกเก็บถาวร คุณแน่ใจหรือไม่?"
+msgstr ""
+"ตำแหน่งงานนี้และผู้สมัครที่เกี่ยวข้องทั้งหมดจะถูกเก็บถาวร คุณแน่ใจหรือไม่?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__fold
@@ -3760,8 +3776,8 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies "
 "on the Survey app."
 msgstr ""
-"ใช้แบบฟอร์มสัมภาษณ์ที่เหมาะกับตำแหน่งงานแต่ละตำแหน่งในระหว่างกระบวนการสรรหา "
-"เลือกแบบฟอร์มที่จะใช้ในแบบฟอร์มรายละเอียดตำแหน่งงาน ขึ้นขึ้นอยู่กับแอปแบบสอบถาม"
+"ใช้แบบฟอร์มสัมภาษณ์ที่เหมาะกับตำแหน่งงานแต่ละตำแหน่งในระหว่างกระบวนการสรรหา เลือกแบบฟอร์มที่"
+"จะใช้ในแบบฟอร์มรายละเอียดตำแหน่งงาน ขึ้นขึ้นอยู่กับแอปแบบสอบถาม"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_users
@@ -3884,9 +3900,15 @@ msgid ""
 "recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
-"คุณไม่สามารถลบแหล่งที่มา UTM เหล่านี้ได้ "
-"เนื่องจากเชื่อมโยงกับแหล่งการสรรหาบุคลากรต่อไปนี้ในการสรรหาบุคลากร:\n"
+"คุณไม่สามารถลบแหล่งที่มา UTM เหล่านี้ได้ เนื่องจากเชื่อมโยงกับแหล่งการสรรหาบุคลากรต่อไปนี้ในการส"
+"รรหาบุคลากร:\n"
 "%(recruitment_sources)s"
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
+msgid "You cannot duplicate the talent(s)."
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python

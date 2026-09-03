@@ -4,7 +4,13 @@ import { animationFrame } from "@odoo/hoot-mock";
 
 import { focus, mailModels } from "@mail/../tests/mail_test_helpers";
 import { projectModels } from "@project/../tests/project_models";
-import { contains, defineModels, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    clickFieldDropdownItem,
+    contains,
+    defineModels,
+    mountView,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
 import { ProductProduct, ProjectTask, SaleOrder, SaleOrderLine } from "./project_task_model";
 
 describe.current.tags("desktop");
@@ -99,10 +105,11 @@ test("test so_line_create_button widget: valid SO", async () => {
 
     await contains(".modal-content .o_field_x2many_list_row_add a").click();
     await contains(".modal-content .o_selected_row td[name='product_id'] input").edit(
-        "Service Product 2"
+        "Service Product 2",
+        { confirm: false }
     );
-    await contains(".modal-content .ui-sortable .o-autocomplete--input").click();
-    await contains(".dropdown-item:nth-child(1)").click();
+    await runAllTimers();
+    await clickFieldDropdownItem("product_id", "Service Product 2");
     await contains(".modal-content button[class*='o_form_button_save']").click();
 
     expect("div[name='sale_line_id'] input").toHaveValue("Service Product 2", {
@@ -125,10 +132,11 @@ test("test so_line_create_button widget: invalid SO", async () => {
 
     await contains(".modal-content .o_field_x2many_list_row_add a").click();
     await contains(".modal-content .o_selected_row td[name='product_id'] input").edit(
-        "Consumable Product 1"
+        "Consumable Product 1",
+        { confirm: false }
     );
-    await contains(".modal-content .ui-sortable .o-autocomplete--input").click();
-    await contains(".dropdown-item:nth-child(1)").click();
+    await runAllTimers();
+    await clickFieldDropdownItem("product_id", "Consumable Product 1");
     await contains(".modal-content button[class*='o_form_button_save']").click();
 
     expect("div[name='sale_line_id'] input").toHaveValue("", {

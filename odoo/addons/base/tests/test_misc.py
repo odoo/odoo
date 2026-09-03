@@ -619,6 +619,26 @@ class TestMiscToken(TransactionCase):
         token = base64.urlsafe_b64encode(token[:1] + new_timestamp + token[9:]).decode()
         self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token))
 
+    def test_custom_secret(self):
+        payload = {'value': 123456, 'name': 'bob'}
+        token = misc.hash_sign(self.env, 'test', payload, expiration_hours=24, secret='very_secret')
+
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token, secret='very_secret'), payload)
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token, secret=b'very_secret'), payload)
+        self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token, secret='other'))
+        self.assertIsNone(misc.verify_hash_signed(self.env, 'test', token))
+
+    def test_default_secret(self):
+        payload = ["str1", "str2", "str3", 4, 5]
+        db_secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
+
+        token_default = misc.hash_sign(self.env, 'test', payload, expiration_hours=24)
+        token_explicit = misc.hash_sign(self.env, 'test', payload, expiration_hours=24, secret=db_secret)
+
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_default), payload)
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_explicit), payload)
+        self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_default, secret=db_secret), payload)
+
 
 class TestFormatAmountFunction(TransactionCase):
     @classmethod

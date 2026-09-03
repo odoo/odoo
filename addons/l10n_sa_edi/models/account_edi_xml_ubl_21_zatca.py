@@ -61,6 +61,8 @@ class AccountEdiXmlUbl_21Zatca(models.AbstractModel):
         # Get downpayment moves' base lines
         if not invoice._is_downpayment():
             prepayment_moves = invoice.line_ids._get_downpayment_lines().move_id.filtered(lambda m: m.move_type == 'out_invoice')
+            if non_reversed := prepayment_moves.filtered(lambda m: m.payment_state != 'reversed'):
+                prepayment_moves = non_reversed
         else:
             prepayment_moves = self.env['account.move']
 

@@ -2,15 +2,18 @@
 # This file contains the translation of the following modules:
 # * sale_gelato
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 19:16+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"PO-Revision-Date: 2026-08-08 07:20+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "sale_gelato/sl/>\n"
 "Language: sl\n"
@@ -19,58 +22,98 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_gelato
 #: model:mail.template,body_html:sale_gelato.order_status_update
+#, fuzzy
 msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                    Hello <t t-out=\"object.partner_id.name or ''\">Brandon "
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                Hello <t t-out=\"object.partner_id.name or ''\">Brandon "
 "Freeman</t>,<br/><br/>\n"
-"                    <!-- Order in transit body -->\n"
-"                    <t t-if=\"ctx.get('tracking_data')\">\n"
-"                        We are glad to inform you that your order is in "
+"                <!-- Order in transit body -->\n"
+"                <t t-if=\"ctx.get('tracking_data')\">\n"
+"                    We are glad to inform you that your order is in "
 "transit.\n"
-"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
-"                            <t t-set=\"tracking_url\" t-"
+"                    <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                        <t t-set=\"tracking_url\" t-"
 "value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
-"                            Your tracking number is <a t-att-"
+"                        Your tracking number is <a t-att-"
 "href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
-"                            <br/><br/>\n"
-"                        </t>\n"
-"                        <t t-else=\"\">\n"
-"                            Your tracking numbers are:\n"
-"                            <ul>\n"
-"                                <li t-foreach=\"ctx['tracking_data']\" t-"
-"as=\"tracking_url\">\n"
-"                                    <a t-att-href=\"tracking_url\" t-"
-"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
-"                                </li>\n"
-"                            </ul>\n"
-"                        </t>\n"
-"                    </t>\n"
-"                    <!-- Order delivered body -->\n"
-"                    <t t-if=\"ctx.get('order_delivered')\">\n"
-"                        We are glad to inform you that your order has been "
-"delivered.\n"
 "                        <br/><br/>\n"
 "                    </t>\n"
-"                    Thank you,\n"
-"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+"                    <t t-else=\"\">\n"
+"                        Your tracking numbers are:\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <!-- Order delivered body -->\n"
+"                <t t-if=\"ctx.get('order_delivered')\">\n"
+"                    We are glad to inform you that your order has been "
+"delivered.\n"
+"                    <br/><br/>\n"
+"                </t>\n"
+"                Thank you,\n"
+"                <t t-if=\"object.user_id.name\" data-o-mail-quote-"
 "container=\"1\">\n"
-"                        <br/>\n"
-"                        <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"                    <br/>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
 "quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-"
 "quote=\"1\">Mitchell Admin</t></div>\n"
-"                    </t>\n"
-"                </p>\n"
+"                </t>\n"
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                Pozdravljeni <t t-out=\"object.partner_id.name or ''\">"
+"Brandon Freeman</t>,<br/><br/>\n"
+"                <!-- Order in transit body -->\n"
+"                <t t-if=\"ctx.get('tracking_data')\">\n"
+"                    Z veseljem vas obveščamo, da je vaše naročilo na poti.\n"
+"                    <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                        <t t-set=\"tracking_url\" t-value=\"list"
+"(ctx['tracking_data'].keys())[0]\"/>\n"
+"                        Vaša številka za sledenje je <a t-att-"
+"href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        Vaše številke za sledenje so:\n"
+"                        <ul>\n"
+"                            <li t-foreach=\"ctx['tracking_data']\" t-"
+"as=\"tracking_url\">\n"
+"                                <a t-att-href=\"tracking_url\" t-"
+"out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                            </li>\n"
+"                        </ul>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <!-- Order delivered body -->\n"
+"                <t t-if=\"ctx.get('order_delivered')\">\n"
+"                    Z veseljem vas obveščamo, da je bilo vaše naročilo "
+"dostavljeno.\n"
+"                    <br/><br/>\n"
+"                </t>\n"
+"                Hvala,\n"
+"                <t t-if=\"object.user_id.name\" data-o-mail-quote-"
+"container=\"1\">\n"
+"                    <br/>\n"
+"                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
+"                </t>\n"
+"            </div>\n"
+"        "
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+#, fuzzy
 msgid ""
 "<i title=\"All print images are set\" invisible=\"gelato_missing_images\" "
 "class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
@@ -78,6 +121,12 @@ msgid ""
 "invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-"
 "danger fs-3 me-3\"/>"
 msgstr ""
+"<i title=\"Vse slike za tisk so nastavljene\" "
+"invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success "
+"fs-3 me-3\"/>\n"
+"                        <i title=\"Nekatere slike za tisk manjkajo\" "
+"invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-"
+"danger fs-3 me-3\"/>"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
@@ -102,14 +151,16 @@ msgstr "Stik"
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/utils.py:0
+#, fuzzy
 msgid "Could not establish the connection to the Gelato API."
-msgstr ""
+msgstr "Povezave z API-jem Gelato ni bilo mogoče vzpostaviti."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
+#, fuzzy
 msgid "Could not synchronize with Gelato"
-msgstr ""
+msgstr "Sinhronizacija z Gelatom ni uspela"
 
 #. module: sale_gelato
 #: model:ir.model,website_form_label:sale_gelato.model_res_partner
@@ -137,8 +188,9 @@ msgstr "Ekspresna dostava"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.express_delivery_product_product_template
+#, fuzzy
 msgid "Express Delivery (Gelato)"
-msgstr ""
+msgstr "Hitra dostava (Gelato)"
 
 #. module: sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
@@ -151,66 +203,79 @@ msgstr "Sladoled"
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_api_key
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_api_key
+#, fuzzy
 msgid "Gelato API Key"
-msgstr ""
+msgstr "Ključ API-ja Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
+#, fuzzy
 msgid "Gelato Print Images"
-msgstr ""
+msgstr "Slike za tiskanje Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
+#, fuzzy
 msgid "Gelato Product UID"
-msgstr ""
+msgstr "UID izdelka Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_product_uid
+#, fuzzy
 msgid "Gelato Product Uid"
-msgstr ""
+msgstr "UID izdelka Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__gelato_shipping_service_type
+#, fuzzy
 msgid "Gelato Shipping Service Type"
-msgstr ""
+msgstr "Vrsta storitve pošiljanja Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_template_ref
+#, fuzzy
 msgid "Gelato Template Reference"
-msgstr ""
+msgstr "Sklic predloge Gelato"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
 #: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
+#, fuzzy
 msgid "Gelato Webhook Secret"
-msgstr ""
+msgstr "Skrivnost spletnega kavlja Gelato"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
+#, fuzzy
 msgid ""
 "Gelato could not proceed with the fulfillment of order %(order_reference)s: %"
 "(gelato_message)s"
 msgstr ""
+"Gelato ni mogel nadaljevati z izpolnjevanjem naročila %(order_reference)s: %"
+"(gelato_message)s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
+#, fuzzy
 msgid "Gelato has canceled order %(reference)s."
-msgstr ""
+msgstr "Gelato je preklical naročilo %(reference)s."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/controlers/main.py:0
+#, fuzzy
 msgid "Gelato has returned order %(reference)s."
-msgstr ""
+msgstr "Gelato je vrnil naročilo %(reference)s."
 
 #. module: sale_gelato
 #: model:mail.template,name:sale_gelato.order_status_update
+#, fuzzy
 msgid "Gelato: Order status update"
-msgstr ""
+msgstr "Gelato: Posodobitev statusa naročila"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__id
@@ -228,41 +293,49 @@ msgstr "ID"
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
+#, fuzzy
 msgid "Invalid source document type"
-msgstr ""
+msgstr "Neveljavna vrsta izvornega dokumenta"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
+#, fuzzy
 msgid "Is Gelato"
-msgstr ""
+msgstr "Je Gelato"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+#, fuzzy
 msgid "Manage Delivery Methods"
-msgstr ""
+msgstr "Upravljaj načine dostave"
 
 #. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_missing_images
 #: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_missing_images
+#, fuzzy
 msgid "Missing Print Images"
-msgstr ""
+msgstr "Manjkajoče slike za tisk"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
+#, fuzzy
 msgid "Missing product variants and images have been successfully created."
-msgstr ""
+msgstr "Manjkajoče različice izdelkov in slike so bile uspešno ustvarjene."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+#, fuzzy
 msgid "Print Images"
-msgstr ""
+msgstr "Natisni slike"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_document.py:0
+#, fuzzy
 msgid "Print images must be set on products before they can be ordered."
 msgstr ""
+"Pred naročilom izdelkov je treba na izdelkih nastaviti slike za tiskanje."
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_template
@@ -271,15 +344,17 @@ msgstr "Proizvod"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_document
+#, fuzzy
 msgid "Product Document"
-msgstr ""
+msgstr "Dokument izdelka"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+#, fuzzy
 msgid "Product UID"
-msgstr ""
+msgstr "ID izdelka"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_product_product
@@ -303,8 +378,9 @@ msgstr "Postavka prodajnega naloga"
 
 #. module: sale_gelato
 #: model:mail.template,description:sale_gelato.order_status_update
+#, fuzzy
 msgid "Sent to the customer when Gelato updates the status of an order"
-msgstr ""
+msgstr "Poslano stranki, ko Gelato posodobi status naročila"
 
 #. module: sale_gelato
 #: model:ir.model,name:sale_gelato.model_delivery_carrier
@@ -314,87 +390,106 @@ msgstr "Metode odpreme"
 #. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.standard_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
+#, fuzzy
 msgid "Standard Delivery"
-msgstr ""
+msgstr "Standardna dostava"
 
 #. module: sale_gelato
 #: model:product.template,name:sale_gelato.standard_delivery_product_product_template
+#, fuzzy
 msgid "Standard Delivery (Gelato)"
-msgstr ""
+msgstr "Standardna dostava (Gelato)"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/product_template.py:0
+#, fuzzy
 msgid "Successfully synchronized with Gelato"
-msgstr ""
+msgstr "Uspešno sinhronizirano z Gelato"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+#, fuzzy
 msgid "Synchronize"
-msgstr ""
+msgstr "Sinhroniziraj"
 
 #. module: sale_gelato
 #: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_template_ref
 #: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_template_ref
+#, fuzzy
 msgid "Synchronize to fetch variants from Gelato"
-msgstr ""
+msgstr "Sinhroniziraj za pridobitev različic iz Gelata"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+#, fuzzy
 msgid "Template Reference"
-msgstr ""
+msgstr "Referenca predloge"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/delivery_carrier.py:0
+#, fuzzy
 msgid "The delivery method is not available for this order."
-msgstr ""
+msgstr "Način dostave ni na voljo za to naročilo."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
+#, fuzzy
 msgid "The following required address fields are missing: %s"
-msgstr ""
+msgstr "Manjkajo naslednja obvezna polja naslova: %s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
+#, fuzzy
 msgid "The order has been successfully passed on Gelato."
-msgstr ""
+msgstr "Naročilo je bilo uspešno posredovano družbi Gelato."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The order with reference %(order_reference)s was not sent to Gelato.\n"
 "Reason: %(error_message)s"
 msgstr ""
+"Naročilo z referenco %(order_reference)s ni bilo poslano v Gelato.\n"
+"Razlog: %(error_message)s"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
+#, fuzzy
 msgid "Unable to confirm the order %s on Gelato."
-msgstr ""
+msgstr "Naročila %s v Gelatu ni bilo mogoče potrditi."
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
+#, fuzzy
 msgid "Unable to delete the order %s on Gelato."
-msgstr ""
+msgstr "Naročila %s v Gelatu ni bilo mogoče izbrisati."
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+#, fuzzy
 msgid "Webhook Secret"
-msgstr ""
+msgstr "Skrivnost spletnega kavlja"
 
 #. module: sale_gelato
 #. odoo-python
 #: code:addons/sale_gelato/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "You cannot mix Gelato products with non-Gelato products in the same order."
 msgstr ""
+"V istem naročilu ni mogoče kombinirati izdelkov Gelato z izdelki, ki niso "
+"Gelato."
 
 #. module: sale_gelato
 #: model:mail.template,subject:sale_gelato.order_status_update
+#, fuzzy
 msgid "{{ object.reference }}"
-msgstr ""
+msgstr "{{ object.reference }}"

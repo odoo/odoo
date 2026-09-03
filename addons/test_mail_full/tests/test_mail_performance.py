@@ -91,7 +91,11 @@ class TestMailPerformance(FullBaseMailPerformance):
             new_message.notified_partner_ids,
             self.user_follower_emp_email.partner_id + self.user_admin.partner_id + self.customers + self.user_follower_portal.partner_id
         )
-        self.assertEqual(self.push_to_end_point_mocked.call_count, 8, "Not sure why 8")
+        self.assertEqual(
+            self.push_to_end_point_mocked.call_count,
+            2,
+            "Mentioned/Subscribed internal users with a device",
+        )
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -232,7 +236,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=14):
+        with self.assertQueryCount(employee=15):
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
@@ -247,21 +251,25 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                     {
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
+                        'has_thumbnail': False,
                         'id': message.attachment_ids[0].id,
                         'mimetype': 'text/plain',
                         'name': 'Test file 1',
                         'raw_access_token': message.attachment_ids[0]._get_raw_access_token(),
                         'res_id': record.id,
                         'res_model': record._name,
+                        'thumbnail_access_token': message.attachment_ids[0]._get_thumbnail_token(),
                     }, {
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
+                        'has_thumbnail': False,
                         'id': message.attachment_ids[1].id,
                         'mimetype': 'text/plain',
                         'name': 'Test file 0',
                         'raw_access_token': message.attachment_ids[1]._get_raw_access_token(),
                         'res_id': record.id,
                         'res_model': record._name,
+                        'thumbnail_access_token': message.attachment_ids[1]._get_thumbnail_token(),
                     }
                 ]
             )
@@ -285,7 +293,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=28):  # sometimes +1
+        with self.assertQueryCount(employee=29):  # sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -307,7 +315,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=19):  # randomness: 18+1
+        with self.assertQueryCount(employee=20):  # randomness: 19+1
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)

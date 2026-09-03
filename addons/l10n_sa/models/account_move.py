@@ -102,7 +102,7 @@ class AccountMove(models.Model):
 
     def _l10n_sa_get_adjustment_reason(self):
         self.ensure_one()
-        readable_zatca_reason = dict(self._fields['l10n_sa_reason'].selection).get(self.l10n_sa_reason)
+        readable_zatca_reason = dict(self._fields['l10n_sa_reason']._description_selection(self.env)).get(self.l10n_sa_reason)
         return readable_zatca_reason if self.l10n_sa_show_reason else self.ref
 
     def _compute_show_l10n_sa_reason(self):

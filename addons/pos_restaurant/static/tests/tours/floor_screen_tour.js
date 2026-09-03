@@ -225,11 +225,8 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Check original orders for table 4
             FloorScreen.clickTable("4"),
             inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            Chrome.fakePrintChange(),
             ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -238,10 +235,6 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             FloorScreen.clickTable("5"),
             inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
             ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
@@ -256,10 +249,6 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             ProductScreen.clickDisplayedProduct("Minute Maid"),
             ProductScreen.orderlineIsToOrder("Minute Maid"),
             ProductScreen.clickOrderButton(),
-            {
-                ...Dialog.confirm(),
-                content: "Acknowledge printing error (test does not use a printer).",
-            },
             ProductScreen.orderlinesHaveNoChange(),
 
             // Unlink tables again and verify restoration

@@ -374,12 +374,7 @@ class TestProcRule(TransactionCase):
             ('product_id', '=', self.productA.id),
         ])
         self.assertTrue(rr)
-        orderpoint.write({
-            'replenishment_uom_id': self.env['uom.uom'].create({
-                'name': 'Test UoM',
-                'relative_factor': 1,
-            })
-        })
+        orderpoint.write({'replenishment_uom_id': self.productA.uom_id})
         self.assertEqual(orderpoint.qty_to_order, 16.0)  # 15.0 < 14.5 + 15 <= 30.0
         orderpoint.write({
             'replenishment_uom_id': False,
@@ -657,6 +652,28 @@ class TestProcRule(TransactionCase):
         stock_move._action_confirm()
         self.assertEqual(orderpoint.qty_to_order, 6)
 
+    def test_compute_qty_to_order_after_receipt_line_deletion(self):
+        """Test that deleting a confirmed incoming receipt move updates the orderpoint."""
+        self.product.is_storable = True
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Manual orderpoint',
+            'product_id': self.product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+            'trigger': 'manual',
+        })
+        stock_move = self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 10,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
+        })
+        stock_move._action_confirm()
+        self.assertRecordValues(orderpoint, [{'qty_forecast': 10.0, 'qty_to_order': 0.0}])
+        stock_move.unlink()
+        self.assertRecordValues(orderpoint, [{'qty_forecast': 0.0, 'qty_to_order': 10.0}])
+
     def test_rule_help_message_mto_mtso(self):
         """Verify that the rule's help message correctly displays all relevant
         information when the procurement method is MTO or MTSO.
@@ -902,6 +919,29 @@ class TestProcRule(TransactionCase):
         self.assertEqual(graph_data['ordering_period'], 2.0)
         self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 day(s)', 'In 4 day(s)', 'In 6 day(s)'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
+
+    def test_orderpoint_replenishment_view_internal_transfer(self):
+        """An internal transfer between replenishment locations creates a need at its source."""
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        replenish_loc = self.env['stock.location'].create({
+            'name': 'Replenish Location',
+            'location_id': warehouse.view_location_id.id,
+            'replenish_location': True,
+        })
+        self.product.is_storable = True
+        self.env['stock.move'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': replenish_loc.id,
+            'product_id': self.product.id,
+            'product_uom_qty': 3,
+        })._action_confirm()
+        self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
+        replenishments = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', self.product.id),
+        ])
+        self.assertRecordValues(replenishments, [
+            {'location_id': warehouse.lot_stock_id.id, 'qty_to_order': 3},
+        ])
 
 
 class TestProcRuleLoad(TransactionCase):

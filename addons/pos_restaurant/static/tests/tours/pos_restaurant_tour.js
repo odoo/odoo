@@ -26,6 +26,7 @@ import {
 } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
+import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 
 registry.category("web_tour.tours").add("pos_restaurant_sync", {
     steps: () =>
@@ -55,10 +56,26 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 { name: "Water", qty: 1 },
             ]),
             ProductScreen.clickOrderButton(),
+            FloorScreen.table({ name: "5", run: "click", waitForSync: false }),
+            Notification.has(
+                "This order is currently syncing, please wait a moment before loading it."
+            ),
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
+            ProductScreen.orderlineIsToOrder("Water"),
+            ProductScreen.orderlineIsToOrder("Coca-Cola"),
+            checkPreparationTicketData([
+                { name: "Coca-Cola", qty: 1 },
+                { name: "Water", qty: 1 },
+            ]),
+            Chrome.fakePrintChange(),
+            ProductScreen.clickOrderButton(),
+            FloorScreen.table({ name: "5", run: "click", waitForSync: false }),
+            Notification.has(
+                "This order is currently syncing, please wait a moment before loading it."
+            ),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
-            checkPreparationTicketData([]),
             ProductScreen.totalAmountIs("4.40"),
 
             // Create 2nd order (paid)
@@ -90,7 +107,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
                 { name: "Desk Organizer", qty: 1, attributes: ["S", "Leather"] },
             ]),
             ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("4"),
             ProductScreen.orderlinesHaveNoChange(),
             checkPreparationTicketData([]),
@@ -120,7 +136,6 @@ registry.category("web_tour.tours").add("pos_restaurant_sync", {
             // The first order made in the session is a floating order.
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
-            Chrome.closePrintingWarning(),
             Chrome.isSyncStatusConnected(),
             TicketScreen.selectOrder("005"),
             TicketScreen.loadSelectedOrder(),
@@ -216,8 +231,8 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
             ProductScreen.orderlineIsToOrder("Coca-Cola"),
+            Chrome.fakePrintChange(),
             ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             Chrome.waitRequest(),
             ProductScreen.orderlinesHaveNoChange(),
@@ -244,8 +259,8 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             ProductScreen.clickCourseButton(),
             ProductScreen.clickDisplayedProduct("Minute Maid"),
             ProductScreen.clickCourseButton(),
+            Chrome.fakePrintChange(),
             ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             // Check only 2 courses are there and empty course gets removed on clicking Order button
             {
@@ -270,7 +285,6 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
                 run: async () => await delay(1000),
             },
             ProductScreen.fireCourseButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             {
                 trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
@@ -318,10 +332,17 @@ registry.category("web_tour.tours").add("OrderChange", {
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true, "1"),
+            Chrome.fakePrintChange(),
             ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
+            ProductScreen.clickInternalNoteButton("Note"),
+            TextInputPopup.inputText("test note"),
+            Dialog.confirm(),
+            negateStep(...ProductScreen.OrderButtonNotContain("Message")),
+            ProductScreen.clickInternalNoteButton("Note"),
+            Dialog.cancel(),
+            negateStep(...ProductScreen.clickOrderButton()),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickNumpad("+10"),
@@ -360,6 +381,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour1", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -384,6 +406,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour2", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -407,6 +430,7 @@ registry.category("web_tour.tours").add("PoSPaymentSyncTour3", {
             ProductScreen.isShown(),
             ProductScreen.clickOrderButton(),
             Chrome.closePrintingWarning(),
+            FloorScreen.clickTable("5"),
             ProductScreen.orderlinesHaveNoChange(),
             Chrome.clickPlanButton(),
         ].flat(),
@@ -438,8 +462,8 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                 ],
                 invisibleInDom: ["DUPLICATA!"],
             }),
+            Chrome.fakePrintChange(),
             ProductScreen.clickOrderButton(),
-            Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             ProductScreen.clickLine("Product Test"),
             ProductScreen.addCustomerNote("Updated customer note - orderline"),
@@ -491,17 +515,14 @@ registry.category("web_tour.tours").add("test_course_restaurant_preparation_tour
                     visibleInDom: ["Course 1", "Course 2", "Course 3"],
                 }
             ),
+            Chrome.fakePrintChange(),
             ProductScreen.clickOrderButton(),
-            Dialog.bodyIs("Preparation Printer: The printer is not reachable."),
-            Dialog.confirm(),
             FloorScreen.clickTable("5"),
             checkPreparationTicketData([], {
                 visibleInDom: ["Course 2"],
                 fireCourse: true,
             }),
             ProductScreen.fireCourseButton(),
-            Dialog.bodyIs("Printer: The printer is not reachable."),
-            Dialog.confirm(),
             FloorScreen.clickTable("5"),
             ProductScreen.selectCourseLine("Course 3"),
             checkPreparationTicketData([{ name: "Product Test", qty: 1, attribute: ["Value 1"] }], {
@@ -761,10 +782,13 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Chrome.clickOrders(),
+            Chrome.waitRequest(),
             Chrome.clickRegister(),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Acme Corporation"),
+            ProductScreen.customerIsSelected("Acme Corporation"),
             Chrome.clickOrders(),
+            Chrome.waitRequest(),
             Chrome.clickRegister(),
             ProductScreen.customerIsSelected("Acme Corporation"),
         ].flat(),
@@ -807,9 +831,8 @@ registry
                     ProductScreen.clickFastPaymentButton("Bank"),
                     Dialog.discard(),
                     FeedbackScreen.isShown(),
-                    Dialog.confirm(),
-                    FeedbackScreen.clickScreen(),
                     FloorScreen.isShown(),
+                    Dialog.confirm(),
                     FloorScreen.clickTable("2"),
                     ProductScreen.clickDisplayedProduct("Coca-Cola"),
                     {
@@ -830,9 +853,8 @@ registry
                     PaymentScreen.clickPaymentMethod("Bank"),
                     PaymentScreen.clickValidate(),
                     FeedbackScreen.isShown(),
-                    Dialog.confirm(),
-                    FeedbackScreen.clickScreen(),
                     FloorScreen.isShown(),
+                    Dialog.confirm(),
                 ].flat(),
         }
     );
@@ -1218,6 +1240,7 @@ registry.category("web_tour.tours").add("test_guest_count_bank_payment", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             Order.hasLine({ productName: "Coca-Cola" }),
             ProductScreen.clickPayButton(false),
+            Chrome.fakePrintChange(),
             ProductScreen.confirmOrderWarningDialog(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickBackToProductScreen(),
@@ -1292,5 +1315,25 @@ registry.category("web_tour.tours").add("test_floating_order_name_change_partner
             Chrome.clickOrders(),
             TicketScreen.nthRowNotContains(1, "Deco Addict"),
             Chrome.clickRegister(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_guest_count_defaults_to_table_seats", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.guestNumberIs("4"),
+            Dialog.cancel(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickPayButton(false),
+            ProductScreen.discardOrderWarningDialog(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            {
+                content: "the receipt shows the table seats as guest count",
+                trigger: ".pos-receipt:contains('Table 5, Guests: 4')",
+            },
         ].flat(),
 });

@@ -4,7 +4,7 @@ from contextlib import closing
 from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged, users
+from odoo.tests import Form, tagged, users, warmup
 from odoo.exceptions import UserError
 from odoo import fields, Command
 
@@ -278,6 +278,48 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     [{'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'reconciled': True}] * len(batch),
                 )
                 batch.remove_move_reconcile()
+
+    def test_full_reconcile_unlink_clears_matching_number(self):
+        """ When `account.full.reconcile` is unlinked directly, the FK
+        `full_reconcile_id` on the linked `account.move.line` records is
+        nulled by PostgreSQL but `matching_number` (a plain Char) would keep
+        the now-orphan id of the deleted full unless cleanup is invoked.
+        Ensure the contract holds: no line keeps a decimal `matching_number`
+        pointing to a `account.full.reconcile` record that no longer exists.
+        After cleanup, lines must end up with either `False` (no remaining
+        reconciliation) or a `'P<id>'` partial-matching number (when the
+        partial reconciles survive as zombies pointing to the deleted full).
+        """
+        comp_curr = self.company_data['currency']
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-1000.0, -1000.0, comp_curr, '2016-01-01')
+        batch = line_1 + line_2
+        batch.reconcile()
+
+        full = batch.full_reconcile_id
+        self.assertTrue(full, "A full reconcile must be created for the balanced batch")
+        amls = full.reconciled_line_ids
+        stale_value = str(full.id)
+        self.assertEqual(set(amls.mapped('matching_number')), {stale_value})
+
+        full.unlink()
+
+        for line in amls:
+            self.assertFalse(
+                line.full_reconcile_id,
+                "FK should be nulled by PostgreSQL cascade on full reconcile unlink",
+            )
+            self.assertNotEqual(
+                line.matching_number, stale_value,
+                "matching_number must not keep the id of the deleted full reconcile "
+                "(line %s kept stale value %r)" % (line.id, line.matching_number),
+            )
+            self.assertTrue(
+                line.matching_number.startswith('P'),
+                "matching_number must be a 'P<id>' partial reference after the full is "
+                "unlinked (partial reconciles survive as zombies pointing to the deleted "
+                "full), not a decimal pointing to the deleted full (got %r)" % line.matching_number,
+            )
 
     def test_reconcile_lines_multiple_in_foreign_currency(self):
         currency = self.other_currency
@@ -582,6 +624,25 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,    'reconciled': True},
             {'amount_residual': -40.0,      'amount_residual_currency': -120.0, 'reconciled': False},
         ])
+
+    def test_reconciled_lines_excluding_exchange_diff_on_partial_payment(self):
+        """ Test reconciliation widget is given the correct reconciled values
+        """
+        currency = self.other_currency
+
+        line_1 = self.create_line_for_reconciliation(120.0, 240.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
+        amls = line_1 + line_2 + line_3
+
+        amls.reconcile()
+        self.assertEqual(line_1.reconciled_lines_excluding_exchange_diff_ids, line_2 + line_3)
+        self.assertRecordValues(line_1, [{
+            'count_reconciled_lines': 4,
+            'first_reconciled_lines_id': line_2.id,
+            'count_reconciled_lines_excluding_exchange_diff': 2,
+            'first_reconciled_lines_excluding_exchange_diff_id': line_2.id,
+        }])
 
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_income_partial_payment(self):
         currency = self.other_currency
@@ -6086,3 +6147,29 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             {'balance': 10.0},
             {'balance': -10.0},
         ])
+
+    def test_perf_reconciled_lines_ids(self):
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, self.env.company.currency_id, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-1000.0, -1000.0, self.env.company.currency_id, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(1000.0, 1000.0, self.env.company.currency_id, '2016-01-01')
+        line_4 = self.create_line_for_reconciliation(-1000.0, -1000.0, self.env.company.currency_id, '2016-01-01')
+        line_5 = self.create_line_for_reconciliation(1000.0, 1000.0, self.env.company.currency_id, '2016-01-01')
+        line_6 = self.create_line_for_reconciliation(-1000.0, -1000.0, self.env.company.currency_id, '2016-01-01')
+        (line_1 + line_2).reconcile()
+        (line_3 + line_4).reconcile()
+        (line_5 + line_6).reconcile()
+        self.env['ir.rule'].sudo().create({
+            'model_id': self.env['ir.model']._get('account.move.line').id,
+            'domain_force': [('id', '!=', line_6.id)],
+        })
+
+        def test(self):
+            with self.assertQueriesContain([
+                """FROM "account_move_line" WHERE "account_move_line"."id" IN %s""",  # read debit lines
+                """FROM "account_partial_reconcile" WHERE "account_partial_reconcile"."credit_move_id""",  # search partials for credit lines (none)
+                """FROM "account_partial_reconcile" WHERE "account_partial_reconcile"."debit_move_id""",  # search partials for debit lines
+                """FROM "account_partial_reconcile" WHERE "account_partial_reconcile"."id" IN %s""",  # read partials (from debit lines)
+                """FROM "account_move_line" WHERE "account_move_line"."id" IN %s""",  # read credit lines
+            ]):
+                self.assertEqual((line_1 + line_3 + line_5).reconciled_lines_ids, line_2 + line_4)
+        warmup(test)(self)

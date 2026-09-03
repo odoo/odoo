@@ -106,6 +106,14 @@ class AccountAnalyticLine(models.Model):
                 raise UserError(_('You cannot modify timesheets that are already invoiced.'))
         return super()._check_can_write(values)
 
+    def write(self, vals):
+        project = self.env['project.project'].sudo().browse(vals.get('project_id'))
+
+        if project and not project.allow_billable:
+            vals['is_so_line_edited'] = False
+
+        return super().write(vals)
+
     def _timesheet_determine_sale_line(self):
         """ Deduce the SO line associated to the timesheet line:
             1/ timesheet on task rate: the so line will be the one from the task

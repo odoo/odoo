@@ -13,4 +13,10 @@ class ProductComboItem(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'combo_id', 'product_id', 'extra_price']
+        return ['id', 'combo_id', 'product_id', 'extra_price', 'currency_id']
+
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        self._convert_pos_data_currency(read_records, config, 'extra_price', 'currency_id')
+        return read_records

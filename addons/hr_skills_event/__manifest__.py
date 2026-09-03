@@ -19,7 +19,15 @@ This module add completed course events to resume for employees.
         'views/hr_views.xml',
     ],
     'auto_install': True,
-    'assets': {},
+    'assets': {
+        'web.assets_tests': [
+            'hr_skills_event/static/tests/tours/**/*',
+        ],
+        'web.assets_unit_tests': [
+            'hr_skills_event/static/tests/**/*',
+            ('remove', 'hr_skills_event/static/tests/tours/**/*'),
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

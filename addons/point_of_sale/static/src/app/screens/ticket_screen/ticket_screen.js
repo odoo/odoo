@@ -66,6 +66,7 @@ export class TicketScreen extends Component {
         this.doPrint = useTrackedAsync((_selectedSyncedOrder) => this.print(_selectedSyncedOrder));
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
+            useWithBarcode: true,
         });
 
         this.state = useState({
@@ -131,7 +132,7 @@ export class TicketScreen extends Component {
         }
     }
     async print(order) {
-        await this.pos.printReceipt({ order: order });
+        this.pos.printReceipt({ order: order });
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
@@ -181,6 +182,8 @@ export class TicketScreen extends Component {
         }
     }
     onClickOrder(clickedOrder) {
+        // Pending keystrokes belong to the line they were typed for.
+        this.numberBuffer.capture();
         this.setSelectedOrder(clickedOrder);
         this.numberBuffer.reset();
         if ((!clickedOrder || clickedOrder.finalized) && !this.getSelectedOrderlineId()) {
@@ -225,6 +228,7 @@ export class TicketScreen extends Component {
     onClickOrderline(orderline) {
         if (this.getSelectedOrder()?.finalized) {
             const order = this.getSelectedOrder();
+            this.numberBuffer.capture();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
         }
@@ -306,6 +310,11 @@ export class TicketScreen extends Component {
     async _doneOrder(order) {
         return;
     }
+    async onClickRefund() {
+        // Flush pending keystrokes so the refund uses the quantities shown on screen.
+        this.numberBuffer.capture();
+        await this.onDoRefund();
+    }
     async onDoRefund() {
         const order = this.getSelectedOrder();
 
@@ -341,6 +350,7 @@ export class TicketScreen extends Component {
             const line = this.pos.models["pos.order.line"].create({
                 qty: -refundDetail.qty,
                 price_unit: refundLine.price_unit,
+                price_subtotal_incl: refundLine.price_subtotal_incl,
                 product_id: refundLine.product_id,
                 order_id: destinationOrder,
                 discount: refundLine.discount,
@@ -378,9 +388,8 @@ export class TicketScreen extends Component {
             return;
         }
 
-        if (order.fiscal_position_id) {
-            destinationOrder.fiscal_position_id = order.fiscal_position_id;
-        }
+        // A refund is taxed like the order it refunds, even when that order has no fiscal position.
+        destinationOrder.fiscal_position_id = order.fiscal_position_id || false;
         // Set the partner to the destinationOrder.
         this.setPartnerToRefundOrder(partner, destinationOrder);
         destinationOrder.refunded_order_id = order;
@@ -676,6 +685,9 @@ export class TicketScreen extends Component {
     }
 
     async setOrder(order) {
+        if (this.pos.isOrderSyncing(order)) {
+            return;
+        }
         if (this.pos.config.isShareable) {
             await this.pos.syncAllOrders();
         }

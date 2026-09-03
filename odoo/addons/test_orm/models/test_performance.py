@@ -19,6 +19,10 @@ class Test_PerformanceBase(models.Model):
     total = fields.Integer(compute="_total", store=True)
     tag_ids = fields.Many2many('test_performance.tag')
 
+    # domain forces the ORM to read a field on the lines when updating the
+    # cache of this one2many
+    related_line_ids = fields.One2many('test_performance.line', 'related_base_id', domain=[('value', '>=', 0)])
+
     @api.depends('value')
     def _value_pc(self):
         for record in self:
@@ -52,6 +56,8 @@ class Test_PerformanceLine(models.Model):
 
     base_id = fields.Many2one('test_performance.base', required=True, ondelete='cascade')
     value = fields.Integer()
+
+    related_base_id = fields.Many2one('test_performance.base', related='base_id', string="Related base")
 
     _line_uniq = models.UniqueIndex('(base_id, value)', "base_id and value should be unique")
 

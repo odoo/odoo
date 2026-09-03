@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-30 19:08+0000\n"
+"POT-Creation-Date: 2026-07-31 18:11+0000\n"
 "PO-Revision-Date: 2025-07-23 07:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -15,6 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "%(details)s\n"
+msgstr ""
 
 #. module: l10n_my_edi
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__account_move_line__l10n_my_edi_classification_code__001
@@ -441,6 +447,14 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
+msgid ""
+"Classification code '004' can only be used for consolidated e-invoice issued "
+"to general public (TIN of 'EI00000000010', BRN/NRIC of 'NA')"
+msgstr ""
+
+#. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_consolidate_invoice_wizard_form
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.myinvois_document_status_update_form
 msgid "Close"
@@ -602,18 +616,6 @@ msgid ""
 "Error when generating the documents' files:\n"
 "\n"
 "- %(errors)s"
-msgstr ""
-
-#. module: l10n_my_edi
-#. odoo-python
-#: code:addons/l10n_my_edi/models/myinvois_document.py:0
-msgid "Error when sending the documents to the E-invoicing service."
-msgstr ""
-
-#. module: l10n_my_edi
-#. odoo-python
-#: code:addons/l10n_my_edi/models/account_edi_proxy_user.py:0
-msgid "Failed to contact the E-Invoicing service. Please try again later."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -963,8 +965,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid ""
+"MyInvois did not return a specific reason for the invalidation. Please check "
+"the MyInvois portal for the exact reason."
+msgstr ""
+
+#. module: l10n_my_edi
 #: model_terms:ir.ui.view,arch_db:l10n_my_edi.res_config_settings_view_form
 msgid "MyInvois mode"
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "MyInvois returned the following response(s):"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1085,6 +1101,12 @@ msgid "Please register for the E-Invoicing service in the settings first."
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "Please try again later."
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields.selection,name:l10n_my_edi.selection__res_company__l10n_my_edi_mode__test
 msgid "Pre-Production"
 msgstr ""
@@ -1189,7 +1211,9 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
-msgid "Server error; If the problem persists, please contact the Odoo support."
+msgid ""
+"Server error; If the problem persists, please contact the Odoo support.\n"
+"Details: %(details)s\n"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1228,6 +1252,14 @@ msgid "Submit To MyInvois"
 msgstr ""
 
 #. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
+msgid ""
+"TIN 'EI00000000010' (General Public / Consolidated e-Invoice) with BRN/NRIC "
+"of 'NA' requires classification code '004' on every invoice line."
+msgstr ""
+
+#. module: l10n_my_edi
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_bank_statement_line__l10n_my_edi_exemption_reason
 #: model:ir.model.fields,field_description:l10n_my_edi.field_account_move__l10n_my_edi_exemption_reason
 #: model:ir.model.fields,field_description:l10n_my_edi.field_myinvois_document__myinvois_exemption_reason
@@ -1263,9 +1295,8 @@ msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
-#: code:addons/l10n_my_edi/models/myinvois_document.py:0
-msgid ""
-"The MyInvois platform returned an \"%(status)s\" status for this document."
+#: code:addons/l10n_my_edi/models/account_edi_proxy_user.py:0
+msgid "The MyInvois server is temporarily unreachable. Please try again later."
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1442,6 +1473,12 @@ msgstr ""
 #. module: l10n_my_edi
 #. odoo-python
 #: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "This document could not be sent for the following reason(s):"
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
 msgid ""
 "This document has already been submitted and was deemed invalid.\n"
 "Please correct the document based on the previous error, or wait before "
@@ -1477,6 +1514,12 @@ msgstr ""
 #. module: l10n_my_edi
 #: model:ir.model.fields,help:l10n_my_edi.field_myinvois_document__myinvois_external_uuid
 msgid "Unique ID assigned to a specific document when sent to MyInvois."
+msgstr ""
+
+#. module: l10n_my_edi
+#. odoo-python
+#: code:addons/l10n_my_edi/models/myinvois_document.py:0
+msgid "Unknown"
 msgstr ""
 
 #. module: l10n_my_edi
@@ -1594,10 +1637,10 @@ msgstr ""
 
 #. module: l10n_my_edi
 #. odoo-python
-#: code:addons/l10n_my_edi/models/account_edi_xml_ubl_my.py:0
+#: code:addons/l10n_my_edi/models/account_edi_proxy_user.py:0
 msgid ""
-"You must have a commercial partner named 'General Public' with a VAT number "
-"set to 'EI00000000010' in order to proceed."
+"You have reached the maximum number of requests allowed in a short period of "
+"time. Please wait a few minutes before trying again."
 msgstr ""
 
 #. module: l10n_my_edi

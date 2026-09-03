@@ -7,9 +7,13 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
         <data>
-             <xpath expr="//field[@name='company_registry']" position="after">
-                 <field name="ape" invisible="not is_france_country"/>
-             </xpath>
+        <xpath expr="//field[@name='company_registry']" position="attributes">
+            <attribute name="invisible">is_france_country</attribute>
+        </xpath>
+        <xpath expr="//field[@name='company_registry']" position="after">
+            <field name="company_registry" string="Siren/Siret" invisible="not is_france_country"/>
+            <field name="ape" invisible="not is_france_country"/>
+        </xpath>
         </data>
         </field>
     </record>

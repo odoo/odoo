@@ -41,6 +41,17 @@ class MailTestPortalNoPartner(models.Model):
             record.access_url = '/my/test_portal_no_partner/%s' % self.id
 
 
+class MailTestPortalNoAccess(models.Model):
+    """Portal-mixin model with no ACL grants: only superuser has direct
+    access, so a share token or sign is the sole entry point for other users."""
+
+    _description = "Chatter Model for Portal (no ACL)"
+    _name = "mail.test.portal.no.access"
+    _inherit = ["mail.thread", "portal.mixin"]
+
+    name = fields.Char()
+
+
 class MailTestPortalPublicAccessAction(models.Model):
     """ Test 'public' target_type access action """
     _description = 'Portal Public Access Action'

@@ -19,15 +19,15 @@
                 </tr>
                 <tr t-if="o.date_approve">
                     <td>Order Date:</td>
-                    <td><t t-out="o.date_approve" t-options="{'widget': 'date'}"/></td>
+                    <td><t t-out="o.date_approve" t-options="{'widget': 'date', 'format': 'dd.MM.yyyy'}"/></td>
                 </tr>
                 <tr t-if="o.date_order">
                     <td>Order Deadline:</td>
-                    <td><t t-out="o.date_order" t-options="{'widget': 'date'}"/></td>
+                    <td><t t-out="o.date_order" t-options="{'widget': 'date', 'format': 'dd.MM.yyyy'}"/></td>
                 </tr>
                 <tr t-if="o.date_planned">
                     <td>Expected Arrival:</td>
-                    <td><t t-out="o.date_planned" t-options="{'widget': 'date'}"/></td>
+                    <td><t t-out="o.date_planned" t-options="{'widget': 'date', 'format': 'dd.MM.yyyy'}"/></td>
                 </tr>
                 <tr t-if="o.incoterm_id">
                     <td>Incoterm:</td>

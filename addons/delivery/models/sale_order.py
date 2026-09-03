@@ -133,8 +133,8 @@ class SaleOrder(models.Model):
             name = _('Add a shipping method')
             shipping_partner_id = self.with_company(self.company_id).partner_shipping_id
             carrier_property = (
-                shipping_partner_id.property_delivery_carrier_id
-                or shipping_partner_id.commercial_partner_id.property_delivery_carrier_id
+                shipping_partner_id.property_delivery_carrier_id.filtered("active")
+                or shipping_partner_id.commercial_partner_id.property_delivery_carrier_id.filtered("active")
             )
             carrier = carrier_property.available_carriers(self.partner_shipping_id, self)
         return {
@@ -226,6 +226,7 @@ class SaleOrder(models.Model):
             'price_unit': price_unit,
             'product_uom_qty': 1,
             'product_id': carrier.product_id.id,
+            'product_uom_id': carrier.product_id.uom_id.id,
             'tax_ids': [(6, 0, taxes_ids)],
             'is_delivery': True,
         }

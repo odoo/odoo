@@ -126,7 +126,7 @@ class AccountMove(models.Model):
                 # button_cancel calls button_draft.
                 # Draft button does not appear for user.
                 raise UserError(_("You cannot reset to draft an entry that has been posted to TicketBAI's chain"))
-        super().button_draft()
+        return super().button_draft()
 
     @api.ondelete(at_uninstall=False)
     def _l10n_es_tbai_unlink_except_in_chain(self):
@@ -339,7 +339,7 @@ class AccountMove(models.Model):
         if intracom:
             values['regime_key'] = ['09']
         elif reagyp:
-            values['regime_key'] = ['19']
+            values['regime_key'] = ['02']
         else:
             values['regime_key'] = ['01']
         # Credit notes (factura rectificativa)

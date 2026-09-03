@@ -127,6 +127,24 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
                 },
             }]
 
+    def _ubl_add_line_item_name_description_nodes(self, vals):
+        # EXTENDS account.edi.ubl
+        super()._ubl_add_line_item_name_description_nodes(vals)
+        item_node = vals['item_node']
+
+        if name := item_node['cbc:Name'] and item_node['cbc:Name'].get('_text'):
+            item_node['cbc:Name']['_text'] = name[:100]
+        if description := item_node['cbc:Description'] and item_node['cbc:Description'].get('_text'):
+            item_node['cbc:Description']['_text'] = description[:200]
+
+    def _ubl_add_notes_nodes(self, vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        super()._ubl_add_notes_nodes(vals)
+        document_node = vals['document_node']
+
+        if note := document_node['cbc:Note'].get('_text'):
+            document_node['cbc:Note']['_text'] = note[:300]
+
     # -------------------------------------------------------------------------
     # EXPORT: Constraints
     # -------------------------------------------------------------------------

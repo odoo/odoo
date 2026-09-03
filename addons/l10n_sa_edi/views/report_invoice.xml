@@ -12,6 +12,14 @@
                     </t>
                 </t>
             </xpath>
+            <t t-call="web.external_layout" position="before">
+                <t t-set="additional_address_sa">
+                    <li t-if="o.company_id.country_id.code == 'SA' and o.company_id.partner_id.l10n_sa_edi_additional_identification_scheme and o.company_id.partner_id.l10n_sa_edi_additional_identification_number">
+                        <span t-field="o.company_id.partner_id.l10n_sa_edi_additional_identification_scheme"/>:
+                        <span t-field="o.company_id.partner_id.l10n_sa_edi_additional_identification_number"/>
+                    </li>
+                </t>
+            </t>
             <!-- End Address format -->
         </template>
     </data>

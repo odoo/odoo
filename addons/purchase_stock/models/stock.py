@@ -261,7 +261,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_default_supplier(self):
         self.ensure_one()
         if self.show_supplier and self.product_id:
-            return self._get_default_rule()._get_matching_supplier(
+            return self.env['stock.rule']._get_matching_supplier(
                 self.product_id, self.qty_to_order, self.product_uom, self.company_id, {}
             )
         else:

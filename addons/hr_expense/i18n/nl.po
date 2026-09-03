@@ -6,16 +6,16 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-03-06 17:45+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-06 22:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/hr_expense/"
 "nl/>\n"
 "Language: nl\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #. odoo-python
@@ -186,13 +186,13 @@ msgstr "Activiteitsfase"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.mail_activity_type_action_config_hr_expense
 #: model:ir.ui.menu,name:hr_expense.hr_expense_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Activiteitensoorten"
+msgstr "Activiteitstypes"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
@@ -328,6 +328,11 @@ msgstr "Koppel betaalbewijs"
 msgid "Attach a receipt - usually an image or a PDF file."
 msgstr ""
 "Voeg een ontvangstbewijs toe - meestal een afbeelding of een PDF-bestand."
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Bijlage"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -558,12 +563,13 @@ msgstr "Digitaliseer je bonnen met OCR en kunstmatige intelligentie"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__distribution_analytic_account_ids
@@ -975,6 +981,7 @@ msgstr "Aliasdomein HR-onkosten"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__id
 #: model:ir.model.fields,field_description:hr_expense.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:hr_expense.field_ir_attachment__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__id
 #: model:ir.model.fields,field_description:hr_expense.field_product_template__id
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__id
@@ -2037,6 +2044,9 @@ msgid ""
 "payment method.\n"
 "Please set a vendor on the following expenses: %s"
 msgstr ""
+"De leverancier is vereist voor onkosten waarbij SEPA-overschrijving als "
+"betaalmethode wordt gebruikt.\n"
+"Stel een leverancier in voor de volgende onkosten: %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2122,8 +2132,7 @@ msgstr "Totaal onbelast bedrag in valuta"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr ""
-"Totaal bedrag van de oorspronkelijke onkostendeclaratie die we splitsen"
+msgstr "Totaal bedrag van de oorspronkelijke onkostendeclaratie die we splitsen"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2256,11 +2265,10 @@ msgstr ""
 "de gebruiker                                             dit product "
 "gebruikt het bedrag van de onkostendeclaratie niet "
 "wijzigen,                                             alleen het aantal. "
-"Gebruik een kostprijs anders dan 0 voor onkostencategorieën die "
-"door                                            het bedrijf worden "
-"gefinancierd tegen vaste kosten, zoals kilometervergoedingen, "
-"dagvergoedingen, huisvesting                                             of "
-"maaltijden."
+"Gebruik een kostprijs anders dan 0 voor onkostencategorieën die door"
+"                                            het bedrijf worden gefinancierd "
+"tegen vaste kosten, zoals kilometervergoedingen, dagvergoedingen, huisvesting"
+"                                             of maaltijden."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2290,6 +2298,31 @@ msgstr "Je kunt het nu insturen naar je manager vanuit de volgende link."
 msgid "You can only generate an accounting entry for approved expense(s)."
 msgstr ""
 "Je kunt enkel financiële boekingen verrichten voor goedgekeurde uitgave(s)."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You can't add an attachment to an expense once it has been approved."
+msgstr ""
+"Je kunt geen bijlage meer toevoegen aan een onkostendeclaratie zodra deze is "
+"goedgekeurd."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid "You can't add attachments to an expense once it has been approved."
+msgstr ""
+"Je kunt geen bijlagen meer toevoegen aan een onkostendeclaratie zodra deze "
+"is goedgekeurd."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/ir_attachment.py:0
+msgid ""
+"You can't delete attachments from an expense once it has been submitted."
+msgstr ""
+"Je kunt bijlagen niet meer verwijderen uit een onkostendeclaratie nadat deze "
+"is ingediend."
 
 #. module: hr_expense
 #. odoo-python
@@ -2382,6 +2415,12 @@ msgstr "Je hebt de benodigde toestemming niet om deze onkost in te dienen."
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You do not have the rights to edit this expense."
 msgstr "Je hebt de rechten niet om deze onkost te bewerken."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid "You don't have the access rights to modify this expense."
+msgstr "Je hebt geen toegangsrechten om deze onkostendeclaratie te wijzigen."
 
 #. module: hr_expense
 #. odoo-python

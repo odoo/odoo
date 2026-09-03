@@ -330,6 +330,9 @@ class configmanager:
                          help='shortcut for --log-handler=odoo.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default='')
         group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
+        group.add_option('--log-config', dest='log_config', type='path', my_default='',
+                         help="JSON logging configuration file, in dictconfig format ("
+                              "https://docs.python.org/3/library/logging.config.html#logging-config-dictschema).")
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
@@ -785,6 +788,9 @@ class configmanager:
     def _check_addons_path(cls, option, opt, value):
         ad_paths = []
         for path in map(cls._normalize, cls._check_comma(option, opt, value)):
+            if glob.has_magic(path):
+                ad_paths.extend(sorted(p for p in glob.glob(path) if os.path.isdir(p) and cls._is_addons_path(p)))
+                continue
             if not os.path.isdir(path):
                 cls._log(logging.WARNING, "option %s, no such directory %r, skipped", opt, path)
                 continue
@@ -792,7 +798,6 @@ class configmanager:
                 cls._log(logging.WARNING, "option %s, invalid addons directory %r, skipped", opt, path)
                 continue
             ad_paths.append(path)
-
         return ad_paths
 
     @classmethod
@@ -939,8 +944,19 @@ class configmanager:
             option = self.options_index.get(opt)
             if keys is not None and opt not in keys:
                 continue
-            if opt == 'version' or (option and not option.file_exportable):
+            if opt == 'version':
                 continue
+            if option:
+                if option.file_exportable:
+                    pass
+                elif option.file_loadable and self.options[opt] != self._default_options[opt]:
+                    # Persist the option if we can load it from the file
+                    # and that it is different from the default value.
+                    # Even if it was marked "file_exportable=False", we
+                    # just don't want to export the default value.
+                    pass
+                else:
+                    continue
             if option:
                 p.set('options', opt, self.format(opt, self.options[opt]))
             else:

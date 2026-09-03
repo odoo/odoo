@@ -9,7 +9,7 @@ import {
     SaleDetailsButton,
     handleSaleDetails,
 } from "@point_of_sale/app/components/navbar/sale_details_button/sale_details_button";
-import { Component, onMounted, useState, useExternalListener } from "@odoo/owl";
+import { Component, useState, useExternalListener } from "@odoo/owl";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { barcodeService } from "@barcodes/barcode_service";
@@ -48,9 +48,6 @@ export class Navbar extends Component {
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
         this.timeout = null;
         this.bufferedInput = "";
-        onMounted(async () => {
-            this.hasProductCreationAccess = await this.pos.allowProductCreation();
-        });
         useExternalListener(document, "keydown", this.handleKeydown.bind(this));
         this.openPresetTiming = useAsyncLockedMethod(this.openPresetTiming);
     }
@@ -183,24 +180,26 @@ export class Navbar extends Component {
         });
     }
 
-    openCustomerDisplay() {
+    get customerDisplayURL() {
         const getDeviceUuid = () => {
             if (!localStorage.getItem("device_uuid")) {
                 localStorage.setItem("device_uuid", uuidv4());
             }
             return localStorage.getItem("device_uuid");
         };
-        const customer_display_url = `/pos_customer_display/${
+        return `${this.pos.config._base_url}/pos_customer_display/${
             this.pos.config.id
-        }/${getDeviceUuid()}`;
+        }/${getDeviceUuid()}?access_token=${this.pos.config.access_token}`;
+    }
 
+    openCustomerDisplay() {
         this.dialog.add(QrCodeCustomerDisplay, {
-            customerDisplayURL: `${this.pos.config._base_url}${customer_display_url}`,
+            customerDisplayURL: this.customerDisplayURL,
         });
     }
 
     get showCreateProductButton() {
-        return this.hasProductCreationAccess;
+        return this.pos.hasProductCreationAccess;
     }
 
     get shouldDisplayPresetTime() {

@@ -23,6 +23,9 @@
                 <t t-call="hr_timesheet.portal_timesheet_table"/>
             </div>
         </xpath>
+        <xpath expr="//div[@name='portal_my_task_allocated_hours']" position="attributes">
+            <attribute name="t-if">task.env['account.analytic.line']._show_portal_timesheets()</attribute>
+        </xpath>
         <xpath expr="//div[@name='portal_my_task_allocated_hours']" position="after">
             <div t-if="task.allocated_hours > 0 and allow_timesheets and show_portal_timesheets"><strong>Progress:</strong> <span t-esc="task.progress * 100" t-options='{"widget": "float", "precision": 0}'/>%</div>
         </xpath>
@@ -55,7 +58,7 @@
             </t>
         </xpath>
         <xpath expr="//th[@name='state_col']" position="before">
-            <th t-if="not project or project.allow_timesheets" class="text-end text-muted fw-normal">
+            <th t-if="(not project or project.allow_timesheets) and show_portal_timesheets" class="text-end text-muted fw-normal">
                 <t t-set="total_hours_dict" t-value="tasks._get_portal_total_hours_dict()"/>
                 <t t-if="total_hours_dict">
                     <t t-set="total_allocated_hours" t-value="tasks.project_id.allocated_hours if groupby == 'project_id' else total_hours_dict['allocated_hours']"/>

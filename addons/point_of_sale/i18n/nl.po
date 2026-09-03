@@ -7,16 +7,16 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025, 2026.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-08 14:23+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-08-05 20:56+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/nl/>\n"
 "Language: nl\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -194,7 +194,7 @@ msgstr "+ Nieuwe winkel"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ", you can skip the system parameter section."
-msgstr ""
+msgstr ", kun je het gedeelte over systeemparameters overslaan."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -229,37 +229,6 @@ msgstr "Katoenen denimbroek met 5 zakken.."
 
 #. module: point_of_sale
 #: model:mail.template,body_html:point_of_sale.email_template_pos_receipt
-#, fuzzy
-#| msgid ""
-#| "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-#| "                    <t t-set=\"client_name\" t-"
-#| "value=\"object.partner_id.name\"/>\n"
-#| "                    <t t-set=\"store_name\" t-"
-#| "value=\"object.config_id.name\"/>\n"
-#| "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-#| "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-#| "user.lang\"/>\n"
-#| "                    <div>\n"
-#| "                        <t t-if=\"client_name\">Hello <t t-"
-#| "out=\"client_name\">Client name</t>,</t>\n"
-#| "                        <t t-else=\"\">Hello,</t>\n"
-#| "                    </div>\n"
-#| "                    <br/>\n"
-#| "                    <div>Thank you for purchasing from <t t-"
-#| "out=\"store_name\">Store name</t>!</div>\n"
-#| "                    <div>Attached, you will find your receipt for the "
-#| "purchase of <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
-#| "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) "
-#| "or ''\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
-#| "time_format='short',                          lang_code=lg)\">time</t>.</"
-#| "span>\n"
-#| "                    </div>\n"
-#| "                    <br/>\n"
-#| "                    <div>With kind regards,</div>\n"
-#| "                    <br/>\n"
-#| "                    <t t-out=\"store_name\">Store name</t>\n"
-#| "                </div>\n"
-#| "            "
 msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"client_name\" t-"
@@ -297,28 +266,29 @@ msgstr ""
 "value=\"object.partner_id.name\"/>\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Beste <t t-"
-"out=\"client_name\">Klantnaam</t>,</t>\n"
-"                        <t t-else=\"\">Beste,</t>\n"
+"                        <t t-if=\"client_name\">Hallo <t t-"
+"out=\"client_name\">naam klant</t>,</t>\n"
+"                        <t t-else=\"\">Hallo,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Bedankt voor je aankoop bij <t t-"
-"out=\"store_name\">Winkelnaam</t>!</div>\n"
-"                    <div>In de bijlage vind je je kassabon voor de aankoop "
-"op <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"                    <div>Bedankt voor je aankoop bij <t t-out=\"store_name\">"
+"naam winkel</t>!</div>\n"
+"                    <div>In de bijlage vind je het aankoopbewijs voor je "
+"aankoop van <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
 "dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
-"''\">datum</t> om <t t-out=\"format_time(time=object.date_order, tz=tz, "
-"time_format='short',                          lang_code=lg)\">tijd</t>.</"
+"''\">date</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">time</t>.</"
 "span>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Met vriendelijke groeten,</div>\n"
+"                    <div>Met vriendelijke groet,</div>\n"
 "                    <br/>\n"
-"                    <t t-out=\"store_name\">Winkelnaam</t>\n"
+"                    <t t-out=\"store_name\">Naam winkel</t>\n"
 "                </div>\n"
 "            "
 
@@ -344,9 +314,9 @@ msgid ""
 "(is_invoiced)sfor             %(pos_name)s amounting in %(amount)s from %"
 "(company_name)s. </p>"
 msgstr ""
-"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %"
-"(is_invoiced)svoor             %(pos_name)s voor een bedrag van %(amount)s "
-"bij %(company_name)s. </p>"
+"<p>Beste %(client_name)s,<br/>Hier is je aankoopbewijs %(is_invoiced)svoor"
+"             %(pos_name)s voor een bedrag van %(amount)s bij %(company_name)"
+"s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -514,13 +484,6 @@ msgid "A payment with this uuid already exists"
 msgstr "Een betaling met deze UUID bestaat al"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
-msgid "A request is still being processed in the background. Please wait."
-msgstr ""
-"Er wordt nog een verzoek verwerkt op de achtergrond. Even geduld alsjeblieft."
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
 msgid ""
 "A session is a period of time, usually one day, during which you sell "
@@ -672,8 +635,8 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records "
 "for bank payments."
 msgstr ""
-"Rekening die wordt gebruikt als openstaande rekening bij het maken van "
-"boekhoudkundige betalingsrecords voor bankbetalingen."
+"Rekening die wordt gebruikt als Rekening betalingen onderweg bij het maken "
+"van boekhoudkundige betalingsrecords voor bankbetalingen."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -754,7 +717,7 @@ msgstr "Activiteitsfase"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1821,9 +1784,14 @@ msgid "Cash Rounding (PoS)"
 msgstr "Kasafronding (kassa)"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "Cash Rounding:"
+msgstr "Kasafronding:"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "Kasafrondingen"
+msgstr "Cash afronding"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2895,7 +2863,7 @@ msgstr "Klanten"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Daily Sale"
-msgstr "Dagelijkse verkopen"
+msgstr "Dagelijks verkoopoverzicht"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2917,6 +2885,12 @@ msgstr "Gevaarlijk: te veel producten"
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Database Connection Lost"
+msgstr "Verbinding met database verbroken"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3309,6 +3283,7 @@ msgstr "Kortingen"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_exclusion__display_name
@@ -3335,7 +3310,7 @@ msgstr "Kortingen"
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_warehouse__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3391,6 +3366,18 @@ msgstr "Wil je de klantenlijst openen om een klant te selecteren?"
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "Downloaden"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IDB Errors"
+msgstr "IDB-fouten downloaden"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IndexedDB error logs from localStorage"
+msgstr "IndexedDB-foutlogboeken uit localStorage downloaden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3614,8 +3601,10 @@ msgstr "Epson Bonprinter IP-adres"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+#: code:addons/point_of_sale/static/src/app/services/printer_service.js:0
 msgid "Error"
 msgstr "Fout"
 
@@ -3630,12 +3619,6 @@ msgstr "Fout! Het is niet mogelijk recursieve categorieën te maken."
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Error: no internet connection."
 msgstr "Fout: geen internetverbinding."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Everything is ready to go!"
-msgstr "Alles is klaar voor gebruik!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3856,7 +3839,7 @@ msgstr "Sluit sessie forceren"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force Done"
-msgstr "Forceer gereed"
+msgstr "Forceer voltooid"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3868,12 +3851,12 @@ msgstr "Annuleren afdwingen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Force done"
-msgstr "Forceer gereed"
+msgstr "Forceer voltooid"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr "Gedwongen openstaande rekening"
+msgstr "Gedwongen Rekening betalingen onderweg"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -3894,7 +3877,7 @@ msgstr "Gratis"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "Free To Use:"
-msgstr "Beschikbaar voor gebruik:"
+msgstr "Beschikbaar:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_free
@@ -3966,8 +3949,7 @@ msgstr "Mijn factuur ontvangen"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__sequence
 msgid "Gives the sequence order when displaying a list of product categories."
-msgstr ""
-"Geeft de volgorde weer waarin de productcategorieën worden weergegeven."
+msgstr "Geeft de volgorde weer waarin de productcategorieën worden weergegeven."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_discount
@@ -4061,6 +4043,11 @@ msgstr "Heeft bericht"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
 msgid "Has Refundable Lines"
 msgstr "Heeft geretourneerde regels"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__has_stock_reports_to_print
+msgid "Has Stock Reports To Print"
+msgstr "Heeft voorraadrapporten om af te drukken"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4205,6 +4192,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_pricelist_item__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__id
+#: model:ir.model.fields,field_description:point_of_sale.field_product_removal__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_tag__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__id
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_attribute_exclusion__id
@@ -4698,8 +4686,8 @@ msgid ""
 "order(s)?"
 msgstr ""
 "Het lijkt erop dat de kassaorder(s) %(order_ref)s geen klant hebben. \n"
-"Wil je %(customer_name)s instellen als klant voor de geselecteerde "
-"kassaorder(s)?"
+"Wil je %(customer_name)s instellen als klant voor de geselecteerde kassaorder"
+"(s)?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4933,8 +4921,8 @@ msgstr ""
 "sluiten van de sessie.\n"
 "Voor kasboek schrijven we rechtstreeks via afschriftregels naar de "
 "standaardrekening in het dagboek.\n"
-"Voor bankboek schrijven we naar de openstaande rekening die is opgegeven in "
-"deze betaalmethode.\n"
+"Voor bankboek schrijven we naar de Rekening betalingen onderweg die is "
+"opgegeven in deze betaalmethode.\n"
 "Alleen kas- en bankdagboeken zijn toegestaan."
 
 #. module: point_of_sale
@@ -5778,6 +5766,12 @@ msgid "Not available"
 msgstr "Niet beschikbaar"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Not implemented"
+msgstr "Niet geïmplementeerd"
+
+#. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
 msgid "Not required"
 msgstr "Niet vereist"
@@ -5950,8 +5944,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Only administrators can edit receipt headers and footers"
-msgstr ""
-"Enkel beheerders kunnen de kopteksten en voetnota's van bonnen wijzigen"
+msgstr "Enkel beheerders kunnen de kopteksten en voetnota's van bonnen wijzigen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -6343,7 +6336,7 @@ msgstr "Uit"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Openstaande rekening"
+msgstr "Rekening betalingen onderweg"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
@@ -6847,7 +6840,7 @@ msgstr "Selecteer een klant aub"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Please, Scan again!"
-msgstr "Graag opnieuw te scannen!"
+msgstr "Scan alsjeblieft opnieuw!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_contact_address
@@ -7479,7 +7472,7 @@ msgstr "De printerkap is open. Sluit en probeer opnieuw!"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Printer's local IP address is printerd"
-msgstr ""
+msgstr "Het lokale IP-adres van de printer is afgedrukt"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7504,6 +7497,12 @@ msgstr "Afdrukken wordt in sommige browsers niet ondersteund"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Proceed Anyway"
 msgstr "Verdergaan"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Processing..."
+msgstr "Verwerken..."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -7711,7 +7710,7 @@ msgstr "QFPay betaalterminal"
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_facing_qr.xml:0
 msgid "QR Code"
-msgstr "QR code"
+msgstr "QR-code"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__qr_code_method
@@ -7981,6 +7980,12 @@ msgstr "Gerelateerde sessie: %(link)s"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr "Herladen"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
@@ -8012,6 +8017,11 @@ msgstr "Gegevens herladen"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.js:0
 msgid "Remaining"
 msgstr "Resterend"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_product_removal
+msgid "Removal Strategy"
+msgstr "Verwijderingsstrategie"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8472,7 +8482,7 @@ msgstr "Geselecteerde kenmerken"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Selection of outstanding account is required"
-msgstr "Het selecteren van een openstaande rekening is vereist"
+msgstr "Het selecteren van een Rekening betalingen onderweg is vereist"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8604,6 +8614,12 @@ msgstr "Sessierapportage"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__statistics_for_current_session
 msgid "Session Statistics"
 msgstr "Sessiestatistieken"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "Session already closed"
+msgstr "Sessie is al gesloten"
 
 #. module: point_of_sale
 #: model:mail.activity.type,name:point_of_sale.mail_activity_old_session
@@ -8863,10 +8879,11 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Some process are still running in background, please wait..."
+#: code:addons/point_of_sale/static/src/app/main.js:0
+msgid ""
+"Some paid orders have not been synced to the server yet. Closing or "
+"reloading now may cause data loss."
 msgstr ""
-"Sommige processen lopen nog op de achtergrond, even geduld alsjeblieft..."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9350,6 +9367,17 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "The company must have a fiscal country set."
 msgstr "Het bedrijf moet een fiscaal land ingesteld hebben."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
+"De verbinding met de lokale database is verbroken. Door de pagina opnieuw te "
+"laden, wordt deze hersteld en wordt verlies van niet-opgeslagen bestellingen "
+"voorkomen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10131,6 +10159,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"This order is currently syncing, please wait a moment before loading it."
+msgstr ""
+"Deze bestelling wordt momenteel gesynchroniseerd, wacht even voordat je deze "
+"laadt."
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
@@ -10708,6 +10745,7 @@ msgstr "Btw"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "VAT:"
 msgstr "Btw:"
 
@@ -10716,6 +10754,17 @@ msgstr "Btw:"
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Validate"
 msgstr "Bevestigen"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"Validation Error: You cannot assign the same Cash payment method to multiple "
+"POS Shops. Please create a separate Cash payment method for each shop."
+msgstr ""
+"Validatiefout: Je kunt niet dezelfde contante betaalmethode toewijzen aan "
+"meerdere Kassa-winkels. Maak voor elke winkel een aparte contante "
+"betaalmethode aan."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
@@ -10893,7 +10942,7 @@ msgstr "Wil je doorgaan zonder af te drukken of het opnieuw proberen?"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11176,6 +11225,13 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
+msgid "You don't have the access rights to perform a cash in/out."
+msgstr ""
+"Je hebt geen toegangsrechten om een kasontvangst/kasuitgave uit te voeren."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You have enabled the \"Identify Customer\" option for %(payment_method)s "
 "payment method,but the order %(order)s does not contain a customer."
@@ -11282,7 +11338,7 @@ msgstr "Je {{ object.config_id.name }} ticket"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11599,7 +11655,19 @@ msgstr "met een waarde van"
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
+
+#~ msgid "A request is still being processed in the background. Please wait."
+#~ msgstr ""
+#~ "Er wordt nog een verzoek verwerkt op de achtergrond. Even geduld "
+#~ "alsjeblieft."
+
+#~ msgid "Everything is ready to go!"
+#~ msgstr "Alles is klaar voor gebruik!"
+
+#~ msgid "Some process are still running in background, please wait..."
+#~ msgstr ""
+#~ "Sommige processen lopen nog op de achtergrond, even geduld alsjeblieft..."
 
 #~ msgid "0.00"
 #~ msgstr "0.00"

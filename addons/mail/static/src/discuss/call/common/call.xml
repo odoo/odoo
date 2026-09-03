@@ -2,7 +2,6 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.Call">
-        <PttAdBanner/>
         <div class="o-discuss-Call user-select-none d-flex position-relative shadow-sm" t-att-class="{
             'o-fullSize': isFullSize,
             'o-compact': props.compact and !isMobileOs,
@@ -14,6 +13,7 @@
             'border-bottom': !isActiveCall,
         }" t-ref="root">
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
+                <PttAdBanner t-if="!props.compact"/>
                 <BlurPerformanceWarning t-if="store.settings.blurPerformanceWarning"/>
                 <div
                     class="o-discuss-Call-mainCards d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"

@@ -180,9 +180,12 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         myinvois_document = vals["myinvois_document"]
         if myinvois_document.invoice_ids:
             # Add the total amount paid.
+            # Genuine prepayments only; the base implementation would otherwise treat any reconciled payment,
+            # regardless of its date, as a deposit.
+            prepaid_amounts = {invoice: self._l10n_my_edi_get_prepaid_amount(invoice) for invoice in myinvois_document.invoice_ids}
             vals.update({
-                'total_paid_amount': sum((invoice.amount_total - invoice.amount_residual) * invoice.invoice_currency_rate for invoice in myinvois_document.invoice_ids),
-                'total_paid_amount_currency': sum(invoice.amount_total - invoice.amount_residual for invoice in myinvois_document.invoice_ids),
+                'total_paid_amount': sum(amount * invoice.invoice_currency_rate for invoice, amount in prepaid_amounts.items()),
+                'total_paid_amount_currency': sum(prepaid_amounts.values()),
             })
 
     # -------------------------------------------------------------------------
@@ -203,14 +206,11 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             if (
                 partner._l10n_my_edi_get_tin_for_myinvois() == 'EI00000000010'
                 and partner.l10n_my_identification_number == 'NA'
-            ):
-                # Special case for consolidated entities (e.g., general public).
-                # When TIN is 'EI00000000010' and Identification Number is 'NA', MyInvois requires
-                # the CountrySubentityCode to be fixed as '17' regardless of the actual state.
+            ) or country.code != 'MY':
+                # Special case for consolidated entities (e.g., general public) and non-Malaysian partners:
+                # MyInvois requires the CountrySubentityCode to be fixed as '17' ("not applicable") since
+                # Malaysian state codes don't apply to them.
                 subentity_code = '17'
-            elif country.code != 'MY':
-                # For non-Malaysian partners return the state name instead of state code
-                subentity_code = partner.state_id.name
             else:
                 # Get the subentity code for the partner, based on its state.
                 subentity_code = partner.state_id.code
@@ -435,12 +435,13 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         currency_suffix = vals['currency_suffix']
 
         amount_paid = vals[f'total_paid_amount{currency_suffix}']
+        myinvois_document = vals["myinvois_document"]
+        if myinvois_document._is_consolidated_invoice():
+            amount_paid = 0
+        # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
+        amount_paid = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else amount_paid
+        # Omit the node entirely rather than emitting it with a 0.00 amount when there is no genuine prepayment.
         if amount_paid:
-            myinvois_document = vals["myinvois_document"]
-            if myinvois_document._is_consolidated_invoice():
-                amount_paid = 0
-            # For credit, debit, refund notes, and their self-billed variants, the PrepaidPayment amount must be set to 0.
-            amount_paid = 0 if vals['document_type_code'] in ('02', '03', '04', '12', '13', '14') else amount_paid
             document_node['cac:PrepaidPayment'] = {
                 'cbc:PaidAmount': {
                     '_text': self.format_float(amount_paid, vals['currency_dp']),
@@ -598,11 +599,26 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 if tax_category['cbc:ID']['_text'] == 'E' and not tax_category['cbc:TaxExemptionReason']['_text']:
                     self._l10n_my_edi_make_validation_error(constraints, 'tax_exemption_required', line_vals['cbc:ID']['_text'], line_item['cbc:Name']['_text'])
 
-            myinvois_document = vals["myinvois_document"]
-            if myinvois_document._is_consolidated_invoice() or myinvois_document._is_consolidated_invoice_refund():
-                customer_vat = vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyIdentification'][0]['cbc:ID']['_text']
-                if customer_vat != 'EI00000000010':
-                    self._l10n_my_edi_make_validation_error(constraints, 'missing_general_public', vals['customer'].id, vals['customer'].name)
+        # Code '004' (Consolidated e-Invoice) requires the General Public TIN + identification number, and
+        # vice-versa: that TIN + identification number requires every line to use code '004'.
+        invoice_type_code = vals['document_node']['cbc:InvoiceTypeCode']['_text']
+        if invoice_type_code in ("11", "12", "13", "14"):  # For self billed, we validate the supplier
+            party_identification_nodes = vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:PartyIdentification']
+        else:
+            party_identification_nodes = vals['document_node']['cac:AccountingCustomerParty']['cac:Party']['cac:PartyIdentification']
+        vat = party_identification_nodes[0]['cbc:ID']['_text']
+        identification_number = party_identification_nodes[1]['cbc:ID']['_text'] if len(party_identification_nodes) > 1 else None
+        is_general_public = vat == 'EI00000000010' and identification_number == 'NA'
+
+        line_classification_codes = [
+            line_vals['cac:Item'].get('cac:CommodityClassification', {}).get('cbc:ItemClassificationCode', {}).get('_text')
+            for line_vals in vals['document_node']['cac:InvoiceLine']
+        ]
+
+        if any(code == '004' for code in line_classification_codes) and not is_general_public:
+            self._l10n_my_edi_make_validation_error(constraints, 'missing_general_public', vals['customer'].id, vals['customer'].name)
+        if is_general_public and any(code != '004' for code in line_classification_codes):
+            self._l10n_my_edi_make_validation_error(constraints, 'general_public_requires_004', vals['customer'].id, vals['customer'].name)
 
         return constraints
 
@@ -668,7 +684,12 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 "You must set a Tax Exemption Reason on each tax exempt taxes in order to use them in a Myinvois Document.",
             ),
             'missing_general_public': self.env._(
-                "You must have a commercial partner named 'General Public' with a VAT number set to 'EI00000000010' in order to proceed.",
+                "Classification code '004' can only be used for consolidated e-invoice issued to general public "
+                "(TIN of 'EI00000000010', BRN/NRIC of 'NA')"
+            ),
+            'general_public_requires_004': self.env._(
+                "TIN 'EI00000000010' (General Public / Consolidated e-Invoice) with BRN/NRIC of 'NA' requires "
+                "classification code '004' on every invoice line."
             ),
         }
 
@@ -746,6 +767,33 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         refunded_document = invoice.reversed_entry_id._get_active_myinvois_document()
         is_refund = is_paid and has_payments
         return is_refund, refunded_document
+
+    @api.model
+    def _l10n_my_edi_get_prepaid_amount(self, invoice):
+        """ Compute the amount of the invoice that was genuinely paid in advance.
+
+        LHDN only recognizes a reconciled payment as a deposit/prepayment if it was made strictly before the
+        invoice date; a payment made on or after the invoice date is a regular settlement, not a prepayment.
+        Additionally, LHDN never accepts a PayableAmount of 0, so a 100% advance payment must not be reported
+        as a prepayment either: in that case, the full invoice amount is reported as payable instead.
+        Credit/debit notes reconciled against the invoice are not prepayments.
+        """
+        if not invoice.invoice_date:
+            return 0.0
+
+        invoice_partials, exchange_diff_moves = invoice._get_reconciled_invoices_partials()
+        prepaid_amount = sum(
+            amount
+            for partial, amount, aml in invoice_partials
+            if (
+                aml.move_id.id not in exchange_diff_moves
+                and aml.move_id.move_type not in ('out_refund', 'in_refund')
+                and aml.date and aml.date < invoice.invoice_date
+            )
+        )
+        if invoice.currency_id.compare_amounts(prepaid_amount, invoice.amount_total) >= 0:
+            return 0.0
+        return prepaid_amount
 
     @api.model
     def _l10n_my_edi_get_formatted_phone_number(self, number):

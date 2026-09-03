@@ -13,15 +13,18 @@
 # Jasmina Macur <jasmina@hbs.si>, 2022
 # Martin Trigaux, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:35+0000\n"
-"PO-Revision-Date: 2025-11-08 19:17+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-08 07:20+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "hr_recruitment/sl/>\n"
 "Language: sl\n"
@@ -30,7 +33,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
@@ -70,6 +73,7 @@ msgstr "<b>Povlecite to kartico</b>, da ga kvalificirate za prvi razgovor."
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
+#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "    Hello,\n"
@@ -162,6 +166,96 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Pozdravljeni,\n"
+"    <br/><br/>\n"
+"    Potrjujemo, da smo uspešno prejeli vašo prijavo za delovno mesto\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-"
+"out=\"object.job_id.name or ''\">Izkušen razvijalec</strong></a>\" pri "
+"<strong t-out=\"object.company_id.name or ''\">Vaše podjetje</strong>.\n"
+"    <br/><br/>\n"
+"    Kmalu se vam bomo oglasili.\n"
+"\n"
+"    <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"        <a t-att-href=\"object.job_id.website_url\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Opis delovnega mesta</a>\n"
+"    </div>\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    <t t-if=\"object.user_id\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Vaša kontaktna oseba:</strong></"
+"h3>\n"
+"        <p>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            <span>E-pošta: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-"
+"123-4567</t></span>\n"
+"        </p>\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    </t>\n"
+"\n"
+"    <h3 style=\"color:#9A6C8E;\"><strong>Kaj je naslednji korak?</strong></"
+"h3>\n"
+"    Na prijave običajno <strong>odgovorimo v nekaj dneh.</strong><br/><br/>\n"
+"    Če želite <strong>hitrejše povratne informacije, se lahko\n"
+"    obrnete na nas</strong> ali če od nas ne prejmete novic\n"
+"    dovolj hitro (samo odgovorite na to e-pošto).\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"    <t t-set=\"location\" t-value=\"''\"/>\n"
+"    <t t-if=\"object.job_id.address_id.name\">\n"
+"        <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street\">\n"
+"        <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street2\">\n"
+"        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago "
+"(RM)</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.city\">\n"
+"        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.zip\">\n"
+"        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -230,10 +324,10 @@ msgstr ""
 "    <div style=\"font-size: 11px; color: grey;\">\n"
 "        <t t-if=\"object.user_id\">\n"
 "            -- <br/>\n"
-"            <strong t-out=\"object.user_id.name or ''\">Tomaž Admin</"
-"strong><br/>\n"
-"            Email: <t t-out=\"object.user_id.email or "
-"''\">admin@yourcompany.example.com</t><br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Tomaž Admin</strong>"
+"<br/>\n"
+"            Email: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t><br/>\n"
 "            Phone: <t t-out=\"object.user_id.phone or ''\">01 123-4567</t>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
@@ -288,15 +382,15 @@ msgstr ""
 "                -- <br/>\n"
 "                <strong t-out=\"object.user_id.name or ''\">Marko Demo</"
 "strong><br/>\n"
-"                Email: <t t-out=\"object.user_id.email or "
-"''\">mark.brown23@example.com</t><br/>\n"
-"                Telefon: <t t-out=\"object.user_id.phone or ''\">01 "
-"123-4567</t>\n"
+"                Email: <t t-out=\"object.user_id.email or ''\">"
+"mark.brown23@example.com</t><br/>\n"
+"                Telefon: <t t-out=\"object.user_id.phone or ''\">01 123-"
+"4567</t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                -- <br/>\n"
-"                <t t-out=\"object.company_id.name or ''\">VašePodjetje</"
-"t><br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">VašePodjetje</t>"
+"<br/>\n"
 "               Kadrovska ekipa<br/>\n"
 "            </t>\n"
 "        </div>\n"
@@ -306,6 +400,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"text-align: center\">\n"
@@ -411,6 +506,110 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"text-align: center\">\n"
+"        <h2>Čestitamo!</h2>\n"
+"        <div style=\"color:grey;\">Vaš življenjepis je bil pozitivno "
+"ocenjen.</div>\n"
+"    </div>\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Pravkar smo pregledali vaš življenjepis in pritegnil je našo\n"
+"        pozornost. Ker menimo, da bi bili lahko odlični za to\n"
+"        delovno mesto, je bila vaša prijava uvrščena v ožji izbor za\n"
+"        klic ali razgovor.\n"
+"        <br/><br/>\n"
+"        <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"            <a t-att-href=\"object.job_id.website_url\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Opis delovnega mesta</a>\n"
+"        </div>\n"
+"\n"
+"        <t t-if=\"object.user_id\">\n"
+"            Kmalu vas bo kontaktiral/-a:<br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            <span>E-pošta: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-"
+"123-4567</t></span>\n"
+"            <br/><br/>\n"
+"        </t>\n"
+"        Se vidimo kmalu,\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            -- <br/>\n"
+"            Ekipa za kadrovanje\n"
+"            <t t-if=\"'website_url' in object.job_id and hasattr"
+"(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                Odkrijte <a href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\">vsa naša prosta delovna mesta</a>.<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Kaj je naslednji korak?</strong>"
+"</h3>\n"
+"        Običajno <strong>odgovorimo na prijave v nekaj dneh</strong>.\n"
+"        <br/><br/>\n"
+"        Naslednji korak je klic ali sestanek v naših pisarnah.\n"
+"        <br/>\n"
+"        Če želite hitrejše <strong>povratne informacije,\n"
+"        nas lahko brez zadržkov kontaktirate</strong> ali če od nas\n"
+"        ne prejmete dovolj hitro nobenih novic (preprosto odgovorite na to e-"
+"pošto).\n"
+"        <br/>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"        <t t-set=\"location\" t-value=\"''\"/>\n"
+"        <t t-if=\"object.job_id.address_id.name\">\n"
+"            <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street\">\n"
+"            <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"            <t t-set=\"location\" t-"
+"value=\"object.job_id.address_id.street\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.street2\">\n"
+"            <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, "
+"Santiago (RM)</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.city\">\n"
+"            <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>"
+",\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
+"        </t>\n"
+"        <t t-if=\"object.job_id.address_id.zip\">\n"
+"            <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"        <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br/>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
+"        </t>\n"
+"        <br/>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -424,9 +623,11 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-2x fa-clock-o\" role=\"img\" aria-label=\"Activities\"/>"
 msgstr ""
+"<i class=\"fa fa-2x fa-clock-o\" role=\"img\" aria-label=\"Dejavnosti\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -435,8 +636,9 @@ msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "<i class=\"fa fa-user fa-2x\" title=\"new_applications_icon\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-user fa-2x\" title=\"new_applications_icon\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -483,8 +685,9 @@ msgstr "<span invisible=\"not salary_proposed_extra\"> + </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "<span> new applications</span>"
-msgstr ""
+msgstr "<span> nove prijave</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -543,13 +746,15 @@ msgstr "Aktivnosti"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Aktivnosti od"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activity_count
+#, fuzzy
 msgid "Activity Count"
-msgstr ""
+msgstr "Število dejavnosti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -635,8 +840,9 @@ msgstr "Dodaj novo oznako"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "Add applicant(s) to the pool"
-msgstr ""
+msgstr "Dodajte prijavitelje v skupino"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_job_add_applicants
@@ -650,8 +856,9 @@ msgstr "Dodajte kandidate v nabor talentov"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Add private notes about this applicant..."
-msgstr ""
+msgstr "Dodajte zasebne opombe o tem kandidatu..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -868,8 +1075,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email or phone or mobile"
-msgstr ""
-"Aplikacije z istim e-poštnim naslovom, telefonom ali mobilnim telefonom"
+msgstr "Aplikacije z istim e-poštnim naslovom, telefonom ali mobilnim telefonom"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__create_date
@@ -999,8 +1205,9 @@ msgstr "Po delovnih mestih"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_talent_pools
+#, fuzzy
 msgid "By Talent Pools"
-msgstr ""
+msgstr "Po bazenih talentov"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -1171,8 +1378,9 @@ msgstr "Ustvari kader"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_talent_pool.py:0
+#, fuzzy
 msgid "Create Talent"
-msgstr ""
+msgstr "Ustvari talent"
 
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_res_partner
@@ -1258,21 +1466,28 @@ msgstr "Custom Bounced Message"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__rotting_threshold_days
+#, fuzzy
 msgid ""
 "Day count before applicants in this stage become stale.         Set to 0 to "
 "disable.  Changing this parameter will not affect the rotting status/date of "
 "resources last updated before this change."
 msgstr ""
+"Število dni, preden kandidati v tej fazi postanejo zastareli. Nastavite na "
+"0, če želite onemogočiti.  Spreminjanje tega parametra ne bo vplivalo na "
+"status/zastaranje kandidatov, ki so bili nazadnje posodobljeni pred to "
+"spremembo."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__rotting_days
+#, fuzzy
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Število dni od zadnje posodobitve tega vira"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rotting_days
+#, fuzzy
 msgid "Days Rotting"
-msgstr ""
+msgstr "Dnevi zastaranja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__day_close
@@ -1286,8 +1501,9 @@ msgstr "Dni do odprtja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__rotting_threshold_days
+#, fuzzy
 msgid "Days to rot"
-msgstr ""
+msgstr "Dni do zastaranja"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_defaults
@@ -1505,13 +1721,15 @@ msgstr "Podvoji"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids_domain
+#, fuzzy
 msgid "Duplicate Applicant Ids Domain"
-msgstr ""
+msgstr "Domena ID-jev podvojenih kandidatov"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids
+#, fuzzy
 msgid "Duplicate Applications"
-msgstr ""
+msgstr "Podvojene aplikacije"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
@@ -1535,8 +1753,9 @@ msgstr "Email vzdevek"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#, fuzzy
 msgid "Email Body..."
-msgstr ""
+msgstr "Vsebina e-pošte..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
@@ -1632,8 +1851,9 @@ msgstr "Pričakovano"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__expected_degree
+#, fuzzy
 msgid "Expected Degree"
-msgstr ""
+msgstr "Pričakovana izobrazba"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__expected_employee
@@ -2042,8 +2262,9 @@ msgstr "Lokacija zaposlitve"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "Job Page"
-msgstr ""
+msgstr "Stran delovnega mesta"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
@@ -2088,8 +2309,9 @@ msgstr "Lastnosti opravila"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__job_source_ids
+#, fuzzy
 msgid "Job Source"
-msgstr ""
+msgstr "Vir delovnega mesta"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
@@ -2133,8 +2355,9 @@ msgstr "Veljaven Kanban"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__legend_waiting
+#, fuzzy
 msgid "Kanban Waiting"
-msgstr ""
+msgstr "Kanban Čakanje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
@@ -2406,8 +2629,9 @@ msgstr "Novo zaposleni zaposleni"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_talent_new
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#, fuzzy
 msgid "New Talent"
-msgstr ""
+msgstr "Nov talent"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_tree_activity
@@ -2458,8 +2682,9 @@ msgstr "V skupini še ni talentov"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "No applications found."
-msgstr ""
+msgstr "Ni najdenih prošenj."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -2524,8 +2749,9 @@ msgstr "Število novih aplikacij v toku (običajno na prvem koraku toka)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__open_application_count
+#, fuzzy
 msgid "Number of applications that are still ongoing (not hired or refused)"
-msgstr ""
+msgstr "Število prijav, ki so še v teku (niso izbrane ali zavrnjene)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -2596,13 +2822,15 @@ msgstr "Spletna objava"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__open_application_count
+#, fuzzy
 msgid "Open Application Count"
-msgstr ""
+msgstr "Število odprtih prošenj"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_view_tree_inherit
+#, fuzzy
 msgid "Open Applications"
-msgstr ""
+msgstr "Odprte prošnje"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_force_thread_id
@@ -2618,12 +2846,17 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__lang
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__lang
+#, fuzzy
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the main partner's language will be used. This should "
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"Izbirni jezik prevoda (koda ISO), ki se izbere pri pošiljanju e-pošte. Če ni "
+"nastavljen, bo uporabljen jezik glavnega partnerja. To bi moral biti "
+"običajno izraz z nadomestnim mestom, ki zagotavlja ustrezen jezik, npr. {{ "
+"object.partner_id.lang }}."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2633,8 +2866,9 @@ msgstr "Ali pa se o tem kandidatu pogovorite na samem s sodelavci."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__legend_waiting
+#, fuzzy
 msgid "Orange Kanban Label"
-msgstr ""
+msgstr "Oranžna kanban oznaka"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2863,8 +3097,9 @@ msgstr "Datum zavrnitve"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates
+#, fuzzy
 msgid "Refuse Duplicate Applications"
-msgstr ""
+msgstr "Zavrni podvojene aplikacije"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2977,8 +3212,9 @@ msgstr "Vsebina življenjepisa"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_rotting
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#, fuzzy
 msgid "Rotting"
-msgstr ""
+msgstr "Zastareli"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3054,8 +3290,9 @@ msgstr "Izid"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_score_range
+#, fuzzy
 msgid "Score should be between 0 and 100%"
-msgstr ""
+msgstr "Ocena mora biti med 0 in 100%"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -3074,8 +3311,9 @@ msgstr "Drugi intervju"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Select the campaign the applicant was part of"
-msgstr ""
+msgstr "Izberite kampanjo, v kateri je bil kandidat"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__address_id
@@ -3088,13 +3326,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Select the way applicant found the offer"
-msgstr ""
+msgstr "Izberite način, kako je kandidat našel ponudbo"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Select where the applicant comes from"
-msgstr ""
+msgstr "Izberite, od kod prihaja kandidat"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3134,8 +3374,9 @@ msgstr "Med postopkom zaposlovanja pošljite kandidatu anketo za razgovor"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "Send applications to"
-msgstr ""
+msgstr "Pošljite prošnje na"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
@@ -3179,8 +3420,10 @@ msgstr "Nastavitve"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#, fuzzy
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Prikaži vse zapise, pri katerih je datum naslednje aktivnosti že pretekel"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__source_id
@@ -3222,13 +3465,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#, fuzzy
 msgid "Specify Refused Applicants..."
-msgstr ""
+msgstr "Določite zavrnjene kandidate..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Spontaneous application"
-msgstr ""
+msgstr "Prosta prijava"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3358,14 +3603,16 @@ msgstr "Bazeni talentov"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_talent_new
+#, fuzzy
 msgid "Talent created"
-msgstr ""
+msgstr "Kandidat ustvarjen"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "Talent must belong to at least one Talent Pool."
-msgstr ""
+msgstr "Talent mora pripadati vsaj eni skupini talentov."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
@@ -3785,6 +4032,13 @@ msgstr ""
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
+msgid "You cannot duplicate the talent(s)."
+msgstr "Talentov ni mogoče podvojiti."
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_applicant.py:0
 msgid "You have been assigned as an interviewer for %s"
 msgstr "Dodeljeni ste bili kot anketar za %s"
 
@@ -3847,8 +4101,9 @@ msgstr "npr. Vodja prodaje"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "e.g. Trainee"
-msgstr ""
+msgstr "npr. Pripravnik"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
@@ -3898,13 +4153,15 @@ msgstr "identifikacija"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "in<br/>progress"
-msgstr ""
+msgstr "v<br/>teku"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "new<br/>applications"
-msgstr ""
+msgstr "nove<br/>prošnje"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -3914,10 +4171,12 @@ msgstr "ali"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
+#, fuzzy
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
 msgstr ""
+"Pošlji e-pošto po tem datumu. Ta datum se obravnava kot v časovnem pasu UTC."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
@@ -3927,8 +4186,9 @@ msgstr "bazen talentov"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "to<br/>recruit"
-msgstr ""
+msgstr "za<br/>zaposlitev"
 
 #~ msgid ""
 #~ "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "

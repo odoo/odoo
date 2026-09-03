@@ -2,6 +2,7 @@
 
 from odoo.exceptions import AccessError, MissingError
 from odoo.http import request, route
+from odoo.tools.misc import str2bool
 
 from odoo.addons.sale.controllers import portal
 
@@ -38,7 +39,7 @@ class CustomerPortal(portal.CustomerPortal):
             return
 
         if input_quantity is not False:
-            quantity = input_quantity
+            quantity = max(input_quantity, 0)
         else:
             number = -1 if remove else 1
             quantity = max((order_line.product_uom_qty + number), 0)
@@ -48,4 +49,11 @@ class CustomerPortal(portal.CustomerPortal):
             combo_item_lines = order_line._get_linked_lines().filtered('combo_item_id')
             combo_item_lines.update({'product_uom_qty': quantity})
 
-        order_line.product_uom_qty = quantity
+        with self.env.protecting(
+            [order_line._fields["discount"], order_line._fields["price_unit"]], order_line
+        ):
+            order_line.product_uom_qty = quantity
+
+        disabled = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.disable_sale_update'), default=False)
+        if not disabled and order_sudo.has_active_pricelist:
+            order_line._compute_price_unit()

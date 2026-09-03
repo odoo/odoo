@@ -2,7 +2,8 @@
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
-from odoo.tests import Form
+from odoo.tests import Form, tagged
+from odoo import Command
 
 
 class TestMrpAnalyticAccount(TransactionCase):
@@ -427,9 +428,9 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
 
     def test_mandatory_analytic_plan_production(self):
         """
-        Tests that the MO can only generate AALs if it is supposed to.
-        ie. The MO is producing the product and there is a project linked to the MO that has at least one analytic plan set,
-        and all its mandatory plans set (the ones that are constrained by the 'Manufacturing Order' domain).
+        Tests that the MO cannot be confirmed if the linked project does not
+        have an analytic account set on all plans mandatory for the
+        'Manufacturing Order' business domain.
         """
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
         self.applicability.business_domain = 'manufacturing_order'
@@ -449,11 +450,9 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo_form.product_qty = 1
         mo_form.project_id = self.project
         mo = mo_form.save()
-        mo.action_confirm()
-        self.assertTrue(mo)
 
-        with self.assertRaises(ValidationError):
-            mo.button_mark_done()
+        with self.assertRaisesRegex(ValidationError, "The Project linked to the Manufacturing Order is missing a mandatory distribution"):
+            mo.action_confirm()
 
     def test_bom_aal_generation(self):
         """ This test ensure that when a project is set on a BOM, the aal are correctly generated when the workorder of
@@ -491,3 +490,46 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         mo.action_confirm()
         mo.button_mark_done()
         self.assertEqual(mo.move_raw_ids.analytic_account_line_ids.category, 'manufacturing_order')
+
+
+@tagged('post_install', '-at_install')
+class TestAnalyticAccountTimesheet(TestMrpAnalyticAccount):
+    def test_analytic_account_access(self):
+        """ This test make sure that a user can scrap an order even without accounting rights """
+        if not self.env['ir.module.module'].search([('name', '=', 'timesheet_grid'), ('state', '=', 'installed')]):
+            self.skipTest("timesheet_grid is not installed, the access error won't trigger")
+
+        test_user = self.env['res.users'].create({
+            'name': 'Test MRP User',
+            'login': 'test_mrp_user',
+            'group_ids': [Command.set([
+                self.ref('mrp.group_mrp_user'),
+                self.ref('project.group_project_user'),
+                self.ref('hr_timesheet.group_hr_timesheet_approver')
+            ])],
+        })
+
+        quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+                'product_id': self.component.id,
+                'inventory_quantity': 10,
+                'location_id': self.env.ref("stock.warehouse0").lot_stock_id.id,
+            })
+        quant.action_apply_inventory()
+
+        def _create_confirmed_mo():
+            mo_form = Form(self.env['mrp.production'])
+            mo_form.product_id = self.product
+            mo_form.bom_id = self.bom
+            mo_form.product_qty = 1.0
+            mo_form.project_id = self.project
+            mo = mo_form.save()
+            mo.action_confirm()
+            return mo
+
+        _create_confirmed_mo().button_mark_done()
+        mo2 = _create_confirmed_mo()
+        self.env['stock.scrap'].with_user(test_user).create({
+            'product_id': self.component.id,
+            'scrap_qty': 1.0,
+            'production_id': mo2.id,
+        }).action_validate()

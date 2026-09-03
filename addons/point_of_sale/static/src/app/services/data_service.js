@@ -26,6 +26,7 @@ export class PosData {
         this.custom = {};
         this.syncInProgress = false;
         this.mutex = markRaw(new Mutex());
+        this.indexedDBMutex = markRaw(new Mutex());
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
@@ -41,9 +42,11 @@ export class PosData {
             unsyncData: [],
         });
 
-        if (!navigator.onLine) {
-            await this.checkConnectivity();
-        }
+        // UUIDs of paid orders written to IndexedDB but not yet confirmed synced to the server.
+        // Used by the beforeunload guard to prevent data loss on accidental page close/reload.
+        this.localUnsyncedPaidOrderUuids = new Set();
+
+        await this.checkConnectivity();
 
         this.initializeWebsocket();
         await this.initializeDeviceIdentifier();
@@ -147,11 +150,19 @@ export class PosData {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
+            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve, this.dialog);
         });
     }
 
     async synchronizeLocalDataInIndexedDB() {
+        return this.indexedDBMutex.exec(async () => await this._synchronizeLocalDataInIndexedDB());
+    }
+
+    /**
+     * Private method that synchronizes local data and state in indexedDB.
+     * DO NOT CALL THIS METHOD DIRECTLY, use synchronizeLocalDataInIndexedDB instead.
+     */
+    async _synchronizeLocalDataInIndexedDB() {
         // This methods will synchronize local data and state in indexedDB. This methods is mostly
         // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
         // in the frontend and are not loaded from the backend.
@@ -218,6 +229,40 @@ export class PosData {
                     }
                     if (!dataToKeep[model] || !dataToKeep[model].includes(record[key])) {
                         keysToDelete.push(record[key]);
+                    }
+                }
+
+                if (model === "pos.order") {
+                    const idbOrdersByUuid = new Map(records.map((r) => [r[key], r]));
+                    for (const trackedUuid of [...this.localUnsyncedPaidOrderUuids]) {
+                        const idbRecord = idbOrdersByUuid.get(trackedUuid);
+                        if (!idbRecord) {
+                            logPosMessage(
+                                "IndexedDB",
+                                "localUnsyncedPaidOrderUuids",
+                                `Paid order ${trackedUuid} is flagged but not found in IndexedDB — potential data loss`,
+                                CONSOLE_COLOR,
+                                [],
+                                true
+                            );
+                            continue;
+                        }
+                        const localRecord = this.models[model].get(idbRecord.id);
+                        if (idbRecord.state === "paid" || !localRecord?.isUnsyncedPaid) {
+                            // Remove guard when either:
+                            // - the order is confirmed in IndexedDB in paid state (safe on reload), or
+                            // - the order is no longer unsynced in memory (synced to server).
+                            this.localUnsyncedPaidOrderUuids.delete(trackedUuid);
+                        } else {
+                            logPosMessage(
+                                "IndexedDB",
+                                "localUnsyncedPaidOrderUuids",
+                                `Paid order ${trackedUuid} is in IndexedDB but has state "${idbRecord.state}" instead of "paid"`,
+                                CONSOLE_COLOR,
+                                [],
+                                true
+                            );
+                        }
                     }
                 }
 

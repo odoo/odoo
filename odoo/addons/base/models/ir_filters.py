@@ -10,7 +10,7 @@ class IrFilters(models.Model):
     _order = 'model_id, name, id desc'
 
     name = fields.Char(string='Filter Name', required=True)
-    user_ids = fields.Many2many('res.users', string='Users', ondelete='cascade', help="The users the filter is shared with. If empty, the filter is shared with all users.")
+    user_ids = fields.Many2many('res.users', string='Users', ondelete='cascade', help="The users the filter is shared with. If empty, the filter is shared with all users.", context={'active_test': False})
     domain = fields.Text(default='[]', required=True)
     context = fields.Text(default='{}', required=True)
     sort = fields.Char(default='[]', required=True)

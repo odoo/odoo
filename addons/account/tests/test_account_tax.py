@@ -223,7 +223,6 @@ class TestAccountTax(AccountTestInvoicingCommon):
                 }),
             ],
         })
-        tax_invoice.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_invoice.is_used)
 
         # Account.reconcile is another of transaction
@@ -238,7 +237,6 @@ class TestAccountTax(AccountTestInvoicingCommon):
                 'tax_ids': [Command.set(tax_reconciliation.ids)],
             })],
         })
-        tax_reconciliation.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_reconciliation.is_used)
 
     def test_tax_no_duplicate_in_repartition_line(self):
@@ -376,3 +374,19 @@ class TestAccountTax(AccountTestInvoicingCommon):
                     }),
                 ],
             })
+
+    def test_name_search_self_replacing_taxes(self):
+        tax_1 = self.percent_tax(15.0, name='Name search tax 1')
+        tax_2 = self.percent_tax(15.0, name='Name search tax 2', original_tax_ids=tax_1)
+        result = self.env['account.tax'].with_context(
+            dynamic_fiscal_position_id=self.fiscal_pos_a.id,
+            hide_original_tax_ids=True,
+        ).name_search(name='Name search tax')
+        self.assertEqual(result, [(tax_2.id, tax_2.display_name)])
+
+        tax_1.original_tax_ids = [Command.set((tax_1 | tax_2).ids)]
+        result = self.env['account.tax'].with_context(
+            dynamic_fiscal_position_id=self.fiscal_pos_a.id,
+            hide_original_tax_ids=True,
+        ).name_search(name='Name search tax')
+        self.assertEqual(result, [(tax_1.id, tax_1.display_name)])

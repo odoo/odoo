@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-01-27 10:10+0000\n"
+"PO-Revision-Date: 2026-08-02 13:05+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "product_expiry/nl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product_expiry
 #. odoo-python
@@ -47,8 +47,8 @@ msgid ""
 "invisible=\"not product_expiry_alert\">Expired</span>"
 msgstr ""
 "<span class=\"badge rounded-pill float-end text-bg-warning\" invisible=\"not "
-"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)"
-"\">Bijna vervallen</span>\n"
+"(alert_date &lt;= time.strftime('%Y-%m-%d %H:%M:%S') &lt; expiration_date)\">"
+"Bijna vervallen</span>\n"
 "            <span class=\"badge rounded-pill float-end text-bg-danger\" "
 "invisible=\"not product_expiry_alert\">Vervallen</span>"
 
@@ -118,8 +118,8 @@ msgstr ""
 "In de context van één voorraadlocatie omvat dit de goederen die in deze "
 "locatie of in een van de onderliggende locaties zijn opgeslagen.\n"
 "In de context van één magazijn omvat dit de goederen die zijn opgeslagen in "
-"de voorraadlocatie van dat magazijn of in een van de onderliggende locaties."
-"\n"
+"de voorraadlocatie van dat magazijn of in een van de onderliggende "
+"locaties.\n"
 "In andere gevallen omvat dit de goederen die zijn opgeslagen in elke "
 "voorraadlocatie van het type 'intern'."
 
@@ -220,7 +220,7 @@ msgstr "Vervaldatums weergeven op leveringsbonnen"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__display_name
 #: model:ir.model.fields,field_description:product_expiry.field_stock_rule__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
@@ -313,7 +313,7 @@ msgstr "Voorspelde aantal"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr "Vrije voorraad "
+msgstr "Beschikbare voorraad "
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -411,8 +411,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
 msgstr ""
-"Beschikbare hoeveelheid die nog niet is gereserveerd voor een transfer en "
-"nog vers is, in de standaardmaateenheid van het product"
+"Aanwezige hoeveelheid die nog niet is gereserveerd voor een transfer en nog "
+"vers is, in de standaardmaateenheid van het product"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids

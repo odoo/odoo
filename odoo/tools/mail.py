@@ -25,7 +25,6 @@ from lxml.html import (
     _looks_like_full_html_unicode,
     clean,
     defs,
-    document_fromstring,
     html_parser,
 )
 from werkzeug import urls
@@ -83,6 +82,9 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-language-id',
      'data-bs-toggle',  # support nav-tabs
      ])
+
+defs.link_attrs |= {'xlink:href'}
+
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
     'allow_tags': defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment]),
@@ -294,7 +296,7 @@ def fromstring(html_, base_url=None, parser=None, **kw):
         is_full_html = _looks_like_full_html_bytes(html_)
     else:
         is_full_html = _looks_like_full_html_unicode(html_)
-    doc = document_fromstring(html_, parser=parser, base_url=base_url, **kw)
+    doc = html.document_fromstring(html_, parser=parser, base_url=base_url, **kw)
     if is_full_html:
         return doc, False
     # otherwise, lets parse it out...

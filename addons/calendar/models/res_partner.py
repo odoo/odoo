@@ -48,7 +48,7 @@ class ResPartner(models.Model):
             # Add the events linked to the children of the partner
             for p in self.browse(meetings.keys()):
                 partner = p
-                while partner.parent_id:
+                while partner.parent_id and partner.parent_id in all_partners:
                     partner = partner.parent_id
                     if partner in self:
                         meetings[partner.id] = meetings.get(partner.id, set()) | meetings[p.id]
@@ -86,6 +86,12 @@ class ResPartner(models.Model):
                 'is_organizer': 1 if attendee.partner_id == attendee.event_id.user_id.partner_id else 0,
             })
         return attendees_details
+
+    def _creation_message(self):
+        self.ensure_one()
+        if self.env.context.get('mail_create_log_from_calendar_sync'):
+            return _('Contact created through Calendar sync.')
+        return super()._creation_message()
 
     @api.model
     def _set_calendar_last_notif_ack(self):

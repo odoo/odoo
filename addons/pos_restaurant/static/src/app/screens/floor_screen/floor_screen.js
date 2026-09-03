@@ -179,7 +179,7 @@ export class FloorScreen extends Component {
                     }
                     const potentialParentElem = findIntersectingTableElem(element);
                     if (!potentialParentElem) {
-                        this.alert.add("Link Table");
+                        this.alert.add(_t("Link Table"));
                         return;
                     }
                     this.state.potentialLink = {
@@ -188,7 +188,10 @@ export class FloorScreen extends Component {
                         time: Date.now(),
                     };
                     this.alert.add(
-                        `Link Table ${table.table_number} with ${this.state.potentialLink.parent.table_number}`
+                        _t("Link Table %(sourceTable)s with %(destinationTable)s", {
+                            sourceTable: table.table_number,
+                            destinationTable: this.state.potentialLink.parent.table_number,
+                        })
                     );
                     return;
                 }
@@ -239,8 +242,9 @@ export class FloorScreen extends Component {
                 if (oToTrans) {
                     this.pos.mergeTableOrders(oToTrans.uuid, this.state.potentialLink.parent);
                 }
-                this.pos.data.write("restaurant.table", [table.id], {
+                this.pos.data.callRelated("restaurant.table", "set_parent_id", [table.id], {
                     parent_id: this.state.potentialLink.parent.id,
+                    config_id: this.pos.config.id,
                 });
                 this.state.potentialLink = null;
             },
@@ -714,6 +718,7 @@ export class FloorScreen extends Component {
                         {
                             name: newName,
                             background_color: "white",
+                            active: true,
                             pos_config_ids: [this.pos.config.id],
                         },
                     ],
@@ -770,6 +775,7 @@ export class FloorScreen extends Component {
         const copyFloor = await this.pos.data.create("restaurant.floor", [
             {
                 name: newFloorName,
+                active: true,
                 background_color: "#ACADAD",
                 pos_config_ids: [this.pos.config.id],
             },
@@ -926,7 +932,7 @@ export class FloorScreen extends Component {
     }
     async deleteFloor() {
         const confirmed = await ask(this.dialog, {
-            title: `Removing floor ${this.activeFloor.name}`,
+            title: _t("Removing floor %s", this.activeFloor.name),
             body: _t(
                 "Removing a floor cannot be undone. Do you still want to remove %s?",
                 this.activeFloor.name
@@ -959,8 +965,9 @@ export class FloorScreen extends Component {
         this.pos.models["restaurant.table"].deleteMany(activeFloor.table_ids);
         activeFloor.delete();
 
-        if (this.pos.models["restaurant.floor"].length > 0) {
-            this.selectFloor(this.pos.models["restaurant.floor"].getAll()[0]);
+        const remainingFloors = this.pos.config.floor_ids.filter((f) => f.active);
+        if (remainingFloors.length > 0) {
+            this.selectFloor(remainingFloors[0]);
         } else {
             this.pos.isEditMode = false;
             this.pos.floorPlanStyle = "default";

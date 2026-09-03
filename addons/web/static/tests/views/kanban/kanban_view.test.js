@@ -31,7 +31,7 @@ import {
     runAllTimers,
     tick,
 } from "@odoo/hoot-mock";
-import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onRendered, onWillRender, xml } from "@odoo/owl";
 import {
     MockServer,
     clickKanbanLoadMore,
@@ -5736,7 +5736,7 @@ test("delete a column in grouped on m2o", async () => {
     await validateKanbanColumn();
 
     expect.verifySteps(["name_create", "web_resequence"]);
-    expect(resequencedIDs).toEqual([3, 4], {
+    expect(resequencedIDs).toEqual([3, 6], {
         message: "creating a column should trigger a resequence",
     });
 
@@ -5744,7 +5744,7 @@ test("delete a column in grouped on m2o", async () => {
         queryAll(".o_kanban_group")[2]
     );
 
-    expect(resequencedIDs).toEqual([3, 4], {
+    expect(resequencedIDs).toEqual([3, 6], {
         message: "moving the Undefined column should not affect order of other columns",
     });
 
@@ -5753,7 +5753,7 @@ test("delete a column in grouped on m2o", async () => {
         queryAll(".o_kanban_group")[2]
     );
     expect.verifySteps(["web_resequence"]);
-    expect(resequencedIDs).toEqual([4, 3], {
+    expect(resequencedIDs).toEqual([6, 3], {
         message: "moved column should be resequenced accordingly",
     });
 });
@@ -12797,6 +12797,54 @@ test("scroll on group unfold and progressbar click", async () => {
 });
 
 test.tags("desktop");
+test("unfold group and apply new groupby, simultaneously", async () => {
+    Product._records[1].fold = true;
+
+    const def = new Deferred();
+    onRpc("web_search_read", () => def);
+
+    patchWithCleanup(KanbanRenderer.prototype, {
+        setup() {
+            super.setup();
+            onMounted(() => expect.step("mounted"));
+            onPatched(() => expect.step("patched"));
+        },
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">Record</t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+        searchViewArch: `
+            <search>
+                <filter name="groupby_id" string="Ids" context="{'group_by': 'id'}"/>
+            </search>`,
+    });
+
+    expect(".o_kanban_group").toHaveCount(2);
+    await contains(getKanbanColumn(1)).click();
+    await toggleSearchBarMenu();
+
+    // The kanban renderer will have 2 simultaneous rendering requests:
+    // - one for the group that we opened and that is now loaded
+    // - one for the new groupby
+    // A single rendering will be done, so the renderer will be patched once.
+    // However, we don't want it to crash when trying to scroll to display the
+    // group that is no longer there
+    toggleMenuItem("Ids");
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_group").toHaveCount(4);
+    expect.verifySteps(["mounted", "patched"]); // a single patch ensures that the test is relevant
+});
+
+test.tags("desktop");
 test(`kanban view: press "hotkey" to execute header button action`, async () => {
     mockService("action", {
         doActionButton(params) {
@@ -15022,4 +15070,25 @@ test("add o-navigable to buttons with dropdown-item class and view buttons", asy
 
     await press("arrowdown");
     expect(".o-dropdown--menu .dropdown-item.o-navigable:nth-child(3)").toHaveClass("focus");
+});
+
+test("web_read_group must not load base64 images", async () => {
+    onRpc("web_read_group", async (args) => {
+        expect.step("web_read_group");
+        expect(args.kwargs.context.bin_size).toBe(true);
+        expect(args.kwargs.context.read_group_expand).toBe(true);
+    });
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban default_group_by="product_id">
+                <templates>
+                    <t t-name="card">
+                        <field name="display_name" />
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+    expect.verifySteps(["web_read_group"]);
 });

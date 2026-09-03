@@ -14,6 +14,10 @@ test("avatarAndCssClass", async () => {
 });
 test("selectCashier", async () => {
     const store = await setupPosEnv();
+    // Remove all employees except Administrator (id=2) and Employee1 (id=3)
+    store.models["hr.employee"].forEach(
+        (employee) => ![2, 3].includes(employee.id) && employee.delete()
+    );
     const comp = await mountWithCleanup(CashierName, {});
     const result = await comp.selectCashier();
     expect(result.name).toBe("Employee1");

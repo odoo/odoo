@@ -9,7 +9,7 @@ import docutils.parsers.rst.directives.admonitions
 import docutils.parsers.rst.roles
 
 from odoo.modules.registry import Registry
-from odoo.tests.common import BaseCase, get_db_name, tagged
+from odoo.tests.common import BaseCase, get_db_name, tagged, no_retry
 
 logger = logging.getLogger(__name__)
 
@@ -152,6 +152,7 @@ def extract_docstring_params(doctree):
 
 
 @tagged('-at_install', 'post_install')
+@no_retry
 class TestDocstring(BaseCase):
     @classmethod
     def setUpClass(cls):

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.AttributeSelection">
-        <t t-foreach="props.productTemplate.attribute_line_ids" t-as="attribute" t-key="attribute.id">
+        <t t-foreach="attributesToDisplay" t-as="attribute" t-key="attribute.id">
             <t t-set="availableValues" t-value="availableAttributeValue(attribute)"/>
             <t t-if="availableValues.length">
                 <t t-set="attributeRequired" t-value="attribute.attribute_id.display_type !== 'multi'"/>

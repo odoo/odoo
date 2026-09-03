@@ -2,16 +2,18 @@
 # This file contains the translation of the following modules:
 # * account_peppol
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-09 11:31+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-08 04:17+0000\n"
+"Last-Translator: Žiga Trček <ziga.trcek@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/sl/>\n"
 "Language: sl\n"
@@ -20,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -37,6 +39,13 @@ msgstr " (Demo)"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+#, fuzzy
+msgid " (Missing %(eas)s)"
+msgstr " (Manjka %(eas)s)"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Test)"
 msgstr " (Test)"
 
@@ -48,21 +57,26 @@ msgstr " (brez DDV)"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (no access)"
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid " Expected format: %(expected_format)s."
-msgstr ""
+msgstr " Pričakovana oblika: %(expected_format)s."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+#, fuzzy
+msgid ""
+"%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
+msgstr ""
+"Obdelanih dokumentov Peppol: %(processed)s, izbrisanih dokumentov: %(deleted)"
+"s"
 
 #. module: account_peppol
 #. odoo-python
@@ -72,8 +86,9 @@ msgstr "%s je zahteval prejemanje elektronskih računov na Peppolu."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr ""
+#, fuzzy
+msgid "<b>Authenticate</b>"
+msgstr "<b>Preveri pristnost</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -89,19 +104,25 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "<br/>\n"
 "                            But you are receiving your e-invoices via this "
 "Access Point:"
 msgstr ""
+"<br/>\n"
+"                            Vendar pa svoje e-račune prejemate prek te "
+"dostopne točke:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "<span><strong>Disconnected from Peppol!</strong></span>"
-msgstr ""
+msgstr "<span><strong>Prekinjena povezava s Peppolom!</strong></span>"
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
+#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
 "16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
@@ -189,63 +210,177 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: "
+"16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; "
+"color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"padding: 16px; background-color: white; color: "
+"#454748; border-collapse:separate;\">\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td valign=\"middle\">\n"
+"                                    <span style=\"font-size: 10px;\">"
+"Obvestilo</span>\n"
+"                                    <br/>\n"
+"                                    <span style=\"font-size: 20px; font-"
+"weight: bold;\">\n"
+"                                        Dobrodošli v Peppol\n"
+"                                    </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-"
+"top: 18px;\">\n"
+"                                        <a t-attf-href=\"/odoo/accounting/\" "
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            Pošlji račune\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td valign=\"middle\" align=\"right\">\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    </t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; "
+"border:none; height:1px; margin:16px 0;\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- BODY -->\n"
+"                <tr>\n"
+"                    <td align=\"center\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-"
+"collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td style=\"font-size: 14px;\">\n"
+"                                    <p>Spoštovani <t t-out=\"object.name or "
+"''\">YourCompany</t>,</p>\n"
+"\n"
+"                                    <p>Vaše podjetje smo uspešno dodali v "
+"<strong>omrežje Peppol</strong>.</p>\n"
+"\n"
+"                                    <p>Zdaj lahko <strong>pošiljate<t t-"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> in prejemate</t></"
+"strong> elektronske račune prek Odoo — popolnoma brezplačno.</p>\n"
+"\n"
+"                                    <p>Lep pozdrav,</p>\n"
+"\n"
+"                                    <p style=\"margin-bottom: 24px;\">Ekipa "
+"Odoo</p>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"            "
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A Receipt has been received  for a message that was previously sent by the "
 "MSH generating this error, but the content does not match the message "
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
+"Potrdilo je bilo prejeto  za sporočilo, ki ga je predhodno poslal MSH, ki je "
+"povzročil to napako, vendar vsebina ne ustreza vsebini sporočila (npr. "
+"nekateri del ni bil potrjen, ali pa pripadajoči digest ne ustreza podpisnemu "
+"digestu, za NRR)."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
 msgstr ""
+"Potrdilo za sporočilo, ki ga je predhodno poslal MSH, ki je povzročil to "
+"napako, ni bilo prejeto."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
+msgid "A connection to '%s' already exists."
+msgstr "Povezava do '%s' že obstaja."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
 msgstr ""
+"Prejet je fragment, vendar je bil predhodno prejet fragment z enakimi "
+"vrednostmi za GroupId in FragmentNum"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
+"Prejet je fragment, vendar več kot eno sporočilo fragmenta v skupini "
+"fragmentov določa vrednost za kompresijski element."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
+"Prejet je fragment, vendar več kot eno fragmentno sporočilo v skupini "
+"fragmentov določa vrednost za ta element."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A fragment is received that relates to a group that was previously rejected."
 msgstr ""
+"Prejeti je fragment, ki se nanaša na skupino, ki je bila predhodno zavrnjena."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
 msgstr ""
+"Sporočilna enota v paketu ni bila obdelana, ker je povezana sporočilna enota "
+"v paketu povzročila napako."
 
 #. module: account_peppol
 #. odoo-python
@@ -266,18 +401,24 @@ msgstr "Za prejem dokumentov Peppol je treba uporabiti dnevnik nakupov."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
 msgstr ""
+"Odzivni MSH kaže, da se za odzivno sporočilo uporablja alternativna vezava "
+"MEP."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
 msgstr ""
+"Za FragmentCount je nastavljena vrednost, vendar je predhodno prejeti "
+"fragment imel višjo vrednost."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -302,8 +443,9 @@ msgstr "Čarovnik za pošiljanje premika računa"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_contact_email
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_contact_email
+#, fuzzy
 msgid "Account Peppol Contact Email"
-msgstr ""
+msgstr "Kontaktni e-poštni naslov za Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_user
@@ -324,11 +466,6 @@ msgid "Activate"
 msgstr "Aktiviraj"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "Aktivirajte elektronsko izdajanje računov"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -336,6 +473,7 @@ msgstr "Aktivirajte elektronsko izdajanje računov (prek Peppola)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "Aktiviraj Peppol"
 
@@ -351,23 +489,27 @@ msgstr "Aktiviraj Peppol (Test)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__peppol_activate_self_billing
+#, fuzzy
 msgid "Activate self-billing"
-msgstr ""
+msgstr "Aktiviraj samofakturiranje"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_activate_self_billing_sending
+#, fuzzy
 msgid "Activate self-billing sending"
-msgstr ""
+msgstr "Aktiviraj pošiljanje samofakturiranih računov"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company
+#, fuzzy
 msgid "Active Parent Company"
-msgstr ""
+msgstr "Aktivna nadrejena družba"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__active_parent_company_name
+#, fuzzy
 msgid "Active Parent Company Name"
-msgstr ""
+msgstr "Naziv aktivnega matičnega podjetja"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -382,129 +524,181 @@ msgstr "Omogoči pošiljanje in prejemanje računov prek omrežja Peppol"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Although the message document is well formed and schema valid, some element/"
 "attribute contains a value that could not be recognized and therefore could "
 "not be used by the MSH."
 msgstr ""
+"Čeprav je dokument sporočila pravilno oblikovan in veljavna po shemi, "
+"nekater element/atribut vsebuje vrednost, ki je je bilo ni mogoče "
+"prepoznati, zato je MSH je ni mogel uporabiti."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Although the message document is well formed and schema valid, some element/"
 "attribute value cannot be processed as expected because the related feature "
 "is not supported by the MSH."
 msgstr ""
+"Čeprav je dokument sporočila dobro oblikovan in je shema veljavna, vrednost "
+"nekaterih elementov/atributov ni mogoče obdelati, kot je bilo pričakovano, "
+"ker ustrezna funkcija ni podprta s strani MSH."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Although the message document is well formed and schema valid, some element/"
 "attribute value is inconsistent either with the content of other element/"
 "attribute, or with the processing mode of the MSH, or with the normative "
 "requirements of the ebMS specification."
 msgstr ""
+"Čeprav je sporočilni dokument dobro oblikovan in veljaven glede sheme, je "
+"neka vrednost elementa/atributa nedosledna bodisi glede vsebine drugega "
+"elementa/atributa, bodisi glede načina obdelave MSH ali glede normativnih "
+"zahtev specifikacije ebMS."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Although the message document is well formed and schema valid, the presence "
 "or absence of some element/ attribute is not consistent with the capability "
 "of the MSH, with respect to supported features."
 msgstr ""
+"Čeprav je sporočilni dokument dobro oblikovan in shematsko veljaven, "
+"prisotnost ali odsotnost nekaterih elementov/ atributov ni skladna z "
+"zmogljivostjo MSH glede podprtih funkcij."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Although the message was sent under Guaranteed delivery requirement, the "
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
+"Čeprav je bilo sporočilo poslano pod zahtevo za zagotovljeno dostavo, modul "
+"zanesljivosti ni mogel dobiti zagotovila, da je bilo sporočilo pravilno "
+"dostavljeno, kljub prizadevanjem za ponovno pošiljanje."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
 msgstr ""
+"Posredniški MSH ni uspel usmeriti ebMS sporočila in je prenehal obdelovati "
+"sporočilo."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
 msgstr ""
+"MSH je ugotovil, da je sporočilo poteklo, in ga ne bo poskušal posredovati "
+"naprej ali dostaviti."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "An entry in the routing function is matched that assigns the message to an "
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
 msgstr ""
+"V funkciji usmerjanja je ujemen vnos, ki sporočilo dodeli MPC za prevzem, "
+"vendar posredni MSH ni sposoben shraniti sporočila s tem MPC-jem"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "An error occurred during the decompression."
-msgstr ""
+msgstr "Med dekompresijo je prišlo do napake."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "An error occurred while decompressing the reassembled message."
-msgstr ""
+msgstr "Pri razpakiranju ponovno sestavljenega sporočila je prišlo do napake."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "An incoming message fragment has a a value greater than the known "
 "FragmentCount."
 msgstr ""
+"Prispeli fragment sporočila ima vrednost, ki je večja od znanega "
+"FragmentCount."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "An intermediary MSH has assigned the message to an MPC for pulling and has "
 "successfully stored it. However the intermediary set a limit on the time it "
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
+"Posredniški MSH je sporočilo dodelil v MPC za prevzem in ga uspešno shranil. "
+"Vendar je posrednik določil omejitev časa, koliko časa je bil pripravljen "
+"čakati na prevzem sporočila, in ta omejitev je bila dosežena."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Prišlo je do notranje napake"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__peppol_self_billing_reception_journal_id
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_self_billing_reception_journal_id
+#, fuzzy
 msgid ""
 "Any self-billed invoices / credit notes received via Peppol will be created "
 "in draft in this journal. Defaults to the first sale journal."
 msgstr ""
+"Vsi samofakturirani računi in dobropisi, prejeti prek Peppol, se v tem "
+"dnevniku ustvarijo kot osnutki. Privzeto se uporablja prvi prodajni dnevnik."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+#, fuzzy
+msgid "Authentication canceled"
+msgstr "Preverjanje pristnosti preklicano"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+#, fuzzy
 msgid "Authentication failed"
-msgstr ""
+msgstr "Preverjanje pristnosti ni uspelo"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+#, fuzzy
 msgid "Authentication successful"
-msgstr ""
+msgstr "Avtentikacija uspešna"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -519,14 +713,22 @@ msgid "Available Peppol Sending Methods"
 msgstr "Razpoložljivi načini pošiljanja Peppol"
 
 #. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_ubl
+#, fuzzy
+msgid "Base helpers for UBL"
+msgstr "Osnovni pripomočki za UBL"
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "By clicking the button below:"
-msgstr ""
+msgstr "S klikom na spodnji gumb:"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__can_use_parent_connection
+#, fuzzy
 msgid "Can Use Parent Connection"
-msgstr ""
+msgstr "Lahko uporablja povezavo z matičnim podjetjem"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__receiver
@@ -544,6 +746,8 @@ msgid "Can send, pending registration to receive"
 msgstr "Pošiljanje je možno, za prejemanje je potrebna registracija."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Cancel"
 msgstr "Prekliči"
@@ -639,16 +843,20 @@ msgstr "Kontaktni e-poštni naslov in telefonska številka sta obvezna."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "Could not connect to Proxy Server."
-msgstr ""
+msgstr "Povezava s posredniškim strežnikom ni uspela."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
 msgstr ""
+"Ni bilo mogoče najti XSD, s katerim bi preverili veljavnost dokumenta z "
+"identifikatorjem \"%s\"."
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -693,8 +901,9 @@ msgstr "Demo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
 msgid "Disable the reception."
-msgstr ""
+msgstr "Onemogoči prejemanje."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -708,29 +917,34 @@ msgstr "Prekini povezavo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Disconnect Peppol"
-msgstr ""
+msgstr "Prekini povezavo s Peppolom"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Disconnect this database"
-msgstr ""
+msgstr "Odklopi to bazo podatkov"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
+#, fuzzy
 msgid "Disconnected this branch company peppol configuration from %s."
 msgstr ""
+"Konfiguracija PEPPOL tega podružničnega podjetja je bila odklopljena od %s."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_itsme_login
+#, fuzzy
 msgid "Display Itsme Login"
-msgstr ""
+msgstr "Prikaži prijavo Itsme"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
@@ -748,13 +962,22 @@ msgstr "Prikazani naziv"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_no_auth_buttons
+#, fuzzy
 msgid "Display No Auth Buttons"
-msgstr ""
+msgstr "Prikaži gumbe brez avtentikacije"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__display_use_parent_connection_selection
+#, fuzzy
 msgid "Display Use Parent Connection Selection"
-msgstr ""
+msgstr "Prikaži izbiro uporabe povezave s starševskim podjetjem"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+#, fuzzy
+msgid "Do you want to proceed?"
+msgstr "Ali želite nadaljevati?"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
@@ -765,6 +988,46 @@ msgstr "Identifikator dokumenta"
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_name
 msgid "Document Name"
 msgstr "Naziv dokumenta"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid "Document cancelled successfully"
+msgstr "Dokument je bil uspešno preklican"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid "Document reset to draft successfully"
+msgstr "Dokument je bil uspešno ponastavljen v osnutek"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to cancel this document instead?"
+msgstr ""
+"Dokumentov, poslanih/prejetih prek Peppola, ni mogoče izbrisati.\n"
+"\n"
+"Ali želite ta dokument raje preklicati?"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to reset this document to draft instead?"
+msgstr ""
+"Dokumenti poslani/prejeti prek Peppola ne morejo biti izbrisani.\n"
+"\n"
+"Ali želite ta dokument namesto tega vrniti v osnutek?"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -795,8 +1058,9 @@ msgstr "EDI uporabnik"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "EDI user should be of type Peppol"
-msgstr "EDI uporabnik mora biti tipa Peppol"
+#, fuzzy
+msgid "EDI user should be of one of the following types: %s"
+msgstr "Uporabnik EDI mora biti enega od naslednjih tipov: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -811,8 +1075,9 @@ msgstr "E-pošta"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
 msgid "Enable reception"
-msgstr ""
+msgstr "Omogoči prejem"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__enabled
@@ -833,18 +1098,32 @@ msgstr "Pri ustvarjanju dokumenta EDI je prišlo do napak (format: %s):"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_iap_connector.py:0
+#, fuzzy
 msgid "Failed to connect to Odoo Peppol Proxy."
-msgstr ""
+msgstr "Povezava z Odoo Peppol Proxy ni uspela."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+#, fuzzy
 msgid ""
 "Failed to connect to Peppol Access Point. This might happen if you restored "
 "a database from a backup or copied it without neutralization. To fix this, "
 "please go to Settings > Accounting > Peppol Settings and click on 'Reconnect "
 "this database'."
 msgstr ""
+"Povezave s Peppol Access Point ni bilo mogoče vzpostaviti. Do tega lahko "
+"pride, če ste obnovili podatkovno bazo iz varnostne kopije ali jo kopirali "
+"brez nevtralizacije. Za odpravo tega pojdite v Nastavitve > Računovodstvo > "
+"Nastavitve Peppol in kliknite 'Ponovno poveži to bazo'."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr "Francija – e-izdajanje računov (odobrena platforma)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -866,18 +1145,20 @@ msgstr "Razumem !"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "I accept that Odoo may process my e-invoices,"
-msgstr ""
+msgstr "Sprejmem, da lahko Odoo obdeluje moje e-račune,"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "I reckon I'm allowed to register this company."
-msgstr ""
+msgstr "Menim, da smem registrirati to podjetje."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
@@ -895,23 +1176,31 @@ msgstr "ID"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__peppol_activate_self_billing
+#, fuzzy
 msgid ""
 "If activated, you will be able to send and receive self-billed invoices via "
 "Peppol.You can still disable reception by disabling the self-billing "
 "document types below."
 msgstr ""
+"Če je aktivirano, boste lahko pošiljali in prejemali samofakturirane račune "
+"prek Peppola.Še vedno lahko onemogočite prejemanje z onemogočanjem spodnjih "
+"vrst dokumentov za samofakturiranje."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_activate_self_billing_sending
+#, fuzzy
 msgid ""
 "If activated, you will be able to send vendor bills as self-billed invoices "
 "via Peppol."
 msgstr ""
+"Če je aktivirano, boste lahko račune dobaviteljev pošiljali kot "
+"samofakturirane račune prek Peppola."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "If you don't have Itsme, please contact"
-msgstr ""
+msgstr "Če nimate Itsme, se obrnite na"
 
 #. module: account_peppol
 #. odoo-python
@@ -923,14 +1212,16 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Incoming Accounting Journal"
-msgstr ""
+msgstr "Dnevnik prejetih računov"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Invoice %s is too big to send via peppol (64MB limit)"
-msgstr ""
+#, fuzzy
+msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
+msgstr "Račun %s presega omejitev velikosti 64 MB za pošiljanje prek Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -940,13 +1231,9 @@ msgstr "Pošiljanje računov"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__is_branch_company
+#, fuzzy
 msgid "Is Branch Company"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr ""
+msgstr "Je podružniško podjetje"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__service_json
@@ -987,10 +1274,13 @@ msgstr "V živo"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
 msgstr ""
+"Lastnosti sporočila so bile prisotne v glavi fragmenta SOAP, ki niso bile "
+"določene v %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -1009,30 +1299,45 @@ msgstr "Mobilna številka"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
 msgstr ""
+"Po prejemu prvega fragmenta je minilo več časa kot %s, a vsi preostali "
+"fragmenti še niso bili prejeti."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr ""
+msgstr "Noben UBL dokument ni bil predan storitvi Peppol Outbound Service."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "No valid AS4 participant endpoint were found."
-msgstr ""
+msgstr "Za udeleženca AS4 ni bilo najdenih veljavnih končnih točk."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid "No, Keep It"
+msgstr "Ne, obdrži"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Not enough disk space available to store all (expected) fragments of the "
 "group."
 msgstr ""
+"Na voljo ni dovolj prostora na disku za shranjevanje vseh (pričakovanih) "
+"fragmentov skupine."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__not_registered
@@ -1041,8 +1346,9 @@ msgstr "Ni registrirano"
 
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
+#, fuzzy
 msgid "Notification email for peppol registration state update"
-msgstr ""
+msgstr "Obvestilo po e-pošti za posodobitev stanja registracije Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1121,18 +1427,20 @@ msgstr "PEPPOL: posodobi status udeleženca"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
+#, fuzzy
 msgid "PEPPOL: webhook keep alive"
-msgstr ""
+msgstr "PEPPOL: ohranjanje delovanja webhooka"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
 msgid "Parent Company"
-msgstr ""
+msgstr "Nadrejena družba"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid_format
+#, fuzzy
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "Partner ne more prejeti formata"
 
 #. module: account_peppol
 #. odoo-python
@@ -1142,13 +1450,15 @@ msgstr "Partner nima veljavne konfiguracije Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
+#, fuzzy
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "Partner ni v Peppolu"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
+#, fuzzy
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "Partner je na Peppolu"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__processing
@@ -1163,18 +1473,21 @@ msgstr "Navesti je treba naslov Peppola."
 
 #. module: account_peppol
 #: model:ir.actions.client,name:account_peppol.action_peppol_auth_callback
+#, fuzzy
 msgid "Peppol Auth Callback action"
-msgstr ""
+msgstr "Dejanje povratnega klica avtentikacije Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_can_connect_data
+#, fuzzy
 msgid "Peppol Can Connect Data"
-msgstr ""
+msgstr "Podatki o možnosti povezave s Peppolom"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
+#, fuzzy
 msgid "Peppol Can Send"
-msgstr ""
+msgstr "Peppol lahko pošlje"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
@@ -1183,8 +1496,23 @@ msgstr "Čarovnik za konfiguracijo Peppola"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Peppol Contact Email"
-msgstr ""
+msgstr "Kontaktni e-poštni naslov Peppol"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+#, fuzzy
+msgid "Peppol Documents Cannot Be Deleted"
+msgstr "Dokumentov Peppol ni mogoče izbrisati"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid "Peppol Documents: Cannot Delete Invoice"
+msgstr "Peppol dokumenti: Računa ni mogoče izbrisati"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1197,10 +1525,13 @@ msgstr "Končna točka Peppol"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
 "%(error_message)s"
 msgstr ""
+"Napaka Peppol [koda=%(error_code)s]: %(error_subject)s\n"
+"%(error_message)s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
@@ -1217,35 +1548,53 @@ msgstr "Peppol ID"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "Peppol ID should be different from main company."
-msgstr ""
+msgstr "Peppol ID mora biti različen od glavnega podjetja."
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
+#, fuzzy
+msgid "Peppol Is Sent"
+msgstr "Poslano prek PEPPOL"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
+#, fuzzy
 msgid "Peppol Metadata"
-msgstr ""
+msgstr "Peppol metapodatki"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_parent_company_id
+#, fuzzy
 msgid "Peppol Parent Company"
-msgstr ""
+msgstr "Nadrejena družba Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_parent_company_name
+#, fuzzy
 msgid "Peppol Parent Company Name"
-msgstr ""
+msgstr "Naziv matičnega podjetja Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_participation_role
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Peppol Participation Role"
-msgstr ""
+msgstr "Vloga sodelovanja Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "Peppol Purchase Journal"
 msgstr "Peppol Dnevnik nakupov"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
+#, fuzzy
+msgid "Peppol Purchase Journal Required"
+msgstr "Peppol Dnevnik nakupov je zahtevan"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1264,14 +1613,16 @@ msgstr "Peppol Storitev"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
+#, fuzzy
 msgid "Peppol Use Parent Company"
-msgstr ""
+msgstr "Uporabi matično družbo za Peppol"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_common.py:0
+#, fuzzy
 msgid "Peppol document UUID: %s"
-msgstr ""
+msgstr "UUID dokumenta Peppol: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details
@@ -1290,13 +1641,15 @@ msgstr "Peppolov e-naslov (EAS)"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_common.py:0
+#, fuzzy
 msgid "Peppol invoice received"
-msgstr ""
+msgstr "Prejet Peppol račun"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata_updated_at
+#, fuzzy
 msgid "Peppol meta updated at"
-msgstr ""
+msgstr "Peppol metapodatki posodobljeni ob"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_verification_state
@@ -1318,8 +1671,9 @@ msgstr "Peppol opozorila"
 
 #. module: account_peppol
 #: model:mail.template,name:account_peppol.mail_template_peppol_registration
+#, fuzzy
 msgid "Peppol: Registration update"
-msgstr ""
+msgstr "Peppol: Posodobitev registracije"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1329,10 +1683,13 @@ msgstr "Telefon"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
+#, fuzzy
 msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Vnesite mobilno številko v pravilni mednarodni obliki.\n"
+"Na primer: +32123456789, kjer je +32 klična oznaka države."
 
 #. module: account_peppol
 #. odoo-python
@@ -1349,15 +1706,18 @@ msgstr "Namestite knjižnico telefonskih številk."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "Please select a country for your company."
-msgstr ""
+msgstr "Prosimo, izberite državo za vašo družbo."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+#, fuzzy
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
 msgstr ""
+"Prosimo, nastavite dnevnik za Peppol račune na %s pred prejemom dokumentov."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__contact_email
@@ -1368,12 +1728,17 @@ msgstr "Glavni kontaktni e-poštni naslov"
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__contact_email
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_contact_email
+#, fuzzy
 msgid ""
 "Primary contact email for Peppol connection related communications and "
 "notifications.\n"
 "In particular, this email is used by Odoo to reconnect your Peppol account "
 "in case of database change."
 msgstr ""
+"Primarni kontaktni e-poštni naslov za komunikacijo in obvestila, povezane s "
+"povezavo Peppol.\n"
+"Ta e-poštni naslov Odoo uporablja za ponovno povezavo vašega računa Peppol v "
+"primeru spremembe baze podatkov."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__proxy_type
@@ -1383,10 +1748,13 @@ msgstr "Vrsta posrednika (Proxy-ja)"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
 msgstr ""
+"Napaka proxyja, prosimo, kontaktirajte Odoo (manjka \"%s\" - preverite, da "
+"je bilo naloženo iz konfiguracijskega panela)"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1405,8 +1773,9 @@ msgstr "Prejemajte svoje elektronske račune v Odoo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Reconnect this database"
-msgstr ""
+msgstr "Ponovno poveži to bazo podatkov"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__smp_registration
@@ -1415,8 +1784,9 @@ msgstr "Registrirajte se kot prejemnik"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_self
+#, fuzzy
 msgid "Register this company on peppol"
-msgstr ""
+msgstr "Registriraj to podjetje v PEPPOL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1446,31 +1816,42 @@ msgid "Remove from Peppol"
 msgstr "Odstrani iz Peppola"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid "Reset to draft"
+msgstr "Ponastavi v osnutek"
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Save"
 msgstr "Shrani"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
+#, fuzzy
 msgid "Selected Company"
-msgstr ""
+msgstr "Izbrano podjetje"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "Selected authentication method is not available."
-msgstr ""
+msgstr "Izbrana metoda preverjanja pristnosti ni na voljo."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
 msgid "Self Billing"
-msgstr ""
+msgstr "Samofakturiranje"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__peppol_self_billing_reception_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_self_billing_reception_journal_id
+#, fuzzy
 msgid "Self-Billing reception journal"
-msgstr ""
+msgstr "Dnevnik prejema samofakturiranja"
 
 #. module: account_peppol
 #. odoo-python
@@ -1480,23 +1861,28 @@ msgstr "Pošlji"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "Send electronic invoices, and receive bills automatically via Peppol."
 msgstr ""
+"Pošiljajte elektronske račune in samodejno prejemajte račune prek Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__use_parent_connection_selection__use_parent
+#, fuzzy
 msgid "Send from parent company"
-msgstr ""
+msgstr "Pošlji iz matičnega podjetja"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_and_receiving
+#, fuzzy
 msgid "Sending & Receiving"
-msgstr ""
+msgstr "Pošiljanje in prejemanje"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__peppol_participation_role__sending_only
+#, fuzzy
 msgid "Sending Only"
-msgstr ""
+msgstr "Samo pošiljanje"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__service_ids
@@ -1521,32 +1907,43 @@ msgstr "Izpuščeno"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Nekaterih prilog ni bilo mogoče poslati z XML-jem:"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "Some reliability function as implemented by the Reliability module, is not "
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
+"Nekatera funkcija zanesljivosti, kot jo izvaja zanesljivostni modul, ni "
+"operativna, ali pa je stanje zanesljivosti, povezano s tem zaporedjem "
+"sporočil, neveljavno."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
 msgid ""
 "Some service support migration keys. If this is your case you can enter your "
 "migration key below.\n"
 "                            If not, you should de-register from your current "
 "service provider and register with Odoo afterward."
 msgstr ""
+"Nekateri ponudniki storitev podpirajo migracijske ključe. Če je to vaš "
+"primer, lahko spodaj vnesete migracijski ključ.\n"
+"                            Če ne, se morate odjaviti od svojega trenutnega "
+"ponudnika storitev in nato registrirati pri Odoo."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "Something went wrong with your request"
-msgstr ""
+msgstr "Nekaj je šlo narobe z vašo zahtevo"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1555,11 +1952,16 @@ msgstr "Test"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid ""
 "Test mode allows sending e-invoices through the test Peppol network.<br/>\n"
 "                            By clicking the button below I accept that Odoo "
 "may process my e-invoices."
 msgstr ""
+"Testni način omogoča pošiljanje e-računov prek testnega omrežja Peppol.<br/>"
+"\n"
+"                            S klikom spodnjega gumba sprejemam, da lahko "
+"Odoo obdeluje moje e-račune."
 
 #. module: account_peppol
 #. odoo-python
@@ -1570,47 +1972,61 @@ msgstr "Ta država ni na voljo za Peppol."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The MSH is experiencing temporary or permanent failure in trying to open a "
 "transport connection with a remote MSH."
 msgstr ""
+"MSH ima začasno ali trajno napako pri poskusu vzpostavitve transportne "
+"povezave z oddaljenim MSH."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The MSH is unable to resolve an external payload reference (i.e. a Part that "
 "is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
+"MSH ne more razrešiti zunanje reference na vsebinski del (tj. Part, ki ni "
+"vsebovan znotraj sporočila ebMS, kot je opredeljen z URI PartInfo/href)."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The Peppol Participant DNS lookup resulted in an URL address that does not "
 "belong to this server."
 msgstr ""
+"Poizvedba DNS udeleženca Peppol je vrnila URL-naslov, ki ne pripada temu "
+"strežniku."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The Peppol Participant cannot receive this document type."
-msgstr ""
+msgstr "Peppol udeleženec ne more prejeti te vrste dokumenta."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The Peppol Participant certificate is invalid."
-msgstr ""
+msgstr "Potrdilo udeleženca Peppol je neveljavno."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The Peppol Participant service group found on his Service Metadata Provider "
 "is invalid."
 msgstr ""
+"Skupina storitev udeleženca Peppol, najdena na njegovem ponudniku "
+"metapodatkov storitev, je neveljavna."
 
 #. module: account_peppol
 #. odoo-python
@@ -1627,40 +2043,50 @@ msgstr "Uporablja se storitev Peppol %s."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The Service Metadata Publisher associated to this participant is not "
 "reachable. url: %s"
 msgstr ""
+"Objavitelj storitvenih metapodatkov, povezan s tem udeležencem, ni "
+"dosegljiv. url: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The UBL document provided to the Peppol Outbound Service is malformed."
 msgstr ""
+"UBL dokument, posredovan storitvi Peppol Outbound Service, je napačno "
+"oblikovan."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The XML document could not be canonicalized."
-msgstr ""
+msgstr "XML dokumenta ni bilo mogoče kanonizirati."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The XML document is not valid according to the XSD Schema."
-msgstr ""
+msgstr "XML dokument ni veljaven glede na XSD-shemo."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The XML document is not valid according to the schematron."
-msgstr ""
+msgstr "XML dokument ni veljaven glede na schematron."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "The database you are trying to connect to is not suitable for Peppol."
-msgstr ""
+msgstr "Podatkovna baza, s katero se poskušate povezati, ni primerna za Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -1671,14 +2097,16 @@ msgstr "Dokumenta ni bilo mogoče najti."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The document could not be sent to the Peppol Participant."
-msgstr ""
+msgstr "Dokumenta ni bilo mogoče poslati udeležencu Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The document could not be validated."
-msgstr ""
+msgstr "Dokumenta ni bilo mogoče validirati."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1689,35 +2117,47 @@ msgstr "Omrežje za e-račune"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
 msgstr ""
+"Glava eb3:Message, ki je bila kopirana v glavo fragmenta, se ne ujema z "
+"glavo eb3:Message v ponovno sestavljenem izvornem sporočilu."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
+"Glava ebMS ni pravilno oblikovana kot dokument XML ali pa ni skladna s "
+"pravili pakiranja ebMS."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The ebMS header or another header (e.g. reliability, security) expected by "
 "the MSH is not compatible with the expected content, based on the associated "
 "P-Mode."
 msgstr ""
+"ebMS glava ali druga glava (npr. zanesljivost, varnost), ki jo pričakuje "
+"MSH, ni združljiva s pričakovano vsebino glede na pripadajoči P-Mode."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
+"Šifrirani podatkovni sklic v glavi Security, namenjen SOAP actorju \"ebms\", "
+"ni bilo mogoče dešifrirati z Varnostnim modulom."
 
 #. module: account_peppol
 #. odoo-python
@@ -1728,6 +2168,32 @@ msgid ""
 msgstr ""
 "Številka končne točke morda ni pravilna. Preverite, ali ste vnesli pravilno "
 "identifikacijsko številko."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+#, fuzzy
+msgid ""
+"The following %s Peppol document(s) will be reset to draft:\n"
+"\n"
+"• %s"
+msgstr ""
+"Naslednji dokumenti Peppol (%s) bodo vrnjeni v osnutek:\n"
+"\n"
+"• %s"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+#, fuzzy
+msgid ""
+"The following %s draft Peppol document(s) will be cancelled:\n"
+"\n"
+"• %s"
+msgstr ""
+"Naslednjih %s osnutkov dokumentov Peppol bo preklicanih:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1744,62 +2210,87 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The href attribute does not reference a valid MIME data part, MIME parts "
 "other than the fragment header and a data part are in the message. are added "
 "or the SOAP Body is not empty."
 msgstr ""
+"Atribut href ne kaže na veljaven MIME podatkovni del, drugi MIME deli razen "
+"glave fragmenta in podatkovnega dela so prisotni v sporočilu, ali pa je SOAP "
+"Body neprazen."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The incoming message could not be decompressed."
-msgstr ""
+msgstr "Vhodno sporočilo ni bilo mogoče dekompresirati."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
 msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Račun je bil poslan v Peppol Access Point. Naslednje priloge so bile poslane "
+"z XML-jem:"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The message does not comply with the AS4 policy."
-msgstr ""
+msgstr "Sporočilo ni skladno s politiko AS4."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The processor determined that the message's security methods, parameters, "
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
+"Procesor je ugotovil, da varnostne metode, parametri, obseg ali druge "
+"zahteve oziroma dogovori na ravni varnostne politike sporočila niso bili "
+"izpolnjeni."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+#, fuzzy
+msgid "The remaining %s document(s) will be deleted."
+msgstr "Preostalih %s dokumentov bo izbrisanih."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
 msgstr ""
+"Podpis v glavi varnosti, namenjen za SOAP akterja \"ebms\", ni bilo mogoče "
+"preveriti v varnostnem modulu."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr ""
+msgstr "Velikost podatkovnega dela v fragmentnem sporočilu je večja od %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
-msgstr ""
+msgstr "Struktura prejetega paketa ni v skladu s pravili paketiranja."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1810,67 +2301,84 @@ msgstr "Enolični ID, ki identificira tega uporabnika, običajno DDV"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
-msgstr ""
+msgstr "Uporaba MIME ni skladna z zahtevano uporabo v tej specifikaciji."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "There is no message available for pulling from this MPC at this moment."
-msgstr ""
+msgstr "V tem trenutku ni sporočila, ki je na voljo za prevzem iz tega MPC."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
+#, fuzzy
 msgid "There was an error while sending this invoice via Peppol."
-msgstr ""
+msgstr "Med pošiljanjem tega računa prek Peppola je prišlo do napake."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "There was an error with the Peppol Request"
-msgstr ""
+msgstr "Pri Peppol zahtevku je prišlo do napake"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "There was an error with the incoming message."
-msgstr ""
+msgstr "Prišlo je do napake z vhodnim sporočilom."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
 msgstr ""
+"Prišlo je do težave z vmesnikom Hermes Migration Token Collection Interface "
+"(MTCI)."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "There was an issue with the Peppol Participant."
-msgstr ""
+msgstr "Prišlo je do težave z udeležencem Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "This branch company will use the active Peppol connection found on"
-msgstr ""
+msgstr "Ta podružnica bo uporabljala aktivno Peppol povezavo, najdeno pri"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+#, fuzzy
 msgid ""
 "This connection has been superseded by another database. Register again."
 msgstr ""
+"Ta povezava je bila nadomeščena z drugo podatkovno bazo. Ponovno se "
+"registrirajte."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_is_token_out_of_sync
+#, fuzzy
 msgid ""
 "This field is used to indicate that the edi user token is out of sync with "
 "the proxy server. It is set to True when the token needs to be refreshed or "
 "updated."
 msgstr ""
+"To polje se uporablja za označevanje, da je uporabniški žeton EDI "
+"nesinhroniziran s proxy strežnikom. Nastavljeno je na True, če je treba "
+"žeton osvežiti ali posodobiti."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1881,22 +2389,27 @@ msgstr "Tudi ta račun je bil"
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_company__account_peppol_phone_number
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_phone_number
+#, fuzzy
 msgid "This number is used for identification purposes only."
-msgstr ""
+msgstr "Ta številka se uporablja samo za namene identifikacije."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "This user is not registered on our Access Point."
-msgstr ""
+msgstr "Ta uporabnik ni registriran na naši dostopni točki."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"Ta uporabnik ni uporabnik Peppola. Povezana vrednost proxy_type mora biti "
+"\"peppol\". To je potrebno za ustvarjanje udeleženca Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1913,36 +2426,53 @@ msgstr ""
 "partnerja."
 
 #. module: account_peppol
-#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
-msgid "Token Out of Sync"
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
+msgid "To use the Approved Platform for French E-Invoicing install the module"
 msgstr ""
+"Za uporabo odobrene platforme za francosko e-izdajanje računov namestite "
+"modul"
 
 #. module: account_peppol
-#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
-msgid "UBL 2.0"
-msgstr "UBL 2.0"
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
+"Za uporabo odobrene platforme za francosko e-izdajanje računov namestite "
+"modul"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
+#, fuzzy
+msgid "Token Out of Sync"
+msgstr "Žeton ni sinhroniziran"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
-msgstr ""
+msgstr "UBL BIS Billing 3.0.12"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "Unable to verify the digest value."
-msgstr ""
+msgstr "Ni mogoče preveriti vrednosti zgoščenega povzetka."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_verified
+#, fuzzy
 msgid "Unchecked"
-msgstr ""
+msgstr "Nepreverjeno"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "Unexpected end of MIME multipart message."
-msgstr ""
+msgstr "Nepričakovan konec MIME multipart sporočila."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1958,18 +2488,28 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "Unknown Peppol Error: %s"
-msgstr ""
+msgstr "Neznana napaka Peppol: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection
+#, fuzzy
 msgid "Use Parent Connection"
-msgstr ""
+msgstr "Uporabi povezavo matičnega podjetja"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__use_parent_connection_selection
+#, fuzzy
 msgid "Use Parent Connection Selection"
-msgstr ""
+msgstr "Uporabi izbiro povezave matičnega podjetja"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+#, fuzzy
+msgid "Verification pending"
+msgstr "Preverjanje v teku"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2004,14 +2544,22 @@ msgstr ""
 
 #. module: account_peppol
 #: model:mail.template,subject:account_peppol.mail_template_peppol_registration
+#, fuzzy
 msgid "Welcome to Peppol"
-msgstr ""
+msgstr "Dobrodošli v Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "What is Peppol and why it's great ?"
 msgstr "Kaj je Peppol in zakaj je tako dober?"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#, fuzzy
+msgid "Why should I use French E-Invoicing ?"
+msgstr "Zakaj naj uporabljam francosko e-izdajanje računov?"
 
 #. module: account_peppol
 #. odoo-python
@@ -2031,25 +2579,38 @@ msgid "Wizard"
 msgstr "Čarovnik"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+#, fuzzy
+msgid "Yes, Cancel It"
+msgstr "Da, prekliči"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+#, fuzzy
+msgid "Yes, Proceed"
+msgstr "Da, nadaljuj"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid ""
 "You are about to register with your VAT number. Make sure you register with "
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "You are not allowed to send invoice on behalf of %s."
-msgstr ""
+"Pravkar se boste registrirali z vašo davčno številko. Preden nadaljujete, se "
+"registrirajte v register podjetij (BCE/KBO), da boste skladni z novimi "
+"predpisi."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "You are not authorized to change the contact email."
-msgstr ""
+msgstr "Nimate pooblastila za spreminjanje kontaktnega e-poštnega naslova."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2059,8 +2620,9 @@ msgstr "Svoje e-račune pošiljate in prejemate prek Odooja s tem Peppol ID-jem.
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "You are sending from"
-msgstr ""
+msgstr "Pošiljate iz"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2087,23 +2649,44 @@ msgstr "Ta račun lahko pošljete elektronsko prek Peppola."
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/exceptions.py:0
-msgid "You don't have enough credit"
+#: code:addons/account_peppol/models/account_journal.py:0
+#, fuzzy
+msgid ""
+"You can't change the type of a journal used for Peppol invoice reception toa "
+"type different than 'Purchase'.\n"
+"Please change the journal used for Peppol reception before changing the type "
+"of this journal."
 msgstr ""
+"Vrste dnevnika, ki se uporablja za prejemanje računov Peppol, ne morete "
+"spremeniti v vrsto, ki se razlikuje od »Nakup«.\n"
+"Preden spremenite vrsto tega dnevnika, spremenite dnevnik, ki se uporablja "
+"za prejemanje računov Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
+msgid "You don't have enough credit"
+msgstr "Nimaš dovolj kreditov"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
 msgstr ""
+"Dosegli ste dnevno omejitev dokumentov, ki jih lahko danes pošljete. "
+"Poskusite znova pozneje. Če menite, da je treba to omejitev povečati, se "
+"obrnite na podporo."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "You need to authenticate to continue."
-msgstr ""
+msgstr "Za nadaljevanje se morate avtenticirati."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2119,20 +2702,23 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Your Peppol ID"
-msgstr ""
+msgstr "Vaš Peppol ID"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid "Your Peppol identification is:"
-msgstr ""
+msgstr "Vaša Peppol identifikacija je:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
+#, fuzzy
 msgid ""
 "Your Peppol registration is being processed, it should be active within a "
 "day."
-msgstr ""
+msgstr "Vaša Peppol registracija je v obdelavi, aktivna bo v enem dnevu."
 
 #. module: account_peppol
 #. odoo-python
@@ -2155,36 +2741,56 @@ msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Your database is not linked to Peppol anymore. This might be due to a "
 "database duplication or restoration.\n"
 "                                        Make sure to reconnect the correct "
 "database."
 msgstr ""
+"Vaša podatkovna baza ni več povezana s Peppolom. Do tega je lahko prišlo "
+"zaradi podvajanja ali obnove podatkovne baze.\n"
+"                                        Prepričajte se, da ponovno povežete "
+"pravo bazo podatkov."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+#, fuzzy
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+"Vaši podatki se preverjajo. Z vaše strani ni treba storiti ničesar: vaša "
+"registracija za Peppol bo samodejno dokončana."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "Your identification has not been approved for this action yet"
-msgstr ""
+msgstr "Vaša identifikacija še ni bila odobrena za to dejanje"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "Your identifier does not have a valid format.%s"
-msgstr ""
+msgstr "Vaš identifikator nima veljavnega formata.%s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "Your identifier is invalid."
-msgstr ""
+msgstr "Vaš identifikator ni veljaven."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
+#, fuzzy
 msgid "Your identifier you entered is invalid for Peppol."
-msgstr ""
+msgstr "Vnešeni identifikator ni veljaven za Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -2213,29 +2819,37 @@ msgstr "Vaša registracija bi morala biti aktivirana v enem dnevu."
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
+#, fuzzy
 msgid "Your request is still being processed."
-msgstr ""
+msgstr "Vaša zahteva se še vedno obdeluje."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_xml_ubl_bis3.py:0
+#, fuzzy
 msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] Za stranko '%s' mora biti naveden elektronski naslov "
+"(EAS)."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_xml_ubl_bis3.py:0
+#, fuzzy
 msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] Elektronski naslov (EAS) mora biti naveden za podjetje "
+"'%s'."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "and send invoices via Peppol on their behalf."
-msgstr ""
+msgstr "in pošilja račune prek Peppola v njihovem imenu."
 
 #. module: account_peppol
 #. odoo-python
@@ -2256,8 +2870,9 @@ msgstr "poslano prek Peppola"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#, fuzzy
 msgid "support"
-msgstr ""
+msgstr "podporo"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -2268,6 +2883,15 @@ msgstr "za pošiljanje računov, ampak ta"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "uporablja"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "Aktivirajte elektronsko izdajanje računov"
+
+#~ msgid "EDI user should be of type Peppol"
+#~ msgstr "EDI uporabnik mora biti tipa Peppol"
+
+#~ msgid "UBL 2.0"
+#~ msgstr "UBL 2.0"
 
 #~ msgid "Peppol error: %s"
 #~ msgstr "Peppol napaka: %s"

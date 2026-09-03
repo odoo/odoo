@@ -37,6 +37,39 @@ describe("pos.order.line - loyalty", () => {
         expect(line.ignoreLoyaltyPoints({ program: programA })).toBe(true);
     });
 
+    test("gift card reward lines are excluded from global discount", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const card = models["loyalty.card"].get(3);
+
+        const regularLine = await addProductLineToOrder(store, order);
+        expect(regularLine.isGlobalDiscountApplicable()).toBe(true);
+
+        const giftCardLine = await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            coupon_id: card,
+        });
+        expect(giftCardLine.isGiftCardOrEWalletReward()).toBe(true);
+        expect(giftCardLine.isGlobalDiscountApplicable()).toBe(false);
+    });
+
+    test("promotion reward lines are not excluded from global discount", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        const loyaltyCard = models["loyalty.card"].get(1);
+
+        const rewardLine = await addProductLineToOrder(store, order, {
+            is_reward_line: true,
+            coupon_id: loyaltyCard,
+        });
+        expect(rewardLine.isGiftCardOrEWalletReward()).toBe(false);
+        expect(rewardLine.isGlobalDiscountApplicable()).toBe(true);
+    });
+
     test("getGiftCardOrEWalletBalance", async () => {
         const store = await setupPosEnv();
         const models = store.models;

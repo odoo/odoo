@@ -610,7 +610,7 @@ class Im_LivechatChannelRule(models.Model):
         ('hide_button', 'Hide')], string='Live Chat Button', required=True, default='display_button',
         help="* 'Show' displays the chat button on the pages.\n"\
              "* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"\
-             "* 'Open automatically' displays the button and automatically opens the conversation pane.\n"\
+             "* 'Open automatically' displays the button and automatically opens the conversation pane on larger screens. On small screens, this behaves like 'Show'.\n"
              "* 'Hide' hides the chat button on the pages.\n")
     auto_popup_timer = fields.Integer('Time to Open', default=0,
         help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.")

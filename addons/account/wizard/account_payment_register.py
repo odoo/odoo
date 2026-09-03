@@ -979,6 +979,8 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't create payments for entries belonging to different branches without access to parent company."))
             if len(set(available_lines.mapped('account_type'))) > 1:
                 raise UserError(_("You can't register payments for both inbound and outbound moves at the same time."))
+            if any(move.payment_state == 'blocked' for move in available_lines.move_id):
+                raise UserError(self.env._("You cannot register payments for blocked invoices."))
 
             res['line_ids'] = [(6, 0, available_lines.ids)]
 
@@ -1211,7 +1213,7 @@ class AccountPaymentRegister(models.TransientModel):
                         ('reconciled', '=', False),
                     ])\
                     .reconcile()
-            lines.move_id.matched_payment_ids += payment
+            lines.move_id.matched_payment_ids = [Command.link(payment.id)]
 
     def _create_payments(self):
         self.ensure_one()
@@ -1249,9 +1251,9 @@ class AccountPaymentRegister(models.TransientModel):
 
             to_process.append(to_process_values)
         else:
+            lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
             if not self.group_payment:
                 # Don't group payments: Create one batch per move.
-                lines_to_pay = self._get_total_amounts_to_pay(batches)['lines'] if self.installments_mode in ('next', 'overdue', 'before_date') else self.line_ids
                 new_batches = []
                 for batch_result in batches:
                     sub_batches = {}
@@ -1273,6 +1275,7 @@ class AccountPaymentRegister(models.TransientModel):
                 batches = new_batches
 
             for batch_result in batches:
+                batch_result['lines'] = batch_result['lines'] & lines_to_pay
                 to_process.append({
                     'create_vals': self._create_payment_vals_from_batch(batch_result),
                     'to_reconcile': batch_result['lines'],

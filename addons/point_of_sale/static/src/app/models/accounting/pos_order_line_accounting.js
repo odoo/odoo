@@ -69,6 +69,9 @@ export class PosOrderlineAccounting extends Base {
             ? this.unitPrices.total_included
             : this.unitPrices.total_excluded;
     }
+    get displayPriceUnitIncl() {
+        return this.unitPrices.total_included;
+    }
     get displayPriceUnitExcl() {
         return this.unitPrices.total_excluded;
     }
@@ -83,6 +86,11 @@ export class PosOrderlineAccounting extends Base {
     }
     get priceExcl() {
         return this.currency.round(this.prices.total_excluded * this.order_id.orderSign);
+    }
+    get priceUnitInclNoDiscount() {
+        return this.currency.round(
+            this.unitPrices.no_discount_total_included * this.order_id.orderSign
+        );
     }
     get priceInclNoDiscount() {
         return this.currency.round(
@@ -139,7 +147,7 @@ export class PosOrderlineAccounting extends Base {
 
     get taxGroupLabels() {
         let taxes_id = this.tax_ids;
-        if (this.order_id.fiscal_position_id) {
+        if (this.order_id?.fiscal_position_id) {
             taxes_id = this.order_id.fiscal_position_id.getTaxesAfterFiscalPosition(this.tax_ids);
         }
         return [
@@ -164,6 +172,10 @@ export class PosOrderlineAccounting extends Base {
         return this.price_unit * (1 - this.getDiscount() / 100);
     }
 
+    isRefund() {
+        return this.qty * this.price_unit < 0;
+    }
+
     /**
      * Prepare extra values for the base line used in taxes computation.
      */
@@ -184,7 +196,7 @@ export class PosOrderlineAccounting extends Base {
             product_id: product,
             product_uom_id: productUom,
             rate: 1.0,
-            is_refund: this.qty * priceUnit < 0,
+            is_refund: this.isRefund(),
             ...customValues,
         };
         if (order?.fiscal_position_id && product !== this.config.discount_product_id) {

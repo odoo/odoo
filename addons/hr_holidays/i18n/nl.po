@@ -6,16 +6,16 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023, 2025, 2026.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-03-27 12:00+0000\n"
-"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-07 04:14+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/nl/>\n"
 "Language: nl\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -171,6 +171,16 @@ msgstr "%(name)s (%(time)g overgebleven van %(maximum)g uur)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+"%(name)s heeft geen geldige toewijzing voor het verloftype %(leave_type)s om "
+"aan dat verzoek te voldoen."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
 
@@ -242,30 +252,6 @@ msgstr ": samenvatting ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr "samenvatting in deze periode"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
-#| msgid "Day(s)"
-msgid "(s)"
-msgstr "Dag(en)"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-"(s)\n"
-"                                    en een balansbovengrens is ingesteld op"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -720,25 +706,25 @@ msgstr "Activiteitsfase"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_mail_activity_type
 msgid "Activity Type"
-msgstr "Soort activiteit"
+msgstr "Activiteitstype"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Activiteitensoorten"
+msgstr "Activiteitstypes"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Activity type"
-msgstr "Soort activiteit"
+msgstr "Activiteitstype"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1367,13 +1353,17 @@ msgid ""
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"Als het contrat van deze werknemer wordt gewijzigd, veranderd zijn "
-"werkschema in een periode waarin hij al verlof heeft genomen. Door dit "
+"Als het contract van deze werknemer wordt gewijzigd, veranderd zijn "
+"werkschema in een periode waarin hij al verlof heeft opgenomen. Door dit "
 "werkschema te wijzigen, verandert de duur van dit verlof zodanig dat de "
-"werknemer niet langer de vereiste toewijzing hiervoor heeft. Controleer dit "
-"verlof en/of deze toewijzingen voordat je het contract wijzigt."
+"werknemer niet langer over de vereiste toewijzing beschikt. Controleer dit "
+"verlof en/of deze toewijzingen voordat je het contract wijzigt.\n"
+"\n"
+"Deze fout werd geactiveerd door:\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1384,10 +1374,10 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
-"Het wijzigen van dit werkschema heeft tot gevolg dat de betrokken "
-"werknemer(s) niet genoeg verlofdagen toegewezen krijgen om de reeds "
-"opgenomen verlofdagen in de toekomst op te vangen. Controleer de verlofdagen "
-"van deze werknemer en pas de toewijzing dienovereenkomstig aan."
+"Het wijzigen van dit werkschema heeft tot gevolg dat de betrokken werknemer"
+"(s) niet genoeg verlofdagen toegewezen krijgen om de reeds opgenomen "
+"verlofdagen in de toekomst op te vangen. Controleer de verlofdagen van deze "
+"werknemer en pas de toewijzing dienovereenkomstig aan."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_hr_leave_report
@@ -1439,6 +1429,11 @@ msgstr "Klik op deze knop om verlof aan te vragen"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
 msgstr "Kleur"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__company_id
@@ -1827,13 +1822,14 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1878,8 +1874,8 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"Als gevolg van een wijziging in de globale verlofdagen, zijn er %s extra "
-"dag(en) uit je toewijzing gehaald. Controleer dit verlof als je het wilt "
+"Als gevolg van een wijziging in de globale verlofdagen, zijn er %s extra dag"
+"(en) uit je toewijzing gehaald. Controleer dit verlof als je het wilt "
 "wijzigen."
 
 #. module: hr_holidays
@@ -2389,6 +2385,7 @@ msgstr "HR-icoonweergave"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
@@ -3934,7 +3931,7 @@ msgstr "Staking"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_striked
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_striked
 msgid "Striked"
-msgstr "Geslagen"
+msgstr "Geschrapt"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_jo_leave_type_study
@@ -4043,8 +4040,17 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__color
 msgid ""
 "The color selected here will be used in every screen with the time off type."
+msgstr "De geselecteerde kleur wordt gebruikt in elk scherm met dit verloftype."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/res_company.py:0
+msgid ""
+"The company country cannot be changed while time off leaves or allocations "
+"with the country exist."
 msgstr ""
-"De geselecteerde kleur wordt gebruikt in elk scherm met dit verloftype."
+"Het land van het bedrijf kan niet worden gewijzigd zolang er verlof of "
+"toewijzingen met dat land bestaan."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4183,12 +4189,6 @@ msgid ""
 msgstr ""
 "Er is geen werknemer op de verlofaanvraag ingesteld. Zorg ervoor dat je bij "
 "het juiste bedrijf bent ingelogd."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "Er is geen geldige toewijzing om dat verzoek te dekken."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4515,8 +4515,7 @@ msgstr "Verlof van mensen waar je manager van bent"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Time off request must be confirmed or validated in order to refuse it."
-msgstr ""
-"Verlofaanvraag moet bevestigd of goedgekeurd worden om het te weigeren."
+msgstr "Verlofaanvraag moet bevestigd of goedgekeurd worden om het te weigeren."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -5341,6 +5340,12 @@ msgstr "toewijzingsdatum"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "en de"
@@ -5377,6 +5382,12 @@ msgstr "klik hier"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "datums"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr "dag(en)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5463,6 +5474,12 @@ msgstr "vanaf het begin van de toewijzing"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5485,6 +5502,12 @@ msgid ""
 msgstr ""
 "verlof van het type 'Gewerkte tijd' moet altijd in aanmerking komen voor het "
 "opbouwpercentage."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr "maand(en)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5611,6 +5634,42 @@ msgstr "geldig t/m"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "bevestigen"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr "jaar(en)"
+
+#~ msgid "(s)"
+#~ msgstr "(s)"
+
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr ""
+#~ "(s)\n"
+#~ "                                    en een balansbovengrens is ingesteld "
+#~ "op"
+
+#~ msgid "(s)."
+#~ msgstr "(s)."
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Er is geen geldige toewijzing om dat verzoek te dekken."
+
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "Als het contrat van deze werknemer wordt gewijzigd, veranderd zijn "
+#~ "werkschema in een periode waarin hij al verlof heeft genomen. Door dit "
+#~ "werkschema te wijzigen, verandert de duur van dit verlof zodanig dat de "
+#~ "werknemer niet langer de vereiste toewijzing hiervoor heeft. Controleer "
+#~ "dit verlof en/of deze toewijzingen voordat je het contract wijzigt."
 
 #~ msgid ""
 #~ "You cannot refuse this allocation request since the employee has already "
@@ -6653,9 +6712,6 @@ msgstr "bevestigen"
 #~ msgid "day of the month"
 #~ msgstr "dag van de maand"
 
-#~ msgid "day(s)"
-#~ msgstr "dag(en)"
-
 #~ msgid "days of the months"
 #~ msgstr "dagen van de maand"
 
@@ -6668,9 +6724,6 @@ msgstr "bevestigen"
 #~ msgid "lost"
 #~ msgstr "verloren"
 
-#~ msgid "month(s)"
-#~ msgstr "maand(en)"
-
 #~ msgid "postponed"
 #~ msgstr "overgezet naar het volgende jaar"
 
@@ -6679,6 +6732,3 @@ msgstr "bevestigen"
 
 #~ msgid "validated"
 #~ msgstr "bevestigd"
-
-#~ msgid "year(s)"
-#~ msgstr "jaar(en)"

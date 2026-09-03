@@ -24,6 +24,9 @@ class ProductProduct(models.Model):
         string="Base Unit Count",
         help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
              " product.",
+        # Force NUMERIC with unlimited precision, as for `uom.uom.relative_factor`,
+        # to support very small ratios, e.g. one unit in a box of 10000.
+        digits=0,
         required=True,
         default=1,
     )
@@ -195,6 +198,8 @@ class ProductProduct(models.Model):
                 'ratingValue': self.sudo().rating_avg,
                 'reviewCount': self.rating_count,
             }
+        if self.default_code:
+            markup_data['sku'] = self.default_code
         if self.barcode:
             markup_data['gtin'] = self.barcode
         return markup_data
@@ -233,3 +238,12 @@ class ProductProduct(models.Model):
                 ('order_id', 'any', [('website_id', '!=', False)]),
             ]).unlink()
         return super().write(vals)
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == 'create'
+            and not self.env.user._is_internal()
+            and not self.env['website'].is_view_active('website_sale.product_comment')
+        ):
+            return dict.fromkeys(self, 'write')
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)

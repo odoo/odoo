@@ -1,5 +1,6 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { resizeGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
+import { scrollTo } from "@html_builder/utils/scrolling";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -78,7 +79,9 @@ export class AddElementOptionPlugin extends Plugin {
         const middleY = (newColumnPosition.top + newColumnPosition.bottom) / 2;
         const sameCoordinatesEl = this.document.elementFromPoint(middleX, middleY);
         if (!sameCoordinatesEl || !newColumnEl.contains(sameCoordinatesEl)) {
-            newColumnEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            const viewportHeight = this.document.defaultView.innerHeight;
+            const newColumnHeight = newColumnEl.getBoundingClientRect().height;
+            scrollTo(newColumnEl, { forcedOffset: viewportHeight / 2 - newColumnHeight / 2 });
         }
         // Activate the new column options.
         this.dependencies.builderOptions.setNextTarget(newColumnEl);

@@ -301,6 +301,7 @@ class TestVirtualAvailable(TestStockCommon):
             (False, sub_loc01.name, 10.0),
             (False, 'sub', 11.0),
             (False, main_loc.name, 1111.0),
+            (False, main_loc.complete_name.lower(), 111.0),
             (False, (sub_loc01 | sub_loc02 | sub_loc03).ids, 11.0),
             (main_warehouse.id, main_loc.name, 111.0),
             (main_warehouse.id, main_loc.id, 111.0),
@@ -457,3 +458,43 @@ class TestProductPostInstall(TestStockCommon):
             {'location_id': transit_location.id, 'quantity': 3.0},
             {'location_id': self.stock_location.id, 'quantity': 4.0},
         ])
+
+    def test_toggle_inventory_tracking_keeps_stock_on_hand(self):
+        """ Toggling 'is_storable' off/on must keep the stock on hand
+        consistent with its moves, without counter balancing existing quants.
+        This is required to avoid incorrect inventory valuation at date. """
+        product = self.product
+        product.is_storable = True
+        self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product.id,
+            'location_id': self.stock_location.id,
+            'inventory_quantity': 10.0,
+        })._apply_inventory()
+        self.assertEqual(product.qty_available, 10.0)
+        self.assertEqual(product.with_context(to_date='2020-01-01 00:00:00').qty_available, 0.0)
+
+        product.is_storable = False
+        product.is_storable = True
+
+        self.assertEqual(product.qty_available, 10.0)
+        self.assertEqual(product.with_context(to_date='2020-01-01 00:00:00').qty_available, 0.0)
+        self.assertFalse(self.env['stock.move'].search([
+            ('product_id', '=', product.id),
+            ('location_dest_usage', '=', 'inventory'),
+        ]))
+
+    def test_user_inventory_permissions_change_lot_or_serial(self):
+        """
+        Test if a user with Product/Create can change the Custom Lot/Serial
+        """
+        product = self.productA
+        product.tracking = 'lot'
+
+        user = self.user_stock_manager
+        user.group_ids += self.env.ref('product.group_product_manager')
+
+        product.with_user(user).write({
+            'serial_prefix_format': 'TCLPP'
+        })
+
+        self.assertEqual(product.serial_prefix_format, 'TCLPP')

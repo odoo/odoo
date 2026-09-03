@@ -28,6 +28,10 @@ export class PaymentVivaCom extends PaymentInterface {
         return this._viva_com_cancel(order, uuid);
     }
 
+    getCashRegisterId() {
+        return this.pos.getCashier().name?.trim() || this.pos.config.name;
+    }
+
     _call_viva_com(data, action, paymentLine) {
         return this.env.services.orm.silent
             .call("pos.payment.method", action, [[this.payment_method_id.id], data])
@@ -70,14 +74,16 @@ export class PaymentVivaCom extends PaymentInterface {
             customerTrns = order.partner.name + " - " + order.partner.email;
         }
 
-        line.uiState.vivaSessionId = order.uuid + " - " + uuidv4();
+        line.viva_com_session_id = order.uuid + " - " + uuidv4();
+        const cashRegisterId = this.getCashRegisterId();
         var data = {
-            sessionId: line.uiState.vivaSessionId,
+            sessionId: line.viva_com_session_id,
+            parentSessionId: line.uiState.vivaComParentSessionId,
             terminalId: line.payment_method_id.viva_com_terminal_id,
-            cashRegisterId: this.pos.getCashier().name,
+            cashRegisterId,
             amount: roundPrecision(Math.abs(line.amount * 100)),
             currencyCode: this.pos.currency.iso_numeric.toString(),
-            merchantReference: line.uiState.vivaSessionId + "/" + this.pos.session.id,
+            merchantReference: line.viva_com_session_id + "/" + this.pos.session.id,
             customerTrns: customerTrns,
             preauth: false,
             maxInstalments: 0,
@@ -95,9 +101,10 @@ export class PaymentVivaCom extends PaymentInterface {
     async _viva_com_cancel(order, uuid) {
         const line = order.getPaymentlineByUuid(uuid);
 
+        const cashRegisterId = this.getCashRegisterId();
         var data = {
-            sessionId: line.uiState.vivaSessionId,
-            cashRegisterId: this.pos.getCashier().name,
+            sessionId: line.viva_com_session_id,
+            cashRegisterId,
         };
         return this._call_viva_com(data, "viva_com_send_payment_cancel", line).then((data) => {
             if (data.error) {
@@ -143,23 +150,44 @@ export class PaymentVivaCom extends PaymentInterface {
 
     waitForPaymentConfirmation(paymentLine) {
         return new Promise((resolve) => {
-            const sessionId = paymentLine.uiState.vivaSessionId;
+            const sessionId = paymentLine.viva_com_session_id;
             this.paymentLineResolvers[paymentLine.uuid] = resolve;
+            let connectionLost = false;
             const intervalId = setInterval(async () => {
                 const isPaymentStillValid = () =>
                     this.paymentLineResolvers[paymentLine.uuid] &&
-                    paymentLine.payment_status === "waitingCard" &&
-                    sessionId === paymentLine.uiState.vivaSessionId;
+                    sessionId === paymentLine.viva_com_session_id;
                 if (!isPaymentStillValid()) {
                     clearInterval(intervalId);
                     return;
                 }
 
-                const result = await this._call_viva_com(
-                    sessionId,
-                    "viva_com_get_payment_status",
-                    paymentLine
-                );
+                let result;
+                try {
+                    // Use a direct silent ORM call instead of _call_viva_com
+                    // so that _handleOdooConnectionFailure is NOT triggered
+                    // during polling (no error dialog spam).
+                    result = await this.env.services.orm.silent.call(
+                        "pos.payment.method",
+                        "viva_com_get_payment_status",
+                        [[this.payment_method_id.id], sessionId]
+                    );
+                } catch {
+                    // Connection failure during polling — the payment may have
+                    // gone through on Viva's side. Keep polling silently until
+                    // we get a definitive answer.
+                    if (!connectionLost) {
+                        connectionLost = true;
+                        this.env.services.notification.add(
+                            _t(
+                                "No internet connection. Waiting for recovery to confirm the payment..."
+                            ),
+                            { type: "warning" }
+                        );
+                    }
+                    return;
+                }
+                connectionLost = false;
                 if ("success" in result && isPaymentStillValid()) {
                     clearInterval(intervalId);
                     if (this.isPaymentSuccessful(result)) {
@@ -176,9 +204,10 @@ export class PaymentVivaCom extends PaymentInterface {
     }
 
     handleSuccessResponse(line, notification) {
-        line.transaction_id = notification.transaction_id;
-        line.card_type = notification.card_type;
-        line.cardholder_name = notification.cardholder_name;
+        line.transaction_id = notification.transactionId;
+        line.card_type = notification.cardType;
+        line.card_brand = notification.applicationLabel;
+        line.card_no = notification.primaryAccountNumberMasked;
     }
 
     _show_error(msg, title) {

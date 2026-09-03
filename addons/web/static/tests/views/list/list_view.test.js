@@ -4749,6 +4749,30 @@ test(`monetary aggregates in grouped list (!= currencies in same group, delete)`
     expect(`.o_group_header:last`).toHaveText("Yes (0)\n 0.00");
 });
 
+test(`monetary aggregates in grouped list: add a new group`, async () => {
+    onRpc("name_create", () => {
+        expect.step("name_create");
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list default_group_by="m2o">
+                <field name="foo"/>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)"]);
+    expect(`.o_list_footer td > button`).toHaveText("Add a M2o");
+    await contains(`.o_list_footer td > button`).click();
+    await contains(`.o_list_footer td input`).edit("New group", { confirm: false });
+    await contains(`.o_list_footer .o_list_group_confirm`).click();
+    expect.verifySteps(["name_create"]);
+    expect(queryAllTexts(".o_group_name")).toEqual(["Value 1 (3)", "Value 2 (1)", "New group (0)"]);
+});
+
 test(`list with monetary field with attribute column_invisible="1"`, async () => {
     await mountView({
         resModel: "foo",
@@ -5039,7 +5063,7 @@ test(`aggregates monetary (currency field not set)`, async () => {
         "300.00",
         "0.00",
     ]);
-    expect(`tfoot`).toHaveText("$ 0.00?");
+    expect(`tfoot`).toHaveText("$ 2,000.00?");
 });
 
 test(`aggregates monetary (currency field not set on first record)`, async () => {
@@ -5063,7 +5087,7 @@ test(`aggregates monetary (currency field not set on first record)`, async () =>
         "300.00",
         "0.00",
     ]);
-    expect(`tfoot`).toHaveText("$ 0.00?");
+    expect(`tfoot`).toHaveText("$ 2,000.00?");
 });
 
 test(`aggregates monetary with custom digits (same currency)`, async () => {
@@ -6452,6 +6476,37 @@ test(`pager, grouped, with count limit reached`, async () => {
     });
     expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("1");
     expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("2");
+});
+
+test.tags("desktop");
+test(`pager, grouped, with count limit reached and total above countLimit`, async () => {
+    Foo._records.push({ id: 398, foo: "blip" });
+    Foo._records.push({ id: 399, foo: "blip" });
+    Foo._records.push({ id: 400, foo: "blip" });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list limit="2" count_limit="3"><field name="foo"/><field name="bar"/></list>`,
+        groupBy: ["foo"],
+    });
+    expect(`.o_group_header`).toHaveCount(3, { message: "should have 3 groups" });
+
+    await contains(`.o_group_header:first-of-type`).click();
+    expect(`.o_group_header:first-of-type .o_pager:eq(0)`).toHaveCount(1, {
+        message: "first group should have a pager",
+    });
+    expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("1-2");
+    expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("5", {
+        message:
+            "The true count being already computed, we can display it instead of the countLimit",
+    });
+
+    await contains(`.o_pager_next:eq(1)`).click();
+    expect(`.o_group_header:first-of-type .o_pager_value`).toHaveText("3-4");
+    expect(`.o_group_header:first-of-type .o_pager_limit`).toHaveText("5", {
+        message:
+            "The true count being already computed, we can display it instead of the countLimit",
+    });
 });
 
 test.tags("desktop");
@@ -19599,4 +19654,26 @@ test(`select menu navigation with hot keys`, async () => {
 
     await contains(`.o_form_button_save`).click();
     expect(queryAllTexts(`.o_field_x2many_list .o_data_row`)).toEqual(["aab", "aac"]);
+});
+
+test("should not crash in lists with groupby node and sample data", async () => {
+    Foo._records = [];
+    Bar._fields.bar_grouped = fields.Boolean({ default: false });
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list sample="1" default_group_by="m2o">
+                <groupby name="m2o">
+                    <field name="bar_grouped" invisible="1" />
+                    <button type="object" name="group_btn" string="Do Something" invisible="bar_grouped"/>
+                </groupby>
+                <field name="foo"/>
+                <field name="amount"/>
+                <field name="properties"/>
+            </list>`,
+    });
+
+    expect(queryAll(".o_group_header").length).toBeGreaterThan(0);
 });

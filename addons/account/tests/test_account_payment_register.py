@@ -261,6 +261,31 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
             },
         ])
 
+    def test_register_payment_grouped_then_regroup_partially_paid_invoice(self):
+        """
+        Test that registering a second grouped payment on an invoice left partially paid by a
+        first grouped payment does not wrongly link the first payment to the other invoices of the second one.
+        """
+        active_ids = (self.out_invoice_1 + self.out_invoice_2 + self.out_invoice_3).ids
+        first_payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'amount': 3010.0,
+            'group_payment': True,
+            'payment_difference_handling': 'open',
+            'currency_id': self.other_currency.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        active_ids = (self.out_invoice_2 + self.out_invoice_4).ids
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
+            'amount': 38.0,
+            'group_payment': True,
+            'currency_id': self.other_currency.id,
+            'payment_method_line_id': self.inbound_payment_method_line.id,
+        })._create_payments()
+
+        first_payment.invalidate_recordset()
+        self.assertRecordValues(first_payment, [{'reconciled_invoices_count': 3}])
+
     def test_register_payment_single_batch_grouped_writeoff_lower_amount_debit(self):
         ''' Pay 800.0 with 'reconcile' as payment difference handling on two customer invoices (1000 + 2000). '''
         active_ids = (self.out_invoice_1 + self.out_invoice_2).ids
@@ -857,6 +882,26 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
                 'reconciled': True,
             },
         ])
+
+    def test_cannot_register_payment_on_blocked_invoices(self):
+        blocked_invoice = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        blocked_invoice.action_toggle_block_payment()
+
+        invoice_1 = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        invoice_2 = self.init_invoice('out_invoice', products=self.product_a, post=True)
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            blocked_invoice.action_force_register_payment()
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            (blocked_invoice + invoice_1 + invoice_2).action_force_register_payment()
+
+        receivable_lines = (blocked_invoice + invoice_1 + invoice_2).line_ids.filtered(
+            lambda line: line.account_type == 'asset_receivable'
+        )
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            Form.from_action(self.env, receivable_lines.action_register_payment())
 
     def test_register_payment_constraints(self):
         # Test to register a payment for an already fully reconciled journal entry.
@@ -2185,3 +2230,40 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon, PaymentCommon):
 
         payments = self._register_payment(move1 + move2, group_payment=False)
         self.assertEqual(len(payments), 3, "We should get 2 payments from the first move and 1 for the second one")
+
+    def test_group_payment_multi_partner_with_installments(self):
+        """
+        When "Group Payments" is selected and vendor bills from different partners are selected,
+        and at least one bill has multiple installments, only the next installment should be
+        included, not all installments of that bill.
+        """
+        in_invoice_with_installments = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2026-01-01',
+            'invoice_payment_term_id': self.term_0_5_10_days.id,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [],
+            })],
+        })
+        in_invoice_with_installments.action_post()
+
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=(self.in_invoice_1 + in_invoice_with_installments + self.in_invoice_3).ids,
+        ).create({
+            'group_payment': True,
+            'payment_date': '2026-01-01',
+        })
+
+        payments = wizard._create_payments()
+
+        self.assertEqual(len(payments), 2)
+
+        payment_a = payments.filtered(lambda p: p.partner_id == self.partner_a)
+        payment_b = payments.filtered(lambda p: p.partner_id == self.partner_b)
+
+        self.assertRecordValues(payment_a, [{'amount': 1100.0, 'partner_id': self.partner_a.id}])
+        self.assertRecordValues(payment_b, [{'amount': 3000.0, 'partner_id': self.partner_b.id}])

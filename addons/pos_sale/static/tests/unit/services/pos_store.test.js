@@ -177,4 +177,42 @@ describe("onClickSaleOrder", () => {
         expect(cell(2, 2)).toHaveText("TEST 2");
         expect(cell(2, 4)).toHaveText(`$ 150.00 (tax incl.)`);
     });
+
+    test("import sale downpayment with percentage", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
+        order.setOrderPrices();
+        const original_price = order.amount_total;
+
+        const promiseResult = store.onClickSaleOrder(3);
+        const buttonDownPaymentPercentage =
+            ".modal-body button:contains('Apply a down payment (percentage)')";
+        await waitFor(buttonDownPaymentPercentage);
+        await click(buttonDownPaymentPercentage);
+        await waitFor(".modal-title:contains('Down Payment')");
+        await click(".modal-body .numpad .numpad-button[value='+50']");
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        await click(".modal-body .numpad .numpad-button[value='+50']");
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        await click(".modal-footer .btn:contains('Apply')");
+        await promiseResult;
+
+        const currentOrder = store.getOrder();
+        currentOrder.setOrderPrices();
+        expect(currentOrder.amount_total).toBe(
+            650 - store.models["sale.order.line"].get(4).price_unit + original_price
+        );
+    });
+
+    test("down payment line count on sale order with down payment", async () => {
+        const store = await setupPosEnv();
+        const currentOrder = store.getEmptyOrder();
+        const saleOrder = await store._getSaleOrder(3);
+        await store.addDownPaymentProductOrderlineToOrder(saleOrder, 20, "percentage");
+        // This is required because we cannot await the for the order lines to be added in the pos order
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        expect(currentOrder.lines.length).toBe(1);
+        expect(currentOrder.lines[0].price_unit).toBe(110);
+    });
 });

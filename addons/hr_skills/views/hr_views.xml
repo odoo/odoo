@@ -108,7 +108,7 @@
                     Adding fields in the list arch below makes them accessible to the widget
                 -->
                 <widget name="internal_resume_lines"/>
-                <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many">
+                <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many" context="{'default_employee_id': employee_id}">
                     <list>
                         <field name="line_type_id"/>
                         <field name="name"/>
@@ -175,7 +175,7 @@
                             Adding fields in the list arch below makes them accessible to the widget
                         -->
                         <widget name="internal_resume_lines"/>
-                        <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many">
+                        <field mode="list" nolabel="1" name="resume_line_ids" widget="resume_one2many" context="{'default_employee_id': employee_id}">
                             <list>
                                 <field name="line_type_id"/>
                                 <field name="name"/>

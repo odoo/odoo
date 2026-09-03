@@ -52,6 +52,10 @@ function _getValidSrc(src) {
         return cache[src];
     }
     const prom = new Promise((resolve) => {
+        if (!src) {
+            resolve(placeholderHref);
+            return;
+        }
         fetch(src)
             .then((response) => {
                 resolve(response.ok ? src : placeholderHref);
@@ -146,7 +150,7 @@ export function getImageSizeFromCache(src) {
  * @param {Number} aspectRatio the aspectRatio of the crop box
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
-export async function activateCropper(image, aspectRatio, dataset) {
+export async function activateCropper(image, aspectRatio, dataset, { onReady } = {}) {
     await loadBundle("html_editor.assets_image_cropper");
     const oldSrc = image.src;
     const newSrc = await _loadImageObjectURL(image.getAttribute("src"));
@@ -168,7 +172,12 @@ export async function activateCropper(image, aspectRatio, dataset) {
         // Can't use 0 because it's falsy and cropperjs will then use its defaults (200x100)
         minContainerWidth: 1,
         minContainerHeight: 1,
-        ready: readyResolve,
+        ready: () => {
+            readyResolve();
+            if (onReady) {
+                onReady(cropper);
+            }
+        },
     });
     if (oldSrc === newSrc && image.complete) {
         return;
@@ -247,6 +256,8 @@ export async function loadImageInfo(el, attachmentSrc = "") {
         newDataset.originalId = original.id;
         newDataset.originalSrc = original.image_src;
         newDataset.mimetypeBeforeConversion = original.mimetype;
+    } else if (/^\/web\/image\/[\w.]+\/\d+\/[\w-]+(\/|\?|$)/.test(src)) {
+        newDataset.originalSrc = src;
     }
     return newDataset;
 }

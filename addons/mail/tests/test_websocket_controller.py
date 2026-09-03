@@ -59,6 +59,20 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertEqual(notification["message"]["payload"]["im_status"], "online")
         self.assertEqual(notification["message"]["payload"]["presence_status"], "online")
 
+    def test_guest_receives_its_channels_on_peek_notifications(self):
+        channel = self.env["discuss.channel"].create(
+            {"name": "General", "channel_type": "channel", "group_public_id": False}
+        )
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        channel.add_members(guest_ids=guest.ids)
+        self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
+        result = self.make_jsonrpc_request(
+            "/websocket/peek_notifications",
+            {"channels": [], "last": 0, "is_first_poll": True},
+        )
+        self.assertIn([self.env.cr.dbname, "mail.guest", guest.id], result["channels"])
+        self.assertIn([self.env.cr.dbname, "discuss.channel", channel.id], result["channels"])
+
     def test_do_not_rotate_session_when_updating_presence(self):
         self.authenticate('admin', 'admin')
         self.url_open('/odoo')

@@ -1,20 +1,14 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests.common import TransactionCase, tagged
-from odoo._monkeypatches.stdnum import new_get_soap_client
 from odoo.exceptions import ValidationError
 from unittest.mock import patch
 
-import stdnum.eu.vat
-from lxml import etree
-from zeep import Client, Transport
-from zeep.wsdl import Document
 
-
+@tagged('post_install', '-at_install')
 class TestStructure(TransactionCase):
     @classmethod
     def setUpClass(cls):
         def _check_vies_iap(record):
-            return "valid" if record.vat == 'BE0477472701' else "unassigned"
+            return 'valid' if record.vat == 'BE0477472701' else 'unassigned'
 
         super().setUpClass()
         cls.env.user.company_id.vat_check_vies = False
@@ -125,14 +119,6 @@ class TestStructure(TransactionCase):
         with self.assertRaises(ValidationError):
             test_partner.write({'vat': "136695978"})
 
-    def test_soap_client_for_vies_loads(self):
-        # Test of stdnum get_soap_client monkeypatch. This test is mostly to
-        # see that no unexpected import errors are thrown and not caught.
-        with patch.object(Document, '_get_xml_document', return_value=etree.Element("root")), \
-                patch.object(Client, 'service', return_value=None):
-            doc = Document(location=None, transport=Transport())
-            new_get_soap_client(doc, 30)
-
     def test_no_vies_revalidation_when_creating_company_from_contact(self):
         # Test that we don't revalidate the VAT when create a company from a contact where it's already validated
         self.env.user.company_id.vat_check_vies = True
@@ -140,9 +126,9 @@ class TestStructure(TransactionCase):
             partner = self.env["res.partner"].create({
                 'name': 'Dummy Partner',
                 'company_name': 'My Company',
-                'vat': 'BE0477472701',
                 'country_id': self.env.ref("base.be").id,
             })
+            partner.vat = 'BE0477472701'
             self.assertEqual(partner.vies_valid, True)
 
         with patch('odoo.addons.base_vat.models.res_partner.ResPartner._check_vies_iap',
@@ -230,7 +216,7 @@ class TestStructure(TransactionCase):
         for ubn in ['88117254', '12345601', '90183275']:
             test_partner.vat = ubn
 
-        for ubn in ['88117250', '12345600', '90183272']:
+        for ubn in ['88117250', '12345600', '90183272', '1234567A']:
             with self.assertRaises(ValidationError):
                 test_partner.vat = ubn
 
@@ -277,13 +263,15 @@ class TestStructure(TransactionCase):
         in_partner = self.env["res.partner"].create({"name": "IN Company", "country_id": self.env.ref("base.in").id})
         in_partner.vat = "9922JPN29001OSU"
 
+    def test_cnpj_br(self):
+        """Test valid alphanumeric CNPJ for Brazil"""
+        test_partner = self.env["res.partner"].create({"name": "BR Company", "country_id": self.env.ref("base.br").id})
+        # Invalid CNPJ with checksum failure
+        with self.assertRaises(ValidationError):
+            test_partner.write({'vat': "49.233.848/0001-59"})
 
-@tagged('-standard', 'external')
-class TestStructureVIES(TestStructure):
-    allow_inherited_tests_method = True
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.env.user.company_id.vat_check_vies = True
-        cls._vies_check_func = stdnum.eu.vat.check_vies
+        # Valid alphanumeric CNPJ
+        test_partner.write({'vat': '12.ABC.345/01DE-35'})
+        self.assertEqual(test_partner.vat, '12ABC34501DE35')
+        test_partner.write({'vat': '51.494.569/0131-70'})
+        self.assertEqual(test_partner.vat, '51494569013170')

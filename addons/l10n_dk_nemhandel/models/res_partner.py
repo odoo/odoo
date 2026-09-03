@@ -74,7 +74,8 @@ class ResPartner(models.Model):
                 continue
             country_code = partner._deduce_country_code()
             if country_code == 'DK' and partner.nemhandel_identifier_type == '0184':
-                partner.nemhandel_identifier_value = partner.company_registry
+                vat_country, vat_number = partner._split_vat(partner.company_registry or '')
+                partner.nemhandel_identifier_value = vat_number if vat_country == 'DK' else partner.company_registry
             elif country_code == 'DK':
                 partner.nemhandel_identifier_value = partner.nemhandel_identifier_value
             else:
@@ -123,6 +124,8 @@ class ResPartner(models.Model):
         hash_participant = md5(edi_identification.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{edi_identification}")
         nemhandel_user = self.env.company.sudo().nemhandel_edi_user
+        if not nemhandel_user:  # to avoid unnecessary requests; i.e. in tests
+            return None
         edi_mode = nemhandel_user and nemhandel_user.edi_mode or self.env['ir.config_parameter'].sudo().get_param('l10n_dk_nemhandel.edi.mode')
         sml_zone = 'edel.sml-demo' if edi_mode == 'test' else 'edel.sml'
         smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.dataudveksling.dk/{endpoint_participant}"

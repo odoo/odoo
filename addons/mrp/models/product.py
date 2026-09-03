@@ -88,7 +88,9 @@ class ProductTemplate(models.Model):
 
     def action_view_mos(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_action")
-        action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
+        action['domain'] = [('state', '=', 'done'), ('move_finished_ids', 'any', [
+            ('product_tmpl_id', 'in', self.ids), ('state', '!=', 'cancel'), ('picked', '=', True)])
+        ]
         action['context'] = {
             'search_default_filter_plan_date': 1,
         }
@@ -247,10 +249,19 @@ class ProductProduct(models.Model):
 
     def _compute_mrp_product_qty(self):
         date_from = fields.Datetime.to_string(fields.Datetime.now() - timedelta(days=365))
-        #TODO: state = done?
-        domain = [('state', '=', 'done'), ('product_id', 'in', self.ids), ('date_start', '>', date_from)]
-        read_group_res = self.env['mrp.production']._read_group(domain, ['product_id'], ['product_uom_qty:sum'])
-        mapped_data = {product.id: qty for product, qty in read_group_res}
+        domain = [
+            ('production_id.state', '=', 'done'),
+            ('product_id', 'in', self.ids),
+            ('production_id.date_start', '>', date_from),
+            ('state', '!=', 'cancel'),
+            ('picked', '=', True),
+        ]
+        read_group_res = self.env['stock.move']._read_group(domain, ['product_id', 'product_uom'], ['quantity:sum'])
+        mapped_data = collections.defaultdict(float)
+        for product, uom, qty in read_group_res:
+            if uom != product.uom_id:
+                qty = uom._compute_quantity(qty, product.uom_id)
+            mapped_data[product.id] += qty
         for product in self:
             if not product.id:
                 product.mrp_product_qty = 0.0
@@ -268,7 +279,7 @@ class ProductProduct(models.Model):
         This override is used to get the correct quantities of products
         with 'phantom' as BoM type.
         """
-        bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom')
+        bom_kits = self.env['mrp.bom']._bom_find(self, bom_type='phantom', company_id=self.env.company.id)
         kits = self.filtered(lambda p: bom_kits.get(p))
         regular_products = self - kits
         res = (
@@ -361,7 +372,9 @@ class ProductProduct(models.Model):
 
     def action_view_mos(self):
         action = self.product_tmpl_id.action_view_mos()
-        action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
+        action['domain'] = [('state', '=', 'done'), ('move_finished_ids', 'any', [
+            ('product_id', 'in', self.ids), ('state', '!=', 'cancel'), ('picked', '=', True)])
+        ]
         return action
 
     def action_open_quants(self):
@@ -403,19 +416,18 @@ class ProductProduct(models.Model):
         if not op:
             return NotImplemented
         product_ids = super(ProductProduct, self)._search_qty_available_new(operator, value, lot_id, owner_id, package_id)
+        # Callers that never value kits (e.g. stock valuation) can skip the kit BoM expansion.
+        if self.env.context.get('skip_kit_qty_available'):
+            return product_ids
         kit_boms = self.env['mrp.bom'].search([('type', "=", 'phantom')])
-        kit_products = self.env['product.product']
-        for kit in kit_boms:
-            if kit.product_id:
-                kit_products |= kit.product_id
-            else:
-                kit_products |= kit.product_tmpl_id.product_variant_ids
+        kit_products = kit_boms.mapped(lambda kit: kit.product_id or kit.product_tmpl_id.product_variant_ids)
+        product_ids = set(product_ids)
         for product in kit_products:
             if op(product.qty_available, value):
-                product_ids.append(product.id)
-            elif product.id in product_ids:
-                product_ids.pop(product_ids.index(product.id))
-        return list(set(product_ids))
+                product_ids.add(product.id)
+            else:
+                product_ids.discard(product.id)
+        return list(product_ids)
 
     def action_archive(self):
         filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')

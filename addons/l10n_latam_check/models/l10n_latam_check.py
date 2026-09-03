@@ -115,9 +115,20 @@ class L10n_LatamCheck(models.Model):
 
     def action_void(self):
         for rec in self.filtered('outstanding_line_id'):
+            # Unreconcile the payment from its mactched invoice before voiding
+            payment_line = rec.payment_id.move_id.line_ids.filtered(
+                lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable')
+            )
+            if payment_line:
+                payment_line.remove_move_reconcile()
+
+            # Create and post reversal move to cancel original payment entry
             void_move = rec.env['account.move'].create(rec._prepare_void_move_vals())
             void_move.action_post()
+
+            # Reconcile the void move with the check and the outstanding debit on invoice
             (void_move.line_ids[1] + rec.outstanding_line_id).reconcile()
+            (void_move.line_ids[0] + payment_line).reconcile()
 
     def _get_last_operation(self):
         self.ensure_one()
@@ -128,7 +139,9 @@ class L10n_LatamCheck(models.Model):
     def _compute_current_journal(self):
         for rec in self:
             last_operation = rec._get_last_operation()
-            if not last_operation:
+            incoming_operations = (rec.payment_id + rec.operation_ids).filtered(lambda x: x.state not in ['draft', 'canceled'] and x.payment_type == 'inbound')
+            outgoing_operations = (rec.payment_id + rec.operation_ids).filtered(lambda x: x.state not in ['draft', 'canceled'] and x.payment_type == 'outbound')
+            if not last_operation or len(incoming_operations) - len(outgoing_operations) < 1:
                 rec.current_journal_id = False
                 continue
             if last_operation.payment_type == 'inbound':

@@ -4,7 +4,6 @@
 from datetime import datetime as dt, time
 from datetime import timedelta as td
 from json import loads
-from unittest import skip
 
 from odoo import SUPERUSER_ID, Command
 from odoo.fields import Date
@@ -910,7 +909,6 @@ class TestReorderingRule(TransactionCase):
             {'qty_forecast': 0, 'qty_to_order': 0},
         ])
 
-    @skip('Temporary to fast merge new valuation')
     def test_decrease_qty_multi_step_receipt(self):
         """ Two-steps receipt. An orderpoint generates a move from Input to Stock
         with 5 x Product01 and a purchase order to fulfill the need of that SM.
@@ -963,7 +961,6 @@ class TestReorderingRule(TransactionCase):
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 4},
         ])
 
-    @skip('Temporary to fast merge new valuation')
     def test_decrease_qty_multi_step_receipt02(self):
         """
         Two-steps receipt. An orderpoint generates a move from Input to Stock
@@ -1475,3 +1472,35 @@ class TestReorderingRule(TransactionCase):
         self.product_01.seller_ids = False
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertTrue(orderpoint.show_supply_warning)
+
+    def test_replenish_expired_seller(self):
+        self.product_01.standard_price = 50.0
+        self.product_01.seller_ids.price = 100.0
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_user(2).create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0.0,
+            'product_max_qty': 10.0,
+            'trigger': 'manual',
+        })
+        orderpoint.qty_to_order = 5.0
+        orderpoint.action_replenish()
+        po = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)], order='id desc', limit=1)
+        self.assertRecordValues(po.order_line, [{
+            'product_id': self.product_01.id,
+            'product_qty': 5.0,
+            'price_unit': 100.0,
+        }])
+
+        # Expire the seller
+        self.product_01.seller_ids.date_end = Date.today() - td(days=1)
+        # Second replenishment with expired seller using the same orderpoint
+        orderpoint.qty_to_order = 1.0
+        orderpoint.action_replenish()
+        self.assertRecordValues(po.order_line, [{
+            'product_id': self.product_01.id,
+            'product_qty': 6.0,
+            'price_unit': 100.0,
+        }])

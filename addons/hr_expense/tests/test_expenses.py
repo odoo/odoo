@@ -898,7 +898,6 @@ class TestExpenses(TestExpenseCommon):
         })
 
         self.create_expenses({'tax_ids': [Command.set(tax_expense.ids)]})
-        tax_expense.invalidate_model(fnames=['is_used'])
         self.assertTrue(tax_expense.is_used)
 
     def test_expense_by_company_with_caba_tax(self):
@@ -967,6 +966,34 @@ class TestExpenses(TestExpenseCommon):
             expense.with_context(validate_analytic=True).action_approve()
         expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
         expense.with_context(validate_analytic=True).action_approve()
+
+    def test_expense_mandatory_analytic_plan_autovalidated_submission(self):
+        """
+        Check that when an analytic plan has a mandatory applicability,
+        it gets correctly triggered when the expense is submitted
+        and approved automatically.
+        """
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'expense',
+            'analytic_plan_id': self.analytic_plan.id,
+            'applicability': 'mandatory',
+            'product_categ_id': self.product_a.categ_id.id,
+        })
+
+        expense = self.create_expenses({
+            'product_id': self.product_a.id,
+            'quantity': 350.00,
+            'payment_mode': 'company_account',
+        })
+
+        # Set the employee's manager to none to auto-approve the expense on submission
+        expense.employee_id.sudo().expense_manager_id = None
+
+        with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
+            expense.action_submit()
+        expense.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense.action_submit()
+        self.assertEqual(expense.state, 'approved', "Expense should be approved after submission with analytic distribution set.")
 
     def test_expense_no_stealing_from_employees(self):
         """
@@ -1198,3 +1225,17 @@ class TestExpenses(TestExpenseCommon):
                 {'name': 'file_4.png', 'res_model': 'account.move', 'res_id': expense_2.account_move_id.id},
             ]
         )
+
+    def test_delete_expense_with_attachment(self):
+        """ Deleting an expense should also delete its attachments """
+        expense = self.create_expenses()
+        attachment = self.env['ir.attachment'].create({
+            'raw': b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
+            'name': 'file.png',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+
+        expense.unlink()
+        self.assertFalse(expense.exists())
+        self.assertFalse(attachment.exists())

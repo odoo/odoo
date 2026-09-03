@@ -14,15 +14,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-10-08 18:37+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-07 02:12+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-19/"
+"hr_holidays/uz/>\n"
 "Language: uz\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -187,6 +189,14 @@ msgstr "%(name)s (%(maximum)g soatdan %(time)g soat qoldi)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #, fuzzy
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
@@ -271,28 +281,6 @@ msgstr "ning qisqacha bayoni ("
 #, fuzzy
 msgid "'s summary in this period"
 msgstr "ushbu davrdagi qisqacha xulosasi"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
-msgid "(s)"
-msgstr "Kun(lar)"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr "(s) va balans chegarasi o‘rnatildi"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1520,19 +1508,15 @@ msgstr "O‘tkazish parametrlari"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_version.py:0
-#, fuzzy
 msgid ""
 "Changing the contract on this employee changes their working schedule in a "
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"Ushbu xodimning shartnomasini o‘zgartirish, u allaqachon ta'til olgan "
-"davrdagi ish jadvalini o‘zgartiradi. Bu ish jadvalining o‘zgartirilishi "
-"ta'tillar muddatini shunday o‘zgartiradiki, xodim endi ularga zarur bo‘lgan "
-"ajratmaga ega bo‘lmaydi. Iltimos, shartnomani o‘zgartirishdan oldin ushbu "
-"ta'tillar va/yoki ajratmalarni ko‘rib chiqing."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1544,8 +1528,8 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
-"Ushbu ish jadvalining o‘zgartirilishi natijasida ta'sirga uchragan "
-"xodim(lar) kelajakda olgan ta'tillari uchun yetarli miqdorda ajratmaga ega "
+"Ushbu ish jadvalining o‘zgartirilishi natijasida ta'sirga uchragan xodim"
+"(lar) kelajakda olgan ta'tillari uchun yetarli miqdorda ajratmaga ega "
 "bo‘lmaydi. Iltimos, ushbu xodimning ta'tillarini ko‘rib chiqing va "
 "ajratmalarini tegishli ravishda moslashtiring."
 
@@ -1608,6 +1592,11 @@ msgstr "Ta'til so‘rash uchun ushbu tugmani bosing"
 #, fuzzy
 msgid "Color"
 msgstr "Rang"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__company_id
@@ -2051,6 +2040,7 @@ msgstr "Bekor qilish"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
@@ -2697,6 +2687,7 @@ msgstr "Kadrlar belgisi ko‘rinishi"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
@@ -4239,8 +4230,8 @@ msgid ""
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
 "Xodim tomonidan so‘rov berilganda kerakli tasdiqlash darajasini tanlang # - "
-"Tasdiqlash shart emas: Xodimning so‘rovi avtomatik ravishda tasdiqlanadi. # "
-"- Dam olish vaqti bo‘yicha mas'ul xodim tomonidan tasdiqlanadi: Xodimning "
+"Tasdiqlash shart emas: Xodimning so‘rovi avtomatik ravishda tasdiqlanadi. "
+"# - Dam olish vaqti bo‘yicha mas'ul xodim tomonidan tasdiqlanadi: Xodimning "
 "so‘rovi dam olish vaqti bo‘yicha mas'ul xodim, xodimning tasdiqlovchisi yoki "
 "ikkalasi tomonidan qo‘lda tasdiqlanishi kerak."
 
@@ -4612,6 +4603,14 @@ msgstr ""
 "Bu yerda tanlangan rang dam olish turining barcha ekranlarida ishlatiladi."
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/res_company.py:0
+msgid ""
+"The company country cannot be changed while time off leaves or allocations "
+"with the country exist."
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #, fuzzy
 msgid "The days carried over will be effective for"
@@ -4713,8 +4712,7 @@ msgstr "Boshlanish sanasi tugash sanasidan oldin bo‘lishi kerak."
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
 #, fuzzy
 msgid "The start date must be before or equal to the end date."
-msgstr ""
-"Boshlanish sanasi tugash sanasidan oldin yoki unga teng bo‘lishi kerak."
+msgstr "Boshlanish sanasi tugash sanasidan oldin yoki unga teng bo‘lishi kerak."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -4763,13 +4761,6 @@ msgid ""
 msgstr ""
 "Ta'til vaqti uchun xodim belgilanmagan. To‘g‘ri kompaniyaga kirganingizga "
 "ishonch hosil qiling."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-#, fuzzy
-msgid "There is no valid allocation to cover that request."
-msgstr "Bu so‘rovni qoplash uchun haqiqiy taqsimot mavjud emas."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5843,8 +5834,7 @@ msgstr "Bir xil harakatni ikki marta bajara olmaysiz"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, fuzzy
 msgid "You can't refuse a leave with validation by Time Off Officer."
-msgstr ""
-"Dam olish vaqti xodimi tomonidan tekshirilgan ta'tilni rad eta olmaysiz"
+msgstr "Dam olish vaqti xodimi tomonidan tekshirilgan ta'tilni rad eta olmaysiz"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5885,8 +5875,7 @@ msgstr "Bu ta'tilni tasdiqlay olmaysiz."
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 #, fuzzy
 msgid "You cannot allow requests on top of leaves of type 'Absence'."
-msgstr ""
-"\"Yo‘qlik\" turidagi ta'tillar ustiga so‘rovlarga ruxsat bera olmaysiz."
+msgstr "\"Yo‘qlik\" turidagi ta'tillar ustiga so‘rovlarga ruxsat bera olmaysiz."
 
 #. module: hr_holidays
 #. odoo-python
@@ -6084,6 +6073,12 @@ msgstr "ajratish sanasi"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 #, fuzzy
 msgid "and the"
@@ -6127,6 +6122,12 @@ msgstr "bu yerga bosing"
 #, fuzzy
 msgid "dates"
 msgstr "sanalar"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -6227,6 +6228,12 @@ msgstr "ajratilgan vaqt boshidan"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -6252,6 +6259,12 @@ msgid ""
 msgstr ""
 "\"Ishlangan vaqt\" turidagi ta'tillar doimo hisoblash stavkasi uchun mos "
 "kelishi kerak."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -6400,3 +6413,37 @@ msgstr "-gacha amal qiladi"
 #, fuzzy
 msgid "validate"
 msgstr "tasdiqlash"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr ""
+
+#, fuzzy
+#~ msgid "(s)"
+#~ msgstr "Kun(lar)"
+
+#, fuzzy
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr "(s) va balans chegarasi o‘rnatildi"
+
+#, fuzzy
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Bu so‘rovni qoplash uchun haqiqiy taqsimot mavjud emas."
+
+#, fuzzy
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "Ushbu xodimning shartnomasini o‘zgartirish, u allaqachon ta'til olgan "
+#~ "davrdagi ish jadvalini o‘zgartiradi. Bu ish jadvalining o‘zgartirilishi "
+#~ "ta'tillar muddatini shunday o‘zgartiradiki, xodim endi ularga zarur "
+#~ "bo‘lgan ajratmaga ega bo‘lmaydi. Iltimos, shartnomani o‘zgartirishdan "
+#~ "oldin ushbu ta'tillar va/yoki ajratmalarni ko‘rib chiqing."

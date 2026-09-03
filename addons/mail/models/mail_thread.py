@@ -9,6 +9,7 @@ import email.policy
 import encodings
 import hashlib
 import hmac
+from itertools import chain
 import json
 import lxml
 import logging
@@ -1240,20 +1241,20 @@ class MailThread(models.AbstractModel):
             user_id = self._mail_find_user_for_gateway(email_from, alias=dest_aliases).id or self.env.uid
             route = self._routing_check_route(
                 message, message_dict,
-                (reply_model, reply_thread_id, custom_values, user_id, dest_aliases),
+                (reply_model, reply_thread_id, None, user_id, dest_aliases),
                 raise_exception=False)
             if route:
                 _logger.info(
                     'Routing mail from %s to %s with Message-Id %s: direct reply to msg: model: %s, thread_id: %s, custom_values: %s, uid: %s',
-                    email_from, message_dict['to'], message_id, reply_model, reply_thread_id, custom_values, self.env.uid)
+                    email_from, message_dict['to'], message_id, reply_model, reply_thread_id, None, self.env.uid)
                 return [route]
             if route is False:
                 return []
 
         # 2. Handle new incoming email by checking aliases and applying their settings
         # prefetch catchall aliases as they are used several times
-        catchall_aliases = self.env['mail.alias.domain'].search([]).mapped('catchall_email')
-        self = self.with_context(mail_catchall_aliases=catchall_aliases)
+        all_aliases = self.env['mail.alias.domain'].search([])
+        self = self.with_context(mail_catchall_aliases=all_aliases.mapped('catchall_email'))
         if rcpt_tos_list:
             # no route found for a matching reference (or reply), so parent is invalid
             message_dict.pop('parent_id', None)
@@ -1262,14 +1263,23 @@ class MailThread(models.AbstractModel):
             if self._detect_write_to_catchall(message_dict):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce',
                              email_from, message_dict['to'], message_id)
+
+                # TODO master: merge the logic with _detect_write_to_catchall.
+                recipient_company = self.env.company
+                email_to_list = [email_normalize(e) or e for e in email_split(message_dict['to'])]
+                for alias in all_aliases:
+                    if alias.catchall_email in email_to_list and alias.company_ids and recipient_company not in alias.company_ids:
+                        recipient_company = alias.company_ids[:1]
+
                 body = self.env['ir.qweb']._render('mail.mail_bounce_catchall', {
                     'message': message,
+                    'res_company': recipient_company,
                 })
-                self._routing_create_bounce_email(
+                self.with_company(recipient_company)._routing_create_bounce_email(
                     email_from, body, message,
                     # add a reference with a tag, to be able to ignore response to this email
                     references=f'{message_id} {generate_tracking_message_id("loop-detection-bounce-email")}',
-                    reply_to=self.env.company.email)
+                    reply_to=recipient_company.email)
                 return []
 
             dest_aliases = self.env['mail.alias'].search([
@@ -1347,7 +1357,11 @@ class MailThread(models.AbstractModel):
 
             # disabled subscriptions during message_new/update to avoid having the system user running the
             # email gateway become a follower of all inbound messages
-            ModelCtx = Model.with_user(related_user).sudo()
+            ModelCtx = Model
+            if alias:
+                if self.env.is_system():
+                    ModelCtx = Model.with_user(related_user)
+                ModelCtx = ModelCtx.sudo()
             if thread_id and hasattr(ModelCtx, 'message_update'):
                 thread = ModelCtx.browse(thread_id)
                 thread.message_update(message_dict)
@@ -1465,10 +1479,18 @@ class MailThread(models.AbstractModel):
         if strip_attachments:
             msg_dict.pop('attachments', None)
 
-        existing_msg_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['message_id'])], limit=1)
-        if existing_msg_ids:
+        msg_id = msg_dict.get('message_id')
+        is_duplicate = bool(self.env['mail.message'].search_count([('message_id', '=', msg_id)], limit=1))
+        if not is_duplicate and msg_id:
+            # Synchronize concurrent transactions for the same message_id to make the duplicate check reliable.
+            # Use pg_try_advisory_xact_lock: if another transaction is already processing the same message_id,
+            # treat it as a duplicate.
+            self.env.cr.execute(SQL('SELECT pg_try_advisory_xact_lock(hashtext(%s))', msg_id))
+            is_duplicate = not self.env.cr.fetchone()[0]
+
+        if is_duplicate:
             _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
-                         msg_dict.get('email_from'), msg_dict.get('to'), msg_dict.get('message_id'))
+                         msg_dict.get('email_from'), msg_dict.get('to'), msg_id)
             return False
 
         if self._detect_loop_headers(msg_dict):
@@ -2056,6 +2078,8 @@ class MailThread(models.AbstractModel):
         alias_emails = self.env['mail.alias.domain'].sudo()._find_aliases(emails_key_all) if avoid_alias else []
         ban_emails = (ban_emails or []) + alias_emails
 
+        emails_set = set(chain.from_iterable(records_emails.values()))
+
         # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810; final
         # ordering is search order defined in '_find_or_create_from_emails', which is id ASC
         def sort_key(p):
@@ -2067,6 +2091,7 @@ class MailThread(models.AbstractModel):
                 p.company_id.id == emails_key_company_id.get(
                     p.email_normalized, False
                 ),                                                  # then partner associated w/ record's company
+                p.email_formatted in emails_set,                    # prioritize exact mail match
                 not p.company_id,                                   # then company-agnostic to avoid issues
             )
 
@@ -4398,12 +4423,18 @@ class MailThread(models.AbstractModel):
             return ooo_messages
 
         # limit number of real author / recipient exchanges to 1 every 4 days
-        sent_su = self.env['mail.message'].sudo().search([
+        base_domain = Domain([
             ('author_id', 'in', ooo_users.partner_id.ids),
             ('message_type', '=', 'out_of_office'),
-            '|', ('partner_ids', 'in', recipient.ids), ('outgoing_email_to', '=', email_to),
             ('date', '>=', '-4d'),
         ])
+
+        partner_domain = Domain('partner_ids', 'in', recipient.ids) if recipient else Domain.FALSE
+        email_domain = Domain('outgoing_email_to', '=', email_to) if email_to else Domain.FALSE
+        recipient_domain = partner_domain | email_domain
+
+        final_domain = base_domain & recipient_domain
+        sent_su = self.env['mail.message'].sudo().search(final_domain)
         already_mailed = sent_su.author_id
 
         # finally send OOO messages
@@ -4864,32 +4895,42 @@ class MailThread(models.AbstractModel):
                     will transfer the context of the thread of my_lead to my_project_task
         """
         self.ensure_one()
-        # get the subtype of the comment Message
-        subtype_comment = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
-
+        self.check_access('read')
+        new_thread.check_access('read')
         # get the ids of the comment and not-comment of the thread
         # TDE check: sudo on mail.message, to be sure all messages are moved ?
         MailMessage = self.env['mail.message']
-        msg_comment = MailMessage.search([
+        messages = MailMessage.search([
             ('model', '=', self._name),
             ('res_id', '=', self.id),
             ('message_type', '!=', 'user_notification'),
-            ('subtype_id', '=', subtype_comment)])
-        msg_not_comment = MailMessage.search([
-            ('model', '=', self._name),
-            ('res_id', '=', self.id),
-            ('message_type', '!=', 'user_notification'),
-            ('subtype_id', '!=', subtype_comment)])
+        ])
+        non_generic_messages = messages.filtered(lambda m: m.subtype_id.res_model)
+        generic_messages = messages - non_generic_messages
 
         # update the messages
         msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
         if new_parent_message:
             msg_vals["parent_id"] = new_parent_message.id
-        msg_comment.sudo().write(msg_vals)
+        generic_messages.sudo().write(msg_vals)
 
-        # other than comment: reset subtype
-        msg_vals["subtype_id"] = None
-        msg_not_comment.sudo().write(msg_vals)
+        messages_with_description = MailMessage
+
+        if self._name != new_thread._name:
+            msg_vals["subtype_id"] = None
+
+            messages_with_description = non_generic_messages.filtered(
+                lambda msg: msg.subtype_id.description
+            )
+            for message in messages_with_description:
+                body = append_content_to_html(
+                    message.subtype_id.description,
+                    message.body,
+                )
+                # only admin can modify model and res_id, so use sudo
+                message.sudo().write({**msg_vals, "body": body})
+
+        (non_generic_messages - messages_with_description).sudo().write(msg_vals)
         return True
 
     def _message_update_content(self, message, /, *, body, attachment_ids=None, partner_ids=None,
@@ -4954,6 +4995,8 @@ class MailThread(models.AbstractModel):
             message.attachment_ids._delete_and_notify()
         if partner_ids is not None:
             msg_values.update({"partner_ids": [int(pid) for pid in partner_ids] or False})
+        if "subject" in kwargs:
+            msg_values["subject"] = kwargs["subject"]
         if msg_values:
             message.write(msg_values)
         if message._filter_empty():
@@ -4979,6 +5022,8 @@ class MailThread(models.AbstractModel):
             *message._get_store_linked_messages_fields(),
             *self._get_store_message_update_extra_fields(),
         ]
+        if "subject" in kwargs:
+            res.append("subject")
         if body is not None:
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
@@ -5075,7 +5120,7 @@ class MailThread(models.AbstractModel):
         sudo()._message_update_content(), which means these parameters should be either inoffensive
         or safely handled by these methods. Parameters requiring special processing need to be
         manually handled in _prepare_message_data."""
-        return {"email_add_signature", "message_type", "subtype_xmlid"}
+        return {"email_add_signature", "message_type", "subject", "subtype_xmlid"}
 
     @api.model
     def _get_allowed_access_params(self):

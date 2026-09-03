@@ -11,15 +11,16 @@
 # Lars Aam <lars.aam@vikenfiber.no>, 2022
 # Henning Fyllingsnes, 2023
 # Mads Søndergaard, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Victoria Granlie <victoria@flytconsulting.no>, 2026.
+# Aleksander Steffensen <ast@system.as>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-03-06 17:47+0000\n"
+"POT-Creation-Date: 2026-07-10 17:37+0000\n"
+"PO-Revision-Date: 2026-08-08 00:49+0000\n"
 "Last-Translator: Victoria Granlie <victoria@flytconsulting.no>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-19/"
 "sale/nb_NO/>\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -69,7 +70,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "%s has been created"
-msgstr "%s har blitt laget"
+msgstr "%s har blitt opprettet"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -784,12 +785,12 @@ msgstr "<strong>Dette tilbudet er utløpt.</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Dette tilbudet har blitt kansellert.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>Deres referanse</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -876,6 +877,13 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"I henhold til produktkonfigurasjonen kan leverte kvantum automatisk beregnes "
+"ved en av følgende mekanismer:\n"
+"  - Manuelt: Kvantum settes manuelt på linjen\n"
+"  - Analytisk fra utgifter: Kvantum er lik kvantum fra en bokført utgift\n"
+"  - Timer: Kvantum er summen av timer registrert på oppgaver linket til "
+"denne ordrelinjen\n"
+"  - Lagerbevegelser: Kvantum kommer fra bekreftede vareplukk\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_chart_template
@@ -1095,8 +1103,8 @@ msgid ""
 "            ordered quantities, and the invoicing policy is based on ordered "
 "quantities."
 msgstr ""
-"En ordre anses som mersalg når leverte kvantiteter overstiger de "
-"opprinnelig \n"
+"En ordre anses som mersalg når leverte kvantiteter overstiger de opprinnelig "
+"\n"
 "             bestilte kvantitetene, og faktureringspolicyen er basert på "
 "bestilte kvantiteter."
 
@@ -1580,11 +1588,6 @@ msgstr "Bekreftelse"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Connect with your software!"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Connect your software"
 msgstr ""
 
 #. module: sale
@@ -2824,8 +2827,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_expense
 msgid "Is true if the sales order line comes from an expense or a vendor bills"
-msgstr ""
-"Er sann om salgsordrelinje kommer fra en utgift eller leverandørregning"
+msgstr "Er sann om salgsordrelinje kommer fra en utgift eller leverandørregning"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -3238,8 +3240,8 @@ msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
 msgstr ""
-"Så fort tilbudet er bekreftet av kunden, vil det bli til en salgsordre."
-"<br>Du vil da kunne opprette en faktura og ta imot betaling."
+"Så fort tilbudet er bekreftet av kunden, vil det bli til en salgsordre.<br>"
+"Du vil da kunne opprette en faktura og ta imot betaling."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders
@@ -3292,8 +3294,7 @@ msgstr "Kun ordreutkast kan merkes som sendt direkte."
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique
 msgid ""
 "Only one Custom Value is allowed per Attribute Value per Sales Order Line."
-msgstr ""
-"Kun én tilpasset verdi er tillatt pr attributtverdi pr salgsordrelinje."
+msgstr "Kun én tilpasset verdi er tillatt pr attributtverdi pr salgsordrelinje."
 
 #. module: sale
 #. odoo-python
@@ -5530,8 +5531,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "You cannot cancel a locked order. Please unlock it first."
-msgstr ""
-"Du kan ikke kansellere en låst bestilling. Vennligst lås den opp først."
+msgstr "Du kan ikke kansellere en låst bestilling. Vennligst lås den opp først."
 
 #. module: sale
 #. odoo-python
@@ -5717,11 +5717,6 @@ msgid "sale order"
 msgstr "salgsordre"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "to create quotes automatically."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "to learn all the ways to connect your software with"
 msgstr ""
@@ -5730,11 +5725,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "units"
 msgstr "enheter"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "with"
-msgstr "med"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5771,6 +5761,9 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "with"
+#~ msgstr "med"
 
 #~ msgid "27.00"
 #~ msgstr "27.00"

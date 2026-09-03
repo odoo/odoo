@@ -122,6 +122,43 @@ class Intervals(typing.Generic[T]):
         warnings.warn("Deprecated since 19.0, just iterate over Intervals", DeprecationWarning)
         return self._items
 
+    def conflicting(self, other):
+        """Return whole intervals from `self` that overlap ANY interval in `other`."""
+        result = Intervals()
+        append = result._items.append
+
+        bounds_self = _boundaries(self, 'start', 'stop')
+        bounds_other = _boundaries(other, 'switch', 'switch')
+
+        # We want touching NOT to overlap, so:
+        # - process 'stop' before 'start' at the same timestamp
+        # - process 'switch' before 'start' at the same timestamp (so other ending at t
+        #   is applied before self starting at t)
+        rank = {'stop': 0, 'switch': 0, 'start': 1}
+
+        def _key(item):
+            value, flag, _recs = item
+            return (value, rank[flag])
+
+        cur = None                    # (self_start, self_recs) if a self interval is open, else None
+        overlapped = False            # did current self interval overlap at any moment?
+        active_other = False          # Is an `other` interval currently open
+        for value, flag, recs in sorted(itertools.chain(bounds_self, bounds_other), key=_key):
+            if flag == 'start':
+                cur = (value, recs)
+                overlapped = active_other
+            elif flag == 'stop':
+                if overlapped:
+                    start, s_recs = cur
+                    append((start, value, s_recs))
+                cur = None
+            else:  # 'switch'
+                active_other = not active_other
+                if active_other and cur is not None:
+                    overlapped = True
+
+        return result
+
 
 def intervals_overlap(interval_a: tuple[T, T], interval_b: tuple[T, T]) -> bool:
     """Check whether intervals intersect.
@@ -149,10 +186,14 @@ def invert_intervals(intervals: Iterable[tuple[T, T]], first_start: T, last_stop
     items = []
     prev_stop = first_start
     for start, stop in sorted(intervals):
-        if prev_stop and prev_stop < start and start <= last_stop:
+        if start > last_stop:
+            break
+        if prev_stop < start:
             items.append((prev_stop, start))
         prev_stop = max(prev_stop, stop)
-    if last_stop and prev_stop < last_stop:
+        if stop >= last_stop:
+            break
+    if prev_stop < last_stop:
         items.append((prev_stop, last_stop))
     # abuse Intervals to merge contiguous intervals
     return [(start, stop) for start, stop, _ in Intervals([(start, stop, set()) for start, stop in items])]

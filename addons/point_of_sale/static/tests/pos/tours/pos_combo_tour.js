@@ -52,10 +52,13 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "62.1"),
                 ...ProductScreen.clickLine("Combo Product 3"),
+                ...Order.hasLine({ withClass: ":eq(3).selected" }),
                 ...ProductScreen.selectedOrderlineHasDirect("Combo Product 3", "1"),
                 ...ProductScreen.clickLine("Combo Product 5"),
+                ...Order.hasLine({ withClass: ":eq(1).selected" }),
                 ...ProductScreen.selectedOrderlineHasDirect("Combo Product 5", "1"),
                 ...ProductScreen.clickLine("Combo Product 8"),
+                ...Order.hasLine({ withClass: ":eq(2).selected" }),
                 ...ProductScreen.selectedOrderlineHasDirect("Combo Product 8", "1"),
             ]),
             // check that you can select a customer which triggers a recomputation of the price
@@ -118,6 +121,8 @@ registry.category("web_tour.tours").add("ProductComboPriceCheckTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Combo"),
+            combo.select("Whiteboard Pen"),
+            Dialog.confirm(),
             inLeftSide([
                 ...ProductScreen.selectedOrderlineHasDirect("Desk Combo", "1", "7.00"),
                 ...ProductScreen.orderLineHas("Desk Organizer", "1"),

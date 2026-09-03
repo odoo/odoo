@@ -10,23 +10,23 @@
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023
 # Niyas Raphy, 2023
 # Larissa Manderfeld, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-02 11:40+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"PO-Revision-Date: 2026-08-02 13:20+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/mrp/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -163,7 +163,7 @@ msgstr "%(qty)s Artikel bereit für Produktion"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s To %(route)s"
-msgstr "%(qty)s nach %(route)s"
+msgstr "%(qty)s %(route)s"
 
 #. module: mrp
 #. odoo-python
@@ -327,11 +327,11 @@ msgstr ""
 "<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
 "absolute\">Stechuhr</span>\n"
 "                                        <span class=\"o_annotation "
-"o_annotation_2 o_annotation_end position-absolute\">Qualitätskontrolle</"
-"span>\n"
+"o_annotation_2 o_annotation_end position-absolute\">Qualitätskontrolle</span>"
+"\n"
 "                                        <span class=\"o_annotation "
-"o_annotation_3 o_annotation_start position-absolute\">Feedbackschleife</"
-"span>\n"
+"o_annotation_3 o_annotation_start position-absolute\">Feedbackschleife</span>"
+"\n"
 "                                        <span class=\"o_annotation "
 "o_annotation_4 o_annotation_start position-absolute\">Materialien "
 "registrieren</span>\n"
@@ -2509,7 +2509,7 @@ msgstr "Geschätzt"
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 msgid "Estimated %s"
-msgstr "Geschätzte %s"
+msgstr "Geschätzt: %s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
@@ -3986,10 +3986,8 @@ msgstr "Keinen Demontageauftrag gefunden"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
-#, fuzzy
-#| msgid "Assign serial numbers to production order"
 msgid "No valid serial numbers provided."
-msgstr "Seriennummern Produktionsauftrag zuweisen"
+msgstr "Es wurden keine gültigen Seriennummern angegeben."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -4032,8 +4030,7 @@ msgstr "Nicht bereit"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr ""
-"Beachten Sie, dass eine andere Version dieser Stückliste verfügbar ist."
+msgstr "Beachten Sie, dass eine andere Version dieser Stückliste verfügbar ist."
 
 #. module: mrp
 #. odoo-python
@@ -4483,8 +4480,7 @@ msgstr "Auf Grundlage der Komponentenverfügbarkeit planen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr ""
-"Planen Sie Fertigungsaufträge oder Bestellungen basierend auf Prognosen"
+msgstr "Planen Sie Fertigungsaufträge oder Bestellungen basierend auf Prognosen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -4587,7 +4583,7 @@ msgstr "Vorproduktion"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "Prepare MO"
-msgstr ""
+msgstr "Fertigungsauftrag vorbereiten"
 
 #. module: mrp
 #. odoo-javascript
@@ -7251,10 +7247,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Bitte überprüfen Sie Ihren Komponentenverbrauch "
 "oder bitten Sie einen Manager um Bestätigung für\n"
-"                            <span invisible=\"mrp_production_count != "
-"1\">diesen Fertigungsauftrag</span>\n"
-"                            <span invisible=\"mrp_production_count == "
-"1\">diese Fertigungsaufträge</span>.\n"
+"                            <span invisible=\"mrp_production_count != 1\">"
+"diesen Fertigungsauftrag</span>\n"
+"                            <span invisible=\"mrp_production_count == 1\">"
+"diese Fertigungsaufträge</span>.\n"
 "                        </b>"
 
 #. module: mrp

@@ -4,19 +4,19 @@
 #
 # Translators:
 # 江口和志 <sandwhale1010@gmail.com>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2022, 2025, 2026.
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:36+0000\n"
-"PO-Revision-Date: 2026-04-09 11:20+0000\n"
-"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"PO-Revision-Date: 2026-08-08 00:08+0000\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "calendar/ja/>\n"
 "Language: ja\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
@@ -52,7 +52,7 @@ msgstr "%(day)s 以下における(%(start)s から %(end)s) (%(timezone)s)"
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "%s has accepted the invitation"
-msgstr "%sが招待を承認しました"
+msgstr "%s が招待を承諾しました"
 
 #. module: calendar
 #. odoo-python
@@ -772,8 +772,8 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"font-size: 13px; color: #374151;\">\n"
-"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or "
-"ctx.get('mail_tz')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get"
+"('mail_tz')\"/>\n"
 "    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
 "    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
 "    <h1 style=\"font-size: 18px; font-weight: bold; color: #374151; margin-"
@@ -794,8 +794,8 @@ msgstr ""
 "    </p>\n"
 "    <div style=\"margin: 32px 0 0;\">\n"
 "        <h2 t-attf-style=\"margin-bottom: 12px; font-size: 14px; font-"
-"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};"
-"\">詳細</h2>\n"
+"weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}}"
+";\">詳細</h2>\n"
 "        <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"font-"
 "size: 13px; color: #374151;\">\n"
 "            <tr>\n"
@@ -824,14 +824,14 @@ msgstr ""
 "                </td>\n"
 "            </tr>\n"
 "            <tr t-if=\"not object.allday and object.duration\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">所要時間</td>\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">所要時間</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"('%dH%02d' % "
 "(object.duration,round(object.duration*60)%60))\">0H30</t></td>\n"
 "            </tr>\n"
 "            <tr t-if=\"object.location\">\n"
-"                <td style=\"width: 100px; padding-top: 6px; color: #676F7B;"
-"\">場所</td>\n"
+"                <td style=\"width: 100px; padding-top: 6px; color: "
+"#676F7B;\">場所</td>\n"
 "                <td style=\"padding-top: 6px;\"><t t-out=\"object.location "
 "or ''\">Bruxelles</t></td>\n"
 "            </tr>\n"
@@ -1008,8 +1008,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"アクションは、カレンダービューを開くなどの特定の動作をトリガーしたり、ドキュ"
-"メントのアップロード時に完了として自動的にマークを付けたりする場合があります"
+"アクションは、カレンダービューを開くなどの特定の動作をトリガーしたり、"
+"ドキュメントのアップロード時に完了として自動的にマークを付けたりする場合があ"
+"ります"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -1109,7 +1110,7 @@ msgstr "参加者"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Attendees"
-msgstr "出席者"
+msgstr "参加者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
@@ -1375,6 +1376,12 @@ msgid "Contact Details"
 msgstr "コンタクトの詳細"
 
 #. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_partner.py:0
+msgid "Contact created through Calendar sync."
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
 msgid "Contents"
 msgstr "内容"
@@ -1474,7 +1481,7 @@ msgstr "日"
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Decline"
-msgstr "拒否"
+msgstr "辞退"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
@@ -1759,8 +1766,7 @@ msgstr "%(interval)s月ごと、 %(position)s %(weekday)sに"
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
-msgstr ""
-"%(interval)s月ごと、 %(position)s %(weekday)sに、 %(count)sイベントにつき"
+msgstr "%(interval)s月ごと、 %(position)s %(weekday)sに、 %(count)sイベントにつき"
 
 #. module: calendar
 #. odoo-python
@@ -1971,9 +1977,9 @@ msgid ""
 "available during that period of time."
 msgstr ""
 "もし、その時間が'予定あり'と表示された場合、このイベントは他の人に表示され、"
-"プライバシーに応じて、完全な情報が表示されるか、単に'予定あり'と表示されま"
-"す。このオプションを使うと、その時間帯にあなたが不在であることを他の人に知ら"
-"せることができます。\n"
+"プライバシーに応じて、完全な情報が表示されるか、単に'予定あり'と表示されます"
+"。このオプションを使うと、その時間帯にあなたが不在であることを他の人に知らせ"
+"ることができます。\n"
 "イベントが'空きあり'と表示されている場合、他のユーザはあなたの予定が空いてい"
 "ると知ることができます。"
 
@@ -2239,7 +2245,7 @@ msgstr "月"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
 msgid "More Options"
-msgstr "さらなるオプション"
+msgstr "他のオプション"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2680,7 +2686,7 @@ msgstr "2番目"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr "出席者選択..."
+msgstr "参加者選択..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3026,7 +3032,7 @@ msgstr "終了"
 #: model:mail.template,description:calendar.calendar_template_delete_event
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notify attendees"
-msgstr "出席者に手動で通知するために使用します。"
+msgstr "参加者に手動で通知するために使用します"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -3152,7 +3158,7 @@ msgstr "ベースイベントなしに繰返しを更新することはできま
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "You cannot duplicate a calendar attendee."
-msgstr "カレンダの出席者は重複できません。"
+msgstr "カレンダの参加者は重複できません。"
 
 #. module: calendar
 #. odoo-python
@@ -3170,7 +3176,7 @@ msgstr "このミーティングにはあなたしかいません。"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr "受諾済"
+msgstr "承諾済"
 
 #. module: calendar
 #. odoo-javascript

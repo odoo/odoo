@@ -31,20 +31,22 @@
 # hed shefer <hed@laylinetech.com>, 2023
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # or balmas <or@laylinetech.com>, 2025, 2026.
 # Yael Terner <yael@laylinetech.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # noa eldar <noaeldar@laylinetech.com>, 2026.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# diego gurwicz <diegog@dnghub.com>, 2026.
+# Yoram Lavi <yoram@digitale.co.il>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-09 11:26+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-05 22:30+0000\n"
+"Last-Translator: Yoram Lavi <yoram@digitale.co.il>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/account/"
 "he/>\n"
 "Language: he\n"
@@ -53,7 +55,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -187,14 +189,26 @@ msgstr ""
 msgid ""
 "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
-"%(auto_post_name)s הופעלה השלמה אוטומטית עבור. תאריך הנה\"ח הבא: %"
-"(move_date)s."
+"%(auto_post_name)s הופעלה השלמה אוטומטית עבור. תאריך הנה\"ח הבא: %(move_date)"
+"s."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "%(exception)s for %(user)s%(end_datetime_string)s%(reason)s."
 msgstr "%(exception)s ל %(user)s%(end_datetime_string)s%(reason)s."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s (Draft)"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -207,12 +221,6 @@ msgstr ""
 "%(move)s נמצאת במצב שגוי ביחס לשורת הפקודה המשויכת אליה..\n"
 "כדי לשמור על תקינות חשבונאית, על פקודת היומן להכיל שורת חשבון ביניים אחת "
 "בלבד."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -325,21 +333,9 @@ msgstr "%s מיסים"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s, או / אם לא רלוונטי"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
-msgstr "%s, או לא רלוונטי"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
-msgstr ""
+msgstr "'%(filename)s' (חולץ מתוך '%(root_filename)s', סוג=%(type)s)"
 
 #. module: account
 #. odoo-python
@@ -447,12 +443,6 @@ msgstr "... (%(nb_of_values)s אחר)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "... (הצג הכל)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ אם לא רלוונטי"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
@@ -622,9 +612,8 @@ msgstr ""
 "                    (מזהה: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "                </t>\n"
-"                על סך <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"                על סך <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "                מחברת <t t-out=\"object.company_id.name or ''\">YourCompany</"
 "t>.\n"
 "                <br/><br/>\n"
@@ -740,9 +729,8 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (מזהה: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        על סך <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        על סך <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        מחברת  <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            חשבונית זו שולמה.\n"
@@ -763,8 +751,8 @@ msgstr ""
 "        <t t-if=\"hasattr(object, 'timesheet_count') and "
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            ניתן לצפות בשעות החיוב  <a t-att-href=\"'/my/timesheets?"
-"search_in=invoice&amp;search=%s' % object.name\">דרך הפורטל.</a>\n"
+"            ניתן לצפות בשעות החיוב  <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">דרך הפורטל.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        לכל שאלה ניתן לפנות אלינו.\n"
@@ -772,8 +760,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -904,9 +892,8 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (מזהה: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        על סך <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        על סך <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        מחברת  <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        לכל שאלה ניתן לפנות אלינו.\n"
@@ -914,8 +901,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -951,14 +938,14 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        שלום <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/"
-"><br/>\n"
+"        שלום <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>"
+"<br/><br/>\n"
 "        תודה על התשלום.\n"
 "        מצורפת קבלה <span style=\"font-weight:bold;\" t-out=\"(object.name "
 "or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> על סך\n"
-"        to <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-"span> מחברת <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        to <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span> מחברת <t t-"
+"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        לכל שאלה ניתן לפנות אלינו.\n"
 "        <br/><br/>\n"
@@ -967,8 +954,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1168,8 +1155,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1554,7 +1541,7 @@ msgstr "<span>יתכן שחשבון הבנק הזה כבר קיים תחת שו�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span>This document might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>מסמך זה עשוי להיות כפילות של</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1670,7 +1657,7 @@ msgstr "<strong>סכום ביניים</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Taxable Supply</strong>"
-msgstr ""
+msgstr "<strong>אספקה חייבת במס</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1687,7 +1674,7 @@ msgstr "<strong>סוג: </strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
 msgid "<strong>WARNING - This change is irreversible</strong>"
-msgstr ""
+msgstr "<strong>אזהרה - שינוי זה אינו הפיך</strong>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_einvoice_notification
@@ -2140,7 +2127,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr ""
+msgstr "עמדה שנתית עם מע\"מ זר כבר קיימת במדינה זו."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -2170,7 +2157,7 @@ msgstr "שורה לא יכולה להכיל גם ילדים וגם קבוצה ל
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a archived account, you cannot post it."
-msgstr ""
+msgstr "שורה בתנועה זו משתמשת בחשבון שהועבר לארכיון, לא ניתן לפרסם אותה."
 
 #. module: account
 #. odoo-python
@@ -2189,8 +2176,7 @@ msgstr "הערה, שהתוכן שלה חל בדרך כלל על הסעיף או 
 msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
-msgstr ""
-"לא ניתן לאשר תשלום לחשבון טרם פירעון מלא ללא רישום ומעקב ביומן חשבונות."
+msgstr "לא ניתן לאשר תשלום לחשבון טרם פירעון מלא ללא רישום ומעקב ביומן חשבונות."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -2215,7 +2201,7 @@ msgstr "כותרת פסקה"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "A single exception must change exactly one lock date field."
-msgstr ""
+msgstr "חריגה בודדת חייבת לשנות רק שדה תאריך נעילה אחד."
 
 #. module: account
 #. odoo-python
@@ -2361,7 +2347,7 @@ msgstr "מטבע החשבון"
 #. module: account
 #: model:onboarding.onboarding,name:account.onboarding_onboarding_account_dashboard
 msgid "Account Dashboard Onboarding"
-msgstr ""
+msgstr "קליטת לוח בקרה חשבונאי"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
@@ -2375,7 +2361,7 @@ msgstr "רשומת החשבון"
 #: model:ir.model.fields,field_description:account.field_account_move__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_group_codes
 msgid "Account Fiscal Country Group Codes"
-msgstr ""
+msgstr "קודי קבוצת מדינה פיסקלית של החשבון"
 
 #. module: account
 #: model:ir.model,name:account.model_account_group
@@ -2398,7 +2384,7 @@ msgstr "קבוצות חשבונות עם אותו פירוט אינן יכולו
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
 msgid "Account Has Hashed Entries"
-msgstr ""
+msgstr "לחשבון יש רשומות עם Hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -2447,7 +2433,7 @@ msgstr "מיפוי חשבונות"
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
 msgid "Account Move Count"
-msgstr ""
+msgstr "מספר תנועות יומן"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2457,7 +2443,7 @@ msgstr "היפוך העברת חשבון"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "שליחת תנועת יומן"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_batch_wizard
@@ -2467,7 +2453,7 @@ msgstr "אשף שליחת תנועות אצווה"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send_wizard
 msgid "Account Move Send Wizard"
-msgstr ""
+msgstr "אשף שליחת תנועת יומן"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -2495,7 +2481,7 @@ msgstr "חשבון ספקים"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__account_prefix_placeholder
 msgid "Account Prefix Placeholder"
-msgstr ""
+msgstr "ממלא מקום קידומת חשבון"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_category_property_form
@@ -2594,8 +2580,8 @@ msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate "
 "codes: %s"
 msgstr ""
-"קודי חשבון חייבים להיות ייחודיים. לא ניתן ליצור חשבונות עם קודים כפולים אלה:"
-"%s"
+"קודי חשבון חייבים להיות ייחודיים. לא ניתן ליצור חשבונות עם קודים כפולים "
+"אלה:%s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -2695,7 +2681,7 @@ msgstr "חשבון המשמש להעברת תקופת ההוצאה"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr ""
+msgstr "החשבון המשמש לרישום החלק הפרטי של הוצאות מעורבות."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -2807,7 +2793,7 @@ msgstr "מיפוי חשבונות של מעמד פיסקלי"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payable
 msgid "Accounts Payable"
-msgstr ""
+msgstr "חשבונות זכאים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2822,13 +2808,14 @@ msgstr "קידומות חשבונות"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_receivable
+#, fuzzy
 msgid "Accounts Receivable"
-msgstr ""
+msgstr "חייבים"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_pos_receivable
 msgid "Accounts Receivable (PoS)"
-msgstr ""
+msgstr "חשבונות חייבים (קופה)"
 
 #. module: account
 #. odoo-python
@@ -2880,6 +2867,12 @@ msgstr "סך הכל נצבר"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_acc_depreciation
 msgid "Accumulated Depreciation"
+msgstr "פחת נצבר"
+
+#. module: account
+#: model:account.account,name:account.1_retained_earnings
+#: model:account.account,name:account.2_account_account_us_retained_earnings
+msgid "Accumulated Retained Earnings"
 msgstr ""
 
 #. module: account
@@ -3000,7 +2993,7 @@ msgstr "הוסף"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add QR-code link on PDF"
-msgstr ""
+msgstr "הוסף קישור קוד QR ל-PDF"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -3076,7 +3069,7 @@ msgstr "הוסף סעיף"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Add a subsection"
-msgstr ""
+msgstr "הוסף תת-פרק"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3106,13 +3099,13 @@ msgstr "סכום להתאמה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Adjusting Entries"
-msgstr ""
+msgstr "פקודות התאמה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_count
 msgid "Adjusting Entries Count"
-msgstr ""
+msgstr "מספר פקודות התאמה"
 
 #. module: account
 #. odoo-python
@@ -3130,36 +3123,36 @@ msgstr "פקודת הפרשה"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_label
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_label
 msgid "Adjusting Entry Origin Label"
-msgstr ""
+msgstr "תווית מקור פקודת התאמה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_move_ids
 msgid "Adjusting Entry Origin Moves"
-msgstr ""
+msgstr "תנועות מקור פקודת התאמה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entry_origin_moves_count
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entry_origin_moves_count
 msgid "Adjusting Entry Origin Moves Count"
-msgstr ""
+msgstr "מספר תנועות מקור פקודת התאמה"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized from {date}"
-msgstr ""
+msgstr "פקודת התאמה {link} {percent}%% מתוך {amount} שהוכר מ-{date}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}"
-msgstr ""
+msgstr "פקודת התאמה {link} {percent}%% מתוך {amount} שהוכר בתאריך {new_date}"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_administration_fees
 msgid "Administration Fees"
-msgstr ""
+msgstr "עמלות ניהול"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -3179,7 +3172,7 @@ msgstr "הגדרות מתקדמות"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_marketing
 msgid "Advertising & Marketing"
-msgstr ""
+msgstr "פרסום ושיווק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
@@ -3206,7 +3199,7 @@ msgstr "קיצור לשילוב נוסחאות אחרות"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_airfare
 msgid "Airfare"
-msgstr ""
+msgstr "כרטיס טיסה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__alerts
@@ -3251,43 +3244,43 @@ msgstr "כל החשבונות בשורות חייבים להיות מאותו ס
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "All bank & cash journals"
-msgstr ""
+msgstr "כל יומני הבנק והמזומן"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_office_services
 msgid ""
 "All expenses made for your office or workplace that are not material goods"
-msgstr ""
+msgstr "כל ההוצאות עבור המשרד או מקום העבודה שאינן טובין מוחשיים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_insurance
 msgid "All fees related to insurance taken in the context of your business"
-msgstr ""
+msgstr "כל העמלות הקשורות לביטוח שנרכש במסגרת העסק שלך"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_social_security
 msgid "All fees related to social security contributions"
-msgstr ""
+msgstr "כל העמלות הקשורות לתשלומי ביטוח לאומי"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_fuel
 msgid "All fuel and gas expenses for a car/auto"
-msgstr ""
+msgstr "כל הוצאות הדלק והגז לרכב"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_raw_materials
 msgid "All goods purchased as raw materials used by your activity"
-msgstr ""
+msgstr "כל הטובין שנרכשו כחומרי גלם המשמשים את פעילותך"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "All moves that will be hashed"
-msgstr ""
+msgstr "כל התנועות שיעברו Hash"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense
 msgid "All other uncategorized expenses"
-msgstr ""
+msgstr "כל שאר ההוצאות שאינן מסווגות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -3311,6 +3304,8 @@ msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
 msgstr ""
+"כל התנועות שלא ניתן ל-Hash לפני התאריך שנבחר ושאינן מוגנות על ידי תאריך "
+"הנעילה הקשיח"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
@@ -3320,7 +3315,7 @@ msgstr "כל שורות דפי הבנק שלא התואמו לפני התארי�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign VAT"
-msgstr ""
+msgstr "אפשר מע\"מ זר"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3340,7 +3335,7 @@ msgstr "אפשר הדפסת שיקים והפקדות"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allow sending and receiving invoices through the PEPPOL network"
-msgstr ""
+msgstr "אפשר שליחה וקבלה של חשבוניות דרך רשת PEPPOL"
 
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
@@ -3355,13 +3350,13 @@ msgstr "קביעת בסיס מזומן לצורכי מס"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "יחידת מידה מותרת"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 msgid "Allows out payments"
-msgstr ""
+msgstr "מאפשר תשלומים יוצאים"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3554,7 +3549,7 @@ msgstr ""
 msgid ""
 "An error occurred when computing the inalterability. A gap has been detected "
 "in the sequence."
-msgstr ""
+msgstr "אירעה שגיאה בעת חישוב אי-השינויות. זוהה פער ברצף."
 
 #. module: account
 #. odoo-python
@@ -3562,7 +3557,7 @@ msgstr ""
 msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
-msgstr ""
+msgstr "אירעה שגיאה בעת חישוב אי-השינויות. יש להתאים את כל הרשומות."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3667,12 +3662,12 @@ msgstr "תנועה נוספת קיימת כבר עם אותו שם."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Any amount"
-msgstr ""
+msgstr "כל סכום"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Any currency"
-msgstr ""
+msgstr "כל מטבע"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__hard_lock_date
@@ -3721,7 +3716,7 @@ msgstr "לכל פקודת יומן בחשבון הכנסות צריך להיות
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Any label"
-msgstr ""
+msgstr "כל תווית"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__purchase_lock_date
@@ -3780,6 +3775,11 @@ msgid ""
 msgstr ""
 "החלה אוטומטית של מיפויים למס והוצאות על חשבוניות אם הקריטריונים המתאימים "
 "(מע\"מ/מדינה) מתקיימים."
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Appropriation of the profit or loss"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -3864,7 +3864,7 @@ msgstr "קובץ מצורף"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Attachment %(filename)s not imported: %(reason)s"
-msgstr ""
+msgstr "הקובץ המצורף %(filename)s לא יובא: %(reason)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
@@ -3918,7 +3918,7 @@ msgstr "אוגוסט"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_auto_insurance
 msgid "Auto Insurance"
-msgstr ""
+msgstr "ביטוח רכב"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3929,7 +3929,7 @@ msgstr "השלמה אוטומטית"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
 msgid "Auto-complete from a previous bill or refund."
-msgstr ""
+msgstr "השלמה אוטומטית מחשבונית ספק או זיכוי קודמים."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -4041,7 +4041,7 @@ msgstr "זמינות"
 #: model:ir.model.fields,field_description:account.field_res_partner__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_users__available_invoice_template_pdf_report_ids
 msgid "Available Invoice Template Pdf Report"
-msgstr ""
+msgstr "דוח PDF זמין לתבנית חשבונית"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
@@ -4071,7 +4071,7 @@ msgstr "שיטת תשלום זמינה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__available_pdf_report_ids
 msgid "Available Pdf Report"
-msgstr ""
+msgstr "דוח PDF זמין"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -4081,7 +4081,7 @@ msgstr "מחיר ממוצע"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "BE71096123456769"
-msgstr ""
+msgstr "BE71096123456769"
 
 #. module: account
 #. odoo-python
@@ -4092,7 +4092,7 @@ msgstr "BILL"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "BRT *([\\d,\\.]+)"
-msgstr ""
+msgstr "BRT *([\\d,\\.]+)"
 
 #. module: account
 #. odoo-javascript
@@ -4108,8 +4108,9 @@ msgstr "בחזרה לחשבוניות לקוח"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Bacon Burger"
-msgstr ""
+msgstr "בורגר בייקון"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
@@ -4124,7 +4125,7 @@ msgstr "יתרה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__balance_negate
 msgid "Balance Negate"
-msgstr ""
+msgstr "שלילת יתרה"
 
 #. module: account
 #. odoo-javascript
@@ -4142,8 +4143,8 @@ msgstr "אחוז מאזן לא יכול להיות 0"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_45
-#: model:account.account,name:account.2_bank_journal_default_account_150
+#: model:account.account,name:account.1_bank_journal_default_account_47
+#: model:account.account,name:account.2_bank_journal_default_account_153
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
@@ -4349,7 +4350,7 @@ msgstr "בנק ומזומנים"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Bank of odoo"
-msgstr ""
+msgstr "בנק של odoo"
 
 #. module: account
 #. odoo-python
@@ -4560,12 +4561,12 @@ msgstr "חשבוניות מאוחרות"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_legal
 msgid "Bills from lawyers, fees paid to the justice system"
-msgstr ""
+msgstr "חשבוניות מעורכי דין, שכר טרחה ששולם למערכת המשפט"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_accounting
 msgid "Bills from your bookkeeper or accounting firm"
-msgstr ""
+msgstr "חשבוניות מהנהלת החשבונות או ממשרד ראיית החשבון שלך"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4648,17 +4649,17 @@ msgstr "בניינים"
 #. module: account
 #: model:ir.model,name:account.model_account_document_import_mixin
 msgid "Business document import mixin"
-msgstr ""
+msgstr "Mixin ייבוא מסמכים עסקיים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_licenses
 msgid "Business licenses and permits that your company must pay to operate"
-msgstr ""
+msgstr "רישיונות והיתרים עסקיים שהחברה שלך חייבת לשלם כדי לפעול"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_local_tax
 msgid "Business or income taxes owed to local or municipal governments"
-msgstr ""
+msgstr "מסים עסקיים או מסי הכנסה המגיעים לרשויות מקומיות או עירוניות"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -4725,7 +4726,7 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__can_be_proposed
 msgid "Can Be Proposed"
-msgstr ""
+msgstr "ניתן להציע"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__can_edit_body
@@ -4797,12 +4798,12 @@ msgstr "חשבונית שבוטלה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Credit Note"
-msgstr ""
+msgstr "תעודת זיכוי פרופורמה מבוטלת"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Invoice"
-msgstr ""
+msgstr "חשבונית פרופורמה מבוטלת"
 
 #. module: account
 #. odoo-python
@@ -4810,7 +4811,7 @@ msgstr ""
 msgid ""
 "Cannot change Price Tax computation method on a company that has already "
 "started invoicing."
-msgstr ""
+msgstr "לא ניתן לשנות שיטת חישוב מס מחיר בחברה שכבר החלה בהפקת חשבוניות."
 
 #. module: account
 #. odoo-python
@@ -4859,7 +4860,7 @@ msgstr "לא ניתן לייצר קוד יומן לא בשימוש. אנא שנ�
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Cannot get aggregation details from a line not using 'aggregation' engine"
-msgstr ""
+msgstr "לא ניתן לקבל פרטי צבירה משורה שאינה משתמשת במנוע 'aggregation'"
 
 #. module: account
 #. odoo-python
@@ -4871,7 +4872,7 @@ msgstr "לא ניתן לזהות את החשבוניות בקובץ ה-PDF שנ�
 #: model:account.account,name:account.1_capital
 #: model:account.account,name:account.2_account_account_us_capital
 msgid "Capital"
-msgstr ""
+msgstr "הון"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
@@ -4879,7 +4880,7 @@ msgstr ""
 msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr ""
+msgstr "קלוט חשבוניות, רשום תשלומים ועקוב אחר התכתובות עם הספקים שלך."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
@@ -4889,7 +4890,7 @@ msgstr "העברה ל"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_161
+#: model:account.account,name:account.1_cash_journal_default_account_163
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4902,12 +4903,12 @@ msgid "Cash Account"
 msgstr "חשבון מזומן"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_158
+#: model:account.account,name:account.1_cash_journal_default_account_160
 msgid "Cash Bakery"
 msgstr "מזומן מאפייה"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_160
+#: model:account.account,name:account.1_cash_journal_default_account_162
 msgid "Cash Bar"
 msgstr ""
 
@@ -4949,7 +4950,7 @@ msgid "Cash Basis Transition Account"
 msgstr "חשבון מעבר על בסיס מזומן"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_157
+#: model:account.account,name:account.1_cash_journal_default_account_159
 msgid "Cash Clothes Shop"
 msgstr ""
 
@@ -5011,7 +5012,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "מחיקת הוצאה מחשבון הנחת מזומן"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_156
+#: model:account.account,name:account.1_cash_journal_default_account_158
 msgid "Cash Furn. Shop"
 msgstr ""
 
@@ -5022,7 +5023,7 @@ msgid "Cash Registers"
 msgstr "קופות רושמות"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_159
+#: model:account.account,name:account.1_cash_journal_default_account_161
 msgid "Cash Restaurant"
 msgstr "מזומן מסעדה"
 
@@ -5086,7 +5087,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
 msgid "Chains To Hash With Gaps"
-msgstr ""
+msgstr "שרשראות ל-Hash עם פערים"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
@@ -5231,7 +5232,7 @@ msgstr "עיר"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__clearing_number
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__clearing_number
 msgid "Clearing Number"
-msgstr ""
+msgstr "מספר סליקה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -5354,7 +5355,7 @@ msgstr "המדינה של שותף מסחרי"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_common_stock
 msgid "Common Stock"
-msgstr ""
+msgstr "מניות רגילות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -5463,12 +5464,12 @@ msgstr "עיצוב מסמך של החברה"
 #: model:ir.model.fields,field_description:account.field_account_account__company_fiscal_country_code
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
-msgstr ""
+msgstr "קוד מדינה פיסקלית של החברה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "ממלא מקום מספר רישום חברה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -5478,7 +5479,7 @@ msgstr "הנה\"ח בשיטת סטורנו בארגון"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_vat_placeholder
 msgid "Company Vat Placeholder"
-msgstr ""
+msgstr "ממלא מקום מספר עוסק/מע\"מ חברה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -5496,17 +5497,17 @@ msgstr "חברה הקשורה ליומן זה"
 #: model:account.account,description:account.2_account_account_us_other_employees_benefits
 msgid ""
 "Company's personnel costs excluding compensations, contributions and vouchers"
-msgstr ""
+msgstr "עלויות כוח האדם של החברה ללא תגמולים, תשלומים ושוברים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_salaries
 msgid "Compensation paid to employees and workers employed by the company"
-msgstr ""
+msgstr "תגמול המשולם לעובדים ולפועלים המועסקים על ידי החברה"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_general_subcontracting
 msgid "Compensation to external workers and consultants for services"
-msgstr ""
+msgstr "תגמול לעובדים חיצוניים וליועצים עבור שירותים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -5584,7 +5585,7 @@ msgstr "אשר אותם עכשיו."
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/form_controller.js:0
 msgid "Confirmation Warning"
-msgstr ""
+msgstr "אזהרת אישור"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5614,7 +5615,7 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
 msgid "Construction of buildings and costs associated to buildings"
-msgstr ""
+msgstr "בניית מבנים ועלויות הקשורות למבנים"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -5637,7 +5638,7 @@ msgstr "מכיל את שם הסעיף או את הודעת השגיאה, בהת�
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Contains hashed entries, but %s also has hashed entries."
-msgstr ""
+msgstr "מכיל רשומות עם Hash, אך גם ל-%s יש רשומות עם Hash."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body
@@ -5663,7 +5664,7 @@ msgstr "נתונים פגומים בפקודת יומן עם מזהה %(id)s (%(
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "Cost and Revenue"
-msgstr ""
+msgstr "עלות והכנסה"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -5687,25 +5688,31 @@ msgstr "עלות המכר"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_equipment
 msgid "Cost of office furniture, fixtures, and business equipment"
-msgstr ""
+msgstr "עלות ריהוט משרדי, ציוד קבוע וציוד עסקי"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, fuzzy
+msgid "Cost of revenue"
+msgstr "עלות ההכנסות"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
 msgid ""
 "Costs for shipping products or materials to customers or receiving inventory."
-msgstr ""
+msgstr "עלויות משלוח מוצרים או חומרים ללקוחות או קבלת מלאי."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_disposal_fees
 msgid ""
 "Costs incurred for removal, disposal, or recycling of waste and obsolete "
 "materials"
-msgstr ""
+msgstr "עלויות שהוצאו עבור הסרה, סילוק או מיחזור של פסולת וחומרים מיושנים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_marketing
 msgid "Costs related to promoting the business, such as ads, campaigns, etc"
-msgstr ""
+msgstr "עלויות הקשורות לקידום העסק, כגון פרסומות, קמפיינים וכו׳"
 
 #. module: account
 #. odoo-python
@@ -5728,6 +5735,16 @@ msgstr "לא ניתן לקבוע את יעד ההעברה אוטומטית עב�
 #: code:addons/account/static/src/components/upload_drop_zone/upload_drop_zone.js:0
 msgid "Could not upload files"
 msgstr "לא ניתן להעלות קבצים"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -5915,7 +5932,7 @@ msgstr "צור קבוצת מס חדשה"
 msgid ""
 "Create a structured report with multiple sections for convenient navigation "
 "and simultaneous printing."
-msgstr ""
+msgstr "צור דוח מובנה עם מספר פרקים לניווט נוח והדפסה בו-זמנית."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
@@ -5936,6 +5953,9 @@ msgid ""
 "                    adjustments, ensuring compliance with diverse "
 "regulations."
 msgstr ""
+"צור כמה קבוצות פנקסי חשבונות שנדרש כדי לשמור על פנקסים נפרדים עבור GAAP "
+"מקומי, IFRS או התאמות\n"
+"                    פיסקליות, תוך הבטחת עמידה בתקנות מגוונות."
 
 #. module: account
 #. odoo-javascript
@@ -5972,7 +5992,7 @@ msgstr "צור ידנית"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create new account"
-msgstr ""
+msgstr "צור חשבון חדש"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -5989,7 +6009,7 @@ msgstr "צור את המוצר."
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__adjusting_entries_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__adjusting_entries_move_ids
 msgid "Created Adjusting Entries"
-msgstr ""
+msgstr "פקודות התאמה שנוצרו"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -6220,6 +6240,11 @@ msgstr "מאזן מצטבר"
 msgid ""
 "Cumulated balance depending on the domain and the order chosen in the view."
 msgstr "יתרה מצטברת בהתאם לתחום ולסדר שנבחר בתצוגה."
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_retained_earnings
+msgid "Cumulative undistributed profits and losses"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6480,7 +6505,7 @@ msgstr "התאם אישית את המראה של המסמכים שלך."
 #. module: account
 #: model:account.account,description:account.2_account_account_us_import_fees
 msgid "Customs fees incurred while importing goods from outside of the US"
-msgstr ""
+msgstr "עמלות מכס שנגרמו בעת ייבוא טובין מחוץ לארה\"ב"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6491,13 +6516,13 @@ msgstr "הפרשה"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label}"
-msgstr ""
+msgstr "חיתוך {label}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Cut-off {label} {percent}%"
-msgstr ""
+msgstr "חיתוך {label} {percent}%"
 
 #. module: account
 #. odoo-python
@@ -6534,7 +6559,7 @@ msgstr "בדיקת הצפנת נתונים"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Data Inalterability Check Report -"
-msgstr ""
+msgstr "דוח בדיקת אי-שינוי נתונים -"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -6698,7 +6723,7 @@ msgstr "רצף תשלום ייעודי"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__deductible_amount
 msgid "Deductibility"
-msgstr ""
+msgstr "ניכוי"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -6760,7 +6785,7 @@ msgstr "ברירת מחדל ל-PoS Recivable Account"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_fiscal_position_id
 msgid "Default Purchase Receipt Fiscal Position"
-msgstr ""
+msgstr "עמדה פיסקלית ברירת מחדל לקבלת רכש"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -6861,7 +6886,7 @@ msgstr "הכנסות נדחות"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Define a default in the settings"
-msgstr ""
+msgstr "הגדר ברירת מחדל בהגדרות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6874,6 +6899,8 @@ msgid ""
 "Define which company can select the multi-ledger in report filters. If none "
 "is provided, available for all companies"
 msgstr ""
+"הגדר איזו חברה יכולה לבחור בפנקס המרובה במסנני הדוח. אם לא צוין, זמין לכל "
+"החברות"
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -7047,7 +7074,7 @@ msgstr "שלט הכוונה"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_disability_insurance
 msgid "Disability Insurance"
-msgstr ""
+msgstr "ביטוח נכות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__disable_merge_button
@@ -7100,7 +7127,7 @@ msgstr "דרושה הקצאת הנחה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_allocation_key
 msgid "Discount Allocation Key"
-msgstr ""
+msgstr "מפתח הקצאת הנחה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount_allocation_needed
@@ -7159,7 +7186,7 @@ msgstr "הצגת קידומת חשבון"
 #: model:ir.model.fields,field_description:account.field_res_company__display_account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_account_storno
 msgid "Display Account Storno"
-msgstr ""
+msgstr "הצג חשבון סטורנו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
@@ -7169,7 +7196,7 @@ msgstr "הצגת שדות כינויים"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__display_alternative_taxes_field
 msgid "Display Alternative Taxes Field"
-msgstr ""
+msgstr "הצג שדה מסים חלופיים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -7189,7 +7216,7 @@ msgstr "תצוגת ימים בחודש הבא"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_hash
 msgid "Display Force Hash"
-msgstr ""
+msgstr "הצג כפיית Hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -7206,7 +7233,7 @@ msgstr "הצג אזהרת שער מטבע לא פעיל"
 #: model:ir.model.fields,field_description:account.field_res_partner__display_invoice_edi_format
 #: model:ir.model.fields,field_description:account.field_res_users__display_invoice_edi_format
 msgid "Display Invoice Edi Format"
-msgstr ""
+msgstr "הצג פורמט Edi לחשבונית"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_invoice_template_pdf_report_id
@@ -7221,7 +7248,7 @@ msgstr "תצוגת תבנית חשבונית בדוח PDF"
 #: model:ir.model.fields,field_description:account.field_res_company__link_qr_code
 #: model:ir.model.fields,field_description:account.field_res_config_settings__link_qr_code
 msgid "Display Link QR-code"
-msgstr ""
+msgstr "הצג קישור קוד QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
@@ -7319,7 +7346,7 @@ msgstr "שם לתצוגה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_pdf_report_id
 msgid "Display Pdf Report"
-msgstr ""
+msgstr "הצג דוח PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_qr_code
@@ -7347,7 +7374,7 @@ msgstr "הצג קוד SEPA QR"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__display_send_button
 msgid "Display Send Button"
-msgstr ""
+msgstr "הצג כפתור שליחה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__display_type
@@ -7373,7 +7400,7 @@ msgstr "הצג את הסכום הכולל של חשבונית באותיות"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_disposal_fees
 msgid "Disposal Fees"
-msgstr ""
+msgstr "עמלות סילוק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
@@ -7415,7 +7442,7 @@ msgstr "חלוקה כאשר נעשה שימוש במס בחשבונית"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_distributions
 msgid "Distributions"
-msgstr ""
+msgstr "חלוקות"
 
 #. module: account
 #: model:account.account,name:account.1_dividends
@@ -7447,7 +7474,7 @@ msgstr "דומיין"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__domain_formula
 msgid "Domain Formula Shortcut"
-msgstr ""
+msgstr "קיצור נוסחת דומיין"
 
 #. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_domestic_fiscal_position
@@ -7460,7 +7487,7 @@ msgstr "מקומי"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__domestic_fiscal_position_id
 msgid "Domestic Fiscal Position"
-msgstr ""
+msgstr "עמדה פיסקלית מקומית"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7551,12 +7578,12 @@ msgstr "טיוטת תשלום"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Credit Note"
-msgstr ""
+msgstr "תעודת זיכוי פרופורמה בטיוטה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Invoice"
-msgstr ""
+msgstr "חשבונית פרופורמה בטיוטה"
 
 #. module: account
 #. odoo-python
@@ -7644,7 +7671,7 @@ msgstr "תנאי תשלום"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_subscriptions
 msgid "Dues & Subscriptions"
-msgstr ""
+msgstr "דמי חבר ומנוי"
 
 #. module: account
 #. odoo-javascript
@@ -7658,7 +7685,7 @@ msgstr "שכפל"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__duplicate_bank_partner_ids
 #: model:ir.model.fields,field_description:account.field_res_users__duplicate_bank_partner_ids
 msgid "Duplicate Bank Partner"
-msgstr ""
+msgstr "שותף בנק כפול"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__duplicate_payment_ids
@@ -7689,6 +7716,8 @@ msgid ""
 "During perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"במהלך הערכה תמידית, חשבון זה יכיל את הפרש המחיר בין המחיר התקני למחיר "
+"החשבונית."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -7698,7 +7727,7 @@ msgstr "דוחות דינמיים"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
-msgstr ""
+msgstr "דומיין דינמי המשמש לתגית שניתן להגדיר על מס"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_tree
@@ -7799,11 +7828,17 @@ msgstr "ערוך סכומי מס אם אתה נתקל בבעיות עיגול."
 #. module: account
 #: model:account.account,description:account.2_account_account_us_training
 msgid "Education and training fees not including food and drinks"
-msgstr ""
+msgstr "דמי חינוך והכשרה, לא כולל אוכל ומשקאות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#, fuzzy
 msgid "Electronic Data Interchange"
+msgstr "החלפת נתונים אלקטרונית"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
 msgstr ""
 
 #. module: account
@@ -7820,7 +7855,7 @@ msgstr "כינוי דוא\"ל"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Email Notifications"
-msgstr ""
+msgstr "התראות אימייל"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_template
@@ -7859,17 +7894,17 @@ msgstr "מיסי משכורות עובדים"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_commissions
 msgid "Employees Commissions"
-msgstr ""
+msgstr "עמלות עובדים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_commissions
 msgid "Employees commissions and bonuses"
-msgstr ""
+msgstr "עמלות ובונוסים לעובדים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_healthcare
 msgid "Employees medical, dental, and vision benefits"
-msgstr ""
+msgstr "הטבות רפואיות, שיניים וראייה לעובדים"
 
 #. module: account
 #: model:account.account,name:account.1_employer_payroll_taxes
@@ -7882,14 +7917,14 @@ msgstr "מיסי מעביד"
 msgid ""
 "Employer contributions to state (SUI) or federal unemployment insurance "
 "programs"
-msgstr ""
+msgstr "הפרשות מעסיק לתוכניות ביטוח אבטלה ממלכתיות (SUI) או פדרליות"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_payroll_tax
 msgid ""
 "Employer's portion of payroll-related taxes (eg. Social Security, Medicare, "
 "FUTA/SUTA)"
-msgstr ""
+msgstr "חלק המעסיק במסים הקשורים לשכר (למשל ביטוח לאומי, Medicare, FUTA/SUTA)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -7899,7 +7934,7 @@ msgstr "ריק"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Enable PEPPOL"
-msgstr ""
+msgstr "אפשר PEPPOL"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_use_credit_limit
@@ -7911,7 +7946,7 @@ msgstr "לאפשר שימוש בתקרת אשראי לשותפים."
 #: model:ir.model.fields,help:account.field_res_company__restrictive_audit_trail
 #: model:ir.model.fields,help:account.field_res_config_settings__restrictive_audit_trail
 msgid "Enable this option to prevent deletion of journal item related logs"
-msgstr ""
+msgstr "הפעל אפשרות זו כדי למנוע מחיקה של יומני רשומות הקשורים לפריטי היומן"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7958,7 +7993,7 @@ msgstr "מונה כניסות"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr ""
+msgstr "הרשומות עברו Hash כראוי"
 
 #. module: account
 #. odoo-python
@@ -8006,27 +8041,27 @@ msgstr "שם פקודה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr ""
+msgstr "Epd דורש עדכון"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
 msgid "Epd Key"
-msgstr ""
+msgstr "מפתח Epd"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_needed
 msgid "Epd Needed"
-msgstr ""
+msgstr "Epd נדרש"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_equipment
 msgid "Equipment and Furniture"
-msgstr ""
+msgstr "ציוד וריהוט"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_machines
 msgid "Equipment, machinery and tools directly related to your business"
-msgstr ""
+msgstr "ציוד, מכונות וכלים הקשורים ישירות לעסק שלך"
 
 #. module: account
 #. odoo-javascript
@@ -8041,7 +8076,7 @@ msgstr "הון עצמי"
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "Error importing attachment %(filename)s:"
-msgstr ""
+msgstr "שגיאה בייבוא הקובץ המצורף %(filename)s:"
 
 #. module: account
 #. odoo-python
@@ -8050,6 +8085,8 @@ msgid ""
 "Error while creating XML:\n"
 "- %s"
 msgstr ""
+"שגיאה ביצירת XML:\n"
+"- %s"
 
 #. module: account
 #. odoo-python
@@ -8059,6 +8096,8 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"שגיאה בטעינת ההתאמה המקומית: תגית מס חסרה %(tag_name)s עבור המדינה %"
+"(country_name)s. סביר שעליך לעדכן תחילה את יישום ההתאמה המקומית שלך."
 
 #. module: account
 #. odoo-python
@@ -8069,18 +8108,18 @@ msgstr "שגיאה!"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__euro
 msgid "European (RF83INV202400001)"
-msgstr ""
+msgstr "אירופי (RF83INV202400001)"
 
 #. module: account
 #: model:res.country.group,name:account.europe_vat
 msgid "European Union VAT"
-msgstr ""
+msgstr "מע\"מ האיחוד האירופי"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Even magicians can't post nothing!"
-msgstr ""
+msgstr "אפילו קוסמים לא יכולים לפרסם כלום!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_amount
@@ -8129,6 +8168,7 @@ msgid "Exchange Gain or Loss Journal"
 msgstr "יומן רווח או הפסד חליפין"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "תנועת העברה"
@@ -8142,12 +8182,12 @@ msgstr "פקודות הפרש שער:"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from follow-up reports."
-msgstr ""
+msgstr "החרג רשומת יומן זו מדוחות מעקב."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
 msgid "Exclude this journal item from follow-up reports."
-msgstr ""
+msgstr "החרג פריט יומן זה מדוחות מעקב."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -8158,7 +8198,7 @@ msgstr "יומנים שלא נכללים"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__expected_currency_rate
 #: model:ir.model.fields,field_description:account.field_account_move__expected_currency_rate
 msgid "Expected Currency Rate"
-msgstr ""
+msgstr "שער מטבע צפוי"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -8200,19 +8240,19 @@ msgstr "הוצאות"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_meals
 msgid "Expenses incurred when eating or drinking at bars or restaurants"
-msgstr ""
+msgstr "הוצאות שנגרמו באכילה או שתייה בברים או מסעדות"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_vehicles_expense
 msgid "Expenses made for the repair and maintenance of company cars and trucks"
-msgstr ""
+msgstr "הוצאות עבור תיקון ותחזוקה של רכבי ומשאיות החברה"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_computers
 msgid ""
 "Expenses made for the repair and maintenance of laptops, peripherals, and "
 "computing equipment"
-msgstr ""
+msgstr "הוצאות עבור תיקון ותחזוקה של מחשבים ניידים, ציוד היקפי וציוד מחשוב"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__expired
@@ -8238,7 +8278,7 @@ msgstr "ביטויים"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_domain_engine_subformula_required
 msgid "Expressions using 'domain' engine should all have a subformula."
-msgstr ""
+msgstr "ביטויים המשתמשים במנוע 'domain' חייבים לכלול תת-נוסחה."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__external_formula
@@ -8258,17 +8298,17 @@ msgstr "ערך חיצוני"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__extra_edi_checkboxes
 msgid "Extra Edi Checkboxes"
-msgstr ""
+msgstr "תיבות סימון Edi נוספות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__extra_edis
 msgid "Extra Edis"
-msgstr ""
+msgstr "Edi נוספים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__extra_tax_data
 msgid "Extra Tax Data"
-msgstr ""
+msgstr "נתוני מס נוספים"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -8289,7 +8329,7 @@ msgstr "חינם על הסיפון"
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "Factor Percent"
-msgstr ""
+msgstr "אחוז מקדם"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -8334,7 +8374,7 @@ msgstr "פברואר"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_federal_income_tax
 msgid "Federal Income Tax"
-msgstr ""
+msgstr "מס הכנסה פדרלי"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__state_ids
@@ -8345,7 +8385,7 @@ msgstr "מדינות פדרליות"
 #. odoo-javascript
 #: code:addons/account/static/src/components/fetch_einvoices/fetch_einvoices_cog.js:0
 msgid "Fetch e-Invoices"
-msgstr ""
+msgstr "משוך חשבוניות אלקטרוניות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
@@ -8428,6 +8468,16 @@ msgid "First New Sequence"
 msgstr "רצף ראשון חדש"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 msgid "First recurring entry"
@@ -8459,12 +8509,12 @@ msgstr "קודי מדינה פיסקאליים"
 #: model:ir.model.fields,field_description:account.field_res_partner__fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_users__fiscal_country_group_codes
 msgid "Fiscal Country Group Codes"
-msgstr ""
+msgstr "קודי קבוצת מדינה פיסקלית"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_country_group__exclude_state_ids
 msgid "Fiscal Exceptions"
-msgstr ""
+msgstr "חריגות פיסקליות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -8554,7 +8604,7 @@ msgstr "רכוש קבוע"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_airfare
 msgid "Flights or expenses related to air travel by plane"
-msgstr ""
+msgstr "טיסות או הוצאות הקשורות לנסיעה באווירון"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__float
@@ -8627,11 +8677,13 @@ msgid ""
 "Food or drinks incurred outside of bars or restaurants, like receptions, "
 "canteen and food delivery, etc"
 msgstr ""
+"אוכל או שתייה שנצרכו מחוץ לברים או מסעדות, כגון קבלות פנים, קפיטריה ומשלוחי "
+"אוכל וכו׳"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_food
 msgid "Food: Catering & Delivery"
-msgstr ""
+msgstr "אוכל: קייטרינג ומשלוחים"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -8668,17 +8720,17 @@ msgstr "אלץ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__force_restrictive_audit_trail
 msgid "Force Audit Trail"
-msgstr ""
+msgstr "כפה תיעוד ביקורת"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_hash
 msgid "Force Hash"
-msgstr ""
+msgstr "כפה Hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__force_restrictive_audit_trail
 msgid "Forced Audit Trail"
-msgstr ""
+msgstr "תיעוד ביקורת שנכפה"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -8715,7 +8767,7 @@ msgstr "מזהה מס זר"
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 #: model:account.fiscal.position,name:account.2_account_fiscal_position_us_export
 msgid "Foreign Trade"
-msgstr ""
+msgstr "סחר חוץ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
@@ -8743,13 +8795,13 @@ msgstr "תשלום מקדמה לחשבון מס זר (%s)"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Foreign tax account payable (%s)"
-msgstr ""
+msgstr "חשבון זכאים למס זר (%s)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Foreign tax account receivable (%s)"
-msgstr ""
+msgstr "חשבון חייבים למס זר (%s)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__formula
@@ -8763,11 +8815,13 @@ msgid ""
 "target of the carryover for this expression (on a _carryover_*-labeled "
 "expression), in case it is different from the parent line."
 msgstr ""
+"נוסחה בצורה line_code.expression_label. זה מאפשר להגדיר את יעד ההעברה עבור "
+"ביטוי זה (בביטוי בעל תווית _carryover_*), במקרה שהוא שונה משורת האב."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Frequent Expenses"
-msgstr ""
+msgstr "הוצאות תכופות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8777,7 +8831,7 @@ msgstr "מ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
 msgid "From Category"
-msgstr ""
+msgstr "מקטגוריה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
@@ -8787,12 +8841,12 @@ msgstr "מחשבונית"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Non Trade Receivable accounts"
-msgstr ""
+msgstr "מחשבונות חייבים שאינם מסחריים"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From P&L accounts"
-msgstr ""
+msgstr "מחשבונות רווח והפסד"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -8802,7 +8856,7 @@ msgstr "מתוך חשבונות לתשלום ספקים"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "From Trade Receivable accounts"
-msgstr ""
+msgstr "מחשבונות חייבים מסחריים"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
@@ -8817,7 +8871,7 @@ msgstr "משנת כספית קודמת"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_return_period
 msgid "From previous return period"
-msgstr ""
+msgstr "מתקופת הדיווח הקודמת"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -8870,22 +8924,22 @@ msgstr "השלמה מלאה"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__odoo
 msgid "Full Reference (INV/2024/00001)"
-msgstr ""
+msgstr "סימוכין מלא (INV/2024/00001)"
 
 #. module: account
 #: model:res.groups,comment:account.group_account_manager
 msgid "Full access, including configuration rights."
-msgstr ""
+msgstr "גישה מלאה, כולל הרשאות תצורה."
 
 #. module: account
 #: model:account.account,name:account.2_transfer_account_id
 msgid "Funds in Transit"
-msgstr ""
+msgstr "כספים במעבר"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_furniture
 msgid "Furniture & Fixtures"
-msgstr ""
+msgstr "ריהוט ואבזור"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8917,7 +8971,7 @@ msgstr "כללי"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_general_subcontracting
 msgid "General Subcontracting"
-msgstr ""
+msgstr "קבלנות משנה כללית"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
@@ -8940,7 +8994,7 @@ msgstr "פקודות יומן שנוצרו"
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "Generic Chart of Accounts"
-msgstr ""
+msgstr "תרשים חשבונות גנרי"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report
@@ -9003,7 +9057,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
 msgid "Ground Transportation"
-msgstr ""
+msgstr "תחבורה יבשתית"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__group_id
@@ -9013,7 +9067,7 @@ msgstr "קבוצה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Group 1"
-msgstr ""
+msgstr "קבוצה 1"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__groupby
@@ -9029,7 +9083,7 @@ msgstr "קיבוץ תשלומים"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Group Payments Number Sequence"
-msgstr ""
+msgstr "רצף מספרי קיבוץ תשלומים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
@@ -9063,6 +9117,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"תכונת groupby אינה נתמכת על ידי מנוע '%(engine)s'. אנא הסר את ערך ה-groupby "
+"ב-'%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -9104,7 +9160,7 @@ msgstr "האם המעמד הפיסקלי השתנה"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_iban_warning
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_iban_warning
 msgid "Has Iban Warning"
-msgstr ""
+msgstr "יש אזהרת IBAN"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
@@ -9135,17 +9191,17 @@ msgstr "יש הודעה"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_money_transfer_warning
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__has_money_transfer_warning
 msgid "Has Money Transfer Warning"
-msgstr ""
+msgstr "יש אזהרת העברת כספים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__has_negative_factor
 msgid "Has Negative Factor"
-msgstr ""
+msgstr "יש מקדם שלילי"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
 msgid "Has Posted Entries"
-msgstr ""
+msgstr "יש רשומות שפורסמו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
@@ -9161,12 +9217,12 @@ msgstr "יש חורים ברצף"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
 msgid "Has Statement Lines"
-msgstr ""
+msgstr "יש שורות דף בנק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__hash_date
 msgid "Hash All Entries"
-msgstr ""
+msgstr "עבור Hash לכל הרשומות"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
@@ -9176,12 +9232,12 @@ msgstr "תוצאת PDF של שלמות גיבוב"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_healthcare
 msgid "Healthcare Benefits"
-msgstr ""
+msgstr "הטבות בריאות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
 msgid "Hey there !"
-msgstr ""
+msgstr "שלום!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -9200,7 +9256,7 @@ msgstr ""
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
 msgid "Hide Composition"
-msgstr ""
+msgstr "הסתר הרכב"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -9213,7 +9269,7 @@ msgstr "הסתרת כפתור רישום"
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
 msgid "Hide Prices"
-msgstr ""
+msgstr "הסתר מחירים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
@@ -9242,6 +9298,8 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
+"התאריך המאוחר ביותר שעד אליו (כולל) כל רשומות היומן שפורסמו מאובטחות. רק "
+"רשומות יומן שלאחר תאריך הנעילה הקשיח נלקחות בחשבון."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -9253,22 +9311,22 @@ msgstr "השם הגבוה ביותר"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highlight_send_button
 #: model:ir.model.fields,field_description:account.field_account_move__highlight_send_button
 msgid "Highlight Send Button"
-msgstr ""
+msgstr "הדגש כפתור שליחה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__horizontal_split_side
 msgid "Horizontal Split Side"
-msgstr ""
+msgstr "צד פיצול אופקי"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_hotels
 msgid "Hotel or accommodation expenses incurred during business trips"
-msgstr ""
+msgstr "הוצאות מלון או לינה שנגרמו במהלך נסיעות עסקיות"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_hotels
 msgid "Hotels"
-msgstr ""
+msgstr "מלונות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9377,22 +9435,22 @@ msgstr "INV"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/00001"
-msgstr ""
+msgstr "INV/2023/00001"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "INV/2023/0001"
-msgstr ""
+msgstr "INV/2023/0001"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "INV0001"
-msgstr ""
+msgstr "INV0001"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "INV001"
-msgstr ""
+msgstr "INV001"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_exception_icon
@@ -9475,14 +9533,14 @@ msgstr "אם מסומן, בחלק מההודעות קיימת שגיאת משל�
 msgid ""
 "If checked, the lines below this section will not be displayed in reports "
 "and portal."
-msgstr ""
+msgstr "אם מסומן, השורות שמתחת לפרק זה לא יוצגו בדוחות ובפורטל."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__collapse_prices
 msgid ""
 "If checked, the prices of the lines below this section will not be displayed "
 "in reports and portal."
-msgstr ""
+msgstr "אם מסומן, המחירים של השורות שמתחת לפרק זה לא יוצגו בדוחות ובפורטל."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9585,7 +9643,7 @@ msgstr "אם תסמן את התיבה הזו, תוכל לגבות תשלומים
 msgid ""
 "If you check this box, you will be able to register your payment using "
 "SEPA / ISO20022."
-msgstr ""
+msgstr "אם תסמן תיבה זו, תוכל לרשום את תשלומך באמצעות SEPA / ISO20022."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.open_account_journal_dashboard_kanban
@@ -9652,13 +9710,13 @@ msgstr "ייבא קובצי .qif"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_import_fees
 msgid "Import Fees"
-msgstr ""
+msgstr "עמלות ייבוא"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Bills"
-msgstr ""
+msgstr "תבנית ייבוא לחשבוניות ספק"
 
 #. module: account
 #. odoo-python
@@ -9670,13 +9728,13 @@ msgstr "ייבוא תבנית ללוח חשבונות"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Credit Notes"
-msgstr ""
+msgstr "תבנית ייבוא לתעודות זיכוי"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Invoices"
-msgstr ""
+msgstr "תבנית ייבוא לחשבוניות"
 
 #. module: account
 #. odoo-python
@@ -9688,13 +9746,13 @@ msgstr "ייבוא תבנית לפריטי יומן"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Misc. Operations"
-msgstr ""
+msgstr "תבנית ייבוא לפעולות שונות"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Import Template for Refunds"
-msgstr ""
+msgstr "תבנית ייבוא להחזרים"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9704,7 +9762,7 @@ msgstr "ייבא את תדפיסי הבנק שלך ב- QIF"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_improvements
 msgid "Improvements"
-msgstr ""
+msgstr "שיפורים"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -9753,6 +9811,8 @@ msgid ""
 "(label)s',\n"
 "Failed to parse the cross report id or xml_id.\n"
 msgstr ""
+"בדוח '%(report_name)s', בשורה '%(line_name)s', עם התווית '%(label)s',\n"
+"נכשל בניתוח מזהה הדוח הצולב או ה-xml_id.\n"
 
 #. module: account
 #. odoo-python
@@ -9773,7 +9833,7 @@ msgstr "לא פעיל"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Inactive Accounts"
-msgstr ""
+msgstr "חשבונות לא פעילים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__inalterable_hash
@@ -9785,7 +9845,7 @@ msgstr "הצפנת המידע עם רישומו בספרים"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secure_sequence_number
 #: model:ir.model.fields,field_description:account.field_account_move__secure_sequence_number
 msgid "Inalterability No Gap Sequence #"
-msgstr ""
+msgstr "מספר רצף אי-שינוי ללא פערים"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
@@ -9828,12 +9888,12 @@ msgstr "חשבון הכנסות"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_state_income_tax
 msgid "Income taxes owed to state taxing authorities"
-msgstr ""
+msgstr "מסי הכנסה המגיעים לרשויות המס של המדינה"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_federal_income_tax
 msgid "Income taxes owed to the U.S. federal government"
-msgstr ""
+msgstr "מסי הכנסה המגיעים לממשלה הפדרלית של ארה\"ב"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9918,12 +9978,12 @@ msgstr "הכנס את התנאים וההגבלות שלך כאן..."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_amount
 msgid "Installments Switch Amount"
-msgstr ""
+msgstr "סכום מעבר לתשלומים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__installments_switch_html
 msgid "Installments Switch Html"
-msgstr ""
+msgstr "HTML מעבר לתשלומים"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_655
@@ -9933,14 +9993,14 @@ msgstr ""
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_liability_insurance
 msgid "Insurance for damage caused to third parties"
-msgstr ""
+msgstr "ביטוח לנזק שנגרם לצדדים שלישיים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_compensation_insurance
 msgid ""
 "Insurance premiums that cover medical costs and wage replacement for "
 "employees injured on the job"
-msgstr ""
+msgstr "פרמיות ביטוח המכסות עלויות רפואיות ופיצוי שכר לעובדים שנפצעו בעבודה"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -9961,7 +10021,7 @@ msgstr "חשבון העברות בין בנקאיות"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_loan_interest_expense
 msgid "Interest paid on loans or lines of credit"
-msgstr ""
+msgstr "ריבית ששולמה על הלוואות או מסגרות אשראי"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__transfer_account_id
@@ -9974,7 +10034,7 @@ msgstr "חשבון מתווך המשמש בעת מעבר מחשבון נזילו
 msgid ""
 "Intermediary account used when moving money from a liquidity account to "
 "another"
-msgstr ""
+msgstr "חשבון ביניים המשמש בעת העברת כספים מחשבון נזילות לחשבון אחר"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__internal_group
@@ -10016,30 +10076,30 @@ msgstr "סוג פנימי"
 msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
-msgstr ""
+msgstr "שדה פנימי לקיצור יצירת expression_ids עבור מנוע account_codes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the aggregation engine"
-msgstr ""
+msgstr "שדה פנימי לקיצור יצירת expression_ids עבור מנוע הצבירה"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
 msgid "Internal field to shorten expression_ids creation for the domain engine"
-msgstr ""
+msgstr "שדה פנימי לקיצור יצירת expression_ids עבור מנוע הדומיין"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__external_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the external engine"
-msgstr ""
+msgstr "שדה פנימי לקיצור יצירת expression_ids עבור מנוע external"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
-msgstr ""
+msgstr "שדה פנימי לקיצור יצירת expression_ids עבור מנוע tax_tags"
 
 #. module: account
 #. odoo-javascript
@@ -10077,6 +10137,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
 "for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
+"\"טווח מיקוד\" אינו תקין, עליך להגדיר גם ערך \"מ-\" וגם ערך \"עד\" עבור טווח "
+"המיקוד, ו\"עד\" צריך להיות גדול מ\"מ-\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10195,7 +10257,7 @@ msgstr "פורמט EDI של חשבונית"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_edi_format_store
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_edi_format_store
 msgid "Invoice Edi Format Store"
-msgstr ""
+msgstr "אחסון פורמט Edi לחשבונית"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -10213,7 +10275,7 @@ msgstr "לחשבונית יש יתרה"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_placeholder
 msgid "Invoice Incoterm Placeholder"
-msgstr ""
+msgstr "ממלא מקום Incoterm לחשבונית"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10228,7 +10290,7 @@ msgstr "שורות חשבונית"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Invoice Notifications"
-msgstr ""
+msgstr "התראות חשבונית"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
@@ -10297,7 +10359,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have a total factor (-) equals "
 "to 100."
-msgstr ""
+msgstr "לחלוקת החשבונית ותעודת הזיכוי צריך להיות מקדם כולל (-) השווה ל-100."
 
 #. module: account
 #. odoo-python
@@ -10467,7 +10529,7 @@ msgstr "חשבוניות שפריטי היומן שלהן תואמו עם תשל
 #. module: account
 #: model:res.groups,comment:account.group_account_invoice
 msgid "Invoices, payments and basic invoice reporting."
-msgstr ""
+msgstr "חשבוניות, תשלומים ודיווח חשבוניות בסיסי."
 
 #. module: account
 #. odoo-python
@@ -10522,7 +10584,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
 #: model:ir.model.fields,field_description:account.field_account_move__is_being_sent
 msgid "Is Being Sent"
-msgstr ""
+msgstr "נמצא בתהליך שליחה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10550,6 +10612,12 @@ msgstr "האם עורך"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
+#: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+msgid "Is Exact Move Duplicate"
 msgstr ""
 
 #. module: account
@@ -10661,7 +10729,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_being_sent
 #: model:ir.model.fields,help:account.field_account_move__is_being_sent
 msgid "Is the move being sent asynchronously"
-msgstr ""
+msgstr "האם התנועה נשלחת באופן אסינכרוני"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -10669,7 +10737,7 @@ msgstr ""
 msgid ""
 "It indicates that the invoice/payment has been sent or the PDF has been "
 "generated."
-msgstr ""
+msgstr "מציין שהחשבונית/התשלום נשלחו או שקובץ ה-PDF נוצר."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -10757,7 +10825,7 @@ msgstr "פקודות יומן לפי תאריך"
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Journal Entries to Hash"
-msgstr ""
+msgstr "רשומות יומן לביצוע Hash"
 
 #. module: account
 #. odoo-python
@@ -10941,7 +11009,7 @@ msgstr "יוני"
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
 msgid "KPI Provider"
-msgstr ""
+msgstr "ספק KPI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -11018,7 +11086,7 @@ msgstr "תווית על קבלות של קופה"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_land
 msgid "Land (not built)"
-msgstr ""
+msgstr "קרקע (לא בנויה)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__lang
@@ -11048,7 +11116,7 @@ msgstr "רבעון אחרון"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__previous_return_period
 msgid "Last Return Period"
-msgstr ""
+msgstr "תקופת הדיווח האחרונה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__last_statement_id
@@ -11282,12 +11350,12 @@ msgstr "התחייבות"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_licenses
 msgid "Licenses and Permits"
-msgstr ""
+msgstr "רישיונות והיתרים"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_software
 msgid "Licenses or computer services (like repairs or upgrades)"
-msgstr ""
+msgstr "רישיונות או שירותי מחשוב (כגון תיקונים או שדרוגים)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
@@ -11301,12 +11369,14 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
+"השורה \"%(line)s\" מגדירה את השורה \"%(parent_line)s\" כאב שלה, אך מופיעה "
+"לפניה בדוח. האב חייב תמיד להופיע קודם."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
-msgstr ""
+msgstr "השורה \"%s\" מגדירה את עצמה כאב שלה."
 
 #. module: account
 #: model:account.reconcile.model,name:account.1_reconcile_from_label
@@ -11342,7 +11412,7 @@ msgstr "העברת נזילות"
 msgid ""
 "List of taxes to replace when applying any of the stipulated fiscal "
 "positions."
-msgstr ""
+msgstr "רשימת מסים להחלפה בעת החלת אחת מהעמדות הפיסקליות שנקבעו."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
@@ -11352,17 +11422,17 @@ msgstr "העלה עוד הגבלה"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_loan_interest_expense
 msgid "Loan Interest Expense"
-msgstr ""
+msgstr "הוצאות ריבית הלוואה"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_property_tax
 msgid "Local taxes that have to be paid due to the ownership of property"
-msgstr ""
+msgstr "מסים מקומיים שיש לשלם עקב בעלות על נכס"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_local_tax
 msgid "Local/City Tax"
-msgstr ""
+msgstr "מס מקומי/עירוני"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11389,12 +11459,12 @@ msgstr "הודעת תאריך נעילה"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__lock_trust_fields
 msgid "Lock Trust Fields"
-msgstr ""
+msgstr "נעל שדות מהימנות"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
-msgstr ""
+msgstr "רשום שינויים ברשומות יומן שפורסמו באופן בלתי הפיך"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -11413,6 +11483,7 @@ msgid "Looks great!"
 msgstr "נראה נהדר!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "הפסד"
@@ -11539,6 +11610,10 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit "
 "Transfer file to your bank. Module account_sepa is necessary.\n"
 msgstr ""
+"ידני: תשלום בכל אמצעי מחוץ ל-Odoo.\n"
+"המחאה: תשלום חשבוניות ספק בהמחאה והדפסתה מ-Odoo.\n"
+"העברת אשראי SEPA: תשלום באזור SEPA באמצעות הגשת קובץ העברת אשראי SEPA לבנק "
+"שלך. נדרש המודול account_sepa.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_line_id
@@ -11595,7 +11670,7 @@ msgstr "ידני"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__mapped_partner_id
 msgid "Mapped Partner"
-msgstr ""
+msgstr "שותף ממופה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -11610,7 +11685,7 @@ msgstr "מיפוי קודי חשבון לפי חברה"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -11706,7 +11781,7 @@ msgstr "תאריך מקסימלי של שורות תואמות"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__max_hash_date
 msgid "Max Hash Date"
-msgstr ""
+msgstr "תאריך Hash מקסימלי"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__5
@@ -11716,12 +11791,12 @@ msgstr "מאי"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_meals
 msgid "Meals & Entertainment"
-msgstr ""
+msgstr "ארוחות ובידור"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_subscriptions
 msgid "Membership fees for industry groups, professional associations, etc"
-msgstr ""
+msgstr "דמי חברות בקבוצות תעשייה, איגודים מקצועיים וכו׳"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__memo
@@ -11804,7 +11879,7 @@ msgstr "אמצעי תשלום"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_ground_transportation
 msgid "Mileage, taxi and parking"
-msgstr ""
+msgstr "קילומטראז׳, מונית וחניה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -11823,12 +11898,12 @@ msgstr "שונות"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense
 msgid "Miscellaneous Expenses"
-msgstr ""
+msgstr "הוצאות שונות"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_misc_fixed_assets
 msgid "Miscellaneous Fixed Assets"
-msgstr ""
+msgstr "נכסים קבועים שונים"
 
 #. module: account
 #. odoo-python
@@ -11848,7 +11923,7 @@ msgstr "חסר 'active_model' בהקשר."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__missing_account_partners
 msgid "Missing Account Partners"
-msgstr ""
+msgstr "שותפי חשבון חסרים"
 
 #. module: account
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_1
@@ -11921,7 +11996,7 @@ msgstr "חודשי"
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
 msgid "More precision on Product Prices"
-msgstr ""
+msgstr "דיוק נוסף על מחירי מוצרים"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -11942,7 +12017,7 @@ msgstr "העבר נתונים"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Move Down"
-msgstr ""
+msgstr "הזז למטה"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__move_line_ids
@@ -11952,7 +12027,7 @@ msgstr "שורת תנועה"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__move_to_hash_ids
 msgid "Move To Hash"
-msgstr ""
+msgstr "העבר ל-Hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_type
@@ -11964,7 +12039,7 @@ msgstr "סוג תנועה"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 msgid "Move Up"
-msgstr ""
+msgstr "הזז למעלה"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_automatic_entry_change_account
@@ -11993,7 +12068,7 @@ msgstr "קבוצות יומנים"
 msgid ""
 "Multiplicator depending on the document type, to convert a price into a "
 "balance"
-msgstr ""
+msgstr "מכפיל בהתאם לסוג המסמך, להמרת מחיר ליתרה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -12046,12 +12121,12 @@ msgstr "שם"
 #: model:ir.model.fields,field_description:account.field_account_journal__name_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__name_placeholder
 msgid "Name Placeholder"
-msgstr ""
+msgstr "ממלא מקום שם"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_bank_fees
 msgid "Nasty charges and interests from your bank"
-msgstr ""
+msgstr "עמלות וריביות מעצבנות מהבנק שלך"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12070,6 +12145,12 @@ msgstr "הכי קרוב"
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
 msgstr "צריך בקשת ביטול"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -12124,7 +12205,7 @@ msgstr "חדש"
 #. module: account
 #: model:mail.template,subject:account.mail_template_einvoice_notification
 msgid "New Electronic Invoices Received"
-msgstr ""
+msgstr "חשבוניות אלקטרוניות חדשות שהתקבלו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -12144,7 +12225,7 @@ msgstr "ערכים חדשים"
 #. module: account
 #: model:mail.template,name:account.mail_template_einvoice_notification
 msgid "New eInvoices Notification"
-msgstr ""
+msgstr "התראת חשבוניות אלקטרוניות חדשות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
@@ -12229,7 +12310,7 @@ msgstr "אין עסקה בנקאית"
 #: model:ir.model.fields,field_description:account.field_account_move__no_followup
 #: model:ir.model.fields,field_description:account.field_account_move_line__no_followup
 msgid "No Follow-Up"
-msgstr ""
+msgstr "ללא מעקב"
 
 #. module: account
 #. odoo-python
@@ -12241,7 +12322,7 @@ msgstr "אין שיטת תשלום"
 #. odoo-python
 #: code:addons/account/models/product_catalog_mixin.py:0
 msgid "No Section"
-msgstr ""
+msgstr "ללא פרק"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__no_template
@@ -12266,7 +12347,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_moves_email_preview
 msgid "No journal entries selected"
-msgstr ""
+msgstr "לא נבחרו רשומות יומן"
 
 #. module: account
 #. odoo-python
@@ -12296,17 +12377,17 @@ msgstr "לא נמצאה פעולה אפשרית עם השורות שנבחרו."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
 msgid "Non Deductible Products"
-msgstr ""
+msgstr "מוצרים לא ניתנים לניכוי"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product_total
 msgid "Non Deductible Products Total"
-msgstr ""
+msgstr "סך מוצרים לא ניתנים לניכוי"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_tax
 msgid "Non Deductible Tax"
-msgstr ""
+msgstr "מס לא ניתן לניכוי"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -12373,7 +12454,7 @@ msgstr "יתרה לא בפיגור"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
 msgid "Not Hashable Unlocked Move"
-msgstr ""
+msgstr "תנועה לא ניתנת ל-Hash שאינה נעולה"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__not_paid
@@ -12399,7 +12480,7 @@ msgstr "לא נשלח"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Not hashed"
-msgstr ""
+msgstr "לא עבר Hash"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_note
@@ -12435,12 +12516,12 @@ msgstr "הערות"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
-msgstr ""
+msgstr "אין מה לעשות"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
 msgid "Notification email for newly received eInvoices"
-msgstr ""
+msgstr "אימייל התראה לחשבוניות אלקטרוניות חדשות שהתקבלו"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -12456,12 +12537,12 @@ msgstr "עכשיו, ניצור את החשבונית הראשונה שלך"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_bank
 msgid "Num Journals Without Account Bank"
-msgstr ""
+msgstr "מספר יומנים ללא חשבון בנק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account_credit
 msgid "Num Journals Without Account Credit"
-msgstr ""
+msgstr "מספר יומנים ללא חשבון זכות"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__name
@@ -12541,7 +12622,7 @@ msgstr "מספר הודעות עם שגיאת משלוח"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_model__number
 msgid "Numbers only (202400001)"
-msgstr ""
+msgstr "מספרים בלבד (202400001)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__value
@@ -12551,7 +12632,7 @@ msgstr "ערך מספרי"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "OSS Tax mapping"
-msgstr ""
+msgstr "מיפוי מס OSS"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__10
@@ -12606,17 +12687,17 @@ msgstr "ריהוט משרדי"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_maintenance
 msgid "Office Maintenance"
-msgstr ""
+msgstr "תחזוקת משרד"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_rent
 msgid "Office Rent"
-msgstr ""
+msgstr "שכירות משרד"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_services
 msgid "Office Services"
-msgstr ""
+msgstr "שירותי משרד"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_supplies
@@ -12626,7 +12707,7 @@ msgstr "ציוד משרדי"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_furniture
 msgid "Office desks, chairs, shelving, etc"
-msgstr ""
+msgstr "שולחנות משרד, כיסאות, מדפים וכו׳"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
@@ -12636,28 +12717,28 @@ msgstr "בתשלום מוקדם"
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_fiscal_year
 msgid "Onboarding Accounting Periods"
-msgstr ""
+msgstr "קליטת תקופות חשבונאיות"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_chart_of_accounts
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_sales_tax
 msgid "Onboarding Bank Account"
-msgstr ""
+msgstr "קליטת חשבון בנק"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_company_data
 msgid "Onboarding Company Data"
-msgstr ""
+msgstr "קליטת נתוני חברה"
 
 #. module: account
 #: model:onboarding.onboarding.step,step_image_alt:account.onboarding_onboarding_step_base_document_layout
 msgid "Onboarding Documents Layout"
-msgstr ""
+msgstr "קליטת פריסת מסמכים"
 
 #. module: account
 #: model:ir.model,name:account.model_onboarding_onboarding_step
 msgid "Onboarding Step"
-msgstr ""
+msgstr "שלב קליטה"
 
 #. module: account
 #. odoo-javascript
@@ -12666,8 +12747,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"ברגע שהכל מוגדר, אתה יכול להמשיך. תוכל לערוך זאת מאוחר יותר בתפריט "
-"<b>הלקוחות</b>."
+"ברגע שהכל מוגדר, אתה יכול להמשיך. תוכל לערוך זאת מאוחר יותר בתפריט <b>"
+"הלקוחות</b>."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12748,7 +12829,7 @@ msgstr "רק פקודות יומן שנרשמו/בוטלו יכולות לחזו
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Only vendor bills allow for deductibility of product/services."
-msgstr ""
+msgstr "רק חשבוניות ספק מאפשרות ניכוי מוצרים/שירותים."
 
 #. module: account
 #. odoo-python
@@ -12763,6 +12844,8 @@ msgid ""
 "Oops! You can only change the period or account for items that are not yet "
 "reconciled! Other ones aren't up for an adventure like that!"
 msgstr ""
+"אופס! ניתן לשנות את התקופה או החשבון רק עבור פריטים שטרם הותאמו! האחרים אינם "
+"מיועדים להרפתקה כזו!"
 
 #. module: account
 #. odoo-python
@@ -12771,6 +12854,8 @@ msgid ""
 "Oops! You can only change the period or account for posted entries! Other "
 "ones aren't up for an adventure like that!"
 msgstr ""
+"אופס! ניתן לשנות את התקופה או החשבון רק עבור רשומות שפורסמו! האחרות אינן "
+"מיועדות להרפתקה כזו!"
 
 #. module: account
 #. odoo-python
@@ -12940,13 +13025,13 @@ msgstr "אחר"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_other_employees_benefits
 msgid "Other Employees Benefits"
-msgstr ""
+msgstr "הטבות עובדים אחרות"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_7
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_other
 msgid "Other Expenses"
-msgstr ""
+msgstr "הוצאות אחרות"
 
 #. module: account
 #: model:account.account,name:account.1_other_income
@@ -12963,7 +13048,7 @@ msgstr "מידע נוסף"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_other_property
 msgid "Other property"
-msgstr ""
+msgstr "נכס אחר"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_other_property
@@ -13089,9 +13174,10 @@ msgid "Owner's Current Account"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
-msgstr ""
+msgstr "חשבונות רווח והפסד"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13119,11 +13205,6 @@ msgstr "קובץ PDF"
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
 msgstr "PDF ללא תשלום"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -13731,7 +13812,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
+msgstr "אנא פנה לרואה החשבון שלך כדי להדפיס את תוצאת בדיקת שלמות ה-Hash."
 
 #. module: account
 #. odoo-python
@@ -14025,6 +14106,7 @@ msgstr "קטגוריות מוצרים"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14105,6 +14187,19 @@ msgstr "רווח והפסד"
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
 msgid "Profit Account"
 msgstr "חשבון רווחים"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_profit_or_loss
+#: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Profit or Loss Appropriation"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -14286,19 +14381,13 @@ msgstr "מצב עריכה מהירה"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_encoding_vals
 #: model:ir.model.fields,field_description:account.field_account_move__quick_encoding_vals
 msgid "Quick Encoding Vals"
-msgstr ""
+msgstr "ערכי קידוד מהיר"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__quick_edit_mode
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "הטמעה מהירה"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "חיפוש מהיר: %s"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -14805,6 +14894,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "הכנסה"
@@ -14939,7 +15029,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__checked
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reviewed"
-msgstr ""
+msgstr "מאושר"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -15268,6 +15358,7 @@ msgstr "חיפוש שם או ID"
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Search: %s"
 msgstr "חיפוש: %s"
@@ -15361,6 +15452,8 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"בחר מוצר שעבורו תשמש החלוקה האנליטית (למשל, ביצירת חשבונית לקוח או הזמנת "
+"מכירה חדשה עם מוצר זה, החשבון האנליטי הזה ייבחר אוטומטית)"
 
 #. module: account
 #. odoo-python
@@ -15752,7 +15845,7 @@ msgstr "הגדר חשבון בנק"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Credit Card Account"
-msgstr ""
+msgstr "הגדר חשבון כרטיס אשראי"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -17021,7 +17114,7 @@ msgstr "מספר ימי הנחת התשלום המוקדם חייב להיות �
 msgid ""
 "The Early Payment Discount functionality can only be used with payment terms "
 "using a single 100% line. "
-msgstr ""
+msgstr "ניתן להשתמש בהנחת תשלום מוקדם רק עם תנאי תשלום בעלי שורת 100% אחת. "
 
 #. module: account
 #. odoo-python
@@ -17062,6 +17155,7 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
+"רצף פקודת היומן אינו תואם את הפורמט הנוכחי. רק רואה החשבון יכול לשנות אותו."
 
 #. module: account
 #. odoo-python
@@ -17071,14 +17165,6 @@ msgid ""
 "percent must be 100%."
 msgstr ""
 "אמצעי התשלום חייב לכלול שורה של אחוז אחד לפחות וסכום האחוזים חייב להיות 100%."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17169,7 +17255,7 @@ msgstr "הסכום אינו מספר"
 msgid ""
 "The application scope of taxes in a group must be either the same as the "
 "group or left empty."
-msgstr ""
+msgstr "היקף התחולה של מסים בקבוצה חייב להיות זהה לקבוצה או להישאר ריק."
 
 #. module: account
 #. odoo-python
@@ -17437,11 +17523,13 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
+"ההוצאה נרשמת בעת אימות חשבונית ספק, למעט בחשבונאות אנגלו-סקסית עם הערכת מלאי "
+"תמידית, שבה ההוצאה (חשבון עלות המכר) מוכרת בעת אימות חשבונית הלקוח."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq
 msgid "The expression label must be unique per report line."
-msgstr ""
+msgstr "תווית הביטוי חייבת להיות ייחודית לכל שורת דוח."
 
 #. module: account
 #. odoo-python
@@ -17500,7 +17588,7 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account '%"
 "(account)s' must be the same."
 msgstr ""
-"המטבע הזר המוגדרן ליומן '%(journal)s' ולחשבון '%(account)s' צריך להיות זהה."
+"המטבע הזר המוגדר ליומן '%(journal)s' ולחשבון '%(account)s' צריך להיות זהה."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -17509,6 +17597,9 @@ msgid ""
 "                                            data without breaking the hash "
 "chain for subsequent parts."
 msgstr ""
+"שרשרת ה-Hash תקינה: לא ניתן לשנות את\n"
+"                                            הנתונים מבלי לשבור את שרשרת ה-"
+"Hash של החלקים הבאים."
 
 #. module: account
 #. odoo-python
@@ -17612,6 +17703,8 @@ msgid ""
 "to work properly, invoice distribution lines should be arranged in the same "
 "order as the credit note distribution lines they correspond to."
 msgstr ""
+"הסדר שבו שורות החלוקה מוצגות ומותאמות. כדי שזיכויים יעבדו כראוי, יש לסדר את "
+"שורות החלוקה בחשבונית באותו סדר של שורות החלוקה בזיכוי המתאים."
 
 #. module: account
 #. odoo-python
@@ -17709,6 +17802,7 @@ msgid ""
 "The register payment wizard should only be called on account.move or "
 "account.move.line records."
 msgstr ""
+"יש להפעיל את אשף רישום התשלום רק על רשומות account.move או account.move.line."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report__root_report_id
@@ -17815,6 +17909,8 @@ msgid ""
 "instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
+"ה-regex של הרצף חייב לכלול לפחות את מפתחות הקיבוץ seq. לדוגמה:\n"
+"^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
 #. odoo-python
@@ -17906,8 +18002,7 @@ msgstr ""
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
-msgstr ""
-"יתרת הפתיחה אינה תואמת ליתרת הסיום של הדיווח הקודם, או שחסר דיווח קודם."
+msgstr "יתרת הפתיחה אינה תואמת ליתרת הסיום של הדיווח הקודם, או שחסר דיווח קודם."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -17930,7 +18025,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
 msgid "The tie-breaking rule used for float rounding operations"
-msgstr ""
+msgstr "כלל שובר השוויון המשמש לפעולות עיגול של מספרים עשרוניים"
 
 #. module: account
 #. odoo-python
@@ -18150,6 +18245,8 @@ msgid ""
 "reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
+"זה מאפשר לך לקבץ תשלומים לאצווה אחת ומקל על תהליך ההתאמה.\n"
+"-פעולה זו מתקינה את המודול account_batch_payment."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__account_prefix
@@ -18261,6 +18358,7 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
+"זוהי מסגרת האשראי המוגדרת כברירת מחדל שתשמש עבור שותפים ללא מסגרת ספציפית."
 
 #. module: account
 #. odoo-python
@@ -18297,7 +18395,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
-msgstr ""
+msgstr "שורה זו וצאצאיה יוסתרו כאשר כל העמודות שלהן שוות 0."
 
 #. module: account
 #. odoo-python
@@ -18753,8 +18851,9 @@ msgstr "העבר ל %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+#, fuzzy
 msgid "Translated Product Name"
-msgstr ""
+msgstr "שם מתורגם של מוצר"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -18847,20 +18946,19 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
+"לא ניתן ליצור דף בנק עקב עסקאות חסרות. מומלץ לסדר מחדש את העסקאות לפני "
+"שממשיכים."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
 msgstr "עדיין לא מוגדר"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#: model:account.account,name:account.1_unaffected_earnings_account
-#: model:account.account,name:account.2_unaffected_earnings_account
-msgid "Undistributed Profits/Losses"
-msgstr "רווחים שלא חולקו"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
@@ -18906,8 +19004,9 @@ msgstr "מחיר יחידה:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Units"
-msgstr ""
+msgstr "יחידה"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -19064,6 +19163,12 @@ msgid "Update Terms & Conditions"
 msgstr "עדכן תנאים והגבלות"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
 msgstr "עדכן שערי חליפין אוטומטית"
@@ -19171,6 +19276,8 @@ msgid ""
 "Odoo will automatically create one invoice line with default values to match "
 "it."
 msgstr ""
+"השתמש בשדה זה כדי להזין את הסכום הכולל של החשבונית.\n"
+"Odoo תיצור אוטומטית שורת חשבונית אחת עם ערכי ברירת מחדל שתתאים לו."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -19233,7 +19340,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__user_has_group_validate_bank_account
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__user_has_group_validate_bank_account
 msgid "User Has Group Validate Bank Account"
-msgstr ""
+msgstr "למשתמש יש קבוצת אימות חשבון בנק"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_purchase_lock_date
@@ -19272,7 +19379,7 @@ msgstr "שדה שירות לביטוי סכום מטבע"
 msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
-msgstr ""
+msgstr "שדה עזר המציין האם פריט היומן כפוף לחשבונאות סטורנו"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -19758,7 +19865,7 @@ msgstr ""
 #: code:addons/account/wizard/account_resequence.py:0
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
-msgstr ""
+msgstr "לא ניתן לסדר מחדש רצף לפי תאריך כאשר היומן נעול עם Hash."
 
 #. module: account
 #. odoo-python
@@ -19802,6 +19909,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -19842,7 +19954,7 @@ msgstr ""
 msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
-msgstr ""
+msgstr "לא ניתן ליצור שורת בנק חדשה בלי חשבון להתאמה בהגדרות %sיומןl."
 
 #. module: account
 #. odoo-python
@@ -19865,8 +19977,8 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"אינך יכול למחוק פריט יומן שפורסם. אל תשחק עם רישומי הנהלת החשבונות שלך; אפס "
-"את פקודת היומן למצב טיוטה לפני שתמחק אותו."
+"אינך יכול למחוק תנועת יומן שפורסמה. אל תשחק עם רישומי הנהלת החשבונות שלך; "
+"אפס את פקודת היומן למצב טיוטה לפני שתמחק אותו."
 
 #. module: account
 #. odoo-python
@@ -19904,7 +20016,7 @@ msgstr "אינך יכול לפתוח את אשף רישום התשלום ללא 
 msgid ""
 "You can't provide a foreign currency without specifying an amount in 'Amount "
 "in Currency' field."
-msgstr ""
+msgstr "לא ניתן לציין מטבע זר מבלי לציין סכום בשדה 'סכום במטבע'."
 
 #. module: account
 #. odoo-python
@@ -20054,8 +20166,7 @@ msgstr ""
 #: code:addons/account/models/mail_template.py:0
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending flow."
-msgstr ""
-"אינך יכול למחוק את תבנית הדוא\"ל הזו, היא בשימוש בתהליך שליחת החשבונית."
+msgstr "אינך יכול למחוק את תבנית הדוא\"ל הזו, היא בשימוש בתהליך שליחת החשבונית."
 
 #. module: account
 #. odoo-python
@@ -20215,6 +20326,13 @@ msgid ""
 msgstr ""
 "לא ניתן לצמצם את מספר המקומות העשרוניים של מטבע שכבר נעשה בו שימוש לביצוע "
 "רישומים חשבונאיים."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -20603,7 +20721,7 @@ msgstr "במייל"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "cancelling {percent}%% of {amount}"
-msgstr ""
+msgstr "מבטל {percent}%% מתוך {amount}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -20805,11 +20923,14 @@ msgid ""
 "                            Double check if the account can be trusted by "
 "calling the vendor.<br/>"
 msgstr ""
+"הוא שירות העברת כספים ולא בנק.\n"
+"                            בדוק שוב אם ניתן לסמוך על החשבון על ידי התקשרות "
+"לספק.<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "is not from the same country as the partner ("
-msgstr ""
+msgstr "אינו מאותה מדינה כמו השותף ("
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_enabled_tax_country_ids
@@ -20852,12 +20973,6 @@ msgid ""
 msgstr ""
 "יש להודיע על כל תביעה באמצעות מכתב שנשלח בדואר רשום למשרדו הרשום תוך 8 ימים "
 "מיום מסירת הסחורה או מתן השירותים."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
@@ -20905,7 +21020,7 @@ msgstr "התשלומים יידחו בשל"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "postponing it to {new_date}"
-msgstr ""
+msgstr "דחייתו ל-{new_date}"
 
 #. module: account
 #. odoo-python
@@ -21051,7 +21166,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "{amount} ({debit_credit}) from {link}"
-msgstr ""
+msgstr "{amount} ({debit_credit}) מתוך {link}"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_invoice_subscriber
@@ -21092,6 +21207,21 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s, או / אם לא רלוונטי"
+
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s, או לא רלוונטי"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ אם לא רלוונטי"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "חיפוש מהיר: %s"
+
+#~ msgid "Undistributed Profits/Losses"
+#~ msgstr "רווחים שלא חולקו"
 
 #~ msgid "1.00"
 #~ msgstr "1.00"

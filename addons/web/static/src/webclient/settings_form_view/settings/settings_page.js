@@ -2,6 +2,7 @@ import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class SettingsPage extends Component {
     static template = "web.SettingsPage";
@@ -47,6 +48,7 @@ export class SettingsPage extends Component {
 
                 const { scrollTop } = this.scrollMap[currentTab] || 0;
                 settingsEl.scrollTop = scrollTop;
+                this.tabChangeProm?.resolve();
             },
             () => [this.settingsRef.el, this.state.selectedTab]
         );
@@ -70,14 +72,16 @@ export class SettingsPage extends Component {
             this.getCurrentIndex() !== this.props.modules.length - 1
         );
     }
-    async onRightSwipe(prom) {
+    async onRightSwipe() {
+        this.tabChangeProm = new Deferred();
         this.state.selectedTab = this.props.modules[this.getCurrentIndex() - 1].key;
-        await prom;
+        await this.tabChangeProm;
         this.scrollToSelectedTab();
     }
-    async onLeftSwipe(prom) {
+    async onLeftSwipe() {
+        this.tabChangeProm = new Deferred();
         this.state.selectedTab = this.props.modules[this.getCurrentIndex() + 1].key;
-        await prom;
+        await this.tabChangeProm;
         this.scrollToSelectedTab();
     }
 

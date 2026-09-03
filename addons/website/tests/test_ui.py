@@ -12,6 +12,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.html_editor.controllers.main import HTML_Editor
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
 from odoo.fields import Command
+from odoo.tools import mute_logger
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -529,6 +530,16 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_media_dialog_insert_media(self):
         self.start_tour("/", "website_media_dialog_insert_media", login="admin")
 
+    def test_website_media_dialog_insert_file(self):
+        # Ensure at least one document exists for the step that chooses one
+        self.env['ir.attachment'].create({
+            'name': 'doc.txt',
+            'raw': b'Text',
+            'mimetype': 'text/plain',
+            'public': True,
+        })
+        self.start_tour("/", "website_media_dialog_insert_file", login="admin")
+
     def test_website_text_font_size(self):
         self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
 
@@ -751,3 +762,68 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_anchor_on_accordion_item(self):
         self.start_tour("/", "anchor_behaviour_on_accordion_same_tab", login="admin")
         self.start_tour("/#What-services-does-your-company-offer-%3F", "anchor_behaviour_on_accordion_new_tab", login="admin")
+
+    @mute_logger("odoo.http")
+    def test_website_replace_remove_image(self):
+        self.start_tour("/", "website_replace_remove_image", login="admin")
+
+    def test_website_optimize_seo_with_multiple_fields(self):
+        model_id = self.env["ir.model"]._get_id("website")
+
+        self.env["ir.model.fields"].create(
+            [
+                {
+                    "name": "x_zone_left",
+                    "field_description": "Zone Left",
+                    "model_id": model_id,
+                    "ttype": "html",
+                },
+                {
+                    "name": "x_zone_right",
+                    "field_description": "Zone Right",
+                    "model_id": model_id,
+                    "ttype": "html",
+                },
+            ],
+        )
+
+        img = '<img src="/web/image/website.s_banner_default_image"/>'
+        website = self.env["website"].get_current_website()
+        website.write(
+            {
+                "x_zone_left": f"<div>{img}</div>",
+                "x_zone_right": f"<div>{img}</div>",
+            },
+        )
+
+        arch = """
+            <t t-name="website.seo_test_page">
+                <t t-call="website.layout">
+                    <div class="container"><div class="row">
+                        <div class="col-6"><div id="zone_left"  t-field="website.x_zone_left"/></div>
+                        <div class="col-6"><div id="zone_right" t-field="website.x_zone_right"/></div>
+                    </div></div>
+                </t>
+            </t>
+        """
+        view = self.env["ir.ui.view"].create(
+            {
+                "name": "SEO Test Page",
+                "type": "qweb",
+                "arch": arch,
+            },
+        )
+
+        self.env["website.page"].create(
+            {
+                "name": "SEO Test Page",
+                "url": "/optimize_seo_test_page",
+                "view_id": view.id,
+                "is_published": True,
+            },
+        )
+        self.start_tour(
+            "/optimize_seo_test_page",
+            "website.test_website_seo_with_duplicate_images_across_html_fields",
+            login="admin",
+        )

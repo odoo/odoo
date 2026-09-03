@@ -12,14 +12,15 @@
 # Jasmina Macur <jasmina@hbs.si>, 2022
 # Nejc G <nejc@luxim.si>, 2022
 # Tomaž Jug <tomaz@editor.si>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 21:35+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"PO-Revision-Date: 2026-08-05 04:56+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "account_payment/sl/>\n"
 "Language: sl\n"
@@ -28,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_payment
 #. odoo-python
@@ -197,6 +198,12 @@ msgid "Authorized Transactions"
 msgstr "Odobrene transakcije"
 
 #. module: account_payment
+#: model:ir.model,name:account_payment.model_account_bank_statement_line
+#, fuzzy
+msgid "Bank Statement Line"
+msgstr "Postavka bančnega izpiska"
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
 msgstr "Zajem transakcije"
@@ -234,6 +241,7 @@ msgid "Discount Date"
 msgstr "Datum popusta"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
@@ -298,6 +306,7 @@ msgid "Has a pending refund"
 msgstr "Ima čakajoče vračilo"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__id
 #: model:ir.model.fields,field_description:account_payment.field_account_move__id
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__id
@@ -631,8 +640,9 @@ msgstr "Dnevnik, v katerega so vnesene uspešne transakcije."
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The payment related to transaction %(ref)s has been posted: %(link)s"
-msgstr ""
+msgstr "Plačilo, povezano s transakcijo %(ref)s, je bilo knjiženo: %(link)s"
 
 #. module: account_payment
 #. odoo-python

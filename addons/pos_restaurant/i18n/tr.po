@@ -17,18 +17,18 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Halil, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
-# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 14:45+0000\n"
-"Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-02 11:49+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/tr/>\n"
 "Language: tr\n"
@@ -36,18 +36,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid " and $1"
-msgstr " ve 1 dolar"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "% discount"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
 msgstr ""
 
 #. module: pos_restaurant
@@ -203,6 +211,7 @@ msgstr "Arşivlendi"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
 msgstr "Emin misiniz?"
 
@@ -743,6 +752,18 @@ msgstr "Son Güncelleme"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table %(sourceTable)s with %(destinationTable)s"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Loading"
 msgstr "Yükleniyor"
@@ -877,8 +898,7 @@ msgstr "Old Fashioned"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Only web-compatible Image formats such as .png or .jpeg are supported."
-msgstr ""
-"Yalnızca .png veya .jpeg gibi web uyumlu Görüntü biçimleri desteklenir."
+msgstr "Yalnızca .png veya .jpeg gibi web uyumlu Görüntü biçimleri desteklenir."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1085,14 +1105,19 @@ msgstr "Masayı bırak"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Removing a floor cannot be undone. Do you still want to remove %s?"
-msgstr ""
-"Bir katın kaldırılması geri alınamaz. Hala kaldırmak istiyor musunuz%s?"
+msgstr "Bir katın kaldırılması geri alınamaz. Hala kaldırmak istiyor musunuz%s?"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Removing a table cannot be undone"
 msgstr "Masayı silmek istiyor musunuz? Bu işlem geri alınamaz"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Removing floor %s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1602,8 +1627,7 @@ msgstr "Bu masaya ait siparişler hâlâ taslak durumdaysa, masayı silemezsiniz
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
-msgstr ""
-"Bir masa için siparişler hala taslak halindeyken o masayı silemezsiniz."
+msgstr "Bir masa için siparişler hala taslak halindeyken o masayı silemezsiniz."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1618,8 +1642,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"PoS oturumunda kullanılan bir katı kaldıramazsınız, önce oturumları "
-"kapatın: \n"
+"PoS oturumunda kullanılan bir katı kaldıramazsınız, önce oturumları kapatın: "
+"\n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1654,6 +1678,9 @@ msgstr "öğeler"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
 msgstr "seçilen ürün(ler)"
+
+#~ msgid " and $1"
+#~ msgstr " ve 1 dolar"
 
 #~ msgid "________________________"
 #~ msgstr "________________________"

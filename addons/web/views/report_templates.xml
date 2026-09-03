@@ -279,16 +279,20 @@
         <t t-set="colclass" t-value="('col-sm-5' if report_type == 'html' else 'col-5') + ' ms-auto'"/>
         <div t-if="address" t-attf-class="address row mb-4" title="This block is not always present depending on the printed document.">
             <t t-if="information_block">
-                <t t-set="colclass" t-value="'col-5 offset-1'"/>
-                <div name="information_block" class="col-6">
-                    <t t-out="information_block or None">
-                        <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
-                            <strong>Information block</strong>
-                            <div>Usually contains a source address or a complementary address.</div>
-                        </div>
-                    </t>
-                </div>
+                <t t-set="colclass" t-value="'col-5' + ('' if custom_layout_address else ' offset-1')"/>
+                <t t-set="information_block_content">
+                    <div name="information_block" class="col-6">
+                        <t t-out="information_block or None">
+                            <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
+                                <strong>Information block</strong>
+                                <div>Usually contains a source address or a complementary address.</div>
+                            </div>
+                        </t>
+                    </div>
+                </t>
             </t>
+
+            <t t-if="not custom_layout_address" t-out="information_block_content"/>
 
             <div name="address" t-att-class="not custom_layout_address and colclass or information_block and colclass">
                 <t t-esc="address or None">
@@ -298,6 +302,8 @@
                     </div>
                 </t>
             </div>
+
+            <t t-if="custom_layout_address" t-out="information_block_content"/>
         </div>
         <div class="oe_structure" t-else=""></div>
     </template>
@@ -556,6 +562,7 @@
 
     <template id="external_layout_folder">
         <t t-set="header_shape_height" t-value="'174'"/>
+        <t t-set="is_rtl" t-value="env['res.lang']._get_data(code=lang or env.user.lang).direction == 'rtl'"/>
 
         <div t-attf-class="header o_company_#{company.id}_layout {{report_type != 'pdf' and 'h-0'}}">
             <div class="o_folder_header_container position-absolute start-0 top-0 z-n1 w-100">
@@ -566,8 +573,9 @@
                     <svg class="d-block flex-grow-1" fill="none" height="100%" xmlns="http://www.w3.org/2000/svg">
                         <rect width="100%" height="100%"/>
                     </svg>
-                    <svg class="o_folder_angle_shape" width="80" height="100%" viewBox="0 0 80 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
+                    <svg class="o_folder_angle_shape position-relative" width="80" height="100%" viewBox="0 0 80 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path t-if="is_rtl" d="M74.296 48H80V0.001H6.46L0 0C5.7973 0.665925 11.2584 3.06708 15.668 6.889L54.648 40.67C60.1026 45.3976 67.0778 48.0001 74.296 48Z" fill="black"/>
+                        <path t-else="" d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
                     </svg>
                     <h2 t-attf-class="{{layout_document_title and 'o_folder_title mt-2 text-nowrap' or 'w-25'}}">
                         <t t-out="layout_document_title"/>
@@ -624,7 +632,7 @@
                 <t t-set="custom_layout_address" t-value="true"/>
                 <t t-call="web.address_layout"/>
             </div>
-            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title" class="opacity-0" t-att-style="'height: 0px'"/>
+            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title or ' '" class="opacity-0" t-att-style="'height: 0px'"/>
             <t t-out="0"/>
         </div>
 
@@ -729,7 +737,7 @@
                         </td>
                         <td class="p-0 text-end">
                             <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
-                            <div name="company_address">
+                            <div name="company_address" class="w-50 ms-auto">
                                 <ul class="list-unstyled" name="company_address_list">
                                     <li t-if="company.is_company_details_empty">
                                         <span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>

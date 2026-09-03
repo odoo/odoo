@@ -2,14 +2,14 @@
 # This file contains the translation of the following modules:
 # * payment_asiapay
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-03-20 15:13+0000\n"
+"PO-Revision-Date: 2026-08-03 03:04+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "payment_asiapay/sv/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_asiapay
 #. odoo-python
@@ -27,8 +27,8 @@ msgid ""
 "An error occurred during the processing of your payment (success code %"
 "(success_code)s; primary response code %(response_code)s). Please try again."
 msgstr ""
-"Ett fel uppstod under bearbetningen av din betalning (framgångskod %"
-"(success_code)s;primär svarskod%(response_code)s). Vänligen försök igen."
+"Ett fel uppstod när betalningen behandlades (framgångskod %(success_code)"
+"s;huvudsaklig svarskod%(response_code)s). Vänligen försök igen."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__code__asiapay
@@ -38,7 +38,7 @@ msgstr "AsiaPay"
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "AsiaPay Merchant ID"
-msgstr "AsiaPays försäljar-ID"
+msgstr "Handelsnummer hos AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
@@ -48,13 +48,13 @@ msgstr "AsiaPay säker hashfunktion"
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_secret
 msgid "AsiaPay Secure Hash Secret"
-msgstr "AsiaPay Secure Hash Secret"
+msgstr "AsiaPay säker hash-hemlighet"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_provider.py:0
 msgid "AsiaPay does not support the following currencies: %(currencies)s."
-msgstr ""
+msgstr "AsiaPay stöder inte följande valutor: %(currencies)s."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
@@ -69,7 +69,7 @@ msgstr "BimoPay"
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Brand"
-msgstr "Märke"
+msgstr "Varumärke"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__code
@@ -91,13 +91,13 @@ msgstr "ID"
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Merchant ID"
-msgstr "Handlarens ID"
+msgstr "Handelsnummer"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_provider.py:0
 msgid "Only one currency can be selected by AsiaPay account."
-msgstr "Endast en valuta kan väljas för ett AsiaPay-konto."
+msgstr "Endast en valuta kan anges för ett AsiaPay-konto."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__paydollar
@@ -123,7 +123,7 @@ msgstr "PesoPay"
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
 msgid "Received data with missing success code."
-msgstr "Mottagen data med saknad framgångskod."
+msgstr "Mottagen data som saknar framgångskod."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
@@ -148,7 +148,7 @@ msgstr "Säker hashfunktion"
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Secure Hash Secret"
-msgstr "Säker Hash Hemlighet"
+msgstr "Säker hash-hemlighet"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__siampay
@@ -158,7 +158,7 @@ msgstr "SiamPay"
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_merchant_id
 msgid "The Merchant ID solely used to identify your AsiaPay account."
-msgstr "Säljar-ID används endast för att identifiera ditt AsiaPay-konto."
+msgstr "Handelsnumret används endast för att identifiera ditt AsiaPay-konto."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_brand
@@ -173,7 +173,7 @@ msgstr "Den säkra hashfunktionen som är kopplad till ditt AsiaPay-konto."
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Den tekniska koden för denna betalningsleverantör."
+msgstr "Betalningsleverantörens tekniska kod."
 
 #. module: payment_asiapay
 #. odoo-python

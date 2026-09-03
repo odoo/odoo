@@ -17,16 +17,16 @@
 # Martin Trigaux, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Emily Jia <eji@odoo.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # 张飞虎 <feihu.zhang@live.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-09 11:29+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-02 14:08+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/mail/zh_Hans/>\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -244,8 +244,8 @@ msgstr ""
 "%(new_line)s%(new_line)s输入 %(bold_start)s@username%(bold_end)s 提及某人，以"
 "吸引他们注意。%(new_line)s输入 %(bold_start)s#channel%(bold_end)s 以提及该频"
 "道。%(new_line)s输入 %(bold_start)s/command%(bold_end)s 以执行指令。%"
-"(new_line)s输入 %(bold_start)s::shortcut%(bold_end)s 以在信息中插入默认回复。"
-"%(new_line)s输入 %(bold_start)s:emoji:%(bold_end)s 以在信息中插入表情符号。"
+"(new_line)s输入 %(bold_start)s::shortcut%(bold_end)s 以在信息中插入默认回复"
+"。%(new_line)s输入 %(bold_start)s:emoji:%(bold_end)s 以在信息中插入表情符号。"
 
 #. module: mail
 #. odoo-javascript
@@ -262,8 +262,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "按 %(open_samp)sEsc%(close_samp)s %(open_em)s以%(open_cancel)s取消%"
-"(close_cancel)s%(close_em)s，%(open_samp)sCtrl+Enter%(close_samp)s %"
-"(open_em)s以%(open_save)s储存%(close_save)s%(close_em)s"
+"(close_cancel)s%(close_em)s，%(open_samp)sCtrl+Enter%(close_samp)s %(open_em)"
+"s以%(open_save)s储存%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -338,8 +338,8 @@ msgid ""
 "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
 "(strong_end)s channel."
 msgstr ""
-"%(user_name)s 邀请您加入 %(strong_start)s%(channel_name)s%(strong_end)s 频"
-"道。"
+"%(user_name)s 邀请您加入 %(strong_start)s%(channel_name)s%(strong_end)s 频道"
+"。"
 
 #. module: mail
 #. odoo-python
@@ -566,8 +566,8 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct messages.</"
 "p><p><i>You might need to invite users from the Settings app first.</i></p>"
 msgstr ""
-"<p>使用私信实时<b>与同事聊天</b>。</p><p><i>您可能需要在“设置”应用中邀请用"
-"户。</i></p>"
+"<p>使用私信实时<b>与同事聊天</b>。</p><p><i>您可能需要在“设置”应用中邀请用户"
+"。</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -1206,24 +1206,27 @@ msgid "Add Star"
 msgstr "添加星标"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "添加表情符"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "添加 Tenor GIF API 密钥以启用 GIF 支持。"
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"添加 Tenor GIF API 密钥以启用 GIF 支持。https://developers.google.com/tenor/"
-"guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "添加表情符"
 
 #. module: mail
 #. odoo-javascript
@@ -2579,8 +2582,8 @@ msgid ""
 "Chat is private and unique between 2 persons. Group is private among invited "
 "persons. Channel can be freely joined (depending on its configuration)."
 msgstr ""
-"在 2 个人之间的聊天是私密且唯一的。受邀者之间群聊是私密的。频道可以自由加入"
-"（取决于其配置）。"
+"在 2 个人之间的聊天是私密且唯一的。受邀者之间群聊是私密的。频道可以自由加入（"
+"取决于其配置）。"
 
 #. module: mail
 #. odoo-javascript
@@ -2941,8 +2944,7 @@ msgstr "容器模型"
 msgid ""
 "Contains the date and time of the last interesting event that happened in "
 "this channel for this user. This includes: creating, joining, pinning"
-msgstr ""
-"包含该用户在该频道中最近标注兴趣事件的日期和时间。包括：创建、加入、固定"
+msgstr "包含该用户在该频道中最近标注兴趣事件的日期和时间。包括：创建、加入、固定"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__last_interest_dt
@@ -2968,8 +2970,7 @@ msgstr "内容"
 msgid ""
 "Content that will automatically replace the shortcut of your choosing. This "
 "content can still be adapted before sending your message."
-msgstr ""
-"将自动替换您选择的快捷方式的内容。 此内容仍然可以在发送您的消息之前进行调整。"
+msgstr "将自动替换您选择的快捷方式的内容。 此内容仍然可以在发送您的消息之前进行调整。"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body
@@ -3619,8 +3620,7 @@ msgstr "被检测为垃圾邮件"
 msgid ""
 "Determines how the channel will be displayed by default when opening it from "
 "its invitation link. No value means display text (no voice/video)."
-msgstr ""
-"确定从邀请链接打开频道时默认显示频道的方式。无值表示显示文本（无语音/视频）"
+msgstr "确定从邀请链接打开频道时默认显示频道的方式。无值表示显示文本（无语音/视频）"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_canned_response__is_editable
@@ -4810,8 +4810,7 @@ msgstr "Font Awesome图标，例如：fa-tasks"
 msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the group-based "
 "authorization or group auto-subscription."
-msgstr ""
-"对于 %(channels)s，channel_type应为“频道”，以获得基于组的授权或组自动订阅。"
+msgstr "对于 %(channels)s，channel_type应为“频道”，以获得基于组的授权或组自动订阅。"
 
 #. module: mail
 #. odoo-javascript
@@ -4856,8 +4855,8 @@ msgid ""
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
 "对于 Python 表达式，该字段可以包含一个 Python 表达式，该表达式可以使用与服务"
-"器操作的代码字段相同的值，例如：`env.user.name` 可以将当前用户的名称设为值，"
-"`record.id` 可以将运行操作的记录的 ID 设为值。\n"
+"器操作的代码字段相同的值，例如：`env.user.name` 可以将当前用户的名称设为值"
+"，`record.id` 可以将运行操作的记录的 ID 设为值。\n"
 "\n"
 "对于静态值，将不经评估直接使用该值，例如`42`或`我的自定义名称`或所选记录。"
 
@@ -5499,8 +5498,8 @@ msgid ""
 "If set, the queue manager will send the email after the date. If not set, "
 "the email will be send as soon as possible. You can use dynamic expression."
 msgstr ""
-"如果设置，队列管理器将在日期之后发送电子邮件。如果未设置，电子邮件将尽快发"
-"送。您可以使用动态表达式。"
+"如果设置，队列管理器将在日期之后发送电子邮件。如果未设置，电子邮件将尽快发送"
+"。您可以使用动态表达式。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_bounced_content
@@ -5557,6 +5556,14 @@ msgstr "如果您想为大型群组通话设置 SFU 服务器。"
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "如果您想使用twilio作为TURN/STUN服务器提供商"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
@@ -6213,6 +6220,16 @@ msgid "Kind Regards"
 msgstr "亲切问候"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_participant_card.xml:0
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_participants.xml:0
@@ -6743,8 +6760,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
-"注释模式下，邮件撰写器应至少在一条记录上运行。未找到记录（模型%"
-"(model_name)s）。"
+"注释模式下，邮件撰写器应至少在一条记录上运行。未找到记录（模型%(model_name)s"
+"）。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -7090,7 +7107,7 @@ msgstr "应在其之前显示分隔符的信息 ID"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
+#: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Message posted on \"%s\""
 msgstr "在“%s”上发布的消息"
 
@@ -8585,8 +8602,8 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例"
-"如：project(parent_model) 和任务 (模型)）"
+"拥有别名的母项模型。拥有别名参考的模型不一定是alias_model_id给出的模型（例如"
+"：project(parent_model) 和任务 (模型)）"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -8949,8 +8966,7 @@ msgstr "应在业务文档上发布消息。使用 message_notify 向用户发�
 msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
-msgstr ""
-"发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
+msgstr "发布一则消息应收到串列（list）或元组（tuple）清单形式的附件（已收到%(aids)s）"
 
 #. module: mail
 #. odoo-python
@@ -9895,6 +9911,12 @@ msgstr "搜索收件服务器"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 msgid "Search Message"
 msgstr "搜索消息"
@@ -9949,12 +9971,6 @@ msgstr "通过名称搜索"
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
 msgstr "搜索会话"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-msgid "Search for a GIF"
-msgstr "搜索 GIF"
 
 #. module: mail
 #. odoo-javascript
@@ -10540,8 +10556,7 @@ msgstr "指定一个字段，用于在服务器操作使用的记录上链接新
 msgid ""
 "Specify a model if the activity should be specific to a model and not "
 "available when managing activities for other models."
-msgstr ""
-"如果活动应特定于某个模型并且在管理其他模型的活动时不可用，则指定一个模型。"
+msgstr "如果活动应特定于某个模型并且在管理其他模型的活动时不可用，则指定一个模型。"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__crud_model_id
@@ -10986,16 +11001,6 @@ msgid "Templates"
 msgstr "模板"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenor API 密钥"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API 密钥"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
@@ -11053,16 +11058,6 @@ msgid ""
 msgstr ""
 "一键通功能只能在选项卡焦点范围内使用。要在该选项卡之外启用一键通功能，建议下"
 "载我们的%(anchor_start)s扩展程序 。"
-
-#. module: mail
-#: model:ir.model.fields,help:mail.field_res_partner__vat
-#: model:ir.model.fields,help:mail.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳税。"
 
 #. module: mail
 #. odoo-python
@@ -11202,8 +11197,7 @@ msgstr ""
 msgid ""
 "The message scheduled on %(model)s(%(id)s) with the following content could "
 "not be sent:%(original_message)s"
-msgstr ""
-"在%(model)s（%(id)s）安排的包含以下内容的信息无法发送：%(original_message)s"
+msgstr "在%(model)s（%(id)s）安排的包含以下内容的信息无法发送：%(original_message)s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__from_message_id
@@ -11811,8 +11805,7 @@ msgstr "跟踪更改"
 msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
-msgstr ""
-"在单独的模型中存储跟踪值。该字段允许重建跟踪，以便在模型中生成统计数据。"
+msgstr "在单独的模型中存储跟踪值。该字段允许重建跟踪，以便在模型中生成统计数据。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -12359,8 +12352,7 @@ msgstr "使用您自己的服务器处理通话，以应对大流量并确保 Tw
 msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
-msgstr ""
-"使用您自己的服务器处理通话，以应对大流量并确保 Twilio 不可用时的可靠性。"
+msgstr "使用您自己的服务器处理通话，以应对大流量并确保 Twilio 不可用时的可靠性。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -12950,8 +12942,8 @@ msgid ""
 "You are about to leave this group conversation and will no longer have "
 "access to it unless you are invited again. Are you sure you want to continue?"
 msgstr ""
-"您即将离开此群组对话，除非再次受到邀请，否则将无法再访问它。 您确定您要继续"
-"吗？"
+"您即将离开此群组对话，除非再次受到邀请，否则将无法再访问它。 您确定您要继续吗"
+"？"
 
 #. module: mail
 #. odoo-python
@@ -13051,6 +13043,18 @@ msgid "You can still turn off your %s anytime."
 msgstr "您仍可随时关闭您的 %s。"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_res_partner__vat
+#: model:ir.model.fields,help:mail.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias_domain.py:0
+msgid "You cannot assign an empty domain name."
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_activity_type.py:0
 msgid "You cannot delete %(activity_names)s as it is required in various apps."
@@ -13078,8 +13082,7 @@ msgstr "您无法修改 %(activities_names)s 的目标模型，因为它们被�
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
 "address %(alias_name)s."
-msgstr ""
-"在别名地址%(alias_name)s中，除了不带尾音的拉丁字符外，不能使用任何其他字符。"
+msgstr "在别名地址%(alias_name)s中，除了不带尾音的拉丁字符外，不能使用任何其他字符。"
 
 #. module: mail
 #. odoo-python
@@ -13282,8 +13285,8 @@ msgid ""
 "                Please try again later."
 msgstr ""
 "因为你有\n"
-"                在过去的几分钟里联系了太多次。                <br/>请稍后重"
-"试。"
+"                在过去的几分钟里联系了太多次。                <br/>请稍后重试"
+"。"
 
 #. module: mail
 #. odoo-javascript
@@ -13334,10 +13337,8 @@ msgstr "创建了这个频道。"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-#, fuzzy
-#| msgid "id"
 msgid "d"
-msgstr "id"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -13885,6 +13886,33 @@ msgstr "\"%(channel_name)s\"中的\"%(member_name)s\""
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Search for a GIF"
+#~ msgstr "搜索 GIF"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳"
+#~ "税。"
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "添加 Tenor GIF API 密钥以启用 GIF 支持。"
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "添加 Tenor GIF API 密钥以启用 GIF 支持。https://developers.google.com/"
+#~ "tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenor API 密钥"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API 密钥"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"

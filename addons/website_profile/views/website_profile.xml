@@ -101,9 +101,9 @@
                     <div class="col-12 col-md-4 col-lg-3">
                         <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image: url(#{website.image_url(user, 'avatar_1024')});"/>
-                            <a class="btn btn-primary d-inline-block d-md-none"
-                                t-if="request.env.user == user and user.karma != 0"
-                                data-bs-toggle="modal" data-bs-target="#o_wprofile_edit_profile_modal">
+                            <a class="o_wprofile_editor btn btn-primary d-inline-block d-md-none"
+                                t-if="(request.env.user == user and user.karma != 0) or request.env.user._is_admin()"
+                                t-att-data-user-id="user.id">
                                 <i class="fa fa-pencil me-1"/>EDIT
                             </a>
                         </div>
@@ -564,6 +564,7 @@
         <t t-set="send_alert_classes" t-value="send_alert_classes if send_alert_classes else 'alert alert-danger alert-dismissable'"/>
         <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissable'"/>
         <t t-set="my_account_redirect" t-value="'/my/account?redirect='+redirect_url"/>
+        <t t-set="user" t-value="env.user"/>
 
         <div t-if="not is_public_user and not user.email" t-att-class="send_alert_classes" role="alert">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

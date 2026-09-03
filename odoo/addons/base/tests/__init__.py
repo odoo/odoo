@@ -37,6 +37,7 @@ from . import test_ir_sequence
 from . import test_ir_sequence_date_range
 from . import test_ir_embedded_actions
 from . import test_ir_default
+from . import test_logging
 from . import test_mail
 from . import test_menu
 from . import test_mimetypes
@@ -83,3 +84,4 @@ from . import test_num2words_ar
 from . import test_cli
 from . import test_signature
 from . import test_import_files
+from . import test_registry

@@ -203,6 +203,12 @@ export class WebsiteBuilderClientAction extends Component {
             },
             () => [this.state.isEditing]
         );
+        onMounted(() => {
+            document.body.classList.add("o_website_o_website_preview");
+        });
+        onWillUnmount(() => {
+            document.body.classList.remove("o_website_o_website_preview");
+        });
     }
 
     get testMode() {
@@ -377,7 +383,6 @@ export class WebsiteBuilderClientAction extends Component {
         // If we detect that behavior, we reload the iframe with a new query
         // parameter, so that it's not cached for Chrome.
         const iframe = this.websiteContent.el;
-        iframe.contentDocument.body.setAttribute("is-ready", "false");
         if (isBrowserChrome() && !iframe.src.includes("iframe_reload")) {
             try {
                 /* eslint-disable no-unused-expressions */
@@ -400,6 +405,7 @@ export class WebsiteBuilderClientAction extends Component {
                 }
             }
         }
+        iframe.contentDocument.body.setAttribute("is-ready", "false");
         if (this.lastPageURL !== iframe.contentWindow.location.href) {
             // Hide Ace Editor when moving to another page.
             this.websiteService.context.showResourceEditor = false;

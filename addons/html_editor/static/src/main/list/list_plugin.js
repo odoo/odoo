@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     removeClass,
+    removeEmptyTextNodes,
     removeStyle,
     toggleClass,
     unwrapContents,
@@ -211,6 +212,11 @@ export class ListPlugin extends Plugin {
                 );
             }
         },
+        selection_placeholder_container_predicates: (container) => {
+            if (isListItemElement(container)) {
+                return true;
+            }
+        },
     };
 
     setup() {
@@ -330,6 +336,18 @@ export class ListPlugin extends Plugin {
                 }
             }
         }
+        // Help CSS to not use :has(> ...) by setting a class on parent nodes
+        for (const floatClass of ["float-start", "float-end"]) {
+            const parentClass = `o-${floatClass}-parent`;
+            for (const el of selectElements(root, `.${parentClass}`)) {
+                if (![...el.children].some((el) => el.classList.contains(floatClass))) {
+                    el.classList.remove(parentClass);
+                }
+            }
+            for (const el of selectElements(root, `:not(.${parentClass}) > .${floatClass}`)) {
+                el.parentElement.classList.add(parentClass);
+            }
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -345,7 +363,7 @@ export class ListPlugin extends Plugin {
             return this.baseContainerToList(element, mode);
         }
         // @todo @phoenix: check for callbacks registered as resources instead?
-        if (element.matches("td, th, li.nav-item")) {
+        if (element.matches("td, th, li.nav-item, blockquote")) {
             return this.blockContentsToList(element, mode);
         }
         let list;
@@ -548,6 +566,11 @@ export class ListPlugin extends Plugin {
         ) {
             element.classList.add("oe-nested");
         }
+
+        element.classList.toggle(
+            "o_checked_has_nested_list",
+            element.classList.contains("o_checked") && !!element.querySelector("ul, ol")
+        );
 
         if (
             [...element.children].some(
@@ -902,12 +925,13 @@ export class ListPlugin extends Plugin {
 
     handleSplitBlock(params) {
         const closestLI = closestElement(params.targetNode, "LI");
-        const isBlockUnsplittable =
+        // Do not split the LI if the cursor is inside an unsplittable element.
+        const isTargetInUnsplittable =
             closestLI &&
-            Array.from(closestLI.childNodes).some(
-                (node) => isBlock(node) && this.dependencies.split.isUnsplittable(node)
+            ancestors(params.targetNode, closestLI).find((node) =>
+                this.dependencies.split.isUnsplittable(node)
             );
-        if (!closestLI || isBlockUnsplittable) {
+        if (!closestLI || isTargetInUnsplittable) {
             return;
         }
         if (isEmptyBlock(closestLI)) {
@@ -1105,11 +1129,14 @@ export class ListPlugin extends Plugin {
         const listItems = new Set(
             targetedNodes.map((n) => closestElement(n, "li")).filter(Boolean)
         );
-        if (!listItems.size || mode !== "color" || isColorGradient(color)) {
+        if (!listItems.size || (mode !== "color" && color) || isColorGradient(color)) {
             return;
         }
         const cursors = this.dependencies.selection.preserveSelection();
         for (const listItem of listItems) {
+            // Remove empty text nodes without breaking the current selection.
+            removeEmptyTextNodes(listItem, cursors);
+
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 for (const node of [
                     listItem,
@@ -1125,6 +1152,9 @@ export class ListPlugin extends Plugin {
 
                     if (node.style.color) {
                         removeStyle(node, "color");
+                    }
+                    if (node.style.backgroundColor) {
+                        removeStyle(node, "background-color");
                     }
                 }
 
@@ -1185,6 +1215,9 @@ export class ListPlugin extends Plugin {
             if (!hasOnlyBaseBlocks || (!applyStyle && !hasExistingFontSize)) {
                 continue;
             }
+
+            // Remove empty text nodes without breaking the current selection.
+            removeEmptyTextNodes(listItem, cursors);
 
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 for (const node of [

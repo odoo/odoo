@@ -69,10 +69,13 @@ class SaleOrder(models.Model):
     def _search_tasks_ids(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        task_domain = [
-            ('display_name' if isinstance(value, str) else 'id', operator, value),
-            ('sale_order_id', '!=', False),
-        ]
+        if operator in ('any', 'any!'):
+            task_domain = value
+        else:
+            task_domain = [
+                ('display_name' if isinstance(value, str) else 'id', operator, value),
+                ('sale_order_id', '!=', False),
+            ]
         query = self.env['project.task']._search(task_domain)
         return [('id', 'in', query.subselect('sale_order_id'))]
 
@@ -151,7 +154,7 @@ class SaleOrder(models.Model):
             if len(order.project_ids) == 1:
                 project = order.project_ids[0]
                 for sol in order.order_line:
-                    if project == sol.project_id and (project_template := sol.product_template_id.project_template_id):
+                    if project == sol.project_id and (project_template := sol.product_template_id.with_company(order.company_id).project_template_id):
                         project.sudo().company_id = project_template.sudo().company_id
                         break
         return super()._action_confirm()
@@ -193,14 +196,12 @@ class SaleOrder(models.Model):
                 'generate_milestone': default_sale_line.product_id.service_policy == 'delivered_milestones',
                 'default_name': self.name,
                 'default_allow_milestones': 'delivered_milestones' in self.order_line.product_id.mapped('service_policy'),
+                'sale_company_id': self.company_id.id,
             },
         }
 
     def action_view_project_ids(self):
         self.ensure_one()
-        if not self.order_line:
-            return {'type': 'ir.actions.act_window_close'}
-
         sorted_line = self.order_line.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line if sol.product_id.type == 'service'

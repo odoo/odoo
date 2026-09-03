@@ -4,16 +4,16 @@
 #
 # Translators:
 # Martin Trigaux, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-03-19 11:56+0000\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-24 03:10+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/ja/>\n"
@@ -22,19 +22,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid " and $1"
-msgstr " および $1"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "% discount"
 msgstr "% 割引"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -54,8 +62,8 @@ msgid ""
 "200G Irish Black Angus beef, 9-month matured cheddar cheese, shredded "
 "iceberg lettuce, caramelised onions, crushed tomatoes and Chef’s sauce."
 msgstr ""
-"アイリッシュブラックアンガスビーフ200g、9ヶ月熟成チェダーチーズ、千切りアイス"
-"バーグレタス、キャラメリゼオニオン、クラッシュトマト、シェフズソース。"
+"アイリッシュブラックアンガスビーフ200g、9ヶ月熟成チェダーチーズ、千切り"
+"アイスバーグレタス、キャラメリゼオニオン、クラッシュトマト、シェフズソース。"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_bacon_product_template
@@ -65,8 +73,8 @@ msgid ""
 "sauce"
 msgstr ""
 "アイリッシュブラックアンガスビーフ200G、パプリカ風味キャラメリゼオニオン、刻"
-"みアイスバーグサラダ、レッドオニオン、グリルベーコン、トマトソース、ピクル"
-"ス、バーベキューソース"
+"みアイスバーグサラダ、レッドオニオン、グリルベーコン、トマトソース、ピクルス"
+"、バーベキューソース"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -146,8 +154,8 @@ msgid ""
 "Adjust the amount authorized by payment terminals to add a tip after the "
 "customers left or at the end of the day."
 msgstr ""
-"支払端末で許可された金額を調整し、顧客が帰った後、またはその日の終わりにチッ"
-"プを追加します。"
+"支払端末で許可された金額を調整し、顧客が帰った後、またはその日の終わりに"
+"チップを追加します。"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -188,6 +196,7 @@ msgstr "アーカイブ済"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
 msgstr "間違いありませんか？"
 
@@ -343,7 +352,7 @@ msgstr "構成設定"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Continue"
-msgstr "次へ進む"
+msgstr "続行"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_cosmopolitan_product_template
@@ -470,7 +479,7 @@ msgstr "事前のレシート印刷"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr "設定オプションのセットを簡単に読み込みます。"
+msgstr "設定オプションセットの簡易ロード"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -606,7 +615,7 @@ msgstr "フロア & テーブルマップ"
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
 msgid "Food"
-msgstr "食品"
+msgstr "食べ物"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -617,8 +626,7 @@ msgstr "ご参考までに、以下のチップ計算をご用意しています
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
 msgid "Force guest selection when clicking on order button in PoS restaurant"
-msgstr ""
-"POSレストランでオーダボタンをクリックする際に、ゲストの選択を必須にする"
+msgstr "POSレストランでオーダボタンをクリックする際に、ゲストの選択を必須にする"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -721,6 +729,18 @@ msgstr "最終更新者"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table %(sourceTable)s with %(destinationTable)s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -979,8 +999,8 @@ msgid ""
 "this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
-"このフロアを変更する前に、以下の未確定のPoSセッションを閉じて検証して下さ"
-"い。\n"
+"このフロアを変更する前に、以下の未確定のPoSセッションを閉じて検証して下さい"
+"。\n"
 "未確定セッション: %(session_names)s"
 
 #. module: pos_restaurant
@@ -1072,6 +1092,12 @@ msgstr "フロアを削除すると元に戻すことはできません。それ
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Removing a table cannot be undone"
 msgstr "フロアを削除すると元に戻すことはできません。"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Removing floor %s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1405,8 +1431,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
-"このオーダはまだサーバに同期されていません。同期されていることを確認してか"
-"ら、もう一度試して下さい。"
+"このオーダはまだサーバに同期されていません。同期されていることを確認してから"
+"、もう一度試して下さい。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1436,8 +1462,8 @@ msgstr "チップ"
 #: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
 msgid "Tomato sauce, Agerola mozzarella \"fior di latte\", fresh basil"
 msgstr ""
-"トマトソース、アゲローラ・モッツァレラチーズ \"fior di latte\"、フレッシュバ"
-"ジル"
+"トマトソース、アゲローラ・モッツァレラチーズ \"fior di latte\"、"
+"フレッシュバジル"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1533,8 +1559,8 @@ msgstr "ウイスキー、レモンジュース、砂糖、卵白少々。"
 #: model:product.template,description_sale:pos_restaurant.product_pina_colada_product_template
 msgid "White rhum, Malibu, Batida de coco, coconut liqueur, pineapple juice"
 msgstr ""
-"ホワイトラム、マリブ、バティーダデココ、ココナッツリキュール、パイナップル"
-"ジュース"
+"ホワイトラム、マリブ、バティーダデココ、ココナッツリキュール、"
+"パイナップルジュース"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_mojito_product_template
@@ -1550,7 +1576,7 @@ msgstr "幅"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "With"
-msgstr "以下と一緒に："
+msgstr "込："
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1564,31 +1590,31 @@ msgstr "現在オーダを移行しようとしています %s"
 msgid ""
 "You cannot delete a floor when orders are still in draft for this floor."
 msgstr ""
-"そのフロアのテーブルがまだドラフト中である場合、フロアを削除することはできま"
-"せん。"
+"そのフロアのテーブルがまだ下書き中である場合、フロアを削除することはできませ"
+"ん。"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "You cannot delete a floor with orders still in draft for this floor."
 msgstr ""
-"そのフロアにまだドラフトのオーダがある場合、そのフロアを削除することはできま"
-"せん。"
+"そのフロアにまだ下書きのオーダがある場合、そのフロアを削除することはできませ"
+"ん。"
 
 #. module: pos_restaurant
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 msgid ""
 "You cannot delete a table when orders are still in draft for this table."
-msgstr "オーダがまだドラフトステータスのテーブルを削除することはできません。"
+msgstr "オーダがまだ下書きステータスのテーブルを削除することはできません。"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "You cannot delete a table with orders still in draft for this table."
 msgstr ""
-"そのテーブルのオーダがまだドラフト中である場合、テーブルを削除することはでき"
-"ません。"
+"そのテーブルのオーダがまだ下書き中である場合、テーブルを削除することはできま"
+"せん。"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1603,8 +1629,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
-"POSセッションで使用されているフロアを削除することはできません。最初にセッショ"
-"ンをクローズして下さい: \n"
+"POSセッションで使用されているフロアを削除することはできません。最初に"
+"セッションをクローズして下さい: \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1613,8 +1639,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
-"POSセッションで使用されているテーブルを削除することはできません。最初にセッ"
-"ションをクローズして下さい。"
+"POSセッションで使用されているテーブルを削除することはできません。最初に"
+"セッションをクローズして下さい。"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1639,6 +1665,9 @@ msgstr "アイテム"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
 msgstr "プロダクトが選択されました"
+
+#~ msgid " and $1"
+#~ msgstr " および $1"
 
 #~ msgid "________________________"
 #~ msgstr "________________________"

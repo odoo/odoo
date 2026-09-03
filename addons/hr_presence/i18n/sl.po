@@ -2,14 +2,16 @@
 # This file contains the translation of the following modules:
 # * hr_presence
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 21:10+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-04 12:19+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "hr_presence/sl/>\n"
 "Language: sl\n"
@@ -18,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_presence
 #. odoo-python
@@ -44,6 +46,20 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Spoštovana<t t-out=\"object.name or ''\">Abigail "
+"Peterson</t>,<br/><br/>\n"
+"Upamo, da ste bili s tem sporočilom dobro. Izvedeli smo, da trenutno niste "
+"prisotni na delu in da ni zabeleženih vaših zahtevkov za dopust. Če je bila "
+"ta odsotnost posledica naše malomarnosti, se iskreno opravičujemo za "
+"morebitno zmedo.\n"
+"Prosimo, da sprejmete potrebne ukrepe za odpravo te nenačrtovane odsotnosti. "
+"Če imate kakršna koli vprašanja ali potrebujete pomoč, se čim prej obrnite "
+"na svojega vodjo ali kadrovsko službo.\n"
+"Hvala za vašo takojšnjo pozornost na to zadevo.\n"
+"                    <br/>Lep pozdrav,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -79,8 +95,9 @@ msgstr "Ustvarite si prosti čas"
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -90,8 +107,9 @@ msgstr "Elektronska pošta poslana"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee
+#, fuzzy
 msgid "Employee"
-msgstr ""
+msgstr "Kader"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -137,8 +155,9 @@ msgstr "Kadrovska služba Prikaz stanja prisotnosti ur"
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -167,8 +186,9 @@ msgstr "Ročno nastavitev sedanjosti"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+#, fuzzy
 msgid "Off-Hours"
-msgstr ""
+msgstr "Izven delovnega časa"
 
 #. module: hr_presence
 #. odoo-javascript
@@ -185,12 +205,13 @@ msgstr "Prisotnost/Odsotnost"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__present
 msgid "Present"
-msgstr "Predstavitev"
+msgstr "Prisoten"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_public
+#, fuzzy
 msgid "Public Employee"
-msgstr ""
+msgstr "Javni uslužbenec"
 
 #. module: hr_presence
 #. odoo-python
@@ -231,7 +252,7 @@ msgstr "Nepričakovana odsotnost"
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "Nenačrtovana odsotnost"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log

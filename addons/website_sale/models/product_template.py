@@ -8,6 +8,7 @@ from werkzeug import urls
 from odoo import _, api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.modules.db import FunctionStatus
 from odoo.tools import float_is_zero, is_html_empty
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import html_translate
@@ -25,7 +26,7 @@ _logger = logging.getLogger(__name__)
 def get_translated_field_gist_index(registry, column_name):
     if not registry.has_trigram:
         return ""
-    if registry.has_unaccent:
+    if registry.has_unaccent == FunctionStatus.INDEXABLE:
         return f"USING GIST(unaccent((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text) gist_trgm_ops)"
     return f"USING GIST((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath)::text) gist_trgm_ops)"
 
@@ -134,6 +135,9 @@ class ProductTemplate(models.Model):
         compute='_compute_base_unit_count',
         inverse='_set_base_unit_count',
         store=True,
+        # Force NUMERIC with unlimited precision, as for `uom.uom.relative_factor`,
+        # to support very small ratios, e.g. one unit in a box of 10000.
+        digits=0,
         required=True,
         default=0,
     )
@@ -175,7 +179,7 @@ class ProductTemplate(models.Model):
     _description_sale_gist_idx = models.Index(lambda registry: get_translated_field_gist_index(registry, "description_sale"))
     _default_code_gist_idx = models.Index(
         lambda registry: 'USING GIST(unaccent(default_code) gist_trgm_ops)'
-        if registry.has_trigram and registry.has_unaccent
+        if registry.has_trigram and registry.has_unaccent == FunctionStatus.INDEXABLE
         else ('USING GIST(default_code gist_trgm_ops)' if registry.has_trigram else '')
     )
 
@@ -620,6 +624,7 @@ class ProductTemplate(models.Model):
             'has_discounted_price': has_discounted_price,
             'discount_start_date': pricelist_item.date_start,
             'discount_end_date': pricelist_item.date_end,
+            'show_extra_price': pricelist_item.compute_price != 'fixed',
         }
 
         if (
@@ -856,6 +861,13 @@ class ProductTemplate(models.Model):
         ]
 
     @api.model
+    def _get_website_sale_search_fields(self, search_in_description=True):
+        search_fields = ['name', 'variants_default_code']
+        if search_in_description:
+            search_fields += ['description_sale', 'description_ecommerce']
+        return search_fields
+
+    @api.model
     def _search_get_detail(self, website, order, options):
         with_image = options['displayImage']
         with_description = options['displayDescription']
@@ -883,7 +895,7 @@ class ProductTemplate(models.Model):
             domains.append([('list_price', '<=', max_price)])
         if attribute_value_dict:
             domains.extend(self._get_attribute_value_domain(attribute_value_dict))
-        search_fields = ['name', 'default_code', 'variants_default_code']
+        search_fields = self._get_website_sale_search_fields(with_description)
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
@@ -894,11 +906,8 @@ class ProductTemplate(models.Model):
         if with_image:
             mapping['image_url'] = {'name': 'image_url', 'type': 'html'}
         if with_description:
-            # Internal note is not part of the rendering.
-            search_fields.append('description')
-            fetch_fields.append('description')
-            search_fields.append('description_sale')
             fetch_fields.append('description_sale')
+            fetch_fields.append('description_ecommerce')
             mapping['description'] = {'name': 'description_sale', 'type': 'text', 'match': True}
         if with_price:
             mapping['detail'] = {'name': 'price', 'type': 'html', 'display_currency': options['display_currency']}
@@ -956,7 +965,10 @@ class ProductTemplate(models.Model):
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options
             )
-        if combination_info.get('compare_list_price'):
+        if (
+            combination_info.get('compare_list_price')
+            and combination_info.get('compare_list_price') > combination_info.get('price')
+        ):
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['compare_list_price'], monetary_options
             )
@@ -1121,3 +1133,12 @@ class ProductTemplate(models.Model):
             url = f'{url}?{urls.url_encode(query_params)}'
 
         return url
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == 'create'
+            and not self.env.user._is_internal()
+            and not self.env['website'].is_view_active('website_sale.product_comment')
+        ):
+            return dict.fromkeys(self, 'write')
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)

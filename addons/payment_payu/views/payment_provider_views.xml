@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">PayU Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="before">
+                <button
+                    string="Connect"
+                    name="action_start_onboarding"
+                    type="object"
+                    invisible="code != 'payu' or payu_key_id"
+                    colspan="2"
+                    class="btn-primary mb-2"
+                />
+                <button
+                    string="Disconnect"
+                    name="action_reset_credentials"
+                    type="object"
+                    confirm="Are you sure you want to disconnect?"
+                    invisible="code != 'payu' or not payu_key_id"
+                    class="btn-secondary mb-2"
+                />
+            </group>
+            <group name="provider_credentials" position="inside">
+                <group
+                    name="payu_credentials" invisible="code != 'payu'" groups="base.group_no_one"
+                >
+                    <field string="Key ID" name="payu_key_id"/>
+                    <field string="Merchant Salt" name="payu_merchant_salt" password="True"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

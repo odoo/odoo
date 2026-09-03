@@ -8,15 +8,18 @@ import {
 } from "@html_editor/utils/color";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
+    isElement,
     isEmptyBlock,
+    isIconElement,
     isRedundantElement,
     isTextNode,
     isVisibleTextNode,
     isWhitespace,
     isZWS,
+    PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
-import { isColorGradient, rgbaToHex } from "@web/core/utils/colors";
+import { isColorGradient, normalizeCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBlock } from "@html_editor/utils/blocks";
@@ -99,9 +102,12 @@ export class ColorPlugin extends Plugin {
         }
 
         return {
-            color: hasGradient && hasTextGradientClass ? gradient : rgbaToHex(elStyle.color),
+            color:
+                hasGradient && hasTextGradientClass ? gradient : normalizeCSSColor(elStyle.color),
             backgroundColor:
-                hasGradient && !hasTextGradientClass ? gradient : rgbaToHex(backgroundColor),
+                hasGradient && !hasTextGradientClass
+                    ? gradient
+                    : normalizeCSSColor(backgroundColor),
         };
     }
 
@@ -117,9 +123,12 @@ export class ColorPlugin extends Plugin {
                         .getTargetedNodes()
                         .filter(
                             (n) =>
-                                isTextNode(n) ||
-                                (mode === "backgroundColor" &&
-                                    n.classList.contains("o_selected_td"))
+                                (isTextNode(n) ||
+                                    isIconElement(n) ||
+                                    n.matches?.(`t, ${PROTECTED_QWEB_SELECTOR}`) ||
+                                    (mode === "backgroundColor" &&
+                                        n.classList.contains("o_selected_td"))) &&
+                                this.dependencies.selection.isNodeEditable(n)
                         );
                     return hasAnyNodesColor(nodes, mode);
                 };
@@ -170,7 +179,7 @@ export class ColorPlugin extends Plugin {
             this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
-                    anchorOffset: 0,
+                    anchorOffset: 1,
                 },
                 { normalize: false }
             );
@@ -183,7 +192,9 @@ export class ColorPlugin extends Plugin {
                 .getTargetedNodes()
                 .filter(
                     (node) =>
-                        this.dependencies.selection.isNodeEditable(node) && node.nodeName !== "T"
+                        this.dependencies.selection.isNodeEditable(node) &&
+                        node.nodeName !== "T" &&
+                        this.dependencies.selection.areNodeContentsFullySelected(node)
                 );
             if (isEmptyBlock(selection.endContainer)) {
                 targetedNodes.push(selection.endContainer, ...descendants(selection.endContainer));
@@ -204,6 +215,9 @@ export class ColorPlugin extends Plugin {
                 if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
                     return false;
                 }
+                if (!(this.checkPredicates("is_formattable_node_predicates", node) ?? true)) {
+                    return false;
+                }
                 if (mode === "backgroundColor" && color) {
                     return !closestElement(node, "table.o_selected_table");
                 }
@@ -212,7 +226,10 @@ export class ColorPlugin extends Plugin {
                 }
                 const li = closestElement(node, "li");
                 if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
-                    return rgbaToHex(li.style.color).toLowerCase() !== hexColor;
+                    const existingColor = li.style.color
+                    ? li.style.color
+                    : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
+                    return rgbaToHex(existingColor).toLowerCase() !== hexColor;
                 }
                 return true;
             })
@@ -221,7 +238,7 @@ export class ColorPlugin extends Plugin {
         const targetedFieldNodes = new Set(
             this.dependencies.selection
                 .getTargetedNodes()
-                .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
+                .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
                 .filter(Boolean)
         );
 
@@ -235,14 +252,22 @@ export class ColorPlugin extends Plugin {
                     ) ||
                     closestElement(node, "span");
 
-                const faNodes = font?.querySelectorAll(".fa");
+                const faNodes = font ? [...selectElements(font, ".fa")] : [];
                 if (faNodes && Array.from(faNodes).some((faNode) => faNode.contains(node))) {
                     return font;
+                }
+                if (isIconElement(node)) {
+                    return node;
                 }
                 const children = font && descendants(font);
                 const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
                 const isFullySelected =
-                    children && children.every((child) => selectedNodes.includes(child));
+                    children &&
+                    children.every(
+                        (child) =>
+                            selectedNodes.includes(child) ||
+                            selectedNodes.some((node) => isElement(node) && node.contains(child))
+                    );
                 const isTextGradient =
                     hasInlineGradient && font.classList.contains("text-gradient");
                 const shouldReplaceExistingGradient =
@@ -359,7 +384,7 @@ export class ColorPlugin extends Plugin {
                             font.style.webkitTextFillColor = color;
                         }
                     }
-                    if (node.textContent) {
+                    if (node.nodeName === "BR" || node.textContent) {
                         font.appendChild(node);
                     } else {
                         fillEmpty(font);

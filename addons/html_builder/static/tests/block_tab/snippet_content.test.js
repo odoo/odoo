@@ -20,11 +20,12 @@ import { loadBundle } from "@web/core/assets";
 
 describe.current.tags("desktop");
 
+// This test asserts on the thumbnail URLs, so use existing static images.
 const snippetContent = [
-    `<div name="Button A" data-oe-thumbnail="buttonA.svg" data-oe-snippet-id="123">
+    `<div name="Button A" data-oe-thumbnail="/web/static/img/logo.png" data-oe-snippet-id="123">
         <a class="btn btn-primary" href="#" data-snippet="s_button">Button A</a>
     </div>`,
-    `<div name="Button B" data-oe-thumbnail="buttonB.svg" data-oe-snippet-id="123">
+    `<div name="Button B" data-oe-thumbnail="/web/static/img/logo2.png" data-oe-snippet-id="123">
         <a class="btn btn-primary" href="#" data-snippet="s_button">Button B</a>
     </div>`,
 ];
@@ -47,7 +48,10 @@ test("Display inner content snippet", async () => {
     const thumbnailImgUrls = queryAll(
         `${snippetInnerContentSelector} .o_snippet_thumbnail_img`
     ).map((thumbnail) => thumbnail.style.backgroundImage);
-    expect(thumbnailImgUrls).toEqual(['url("buttonA.svg")', 'url("buttonB.svg")']);
+    expect(thumbnailImgUrls).toEqual([
+        'url("/web/static/img/logo.png")',
+        'url("/web/static/img/logo2.png")',
+    ]);
 });
 
 test("Drag & drop inner content block", async () => {

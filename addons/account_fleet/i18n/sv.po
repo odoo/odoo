@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-02-25 14:52+0000\n"
+"PO-Revision-Date: 2026-08-02 13:26+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
 "account_fleet/sv/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_log_services_view_form
@@ -29,22 +29,21 @@ msgid ""
 "invisible=\"account_move_state == 'posted'\" title=\"Service's "
 "Bill\">Service's Bill</span>"
 msgstr ""
-"<span class=\"o_stat_text text-success\" invisible="
-"\"account_move_state != 'posted'\" title=\"Service's Bill\">Servicefaktura "
-"</span>\n"
+"<span class=\"o_stat_text text-success\" invisible=\"account_move_state != "
+"'posted'\" title=\"Service's Bill\">Servicefaktura </span>\n"
 "                            <span class=\"o_stat_text text-warning\" "
-"invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\""
-">Servicefaktura </span>"
+"invisible=\"account_move_state == 'posted'\" title=\"Service's Bill\">"
+"Servicefaktura </span>"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
 msgid "Account Move"
-msgstr "Transaktion"
+msgstr "Verifikation"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle_log_services__account_move_line_id
 msgid "Account Move Line"
-msgstr "Transaktionsrad"
+msgstr "Verifikationsrad"
 
 #. module: account_fleet
 #. odoo-python
@@ -70,7 +69,7 @@ msgstr "Kostnad"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Skapa bokföringsposter automatiskt"
+msgstr "Skapa verifikation automatiskt"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
@@ -98,12 +97,12 @@ msgstr "ID"
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move
 msgid "Journal Entry"
-msgstr "Bokföringspost"
+msgstr "Verifikation"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_account_move_line
 msgid "Journal Item"
-msgstr "Affärshändelse"
+msgstr "Verifikationsrad"
 
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
@@ -155,9 +154,9 @@ msgid ""
 "You cannot modify amount of services linked to an account move line. Do it "
 "on the related accounting entry instead."
 msgstr ""
-"Det är inte möjligt att ändra antalet tjänster kopplade till en "
-"transaktionsrad. Genomför åtgärden istället på den relaterade "
-"bokföringsposten."
+"Det är inte möjligt att ändra beloppet för tjänster kopplade till en "
+"verifikationsrad. Genomför åtgärden istället på den relaterade "
+"verifikationen."
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form

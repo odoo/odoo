@@ -1,98 +1,129 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_redsys
+# * payment_redsys
 #
+# Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-09-11 13:59+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"POT-Creation-Date: 2026-07-03 17:37+0000\n"
+"PO-Revision-Date: 2026-08-07 04:58+0000\n"
+"Last-Translator: Rosen Vladimirov <vladimirov.rosen@gmail.com>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
+"payment_redsys/bg/>\n"
+"Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_redsys
 #. odoo-python
-#: code:addons/payment_redsys/models/payment_transaction.py:0
-msgid ""
-"An error occurred during the processing of your payment (%s). Please try "
-"again."
-msgstr ""
+#: code:addons/payment_redsys/const.py:0
+msgid "Authentication failed."
+msgstr "Удостоверяването е неуспешно."
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "Номер (ID)"
+
+#. module: payment_redsys
+#. odoo-python
+#: code:addons/payment_redsys/const.py:0
+msgid "Insufficient funds or limit exceeded."
+msgstr "Недостатъчна наличност или превишен лимит."
+
+#. module: payment_redsys
+#. odoo-python
+#: code:addons/payment_redsys/const.py:0
+msgid "Invalid card details."
+msgstr "Невалидни данни на картата."
 
 #. module: payment_redsys
 #: model_terms:ir.ui.view,arch_db:payment_redsys.payment_provider_form
 msgid "Merchant Code"
-msgstr ""
+msgstr "Код на търговеца"
 
 #. module: payment_redsys
 #: model_terms:ir.ui.view,arch_db:payment_redsys.payment_provider_form
 msgid "Merchant Terminal"
-msgstr ""
+msgstr "Терминал на търговеца"
+
+#. module: payment_redsys
+#. odoo-python
+#: code:addons/payment_redsys/const.py:0
+msgid "Operation not allowed for this card or payment method."
+msgstr "Операцията не е разрешена за тази карта или метод на плащане."
 
 #. module: payment_redsys
 #: model:ir.model,name:payment_redsys.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Доставчик на разплащания"
 
 #. module: payment_redsys
 #: model:ir.model,name:payment_redsys.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Платежна транзакция"
 
 #. module: payment_redsys
 #: model:ir.model.fields.selection,name:payment_redsys.selection__payment_provider__code__redsys
 msgid "Redsys"
-msgstr ""
+msgstr "Redsys"
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__redsys_merchant_code
 msgid "Redsys Merchant Code"
-msgstr ""
+msgstr "Код на търговеца в Redsys"
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__redsys_merchant_terminal
 msgid "Redsys Merchant Terminal"
-msgstr ""
+msgstr "Терминал на търговеца в Redsys"
 
 #. module: payment_redsys
 #: model:ir.model.fields,field_description:payment_redsys.field_payment_provider__redsys_secret_key
 msgid "Redsys Secret Key"
-msgstr ""
+msgstr "Таен ключ за Redsys"
 
 #. module: payment_redsys
 #: model_terms:ir.ui.view,arch_db:payment_redsys.payment_provider_form
 msgid "Secret Key"
-msgstr ""
+msgstr "Таен ключ"
+
+#. module: payment_redsys
+#. odoo-python
+#: code:addons/payment_redsys/const.py:0
+msgid "Technical error. Please try again later."
+msgstr "Техническа грешка. Моля, опитайте отново по-късно."
 
 #. module: payment_redsys
 #: model:ir.model.fields,help:payment_redsys.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Техническият код на този доставчик на разплащания."
+
+#. module: payment_redsys
+#. odoo-python
+#: code:addons/payment_redsys/const.py:0
+msgid "Transaction declined by the bank."
+msgstr "Транзакцията е отказана от банката."
 
 #. module: payment_redsys
 #. odoo-python
 #: code:addons/payment_redsys/models/payment_transaction.py:0
 msgid "Unknown status code: %s"
-msgstr ""
+msgstr "Неизвестен статус код: %s"

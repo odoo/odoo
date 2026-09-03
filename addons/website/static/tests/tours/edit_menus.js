@@ -13,7 +13,6 @@ import {
 } from "@website/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add("parent_child_menu", {
-    url: "/odoo/action-website.action_website_menu",
     steps: () => [
         {
             content: "Open Menu Form View",
@@ -34,6 +33,10 @@ registry.category("web_tour.tours").add("parent_child_menu", {
             content: "Click on Save Button",
             trigger: ".o_form_button_save",
             run: "click",
+        },
+        {
+            content: "Wait for the record to be saved",
+            trigger: ".o_form_button_save:not(:visible)",
         },
         {
             content: "Click on Add a line button",
@@ -131,7 +134,7 @@ registerWebsitePreviewTour(
         },
         // Add a menu item in edit mode.
         ...clickOnEditAndWaitEditMode(),
-        ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home"),
+        ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Home')", "Home", 1),
         {
             content: "Click on Edit Menu",
             trigger: ".o-we-linkpopover .js_edit_menu",
@@ -196,7 +199,7 @@ registerWebsitePreviewTour(
         },
         // Edit the new menu item from the "edit link" popover button
         clickOnExtraMenuItem({}, true),
-        ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Random!')", "Random!"),
+        ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Random!')", "Random!", 1),
         {
             content: "navbar shouldn't have any zwnbsp and no o_link_in_selection class",
             trigger: ':iframe nav.navbar:not(:has(.o_link_in_selection)):not(:contains("\ufeff"))',
@@ -241,7 +244,7 @@ registerWebsitePreviewTour(
             },
         },
         clickOnExtraMenuItem({}, true),
-        ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar"),
+        ...openLinkPopup(":iframe .top_menu .nav-item a:contains('Modnar')", "Modnar", 1),
         {
             content: "Click on the popover Edit Menu button",
             trigger: ".o-we-linkpopover .js_edit_menu",
@@ -284,6 +287,28 @@ registerWebsitePreviewTour(
         {
             content: "Label should have changed",
             trigger: ':iframe .top_menu .nav-item a:contains("Modnar !!")',
+        },
+        {
+            content: "Click on the extra menu dropdown toggle if it is there to close it",
+            trigger: ":iframe .top_menu",
+            async run(actions) {
+                // Note: the button might not exist (it only appear if there is
+                // many menu items).
+                const extraMenuButtonEl = this.anchor.querySelector(
+                    ".o_extra_menu_items a.nav-link"
+                );
+                // Don't click on the extra menu button if it's already hidden
+                if (extraMenuButtonEl && extraMenuButtonEl.classList.contains("show")) {
+                    const dropdownFullyClosed = Promise.withResolvers();
+                    extraMenuButtonEl.addEventListener(
+                        "hidden.bs.dropdown",
+                        dropdownFullyClosed.resolve,
+                        { once: true }
+                    );
+                    await actions.click(extraMenuButtonEl);
+                    await dropdownFullyClosed.promise;
+                }
+            },
         },
         // Nest menu item from the menu.
         {

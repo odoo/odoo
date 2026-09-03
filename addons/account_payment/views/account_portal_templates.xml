@@ -75,11 +75,11 @@
     </template>
 
     <template id="portal_my_invoices_payment" name="Payment on My Invoices" inherit_id="account.portal_my_invoices">
-        <xpath expr="//t[@t-call='portal.portal_table']//th[@name='amount_due']" position="after">
+        <xpath expr="//t[@t-call='portal.portal_table']//th[@name='status']" position="after">
             <th class="d-none d-lg-table-cell"/>
             <th/>
         </xpath>
-        <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="after">
+        <xpath expr="//t[@t-foreach='invoices']/tr/td[@name='invoice_status']" position="after">
             <td class="d-none d-lg-table-cell text-center">
                 <t t-if="invoice_data.get('installment_state', False) in ('next', 'overdue')">
                     <span

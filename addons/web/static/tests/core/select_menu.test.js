@@ -1263,6 +1263,37 @@ test("Fetch choices", async () => {
     expect(queryAllTexts(".o_select_menu_item")).toEqual(["test"]);
 });
 
+test("Typing is preserved if choices rerender before the debounced search runs", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                value="this.state.value"
+                onInput.bind="loadChoice"
+                choices="state.choices"
+            />
+        `;
+        setup() {
+            this.state = useState({ choices: [] }, { value: "" });
+        }
+        loadChoice(searchString) {
+            this.state.choices = [{ label: searchString || "test", value: searchString || "test" }];
+        }
+    }
+    const parent = await mountSingleApp(MyParent);
+    await open();
+    for (const char of "test") {
+        await press(char);
+        await animationFrame();
+        if (char === "e") {
+            parent.state.choices = [{ label: "forced rerender", value: "forced" }];
+            await animationFrame();
+        }
+    }
+    expect(".o_select_menu input").toHaveValue("test");
+});
+
 test.tags("mobile");
 test("In the BottomSheet, a 'Clear' button is present", async () => {
     class MyParent extends Component {

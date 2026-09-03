@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import namedtuple
+from lxml import etree
 
 from odoo import Command, fields
 from odoo.tests import tagged
@@ -335,3 +336,67 @@ class TestItEdiReverseCharge(TestItEdi):
         credit_note.action_post()
 
         self._assert_export_invoice(credit_note, 'credit_note_export_document_type.xml')
+
+    def test_self_invoice_ref_in_linked_invoices(self):
+        """Test that the vendor invoice reference for a self-invoice (reverse charge, e.g. TD17-TD19)
+        is exported under DatiFattureCollegate, not DatiOrdineAcquisto.
+        """
+        bill = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'date': '2022-04-01',
+            'partner_id': self.french_partner.id,
+            'ref': 'FT00001',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'product_id': self.product_a.id,
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.purchase_tax_22p.ids)],
+                }),
+            ],
+        })
+        bill.action_post()
+        self.assertTrue(bill.l10n_it_edi_is_self_invoice)
+
+        xml = bill._l10n_it_edi_render_xml()
+        invoice_tree = etree.fromstring(xml)
+        linked_ref = invoice_tree.xpath("//*[local-name()='DatiFattureCollegate']/*[local-name()='IdDocumento']/text()")
+        self.assertIn('FT00001', linked_ref)
+
+    def test_credit_note_linked_invoice_uses_vendor_ref(self):
+        """Test that a credit note created from a vendor bill reports the
+        supplier's own invoice reference in DatiFattureCollegate/IdDocumento.
+        """
+        bill = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2022-03-24',
+            'invoice_date_due': '2022-03-24',
+            'date': '2022-04-01',
+            'partner_id': self.italian_partner_a.id,
+            'ref': 'FT00001',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': "Product A",
+                    'product_id': self.product_a.id,
+                    'price_unit': 800.40,
+                    'tax_ids': [Command.set(self.default_tax.ids)],
+                }),
+            ],
+        })
+        bill.action_post()
+
+        reversal_wizard = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=bill.ids).create({
+            'reason': 'test',
+            'journal_id': bill.journal_id.id,
+            'date': '2022-04-01',
+        })
+        reversal = reversal_wizard.refund_moves()
+        credit_note = self.env['account.move'].browse(reversal['res_id'])
+        credit_note.action_post()
+
+        xml = credit_note._l10n_it_edi_render_xml()
+        invoice_tree = etree.fromstring(xml)
+        linked_ids = invoice_tree.xpath("//*[local-name()='DatiFattureCollegate']/*[local-name()='IdDocumento']/text()")
+        self.assertIn(bill.ref, linked_ids)

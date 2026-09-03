@@ -6,7 +6,6 @@ patch(PosPayment.prototype, {
         super.setup(...arguments);
         this.uiState = {
             ...(this.uiState ?? {}),
-            vivaSessionId: null,
             vivaComParentSessionId: null,
         };
     },

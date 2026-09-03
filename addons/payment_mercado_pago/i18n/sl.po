@@ -2,15 +2,18 @@
 # This file contains the translation of the following modules:
 # * payment_mercado_pago
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2025-11-09 15:13+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-08 07:32+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "payment_mercado_pago/sl/>\n"
 "Language: sl\n"
@@ -19,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
@@ -28,8 +31,9 @@ msgstr "Žeton vabila"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+#, fuzzy
 msgid "Account Country"
-msgstr ""
+msgstr "Država računa"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
@@ -38,50 +42,60 @@ msgstr "Pojavila se je napaka"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
+#, fuzzy
 msgid "An error occurred while linking your Mercado Pago account with Odoo."
-msgstr ""
+msgstr "Pri povezovanju vašega računa Mercado Pago z Odoo je prišlo do napake."
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+#, fuzzy
 msgid "Are you sure you want to disconnect?"
-msgstr ""
+msgstr "Ali ste prepričani, da želite prekiniti povezavo?"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.authorization_error
+#, fuzzy
 msgid "Back to the Mercado Pago provider"
-msgstr ""
+msgstr "Nazaj k ponudniku Mercado Pago"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid ""
 "Call your card issuer to activate your card or use another payment method. "
 "The phone number is on the back of your card."
 msgstr ""
+"Pokličite izdajatelja kartice, da aktivirate kartico, ali uporabite drug "
+"način plačila. Telefonska številka je na zadnji strani kartice."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "Check expiration date."
-msgstr ""
+msgstr "Preverite datum poteka."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "Check the card number."
-msgstr ""
+msgstr "Preverite številko kartice."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "Check the card security code."
-msgstr ""
+msgstr "Preverite varnostno kodo kartice."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "Check the data."
-msgstr ""
+msgstr "Preverite podatke."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
@@ -96,19 +110,22 @@ msgstr "Povežite"
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid "Connect your account before enabling tokenization."
-msgstr ""
+msgstr "Povežite svoj račun, preden omogočite tokenizacijo."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/controllers/onboarding.py:0
+#, fuzzy
 msgid "Could not find Mercado Pago provider %s"
-msgstr ""
+msgstr "Ponudnika Mercado Pago %s ni bilo mogoče najti"
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+#, fuzzy
 msgid "Disconnect Your Mercado Pago Account"
-msgstr ""
+msgstr "Prekinite povezavo z računom Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__display_name
@@ -127,76 +144,93 @@ msgstr "ID"
 #. module: payment_mercado_pago
 #. odoo-javascript
 #: code:addons/payment_mercado_pago/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Incorrect payment details"
-msgstr ""
+msgstr "Napačni podatki o plačilu"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
+#, fuzzy
 msgid "Mercado Pago"
-msgstr ""
+msgstr "Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
+#, fuzzy
 msgid "Mercado Pago Access Token"
-msgstr ""
+msgstr "Dostopni žeton Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token_expiry
+#, fuzzy
 msgid "Mercado Pago Access Token Expiry"
-msgstr ""
+msgstr "Potek veljavnosti dostopnega žetona Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_account_country_id
+#, fuzzy
 msgid "Mercado Pago Account Country"
-msgstr ""
+msgstr "Država računa Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_token__mercado_pago_customer_id
+#, fuzzy
 msgid "Mercado Pago Customer"
-msgstr ""
+msgstr "Stranka Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_is_oauth_supported
+#, fuzzy
 msgid "Mercado Pago Is Oauth Supported"
-msgstr ""
+msgstr "Ali Mercado Pago podpira OAuth"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_public_key
+#, fuzzy
 msgid "Mercado Pago Public Key"
-msgstr ""
+msgstr "Javni ključ Mercado Pago"
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_refresh_token
+#, fuzzy
 msgid "Mercado Pago Refresh Token"
-msgstr ""
+msgstr "Žeton za osvežitev Mercado Pago"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "Mercado Pago credentials are missing. Click the \"Connect\" button to set up "
 "your account."
 msgstr ""
+"Poverilnice za Mercado Pago manjkajo. Kliknite gumb »Poveži«, da nastavite "
+"svoj račun."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "Mercado Pago is not available in your country; please use another payment "
 "provider."
 msgstr ""
+"Mercado Pago v vaši državi ni na voljo, zato uporabite drugega ponudnika "
+"plačilnih storitev."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid "Only the currency %s is available for this account."
-msgstr ""
+msgstr "Za ta račun je na voljo samo valuta %s."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid "Other Payment Providers"
-msgstr ""
+msgstr "Drugi ponudniki plačil"
 
 #. module: payment_mercado_pago
 #: model:ir.model,name:payment_mercado_pago.model_payment_provider
@@ -216,128 +250,166 @@ msgstr "Plačilna transakcija"
 #. module: payment_mercado_pago
 #. odoo-javascript
 #: code:addons/payment_mercado_pago/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Payment processing failed"
-msgstr ""
+msgstr "Obdelava plačila ni uspela"
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "Payment was not processed, use another card or contact issuer."
 msgstr ""
+"Plačilo ni bilo obdelano, uporabite drugo kartico ali se obrnite na "
+"izdajatelja."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, fuzzy
 msgid "Received data with invalid status: %s."
-msgstr ""
+msgstr "Prejeti podatki z neveljavnim statusom: %s."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, fuzzy
 msgid "Received data with missing payment id."
-msgstr ""
+msgstr "Prejeti podatki z manjkajočim ID-jem plačila."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+#, fuzzy
 msgid "Received data with missing status."
-msgstr ""
+msgstr "Prejeti podatki z manjkajočim statusom."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/models/payment_provider.py:0
+#, fuzzy
 msgid "Set the account country before connecting the account."
-msgstr ""
+msgstr "Pred povezavo računa nastavite državo računa."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__mercado_pago_account_country_id
+#, fuzzy
 msgid ""
 "The country of the Mercado Pago account. The currency will be updated to "
 "match the country of the Mercado Pago account."
 msgstr ""
+"Država računa Mercado Pago. Valuta bo posodobljena tako, da bo ustrezala "
+"državi računa Mercado Pago."
 
 #. module: payment_mercado_pago
 #: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
+#, fuzzy
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tehnična koda tega ponudnika plačil."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "This payment method does not process payments in installments."
-msgstr ""
+msgstr "Ta plačilna metoda ne obdeluje plačil na obroke."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid ""
 "We are processing your payment. Don't worry, in less than 2 business days, "
 "we will notify you by e-mail if your payment has been credited."
 msgstr ""
+"Obdelujemo vaše plačilo. Brez skrbi, v manj kot 2 delovnih dneh vas bomo po "
+"e-pošti obvestili, ali je bilo vaše plačilo knjiženo."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid ""
 "We are processing your payment. Don't worry, less than 2 business days we "
 "will notify you by e-mail if your payment has been credited or if we need "
 "more information."
 msgstr ""
+"Obdelujemo vaše plačilo. Brez skrbi, v manj kot 2 delovnih dneh vas bomo po "
+"e-pošti obvestili, ali je bilo vaše plačilo knjiženo ali potrebujemo več "
+"informacij."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid ""
 "We were unable to process your payment, please check your card information."
 msgstr ""
+"Vašega plačila ni bilo mogoče obdelati, preverite podatke o svoji kartici."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "We were unable to process your payment, please use another card."
-msgstr ""
+msgstr "Vašega plačila ni bilo mogoče obdelati, uporabite drugo kartico."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid ""
 "You have already made a payment for that value. If you need to pay again, "
 "use another card or another payment method."
 msgstr ""
+"Za to vrednost ste že izvedli plačilo. Če morate plačati znova, uporabite "
+"drugo kartico ali drug način plačila."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid ""
 "You have reached the limit of allowed attempts. Choose another card or other "
 "means of payment."
 msgstr ""
+"Dosegli ste omejitev dovoljenih poskusov. Izberite drugo kartico ali drug "
+"način plačila."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "You must authorize the payment with this card."
-msgstr ""
+msgstr "Plačilo morate avtorizirati s to kartico."
 
 #. module: payment_mercado_pago
 #: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+#, fuzzy
 msgid ""
 "You must renew your connection to Mercado Pago in order to enable the new\n"
 "                        Card payment method experience, which allows saving "
 "payment details for\n"
 "                        recurring payments."
 msgstr ""
+"Za omogočitev nove izkušnje plačilne metode Kartica morate obnoviti povezavo "
+"z Mercado Pago, ki omogoča shranjevanje podatkov o plačilu za\n"
+"                        ponavljajoča se plačila."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid "Your card has not enough funds."
-msgstr ""
+msgstr "Na vaši kartici ni dovolj sredstev."
 
 #. module: payment_mercado_pago
 #. odoo-python
 #: code:addons/payment_mercado_pago/const.py:0
+#, fuzzy
 msgid ""
 "Your payment has been credited. In your summary you will see the charge as a "
 "statement descriptor."
 msgstr ""
+"Vaše plačilo je bilo knjiženo. V povzetku boste bremenitev videli kot opis "
+"na izpisku."

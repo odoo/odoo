@@ -1159,7 +1159,7 @@ describe("Selection collapsed", () => {
                                         <li class="o_checked">b</li>
                                     </ul>
                                 </li>
-                                <li class="o_checked"><p>c[]d</p>
+                                <li class="o_checked o_checked_has_nested_list"><p>c[]d</p>
                                     <ul class="o_checklist">
                                         <li class="o_checked">e</li>
                                     </ul>

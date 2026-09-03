@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.l10n_ar.tests.common import TestArCommon
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo import Command
 from datetime import datetime
 
@@ -435,3 +435,95 @@ class TestArWithholdingArRi(TestArCommon):
             # Receivable line:
             {'debit': 188865.27, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 188865.27, 'reconciled': True}
         ])
+
+    def test_12_withholding_check_payment_iterative_flush(self):
+        """Test the iterative solver cache flush bug.
+        A 30,250 ARS vendor bill with 1% withholding tax (250 ARS retention) paid with an
+        own check of 30,000 ARS must iteratively converge to 30,250 gross.
+        """
+        self.tax_wth_test_1.amount = 1.0
+
+        # Setup Journal with Own Checks Outbound Payment Method
+        third_party_check_journal = self.third_party_check_journal()
+        own_check_method = self.env.ref('l10n_latam_check.account_payment_method_own_checks')
+        third_party_check_journal.outbound_payment_method_line_ids = [Command.create({'payment_method_id': own_check_method.id})]
+        own_check_line = third_party_check_journal.outbound_payment_method_line_ids.filtered(lambda l: l.payment_method_id == own_check_method)[:1]
+
+        # Create a Vendor Bill of exactly 30,250 (25000 untaxed + 21% VAT = 30250)
+        invoice = self._create_invoice_one_line(
+            move_type='in_invoice',
+            partner_id=self.res_partner_adhoc,
+            product_id=self.product_a,
+            price_unit=25000.0,
+            tax_ids=self.tax_21,
+            l10n_latam_document_number='1-99',
+            post=True,
+        )
+
+        # Add partner tax configuration to guarantee withholdings automatically apply on the wizard
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_test_1.id
+        })
+
+        with Form(self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids)) as pay_form:
+            pay_form.journal_id = third_party_check_journal
+            pay_form.payment_method_line_id = own_check_line
+
+            # Add check details triggering onchange combinations
+            with pay_form.l10n_latam_new_check_ids.new() as check_line:
+                check_line.name = 'CHK-999'
+                check_line.payment_date = datetime.today()
+                check_line.amount = 30000.0
+
+        wizard = pay_form.save()
+
+        # Validate perfectly converged mathematical values
+        self.assertRecordValues(wizard, [{
+            'l10n_ar_net_amount': 30000.0,
+            'amount': 30250.0,
+        }])
+        self.assertRecordValues(wizard.l10n_ar_withholding_ids, [{
+            'amount': 250.0,
+            'base_amount': 25000.0,
+        }])
+
+    def test_payment_register_without_currency(self):
+        "check computation of amount and adjustment warning without currency"
+        moves = self.in_invoice_wht_5('2-1')
+        taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': sum(moves.mapped('amount_untaxed'))}]
+        wizard = Form(self.new_payment_register(moves, taxes))
+        wizard.currency_id = self.env['res.currency']
+        self.assertEqual(wizard.amount, 188865.27)
+        self.assertFalse(wizard.l10n_ar_adjustment_warning)
+
+    def test_payment_withholding_kept(self):
+        """ Check that resetting a payment doesn't remove any payment withholding line. """
+        # Vendor Payment Withholding Tax: 0%
+        tax_wth_0 = self.tax_wth_test_2.copy({
+            'amount': 0.0,
+            'l10n_ar_withholding_sequence_id': self.tax_wth_seq.id,
+        })
+        moves = self.in_invoice_2_wht('2-5')
+        taxes = [{'id': self.tax_wth_test_2.id, 'base_amount': 1000.0}, {'id': tax_wth_0.id, 'base_amount': 1000.0}]
+        wizard = self.new_payment_register(moves, [])
+        wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
+        wizard.l10n_ar_withholding_ids._compute_amount()
+        action = wizard.action_create_payments()
+
+        payment = self.env['account.payment'].browse(action['res_id'])
+        # There should be 2 payment withholding lines
+        self.assertEqual(len(payment.l10n_ar_withholding_ids), 2)
+        line_1 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
+        line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == tax_wth_0.id)
+        self.assertEqual(-100.0, line_1.balance)
+        self.assertEqual(0.0, line_2.balance)
+        # Reset the payment to draft
+        payment.action_draft()
+        # Payment withholding lines should be the same
+        self.assertEqual(len(payment.l10n_ar_withholding_ids), 2)
+        line_1 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
+        line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == tax_wth_0.id)
+        self.assertEqual(-100.0, line_1.balance)
+        self.assertEqual(0.0, line_2.balance)

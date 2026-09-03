@@ -4,7 +4,7 @@ export class ProductPricelist extends models.ServerModel {
     _name = "product.pricelist";
 
     _load_pos_data_fields() {
-        return ["id", "name", "display_name", "item_ids"];
+        return ["id", "name", "display_name", "currency_id", "item_ids"];
     }
 
     _records = [

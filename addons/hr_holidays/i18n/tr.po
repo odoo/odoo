@@ -21,17 +21,18 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2023
 # Ediz Duman <neps1192@gmail.com>, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
-# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025, 2026.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-28 12:48+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-06 22:23+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/tr/>\n"
@@ -40,7 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -189,6 +190,14 @@ msgstr "%(name)s(%(maximum)g saatten geriye kalan süre: %(time)g)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
 
@@ -261,30 +270,6 @@ msgstr "'in özeti ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr "'in bu dönemdeki özeti"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
-#| msgid "Day(s)"
-msgid "(s)"
-msgstr "Gün"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-"(s)\n"
-"                                    ve bir denge üst sınırı"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1386,13 +1371,10 @@ msgid ""
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"Bu çalışanın sözleşmesini değiştirmek, çalışanın halihazırda izin aldığı "
-"döneme ait çalışma programını değiştirir. Bu çalışma programını değiştirmek "
-"çalışanın izin süresini, bundan böyle gerekli izin hakkına sahip olmayacağı "
-"şekilde değiştirir. Sözleşmeyi değiştirmeden önce lütfen bu izinleri ve/veya "
-"izin haklarını gözden geçirin."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1459,6 +1441,11 @@ msgstr "İzin talebi oluşturmak için bu düğmeye tıklayın"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
 msgstr "Renk"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__company_id
@@ -1847,6 +1834,7 @@ msgstr "Sil"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
@@ -2409,6 +2397,7 @@ msgstr "Hr Icon Display"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
@@ -4024,8 +4013,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "The Start Date of the Validity Period must be anterior to the End Date."
-msgstr ""
-"Geçerlilik Süresinin Başlangıç Tarihi, Bitiş Tarihinden önce olmalıdır."
+msgstr "Geçerlilik Süresinin Başlangıç Tarihi, Bitiş Tarihinden önce olmalıdır."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
@@ -4054,6 +4042,14 @@ msgid ""
 "The color selected here will be used in every screen with the time off type."
 msgstr ""
 "Burada seçilen renk, İzin türüyle beraber her görünümde kullanılacaktır."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/res_company.py:0
+msgid ""
+"The company country cannot be changed while time off leaves or allocations "
+"with the country exist."
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4188,14 +4184,7 @@ msgstr ""
 msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
-msgstr ""
-"İzinli çalışan yok. Lütfen doğru şirkete giriş yaptığınızdan emin olun."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "Bu talebi karşılayacak geçerli bir tahsisat yoktur."
+msgstr "İzinli çalışan yok. Lütfen doğru şirkete giriş yaptığınızdan emin olun."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5224,8 +5213,8 @@ msgid ""
 "public holidays, meaning that the balance of those employees would be "
 "affected by this change."
 msgstr ""
-"Bu izin türünde bir veya daha fazla izin günü resmi "
-"tatillerle                        çakıştığı için ‘Resmi Tatil Dahil’ ayarını "
+"Bu izin türünde bir veya daha fazla izin günü resmi tatillerle"
+"                        çakıştığı için ‘Resmi Tatil Dahil’ ayarını "
 "değiştiremezsiniz, çünkü bu değişiklik söz konusu çalışanların izin "
 "bakiyelerini etkileyecektir."
 
@@ -5329,6 +5318,12 @@ msgstr "tahsis Tarihi"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "ve"
@@ -5365,6 +5360,12 @@ msgstr "buraya tıklayın"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "tarihler"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr "gün(ler)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5451,6 +5452,12 @@ msgstr "tahsisin başlangıcından itibaren"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5473,6 +5480,12 @@ msgid ""
 msgstr ""
 "'Çalışılan Zaman' türündeki izinler her zaman tahakkuk oranına uygun "
 "olmalıdır."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr "ay"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5599,6 +5612,35 @@ msgstr "kadar geçerli"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "doğrula"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr "yıl"
+
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr ""
+#~ "(s)\n"
+#~ "                                    ve bir denge üst sınırı"
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Bu talebi karşılayacak geçerli bir tahsisat yoktur."
+
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "Bu çalışanın sözleşmesini değiştirmek, çalışanın halihazırda izin aldığı "
+#~ "döneme ait çalışma programını değiştirir. Bu çalışma programını "
+#~ "değiştirmek çalışanın izin süresini, bundan böyle gerekli izin hakkına "
+#~ "sahip olmayacağı şekilde değiştirir. Sözleşmeyi değiştirmeden önce lütfen "
+#~ "bu izinleri ve/veya izin haklarını gözden geçirin."
 
 #~ msgid ""
 #~ "You cannot refuse this allocation request since the employee has already "
@@ -6618,9 +6660,6 @@ msgstr "doğrula"
 #~ msgid "day of the month"
 #~ msgstr "ayın Günü"
 
-#~ msgid "day(s)"
-#~ msgstr "gün(ler)"
-
 #~ msgid "days of the months"
 #~ msgstr "ayların günleri"
 
@@ -6633,9 +6672,6 @@ msgstr "doğrula"
 #~ msgid "lost"
 #~ msgstr "kayıp"
 
-#~ msgid "month(s)"
-#~ msgstr "ay"
-
 #~ msgid "postponed"
 #~ msgstr "ertelen"
 
@@ -6644,6 +6680,3 @@ msgstr "doğrula"
 
 #~ msgid "validated"
 #~ msgstr "doğrulanmış"
-
-#~ msgid "year(s)"
-#~ msgstr "yıl"

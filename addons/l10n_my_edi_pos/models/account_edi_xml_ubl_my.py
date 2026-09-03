@@ -24,6 +24,21 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 'total_paid_amount_currency': sum(myinvois_document.pos_order_ids.mapped('amount_paid')),
             })
 
+    def _add_myinvois_document_monetary_total_nodes(self, document_node, vals):
+        super()._add_myinvois_document_monetary_total_nodes(document_node, vals)
+        myinvois_document = vals["myinvois_document"]
+        # For individual POS e-invoices, the prepaid amount must be 0.
+        # POS orders are paid immediately at the point of sale, MyInvois requires
+        # the PayableAmount to reflect the full invoice amount (not reduced by prepayment).
+        if not myinvois_document._is_consolidated_invoice() and myinvois_document.invoice_ids.pos_order_ids:
+            currency_suffix = vals['currency_suffix']
+            # Omit the node entirely rather than emitting it with a 0.00 amount, consistent with the base module.
+            document_node['cac:PrepaidPayment'] = None
+            monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
+            document_node[monetary_total_tag]['cbc:PayableAmount']['_text'] = self.format_float(
+                vals[f'tax_inclusive_amount{currency_suffix}'], vals['currency_dp']
+            )
+
     @api.model
     def _l10n_my_edi_get_refund_details(self, invoice):
         """
@@ -364,13 +379,10 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         self._add_document_monetary_total_nodes(document_node, vals)
         currency_suffix = vals['currency_suffix']
 
+        # Consolidated invoices have no genuine prepayment to report; omit the node entirely rather than
+        # emitting it with a 0.00 amount.
         amount_paid = 0.0
-        document_node['cac:PrepaidPayment'] = {
-            'cbc:PaidAmount': {
-                '_text': self.format_float(amount_paid, vals['currency_dp']),
-                'currencyID': vals['currency_name'],
-            },
-        }
+        document_node['cac:PrepaidPayment'] = None
         monetary_total_tag = self._get_tags_for_document_type(vals)['monetary_total']
         payable_amount = self.format_float(vals[f'tax_inclusive_amount{currency_suffix}'] - amount_paid, vals['currency_dp'])
         document_node[monetary_total_tag]['cbc:PayableAmount']['_text'] = payable_amount

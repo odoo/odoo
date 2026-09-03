@@ -189,8 +189,12 @@ class ProductProduct(models.Model):
             owners = self.env.context['owners']
             if owners:
                 domain_quant += [('owner_id', 'in', self.env.context['owners'])]
+                domain_move_in += [('move_line_ids.owner_id', 'in', owners)]
+                domain_move_out += [('move_line_ids.owner_id', 'in', owners)]
             else:
                 domain_quant += [('owner_id', '=', False)]
+                domain_move_in += [('move_line_ids.owner_id', '=', False)]
+                domain_move_out += [('move_line_ids.owner_id', '=', False)]
         if package_id is not None:
             domain_quant += [('package_id', '=', package_id)]
         if dates_in_the_past:
@@ -213,7 +217,7 @@ class ProductProduct(models.Model):
         quants_res = {product.id: (quantity, reserved_quantity) for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])}
         expired_unreserved_quants_res = {}
         if self.env.context.get('with_expiration'):
-            max_date = self.env.context['to_date'] if self.env.context.get('to_date') else self.env.context['with_expiration']
+            max_date = self.env.context['to_date'] if self.env.context.get('to_date') and self.env.context.get('fresh_qty_forecast') else self.env.context['with_expiration']
             domain_quant += [('removal_date', '<=', max_date)]
             expired_unreserved_quants_res = {product.id: quantity - reserved_quantity for product, quantity, reserved_quantity in Quant._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])}
         moves_in_res_past = defaultdict(float)
@@ -271,14 +275,16 @@ class ProductProduct(models.Model):
         """
         if self.env.context.get('skip_qty_available_update', False):
             return
+        warehouse = None
         for product in self:
             if (
                 product.type == "consu" and product.is_storable and float_compare(product.qty_available,
                      0.0, precision_rounding=product.uom_id.rounding) >= 0
             ):
-                warehouse = self.env['stock.warehouse'].search(
-                    [('company_id', '=', self.env.company.id)], limit=1
-                )
+                if warehouse is None:
+                    warehouse = self.env['stock.warehouse'].search(
+                        [('company_id', '=', self.env.company.id)], limit=1
+                    )
                 self.env['stock.quant'].with_context(inventory_mode=True, from_inverse_qty=True).create({
                     'product_id': product.id,
                     'location_id': warehouse.lot_stock_id.id,
@@ -346,13 +352,15 @@ class ProductProduct(models.Model):
         def _search_ids(model, values):
             ids = set()
             domains = []
+            Model = self.env[model]
+            rec_names = Model._rec_names_search or [Model._rec_name]
             for item in values:
                 if isinstance(item, int):
                     ids.add(item)
                 else:
-                    domains.append(Domain(self.env[model]._rec_name, 'ilike', item))
+                    domains.append(Domain.OR(Domain(name, 'ilike', item) for name in rec_names))
             if domains:
-                ids |= set(self.env[model].search(Domain.OR(domains)).ids)
+                ids |= set(Model.search(Domain.OR(domains)).ids)
             return ids
 
         # We may receive a location or warehouse from the context, either by explicit
@@ -663,7 +671,7 @@ class ProductProduct(models.Model):
         )
 
         # If user have rights to write on quant, we define the view as editable.
-        if self.env.user.has_group('stock.group_stock_manager'):
+        if self.env.user.has_group('stock.group_stock_user'):
             self = self.with_context(inventory_mode=True)
             # Set default location id if multilocations is inactive
             if not self.env.user.has_group('stock.group_stock_multi_locations'):
@@ -907,7 +915,7 @@ class ProductTemplate(models.Model):
                 if template.serial_prefix_format in sequences_by_prefix:
                     template.lot_sequence_id = sequences_by_prefix[template.serial_prefix_format]
                 else:
-                    new_sequence = self.env['ir.sequence'].create({
+                    new_sequence = self.env['ir.sequence'].sudo().create({
                         'name': f'{template.name} Serial Sequence',
                         'code': 'stock.lot.serial',
                         'prefix': template.serial_prefix_format,
@@ -935,7 +943,7 @@ class ProductTemplate(models.Model):
     def _compute_show_qty_status_button(self):
         for template in self:
             template.show_on_hand_qty_status_button = template.is_storable
-            template.show_forecasted_qty_status_button = template.is_storable
+            template.show_forecasted_qty_status_button = template.is_storable and template.product_variant_id
 
     @api.depends('is_storable')
     def _compute_has_available_route_ids(self):
@@ -1162,6 +1170,17 @@ class ProductTemplate(models.Model):
                 inventory_ledger[move_line.product_id, move_line.location_id] -= move_line.quantity_product_uom
             if move_line.location_dest_usage in ('internal', 'transit'):
                 inventory_ledger[move_line.product_id, move_line.location_dest_id] += move_line.quantity_product_uom
+        # Unticking "Track Inventory" keeps the existing quants, so on a
+        # storable -> not storable -> storable toggle only counter balance the
+        # moves that aren't already reflected on hand.
+        on_hand = self.env['stock.quant']._read_group(
+            [('product_id', 'in', self.product_variant_ids.ids),
+             ('location_id.usage', 'in', ('internal', 'transit'))],
+            ['product_id', 'location_id'], ['quantity:sum'],
+        )
+        for product, location, quantity in on_hand:
+            if (product, location) in inventory_ledger:
+                inventory_ledger[product, location] -= quantity
         quants_to_reset = self.env['stock.quant'].create([
             {
                 'product_id': product.id,

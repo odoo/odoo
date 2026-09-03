@@ -2,14 +2,17 @@
 # This file contains the translation of the following modules:
 # * payment_asiapay
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:30+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:28+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "payment_asiapay/sl/>\n"
 "Language: sl\n"
@@ -18,51 +21,61 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "An error occurred during the processing of your payment (success code %"
 "(success_code)s; primary response code %(response_code)s). Please try again."
 msgstr ""
+"Pri obdelavi vašega plačila je prišlo do napake (koda uspeha %(success_code)"
+"s; primarna odzivna koda %(response_code)s). Poskusite znova."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__code__asiapay
+#, fuzzy
 msgid "AsiaPay"
-msgstr ""
+msgstr "Asiapay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_merchant_id
+#, fuzzy
 msgid "AsiaPay Merchant ID"
-msgstr ""
+msgstr "ID trgovca AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
+#, fuzzy
 msgid "AsiaPay Secure Hash Function"
-msgstr ""
+msgstr "Funkcija varnostnega zgoščevanja AsiaPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_secure_hash_secret
+#, fuzzy
 msgid "AsiaPay Secure Hash Secret"
-msgstr ""
+msgstr "Skrivnost varnostnega zgoščevanja AsiaPay"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_provider.py:0
+#, fuzzy
 msgid "AsiaPay does not support the following currencies: %(currencies)s."
-msgstr ""
+msgstr "AsiaPay ne podpira naslednjih valut: %(currencies)s."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__asiapay_brand
+#, fuzzy
 msgid "Asiapay Brand"
-msgstr ""
+msgstr "Blagovna znamka Asiapay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__bimopay
+#, fuzzy
 msgid "BimoPay"
-msgstr ""
+msgstr "BimoPay"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
@@ -77,30 +90,34 @@ msgstr "Oznaka"
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Prikazni naziv"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_asiapay.field_payment_transaction__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
 msgid "Merchant ID"
-msgstr ""
+msgstr "ID trgovca"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_provider.py:0
+#, fuzzy
 msgid "Only one currency can be selected by AsiaPay account."
-msgstr ""
+msgstr "Za račun AsiaPay je mogoče izbrati samo eno valuto."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__paydollar
+#, fuzzy
 msgid "PayDollar"
-msgstr ""
+msgstr "PayDollar"
 
 #. module: payment_asiapay
 #: model:ir.model,name:payment_asiapay.model_payment_provider
@@ -114,67 +131,82 @@ msgstr "Plačilna transakcija"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__pesopay
+#, fuzzy
 msgid "PesoPay"
-msgstr ""
+msgstr "PesoPay"
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
+#, fuzzy
 msgid "Received data with missing success code."
-msgstr ""
+msgstr "Prejeti podatki brez kode uspeha."
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha1
+#, fuzzy
 msgid "SHA1"
-msgstr ""
+msgstr "SHA1"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha256
+#, fuzzy
 msgid "SHA256"
-msgstr ""
+msgstr "SHA256"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_secure_hash_function__sha512
+#, fuzzy
 msgid "SHA512"
-msgstr ""
+msgstr "SHA512"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
+#, fuzzy
 msgid "Secure Hash Function"
-msgstr ""
+msgstr "Funkcija varnostnega zgoščevanja"
 
 #. module: payment_asiapay
 #: model_terms:ir.ui.view,arch_db:payment_asiapay.payment_provider_form
+#, fuzzy
 msgid "Secure Hash Secret"
-msgstr ""
+msgstr "Skrivnost varnostnega zgoščevanja"
 
 #. module: payment_asiapay
 #: model:ir.model.fields.selection,name:payment_asiapay.selection__payment_provider__asiapay_brand__siampay
+#, fuzzy
 msgid "SiamPay"
-msgstr ""
+msgstr "SiamPay"
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_merchant_id
+#, fuzzy
 msgid "The Merchant ID solely used to identify your AsiaPay account."
 msgstr ""
+"ID trgovca, ki se uporablja izključno za identifikacijo vašega računa "
+"AsiaPay."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_brand
+#, fuzzy
 msgid "The brand associated to your AsiaPay account."
-msgstr ""
+msgstr "Blagovna znamka, povezana z vašim računom AsiaPay."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__asiapay_secure_hash_function
+#, fuzzy
 msgid "The secure hash function associated to your AsiaPay account."
-msgstr ""
+msgstr "Varna zgoščevalna funkcija, povezana z vašim računom AsiaPay."
 
 #. module: payment_asiapay
 #: model:ir.model.fields,help:payment_asiapay.field_payment_provider__code
+#, fuzzy
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Tehnična koda tega ponudnika plačil."
 
 #. module: payment_asiapay
 #. odoo-python
 #: code:addons/payment_asiapay/models/payment_transaction.py:0
+#, fuzzy
 msgid "Unknown success code: %s"
-msgstr ""
+msgstr "Neznana koda uspeha: %s"

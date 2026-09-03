@@ -19,6 +19,7 @@ class ResConfigSettings(models.TransientModel):
     account_peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state', readonly=False)
     account_peppol_purchase_journal_id = fields.Many2one(related='company_id.peppol_purchase_journal_id', readonly=False)
     peppol_external_provider = fields.Char(related='company_id.peppol_external_provider', readonly=False)
+    peppol_purchase_journal_required = fields.Boolean(compute='_compute_peppol_purchase_journal_required')
     peppol_use_parent_company = fields.Boolean(compute='_compute_peppol_use_parent_company')
     peppol_parent_company_name = fields.Char(compute='_compute_peppol_use_parent_company')
     account_is_token_out_of_sync = fields.Boolean(related='account_peppol_edi_user.is_token_out_of_sync', readonly=False)
@@ -30,6 +31,10 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_peppol_participation_role',
         inverse='_inverse_peppol_participation_role',
     )
+
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        return self.account_peppol_edi_user.proxy_type
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -95,9 +100,14 @@ class ResConfigSettings(models.TransientModel):
                 }
             }
             record.account_peppol_edi_user._call_peppol_proxy(
-                endpoint='/api/peppol/1/update_user',
+                endpoint=record.account_peppol_edi_user._get_peppol_proxy_endpoint('1/update_user'),
                 params=params,
             )
+
+    @api.depends('account_peppol_proxy_state', 'peppol_participation_role')
+    def _compute_peppol_purchase_journal_required(self):
+        for config in self:
+            config.peppol_purchase_journal_required = config.peppol_participation_role == 'sending_and_receiving'
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
@@ -163,3 +173,33 @@ class ResConfigSettings(models.TransientModel):
         if self.account_peppol_edi_user:
             self.account_peppol_edi_user._peppol_deregister_participant()
         return True
+
+    def button_peppol_reregister(self):
+        self.ensure_one()
+        if self.account_peppol_edi_user:
+            self.account_peppol_edi_user._peppol_deregister_participant()
+        else:
+            self.company_id._reset_peppol_configuration()
+        return self.action_open_peppol_form()
+
+    @api.model
+    def _get_pdp_module_info(self):
+        pdp_module = self.env['ir.module.module'].sudo()._get('l10n_fr_pdp')  # avoid returning it since it is sudoed
+        module_name = self.env._("France - E-Invoicing (Approved Platform)")
+        if pdp_module:
+            action = pdp_module._get_records_action()
+            action_name = self.env._("Go to module")
+            warning = self.env._("To use the Approved Platform for French E-Invoicing install the module '%s'.", module_name)
+        else:
+            action = self.env.ref('base.action_view_base_module_update').id
+            action_name = self.env._("Update App List")
+            warning = self.env._("To use the Approved Platform for French E-Invoicing install the module '%s'.\n"
+                                 "The module was not found. Please update the app list first.",
+                                 module_name)
+        return {
+            'is_installed': pdp_module and pdp_module.state == 'installed',
+            'module_name': module_name,
+            'action': action,
+            'action_name': action_name,
+            'warning_message': warning,
+        }

@@ -50,7 +50,7 @@ export async function createSpreadsheetWithChart(params = {}) {
     return { model, env };
 }
 
-function getChartDefinition(type) {
+export function getChartDefinition(type) {
     return {
         metaData: {
             groupBy: ["foo", "bar"],

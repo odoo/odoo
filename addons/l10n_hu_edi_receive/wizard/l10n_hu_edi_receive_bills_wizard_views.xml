@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_hu_edi_receive_bills_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_hu_edi_receive.bills.wizard.form</field>
+        <field name="model">l10n_hu_edi_receive.bills.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="l10n_hu_edi_receive_from" string="Datetime range" widget="daterange" options="{'end_date_field': 'l10n_hu_edi_receive_to'}"/>
+                    <field name="l10n_hu_edi_receive_to" invisible="1"/>  <!-- needed for daterange widget -->
+                </group>
+                <footer>
+                    <button name="action_receive_bills" string="Fetch Bills"
+                            class="oe_highlight" type="object" data-hotkey="Q"/>
+                    <button special="cancel" data-hotkey="X" string="Discard"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

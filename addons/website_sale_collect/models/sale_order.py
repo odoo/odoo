@@ -30,9 +30,9 @@ class SaleOrder(models.Model):
         )
         AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
         for order in in_store_orders:
-            order.fiscal_position_id = AccountFiscalPosition._get_fiscal_position(
-                order.partner_id, delivery=order.warehouse_id.partner_id
-            )
+            order.fiscal_position_id = AccountFiscalPosition.with_company(
+                order.company_id
+            )._get_fiscal_position(order.partner_id, delivery=order.warehouse_id.partner_id)
         super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
 
     def _get_free_qty(self, product):
@@ -57,8 +57,11 @@ class SaleOrder(models.Model):
         )
         super()._set_delivery_method(delivery_method, rate=rate)
         if was_in_store_order:
+            fiscal_position_before = self.fiscal_position_id
             self._compute_warehouse_id()
             self._compute_fiscal_position_id()
+            if fiscal_position_before != self.fiscal_position_id:
+                self._recompute_taxes()
 
     def _set_pickup_location(self, pickup_location_data):
         """ Override `website_sale` to set the pickup location for in-store delivery methods.
@@ -69,12 +72,15 @@ class SaleOrder(models.Model):
         if self.carrier_id.delivery_type != 'in_store':
             return
 
+        fiscal_position_before = self.fiscal_position_id
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
             self._compute_fiscal_position_id()
         else:
             self._compute_warehouse_id()
+        if fiscal_position_before != self.fiscal_position_id:
+            self._recompute_taxes()
 
     def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
         """ Override of `website_sale` to ensure that a country is provided when there is a zip

@@ -8,16 +8,16 @@
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Sarah Park, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-09 11:27+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-03 01:23+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/account/"
 "ko/>\n"
 "Language: ko\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -41,8 +41,8 @@ msgstr ""
 "\n"
 "        고객 청구서를 전표에 입력하려면 '판매'를 선택하세요.\n"
 "        공급업체 청구서를 전표에 입력하려면 '매입'을 선택하세요.\n"
-"        고객 또는 업체 결제 관련 전표 입력은 '현금' 또는 '은행'을 선택하세"
-"요.\n"
+"        고객 또는 업체 결제 관련 전표 입력은 '현금' 또는 '은행'을 "
+"선택하세요.\n"
 "        기타 운영 업무는 '일반' 전표를 선택하세요.\n"
 "        "
 
@@ -74,10 +74,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
+#, fuzzy
 msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"관리자에게 문의하세요."
 
 #. module: account
 #. odoo-python
@@ -168,6 +171,18 @@ msgstr "%(exception)s에 대한 %(user)s%(end_datetime_string)s%(reason)s."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s"
+msgstr "%(label)s - %(currency_amount)s"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s (Draft)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
@@ -176,12 +191,6 @@ msgid ""
 msgstr ""
 "%(move)s 항목이 관련 명세서 내역과 대비하여 유효하지 않습니다.\n"
 "일치시키려면 전표에 가계정 내역은 반드시 하나만 있어야 합니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -210,8 +219,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
-"%(order)s - %(order_line)s; %(quantity_billed)s 청구됨, %"
-"(quantity_received)s 각각 %(unit_price)s으로 수령됨"
+"%(order)s - %(order_line)s; %(quantity_billed)s 청구됨, %(quantity_received)"
+"s 각각 %(unit_price)s으로 수령됨"
 
 #. module: account
 #. odoo-python
@@ -294,18 +303,6 @@ msgstr "%s 세금"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s, 또는 / 해당되지 않는 경우"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
-msgstr "%s 또는 해당 없음"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
 msgid "'%(filename)s' (extracted from '%(root_filename)s', type=%(type)s)"
 msgstr "'%(filename)s' ('%(root_filename)s' 파일에서 추출, 유형=%(type)s)"
@@ -361,8 +358,8 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- « 총계 (세금 포함) » 필드가 새로 추가되어, 계정 및 세금이 정확히 표시되도"
-"록 라인을 자동 생성하여 인코딩 속도를 높이고 제어합니다."
+"- « 총계 (세금 포함) » 필드가 새로 추가되어, 계정 및 세금이 정확히 "
+"표시되도록 라인을 자동 생성하여 인코딩 속도를 높이고 제어합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -398,8 +395,8 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". 전표에 입력할 항목은 Odoo에서 먼저 계산한 후 회사에서 사용할 통화로 입력해"
-"야 합니다."
+". 전표에 입력할 항목은 Odoo에서 먼저 계산한 후 회사에서 사용할 통화로 "
+"입력해야 합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -417,12 +414,6 @@ msgstr "... (%(nb_of_values)s 기타)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "... (전체 보기)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ 해당되지 않는 경우"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
@@ -589,12 +580,11 @@ msgstr ""
 "                    자체 청구용 신용장\n"
 "                </t>\n"
 "                <t t-if=\"object.invoice_origin\">\n"
-"                    (참조 번호: <t t-out=\"object.invoice_origin or "
-"''\">SUB003</t>)\n"
+"                    (참조 번호: <t t-out=\"object.invoice_origin or ''\">"
+"SUB003</t>)\n"
 "                </t>\n"
-"                금액: <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"                금액: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "                회사: <t t-out=\"object.company_id.name or ''\">YourCompany</"
 "t>.\n"
 "                <br/><br/>\n"
@@ -708,12 +698,11 @@ msgstr ""
 "            청구서\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</"
-"t>)\n"
+"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
+"\n"
 "        </t>\n"
-"        금액: <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        금액: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        회사: <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            해당 청구서에 대한 지불이 완료되었습니다.\n"
@@ -734,9 +723,9 @@ msgstr ""
 "        <t t-if=\"hasattr(object, 'timesheet_count') and "
 "object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            참고: 다음의 작업 기록 (<a t-att-href=\"'/my/timesheets?"
-"search_in=invoice&amp;search=%s' % object.name\">)은 포털에서 확인하실 수 있"
-"습니다.</a>\n"
+"            참고: 다음의 작업 기록 (<a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\">)은 포털에서 "
+"확인하실 수 있습니다.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
 "        궁금한 점이 있으면 언제든지 연락주시기 바랍니다.\n"
@@ -744,8 +733,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -819,8 +808,8 @@ msgstr ""
 "out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)님,\n"
 "           </t>\n"
 "            <t t-else=\"\">\n"
-"               <t t-out=\"object.partner_id.parent_id.name or ''\">Azure 인테"
-"리어</t>,\n"
+"               <t t-out=\"object.partner_id.parent_id.name or ''\">Azure "
+"인테리어</t>,\n"
 "           </t>\n"
 "        </t>\n"
 "       <t t-else=\"\">\n"
@@ -836,12 +825,11 @@ msgstr ""
 "            자체 청구서\n"
 "       </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</"
-"t>)\n"
+"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
+"\n"
 "       </t>\n"
-"        금액 <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        금액 <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        에서 <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "       <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            해당 자체 청구서는 이미 결제가 완료되었습니다.\n"
@@ -849,10 +837,10 @@ msgstr ""
 "        <t t-if=\"hasattr(object, 'timesheet_count') and "
 "object.timesheet_count\">\n"
 "           <br/><br/>\n"
-"            참고: 포털에서 <a t-att-href=\"'/my/timesheets?"
-"search_in=invoice&amp;search=%s' % object.name\"><a t-att-href=\"'/my/"
-"timesheets?search_in=invoice&amp;search=%s' % object.name\">작업시간표를 확인"
-"할 수 있습니다.</a>\n"
+"            참고: 포털에서 <a t-att-href=\"'/my/"
+"timesheets?search_in=invoice&amp;search=%s' % object.name\"><a t-att-"
+"href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">"
+"작업시간표를 확인할 수 있습니다.</a>\n"
 "        </t>\n"
 "       <br/><br/>\n"
 "        궁금한 점이 있으면 언제든지 연락해 주시기 바랍니다.\n"
@@ -860,8 +848,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "       </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -931,12 +919,11 @@ msgstr ""
 "            대변전표\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</"
-"t>)\n"
+"            (참조 번호: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)"
+"\n"
 "        </t>\n"
-"        금액: <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
-"143,750.00</span>\n"
+"        금액: <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        회사: <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <br/><br/>\n"
 "        궁금한 점이 있으면 언제든지 연락주시기 바랍니다.\n"
@@ -944,8 +931,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -987,10 +974,9 @@ msgstr ""
 "        다음과 같이 영수증을 발급드리오며 <span style=\"font-weight:bold;\" "
 "t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
 "span> 총 금액은\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span>"
-"이고, 발행인은 <t t-out=\"object.company_id.name or ''\">YourCompany</t>입니"
-"다.\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount, object.currency_id) or ''\">$ 10.00</span>이고, 발행인은 <t "
+"t-out=\"object.company_id.name or ''\">YourCompany</t>입니다.\n"
 "        <br/><br/>\n"
 "        궁금한 점이 있으면 언제든 문의주시기 바랍니다.\n"
 "        <br/><br/>\n"
@@ -999,8 +985,8 @@ msgstr ""
 "container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1045,8 +1031,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"Reversed\" title=\"Reversed\" "
 "role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> 취소"
-"됨</span>"
+"                                    <span class=\"d-none d-md-inline\"> "
+"취소됨</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1084,10 +1070,10 @@ msgid ""
 "all vendors in the accounting settings."
 msgstr ""
 "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
-"                        나중에 공급업체의 양식에서 이 설정을 수정할 수 있으므"
-"로 걱정할 필요 없습니다.\n"
-"                        또한 계정 설정에서 모든 공급업체에 대해 이 기능을 비"
-"활성화할 수 있는 옵션이 있습니다."
+"                        나중에 공급업체의 양식에서 이 설정을 수정할 수 "
+"있으므로 걱정할 필요 없습니다.\n"
+"                        또한 계정 설정에서 모든 공급업체에 대해 이 기능을 "
+"비활성화할 수 있는 옵션이 있습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1128,8 +1114,8 @@ msgid ""
 "                    </small>"
 msgstr ""
 "<small class=\"form-text text-muted\">\n"
-"                    청구서 전송 방법 및 전자 청구서 양식을 선택할 수 있습니"
-"다.\n"
+"                    청구서 전송 방법 및 전자 청구서 양식을 선택할 수 "
+"있습니다.\n"
 "                </small>"
 
 #. module: account
@@ -1183,8 +1169,8 @@ msgid ""
 "<span class=\"figure-caption\">Never miss a deadline, with automated "
 "statements and alerts.</span>"
 msgstr ""
-"<span class=\"figure-caption\">자동화된 명세서와 알림으로 마감일을 놓치지 않"
-"을 수 있습니다.</span>"
+"<span class=\"figure-caption\">자동화된 명세서와 알림으로 마감일을 놓치지 "
+"않을 수 있습니다.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1201,8 +1187,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1381,8 +1367,7 @@ msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "<span invisible=\"not early_discount\"> % if paid within </span>"
-msgstr ""
-"<span invisible=\"not early_discount\"> %, 다음 기간 내 결제 완료 시 </span>"
+msgstr "<span invisible=\"not early_discount\"> %, 다음 기간 내 결제 완료 시 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1469,7 +1454,7 @@ msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1545,8 +1530,8 @@ msgid ""
 "<span>One or more Bank Accounts set on this partner are also used by others:"
 "</span>"
 msgstr ""
-"<span>해당 파트너에 대해 설정된 은행 계좌 중 하나 이상이 다음에도 이용되고 있"
-"습니다:</span>"
+"<span>해당 파트너에 대해 설정된 은행 계좌 중 하나 이상이 다음에도 이용되고 "
+"있습니다:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1596,8 +1581,8 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>이 항목은 회계 앱 설치 전에 청구서 발행 앱을 통하여 생성되었습니다. 잔"
-"액은 별도로 불러 왔습니다.</span>"
+"<span>이 항목은 회계 앱 설치 전에 청구서 발행 앱을 통하여 생성되었습니다. "
+"잔액은 별도로 불러 왔습니다.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1872,8 +1857,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
-"\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-"
+"collapse:separate;\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -1894,8 +1879,8 @@ msgstr ""
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
-"\" class=\"align-baseline w-auto\"/>\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
+"contain;\" class=\"align-baseline w-auto\"/>\n"
 "\n"
 "                                    </td>\n"
 "\n"
@@ -1924,8 +1909,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            새로 수신된 <t t-"
-"if=\"invoice_count &gt; 1\">전자 청구서가 있습니다.</t><t t-else=\"\">전자 청"
-"구서가 있습니다.</t>!\n"
+"if=\"invoice_count &gt; 1\">전자 청구서가 있습니다.</t><t t-else=\"\">전자 "
+"청구서가 있습니다.</t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
@@ -1940,19 +1925,19 @@ msgstr ""
 "                                                <t t-if=\"inv.name or "
 "inv.ref\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">청구서 참조 번호:</span> <t t-out=\"inv.name or inv.ref\"/"
-"><br/>\n"
+"weight:bold;\">청구서 참조 번호:</span> <t t-out=\"inv.name or inv.ref\"/>"
+"<br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
 "if=\"inv.partner_id.name\">\n"
 "                                                    <span style=\"font-"
 "weight:bold;\">업체명:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-"
-"if=\"inv.amount_total\">\n"
+"                                                <t t-if=\"inv.amount_total\">"
+"\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">금액:</span> <t t-out=\"inv.amount_total\" t-"
-"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">금액:</span> <t t-out=\"inv.amount_total\" t-options=\""
+"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -1967,11 +1952,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?"
-"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
-"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
-"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
-"radius:3px; display: inline-block;\">\n"
+"account.action_account_moves_email_preview?active_ids={{ "
+"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
+"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
+"none !important; background-color: #008384; border-radius:3px; display: "
+"inline-block;\">\n"
 "                                               청구서 보기\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -1987,8 +1972,8 @@ msgstr ""
 "                                        <br/>\n"
 "                                        <p style=\"text-align: center; "
 "margin-top: 16px;\">\n"
-"                                            청구서 수신 안내 이메일을 더 이"
-"상 받고 싶지 않으시면 <a t-attf-href=\"/my/journal/{{ object.id }}/"
+"                                            청구서 수신 안내 이메일을 더 "
+"이상 받고 싶지 않으시면 <a t-attf-href=\"/my/journal/{{ object.id }}/"
 "unsubscribe\">여기</a>.를 클릭하세요\n"
 "                                        </p>\n"
 "                                    </td>\n"
@@ -2237,8 +2222,8 @@ msgid ""
 "            "
 msgstr ""
 "<t t-set=\"portal_url\" t-value=\"object.get_portal_url()\"/>\n"
-"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/"
-">\n"
+"<t t-set=\"unsubscribe_url\" t-value=\"ctx.get('unsubscribe_url', False)\"/>"
+"\n"
 "\n"
 "<div style=\"margin:0; padding:0; color:#2c2431;\">\n"
 "    <table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" "
@@ -2250,18 +2235,18 @@ msgstr ""
 "border-radius:16px; overflow:hidden; box-shadow:0 20px 45px rgba(56, 37, 60, "
 "0.12);\">\n"
 "                    <tr>\n"
-"                        <td colspan=\"2\" style=\"background:linear-"
-"gradient(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; "
-"padding:38px;\">\n"
+"                        <td colspan=\"2\" style=\"background:linear-gradient"
+"(140deg,#714B67 0%,#8a6381 55%,#bfa8c2 100%); color:#ffffff; padding:38px;\">"
+"\n"
 "                            <table cellpadding=\"0\" cellspacing=\"0\" "
 "border=\"0\" style=\"width:100%;\">\n"
 "                                <tr>\n"
 "                                    <td style=\"font-size:13px; letter-"
 "spacing:0.3px; text-transform:uppercase; opacity:0.78;\">\n"
-"                                        <t t-"
-"if=\"object.is_sale_document(include_receipts=True)\">청구서 발행 안내</t>\n"
-"                                        <t t-else=\"\">거래처 청구서 수취 안"
-"내</t>\n"
+"                                        <t t-if=\"object.is_sale_document"
+"(include_receipts=True)\">청구서 발행 안내</t>\n"
+"                                        <t t-else=\"\">거래처 청구서 수취 "
+"안내</t>\n"
 "                                    </td>\n"
 "                                    <td align=\"right\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
@@ -2271,8 +2256,8 @@ msgstr ""
 "                                </tr>\n"
 "                                <tr>\n"
 "                                    <td colspan=\"2\" style=\"padding-"
-"top:22px; font-size:26px; line-height:1.45; font-weight:600; color:#ffffff;"
-"\">\n"
+"top:22px; font-size:26px; line-height:1.45; font-weight:600; "
+"color:#ffffff;\">\n"
 "                                        새로운 청구서 확인: <t t-"
 "out=\"object.journal_id.display_name\"/>\n"
 "                                    </td>\n"
@@ -2340,8 +2325,8 @@ msgstr ""
 "                                            <tr>\n"
 "                                                <td style=\"padding:0;\">\n"
 "                                                    <div "
-"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-start;"
-"\">\n"
+"style=\"display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-"
+"start;\">\n"
 "                                                        <t t-"
 "if=\"object.partner_id\">\n"
 "                                                            <div "
@@ -2396,8 +2381,8 @@ msgstr ""
 "                                                                <div "
 "style=\"margin-top:6px; font-size:15px; color:#2c2431; text-"
 "transform:capitalize;\">\n"
-"                                                                    해당 청구"
-"서는 결제가 완료되었습니다\n"
+"                                                                    해당 "
+"청구서는 결제가 완료되었습니다\n"
 "                                                                </div>\n"
 "                                                            </div>\n"
 "                                                        </t>\n"
@@ -2431,14 +2416,13 @@ msgstr ""
 "strong> 원본 문서가 확인용으로 첨부되어 있습니다.\n"
 "                            </div>\n"
 "\n"
-"                            <div style=\"margin-top:32px; text-align:center;"
-"\" t-if=\"object.move_type != 'in_invoice'\">\n"
-"                                <a t-if=\"portal_url\" t-attf-"
-"href=\"{{ portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
-"padding:13px 30px; min-width:210px; background:linear-"
-"gradient(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-"
-"decoration:none; border-radius:12px; font-weight:600; font-size:14px;\" "
-"target=\"_blank\">\n"
+"                            <div style=\"margin-top:32px; text-"
+"align:center;\" t-if=\"object.move_type != 'in_invoice'\">\n"
+"                                <a t-if=\"portal_url\" t-attf-href=\"{{ "
+"portal_url }}\" style=\"display:inline-block; margin:0 10px 14px; "
+"padding:13px 30px; min-width:210px; background:linear-gradient"
+"(135deg,#714B67 0%,#9b77a3 100%); color:#FFFFFF; text-decoration:none; "
+"border-radius:12px; font-weight:600; font-size:14px;\" target=\"_blank\">\n"
 "                                    포털에서 보기\n"
 "                                </a>\n"
 "                            </div>\n"
@@ -2452,9 +2436,9 @@ msgstr ""
 "                                <span style=\"display:block; margin:18px "
 "auto; height:1px; max-width:420px; background:#ece3ed;\"/>\n"
 "                                <t t-if=\"unsubscribe_url\">\n"
-"                                    구독을 취소할까요? <a t-attf-"
-"href=\"{{ unsubscribe_url }}\" style=\"color:#8f8596; text-"
-"decoration:underline;\" target=\"_blank\">수신 거부하기</a>.\n"
+"                                    구독을 취소할까요? <a t-attf-href=\"{{ "
+"unsubscribe_url }}\" style=\"color:#8f8596; text-decoration:underline;\" "
+"target=\"_blank\">수신 거부하기</a>.\n"
 "                                </t>\n"
 "                            </p>\n"
 "                        </td>\n"
@@ -2495,8 +2479,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"이 별칭으로 새로운 레코드를 만들 때 파이썬 사전을 검토하여 기본값을 생성합니"
-"다."
+"이 별칭으로 새로운 레코드를 만들 때 파이썬 사전을 검토하여 기본값을 "
+"생성합니다."
 
 #. module: account
 #. odoo-python
@@ -2511,8 +2495,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"계좌 번호 %(number)s 사용 중인 파트너 %(partner)s 의 은행 계좌가 이미 존재하"
-"며 보관 상태입니다. 대신 보관 취소를 하세요."
+"계좌 번호 %(number)s 사용 중인 파트너 %(partner)s 의 은행 계좌가 이미 "
+"존재하며 보관 상태입니다. 대신 보관 취소를 하세요."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2976,8 +2960,8 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
-"계정 유형은 정보 제공 목적으로 사용되며, 국가별로 법적인 보고서를 생성하고 회"
-"계연도 마감 및 개시 규칙을 설정합니다."
+"계정 유형은 정보 제공 목적으로 사용되며, 국가별로 법적인 보고서를 생성하고 "
+"회계연도 마감 및 개시 규칙을 설정합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_account_type
@@ -2995,8 +2979,7 @@ msgstr "계정 코드 첫 2자리입니다."
 msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate "
 "codes: %s"
-msgstr ""
-"계정 코드는 고유해야 하므로 중복된 코드로는 계정을 만들 수 없습니다: %s"
+msgstr "계정 코드는 고유해야 하므로 중복된 코드로는 계정을 만들 수 없습니다: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -3070,8 +3053,8 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"현금주의 분개로 생성된 명세와 과세표준 금액을 추적하기 위해 사용하는 계정입니"
-"다."
+"현금주의 분개로 생성된 명세와 과세표준 금액을 추적하기 위해 사용하는 "
+"계정입니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -3106,9 +3089,9 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
-"현금주의 기준 세금의 세액을 전환하는 데 사용되는 계정입니다. 원래 청구서 내역"
-"을 조정하지 않는 한 세액이 포함됩니다. 조정할 경우 이 계정에서 이 금액은 취소"
-"되고 일반 세금 계정으로 전환됩니다."
+"현금주의 기준 세금의 세액을 전환하는 데 사용되는 계정입니다. 원래 청구서 "
+"내역을 조정하지 않는 한 세액이 포함됩니다. 조정할 경우 이 계정에서 이 금액은 "
+"취소되고 일반 세금 계정으로 전환됩니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -3121,8 +3104,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
 "today"
 msgstr ""
-"계정: 자동 발행 기능이 활성화되어 있고 회계일자가 금일까지로 설정되어 있는 미"
-"결 전표를 발행합니다"
+"계정: 자동 발행 기능이 활성화되어 있고 회계일자가 금일까지로 설정되어 있는 "
+"미결 전표를 발행합니다"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_accounting
@@ -3288,6 +3271,12 @@ msgid "Accumulated Depreciation"
 msgstr "감가상각누계액"
 
 #. module: account
+#: model:account.account,name:account.1_retained_earnings
+#: model:account.account,name:account.2_account_account_us_retained_earnings
+msgid "Accumulated Retained Earnings"
+msgstr "누적 이익잉여금"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
 #: model:ir.model.fields,field_description:account.field_account_report_line__action_id
 msgid "Action"
@@ -3417,8 +3406,7 @@ msgstr "메모 추가"
 msgid ""
 "Add a QR-code to your invoices so that your customers can pay instantly with "
 "their mobile banking application."
-msgstr ""
-"고객이 모바일 뱅킹으로 즉시 결제할 수 있도록 청구서에 QR 코드를 추가합니다."
+msgstr "고객이 모바일 뱅킹으로 즉시 결제할 수 있도록 청구서에 QR 코드를 추가합니다."
 
 #. module: account
 #. odoo-javascript
@@ -3709,8 +3697,7 @@ msgstr "전체 협력사"
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "All selected moves for reversal must belong to the same company."
-msgstr ""
-"역분개를 위해 선택한 모든 회계 문서는 동일한 회사 코드에 속해야 합니다."
+msgstr "역분개를 위해 선택한 모든 회계 문서는 동일한 회사 코드에 속해야 합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__not_hashable_unlocked_move_ids
@@ -3718,8 +3705,8 @@ msgid ""
 "All unhashable moves before the selected date that are not protected by the "
 "Hard Lock Date"
 msgstr ""
-"선택한 날짜 이전에 해시할 수 없는 모든 이동 중 하드 잠금 날짜로 보호되지 않"
-"는 이동입니다."
+"선택한 날짜 이전에 해시할 수 없는 모든 이동 중 하드 잠금 날짜로 보호되지 "
+"않는 이동입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
@@ -3817,16 +3804,14 @@ msgstr "회사의 통화 금액은 항상 일치하는 양수의 금액이어야
 msgid ""
 "Always positive amount concerned by this matching expressed in the credit "
 "line foreign currency."
-msgstr ""
-"대변 항목이 외화로 표시되는 경우 항상 일치하는 양수의 금액이어야 합니다."
+msgstr "대변 항목이 외화로 표시되는 경우 항상 일치하는 양수의 금액이어야 합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__debit_amount_currency
 msgid ""
 "Always positive amount concerned by this matching expressed in the debit "
 "line foreign currency."
-msgstr ""
-"차변 항목이 외화로 표시되는 경우 항상 일치하는 양수의 금액이어야 합니다."
+msgstr "차변 항목이 외화로 표시되는 경우 항상 일치하는 양수의 금액이어야 합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__amount
@@ -4092,8 +4077,8 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
-"해당 날짜까지의 모든 항목은 분개 일정에 따라 나중에 연기됩니다. 이 잠금 날짜"
-"는 영구적이며 예외를 허용하지 않습니다."
+"해당 날짜까지의 모든 항목은 분개 일정에 따라 나중에 연기됩니다. 이 잠금 "
+"날짜는 영구적이며 예외를 허용하지 않습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -4117,16 +4102,14 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
-msgstr ""
-"외상매입 계정의 전표에는 기한이 있어야 하며 그 반대의 경우도 마찬가지입니다."
+msgstr "외상매입 계정의 전표에는 기한이 있어야 하며 그 반대의 경우도 마찬가지입니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid ""
 "Any journal item on a receivable account must have a due date and vice versa."
-msgstr ""
-"미수금 계정 전표에는 마감일이 표시되어야 합니다. 반대 전표 역시 동일합니다."
+msgstr "미수금 계정 전표에는 마감일이 표시되어야 합니다. 반대 전표 역시 동일합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4184,8 +4167,13 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (VAT/Country) are met."
 msgstr ""
-"일치 기준 (부가가치세/국가)에 맞는 경우 청구서에 세금 및 계정이 자동 적용됩니"
-"다."
+"일치 기준 (부가가치세/국가)에 맞는 경우 청구서에 세금 및 계정이 자동 "
+"적용됩니다."
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Appropriation of the profit or loss"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4366,8 +4354,7 @@ msgstr "자동 발행 종료일"
 msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
-msgstr ""
-"중복 가능성이 감지되어 자동 게시 기능이 이 청구서에서 비활성화되었습니다."
+msgstr "중복 가능성이 감지되어 자동 게시 기능이 이 청구서에서 비활성화되었습니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__autopost_bills
@@ -4548,8 +4535,8 @@ msgstr "잔액 비율은 0이 될 수 없습니다"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_45
-#: model:account.account,name:account.2_bank_journal_default_account_150
+#: model:account.account,name:account.1_bank_journal_default_account_47
+#: model:account.account,name:account.2_bank_journal_default_account_153
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
@@ -4619,8 +4606,8 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"청구서 상의 금액을 지급받을 은행 계좌 번호입니다. 고객 청구서나 업체 신용 전"
-"표에는 회사 은행 계좌가, 그 외에는 협력사의 은행 계좌 번호가 표시됩니다."
+"청구서 상의 금액을 지급받을 은행 계좌 번호입니다. 고객 청구서나 업체 신용 "
+"전표에는 회사 은행 계좌가, 그 외에는 협력사의 은행 계좌 번호가 표시됩니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__l10n_us_bank_account_type
@@ -4731,8 +4718,8 @@ msgid ""
 "Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"은행 거래는 가져오기하거나 동기화한 직후 전기됩니다. 은행 가계정을 거래 상대"
-"로 거래를 진행합니다.\n"
+"은행 거래는 가져오기하거나 동기화한 직후 전기됩니다. 은행 가계정을 거래 "
+"상대로 거래를 진행합니다.\n"
 "은행거래내역 조정 시 최종 계정으로 후자를 대체합니다."
 
 #. module: account
@@ -4761,7 +4748,7 @@ msgstr "Odoo 은행"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "은행 설정"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -4873,8 +4860,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
-"청구서 일괄 발송 기능을 사용할 수 없습니다. 청구서 일괄 발송 기능을 활성화하"
-"려면 크론 작업을 실행하세요."
+"청구서 일괄 발송 기능을 사용할 수 없습니다. 청구서 일괄 발송 기능을 "
+"활성화하려면 크론 작업을 실행하세요."
 
 #. module: account
 #. odoo-python
@@ -4883,8 +4870,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
-"청구서 일괄 발송 기능을 사용할 수 없습니다. 청구서 일괄 발송 기능을 활성화하"
-"려면 시스템 관리자에게 문의하여 크론 작업을 실행하세요."
+"청구서 일괄 발송 기능을 사용할 수 없습니다. 청구서 일괄 발송 기능을 "
+"활성화하려면 시스템 관리자에게 문의하여 크론 작업을 실행하세요."
 
 #. module: account
 #. odoo-javascript
@@ -5085,22 +5072,22 @@ msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
 msgstr ""
-"활성화되어 있는 필드의 선택을 취소하면, 삭제하지 않고 재정 위치를 숨길 수 있"
-"습니다."
+"활성화되어 있는 필드의 선택을 취소하면, 삭제하지 않고 재정 위치를 숨길 수 "
+"있습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__active
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM you will not use."
 msgstr ""
-"활성화한 필드를 선택 취소할 경우에는 사용하지 않을 인코텀즈를 숨길 수 있습니"
-"다."
+"활성화한 필드를 선택 취소할 경우에는 사용하지 않을 인코텀즈를 숨길 수 "
+"있습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -5159,8 +5146,8 @@ msgstr "묶음 결제 가능"
 #: code:addons/account/models/company.py:0
 msgid "Can't disable restricted audit trail: forced by localization."
 msgstr ""
-"감사 추적 제한 기능을 비활성화할 수 없습니다: 현지화에 의해 강제로 비활성화되"
-"었습니다."
+"감사 추적 제한 기능을 비활성화할 수 없습니다: 현지화에 의해 강제로 "
+"비활성화되었습니다."
 
 #. module: account
 #. odoo-javascript
@@ -5225,8 +5212,8 @@ msgid ""
 "Cannot change Price Tax computation method on a company that has already "
 "started invoicing."
 msgstr ""
-"이미 청구서를 발행하기 시작한 회사의 경우, 가격 세금 계산 방법을 변경할 수 없"
-"습니다."
+"이미 청구서를 발행하기 시작한 회사의 경우, 가격 세금 계산 방법을 변경할 수 "
+"없습니다."
 
 #. module: account
 #. odoo-python
@@ -5275,8 +5262,7 @@ msgstr "미사용 전표 코드를 생성할 수 없습니다. %s 전표 이름�
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Cannot get aggregation details from a line not using 'aggregation' engine"
-msgstr ""
-"'집계' 엔진을 사용하지 않는 항목에서는 집계 세부 정보를 가져올 수 없습니다"
+msgstr "'집계' 엔진을 사용하지 않는 항목에서는 집계 세부 정보를 가져올 수 없습니다"
 
 #. module: account
 #. odoo-python
@@ -5296,8 +5282,7 @@ msgstr "자본"
 msgid ""
 "Capture invoices, register payments and keep track of the discussions with "
 "your vendors."
-msgstr ""
-"청구서를 캡처하고 결제 내용을 등록하거나 업체와의 협의 내용을 관리합니다."
+msgstr "청구서를 캡처하고 결제 내용을 등록하거나 업체와의 협의 내용을 관리합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
@@ -5307,7 +5292,7 @@ msgstr "이월 대상"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_161
+#: model:account.account,name:account.1_cash_journal_default_account_163
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5320,12 +5305,12 @@ msgid "Cash Account"
 msgstr "현금 계정"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_158
+#: model:account.account,name:account.1_cash_journal_default_account_160
 msgid "Cash Bakery"
 msgstr "현금 베이커리"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_160
+#: model:account.account,name:account.1_cash_journal_default_account_162
 msgid "Cash Bar"
 msgstr "현금 바"
 
@@ -5367,7 +5352,7 @@ msgid "Cash Basis Transition Account"
 msgstr "현금주의 전환 계좌"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_157
+#: model:account.account,name:account.1_cash_journal_default_account_159
 msgid "Cash Clothes Shop"
 msgstr "현금 의류 매장"
 
@@ -5429,7 +5414,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "현금할인상각손실 계정"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_156
+#: model:account.account,name:account.1_cash_journal_default_account_158
 msgid "Cash Furn. Shop"
 msgstr "현금 가구 매장"
 
@@ -5440,7 +5425,7 @@ msgid "Cash Registers"
 msgstr "금전 등록기"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_159
+#: model:account.account,name:account.1_cash_journal_default_account_161
 msgid "Cash Restaurant"
 msgstr "현금 레스토랑"
 
@@ -5497,8 +5482,8 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
-"일부 국가에서는 해당 지역 법률에 따라 청구서 금액에 대해 원천징수를 적용합니"
-"다. 원천세는 고객이 세무 당국에 납부합니다. 어떠한 상황에서도"
+"일부 국가에서는 해당 지역 법률에 따라 청구서 금액에 대해 원천징수를 "
+"적용합니다. 원천세는 고객이 세무 당국에 납부합니다. 어떠한 상황에서도"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__chains_to_hash_with_gaps
@@ -5594,16 +5579,14 @@ msgstr "이 계정을 전표에 있는 청구서 및 결제 항목과 매칭시�
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and "
 "credit notes made from this journal"
-msgstr ""
-"전표에서 생성된 청구서와 대변전표에 순서를 다르게 지정하려면 표시하세요."
+msgstr "전표에서 생성된 청구서와 대변전표에 순서를 다르게 지정하려면 표시하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence on payments and "
 "bank transactions posted on this journal"
-msgstr ""
-"전표에서 발행된 결제 및 은행거래내역에 순서를 다르게 적용하려면 표시하세요."
+msgstr "전표에서 발행된 결제 및 은행거래내역에 순서를 다르게 적용하려면 표시하세요."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -5726,8 +5709,7 @@ msgstr "고객 대금을 유럽 SEPA 서비스를 통해 원 클릭으로 수금
 msgid ""
 "Collect information and produce statistics on the trade in goods in Europe "
 "with intrastat"
-msgstr ""
-"인트라스탯으로 유럽 지역의 품목 거래 정보를 수집하고 통계를 산출합니다."
+msgstr "인트라스탯으로 유럽 지역의 품목 거래 정보를 수집하고 통계를 산출합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__color
@@ -5752,8 +5734,8 @@ msgid ""
 "Comma-separated list of fields from account.move.line (Journal Item). When "
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
-"account.move.line (전표 항목) 에서 쉼표로 구분된 필드 목록입니다. 설정이 완료"
-"되면, 이 항목은 해당 키로 그룹화하여 하위 항목을 생성합니다."
+"account.move.line (전표 항목) 에서 쉼표로 구분된 필드 목록입니다. 설정이 "
+"완료되면, 이 항목은 해당 키로 그룹화하여 하위 항목을 생성합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__commercial_partner_id
@@ -6106,6 +6088,11 @@ msgid "Cost of office furniture, fixtures, and business equipment"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+msgid "Cost of revenue"
+msgstr "매출원가"
+
+#. module: account
 #: model:account.account,description:account.2_account_account_us_postage
 msgid ""
 "Costs for shipping products or materials to customers or receiving inventory."
@@ -6129,8 +6116,7 @@ msgstr ""
 msgid ""
 "Could not compute any code for the copy automatically. Please create it "
 "manually."
-msgstr ""
-"복사한 항목에서 코드를 자동으로 계산할 수 없습니다. 직접 생성해 주세요."
+msgstr "복사한 항목에서 코드를 자동으로 계산할 수 없습니다. 직접 생성해 주세요."
 
 #. module: account
 #. odoo-python
@@ -6143,6 +6129,16 @@ msgstr "%s 표현식에 대한 이월 대상을 자동으로 결정할 수 없�
 #: code:addons/account/static/src/components/upload_drop_zone/upload_drop_zone.js:0
 msgid "Could not upload files"
 msgstr "파일을 업로드할 수 없습니다."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -6331,8 +6327,8 @@ msgid ""
 "Create a structured report with multiple sections for convenient navigation "
 "and simultaneous printing."
 msgstr ""
-"여러 개의 영역으로 구성된 체계적인 보고서를 생성하여 편리하게 검색하고 동시"
-"에 인쇄할 수 있습니다."
+"여러 개의 영역으로 구성된 체계적인 보고서를 생성하여 편리하게 검색하고 "
+"동시에 인쇄할 수 있습니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice
@@ -6353,8 +6349,8 @@ msgid ""
 "                    adjustments, ensuring compliance with diverse "
 "regulations."
 msgstr ""
-"현지 GAAP, IFRS 또는 회계 조정을 위해 별도의 원장을 유지하는 데 필요한 만큼"
-"의\n"
+"현지 GAAP, IFRS 또는 회계 조정을 위해 별도의 원장을 유지하는 데 필요한 "
+"만큼의\n"
 "                    원장 그룹을 생성하여 다양한 규정을 준수할 수 있습니다."
 
 #. module: account
@@ -6381,8 +6377,7 @@ msgstr "청구서/업체청구서 생성"
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr ""
-"청구서를 생성하고 결제 내용을 등록하거나 고객과의 협의 내용을 관리합니다."
+msgstr "청구서를 생성하고 결제 내용을 등록하거나 고객과의 협의 내용을 관리합니다."
 
 #. module: account
 #. odoo-javascript
@@ -6641,6 +6636,11 @@ msgstr "누적 잔액"
 msgid ""
 "Cumulated balance depending on the domain and the order chosen in the view."
 msgstr "보기 화면에서 선택한 도메인 및 순서에 따라서 누적된 잔액입니다."
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_retained_earnings
+msgid "Cumulative undistributed profits and losses"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6926,7 +6926,7 @@ msgstr "컷오프 {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -6999,8 +6999,8 @@ msgid ""
 "Date (inclusive) to which the numbers are resequenced. If not set, all "
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
-"번호 순서를 재정렬하는 날짜 (해당일 포함)입니다. 설정하지 않으면, 전체 전표"
-"를 마감일까지 재정렬합니다."
+"번호 순서를 재정렬하는 날짜 (해당일 포함)입니다. 설정하지 않으면, 전체 "
+"전표를 마감일까지 재정렬합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
@@ -7250,8 +7250,8 @@ msgid ""
 "Default on whether the sales price used on the product and invoices with "
 "this Company includes its taxes."
 msgstr ""
-"제품 및 인보이스에 적용된 판매 가격에 세금이 포함되는지 여부에 대한 기본 설정"
-"입니다."
+"제품 및 인보이스에 적용된 판매 가격에 세금이 포함되는지 여부에 대한 기본 "
+"설정입니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7299,8 +7299,8 @@ msgid ""
 "Define which company can select the multi-ledger in report filters. If none "
 "is provided, available for all companies"
 msgstr ""
-"보고서 필터에서 다중 원장 옵션을 선택할 수 있는 회사를 지정합니다. 회사를 지"
-"정하지 않으면 모든 회사에서 액세스할 수 있습니다."
+"보고서 필터에서 다중 원장 옵션을 선택할 수 있는 회사를 지정합니다. 회사를 "
+"지정하지 않으면 모든 회사에서 액세스할 수 있습니다."
 
 #. module: account
 #: model:onboarding.onboarding.step,description:account.onboarding_onboarding_step_fiscal_year
@@ -7437,16 +7437,15 @@ msgid ""
 "used to perform tax adjustment."
 msgstr ""
 "세금을 어느 항목에서 선택할 지 지정합니다.\n"
-"참고: '없음'을 선택하면 단독으로 세금을 사용할 수 없으나 그룹으로는 사용이 가"
-"능합니다. '조정'은 세금 조정에 사용합니다."
+"참고: '없음'을 선택하면 단독으로 세금을 사용할 수 없으나 그룹으로는 사용이 "
+"가능합니다. '조정'은 세금 조정에 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
 msgid ""
 "Determines whether the price you use on the product and invoices includes "
 "this tax."
-msgstr ""
-"제품 및 청구서에 적용되는 가격에 이 세금이 포함되어 있는지 여부를 나타냅니다."
+msgstr "제품 및 청구서에 적용되는 가격에 이 세금이 포함되어 있는지 여부를 나타냅니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_account_id
@@ -7859,8 +7858,8 @@ msgstr "배당"
 #: code:addons/account/models/digest.py:0
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"액세스 권한이 없습니다. 사용자 이메일 다이제스트인 경우에는 해당 데이터를 무"
-"시하세요."
+"액세스 권한이 없습니다. 사용자 이메일 다이제스트인 경우에는 해당 데이터를 "
+"무시하세요."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_extract
@@ -8210,8 +8209,7 @@ msgstr "선납 할인"
 #: code:addons/account/models/account_payment_term.py:0
 msgid ""
 "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>"
-msgstr ""
-"선납 할인: <b>%(amount)s</b>, 다음 기간 내 결제 완료 시: <b>%(date)s</b>"
+msgstr "선납 할인: <b>%(amount)s</b>, 다음 기간 내 결제 완료 시: <b>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8239,6 +8237,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Electronic Data Interchange"
 msgstr "전자 데이터 교환"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -8418,8 +8421,8 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
-"전표가 자동으로 발행되도록 기본 설정됩니다. 지금 발행하려면 선택란에 표시하세"
-"요."
+"전표가 자동으로 발행되도록 기본 설정됩니다. 지금 발행하려면 선택란에 "
+"표시하세요."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8567,6 +8570,7 @@ msgid "Exchange Gain or Loss Journal"
 msgstr "외환손익 전표"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "환율 이동"
@@ -8746,8 +8750,7 @@ msgstr "이 구분 항목에서 생성된 계정 작업에 적용할 계수입�
 msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line, in percents"
-msgstr ""
-"이 구분 항목에서 생성된 계정 작업에 적용할 계수로, 백분율로 표시됩니다."
+msgstr "이 구분 항목에서 생성된 계정 작업에 적용할 계수로, 백분율로 표시됩니다."
 
 #. module: account
 #. odoo-python
@@ -8867,6 +8870,16 @@ msgid "First New Sequence"
 msgstr "첫 번째 신규 연번"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 msgid "First recurring entry"
@@ -8957,8 +8970,8 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
-"재정 위치는 특정 고객이나 판매주문서/청구서용으로 세금 및 계정을 조정할 때 사"
-"용합니다. 기본값은 고객 정보에서 가져옵니다."
+"재정 위치는 특정 고객이나 판매주문서/청구서용으로 세금 및 계정을 조정할 때 "
+"사용합니다. 기본값은 고객 정보에서 가져옵니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__fiscalyear_last_day
@@ -9081,8 +9094,7 @@ msgstr "다른 질문이 있으면,"
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
 msgid ""
 "For new invoices, please ensure a PDF or electronic invoice file is attached"
-msgstr ""
-"새 인보이스의 경우 PDF 또는 전자 청구서 파일이 첨부되어 있는지 확인하세요."
+msgstr "새 인보이스의 경우 PDF 또는 전자 청구서 파일이 첨부되어 있는지 확인하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
@@ -9279,9 +9291,9 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"이 보고서에서는 공급업체에서 청구한 금액에 대한 전반적인 내용을 확인할 수 있"
-"습니다. 검색 도구를 사용하여 청구서 보고서를 개별 편집하며, 필요에 맞도록 분"
-"석 내용을 사용할 수도 있습니다."
+"이 보고서에서는 공급업체에서 청구한 금액에 대한 전반적인 내용을 확인할 수 "
+"있습니다. 검색 도구를 사용하여 청구서 보고서를 개별 편집하며, 필요에 맞도록 "
+"분석 내용을 사용할 수도 있습니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -9290,8 +9302,9 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"보고서를 통해 고객에게 청구한 금액을 전체적으로 살펴 봅니다. 검색 도구로 청구"
-"서 관련 보고서를 맞춤 편집할 수 있으므로, 필요에 따라 분석 내용을 조정합니다."
+"보고서를 통해 고객에게 청구한 금액을 전체적으로 살펴 봅니다. 검색 도구로 "
+"청구서 관련 보고서를 맞춤 편집할 수 있으므로, 필요에 따라 분석 내용을 "
+"조정합니다."
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_fuel
@@ -9637,8 +9650,8 @@ msgid ""
 msgstr ""
 "안녕하세요,\n"
 "    <br/><br/>\n"
-"    고객님의 이메일이 삭제되었습니다. 사용하신 이메일 주소는 새 청구서만 받으"
-"실 수 있습니다:"
+"    고객님의 이메일이 삭제되었습니다. 사용하신 이메일 주소는 새 청구서만 "
+"받으실 수 있습니다:"
 
 #. module: account
 #. odoo-javascript
@@ -9687,8 +9700,8 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
-"가장 높은 날짜는 이 날짜까지 게시된 모든 전표 항목이 보호되도록 합니다. 이 하"
-"드 잠금 날짜 이후의 전표 항목만 추가 조치에 고려됩니다."
+"가장 높은 날짜는 이 날짜까지 게시된 모든 전표 항목이 보호되도록 합니다. 이 "
+"하드 잠금 날짜 이후의 전표 항목만 추가 조치에 고려됩니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -9876,8 +9889,8 @@ msgid ""
 "If activated, user-defined filters on journal items can be selected on this "
 "report"
 msgstr ""
-"활성화하면, 이 보고서에서 사용자가 지정한 전표 항목의 필터를 선택할 수 있습니"
-"다."
+"활성화하면, 이 보고서에서 사용자가 지정한 전표 항목의 필터를 선택할 수 "
+"있습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -9937,8 +9950,8 @@ msgid ""
 "If empty, the discount will be discounted directly on the income/expense "
 "account. If set, discount on invoices will be realized in separate accounts."
 msgstr ""
-"비워두면, 수입/지출 계정에서 직접 할인이 적용됩니다. 설정할 경우, 청구서 할인"
-"은 별도 계정에서 인식됩니다."
+"비워두면, 수입/지출 계정에서 직접 할인이 적용됩니다. 설정할 경우, 청구서 "
+"할인은 별도 계정에서 인식됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
@@ -9950,8 +9963,7 @@ msgstr "비워둘 경우, 역분개 대상 항목이 있는 전표를 사용합�
 msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
 "provided they accept it."
-msgstr ""
-"선택할 경우, 이 세금보다 선순위인 세금이 영향을 받게 됩니다 (설정하는 경우)."
+msgstr "선택할 경우, 이 세금보다 선순위인 세금이 영향을 받게 됩니다 (설정하는 경우)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__is_base_affected
@@ -10001,8 +10013,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"활성화 필드를 아니오로 설정할 경우, 지급 조건을 삭제하지 않고 숨길 수 있습니"
-"다."
+"활성화 필드를 아니오로 설정할 경우, 지급 조건을 삭제하지 않고 숨길 수 "
+"있습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -10045,9 +10057,9 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
-"EU 외의 국가에 있는 고객을 상대로 상품이나 서비스를 판매하는 경우 배송지 주소"
-"를 기준으로 부가가치세가 부과됩니다.                                 이 규정"
-"은 소재지에 관계없이 적용됩니다."
+"EU 외의 국가에 있는 고객을 상대로 상품이나 서비스를 판매하는 경우 배송지 "
+"주소를 기준으로 부가가치세가 부과됩니다.                                 이 "
+"규정은 소재지에 관계없이 적용됩니다."
 
 #. module: account
 #. odoo-python
@@ -10055,8 +10067,7 @@ msgstr ""
 msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
-msgstr ""
-"'부외거래' 계정을 사용하려면 반드시 모든 전표 계정이 해당 유형이어야 합니다."
+msgstr "'부외거래' 계정을 사용하려면 반드시 모든 전표 계정이 해당 유형이어야 합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
@@ -10214,8 +10225,8 @@ msgid ""
 msgstr ""
 "'%(report_name)s' 보고서 '%(line_name)s' 줄에 있는 '%(label)s' 라벨에서,\n"
 "교차 보고서 id 또는 xml_id 구분 분석에 실패했습니다.\n"
-"예상 작업: cross_report(<report_id>|<xml_id>)예시:  "
-"cross_report(my_module.my_report) or cross_report(123)"
+"예상 작업: cross_report(<report_id>|<xml_id>)예시:  cross_report"
+"(my_module.my_report) or cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10336,16 +10347,15 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
-"인코텀즈란 국제적으로 통용되는 상업 용어 모음입니다. 구매자와 판매자 간의 거"
-"래 비용과 책임을 배분하는데 사용하며, 최근의 운송 관행도 반영하게 됩니다."
+"인코텀즈란 국제적으로 통용되는 상업 용어 모음입니다. 구매자와 판매자 간의 "
+"거래 비용과 책임을 배분하는데 사용하며, 최근의 운송 관행도 반영하게 됩니다."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
 msgid ""
 "Incoterms are used to divide transaction costs and responsibilities between "
 "buyer and seller."
-msgstr ""
-"인코텀즈는 구매자와 판매자 간의 거래 비용과 책임을 배분하는데 사용됩니다."
+msgstr "인코텀즈는 구매자와 판매자 간의 거래 비용과 책임을 배분하는데 사용됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
@@ -10471,8 +10481,8 @@ msgid ""
 "Internal field to shorten expression_ids creation for the account_codes "
 "engine"
 msgstr ""
-"account_codes 엔진용 expression_ids 생성 시간을 단축하기 위한 내부 필드입니"
-"다."
+"account_codes 엔진용 expression_ids 생성 시간을 단축하기 위한 내부 "
+"필드입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__aggregation_formula
@@ -10483,8 +10493,7 @@ msgstr "집계 엔진용 expression_ids 생성 시간을 단축하기 위한 내
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__domain_formula
 msgid "Internal field to shorten expression_ids creation for the domain engine"
-msgstr ""
-"도메인 엔진용 expression_ids 생성 시간을 단축하기 위한 내부 필드입니다."
+msgstr "도메인 엔진용 expression_ids 생성 시간을 단축하기 위한 내부 필드입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__external_formula
@@ -10496,8 +10505,7 @@ msgstr "외부 엔진용 expression_ids 생성 시간을 단축하기 위한 내
 #: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
 msgid ""
 "Internal field to shorten expression_ids creation for the tax_tags engine"
-msgstr ""
-"tax_tags 엔진의 expression_ids  생성 시간을 단축하기 위한 내부 필드입니다."
+msgstr "tax_tags 엔진의 expression_ids  생성 시간을 단축하기 위한 내부 필드입니다."
 
 #. module: account
 #. odoo-javascript
@@ -10533,8 +10541,8 @@ msgid ""
 "Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values "
 "for the zip range and \"To\" should be greater than \"From\"."
 msgstr ""
-"\"우편 번호 범위\"가 잘못되었습니다. 우편 번호 범위에 대해 \"출발지\" 및 \"도"
-"착지\" 값을 모두 구성해야 하며 \"도착지\"가 \"출발지\"보다 커야 합니다."
+"\"우편 번호 범위\"가 잘못되었습니다. 우편 번호 범위에 대해 \"출발지\" 및 "
+"\"도착지\" 값을 모두 구성해야 하며 \"도착지\"가 \"출발지\"보다 커야 합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10739,8 +10747,8 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
-"청구서 및 신용 전표 배분 항목에는 각각의 기준에 대해 정확히 한 항목이 포함되"
-"어야 합니다."
+"청구서 및 신용 전표 배분 항목에는 각각의 기준에 대해 정확히 한 항목이 "
+"포함되어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -10771,8 +10779,7 @@ msgstr "청구서 및 신용 전표에서 분배 항목 수는 동일해야 합�
 msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
-msgstr ""
-"청구서 및 신용 전표에서 동일하게 항목을 분배해야 합니다 (비율 및 순서 동일)."
+msgstr "청구서 및 신용 전표에서 동일하게 항목을 분배해야 합니다 (비율 및 순서 동일)."
 
 #. module: account
 #. odoo-python
@@ -10781,8 +10788,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition "
 "line."
 msgstr ""
-"청구서 및 신용 전표를 재분할하려면 세금 재분할 항목이 하나 이상 있어야 합니"
-"다."
+"청구서 및 신용 전표를 재분할하려면 세금 재분할 항목이 하나 이상 있어야 "
+"합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10894,7 +10901,7 @@ msgstr "청구서 오류"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices late"
-msgstr "청구서 지연"
+msgstr "연체 중인 청구서"
 
 #. module: account
 #. odoo-python
@@ -10966,8 +10973,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted bills with a sequence "
 "number since last lock date."
 msgstr ""
-"마지막 잠금 날짜 이후 시퀀스 번호가 있는 청구서 초안, 취소 또는 삭제된 청구서"
-"로 인한 비정상입니다."
+"마지막 잠금 날짜 이후 시퀀스 번호가 있는 청구서 초안, 취소 또는 삭제된 "
+"청구서로 인한 비정상입니다."
 
 #. module: account
 #. odoo-python
@@ -10976,8 +10983,8 @@ msgid ""
 "Irregularities due to draft, cancelled or deleted invoices with a sequence "
 "number since last lock date."
 msgstr ""
-"마지막 잠금 날짜 이후 시퀀스 번호가 있는 초안, 취소 또는 삭제된 청구서로 인"
-"한 비정상입니다."
+"마지막 잠금 날짜 이후 시퀀스 번호가 있는 초안, 취소 또는 삭제된 청구서로 "
+"인한 비정상입니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_being_sent
@@ -11012,6 +11019,12 @@ msgstr "편집자입니다"
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
 msgstr "항목"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
+#: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+msgid "Is Exact Move Duplicate"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -11130,8 +11143,7 @@ msgstr "작업이 비동기식으로 전송됩니다."
 msgid ""
 "It indicates that the invoice/payment has been sent or the PDF has been "
 "generated."
-msgstr ""
-"청구서/결제 내역 전송이 완료되었거나 PDF 파일로 생성되었다는 의미입니다."
+msgstr "청구서/결제 내역 전송이 완료되었거나 PDF 파일로 생성되었다는 의미입니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -11440,8 +11452,8 @@ msgid ""
 "anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"비워둘 경우 품목 카테고리에 있는 기본값을 사용합니다. 영미형 회계 방식으로 자"
-"동평가법을 설정한 경우에는, 품목 카테고리에 있는 비용 계정을 사용합니다."
+"비워둘 경우 품목 카테고리에 있는 기본값을 사용합니다. 영미형 회계 방식으로 "
+"자동평가법을 설정한 경우에는, 품목 카테고리에 있는 비용 계정을 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -11762,8 +11774,8 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
-"\"%(line)s\" 내역은 \"%(parent_line)s\"을 상위 항목으로 정의하지만, 보고서에"
-"는 그 앞에 표기됩니다. 상위 항목은 항상 맨 앞에 나와야 합니다."
+"\"%(line)s\" 내역은 \"%(parent_line)s\"을 상위 항목으로 정의하지만, "
+"보고서에는 그 앞에 표기됩니다. 상위 항목은 항상 맨 앞에 나와야 합니다."
 
 #. module: account
 #. odoo-python
@@ -11876,6 +11888,7 @@ msgid "Looks great!"
 msgstr "입력 성공!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "손실"
@@ -11994,11 +12007,11 @@ msgid ""
 "partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "수기 결제: Odoo 외부의 다른 방법으로 결제를 받습니다.\n"
-"결제대행업체: 결제업체들은 자체적인 결제 방법을 사용하고 있습니다. 온라인 구"
-"매나 구독의 경우, 협력사에 저장된 결제 토큰을 이용하여 카드로 거래를 요청합니"
-"다.\n"
-"일괄 입금: 여러 고객들의 수표를 수금 후 일괄 입금 항목을 생성하여 은행에 입금"
-"합니다 (account_batch_payment 모듈 필수).\n"
+"결제대행업체: 결제업체들은 자체적인 결제 방법을 사용하고 있습니다. 온라인 "
+"구매나 구독의 경우, 협력사에 저장된 결제 토큰을 이용하여 카드로 거래를 "
+"요청합니다.\n"
+"일괄 입금: 여러 고객들의 수표를 수금 후 일괄 입금 항목을 생성하여 은행에 "
+"입금합니다 (account_batch_payment 모듈 필수).\n"
 "SEPA 자동이체: 협력사 권한으로 SEPA 지역에서 대금 지급을 받습니다 "
 "(account_sepa 모듈 필수).\n"
 
@@ -12012,8 +12025,8 @@ msgid ""
 msgstr ""
 "직접 결제: Odoo 외부의 결제 방법으로 지불하거나 받습니다.\n"
 "수표: 공급업체 청구서를 수표로 결제하고 Odoo에서 인쇄하세요.\n"
-"SEPA 신용이체: 은행에 SEPA 신용이체 파일을 제출하여 SEPA 지역에서 결제합니"
-"다. 실행하려면 account_sepa 모듈이 필요합니다.\n"
+"SEPA 신용이체: 은행에 SEPA 신용이체 파일을 제출하여 SEPA 지역에서 "
+"결제합니다. 실행하려면 account_sepa 모듈이 필요합니다.\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_method_line_id
@@ -12035,15 +12048,15 @@ msgid ""
 msgstr ""
 "수동 결제: Odoo 외부에서 여러 가지 수단으로 결제하거나 지급받습니다.\n"
 "결제대행업체: 결제업체마다 자체 결제 수단을 지정하고 있습니다. 온라인 구매나 "
-"구독을 할 경우, 협력사에서 저장한 결제 토큰을 사용하여 카드로 결제를 요청합니"
-"다.\n"
+"구독을 할 경우, 협력사에서 저장한 결제 토큰을 사용하여 카드로 결제를 "
+"요청합니다.\n"
 "수표: Odoo에서 수표로 청구 금액을 지급하고 수표 인쇄도 할 수 있습니다.\n"
 "일괄 입금: 고객 수표를 여러 개 수령한 후 한 번에 일괄 입금을 생성하여 은행에 "
 "입금합니다.  account_batch_payment 모듈을 설치해야 합니다.\n"
 "SEPA 계좌이체: 은행으로 SEPA 계좌이체 파일을 전송하여 SEPA 지역에서 결제할 "
 "수 있습니다. account_iso20022 모듈을 설치해야 합니다.\n"
-"SEPA 자동이체: 협력사에서 위임한 권한을 통해 SEPA 지역에서 결제를 진행합니"
-"다. account_iso20022 모듈을 설치해야 합니다.\n"
+"SEPA 자동이체: 협력사에서 위임한 권한을 통해 SEPA 지역에서 결제를 "
+"진행합니다. account_iso20022 모듈을 설치해야 합니다.\n"
 "미국 ISO20022: 미국 내에서 결제하려면 은행에 ISO20022 파일을 제출하세요. "
 "account_iso20022 모듈을 설치해야 합니다.\n"
 
@@ -12064,11 +12077,11 @@ msgid ""
 "partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
 "수기 결제: Odoo 외부에서 결제 또는 지급받는 모든 결제 방식입니다.\n"
-"결제대행업체: 결제업체들은 자체적인 결제 방법을 제공하고 있습니다. 온라인 구"
-"매 또는 구독 시, 협력사에 저장된 결제 토큰을 이용하여 카드 결제를 처리합니"
-"다.\n"
-"수표: 수표를 발행하여 청구 금액을 지급하고 Odoo에서 수표를 인쇄하는 것도 가능"
-"합니다.\n"
+"결제대행업체: 결제업체들은 자체적인 결제 방법을 제공하고 있습니다. 온라인 "
+"구매 또는 구독 시, 협력사에 저장된 결제 토큰을 이용하여 카드 결제를 "
+"처리합니다.\n"
+"수표: 수표를 발행하여 청구 금액을 지급하고 Odoo에서 수표를 인쇄하는 것도 "
+"가능합니다.\n"
 "일괄 입금: 고객들의 수표를 수금 후 일괄 입금을 생성하여 은행에 입금합니다"
 "(account_batch_payment 모듈 필수).\n"
 "SEPA 계좌 이체: 은행에 SEPA 계좌 이체 파일을 전송하여 SEPA 지역에서 결제할 "
@@ -12185,8 +12198,8 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the "
 "name of the full reconcile if it exists."
 msgstr ""
-"이 열에 대해 일치하는 번호로, 부분적으로만 조정된 경우에는 'P'로, 해당 항목"
-"이 존재하는 경우 전체 조정 이름이 표시됩니다."
+"이 열에 대해 일치하는 번호로, 부분적으로만 조정된 경우에는 'P'로, 해당 "
+"항목이 존재하는 경우 전체 조정 이름이 표시됩니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -12346,8 +12359,8 @@ msgid ""
 "Missing a document for a banking statement? Use the Documents apps to "
 "request it and let the owner upload it at the right place."
 msgstr ""
-"은행 명세서를 위한 문서가 없으신가요? 문서 앱을 사용하여 요청하면 소유자가 올"
-"바른 위치에 직접 업로드할 수 있습니다."
+"은행 명세서를 위한 문서가 없으신가요? 문서 앱을 사용하여 요청하면 소유자가 "
+"올바른 위치에 직접 업로드할 수 있습니다."
 
 #. module: account
 #. odoo-python
@@ -12560,6 +12573,12 @@ msgstr "가장 가까운"
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
 msgstr "취소 요청 필요"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr "업데이트 필요"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -13157,8 +13176,8 @@ msgid ""
 "Once everything is set, you are good to continue. You will be able to edit "
 "this later in the <b>Customers</b> menu."
 msgstr ""
-"설정이 모두 완료되었으면 계속 진행하셔도 좋습니다. 나중에 <b>고객</b>메뉴에"
-"서 수정할 수 있습니다."
+"설정이 모두 완료되었으면 계속 진행하셔도 좋습니다. 나중에 <b>고객</b>"
+"메뉴에서 수정할 수 있습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13166,8 +13185,8 @@ msgid ""
 "Once installed, set 'Bank Feeds' to 'File Import' in bank account "
 "settings.This adds a button to import from the Accounting dashboard."
 msgstr ""
-"설치가 완료되면, 은행 계좌 설정에서 ‘은행 피드’를 ‘파일 가져오기’로 설정합니"
-"다. 회계 현황판에서 가져오기 버튼이 추가됩니다."
+"설치가 완료되면, 은행 계좌 설정에서 ‘은행 피드’를 ‘파일 가져오기’로 "
+"설정합니다. 회계 현황판에서 가져오기 버튼이 추가됩니다."
 
 #. module: account
 #. odoo-javascript
@@ -13227,8 +13246,7 @@ msgstr "청구서만 인쇄할 수 있습니다."
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
 msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
-msgstr ""
-"각 청구서가 아니라, 파트너(은행) 기준으로 결제 항목을 하나만 생성합니다."
+msgstr "각 청구서가 아니라, 파트너(은행) 기준으로 결제 항목을 하나만 생성합니다."
 
 #. module: account
 #. odoo-python
@@ -13362,10 +13380,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"이메일 전송 시 번역할 언어 (ISO 코드)를 선택할 수 있습니다. 선택하지 않을 경"
-"우, 기본 파트너의 사용 언어가 기본 언어로 적용됩니다. 알맞은 언어로 표시되는 "
-"자리표지자가 나타나며, 예를 들어 {{ object.partner_id.lang }} 와 같이 표시됩"
-"니다."
+"이메일 전송 시 번역할 언어 (ISO 코드)를 선택할 수 있습니다. 선택하지 않을 "
+"경우, 기본 파트너의 사용 언어가 기본 언어로 적용됩니다. 알맞은 언어로 "
+"표시되는 자리표지자가 나타나며, 예를 들어 {{ object.partner_id.lang }} 와 "
+"같이 표시됩니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
@@ -13482,9 +13500,9 @@ msgid ""
 "timeframe is indicated on either the invoice or the order. In the event of "
 "non-payment by the due date,"
 msgstr ""
-"당사의 청구 대금은 청구서 또는 주문서에 별도의 지급 기간이 명시되어 있지 않"
-"는 한, 영업일 기준으로 21일 이내에 지급되어야 합니다. 만약 기한일까지 결제가 "
-"완료되지 않은 경우"
+"당사의 청구 대금은 청구서 또는 주문서에 별도의 지급 기간이 명시되어 있지 "
+"않는 한, 영업일 기준으로 21일 이내에 지급되어야 합니다. 만약 기한일까지 "
+"결제가 완료되지 않은 경우"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
@@ -13578,8 +13596,8 @@ msgid ""
 "Overrides the Company's default on whether the price you use on the product "
 "and invoices includes this tax."
 msgstr ""
-"해당 세금이 품목 및 청구서에 적용되는 가격에 포함되는지 여부에 따라 회사 기본"
-"값을 재정의합니다."
+"해당 세금이 품목 및 청구서에 적용되는 가격에 포함되는지 여부에 따라 회사 "
+"기본값을 재정의합니다."
 
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
@@ -13590,6 +13608,7 @@ msgid "Owner's Current Account"
 msgstr "소유자 현재 계정"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "손익 계정"
@@ -13620,11 +13639,6 @@ msgstr "PDF 파일"
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
 msgstr "미결제 PDF"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr "PEPPOL 전자 청구서"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -14121,8 +14135,8 @@ msgid ""
 "Payments are used to register liquidity movements. You can process those "
 "payments by your own means or by using installed facilities."
 msgstr ""
-"결제 항목으로 유동성 흐름을 기록합니다. 결제 내역을 직접 처리하거나 설치 장비"
-"를 이용하실 수도 있습니다."
+"결제 항목으로 유동성 흐름을 기록합니다. 결제 내역을 직접 처리하거나 설치 "
+"장비를 이용하실 수도 있습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14252,8 +14266,7 @@ msgstr "결제 항목에서 결제 방법을 지정하세요."
 msgid ""
 "Please install a chart of accounts or create a miscellaneous journal before "
 "proceeding."
-msgstr ""
-"계속하기 전에 계정과목표를 설치하거나 기타 항목 장부를 생성하시기 바랍니다."
+msgstr "계속하기 전에 계정과목표를 설치하거나 기타 항목 장부를 생성하시기 바랍니다."
 
 #. module: account
 #. odoo-python
@@ -14377,8 +14390,7 @@ msgstr "이동 계정 접두사"
 msgid ""
 "Prefix that defines which accounts from the financial accounting this "
 "applicability should apply on."
-msgstr ""
-"이 내용이 적용되어야 하는 재무회계 상에서 계정을 정의하는 접두사입니다."
+msgstr "이 내용이 적용되어야 하는 재무회계 상에서 계정을 정의하는 접두사입니다."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_disability_insurance
@@ -14527,6 +14539,7 @@ msgstr "품목 카테고리"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14609,6 +14622,19 @@ msgid "Profit Account"
 msgstr "이익 계정"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_profit_or_loss
+#: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Profit or Loss Appropriation"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Credit Note"
 msgstr "견적용 신용 전표"
@@ -14651,8 +14677,8 @@ msgid ""
 "Propose to validate bills automatically when AI accuracy is right 3 times in "
 "a row for a vendor."
 msgstr ""
-"공급업체의 AI 정확도가 3회 연속으로 일치에 성공할 경우 청구서가 자동 승인되도"
-"록 제안합니다."
+"공급업체의 AI 정확도가 3회 연속으로 일치에 성공할 경우 청구서가 자동 "
+"승인되도록 제안합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
@@ -14797,12 +14823,6 @@ msgstr "빠른 인코딩 값"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "빠른 인코딩"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr "빠른 검색 : %s"
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -15005,8 +15025,7 @@ msgstr "참조"
 msgid ""
 "Reference of the document used to issue this payment. Eg. check number, file "
 "name, etc."
-msgstr ""
-"이 결제 항목을 발행에 사용된 문서 참조 번호입니다 (예: 수표 번호, 파일명 등)."
+msgstr "이 결제 항목을 발행에 사용된 문서 참조 번호입니다 (예: 수표 번호, 파일명 등)."
 
 #. module: account
 #. odoo-javascript
@@ -15310,6 +15329,7 @@ msgstr "퇴직 연금 비용 (401K 매칭)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "매출액"
@@ -15524,7 +15544,7 @@ msgstr "조정 모델 규칙"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
 msgid "Running Balance"
-msgstr "미사용 잔액"
+msgstr "누적 잔액"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_iso20022
@@ -15773,6 +15793,7 @@ msgstr "이름 또는 납세자 ID 검색..."
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Search: %s"
 msgstr "검색 : %s"
@@ -15827,8 +15848,7 @@ msgstr "보안"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid ""
 "Securing these entries will also secure entries after the selected date."
-msgstr ""
-"해당 항목에 보안을 적용할 경우 선택한 날짜 이후 항목에도 보안이 적용됩니다."
+msgstr "해당 항목에 보안을 적용할 경우 선택한 날짜 이후 항목에도 보안이 적용됩니다."
 
 #. module: account
 #. odoo-python
@@ -15857,8 +15877,8 @@ msgid ""
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
 "품목 카테고리를 선택하여 분석 기본값에서 지정된 분석 계정을 사용합니다 (예: "
-"새로 고객용 청구서나 판매주문서를 생성할 때 해당 품목을 선택하면 분석 계정으"
-"로 간주하여 사용합니다)."
+"새로 고객용 청구서나 판매주문서를 생성할 때 해당 품목을 선택하면 분석 "
+"계정으로 간주하여 사용합니다)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -15867,8 +15887,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"분석 분포를 사용할 품목을 선택합니다 (예: 이 품목을 선택하면 새로 고객용 청구"
-"서나 판매주문서가 생성되며, 자동으로 해당 품목을 분석 계정으로 사용됩니다)."
+"분석 분포를 사용할 품목을 선택합니다 (예: 이 품목을 선택하면 새로 고객용 "
+"청구서나 판매주문서가 생성되며, 자동으로 해당 품목을 분석 계정으로 "
+"사용됩니다)."
 
 #. module: account
 #. odoo-python
@@ -15903,8 +15924,8 @@ msgid ""
 "Select this if the taxes should use cash basis, which will create an entry "
 "for such taxes on a given account during reconciliation."
 msgstr ""
-"세금에 현금주의 기준을 적용하려면 이 옵션을 선택합니다. 조정 중에 특정 계정"
-"에 대한 세금 항목이 생성됩니다."
+"세금에 현금주의 기준을 적용하려면 이 옵션을 선택합니다. 조정 중에 특정 "
+"계정에 대한 세금 항목이 생성됩니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__selected_payment_method_codes
@@ -16039,8 +16060,8 @@ msgid ""
 msgstr ""
 "가짜 청구서를 통해 사기성 계좌 번호를 보내는 것이 일반적인 피싱 수법입니다. "
 "사기를 피하려면, 새로운 은행 계좌 번호는 항상 확인 과정을 거치시기 바랍니다. "
-"보통 피싱은 이메일 보안이 손상된 경우에 발생하므로 직접 업체와 통화하시는 것"
-"이 좋습니다. 확인이 완료되면 자금 이체 기능을 활성화할 수 있습니다."
+"보통 피싱은 이메일 보안이 손상된 경우에 발생하므로 직접 업체와 통화하시는 "
+"것이 좋습니다. 확인이 완료되면 자금 이체 기능을 활성화할 수 있습니다."
 
 #. module: account
 #. odoo-python
@@ -16079,8 +16100,9 @@ msgstr "신용 전표를 첨부하여 고객에게 전송"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_self_billing_credit_note
+#, fuzzy
 msgid "Sent to customers with the self-billing credit note in attachment"
-msgstr ""
+msgstr "고객에게 자체 발행 대변전표를 첨부하여 발송합니다"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
@@ -16252,8 +16274,7 @@ msgstr ""
 msgid ""
 "Setting this field will turn the line into a link, executing the action when "
 "clicked."
-msgstr ""
-"이 항목을 설정하면 내역을 링크로 전환하여 클릭하면 작업이 실행되도록 합니다."
+msgstr "이 항목을 설정하면 내역을 링크로 전환하여 클릭하면 작업이 실행되도록 합니다."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_config
@@ -16285,8 +16306,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also "
 "be named using this prefix by default."
 msgstr ""
-"표시용 줄임말입니다. 전표에 입력할 때도 이 머릿말을 기본값으로 이름을 지정합"
-"니다."
+"표시용 줄임말입니다. 전표에 입력할 때도 이 머릿말을 기본값으로 이름을 "
+"지정합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
@@ -16534,16 +16555,15 @@ msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
 msgstr ""
-"기준일에 입력 내용을 자동 발행할지 여부를 지정합니다. 비슷한 다른 반복 청구서"
-"에도 적용됩니다."
+"기준일에 입력 내용을 자동 발행할지 여부를 지정합니다. 비슷한 다른 반복 "
+"청구서에도 적용됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
 msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
-msgstr ""
-"올림 정확도에 맞게 청구서 금액을 올림하는 데 사용하는 방법을 지정합니다."
+msgstr "올림 정확도에 맞게 청구서 금액을 올림하는 데 사용하는 방법을 지정합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16812,16 +16832,15 @@ msgid ""
 "Tags assigned to this line by the tax creating it, if any. It determines its "
 "impact on financial reports."
 msgstr ""
-"만약 있는 경우 세금을 작성하여 이 내역에 할당한 태그입니다. 재무 보고서에 미"
-"치는 영향을 결정합니다."
+"만약 있는 경우 세금을 작성하여 이 내역에 할당한 태그입니다. 재무 보고서에 "
+"미치는 영향을 결정합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,help:account.field_product_template__account_tag_ids
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
-msgstr ""
-"해당 품목에 대해 생성된 기본 정보 및 세금 전표 입력 시 설정할 태그입니다."
+msgstr "해당 품목에 대해 생성된 기본 정보 및 세금 전표 입력 시 설정할 태그입니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
@@ -17233,8 +17252,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the authorities."
 msgstr ""
-"기관에서 요청할 경우 세금 결산 항목에 대응시켜서 사용하는 세금 당좌 계정입니"
-"다."
+"기관에서 요청할 경우 세금 결산 항목에 대응시켜서 사용하는 세금 당좌 "
+"계정입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__tax_receivable_account_id
@@ -17242,8 +17261,8 @@ msgid ""
 "Tax current account used as a counterpart to the Tax Closing Entry when in "
 "favor of the company."
 msgstr ""
-"회사에서 요청할 경우 세금 결산 항목에 대응시켜서 사용하는 세금 당좌 계정입니"
-"다."
+"회사에서 요청할 경우 세금 결산 항목에 대응시켜서 사용하는 세금 당좌 "
+"계정입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
@@ -17325,8 +17344,8 @@ msgid ""
 "Taxes exigible on payment and on invoice cannot be mixed on the same journal "
 "item if they share some tag."
 msgstr ""
-"같은 태그를 사용하는 경우 결제 항목이나 청구서에 과세된 세금은 동일한 전표에"
-"서 혼용하여 사용할 수 없습니다."
+"같은 태그를 사용하는 경우 결제 항목이나 청구서에 과세된 세금은 동일한 "
+"전표에서 혼용하여 사용할 수 없습니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -17381,8 +17400,8 @@ msgid ""
 "Technical field used to display a warning if the IBAN country is different "
 "than the holder country."
 msgstr ""
-"기재한 국가가 IBAN 국가와 다른 경우 경고를 표시하는 데 사용되는 기술적인 필드"
-"입니다."
+"기재한 국가가 IBAN 국가와 다른 경우 경고를 표시하는 데 사용되는 기술적인 "
+"필드입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__has_money_transfer_warning
@@ -17390,8 +17409,7 @@ msgstr ""
 msgid ""
 "Technical field used to display a warning if the account is a transfer "
 "service account."
-msgstr ""
-"이체 서비스용 계정인 경우 경표를 표시하는데 사용되는 기술적인 필드입니다."
+msgstr "이체 서비스용 계정인 경우 경표를 표시하는데 사용되는 기술적인 필드입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence_override_regex
@@ -17405,14 +17423,14 @@ msgid ""
 "e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
 "P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 msgstr ""
-"보통 시스템에서 인식되지 않는 복잡한 시퀀스를 구성하여 실행하는데 사용되는 기"
-"술 분야입니다.\n"
+"보통 시스템에서 인식되지 않는 복잡한 시퀀스를 구성하여 실행하는데 사용되는 "
+"기술 분야입니다.\n"
 "다음 캡처 그룹 모두가 적용될 수 있는 정규식입니다: prefix1, year, prefix2, "
 "month, prefix3, seq, suffix.\n"
 "접두사 (prefix)* 그룹이란 연도나 월 및 숫자가 커지는 연번 (seq) 사이에 넣는 "
 "구분 기호를 말합니다.\n"
-"예: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"예: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_technology
@@ -17515,8 +17533,8 @@ msgid ""
 "To maintain date-based sequences, select entries and use the resequence "
 "option from the actions menu, available in developer mode."
 msgstr ""
-"입력하신 %(date_field)s의 (%(date)s)가 기존 시퀀스 번호 (%(sequence)s)와 일치"
-"하지 않습니다. 계속 하려면 시퀀스 번호를 제거하세요\n"
+"입력하신 %(date_field)s의 (%(date)s)가 기존 시퀀스 번호 (%(sequence)s)와 "
+"일치하지 않습니다. 계속 하려면 시퀀스 번호를 제거하세요\n"
 "날짜 기반 시퀀스를 유지하려면 항목을 선택하고 개발자 모드에서 사용할 수 있는 "
 "작업 메뉴에서 시퀀스 옵션을 사용합니다."
 
@@ -17527,8 +17545,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
-"%s 차트 템플릿을 직접 선택할 수 없습니다. 대신 해당 국가에 맞는 차트 템플릿"
-"을 선택하세요."
+"%s 차트 템플릿을 직접 선택할 수 없습니다. 대신 해당 국가에 맞는 차트 "
+"템플릿을 선택하세요."
 
 #. module: account
 #. odoo-python
@@ -17548,14 +17566,15 @@ msgid ""
 "The Availability is set to 'Country Matches' but the field Country is not "
 "set."
 msgstr ""
-"사용 가능 여부가 '국가 일치' 로 설정되어 있으나 국가 필드에 설정이 되지 않았"
-"습니다."
+"사용 가능 여부가 '국가 일치' 로 설정되어 있으나 국가 필드에 설정이 되지 "
+"않았습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "The Bill/Refund date is required to validate this document."
-msgstr ""
+msgstr "이 문서를 승인하려면 청구/환불 날짜를 지정해야 합니다."
 
 #. module: account
 #. odoo-python
@@ -17609,8 +17628,7 @@ msgstr ""
 msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
-msgstr ""
-"전표입력 순서가 현재의 형식과 맞지 않습니다. 회계 담당자만 변경이 가능합니다."
+msgstr "전표입력 순서가 현재의 형식과 맞지 않습니다. 회계 담당자만 변경이 가능합니다."
 
 #. module: account
 #. odoo-python
@@ -17618,18 +17636,7 @@ msgstr ""
 msgid ""
 "The Payment Term must have at least one percent line and the sum of the "
 "percent must be 100%."
-msgstr ""
-"지급 조건에는 백분율 항목이 있어야 하며 백분율 합계는 100% 이어야 합니다."
-
-#. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"세무 신고용 등록 번호입니다. 여기에 있는 값을 국가 형식을 기준으로 승인합니"
-"다. 협력사가 과세 대상이 아닌 경우에는 '/' 를 입력하세요."
+msgstr "지급 조건에는 백분율 항목이 있어야 하며 백분율 합계는 100% 이어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -17660,8 +17667,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"전표 입력 시 선택한 계정은 보조 통화를 제공합니다. 계정에서 보조 통화를 제거"
-"해야 합니다."
+"전표 입력 시 선택한 계정은 보조 통화를 제공합니다. 계정에서 보조 통화를 "
+"제거해야 합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
@@ -17692,9 +17699,9 @@ msgid ""
 "same as the one from the company, this amount must strictly be equal to the "
 "balance."
 msgstr ""
-"보조 통화로 표시된 금액은 계정에서 인출 처리할 경우 양수여야 하고 입금 처리"
-"될 경우에는 음수여야 합니다. 해당 통화가 회사에서 사용하는 통화와 동일한 경우"
-"에, 이 금액은 잔액과 정확히 일치해야 합니다."
+"보조 통화로 표시된 금액은 계정에서 인출 처리할 경우 양수여야 하고 입금 "
+"처리될 경우에는 음수여야 합니다. 해당 통화가 회사에서 사용하는 통화와 동일한 "
+"경우에, 이 금액은 잔액과 정확히 일치해야 합니다."
 
 #. module: account
 #. odoo-python
@@ -17704,8 +17711,8 @@ msgid ""
 "data, the expected amount is %(mean)s (± %(wiggle)s).\n"
 "Please verify if this amount is accurate."
 msgstr ""
-"%(partner_name)s의 금액이 비정상적인 것 같습니다. 기록된 데이터에 따르면 예"
-"상 금액은 %(mean)s (± %(wiggle)s)입니다.\n"
+"%(partner_name)s의 금액이 비정상적인 것 같습니다. 기록된 데이터에 따르면 "
+"예상 금액은 %(mean)s (± %(wiggle)s)입니다.\n"
 "금액이 올바른지 다시 한번 확인해 주세요."
 
 #. module: account
@@ -17751,9 +17758,9 @@ msgid ""
 "(expected_date)s (every %(mean)s (± %(wiggle)s) days).\n"
 "Please verify if this date is accurate."
 msgstr ""
-"%(partner_name)s에 대한 청구 빈도가 비정상적으로 보입니다. 기록 데이터에 따르"
-"면 다음 청구 예상 날짜는%(expected_date)s일 (매 %(mean)s (± %(wiggle)s) 일) "
-"이전이 아니어야 합니다.\n"
+"%(partner_name)s에 대한 청구 빈도가 비정상적으로 보입니다. 기록 데이터에 "
+"따르면 다음 청구 예상 날짜는%(expected_date)s일 (매 %(mean)s (± %(wiggle)s) "
+"일) 이전이 아니어야 합니다.\n"
 "이 날짜가 올바른지 확인해 주세요."
 
 #. module: account
@@ -17762,8 +17769,7 @@ msgstr ""
 msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
-msgstr ""
-"이 항목의 세금에 대해서 내역 조정 시 생성된 현금주의 기준의 항목입니다."
+msgstr "이 항목의 세금에 대해서 내역 조정 시 생성된 현금주의 기준의 항목입니다."
 
 #. module: account
 #. odoo-python
@@ -17779,9 +17785,9 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"본 표준 판매 이용약관 이전에 작성되었다 하더라도, 고객의 자체 표준 약관은 명"
-"시적으로 철회하기로 합니다. 내용이 효력을 가지려면, 모든 수정 사항은 사전에 "
-"명확히 서면 동의가 있어야 합니다."
+"본 표준 판매 이용약관 이전에 작성되었다 하더라도, 고객의 자체 표준 약관은 "
+"명시적으로 철회하기로 합니다. 내용이 효력을 가지려면, 모든 수정 사항은 "
+"사전에 명확히 서면 동의가 있어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -17900,8 +17906,8 @@ msgid ""
 "The date the Global Lock Date is set to by this exception. If the lock date "
 "is not changed it is set to the maximal date."
 msgstr ""
-"글로벌 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 않"
-"으면 최대 날짜로 설정됩니다."
+"글로벌 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 "
+"않으면 최대 날짜로 설정됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__purchase_lock_date
@@ -17909,8 +17915,8 @@ msgid ""
 "The date the Purchase Lock Date is set to by this exception. If the lock "
 "date is not changed it is set to the maximal date."
 msgstr ""
-"구매 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 않으"
-"면 최대 날짜로 설정됩니다."
+"구매 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 "
+"않으면 최대 날짜로 설정됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__sale_lock_date
@@ -17918,8 +17924,8 @@ msgid ""
 "The date the Sale Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
-"판매 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 않으"
-"면 최대 날짜로 설정됩니다."
+"판매 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 "
+"않으면 최대 날짜로 설정됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_lock_exception__tax_lock_date
@@ -17927,8 +17933,8 @@ msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
-"세금 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 않으"
-"면 최대 날짜로 설정됩니다."
+"세금 잠금 날짜에 대해 이 예외로 설정된 날짜입니다. 잠금 날짜가 변경되지 "
+"않으면 최대 날짜로 설정됩니다."
 
 #. module: account
 #. odoo-python
@@ -17997,9 +18003,9 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"경비는 공급업체 청구서 승인이 완료되면 처리됩니다. 단, 재고 평가 시 영미식 회"
-"계로 영구재고법을 적용하는 경우에는 고객 청구서를 승인하는 시점에 비용 을 인"
-"식합니다(매출원가 계정)."
+"경비는 공급업체 청구서 승인이 완료되면 처리됩니다. 단, 재고 평가 시 영미식 "
+"회계로 영구재고법을 적용하는 경우에는 고객 청구서를 승인하는 시점에 비용 을 "
+"인식합니다(매출원가 계정)."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_expression_line_label_uniq
@@ -18013,8 +18019,8 @@ msgid ""
 "The field 'Vendor' is required, please complete it to validate the Vendor "
 "Bill."
 msgstr ""
-"'공급업체' 필드는 필수 항목입니다. 공급업체 청구서를 승인하려면 업체를 입력하"
-"세요."
+"'공급업체' 필드는 필수 항목입니다. 공급업체 청구서를 승인하려면 업체를 "
+"입력하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_position_id
@@ -18069,8 +18075,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account '%"
 "(account)s' must be the same."
 msgstr ""
-"'%(journal)s' 전표 및 '%(account)s' 계정 상에서 설정한 통화는 동일해야 합니"
-"다."
+"'%(journal)s' 전표 및 '%(account)s' 계정 상에서 설정한 통화는 동일해야 "
+"합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -18080,8 +18086,8 @@ msgid ""
 "chain for subsequent parts."
 msgstr ""
 "해시 체인은 규정을 준수합니다 : \n"
-"                                              후속 부분에 대한 해시 체인을 끊"
-"지 않고 데이터를 변경할 수 없습니다."
+"                                              후속 부분에 대한 해시 체인을 "
+"끊지 않고 데이터를 변경할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -18105,8 +18111,8 @@ msgid ""
 "item involving the bank/cash account."
 msgstr ""
 "%s 전표가 해당 명세서 내역 대비 유효하지 않습니다.\n"
-"동일하게 하려면, 전표 입력 시 은행/현금 계좌 항목은 반드시 하나만 있어야 합니"
-"다."
+"동일하게 하려면, 전표 입력 시 은행/현금 계좌 항목은 반드시 하나만 있어야 "
+"합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -18161,8 +18167,9 @@ msgid ""
 "Please change the journal entry date or the following lock dates to proceed: "
 "%(lock_date_info)s."
 msgstr ""
-"이미 발행된 세금 계산서에 영향을 줄 수 있으므로 작업이 거부되었습니다. 계속하"
-"려면 분개 입력 날짜 또는 다음 잠금 날짜를 변경하세요: %(lock_date_info)s."
+"이미 발행된 세금 계산서에 영향을 줄 수 있으므로 작업이 거부되었습니다. "
+"계속하려면 분개 입력 날짜 또는 다음 잠금 날짜를 변경하세요: %(lock_date_info)"
+"s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
@@ -18175,8 +18182,8 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
-"추가 선택 수량이 여기에 표시됩니다 (예: 판매된 품목 수량). 수량 표시가 법적"
-"인 필수 사항은 아니나, 일부 보고서에서 매우 유용하게 사용합니다."
+"추가 선택 수량이 여기에 표시됩니다 (예: 판매된 품목 수량). 수량 표시가 "
+"법적인 필수 사항은 아니나, 일부 보고서에서 매우 유용하게 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__sequence
@@ -18185,9 +18192,9 @@ msgid ""
 "to work properly, invoice distribution lines should be arranged in the same "
 "order as the credit note distribution lines they correspond to."
 msgstr ""
-"분배 내역을 표시하여 대응시키는 순서입니다. 환불 작업이 제대로 실행되려면 청"
-"구서 분배 내역이 해당되는 신용 전표의 분배 내역과 동일한 순서로 정렬되어 있어"
-"야 합니다."
+"분배 내역을 표시하여 대응시키는 순서입니다. 환불 작업이 제대로 실행되려면 "
+"청구서 분배 내역이 해당되는 신용 전표의 분배 내역과 동일한 순서로 정렬되어 "
+"있어야 합니다."
 
 #. module: account
 #. odoo-python
@@ -18251,8 +18258,8 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"조정 모델은 명세서 행 라벨, 거래 세부 정보 또는 메모가 다음과 일치하는 경우"
-"에 한해서만 적용됩니다:\n"
+"조정 모델은 명세서 행 라벨, 거래 세부 정보 또는 메모가 다음과 일치하는 "
+"경우에 한해서만 적용됩니다:\n"
 "        * 포함: 명세서 행에 반드시 해당 문자열이 포함되어야 합니다(대소문자 "
 "구분 없음)\n"
 "        * 미포함: \"포함\"과 반대되는 경우\n"
@@ -18264,8 +18271,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
-"지정 금액보다 낮거나 높은 경우 혹은 특정 금액 범위에 있는 경우에만 조정 모델"
-"을 적용합니다."
+"지정 금액보다 낮거나 높은 경우 혹은 특정 금액 범위에 있는 경우에만 조정 "
+"모델을 적용합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -18312,8 +18319,8 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
-"해당 통화 (회사가 사용하는 통화가 아닐 수 있음)로 표시된 전표 상의 잔존가액입"
-"니다."
+"해당 통화 (회사가 사용하는 통화가 아닐 수 있음)로 표시된 전표 상의 "
+"잔존가액입니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual
@@ -18325,7 +18332,7 @@ msgstr "회사 통화로 표시된 전표 상의 잔존가액입니다."
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr "현재 잔액 (%s)이 지정되어 있는 기말 잔액과 일치하지 않습니다."
+msgstr "누적 잔액(%s)이 지정되어 있는 기말 잔액과 일치하지 않습니다."
 
 #. module: account
 #. odoo-python
@@ -18358,8 +18365,8 @@ msgid ""
 "entry transferred to it will be converted into this currency, causing\n"
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
-"선택한 대상 계정은 특정 통화를 사용하도록 설정되어 있습니다 이 계정으로 이동"
-"되는 항목은 모두 해당 통화로 변환되며,\n"
+"선택한 대상 계정은 특정 통화를 사용하도록 설정되어 있습니다 이 계정으로 "
+"이동되는 항목은 모두 해당 통화로 변환되며,\n"
 "                기존에 사전 입력된 외환액은 모두 삭제됩니다."
 
 #. module: account
@@ -18379,8 +18386,8 @@ msgid ""
 "The sending of invoices is not set up properly, make sure the report used is "
 "set for invoices."
 msgstr ""
-"청구서 발송이 제대로 설정되어 있지 않습니다. 사용 중인 보고서가 청구서로 설정"
-"되어 있는지 확인해 주세요."
+"청구서 발송이 제대로 설정되어 있지 않습니다. 사용 중인 보고서가 청구서로 "
+"설정되어 있는지 확인해 주세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -18403,8 +18410,8 @@ msgid ""
 "instance:\n"
 "^(?P<prefix1>.*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 msgstr ""
-"순서를 표시하는 정규식에는 최소한 순서 그룹을 만드는 키가 포함되어 있어야 합"
-"니다. 예:\n"
+"순서를 표시하는 정규식에는 최소한 순서 그룹을 만드는 키가 포함되어 있어야 "
+"합니다. 예:\n"
 "^(?P<prefix1>*?)(?P<seq>\\d*)(?P<suffix>\\D*?)$"
 
 #. module: account
@@ -18478,8 +18485,8 @@ msgid ""
 "The sequences of this journal are different for Invoices and Refunds but you "
 "selected some of both types."
 msgstr ""
-"이 전표는 청구서와 환불 건에 대해 순서가 다르지만 현재 양쪽 유형이 모두 선택"
-"되어 있습니다."
+"이 전표는 청구서와 환불 건에 대해 순서가 다르지만 현재 양쪽 유형이 모두 "
+"선택되어 있습니다."
 
 #. module: account
 #. odoo-python
@@ -18488,8 +18495,8 @@ msgid ""
 "The sequences of this journal are different for Payments and non-Payments "
 "but you selected some of both types."
 msgstr ""
-"이 전표는 결제와 비결제 건에 대해 순서가 다르지만 현재 양쪽 유형이 모두 선택"
-"되어 있습니다."
+"이 전표는 결제와 비결제 건에 대해 순서가 다르지만 현재 양쪽 유형이 모두 "
+"선택되어 있습니다."
 
 #. module: account
 #. odoo-python
@@ -18498,8 +18505,8 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
-"기초 잔액이 이전 명세서의 기말 잔액과 일치하지 않거나 이전 명세서가 누락되었"
-"습니다."
+"기초 잔액이 이전 명세서의 기말 잔액과 일치하지 않거나 이전 명세서가 "
+"누락되었습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -18517,8 +18524,8 @@ msgstr "이 재정 위치에 매핑된 지역의 회사 세금 ID입니다."
 #: code:addons/account/models/account_tax.py:0
 msgid "The tax group must have the same country_id as the tax using it."
 msgstr ""
-"세금 그룹의 국가 코드 (country_id)는 세금에서 사용하는 코드와 동일해야 합니"
-"다."
+"세금 그룹의 국가 코드 (country_id)는 세금에서 사용하는 코드와 동일해야 "
+"합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -18532,8 +18539,8 @@ msgid ""
 "The type of the journal's default credit/debit account shouldn't be "
 "'receivable' or 'payable'."
 msgstr ""
-"'미수금' 또는 '미지급금'은 전표 대변/차변 계정 유형의 기본값이 될 수 없습니"
-"다."
+"'미수금' 또는 '미지급금'은 전표 대변/차변 계정 유형의 기본값이 될 수 "
+"없습니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -18541,8 +18548,8 @@ msgid ""
 "The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
-"반올림 조건을 변경할 경우 res.currency 양식 화면에서 제대로 나오지 않을 위험"
-"이 있음을 경고 알림으로 표시합니다."
+"반올림 조건을 변경할 경우 res.currency 양식 화면에서 제대로 나오지 않을 "
+"위험이 있음을 경고 알림으로 표시합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -18582,8 +18589,7 @@ msgstr "선택한 날짜 이전의 초안 항목이 아직 있습니다."
 msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
-msgstr ""
-"잠그려는 기간에 아직 임시저장된 항목이 있습니다. 게시하거나 삭제해야 합니다."
+msgstr "잠그려는 기간에 아직 임시저장된 항목이 있습니다. 게시하거나 삭제해야 합니다."
 
 #. module: account
 #. odoo-python
@@ -18603,8 +18609,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
-"잠금 기간에 아직 조정되지 않은 은행거래명세서 내역이 있습니다. 조정하거나 삭"
-"제해야 합니다."
+"잠금 기간에 아직 조정되지 않은 은행거래명세서 내역이 있습니다. 조정하거나 "
+"삭제해야 합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -18675,8 +18681,8 @@ msgid ""
 "registration is necessary. You've got your finances under control like a "
 "boss!"
 msgstr ""
-"선택한 전표 항목에 대해 결제해야 하는 잔액이 없으므로 결제 등록이 필요하지 않"
-"습니다. 앞으로도 더욱 철저하게 재무를 관리해 보세요!"
+"선택한 전표 항목에 대해 결제해야 하는 잔액이 없으므로 결제 등록이 필요하지 "
+"않습니다. 앞으로도 더욱 철저하게 재무를 관리해 보세요!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -18746,8 +18752,8 @@ msgid ""
 "reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"이를 통해 지급을 단일 배치로 그룹화하고 조정 프로세스를 간소화할 수 있습니"
-"다.\n"
+"이를 통해 지급을 단일 배치로 그룹화하고 조정 프로세스를 간소화할 수 "
+"있습니다.\n"
 "-account__batch_payment 모듈을 설치합니다."
 
 #. module: account
@@ -18756,8 +18762,8 @@ msgid ""
 "This analytic distribution will apply to all financial accounts sharing the "
 "prefix specified."
 msgstr ""
-"이 분석 분포는 지정된 접두사를 공유하고 있는 모든 재무 관련 계정에 적용됩니"
-"다."
+"이 분석 분포는 지정된 접두사를 공유하고 있는 모든 재무 관련 계정에 "
+"적용됩니다."
 
 #. module: account
 #. odoo-python
@@ -18777,8 +18783,7 @@ msgstr "전표 항목에만 사용할 수 있습니다."
 msgid ""
 "This document is protected by a hash. Therefore, you cannot edit the "
 "following fields: %s."
-msgstr ""
-"이 문서는 해시로 보호됩니다. 따라서 다음 필드를 수정할 수 없습니다: %s."
+msgstr "이 문서는 해시로 보호됩니다. 따라서 다음 필드를 수정할 수 없습니다: %s."
 
 #. module: account
 #. odoo-python
@@ -18794,9 +18799,9 @@ msgid ""
 "country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
-"이 항목에는 재정 기준 국가에 부합하지 않는 세금이 하나 이상 포함되어 있습니"
-"다. 설정 메뉴의 재정 기준 국가 항목과, 환경 설정 메뉴의 세금 신고 국가 항목"
-"을 확인하세요."
+"이 항목에는 재정 기준 국가에 부합하지 않는 세금이 하나 이상 포함되어 "
+"있습니다. 설정 메뉴의 재정 기준 국가 항목과, 환경 설정 메뉴의 세금 신고 국가 "
+"항목을 확인하세요."
 
 #. module: account
 #. odoo-python
@@ -18838,8 +18843,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"미지급 및 미수금 전표에 사용되는 필드입니다. 결제 마감일로 지정할 수도 있습니"
-"다."
+"미지급 및 미수금 전표에 사용되는 필드입니다. 결제 마감일로 지정할 수도 "
+"있습니다."
 
 #. module: account
 #. odoo-python
@@ -18863,8 +18868,8 @@ msgid ""
 "This is the default credit limit that will be used on partners that do not "
 "have a specific limit on them."
 msgstr ""
-"특정 한도를 설정해놓지 않은 협력사에 대해서 사용할 수 있는 기본 신용 한도입니"
-"다."
+"특정 한도를 설정해놓지 않은 협력사에 대해서 사용할 수 있는 기본 신용 "
+"한도입니다."
 
 #. module: account
 #. odoo-python
@@ -18970,8 +18975,9 @@ msgstr "해당일을 포함하여 선택한 날짜까지 반복 발행됩니다,
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "이 설정은 전표 항목이 생성될 경우 잠겨집니다."
 
 #. module: account
 #. odoo-python
@@ -19007,15 +19013,13 @@ msgstr "해당 상태는 세금 포지션에서 무시됩니다."
 #: model:ir.model.fields,help:account.field_account_merge_wizard__is_group_by_name
 msgid ""
 "Tick this checkbox if you want accounts to be grouped by name for merging."
-msgstr ""
-"병합할 수 있도록 계정을 이름별 그룹으로 만드려면 이 확인란을 선택하세요."
+msgstr "병합할 수 있도록 계정을 이름별 그룹으로 만드려면 이 확인란을 선택하세요."
 
 #. module: account
 #: model:digest.tip,name:account.digest_tip_account_0
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
-msgstr ""
-"팁: 청구서를 일일이 인쇄하고 봉투에 넣어 우편으로 보낼 필요가 없습니다."
+msgstr "팁: 청구서를 일일이 인쇄하고 봉투에 넣어 우편으로 보낼 필요가 없습니다."
 
 #. module: account
 #: model:digest.tip,name:account.digest_tip_account_1
@@ -19066,8 +19070,8 @@ msgid ""
 "they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"제한적으로 감사를 계속할 수 있도록, 발행이 완료된 전표 항목은 삭제할 수 없습"
-"니다.\n"
+"제한적으로 감사를 계속할 수 있도록, 발행이 완료된 전표 항목은 삭제할 수 "
+"없습니다.\n"
 "대신 전표 항목을 취소하는 것은 가능합니다."
 
 #. module: account
@@ -19083,8 +19087,8 @@ msgid ""
 "manually validated. You should go on the partner bank account of %(partner)s "
 "in order to validate it."
 msgstr ""
-"%(method_name)s 방식으로 결제 기록을 하려면 수동으로 수취 은행 계좌를 승인해"
-"야 합니다. 승인하려면 %(partner)s 협력사의 거래 은행 계좌로 이동하세요."
+"%(method_name)s 방식으로 결제 기록을 하려면 수동으로 수취 은행 계좌를 "
+"승인해야 합니다. 승인하려면 %(partner)s 협력사의 거래 은행 계좌로 이동하세요."
 
 #. module: account
 #. odoo-python
@@ -19094,8 +19098,8 @@ msgid ""
 "be manually validated. You should go on the partner bank account in order to "
 "validate it."
 msgstr ""
-"%(payment_method)s 결제 내역을 기록하려면 수취 은행 계좌를 수기로 승인해야 합"
-"니다. 승인하려면 협력사 은행 계좌 메뉴로 이동하십시오."
+"%(payment_method)s 결제 내역을 기록하려면 수취 은행 계좌를 수기로 승인해야 "
+"합니다. 승인하려면 협력사 은행 계좌 메뉴로 이동하십시오."
 
 #. module: account
 #. odoo-python
@@ -19364,7 +19368,7 @@ msgstr "이동 후: %s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "번역된 제품명"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -19389,9 +19393,9 @@ msgid ""
 "limit.                                      Set a value greater than 0.0 to "
 "activate a credit limit check"
 msgstr ""
-"협력사의 미수금 총액 한도가 초과된 경우, 청구서나 판매주문서를 생성할 때 주"
-"의 알림이 표시됩니다.                                           신용 한도 확"
-"인 기능을 활성화하려면 0.0보다 큰 값을 설정하세요."
+"협력사의 미수금 총액 한도가 초과된 경우, 청구서나 판매주문서를 생성할 때 "
+"주의 알림이 표시됩니다.                                           신용 한도 "
+"확인 기능을 활성화하려면 0.0보다 큰 값을 설정하세요."
 
 #. module: account
 #. odoo-python
@@ -19430,8 +19434,8 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
-"이 청구서를 인쇄할 경우 결제용으로 생성되는 QR 코드 유형입니다. 공란으로 두"
-"면 사용 가능한 방법 중 가장 첫번째 방식이 적용됩니다."
+"이 청구서를 인쇄할 경우 결제용으로 생성되는 QR 코드 유형입니다. 공란으로 "
+"두면 사용 가능한 방법 중 가장 첫번째 방식이 적용됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__activity_exception_decoration
@@ -19462,22 +19466,19 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
-"거래 내역 중 누락된 항목이 있어서 명세서를 생성할 수 없습니다. 계속하려면 거"
-"래 순서를 다시 조정하십시오."
+"거래 내역 중 누락된 항목이 있어서 명세서를 생성할 수 없습니다. 계속하려면 "
+"거래 순서를 다시 조정하십시오."
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
 msgstr "아직 지정되지 않음"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#: model:account.account,name:account.1_unaffected_earnings_account
-#: model:account.account,name:account.2_unaffected_earnings_account
-msgid "Undistributed Profits/Losses"
-msgstr "미분배 손익"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
@@ -19524,7 +19525,7 @@ msgstr "단가"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Units"
-msgstr ""
+msgstr "단위"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -19681,6 +19682,12 @@ msgid "Update Terms & Conditions"
 msgstr "이용약관 업데이트"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr "앱 업데이트"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Update exchange rates automatically"
 msgstr "환율을 자동으로 업데이트합니다."
@@ -19779,9 +19786,9 @@ msgid ""
 "this feature from the list view to post hundreds of invoices in bulk."
 msgstr ""
 "청구서를 자동으로 발송하려면 '<i>우편 발송</i>' 메뉴를 선택하세요. 현지 우표 "
-"비용만으로 저희가 모든 수작업을 대신해 드립니다. 청구서를 해당 국가에 적합하"
-"도록 인쇄하고 봉투에 넣어서 일반 우편으로 발송합니다. 목록 보기에서 이 기능으"
-"로 수백 건의 청구서를 대량 발행해 보세요."
+"비용만으로 저희가 모든 수작업을 대신해 드립니다. 청구서를 해당 국가에 "
+"적합하도록 인쇄하고 봉투에 넣어서 일반 우편으로 발송합니다. 목록 보기에서 이 "
+"기능으로 수백 건의 청구서를 대량 발행해 보세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__quick_edit_total_amount
@@ -19792,8 +19799,8 @@ msgid ""
 "it."
 msgstr ""
 "이 필드를 사용하여 청구서 상의 총 금액을 인코딩합니다.\n"
-"일치하는 기본 값을 이용하여 Odoo에서는 자동으로 청구서 내역을 하나로 생성합니"
-"다."
+"일치하는 기본 값을 이용하여 Odoo에서는 자동으로 청구서 내역을 하나로 "
+"생성합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__used
@@ -19808,10 +19815,10 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"보고서에 사용하여 회계연도 뿐 아니라 처음 개시 시점에서부터 전표 항목을 고려"
-"해야 하는지 여부를 알 수 있습니다. 새로운 회계 연도를 시작할 때마다 0으로 재"
-"설정되어야 하는 계정 유형 (비용이나 수익 등)에는 이 옵션이 설정되지 않아야 합"
-"니다."
+"보고서에 사용하여 회계연도 뿐 아니라 처음 개시 시점에서부터 전표 항목을 "
+"고려해야 하는지 여부를 알 수 있습니다. 새로운 회계 연도를 시작할 때마다 "
+"0으로 재설정되어야 하는 계정 유형 (비용이나 수익 등)에는 이 옵션이 설정되지 "
+"않아야 합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -19824,8 +19831,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"시스템에서 계산한 값과 금전 등록기의 마감 잔액에 차이가 있을 경우 손실을 기록"
-"하는 데 사용합니다."
+"시스템에서 계산한 값과 금전 등록기의 마감 잔액에 차이가 있을 경우 손실을 "
+"기록하는 데 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
@@ -19833,8 +19840,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"시스템에서 계산한 값과 금전 등록기의 마감 잔액에 차이가 있을 경우 이익을 기록"
-"하는 데 사용합니다."
+"시스템에서 계산한 값과 금전 등록기의 마감 잔액에 차이가 있을 경우 이익을 "
+"기록하는 데 사용합니다."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__user_id
@@ -19979,6 +19986,23 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"대손 처리 항목에 대한 금액 설정\n"
+"    * 비율: 잔액 대비 비율로 설정하며, 0에서 100 사이의 값을 입력합니다.\n"
+"    * 고정값: 대손 처리 금액을 고정값으로 설정합니다. 값이 음수일 경우 차변, "
+"양수일 경우 대변에 반영됩니다.\n"
+"    * 라벨 추출: 정규식 구분 기호를 입력할 필요가 없으며, 정규식만 입력하면 "
+"됩니다. 예를 들어 아래 문자열에서 금액을 추출하려는 경우,\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"You could enter\n"
+"BRT: ([\\d,]+)\n"
+"    라벨이 \"01870912 0009065 00115\"이고 추출하려는 금액을 소수점 형식으로\n"
+"    변환하려면(예: 90.65), 캡처 그룹 정규식을 사용하면 됩니다. 예시는 다음과 "
+"같습니다:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    이 경우:\n"
+"    • 첫 번째 그룹은 정수 부분이 추출됩니다.\n"
+"    • 두 번째 그룹은 소수 부분(마지막 두 자리 숫자)이 추출됩니다.\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -20226,8 +20250,8 @@ msgid ""
 "When an internal transfer is posted, a paired payment is created. They are "
 "cross referenced through this field"
 msgstr ""
-"내부 이체 전표를 발행하면, 연관된 결제 항목이 생성됩니다. 이 필드를 통해 해"
-"당 항목들이 상호 참조됩니다."
+"내부 이체 전표를 발행하면, 연관된 결제 항목이 생성됩니다. 이 필드를 통해 "
+"해당 항목들이 상호 참조됩니다."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -20365,8 +20389,8 @@ msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
 msgstr ""
-"참조 유형마다 다른 모델을 선택할 수 있습니다. 기본 설정은 Odoo 참조로 되어 있"
-"습니다."
+"참조 유형마다 다른 모델을 선택할 수 있습니다. 기본 설정은 Odoo 참조로 되어 "
+"있습니다."
 
 #. module: account
 #. odoo-python
@@ -20449,6 +20473,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -20478,9 +20507,9 @@ msgid ""
 "account set either on the company or the %(payment_method)s payment method "
 "in the %(journal)s journal."
 msgstr ""
-"새로운 결제 항목을 생성할 수 없습니다. %(payment_method)s 결제 방법에 회사 또"
-"는 %(journal)s 전표가 미결제 상태인 미지급금/미수금 계정이 설정되지 않았습니"
-"다."
+"새로운 결제 항목을 생성할 수 없습니다. %(payment_method)s 결제 방법에 회사 "
+"또는 %(journal)s 전표가 미결제 상태인 미지급금/미수금 계정이 설정되지 "
+"않았습니다."
 
 #. module: account
 #. odoo-python
@@ -20488,8 +20517,7 @@ msgstr ""
 msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
-msgstr ""
-"%s 전표에 가계정을 설정하지 않으면 새로운 명세서 내역을 생성할 수 없습니다."
+msgstr "%s 전표에 가계정을 설정하지 않으면 새로운 명세서 내역을 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -20514,8 +20542,8 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"발행된 전표 항목은 삭제할 수 없습니다. 회계 기록 관련 업무 시 주의를 요합니"
-"다. 삭제하기 전에 전표 입력 항목을 초안으로 초기화하세요."
+"발행된 전표 항목은 삭제할 수 없습니다. 회계 기록 관련 업무 시 주의를 "
+"요합니다. 삭제하기 전에 전표 입력 항목을 초안으로 초기화하세요."
 
 #. module: account
 #. odoo-python
@@ -20536,8 +20564,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%"
 "(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
-"두 가지 결제 방법의 유형이 같고 (%(payment_type)s) 이름도 같은 경우 (%"
-"(name)s), 하나의 전표에 항목으로 표시할 수 없습니다."
+"두 가지 결제 방법의 유형이 같고 (%(payment_type)s) 이름도 같은 경우 (%(name)"
+"s), 하나의 전표에 항목으로 표시할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -20578,8 +20606,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"해당 전표 항목은 초안 상태로 재설정할 수 없습니다. 대신 취소를 요청해야 합니"
-"다."
+"해당 전표 항목은 초안 상태로 재설정할 수 없습니다. 대신 취소를 요청해야 "
+"합니다."
 
 #. module: account
 #. odoo-python
@@ -20588,8 +20616,8 @@ msgid ""
 "You can't unlink this company from this account since there are some journal "
 "items linked to it."
 msgstr ""
-"계정에 연결된 전표 항목이 있으므로 이 회사와 계정 간의 연결을 해제할 수 없습"
-"니다."
+"계정에 연결된 전표 항목이 있으므로 이 회사와 계정 간의 연결을 해제할 수 "
+"없습니다."
 
 #. module: account
 #. odoo-python
@@ -20620,8 +20648,8 @@ msgid ""
 "You cannot change the type of an account set as Bank Account on a journal to "
 "Receivable or Payable."
 msgstr ""
-"전표의 계좌 유형이 은행 계좌인 경우에는 미수금이나 미지급금으로 변경할 수 없"
-"습니다."
+"전표의 계좌 유형이 은행 계좌인 경우에는 미수금이나 미지급금으로 변경할 수 "
+"없습니다."
 
 #. module: account
 #. odoo-python
@@ -20629,8 +20657,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a country outside of the selected "
 "country group."
-msgstr ""
-"선택한 국가 그룹 외부에 있는 국가에는 재정 포지션을 생성할 수 없습니다."
+msgstr "선택한 국가 그룹 외부에 있는 국가에는 재정 포지션을 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -20639,8 +20666,8 @@ msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
-"주를 설정하지 않으면 해외 VAT 번호를 이용하여 회계 기준 국가 내에서 재정 위치"
-"를 생성할 수 없습니다."
+"주를 설정하지 않으면 해외 VAT 번호를 이용하여 회계 기준 국가 내에서 재정 "
+"위치를 생성할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -20665,8 +20692,8 @@ msgid ""
 "You cannot delete a payable/receivable line as it would not be consistent "
 "with the payment terms"
 msgstr ""
-"미지급금이나 미수금 내역을 삭제할 수 없습니다. 삭제할 경우 지급 조건과 일치하"
-"지 않게 됩니다."
+"미지급금이나 미수금 내역을 삭제할 수 없습니다. 삭제할 경우 지급 조건과 "
+"일치하지 않게 됩니다."
 
 #. module: account
 #. odoo-python
@@ -20694,8 +20721,7 @@ msgstr ""
 msgid ""
 "You cannot delete this account tag (%s), it is used on the chart of account "
 "definition."
-msgstr ""
-"이 계정 태그(%s)는 계정과목표 정의에서 사용 중이므로 삭제할 수 없습니다."
+msgstr "이 계정 태그(%s)는 계정과목표 정의에서 사용 중이므로 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -20712,8 +20738,7 @@ msgstr ""
 #: code:addons/account/models/mail_template.py:0
 msgid ""
 "You cannot delete this mail template, it is used in the invoice sending flow."
-msgstr ""
-"이 메일 템플릿은 삭제할 수 없습니다. 청구서 발송 흐름에 사용되고 있습니다."
+msgstr "이 메일 템플릿은 삭제할 수 없습니다. 청구서 발송 흐름에 사용되고 있습니다."
 
 #. module: account
 #. odoo-python
@@ -20721,8 +20746,7 @@ msgstr ""
 msgid ""
 "You cannot delete this report (%s), it is used by the accounting PDF "
 "generation engine."
-msgstr ""
-"이 보고서 (%s)는 회계 PDF 생성 엔진에서 사용 중이므로 삭제할 수 없습니다."
+msgstr "이 보고서 (%s)는 회계 PDF 생성 엔진에서 사용 중이므로 삭제할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -20737,8 +20761,8 @@ msgid ""
 "You cannot disable this setting because some of your taxes are cash basis. "
 "Modify your taxes first before disabling this setting."
 msgstr ""
-"설정을 비활성화할 수 없습니다. 현금주의 기준인 세금이 있습니다. 설정을 비활성"
-"화하려면 먼저 세금을 수정하세요."
+"설정을 비활성화할 수 없습니다. 현금주의 기준인 세금이 있습니다. 설정을 "
+"비활성화하려면 먼저 세금을 수정하세요."
 
 #. module: account
 #. odoo-python
@@ -20748,8 +20772,8 @@ msgid ""
 "change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
-"전표 입력 조정이 완료된 후에는 수정할 수 없습니다. 법적으로 필수가 아닌 항목"
-"을 변경하거나 조정을 취소해야 합니다.\n"
+"전표 입력 조정이 완료된 후에는 수정할 수 없습니다. 법적으로 필수가 아닌 "
+"항목을 변경하거나 조정을 취소해야 합니다.\n"
 "전표 입력 (id): %(entry)s (%(id)s)"
 
 #. module: account
@@ -20778,8 +20802,8 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
-"이름을 제거하거나 “/”로 설정하지 않는 한 한 번 게시된 계정 이동의 전표는 수정"
-"할 수 없습니다. 그렇게 하면 순서에 공백이 생길 수 있습니다."
+"이름을 제거하거나 “/”로 설정하지 않는 한 한 번 게시된 계정 이동의 전표는 "
+"수정할 수 없습니다. 그렇게 하면 순서에 공백이 생길 수 있습니다."
 
 #. module: account
 #. odoo-python
@@ -20789,8 +20813,8 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
-"이름을 제거하거나 “/”로 설정하지 않는 한 시퀀스 번호가 할당된 계정 이동의 전"
-"표는 편집할 수 없습니다. 이렇게 하면 순서에 공백이 생길 수 있습니다."
+"이름을 제거하거나 “/”로 설정하지 않는 한 시퀀스 번호가 할당된 계정 이동의 "
+"전표는 편집할 수 없습니다. 이렇게 하면 순서에 공백이 생길 수 있습니다."
 
 #. module: account
 #. odoo-python
@@ -20798,8 +20822,7 @@ msgstr ""
 msgid ""
 "You cannot have a receivable/payable account that is not reconcilable. "
 "(account code: %s)"
-msgstr ""
-"미수금/미지급금 계정은 반드시 조정이 가능해야만 합니다 (계정 코드: %s)."
+msgstr "미수금/미지급금 계정은 반드시 조정이 가능해야만 합니다 (계정 코드: %s)."
 
 #. module: account
 #. odoo-python
@@ -20809,9 +20832,9 @@ msgid ""
 "already posted.                 If you are absolutely sure you want to "
 "modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"기초 작업 (%s)이 이미 발행된 후에는 \"openning_balance\" 파일을 가져올 수 없"
-"습니다.                 계정의 기초 잔액을 꼭 수정해야만 한다면, 작업을 미결 "
-"상태로 초기화하세요."
+"기초 작업 (%s)이 이미 발행된 후에는 \"openning_balance\" 파일을 가져올 수 "
+"없습니다.                 계정의 기초 잔액을 꼭 수정해야만 한다면, 작업을 "
+"미결 상태로 초기화하세요."
 
 #. module: account
 #. odoo-python
@@ -20848,8 +20871,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"전표 발행이 완료되면 관련된 세금을 수정할 수 없습니다. 수정하려면 전표를 미결"
-"로 초기화하세요."
+"전표 발행이 완료되면 관련된 세금을 수정할 수 없습니다. 수정하려면 전표를 "
+"미결로 초기화하세요."
 
 #. module: account
 #. odoo-python
@@ -20876,8 +20899,14 @@ msgstr ""
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
+msgstr "통화의 소수점 자릿수를 줄일 수 없습니다. 이미 회계 입력에 사용된 통화입니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
 msgstr ""
-"통화의 소수점 자릿수를 줄일 수 없습니다. 이미 회계 입력에 사용된 통화입니다."
 
 #. module: account
 #. odoo-python
@@ -20897,8 +20926,7 @@ msgstr "제한된 감사 추적 중 일부를 제거할 수 없습니다."
 msgid ""
 "You cannot remove parts of a restricted audit trail. Archive the record "
 "instead."
-msgstr ""
-"제한된 감사 추적 사항 중 일부를 제거할 수 없습니다. 대신 레코드를 보관하세요."
+msgstr "제한된 감사 추적 사항 중 일부를 제거할 수 없습니다. 대신 레코드를 보관하세요."
 
 #. module: account
 #. odoo-python
@@ -20907,8 +20935,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on a tax "
 "repartition line."
 msgstr ""
-"'%s' 계정을 삭제하거나 비활성화할 수 없습니다. 세금 분할 내역에 설정되어 있"
-"는 계정입니다."
+"'%s' 계정을 삭제하거나 비활성화할 수 없습니다. 세금 분할 내역에 설정되어 "
+"있는 계정입니다."
 
 #. module: account
 #. odoo-python
@@ -20917,8 +20945,8 @@ msgid ""
 "You cannot remove/deactivate the accounts \"%s\" which are set on the "
 "account mapping of a fiscal position."
 msgstr ""
-"'%s' 계정을 삭제하거나 비활성화할 수 없습니다. 재정 위치의 계정 매핑에 설정되"
-"어 있는 계정입니다."
+"'%s' 계정을 삭제하거나 비활성화할 수 없습니다. 재정 위치의 계정 매핑에 "
+"설정되어 있는 계정입니다."
 
 #. module: account
 #. odoo-python
@@ -20944,8 +20972,8 @@ msgstr "외환 차액에 대한 미결 전표로 초기화할 수 없습니다."
 msgid ""
 "You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."
 msgstr ""
-"잠금 날짜 예외를 취소할 수 없습니다. '어드바이저' 역할이 있는 사용자에게 문의"
-"하세요."
+"잠금 날짜 예외를 취소할 수 없습니다. '어드바이저' 역할이 있는 사용자에게 "
+"문의하세요."
 
 #. module: account
 #. odoo-python
@@ -20954,8 +20982,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"이 계정에 외화를 설정할 수 없습니다. 이미 다른 외화가 전표에 입력되어 있습니"
-"다."
+"이 계정에 외화를 설정할 수 없습니다. 이미 다른 외화가 전표에 입력되어 "
+"있습니다."
 
 #. module: account
 #. odoo-python
@@ -20964,8 +20992,8 @@ msgid ""
 "You cannot set a partner as an invoicing address of another if they have a "
 "different %(vat_label)s."
 msgstr ""
-"다른 %(vat_label) 항목이 적용되는 경우에는, 해당 파트너를 다른 파트너의 청구"
-"서 주소로 설정할 수 없습니다."
+"다른 %(vat_label) 항목이 적용되는 경우에는, 해당 파트너를 다른 파트너의 "
+"청구서 주소로 설정할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -21009,8 +21037,8 @@ msgid ""
 "You cannot use the field carryover_target in an expression that does not "
 "have the label starting with _carryover_"
 msgstr ""
-"_carryover_로 시작하는 레이블이 없는 표현식에는 carryover_target 필드를 사용"
-"할 수 없습니다."
+"_carryover_로 시작하는 레이블이 없는 표현식에는 carryover_target 필드를 "
+"사용할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -21034,8 +21062,8 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
-"청구서를 승인할 수 없습니다. 총 금액이 마이너스입니다. 대신 신용 전표를 생성"
-"해야 합니다. 활동 메뉴를 통해 신용 전표 또는 환불 항목으로 변환하세요."
+"청구서를 승인할 수 없습니다. 총 금액이 마이너스입니다. 대신 신용 전표를 "
+"생성해야 합니다. 활동 메뉴를 통해 신용 전표 또는 환불 항목으로 변환하세요."
 
 #. module: account
 #. odoo-python
@@ -21045,8 +21073,8 @@ msgid ""
 "You do not have the right to perform this operation as you do not have "
 "access to the following companies: %s."
 msgstr ""
-"다음 회사에 대한 액세스 권한이 없으므로 이 작업을 수행할 수 있는 권한이 없습"
-"니다: %s."
+"다음 회사에 대한 액세스 권한이 없으므로 이 작업을 수행할 수 있는 권한이 "
+"없습니다: %s."
 
 #. module: account
 #. odoo-python
@@ -21175,8 +21203,7 @@ msgstr "우편번호 종료 범위"
 msgid ""
 "[(Total Receivable/Total Revenue) * number of days since the first invoice] "
 "for this customer"
-msgstr ""
-"[(총 미수금/총 수익) * 첫 번째 청구서 발행 이후 날짜]: 해당 고객 자료입니다."
+msgstr "[(총 미수금/총 수익) * 첫 번째 청구서 발행 이후 날짜]: 해당 고객 자료입니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -21255,8 +21282,8 @@ msgid ""
 "become involved in costs related to a country's legislation. The amount of "
 "the invoice will therefore be due to"
 msgstr ""
-"은(는) 해당 국가의 법률과 관련된 비용에 관여하지 않습니다. 따라서 청구서 금액"
-"을"
+"은(는) 해당 국가의 법률과 관련된 비용에 관여하지 않습니다. 따라서 청구서 "
+"금액을"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -21455,8 +21482,8 @@ msgid ""
 "in its entirety and does not include any costs relating to the legislation "
 "of the country in which the client is located."
 msgstr ""
-"에 전액 납부해야만 하며 고객이 위치하고 있는 국가의 법률과 관련된 비용은 일"
-"체 포함되지 않습니다."
+"에 전액 납부해야만 하며 고객이 위치하고 있는 국가의 법률과 관련된 비용은 "
+"일체 포함되지 않습니다."
 
 #. module: account
 #. odoo-python
@@ -21485,8 +21512,8 @@ msgid ""
 "calling the vendor.<br/>"
 msgstr ""
 "은(는) 은행이 아니라 이체 서비스 업체입니다.\n"
-"                       거래처에 연락하여 신뢰할 수 있는 계좌인지 다시 확인하"
-"시기 바랍니다.<br/>"
+"                       거래처에 연락하여 신뢰할 수 있는 계좌인지 다시 "
+"확인하시기 바랍니다.<br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -21534,12 +21561,6 @@ msgid ""
 msgstr ""
 "의 상품 배송 또는 서비스 제공일로부터 8일 이내에 등록된 사무소로 등기 우편을 "
 "통해 클레임하고자 하는 전체 내용을 반드시 통보하여야 합니다."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr "해당 없음"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
@@ -21613,8 +21634,8 @@ msgid ""
 "reserves the right to call on the services of a debt recovery company. All "
 "legal expenses will be payable by the client."
 msgstr ""
-"은(는) 추심전문업체 서비스를 이용할 수 있는 권리를 가집니다. 모든 법적인 비용"
-"은 고객이 부담합니다."
+"은(는) 추심전문업체 서비스를 이용할 수 있는 권리를 가집니다. 모든 법적인 "
+"비용은 고객이 부담합니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -21668,9 +21689,9 @@ msgid ""
 "accordance with the agreed timeframes. However, none of its obligations can "
 "be considered as being an obligation to achieve results."
 msgstr ""
-"은(는) 약정한 기간에 따라 적시에 우수한 서비스를 제공할 수 있도록 최선을 다"
-"할 것을 약속합니다. 그러나 이 중 어떤 의무도 결과를 담보하는 의무 사항으로 간"
-"주될 수 없습니다."
+"은(는) 약정한 기간에 따라 적시에 우수한 서비스를 제공할 수 있도록 최선을 "
+"다할 것을 약속합니다. 그러나 이 중 어떤 의무도 결과를 담보하는 의무 사항으로 "
+"간주될 수 없습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -21704,8 +21725,7 @@ msgstr "해당 날짜에 자동으로 확인됩니다."
 msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
-msgstr ""
-"은(는) 결제 대금 연체 시 사전 경고 없이 서비스 공급을 중단할 권한이 있습니다."
+msgstr "은(는) 결제 대금 연체 시 사전 경고 없이 서비스 공급을 중단할 권한이 있습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -21749,8 +21769,7 @@ msgstr ""
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} 신용 전표 (참조 {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 신용 전표 (참조 {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -21761,8 +21780,7 @@ msgstr "{{ object.company_id.name }} 청구서 (참조 {{ object.name or 'n/a' }
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} 결제 영수증 (참조 {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 결제 영수증 (참조 {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_credit_note
@@ -21781,6 +21799,35 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 내부 발행 청구서 (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "PEPPOL Electronic Invoicing"
+#~ msgstr "PEPPOL 전자 청구서"
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s, 또는 / 해당되지 않는 경우"
+
+#~ msgid "%s, or not applicable"
+#~ msgstr "%s 또는 해당 없음"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ 해당되지 않는 경우"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "세무 신고용 등록 번호입니다. 여기에 있는 값을 국가 형식을 기준으로 승인합"
+#~ "니다. 협력사가 과세 대상이 아닌 경우에는 '/' 를 입력하세요."
+
+#~ msgid "not applicable"
+#~ msgstr "해당 없음"
+
+#~ msgid "Quick search: %s"
+#~ msgstr "빠른 검색 : %s"
+
+#~ msgid "Undistributed Profits/Losses"
+#~ msgstr "미분배 손익"
 
 #~ msgid "1.00"
 #~ msgstr "1.00"

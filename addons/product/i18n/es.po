@@ -10,18 +10,18 @@
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Rolando Duarte [Vauxoo], 2023
 # Luis D Lafaurie, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-09 11:22+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2026-08-02 12:19+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/product/"
 "es/>\n"
 "Language: es\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product
 #. odoo-python
@@ -145,8 +145,8 @@ msgstr "- %(amount)s de rebaja"
 msgid ""
 "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
-"- El código de barras \"%(barcode)s\" ya está asignado a los productos: %"
-"(product_list)s"
+"- El código de barras «%(barcode)s» ya está asignado a los productos: «%"
+"(product_list)s»"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -247,8 +247,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
-"<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
-"o_translate_inline\">Contáctenos</a>"
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\">"
+"Contacta con nosotros</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -270,8 +270,8 @@ msgid ""
 "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" "
 "title=\"Currency\"/>"
 msgstr ""
-"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Moneda\" title=\"Moneda\"/"
-">"
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Moneda\" "
+"title=\"Moneda\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -337,8 +337,8 @@ msgstr "Una opción de combinación no puede incluir productos duplicados."
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
 msgstr ""
-"Una opción de combinación no puede incluir productos de tipo “de "
-"combinación”."
+"Una opción de combinación no puede incluir productos de tipo “de combinación"
+"”."
 
 #. module: product
 #. odoo-python
@@ -932,7 +932,7 @@ msgstr "Categorías hijas"
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr "Elija el diseño de la hoja para imprimir etiquetas"
+msgstr "Elige el diseño de la hoja para imprimir etiquetas"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_cocacola
@@ -1294,7 +1294,8 @@ msgstr "Precio adicional por defecto modificado"
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Unidad de medida por defecto utilizada para todas las operaciones de stock"
+"Unidad de medida predeterminada utilizada para todas las operaciones de "
+"stock."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -2114,10 +2115,8 @@ msgstr "Kilogramos (kg)"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_l
-#, fuzzy
-#| msgid "LG"
 msgid "L"
-msgstr "LG"
+msgstr "L"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
@@ -2285,13 +2284,13 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
-"¿Está buscando bambú barnizado que combine con sus muebles? Contáctenos para "
-"un presupuesto."
+"¿Está buscando bambú barnizado que combine con sus muebles? Contacta con "
+"nosotros para un presupuesto."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_m
 msgid "M"
-msgstr ""
+msgstr "M"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -2655,15 +2654,14 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute %"
 "(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
-"En el producto %(product)s no puede transformar el atributo %"
-"(attribute_src)s en el atributo %(attribute_dest)s."
+"En el producto %(product)s no puede transformar el atributo %(attribute_src)"
+"s en el atributo %(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
-msgstr ""
-"No fue posible subir “%(fileName)s” porque no es un formato compatible."
+msgstr "No fue posible subir “%(fileName)s” porque no es un formato compatible."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
@@ -3477,10 +3475,8 @@ msgstr "Consejo de regla"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_s
-#, fuzzy
-#| msgid "XS"
 msgid "S"
-msgstr "XS"
+msgstr "S"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3584,8 +3580,7 @@ msgstr "Mostrar nombre"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records whose next activity date is past"
-msgstr ""
-"Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
+msgstr "Mostrar todos los registros cuya próxima fecha de actividad haya pasado"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_silver

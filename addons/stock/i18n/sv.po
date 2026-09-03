@@ -20,26 +20,27 @@
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # symbiotech <symbiotech3@gmail.com>, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
 # Miquel Raïch Regué <miquel.raich@forgeflow.com>, 2026.
+# Lærke Hedegaard Mathiasen <lhm@flytconsulting.dk>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-10 14:45+0000\n"
-"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/stock/sv/"
-">\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-12 14:47+0000\n"
+"Last-Translator: Lærke Hedegaard Mathiasen <lhm@flytconsulting.dk>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/stock/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -312,8 +313,7 @@ msgstr "'Räkningsblad'"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
 msgid "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
-msgstr ""
-"'Leveranssedel - %s - %s' % (object.partner_id.name or '', object.name)"
+msgstr "'Leveranssedel - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -378,7 +378,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid ")^FS"
-msgstr ""
+msgstr ")^FS"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -443,7 +443,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/json_widget.xml:0
 msgid "/day"
-msgstr ""
+msgstr "/dag"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -861,7 +861,7 @@ msgstr "<strong>Från</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Instructions:</strong>"
-msgstr ""
+msgstr "<strong>Instruktioner:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -967,7 +967,7 @@ msgstr "<strong>Leverantörens adress</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Vendor:</strong>"
-msgstr ""
+msgstr "<strong>Leverantör:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -977,7 +977,7 @@ msgstr "<strong>Lageradress</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse:</strong>"
-msgstr ""
+msgstr "<strong>Lagerlokal:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -1730,8 +1730,7 @@ msgstr "Före planerat datum"
 msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
-msgstr ""
-"Nedanstående text är ett förslag och innebär inget ansvar för Odoo S.A."
+msgstr "Nedanstående text är ett förslag och innebär inget ansvar för Odoo S.A."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package__quant_ids
@@ -2724,7 +2723,7 @@ msgstr "Datum schemalagt"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
 msgid "Date at which the replenishment should take place."
-msgstr "Datum som påfyllnaden ska genomföras."
+msgstr "Datum som påfyllningen ska genomföras."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_adjustment_name__counting_date
@@ -2827,7 +2826,7 @@ msgstr "Tidsfrist uppdaterad på grund av försening av %s"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
 msgid "December"
-msgstr "december"
+msgstr "December"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -2885,8 +2884,8 @@ msgid ""
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Definiera en regel för minsta lager så att Odoo automatiskt skapar "
-"offertförfrågningar eller bekräftade tillverkningsorder för att fylla på "
-"ditt lager."
+"offertförfrågningar eller bekräftade produktionsorder för att fylla på ditt "
+"lager."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2907,7 +2906,7 @@ msgstr ""
 "            organisation. Odoo kan hantera fysiska platser\n"
 "            (lager, hyllor, fack etc.), partnerplatser (kunder,\n"
 "            leverantörer) och virtuella platser som är motsvarigheten till\n"
-"            lagerverksamheten som tillverkningsorder\n"
+"            lagerverksamheten som produktionsorder\n"
 "            förbrukningar, lager etc."
 
 #. module: stock
@@ -3021,7 +3020,7 @@ msgstr "Leveransmetoder"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Delivery Note"
-msgstr ""
+msgstr "Följesedel"
 
 #. module: stock
 #. odoo-python
@@ -3916,6 +3915,7 @@ msgid "Full Package Name"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Future Activities"
 msgstr "Kommande aktiviteter"
@@ -4013,8 +4013,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/client_actions/multi_print.js:0
 msgid "HTML reports cannot be auto-printed, skipping report: %s"
-msgstr ""
-"HTML-rapporter kan inte skrivas ut automatiskt, hoppar över rapport: %s"
+msgstr "HTML-rapporter kan inte skrivas ut automatiskt, hoppar över rapport: %s"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -4212,8 +4211,7 @@ msgstr "Om alla produkter är likadana"
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
+msgstr "Om ikryssad, så finns det nya meddelanden som kräver din uppmärksamhet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error
@@ -4791,7 +4789,7 @@ msgstr "Lagerrutter"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Inventory Valuation"
-msgstr "Värdering av lager"
+msgstr "Lagervärdering"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_at_date
@@ -5156,6 +5154,7 @@ msgid "Late"
 msgstr "Försenad(e)"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Activities"
 msgstr "Försenade aktiviteter"
@@ -5714,7 +5713,7 @@ msgstr "Flytta hela paket"
 #: model:ir.model.fields,field_description:stock.field_stock_package__move_line_ids
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__move_line_ids
 msgid "Move Line"
-msgstr "Verifikatrad"
+msgstr "Verifikationsrad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_history__move_line_ids
@@ -5755,7 +5754,7 @@ msgstr "Flytt som skapade returflytten"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree_receipt_picking
 msgid "Moves"
-msgstr "Rörelser"
+msgstr "Flyttar"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_action
@@ -5797,6 +5796,7 @@ msgid "Multiple destinations"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
 msgstr "Mina aktivieteter"
@@ -5805,7 +5805,7 @@ msgstr "Mina aktivieteter"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Mina aktiviteters deadline"
+msgstr "Tidsgräns för mina aktiviteter"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -5911,13 +5911,13 @@ msgstr "Nästa aktivitetshändelse i kalendern"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nästa slutdatum för aktivitet"
+msgstr "Nästa tidsgräns för en aktivitet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_summary
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanställning"
+msgstr "Sammanfattning av nästa aktivitet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_id
@@ -6058,8 +6058,8 @@ msgid ""
 "No rule has been found to replenish \"%(product)s\" in \"%(location)s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
-"Ingen regel har hittats för påfyllning av \"%(product)s\" på \"%"
-"(location)s\".\n"
+"Ingen regel har hittats för påfyllning av \"%(product)s\" på \"%(location)"
+"s\".\n"
 "Verifiera konfigurationen av rutterna på produkten."
 
 #. module: stock
@@ -6601,6 +6601,7 @@ msgstr "Typ av förpackning"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_has_serial_move_line
 msgid "Pack of 6"
 msgstr ""
 
@@ -7281,7 +7282,7 @@ msgstr "Produkt flyttad"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 msgid "Product Replenish"
-msgstr "Produktpåfyllnad"
+msgstr "Produktpåfyllning"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
@@ -8054,7 +8055,7 @@ msgstr "Påfyllning vid beställning (MTO)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "Replenish wizard"
-msgstr "Påfyllnadsguide"
+msgstr "Påfyllningsguide"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
@@ -8086,18 +8087,18 @@ msgstr "Information om påfyllning"
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Information for %(product)s in %(warehouse)s"
-msgstr "Påfyllnadsinformation för %(product)s i %(warehouse)s"
+msgstr "Påfyllningsinformation för %(product)s i %(warehouse)s"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_orderpoint.py:0
 msgid "Replenishment Report"
-msgstr "Påfyllnadsrapport"
+msgstr "Påfyllningsrapport"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Replenishment Report Search"
-msgstr "Sökning av påfyllnadsrapport"
+msgstr "Sökning av påfyllningsrapport"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id_placeholder
@@ -8124,7 +8125,7 @@ msgstr "Fel vid utskrift av rapport"
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapporter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -8489,7 +8490,7 @@ msgstr "Provuppgifter"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
 msgid "Save"
-msgstr ""
+msgstr "Spara"
 
 #. module: stock
 #. odoo-python
@@ -9011,7 +9012,7 @@ msgstr "Visa överföringar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records whose next activity date is past"
-msgstr "Visa alla poster vars nästa aktivitetsdatum är passerat"
+msgstr "Visa alla handlingar vars nästkommande aktivitetsdatum har passerat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -9200,10 +9201,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Status baserad på aktiviteter\n"
-"Försenade: Leveranstidpunkten har passerat\n"
-"Idag: Aktivitetsdatum är idag\n"
-"Kommande: Framtida aktiviteter."
+"Status baserat på aktivitetsdatum:\n"
+"Försenade: Aktivitetsdatum har redan passerat.\n"
+"Idag: Aktivitetsdatum är dagens datum.\n"
+"Planerade: Kommande aktiviteter."
 
 #. module: stock
 #. odoo-python
@@ -9245,7 +9246,7 @@ msgstr "Lagerplatser"
 #: model:ir.model,name:stock.model_stock_move
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_move_ids
 msgid "Stock Move"
-msgstr "Lagerflytt"
+msgstr "Lagertransport"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids
@@ -9256,7 +9257,7 @@ msgstr "Lagerflytt"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Stock Moves"
-msgstr "Lagerflyttar"
+msgstr "Lagertransporter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_graph
@@ -9315,7 +9316,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_forecasted_product_product
 #: model:ir.model,name:stock.model_stock_forecasted_product_template
 msgid "Stock Replenishment Report"
-msgstr "Lagerpåfyllnadsrapport"
+msgstr "Påfyllningsrapport för lager"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_request_count
@@ -9616,8 +9617,8 @@ msgid ""
 "Otherwise, the serial number should be corrected to prevent inconsistent "
 "data."
 msgstr ""
-"Serienumret (%(serial_number)s) används redan på plats(er): %"
-"(location_list)s.\n"
+"Serienumret (%(serial_number)s) används redan på plats(er): %(location_list)"
+"s.\n"
 "\n"
 "Är detta förväntat? Detta kan t.ex. inträffa om en leveransoperation "
 "bekräftas innan motsvarande mottagningsoperation bekräftas. I detta fall "
@@ -9683,8 +9684,7 @@ msgstr "I övermorgon"
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "The deadline has been automatically updated due to a delay on %s."
-msgstr ""
-"Tidsfristen har uppdaterats automatiskt på grund av en försening på %s."
+msgstr "Tidsfristen har uppdaterats automatiskt på grund av en försening på %s."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__delay
@@ -10146,7 +10146,7 @@ msgid ""
 "location for stock moves generated by manufacturing orders."
 msgstr ""
 "Denna lagerplats kommer att användas, istället för standardplatsen, som "
-"ursprungsplatsen för lagerflyttar som genereras av tillverkningsordrar."
+"ursprungsplatsen för lagerflyttar som genereras av produktionsordrar."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_inventory
@@ -10292,6 +10292,7 @@ msgid "Today"
 msgstr "Idag"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Today Activities"
 msgstr "Välj ledighetstyp"
@@ -11431,8 +11432,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot change a cancelled stock move, create a new line instead."
-msgstr ""
-"Du kan inte ändra en annullerad lagerflytt, skapa istället en ny linje."
+msgstr "Du kan inte ändra en annullerad lagerflytt, skapa istället en ny linje."
 
 #. module: stock
 #. odoo-python
@@ -11511,7 +11511,7 @@ msgid ""
 "destination location for a manufacturing type operation."
 msgstr ""
 "Du kan inte ange en plats som skrotplats när den har tilldelats som "
-"destinationsplats för en operation av tillverkningstyp."
+"destinationsplats för en operation av produktionstyp."
 
 #. module: stock
 #. odoo-python
@@ -11524,8 +11524,8 @@ msgstr "Du kan inte dela en lagerrörelse i utkast. Den måste bekräftas först
 #: code:addons/stock/models/stock_move.py:0
 msgid "You cannot split a stock move that has been set to 'Done' or 'Cancel'."
 msgstr ""
-"Du kan inte dela upp en lagerflyttning som har ställts in på ’Utförd’ eller "
-"’Avbruten’."
+"Du kan inte dela upp en lagerflyttning som har ställts in på ’Utförd’ eller ’"
+"Avbruten’."
 
 #. module: stock
 #. odoo-python
@@ -11635,8 +11635,7 @@ msgstr "Du behöver tillhandahålla ett Parti/serienummer %s."
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
-"Du bör uppdatera det här dokumentet så att det återspeglar din T&amp;C."
+msgstr "Du bör uppdatera det här dokumentet så att det återspeglar din T&amp;C."
 
 #. module: stock
 #. odoo-python
@@ -11813,18 +11812,18 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 msgid "^FT210,30^A0N,25^FD"
-msgstr ""
+msgstr "^FT210,30^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FT35,30^A0N,20^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FT35,40^A0N,25^FD"
-msgstr ""
+msgstr "^FT35,40^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11977,7 +11976,7 @@ msgstr "är"
 #. module: stock
 #: model:product.removal,method:stock.removal_least_packages
 msgid "least_packages"
-msgstr "minst_förpackningar"
+msgstr "least_packages"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_lifo
@@ -12008,22 +12007,22 @@ msgstr "report_stock_quantity_graph"
 #. module: stock
 #: model:ir.actions.server,name:stock.click_dashboard_graph
 msgid "stock.click_dashboard_graph"
-msgstr "aktie.klick_tavla_graf"
+msgstr "stock.click_dashboard_graph"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_incoming
 msgid "stock.method_action_picking_tree_incoming"
-msgstr "aktie.metod_åtgärd_plocka_träd_inkommande"
+msgstr "stock.method_action_picking_tree_incoming"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_internal
 msgid "stock.method_action_picking_tree_internal"
-msgstr "stock.method_action_plockning_av_träd_internt"
+msgstr "stock.method_action_picking_tree_internal"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.method_action_picking_tree_outgoing
 msgid "stock.method_action_picking_tree_outgoing"
-msgstr "stock.method_action_plockning_av_träd_utgående"
+msgstr "stock.method_action_picking_tree_outgoing"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__filter_for_stock_putaway_rule

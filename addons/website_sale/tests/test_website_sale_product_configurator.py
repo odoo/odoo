@@ -433,6 +433,21 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         ]
         self.start_tour('/shop', 'website_sale_product_configurator_strikethrough_price')
 
+    def test_product_configurator_strikethrough_price_uom_change(self):
+        """Test that the strikethrough price is updated when changing the packaging."""
+        self.env["res.config.settings"].create({
+            "group_product_price_comparison": True,
+            "group_uom": True,
+        }).execute()
+        self.env["product.template"].create({
+            "name": "Packaged product",
+            "website_published": True,
+            "list_price": 100,
+            "compare_list_price": 200,
+            "uom_ids": [Command.set(self.env.ref("uom.product_uom_pack_6").ids)],
+        })
+        self.start_tour("/shop", "website_sale.product_configurator_strikethrough_price_uom_change")
+
     def test_get_product_combination_multi_attribute_with_archived_variant_and_inactive_ptav(self):
         """
         This test covers a case where a product has multiple attributes and one
@@ -513,3 +528,41 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
                 category=public_category,
             )
         self.assertIn('/category', values['keep'].path)
+
+    def test_product_page_category_respects_current_website(self):
+        """When two categories share the same name but belong to different websites, the product
+        page breadcrumb should show the category accessible from the current website, not the one
+        from another website.
+        """
+        second_website = self.env['website'].create({'name': 'Second Website'})
+
+        categ_website_1 = self.env['product.public.category'].create({
+            'name': 'My Category',
+            'website_id': self.website.id,
+        })
+        categ_website_2 = self.env['product.public.category'].create({
+            'name': 'My Category',
+            'website_id': second_website.id,
+        })
+
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Multi Website Product',
+            'website_published': True,
+            'public_categ_ids': [Command.set([categ_website_1.id, categ_website_2.id])],
+        })
+
+        # On website 1, the category from website 1 should be selected.
+        with MockRequest(self.env, website=self.website):
+            values = self.pc_controller._prepare_product_values(
+                product_tmpl,
+                category=None,
+            )
+        self.assertEqual(values['category'], categ_website_1)
+
+        # On website 2, the category from website 2 should be selected.
+        with MockRequest(self.env, website=second_website):
+            values = self.pc_controller._prepare_product_values(
+                product_tmpl,
+                category=None,
+            )
+        self.assertEqual(values['category'], categ_website_2)

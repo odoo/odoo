@@ -311,6 +311,9 @@ SESSION_LIFETIME = 60 * 60 * 24 * 7
 # session id (also on the cookie) but keeping the same content.
 SESSION_ROTATION_INTERVAL = 60 * 60 * 3
 
+# The header to pass in a request to skip the soft session rotation
+SESSION_ROTATION_INTERVAL_HEADER_SKIP = "X-Odoo-Skip-Session-Rotation-Interval"
+
 # URL paths for which automatic session rotation is disabled.
 SESSION_ROTATION_EXCLUDED_PATHS = (
     '/websocket/on_closed',
@@ -475,6 +478,33 @@ def serialize_exception(exception, *, message=None, arguments=None):
         'debug': ''.join(traceback.format_exception(exception)),
     }
 
+
+def fragment_to_query_string(func):
+    """
+    Decorate a controller method to force the client to write fragment into the query
+    in case there isn't any query.
+    """
+    @functools.wraps(func)
+    def wrapper(self, *a, **kw):
+        if not (kw.keys() - {'debug'}):
+            return Response("""<!DOCTYPE html>
+            <html><head><script>
+                (function() {
+                    const url = window.location;
+                    const fragment = url.hash.substring(1);  // remove the leading "#"
+                    let new_url = url.pathname + url.search;
+                    if(fragment.length !== 0) {
+                        const separator = url.search ? (url.search === '?' ? '' : '&') : '?';
+                        new_url = url.pathname + url.search + separator + fragment;
+                    }
+                    if (new_url == url.pathname) {
+                        new_url = '/';
+                    }
+                    window.location = new_url;
+                })()
+            </script></head><body></body></html>""")
+        return func(self, *a, **kw)
+    return wrapper
 
 # =========================================================
 # File Streaming
@@ -2148,6 +2178,7 @@ class Request:
             sess.uid
             and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL
             and request.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
+            and not request.httprequest.headers.get(SESSION_ROTATION_INTERVAL_HEADER_SKIP)
         ):
             root.session_store.rotate(sess, env, True)
         elif sess.is_dirty:
@@ -2703,8 +2734,9 @@ class Application:
         """
 
         netloc, path = urlparse(url)[1:3]
+        path = os.path.normpath(os.path.normcase(path))
         try:
-            path_netloc, module, static, resource = path.split('/', 3)
+            path_netloc, module, static, resource = path.split(os.sep, 3)
         except ValueError:
             return None
 

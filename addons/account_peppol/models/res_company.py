@@ -10,6 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 from odoo.addons.account.models.company import PEPPOL_LIST
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 
 try:
     import phonenumbers
@@ -133,14 +134,8 @@ class ResCompany(models.Model):
 
         return self.env['res.company']
 
-    def _have_unauthorized_peppol_parent_company(self):
-        """
-        Returns True if the company is using the active peppol connection of the parent company
-        but the user does not have access to that parent company.
-        """
-        self.ensure_one()
-        parent_company = self.peppol_parent_company_id
-        return parent_company and parent_company not in self.env.user.company_ids
+    def _have_unauthorized_peppol_parent_company(self):  # TODO : remove in master
+        return False
 
     def _reset_peppol_configuration(self, soft=False):
         """
@@ -200,6 +195,13 @@ class ResCompany(models.Model):
 
         return True if (endpoint_rule := peppol_dict.get(self.peppol_eas)) is None else endpoint_rule(self.peppol_endpoint)
 
+    def _peppol_is_french_company(self):
+        self.ensure_one()
+        return (
+            self.account_fiscal_country_id.code in {'FR', 'GP', 'MQ', 'RE'}
+            or self.peppol_eas in EAS_MAPPING['FR']
+        )
+
     # -------------------------------------------------------------------------
     # CONSTRAINTS
     # -------------------------------------------------------------------------
@@ -224,6 +226,10 @@ class ResCompany(models.Model):
             if company.peppol_purchase_journal_id and company.peppol_purchase_journal_id.type != 'purchase':
                 raise ValidationError(_("A purchase journal must be used to receive Peppol documents."))
 
+    def _peppol_allows_document_reception(self):
+        self.ensure_one()
+        return True
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -231,7 +237,9 @@ class ResCompany(models.Model):
     @api.depends('account_edi_proxy_client_ids')
     def _compute_account_peppol_edi_user(self):
         for company in self:
-            company.account_peppol_edi_user = company.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+            company.account_peppol_edi_user = company.account_edi_proxy_client_ids.filtered(
+                lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
+            )
 
     @api.depends('peppol_eas', 'peppol_endpoint')
     def _compute_peppol_parent_company_id(self):
@@ -389,7 +397,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         config_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode')
         # by design, we can only have zero or one proxy user per company with type Peppol
-        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol')
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types())
         demo_if_demo_identifier = 'demo' if (temporary_eas or self.peppol_eas) == 'odemo' else False
         return demo_if_demo_identifier or peppol_user.edi_mode or config_param or 'prod'
 
@@ -446,3 +454,10 @@ class ResCompany(models.Model):
             return
 
         mail_template.send_mail(self.id, force_send=True)
+
+    def _get_peppol_proxy_type(self):
+        self.ensure_one()
+        peppol_user = self.sudo().account_edi_proxy_client_ids.filtered(
+            lambda u: u.proxy_type in self.env['account_edi_proxy_client.user']._get_peppol_proxy_types()
+        )
+        return peppol_user.proxy_type or 'peppol'

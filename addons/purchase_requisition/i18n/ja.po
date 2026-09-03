@@ -7,14 +7,14 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-03-26 09:24+0000\n"
+"PO-Revision-Date: 2026-08-24 03:13+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "purchase_requisition/ja/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -303,11 +303,11 @@ msgid ""
 "also decide to order some products from one vendor and others from another "
 "vendor."
 msgstr ""
-"異なる仕入先へ代替見積依頼を追加して、入札募集を作成しま"
-"す。                                リードタイム、納期遵守率(OTD)及び／または"
-"総額の最適な組み合わせからお選び下さい。                                 プロ"
-"ダクト明細を比較することで、ある仕入先にあるプロダクトをオーダし、別の仕入先"
-"に別のプロダクトを注文する決定をすることもできます。"
+"異なる仕入先へ代替見積依頼を追加して、入札募集を作成します。"
+"                                リードタイム、納期遵守率(OTD)及び／または総額"
+"の最適な組み合わせからお選び下さい。                                 "
+"プロダクト明細を比較することで、ある仕入先にあるプロダクトをオーダし、別の仕"
+"入先に別のプロダクトを注文する決定をすることもできます。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -387,7 +387,7 @@ msgstr "完了"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__draft
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Draft"
-msgstr "ドラフト"
+msgstr "下書き"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_end
@@ -483,8 +483,8 @@ msgstr "有効にすると、一部のメッセージに配信エラーが発生
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
-"これがチェックされている場合、元の購買オーダのプロダクト数量がコピーされま"
-"す。"
+"これがチェックされている場合、元の購買オーダのプロダクト数量がコピーされます"
+"。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_is_follower
@@ -532,7 +532,7 @@ msgstr "既存の見積依頼にリンクする"
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_alternatives
 msgid "Manage Purchase Alternatives"
-msgstr "購買代替を管理する"
+msgstr "購買代替案を管理"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -717,7 +717,7 @@ msgstr "購買契約"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_res_config_settings__group_purchase_alternatives
 msgid "Purchase Alternatives"
-msgstr "購買代替"
+msgstr "購買代替案"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__purchase_group_id
@@ -820,7 +820,7 @@ msgstr "見積依頼"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Reset to Draft"
-msgstr "ドラフトにリセット"
+msgstr "下書きにリセット"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_user_id
@@ -830,7 +830,7 @@ msgstr "担当ユーザ"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS送信エラー"
+msgstr "SMS配信エラー"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -853,8 +853,7 @@ msgstr "いくつかはクリアされていません"
 #: code:addons/purchase_requisition/models/purchase.py:0
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
-msgstr ""
-"ステータスが見積依頼ステータスでないため、クリアされなかった数量があります。"
+msgstr "ステータスが見積依頼ステータスでないため、クリアされなかった数量があります。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__date_start
@@ -955,7 +954,7 @@ msgstr "合計"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "記録上の例外活動の種類。"
+msgstr "レコード上の例外の活動タイプ。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_uom_id
@@ -1037,7 +1036,7 @@ msgstr "代替購買オーダ用の値プリセットのウィザード"
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You can only delete draft or cancelled requisitions."
-msgstr "ドラフトまたはキャンセル済の要求しか削除することはできません。"
+msgstr "下書きまたはキャンセル済の要求しか削除することはできません。"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1045,7 +1044,7 @@ msgstr "ドラフトまたはキャンセル済の要求しか削除すること
 msgid ""
 "You cannot change the Agreement Type or Company of a not draft purchase "
 "agreement."
-msgstr "ドラフトではない購買契約の契約タイプや会社を変更することはできません。"
+msgstr "下書きではない購買契約の契約タイプや会社を変更することはできません。"
 
 #. module: purchase_requisition
 #. odoo-python

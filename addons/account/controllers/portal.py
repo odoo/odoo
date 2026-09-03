@@ -70,7 +70,7 @@ class PortalAccount(CustomerPortal):
             'date': {'label': _('Date'), 'order': 'invoice_date desc'},
             'duedate': {'label': _('Due Date'), 'order': 'invoice_date_due desc'},
             'name': {'label': _('Reference'), 'order': 'name desc'},
-            'state': {'label': _('Status'), 'order': 'state'},
+            'state': {'label': _('Status'), 'order': 'payment_state'},
         }
 
     def _get_account_searchbar_filters(self):
@@ -236,6 +236,6 @@ class PortalAccount(CustomerPortal):
         rendering_values = super()._prepare_my_account_rendering_values(*args, **kwargs)
         rendering_values.update({
             'invoice_sending_methods': {'email': _("by Email")},
-            'invoice_edi_formats': dict(request.env['res.partner']._fields['invoice_edi_format'].selection),
+            'invoice_edi_formats': dict(request.env['res.partner']._fields['invoice_edi_format']._description_selection(request.env)),
         })
         return rendering_values

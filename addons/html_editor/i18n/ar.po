@@ -2,16 +2,17 @@
 # This file contains the translation of the following modules:
 # * html_editor
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-08 19:17+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-05 19:29+0000\n"
+"PO-Revision-Date: 2026-08-10 13:17+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "html_editor/ar/>\n"
 "Language: ar\n"
@@ -20,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: html_editor
 #. odoo-javascript
@@ -99,8 +100,8 @@ msgid ""
 "Action %s not found, link preview is not available, please check your url is "
 "correct"
 msgstr ""
-"لم يتم العثور على الإجراء%s ، لا تتوفر معاينة للرابط، يرجى التحقق من صحة "
-"عنوان url الخاص بك"
+"لم يتم العثور على الإجراء%s ، لا تتوفر معاينة للرابط، يرجى التحقق من صحة عنوان "
+"url الخاص بك"
 
 #. module: html_editor
 #. odoo-javascript
@@ -379,6 +380,12 @@ msgstr "إلغاء"
 
 #. module: html_editor
 #. odoo-javascript
+#: code:addons/html_editor/static/src/others/embedded_components/plugins/caption_plugin/caption_plugin.js:0
+msgid "Caption"
+msgstr ""
+
+#. module: html_editor
+#. odoo-javascript
 #: code:addons/html_editor/static/src/main/list/list_plugin.js:0
 msgid "Checklist"
 msgstr "قائمة مرجعية"
@@ -400,6 +407,12 @@ msgstr "مسح المحتوى"
 #: code:addons/html_editor/static/src/main/media/image_plugin.js:0
 msgid "Click again to reset transformation"
 msgstr "اضغط مجدداً لإعادة تعيين التحويل"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/movenode_plugin.js:0
+msgid "Click to select"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -599,6 +612,12 @@ msgstr "اسم العرض"
 #: code:addons/html_editor/static/src/main/media/file_plugin.js:0
 msgid "Documents"
 msgstr "المستندات"
+
+#. module: html_editor
+#. odoo-javascript
+#: code:addons/html_editor/static/src/main/movenode_plugin.js:0
+msgid "Drag to move"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1126,8 +1145,7 @@ msgstr "تم نسخ الرابط إلى الحافظة."
 #: code:addons/html_editor/controllers/main.py:0
 msgid ""
 "Link preview is not available because %s, please check if your url is correct"
-msgstr ""
-"معاينة الرابط غير متوفرة بسبب %s، يرجى التحقق من صحة عنوان url الخاص بك"
+msgstr "معاينة الرابط غير متوفرة بسبب %s، يرجى التحقق من صحة عنوان url الخاص بك"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1165,7 +1183,7 @@ msgstr "تكرار"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/media/media_dialog/video_selector.xml:0
 msgid "MM:SS"
-msgstr ""
+msgstr "MM:SS"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1201,13 +1219,13 @@ msgstr "الملف مفقود"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/powerbox/powerbox_plugin.js:0
 msgid "Modules"
-msgstr ""
+msgstr "التطبيقات "
 
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/banner_plugin.js:0
 msgid "Monospace"
-msgstr ""
+msgstr "خط أحادي المسافة"
 
 #. module: html_editor
 #. odoo-javascript
@@ -1533,8 +1551,8 @@ msgstr "إزالة (حذف) الصورة"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/core/format_plugin.js:0
-msgid "Remove Format"
-msgstr "إزالة التنسيق"
+msgid "Remove Format (Ctrl + Space)"
+msgstr ""
 
 #. module: html_editor
 #. odoo-javascript
@@ -1797,6 +1815,7 @@ msgid ""
 "Showing all differences between the current version and the selected one "
 "updated by"
 msgstr ""
+"عرض جميع الاختلافات بين النسخة الحالية والنسخة المحددة الذي تم تحديثها بواسطة"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2350,7 +2369,7 @@ msgstr "deg"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/separator_plugin.js:0
 msgid "divider"
-msgstr ""
+msgstr "فاصل"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2380,7 +2399,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/link/link_popover.xml:0
 msgid "noopener"
-msgstr ""
+msgstr "noopener"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2404,7 +2423,7 @@ msgstr "بيكسل"
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/font/font_plugin.js:0
 msgid "title"
-msgstr ""
+msgstr "العنوان"
 
 #. module: html_editor
 #. odoo-javascript
@@ -2420,10 +2439,11 @@ msgstr "التعامل مع رسائل websocket"
 #. module: html_editor
 #. odoo-javascript
 #: code:addons/html_editor/static/src/main/table/table_picker.xml:0
-#, fuzzy
-#| msgid "px"
 msgid "x"
-msgstr "بيكسل"
+msgstr ""
+
+#~ msgid "Remove Format"
+#~ msgstr "إزالة التنسيق"
 
 #~ msgid "Copy Link"
 #~ msgstr "نسخ الرابط"

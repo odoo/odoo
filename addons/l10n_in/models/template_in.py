@@ -1,6 +1,5 @@
 from odoo import Command, models
 from odoo.addons.account.models.chart_template import template
-from odoo.exceptions import UserError, RedirectWarning
 
 
 class AccountChartTemplate(models.AbstractModel):
@@ -140,30 +139,8 @@ class AccountChartTemplate(models.AbstractModel):
             # We call these helper methods again in _post_load_data to ensure all payment method lines
             # are correctly assigned once all COA data is fully available.
             bank_journals = company.bank_journal_ids
-            bank_journals._update_payment_method_lines("inbound")
-            bank_journals._update_payment_method_lines("outbound")
-
-    def _get_tag_mapper(self, country_id):
-        original_mapper = super()._get_tag_mapper(country_id)
-        if country_id != self.env.ref('base.in').id:
-            return original_mapper
-
-        def wrapped_mapper(*args):
-            try:
-                return original_mapper(*args)
-            except UserError as e:
-                raise RedirectWarning(
-                    message=e.args[0],
-                    action={
-                        'name': self.env._('App need to update'),
-                        'res_model': 'ir.module.module',
-                        'type': 'ir.actions.act_window',
-                        'views': [(self.env.ref('base.module_form').id, 'form')],
-                        'res_id': self.env.ref('base.module_l10n_in').id,
-                    },
-                    button_text=self.env._("Update app"),
-                )
-        return wrapped_mapper
+            bank_journals._assign_outsanding_account_to_payment_method_lines("inbound", payment_method_codes=['manual'], chart_template="in")
+            bank_journals._assign_outsanding_account_to_payment_method_lines("outbound", payment_method_codes=['manual'], chart_template="in")
 
     def _load(self, template_code, company, install_demo, force_create=True):
         res = super()._load(template_code, company, install_demo, force_create)

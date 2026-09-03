@@ -24,15 +24,15 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Martin Trigaux, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-03 07:46+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"PO-Revision-Date: 2026-08-02 18:35+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "purchase_requisition/fi/>\n"
 "Language: fi\n"
@@ -40,7 +40,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -151,7 +151,7 @@ msgstr "Vaihtoehdot"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "An example of a purchase agreement is a blanket order."
-msgstr "Esimerkki ostosopimuksesta on yleistilaus."
+msgstr "Esimerkki ostosopimuksesta on puitetilaus."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
@@ -182,12 +182,12 @@ msgstr "BO00004"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__requisition_type__blanket_order
 msgid "Blanket Order"
-msgstr "Yleistilaus"
+msgstr "Puitetilaus"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Blanket Orders"
-msgstr "Yleistilaukset"
+msgstr "Puitetilaukset"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -450,9 +450,9 @@ msgid ""
 "benefit\n"
 "            from the negotiated prices."
 msgstr ""
-"Yleistilausta varten voit kirjata sopimuksen tietyksi ajanjaksoksi\n"
-"            (esim. vuosi) ja tilata tuotteita tämän sopimuksen puitteissa "
-"hyödyntääksesi siinä\n"
+"Voit kirjata puitetilauksen sopimuksen tietyksi ajanjaksoksi\n"
+"            (esim. vuosi) ja tilata tuotteita tämän sopimuksen mukaisesti "
+"hyödyntääksesi\n"
 "            neuvoteltuja hintoja."
 
 #. module: purchase_requisition
@@ -557,7 +557,7 @@ msgstr "Hallitse ostovaihtoehtoja"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -702,7 +702,7 @@ msgstr "Tuote"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -789,12 +789,12 @@ msgstr "Ostopyynnön rivi"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__requisition_type__purchase_template
 msgid "Purchase Template"
-msgstr "Oston malli"
+msgstr "Oston mallipohja"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Templates"
-msgstr "Oston mallit"
+msgstr "Oston mallipohjat"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
@@ -815,7 +815,7 @@ msgstr "RFQs / tilaukset"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__reference
@@ -946,9 +946,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
-"Tälle toimittajalle on jo tehty avoin yleistilaus. Suosittelemme, että "
-"täydennät tämän avoimen kokonaistilauksen sen sijaan, että luot uuden "
-"tilauksen."
+"Tälle toimittajalle on jo olemassa puitetilaus. Suosittelemme täydentämään "
+"tämän puitetilauksen uuden tilauksen luomisen sijaan."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1039,7 +1038,7 @@ msgstr "Verkkosivun ilmoitukset"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1078,13 +1077,13 @@ msgstr "Et voi muuttaa ostosopimusluonnoksen sopimustyyppiä tai yritystä."
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a price."
-msgstr "Et voi vahvistaa yleistilausta, jonka riveiltä puuttuu hinta."
+msgstr "Et voi vahvistaa puitetilausta, jonka riveiltä puuttuu hinta."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a quantity."
-msgstr "Et voi vahvistaa yleistilausta, jonka riveiltä puuttuu määrä."
+msgstr "Et voi vahvistaa puitetilausta, jonka riveiltä puuttuu määrä."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1104,7 +1103,7 @@ msgid ""
 "blanket order."
 msgstr ""
 "Negatiivinen hinta tai yksikköhinta ei voi olla 0 jo vahvistetulle "
-"yleistilaukselle."
+"puitetilaukselle."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

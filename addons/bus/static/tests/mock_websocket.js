@@ -35,6 +35,10 @@ function getWebSocketCallbacks() {
 
 function setupWebSocketWorker() {
     currentWebSocketWorker = new WebsocketWorker();
+    // Fixed reconnect delay, longer than the mocked WebSocket's open/close ticks.
+    currentWebSocketWorker.INITIAL_RECONNECT_DELAY = 1000;
+    currentWebSocketWorker.RECONNECT_JITTER = 0;
+    currentWebSocketWorker.connectRetryDelay = 1000;
 
     mockWorker(function onWorkerConnected(worker) {
         currentWebSocketWorker.registerClient(worker._messageChannel.port2);
@@ -83,8 +87,6 @@ patchWithCleanup(MockServer.prototype, {
 });
 
 patch(WebsocketWorker.prototype, {
-    INITIAL_RECONNECT_DELAY: 0,
-    RECONNECT_JITTER: 5,
     // `runAllTimers` advances time based on the longest registered timeout.
     // Some tests rely on the fragile assumption that time won’t advance too much.
     // Disable the interval until those tests are rewritten to be more robust.

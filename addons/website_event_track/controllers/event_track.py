@@ -540,12 +540,8 @@ class EventTrackController(http.Controller):
     # HELPERS ROUTES
     # ------------------------------------------------------------
 
-    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track"):track>/ics'''], type='http', auth="public")
+    @http.route(['''/event/<model("event.event"):event>/track/<model("event.track"):track>/ics'''], type='http', auth="public", website=True, sitemap=False)
     def event_track_ics_file(self, event, track):
-        lang = request.env.context.get('lang', request.env.user.lang)
-        if request.env.user._is_public():
-            lang = request.cookies.get('frontend_lang')
-        track = track.with_context(lang=lang)
         files = track._get_ics_file()
         content = files.get(track.id)
         if not content:

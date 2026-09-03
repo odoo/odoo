@@ -69,8 +69,10 @@ export const multiTabSharedWorkerService = {
                 if (state === STATE.INIT) {
                     await startWorker();
                 }
-                responseDeferred = new Deferred();
-                workerService.send("ELECTION:IS_MASTER?");
+                if (!responseDeferred) {
+                    responseDeferred = new Deferred();
+                    workerService.send("ELECTION:IS_MASTER?");
+                }
                 return responseDeferred;
             },
             unregister,

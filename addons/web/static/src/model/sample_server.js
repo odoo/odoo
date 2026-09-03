@@ -643,7 +643,7 @@ export class SampleServer {
             groups = this._mockFormattedReadGroup({ ...params, aggregates });
         }
         // Don't care another params - and no subgroup:
-        // order / opening_info / unfold_read_default_limit / groupby_read_specification
+        // order / opening_info / unfold_read_default_limit
         const openAllGroups = params.auto_unfold && !this.existingGroups;
         let nbOpenedGroup = 0;
         if (params.unfold_read_specification) {
@@ -662,6 +662,32 @@ export class SampleServer {
                     }
                 }
                 delete group["id:array_agg"];
+            }
+        }
+        // Handle groupby_read_specification to fetch related field values for group headers
+        if (params.groupby_read_specification && params.groupby.length > 0) {
+            const primaryGroupBy = params.groupby[0].split(":")[0];
+            const readSpec = params.groupby_read_specification[params.groupby[0]];
+            const field = this.data[params.model].fields[primaryGroupBy];
+
+            if (readSpec && field && field.relation) {
+                for (const group of groups) {
+                    const groupbyValue = group[primaryGroupBy];
+
+                    if (Array.isArray(groupbyValue)) {
+                        const id = groupbyValue[0];
+                        const fieldSpecification = readSpec.fields || {};
+                        const result = this._mockWebSearchReadUnity({
+                            model: field.relation,
+                            specification: fieldSpecification,
+                            recordIds: [id],
+                        });
+
+                        group.__values = result.records.length ? result.records[0] : { id: false };
+                    } else {
+                        group.__values = { id: false };
+                    }
+                }
             }
         }
 

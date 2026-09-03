@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.exceptions import UserError
 
 
@@ -235,3 +235,106 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'debit': 90.0, 'credit': 0.0},
             {'debit': 0.0, 'credit': 90.0},
         ])
+
+    def test_accrued_entries_with_purchase_uom(self):
+        def accrued_entries_lines(taxes):
+            purchase_order = self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'order_line': [
+                    Command.create({
+                        'name': self.product_a.name,
+                        'product_id': self.product_a.id,
+                        'product_qty': 10.0,
+                        'product_uom_id': self.env.ref('uom.product_uom_dozen').id,
+                        'price_unit': 25.0,
+                        'tax_ids': taxes,
+                    }),
+                ],
+            })
+            purchase_order.button_confirm()
+            purchase_order.order_line.qty_received = 10
+            accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+                active_model='purchase.order',
+                active_ids=purchase_order.ids,
+            ).create({
+                'account_id': self.account_revenue.id,
+            })
+            return self.env['account.move'].search(accrued_wizard.create_entries()['domain']).line_ids
+
+        tax_25_included = self.env['account.tax'].create({
+            'name': 'Tax 25% included',
+            'amount': 25.0,
+            'type_tax_use': 'purchase',
+            'price_include_override': 'tax_included',
+        })
+        self.assertRecordValues(accrued_entries_lines(False), [
+            {'debit': 0.0, 'credit': 250.0},
+            {'debit': 250.0, 'credit': 0.0},
+            {'debit': 250.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 250.0},
+        ])
+        self.assertRecordValues(accrued_entries_lines(tax_25_included.ids), [
+            {'debit': 0.0, 'credit': 200.0},
+            {'debit': 200.0, 'credit': 0.0},
+            {'debit': 200.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 200.0},
+        ])
+
+    def test_accrual_entry_date_as_string_from_context(self):
+        """
+        Test that passing `accrual_entry_date` as a string in the context
+        does not raise an error and accrual entries are created correctly.
+        """
+        self.purchase_order.order_line.qty_received = 10
+        move = self.env['account.move'].browse(self.purchase_order.action_create_invoice()['res_id'])
+        move.invoice_date = '2020-01-01'
+        move.action_post()
+        self.purchase_order.order_line.qty_received = 5
+        wizard = self.wizard.with_context(accrual_entry_date='2020-01-30')
+        res = self.env['account.move'].search(wizard.create_entries()['domain']).line_ids
+        self.assertRecordValues(res, [
+            # move lines
+            {'account_id': self.account_expense.id, 'debit': 0.0, 'credit': 5000.0},
+            {'account_id': self.alt_exp_account.id, 'debit': 0.0, 'credit': 1000.0},
+            {'account_id': self.account_revenue.id, 'debit': 6000.0, 'credit': 0.0},
+            # reverse move lines
+            {'account_id': self.account_expense.id, 'debit': 5000.0, 'credit': 0.0},
+            {'account_id': self.alt_exp_account.id, 'debit': 1000.0, 'credit': 0.0},
+            {'account_id': self.account_revenue.id, 'debit': 0.0, 'credit': 6000.0},
+        ])
+
+    def test_accrued_entries_with_no_date(self):
+        wizard_form = Form(self.wizard)
+        wizard_form.date = False
+        with self.assertRaises(AssertionError):
+            wizard_form.save()
+
+    def test_accrued_order_wizard_zero_total(self):
+        """
+        Test that setting a PO line quantity to 0 (resulting in a 0 total)
+        does not cause a ZeroDivisionError in the Accrued Expense Entry wizard.
+        """
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product_a.name,
+                    'product_id': self.product_a.id,
+                    'product_qty': 10.0,
+                    'price_unit': 100.0,
+                })
+            ]
+        })
+        purchase_order.button_confirm()
+        purchase_order.order_line.qty_received = 10.0
+        purchase_order.order_line.product_qty = 0.0
+
+        wizard = self.env['account.accrued.orders.wizard'].with_context({
+            'active_model': 'purchase.order',
+            'active_ids': purchase_order.ids,
+        }).create({
+            'account_id': self.company_data['default_account_payable'].id,
+        })
+
+        accrued_entry = wizard.create_entries()
+        self.assertTrue(accrued_entry)

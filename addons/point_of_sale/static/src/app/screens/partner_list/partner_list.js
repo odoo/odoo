@@ -28,6 +28,7 @@ export class PartnerList extends Component {
         this.dialog = useService("dialog");
         this.modalRef = useChildRef();
         this.modalContent = null;
+        this.searchInputRef = null;
         this.state = useState({
             initialPartners: this.pos.models["res.partner"].filter((p) => {
                 const par = p.property_account_receivable_id;
@@ -82,6 +83,11 @@ export class PartnerList extends Component {
         }
     }
     async onEnter() {
+        // The search input uses a debounce, so state.query may lag behind what the user
+        // typed. Read the live DOM value and sync it before triggering the server search.
+        if (this.searchInputRef?.el) {
+            this.state.query = this.searchInputRef.el.value;
+        }
         if (!this.state.query) {
             return;
         }
@@ -138,7 +144,7 @@ export class PartnerList extends Component {
         );
 
         const availablePartners = searchWord
-            ? partners.filter((p) => regex.test(normalize(p.searchString)))
+            ? partners.filter((p) => regex.test(normalize(p.searchString))).slice(0, 50)
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
@@ -150,6 +156,26 @@ export class PartnerList extends Component {
                   );
 
         return availablePartners;
+    }
+    _getSearchFields(query) {
+        if (query.includes("@")) {
+            return ["email"];
+        }
+        const stripped = query.replace(/[+\s()\-./]/g, "");
+        if (/^\d+$/.test(stripped) && stripped.length >= 3) {
+            return ["phone_mobile_search", "barcode", "vat", "zip"];
+        }
+        return [
+            "complete_name",
+            "ref",
+            "company_registry",
+            "vat",
+            "street",
+            "zip",
+            "email",
+            "phone_mobile_search",
+            "barcode",
+        ];
     }
     get isBalanceDisplayed() {
         return false;
@@ -169,22 +195,10 @@ export class PartnerList extends Component {
             return [];
         }
         if (this.state.query) {
-            const search_fields = [
-                "name",
-                "parent_name",
-                "phone_mobile_search",
-                "email",
-                "barcode",
-                "street",
-                "zip",
-                "city",
-                "state_id",
-                "country_id",
-                "vat",
-            ];
+            const search_fields = this._getSearchFields(this.state.query);
             domain = [
                 ...Array(search_fields.length - 1).fill("|"),
-                ...search_fields.map((field) => [field, "ilike", this.state.query + "%"]),
+                ...search_fields.map((field) => [field, "ilike", this.state.query]),
             ];
         }
 

@@ -2,11 +2,19 @@ import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embeddi
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { isZwnbsp } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryAll,
+    queryOne,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
 import { deleteBackward, insertText } from "./_helpers/user_actions";
+import { getContent, setSelection } from "./_helpers/selection";
 import { execCommand } from "./_helpers/userCommands";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
@@ -198,6 +206,23 @@ describe("file command", () => {
             // ArrowRight at end should do nothing.
             await press("ArrowRight");
             expect(getContent(fileNameEl)).toBe("file.txt[]");
+
+            // Delete all content to make the file name empty.
+            editor.shared.selection.setSelection({
+                anchorNode: fileNameEl,
+                anchorOffset: 0,
+                focusNode: fileNameEl,
+                focusOffset: nodeSize(fileNameEl),
+            });
+            await animationFrame();
+            await press("Backspace");
+            await animationFrame();
+
+            // ArrowLeft and ArrowRight should do nothing in an empty file name.
+            await press("ArrowLeft");
+            expect(getContent(fileNameEl)).toBe("[]<br>");
+            await press("ArrowRight");
+            expect(getContent(fileNameEl)).toBe("[]<br>");
         });
 
         test.tags("desktop");
@@ -233,6 +258,76 @@ describe("file command", () => {
             await press(["shift", "Enter"]);
             expect(getContent(fileNameEl)).toBe("file.txt[]");
         });
+    });
+
+    test.tags("desktop");
+    test("should not open powerbox inside a static file box", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        // Wait until the file name is rendered.
+        await waitFor('.o_file_box .o_file_name_container:contains("file.txt")');
+
+        // Enable editing on the file name.
+        const fileNameEl = queryOne(".o_file_box .o_file_name_container .o_link_readonly");
+        await click(fileNameEl);
+        await animationFrame();
+        expect(fileNameEl).toHaveAttribute("contenteditable", "true");
+
+        // Typing "/" inside the file name should NOT open the powerbox.
+        await insertText(editor, "/");
+        await animationFrame();
+        expect(".o-we-powerbox").toHaveCount(0);
+    });
+
+    test.tags("desktop");
+    test("should not trigger shorthands inside a static file box", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        // Wait until the file name is rendered.
+        await waitFor('.o_file_box .o_file_name_container:contains("file.txt")');
+
+        // Enable editing on the file name.
+        const fileNameEl = queryOne(".o_file_box .o_file_name_container .o_link_readonly");
+        await click(fileNameEl);
+        await animationFrame();
+        expect(fileNameEl).toHaveAttribute("contenteditable", "true");
+
+        // Place cursor at the start of the file name.
+        editor.shared.selection.setCursorStart(fileNameEl);
+        await animationFrame();
+
+        await insertText(editor, "## ");
+        await animationFrame();
+        expect(getContent(fileNameEl)).toBe("## []file.txt");
+    });
+
+    test.tags("desktop");
+    test("should paste only plain text inside a static file box", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>");
+        patchUpload(editor);
+        execCommand(editor, "uploadFile");
+        // Wait until the file name is rendered.
+        await waitFor('.o_file_box .o_file_name_container:contains("file.txt")');
+
+        // Enable editing on the file name.
+        const fileNameEl = queryOne(".o_file_box .o_file_name_container .o_link_readonly");
+        await click(fileNameEl);
+        await animationFrame();
+
+        editor.shared.selection.setCursorEnd(fileNameEl);
+        await animationFrame();
+
+        // Simulate a paste with both HTML and plain text data.
+        const clipboardData = new DataTransfer();
+        clipboardData.setData("text/html", "<h1><b>rich content</b></h1>");
+        clipboardData.setData("text/plain", "plain content");
+        await manuallyDispatchProgrammaticEvent(fileNameEl, "paste", { clipboardData });
+        await animationFrame();
+
+        // Only the plain text should be inserted; no HTML elements (e.g. <h1>, <b>).
+        expect(fileNameEl.innerHTML).toBe("file.txtplain content");
     });
 });
 
@@ -377,15 +472,40 @@ describe("zero width no-break space", () => {
 
     test("should not add two contiguous ZWNBSP between two file cards (2)", async () => {
         const { el } = await setupEditor(
-            '<p>abc<span data-embedded="file" class="o_file_box"></span>x[]<span data-embedded="file" class="o_file_box"></span></p>',
+            '<p>abc<span data-embedded="file" class="o_file_box" contenteditable="false"></span>x[]<span data-embedded="file" class="o_file_box" contenteditable="false"></span></p>',
             { config: { ...configWithEmbeddedFile, resources: {} } } // disable embedded component rendering
         );
         expect(getContent(el)).toBe(
-            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeffx[]\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
+            '<p>abc\ufeff<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeffx[]\ufeff<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeff</p>'
         );
         press("Backspace");
         expect(getContent(el)).toBe(
-            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff[]<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
+            '<p>abc\ufeff<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeff[]<span data-embedded="file" class="o_file_box" contenteditable="false"></span>\ufeff</p>'
         );
     });
+});
+
+test("Should delete the file box", async () => {
+    const { el } = await setupEditor(
+        '<p>[ab<span data-embedded="file" class="o_file_box" contenteditable="false"></span>x<span data-embedded="file" class="o_file_box" contenteditable="false"></span>]</p>',
+        { config: { ...configWithEmbeddedFile, resources: {} } } // disable embedded component rendering
+    );
+    press("Backspace");
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+});
+
+test("should show the updated file name in the link preview", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>");
+    patchUpload(editor);
+    execCommand(editor, "uploadFile");
+    await waitFor('.o_file_box a:contains("file.txt")');
+    const fileName = queryOne("a.o_link_readonly");
+    await click(".o_link_readonly");
+    fileName.textContent = "Hello";
+    setSelection({ anchorNode: fileName, anchorOffset: 0 });
+    await waitFor(".o_we_url_link:not(:empty)");
+    const fileNameInPreview = queryOne(".o_we_url_link");
+    expect(fileNameInPreview.textContent).toBe("Hello");
 });

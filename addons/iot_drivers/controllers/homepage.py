@@ -184,6 +184,7 @@ class IotBoxOwlHomePage(http.Controller):
             'wifi_ssid': helpers.get_conf('wifi_ssid'),
             'qr_code_wifi': network_qr_codes.get('qr_wifi'),
             'qr_code_url': network_qr_codes.get('qr_url'),
+            "l10n_eg_proxy_token": helpers.get_conf("proxy_access_token", "options"),
         })
 
     @route.iot_route('/iot_drivers/wifi', type="http", cors='*', linux_only=True)

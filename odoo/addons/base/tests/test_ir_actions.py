@@ -10,9 +10,10 @@ from unittest.mock import patch
 
 import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, frozendict
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.models.res_partner import ResPartner
 from odoo import Command
 
 
@@ -509,6 +510,17 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.with_context(self.context).run()
         self.assertEqual(self.test_country.vat_label, 'VatFromTest', 'vat label should be changed to VatFromTest')
 
+    @mute_logger('odoo.addons.base.models.ir_actions')
+    def test_55_access_error_message(self):
+        self.action.write({
+            'model_id': self.res_country_model.id,
+            'binding_model_id': self.res_country_model.id,
+            'code': '1+2',
+        })
+
+        with self.assertRaisesRegex(AccessError, "You don't have enough access rights to run this action."):
+            self.action.with_user(self.user_demo).with_context(active_model="res.country").run()
+
     def test_60_sort(self):
         """ check the actions sorted by sequence """
         Actions = self.env['ir.actions.actions']
@@ -598,6 +610,45 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             self.action.with_context(self.context).run()
             self.env.cr.postcommit.run()  # webhooks run in postcommit
         self.assertEqual(num_requests, 2)
+
+    def test_webhook_sample_payload_with_frozendict_key(self):
+        """Test webhook sample payload generation with a frozendict used as a dict key.
+        Ensure serialization does not crash and key content is preserved in the output."""
+
+        model = self.env['ir.model']._get('res.partner')
+
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_payload',
+            'field_description': 'Payload',
+            'model_id': model.id,
+            'store': False,
+            'ttype': 'binary',
+        })
+
+        action = self.env['ir.actions.server'].create({
+            'name': 'Webhook Test',
+            'state': 'webhook',
+            'model_id': model.id,
+            'webhook_field_ids': [Command.link(field.id)],
+        })
+
+        fake_payload = {
+            frozendict({
+                'move_id': 1,
+                'date_maturity': date(2026, 6, 24),
+            }): {
+                'amount_currency': 1.15,
+                'balance': 1.15,
+            },
+        }
+
+        # Bypass the JSON field's own json.dumps validation by mocking read(),
+        # Such values cannot be stored through normal ORM field types, but can
+        with patch.object(ResPartner, 'read', return_value=[{'x_payload': fake_payload}]):
+            action._compute_webhook_sample_payload()
+
+        self.assertTrue(action.webhook_sample_payload)
+        self.assertIn('move_id', action.webhook_sample_payload)
 
     def test_90_convert_to_float(self):
         # make sure eval_value convert the value into float for float-type fields
@@ -935,6 +986,103 @@ class TestCustomFields(TestCommonCustomFields):
 
 @tagged('post_install', '-at_install')
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
+
+    def test_related_field_non_stored_not_allowed(self):
+        """ Test related field behavior with stored/non-stored combinations """
+
+        model_id = self.env['ir.model']._get_id('res.partner')
+        dummy_model = self.env['ir.model'].create({
+            'name': 'Dummy Model Test',
+            'model': 'x_dummy_model_test',
+        })
+
+        # NON-STORED M2O
+        self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_non_stored_m2o_test',
+            'field_description': 'x_non_stored_m2o_test',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'store': False,
+        })
+
+        # Stored M2O
+        self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_stored_m2o_test',
+            'field_description': 'x_stored_m2o_test',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'store': True,
+        })
+
+        # Stored boolean
+        self.env['ir.model.fields'].create({
+            'model_id': dummy_model.id,
+            'name': 'x_bool_stored_test',
+            'field_description': 'x_bool_stored_test',
+            'ttype': 'boolean',
+            'store': True,
+        })
+
+        # Non-stored boolean
+        self.env['ir.model.fields'].create({
+            'model_id': dummy_model.id,
+            'name': 'x_bool_non_stored_test',
+            'field_description': 'x_bool_non_stored_test',
+            'ttype': 'boolean',
+            'store': False,
+        })
+
+        # 1. Intermediate non-stored → should FAIL
+        self.env.registry.clear_cache()
+        with self.assertRaises(UserError):
+            self.env['ir.model.fields'].create({
+                'model_id': model_id,
+                'name': 'x_fail_intermediate_non_stored',
+                'field_description': 'x_fail_intermediate_non_stored',
+                'ttype': 'boolean',
+                'related': 'x_non_stored_m2o_test.x_bool_stored_test',
+                'store': True,
+            })
+
+        # 2. Last non-stored → should PASS
+        self.env.registry.clear_cache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_last_non_stored',
+            'field_description': 'x_pass_last_non_stored',
+            'ttype': 'boolean',
+            'related': 'x_stored_m2o_test.x_bool_non_stored_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
+        # 3. All stored → should PASS
+        self.env.registry.clear_cache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_all_stored',
+            'field_description': 'x_pass_all_stored',
+            'ttype': 'boolean',
+            'related': 'x_stored_m2o_test.x_bool_stored_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
+        # 4. One non-stored → should PASS
+        self.env.registry.clear_cache()
+        field = self.env['ir.model.fields'].create({
+            'model_id': model_id,
+            'name': 'x_pass_single_non_stored',
+            'field_description': 'x_pass_single_non_stored',
+            'ttype': 'many2one',
+            'relation': 'x_dummy_model_test',
+            'related': 'x_non_stored_m2o_test',
+            'store': True,
+        })
+        self.assertTrue(field)
+
     def test_add_field_valid(self):
         """ custom field names must start with 'x_', even when bypassing the constraints
 

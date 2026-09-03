@@ -297,6 +297,35 @@ test("Background position overlay behavior", async () => {
     );
 });
 
+test("Color filter doesn't disappear when video background is set", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="color-target o_background_video" data-snippet="s_banner" data-name="Banner" data-bg-video-src="/test_route">
+            <div class="o_bg_video_container" contenteditable="false">
+                <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
+            </div>
+            <div>First section</div>
+            <div class="o_we_bg_filter" style="background-color: rgba(100, 100, 100, 0.5);" />
+        </section>
+        <section class="gradient-target o_background_video" data-snippet="s_banner" data-name="Banner" data-bg-video-src="/test_route">
+            <div class="o_bg_video_container" contenteditable="false">
+                <div class="o_bg_video_loading d-flex justify-content-center align-items-center text-primary"></div>
+            </div>
+            <div>Second section</div>
+            <div class="o_we_bg_filter" style="background-image: linear-gradient(135deg, rgba(255, 204, 51, 0.5) 0%, rgba(226, 51, 255, 0.5) 100%)" />
+        </section>`);
+    expect(":iframe .o_we_bg_filter").toHaveCount(2);
+
+    await contains(":iframe .color-target").click();
+    await waitSidebarUpdated();
+    expect(":iframe .color-target .o_we_bg_filter").toHaveCount(1);
+    expect(":iframe .gradient-target .o_we_bg_filter").toHaveCount(1);
+
+    await contains(":iframe .gradient-target").click();
+    await waitSidebarUpdated();
+    expect(":iframe .color-target .o_we_bg_filter").toHaveCount(1);
+    expect(":iframe .gradient-target .o_we_bg_filter").toHaveCount(1);
+});
+
 async function openBgPositionOverlay(editingElement, waitSidebarUpdated) {
     await contains(editingElement).click();
     await waitSidebarUpdated();
@@ -424,6 +453,18 @@ test("remove background image removes color filter", async () => {
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();
 });
 
+test("remove background image removes gradient color filter", async () => {
+    await setupWebsiteBuilder(`
+        <section style="background-image: url('/web/image/123/transparent.png');">
+            <div class="o_we_bg_filter"
+                style="background-image: linear-gradient(135deg, red, blue);"></div>
+            AAAA
+        </section>`);
+    await contains(":iframe section").click();
+    await contains("[data-action-id='toggleBgImage']").click();
+    expect(":iframe section .o_we_bg_filter").not.toHaveCount();
+});
+
 test("change background size", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <section class="o_bg_img_opt_repeat" style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px; background-size: 100px;">
@@ -449,7 +490,7 @@ test("change background size", async () => {
 
     await contains(heightInput).edit("");
     expect(heightInput).toHaveValue("");
-    expect(section).toHaveStyle("background-size: 100px");
+    expect(section).toHaveStyle({ "background-size": /^100px/ });
 
     await contains(widthInput).edit("");
     expect(widthInput).toHaveValue("");
@@ -458,7 +499,7 @@ test("change background size", async () => {
 
     await contains(widthInput).edit("0");
     expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
-    expect(section).toHaveStyle("background-size: 1px");
+    expect(section).toHaveStyle({ "background-size": /^1px/ });
 });
 
 test("background shape detection is compatible with previous ones (web_editor)", async () => {

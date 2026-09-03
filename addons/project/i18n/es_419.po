@@ -2,16 +2,17 @@
 # This file contains the translation of the following modules:
 # * project
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-01-16 20:31+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 12:43+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/project/es_419/>\n"
 "Language: es_419\n"
@@ -19,12 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " Todos los usuarios internos y los usuarios de portal invitados"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -283,16 +279,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/"
-"><br/>\n"
+"                Hola <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hola,<br/><br/>\n"
@@ -301,9 +297,8 @@ msgstr ""
 "con la tarea <strong t-out=\"object.name or ''\">Planificación y "
 "presupuesto</strong> \n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                asignada a <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
-">\n"
+"                asignada a <strong t-out=\"object._rating_get_operator()"
+".name or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -366,23 +361,23 @@ msgstr ""
 "        </td></tr>\n"
 "        <tr><td><br/>Saludos,</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\">TuEmpresa</"
-"t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">TuEmpresa</t>"
+"\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@tuempresa.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@tuempresa.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.ejemplo.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -419,8 +414,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
@@ -466,8 +461,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -601,8 +596,8 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o "
-"pe-2\"/>\n"
+"                                            <i class=\"fa fa-lightbulb-o pe-"
+"2\"/>\n"
 "                                            <span "
 "name=\"rating_status_helper\">\n"
 "                                                <span "
@@ -886,8 +881,12 @@ msgstr "Administrador"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "El administrador puede gestionar el horario de los empleados"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
+"Administrador: Puede gestionar proyectos y etapas, con acceso a reportes y "
+"configuración."
 
 #. module: project
 #. odoo-javascript
@@ -960,6 +959,11 @@ msgid "All internal users"
 msgstr "Todos los usuarios internos"
 
 #. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr "Todos los usuarios internos y los usuarios de portal invitados"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__allocated_hours
 msgid "Allocated Time"
@@ -990,8 +994,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
-msgstr ""
-"Analice el progreso de sus proyectos y el rendimiento de sus empleados."
+msgstr "Analice el progreso de sus proyectos y el rendimiento de sus empleados."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
@@ -1059,7 +1062,7 @@ msgstr "¿Está seguro de que quiere eliminar estas etapas?"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_one2many_field/subtask_list_renderer.js:0
 msgid "Are you sure you want to delete this record?"
-msgstr "¿Está seguro de que desea eliminar este registro?"
+msgstr "¿De verdad quieres eliminar este registro?"
 
 #. module: project
 #. odoo-javascript
@@ -1140,8 +1143,8 @@ msgid ""
 "Attach all documents or links to the task directly, to have all research "
 "information centralized."
 msgstr ""
-"Adjunte todos los documentos o enlaces a la tarea para tener toda la "
-"información disponible en un solo lugar."
+"Adjunta todos los documentos o enlaces directo a la tarea para centralizar "
+"toda la información."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -2426,8 +2429,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them "
 "in the chatter of the tasks."
 msgstr ""
-"Gestione la recopilación de ideas dentro de las tareas de su nuevo proyecto "
-"y hable acerca de ellas en el chatter."
+"Gestiona la recopilación de ideas dentro de las tareas de tu nuevo proyecto "
+"y habla sobre ellas en su respectivo chatter."
 
 #. module: project
 #. odoo-javascript
@@ -2696,8 +2699,8 @@ msgid ""
 msgstr ""
 "Correo electrónico interno asociado a este proyecto. Los correos "
 "electrónicos entrantes se sincronizan en automático con las tareas (o, si lo "
-"desea, con los problemas si el módulo Rastreador de problemas está "
-"instalado)."
+"desea, con los problemas si el módulo Rastreador de problemas está instalado)"
+"."
 
 #. module: project
 #. odoo-javascript
@@ -2964,7 +2967,7 @@ msgstr "Diseño de logo"
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Look for the"
-msgstr "Busque el"
+msgstr "Busca el"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
@@ -4630,10 +4633,10 @@ msgid ""
 "move them all at once to the next sprint by editing the milestone, tag, or "
 "property."
 msgstr ""
-"Ordene las tareas de sus iteraciones por objetivos, etiquetas o una "
-"propiedad específica. Al final de cada iteración solo elegir las tareas "
-"restantes en su lista y moverlas todas al mismo tiempo a la siguiente "
-"iteración al editar el objetivo, etiqueta o propiedad."
+"Usa objetivos, etiquetas o una propiedad específica para ordenar tus tareas "
+"por sprints. Al final de cada sprint, solo tienes que elegir las tareas "
+"restantes de tu lista y moverlas, al mismo tiempo, al siguiente sprint al "
+"editar el objetivo, etiqueta o propiedad."
 
 #. module: project
 #. odoo-javascript
@@ -5780,8 +5783,8 @@ msgstr "Ajustes de usuario"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "El usuario puede gestionar el horario de sus empleados"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr "Usuario: Puede gestionar tareas en los proyectos que le comparten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5828,8 +5831,7 @@ msgstr "En espera"
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
-"¿Busca mejorar la <b>gestión de sus proyectos</b>? <i>Empiece aquí.</i>"
+msgstr "¿Busca mejorar la <b>gestión de sus proyectos</b>? <i>Empiece aquí.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
@@ -6076,7 +6078,7 @@ msgstr "Sus gerentes seleccionan que comentarios aceptar"
 #: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
 #: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
 msgid "\\t- ${"
-msgstr ""
+msgstr "\\t- ${"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -6324,6 +6326,15 @@ msgstr "👤 Sin asignar"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privado"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " Todos los usuarios internos y los usuarios de portal invitados"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "El administrador puede gestionar el horario de los empleados"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "El usuario puede gestionar el horario de sus empleados"
 
 #~ msgid ""
 #~ "<div>\n"

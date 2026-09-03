@@ -22,3 +22,4 @@ class TestTakeawayMail(MailCase, TestSelfOrderPreset):
         # Message is posted and mail is sent on time
         self.assertEqual(len(self._new_mails), 1)
         self.assertEqual(self._new_mails.subject, "Your BarTest receipt")
+        self.assertEqual(len(self._new_mails.attachment_ids), 1)

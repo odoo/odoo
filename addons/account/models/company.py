@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from collections import defaultdict
 from datetime import timedelta, datetime, date
 import calendar
@@ -9,12 +7,12 @@ from odoo.exceptions import LockError, ValidationError, UserError, RedirectWarni
 from odoo.tools import date_utils, format_list, SQL
 from odoo.tools.mail import is_html_empty
 from odoo.tools.misc import format_date
+
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
 from odoo.addons.account.models.partner import _ref_company_registry
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 from odoo.fields import Domain
-
 
 MONTH_SELECTION = [
     ('1', 'January'),
@@ -35,8 +33,8 @@ MONTH_SELECTION = [
 # !!! KEEP ALIGNED WITH ACCOUNT_PEPPOL MANIFEST -> COUNTRIES
 PEPPOL_DEFAULT_COUNTRIES = [
     'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
-    'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
-    'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
+    'FR', 'IE', 'IS', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'SE',
+    'SI',
 ]
 
 # List of countries where Peppol footnote will be added when sending by mail.
@@ -46,9 +44,9 @@ PEPPOL_MAILING_COUNTRIES = [
 
 # List of countries where Peppol is accessible.
 PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
-    'AD', 'AL', 'AX', 'BA', 'BG', 'BL', 'GB', 'GF', 'GP', 'HR', 'HU', 'LI', 'MC', 'ME',
-    'MF', 'MK', 'MQ', 'NC', 'PF', 'PM', 'RE', 'RS', 'SK', 'SM', 'TF', 'TR', 'VA', 'WF',
-    'YT',
+    'AD', 'AL', 'AX', 'BA', 'BG', 'BL', 'GB', 'GF', 'GP', 'GR', 'HR', 'HU', 'IT', 'LI',
+    'MC', 'ME', 'MF', 'MK', 'MQ', 'NC', 'PF', 'PL', 'PM', 'PT', 'RE', 'RO', 'RS', 'SK',
+    'SM', 'TF', 'TR', 'VA', 'WF', 'YT'
 ]
 
 STORNO_MANDATORY_COUNTRIES = {'BA', 'CN', 'CZ', 'HR', 'PL', 'RO', 'RS', 'RU', 'SI', 'SK', 'UA'}
@@ -142,7 +140,7 @@ class ResCompany(models.Model):
         comodel_name='account.account',
         string="Loss Exchange Rate Account",
         check_company=True,
-        domain="[('account_type', '=', 'expense')]")
+        domain="[('account_type', 'in', ('expense', 'expense_other'))]")
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
@@ -163,14 +161,6 @@ class ResCompany(models.Model):
         comodel_name='ir.sequence',
         readonly=True,
         copy=False,
-        default=lambda self: self.env['ir.sequence'].sudo().create({
-            'name': _("Group Payments Number Sequence"),
-            'implementation': 'no_gap',
-            'padding': 5,
-            'use_date_range': True,
-            'company_id': self.id,
-            'prefix': 'GROUP/%(year)s/',
-        }),
     )
 
     #Fields of the setup step for opening move
@@ -475,6 +465,25 @@ class ResCompany(models.Model):
         for company in self:
             onboardings.with_company(company)._search_or_create_progress()
 
+    def _get_batch_payment_sequence_values(self):
+        self.ensure_one()
+        return {
+            'name': _("Group Payments Number Sequence"),
+            'implementation': 'no_gap',
+            'padding': 5,
+            'use_date_range': True,
+            'company_id': self.id,
+            'prefix': 'GROUP/%(range_year)s/',
+        }
+
+    def _create_batch_payment_sequence(self):
+        for company in self:
+            if not company.batch_payment_sequence_id:
+                sequence = self.env['ir.sequence'].sudo().create(
+                    company._get_batch_payment_sequence_values()
+                )
+                company.batch_payment_sequence_id = sequence
+
     @api.model_create_multi
     def create(self, vals_list):
         companies = super().create(vals_list)
@@ -487,6 +496,7 @@ class ResCompany(models.Model):
                         install_demo=False,
                     )
                 self.env.cr.precommit.add(try_loading)
+            company._create_batch_payment_sequence()
         companies._set_category_defaults()
         return companies
 
@@ -844,7 +854,7 @@ class ResCompany(models.Model):
                 'xml_id': f"account.{str(self.id)}_unaffected_earnings_account",
                 'values': {
                               'code': str(code),
-                              'name': _('Undistributed Profits/Losses'),
+                              'name': _('Profit or Loss Appropriation'),
                               'account_type': unaffected_earnings_type,
                               'company_ids': [Command.link(self.id)],
                           },
@@ -1114,15 +1124,13 @@ class ResCompany(models.Model):
     @api.depends('country_id', 'account_fiscal_country_id')
     def _compute_company_vat_placeholder(self):
         for company in self:
-            placeholder = _("/ if not applicable")
+            expected_vat = ''
             if company.country_id or company.account_fiscal_country_id:
                 expected_vat = _ref_vat.get(
                     (company.country_id.code or company.account_fiscal_country_id.code).lower()
                 )
-                if expected_vat:
-                    placeholder = _("%s, or / if not applicable", expected_vat)
 
-            company.company_vat_placeholder = placeholder
+            company.company_vat_placeholder = self.env._(expected_vat or '')  # pylint: disable=E8502
 
     @api.depends('country_id', 'account_fiscal_country_id')
     def _compute_company_registry_placeholder(self):

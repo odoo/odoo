@@ -19,15 +19,15 @@
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-13 18:36+0000\n"
-"PO-Revision-Date: 2026-02-20 11:55+0000\n"
+"PO-Revision-Date: 2026-08-24 05:51+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "sale_stock/fi/>\n"
@@ -36,7 +36,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -126,13 +126,13 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Tuotekonfiguraation mukaan toimitettu määrä voidaan laskea automaattisesti "
-"mekanismin avulla:\n"
-"  - Manuaalinen: määrä asetetaan manuaalisesti rivillä\n"
-"  - Analyyttinen kuluista: määrä on kirjattujen kulujen summa\n"
-"  - Työaikakirjaukset: määrä on tähän myyntiriviin linkitettyjen tehtävissä "
-"olevien kirjattujen tuntien summa\n"
-"  - Varastosiirrot: määrä tulee vahvistetuista keräilyistä\n"
+"Tuotteen asetusten perusteella toimitettavan määrän voi laskea "
+"automaattisesti:\n"
+"  - Manuaalisesti: määrä määritetään manuaalisesti riville\n"
+"  - Analyyttisesti kuluista: määrä on kirjattujen kulujen summa\n"
+"  - Työaikakirjaukset: määrä on tähän riviin linkitettyihin tehtäviin "
+"kirjattujen tuntien summa\n"
+"  - Varastoliikkeistä: määrä perustuu vahvistettuihin keräilyihin\n"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
@@ -430,7 +430,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Routes"
-msgstr "Varaston reititys"
+msgstr "Varastoinnin reitit"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -636,7 +636,7 @@ msgstr "Varattu"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Palauta keräily"
+msgstr "Palautuskeräily"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -772,12 +772,12 @@ msgstr "Varaston täydennyksen raportti"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Varaston sääntö"
+msgstr "Varastosääntö"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr "Varaston sääntöjen raportti"
+msgstr "Varastosääntöraportti"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -813,8 +813,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered. "
 "Instead, create a return in your inventory."
 msgstr ""
-"Tilattua määrää ei voi pienentää jo toimitettua määrää pienemmäksi. Luo sen "
-"sijaan palautus varastoon."
+"Tilattua määrää ei voi vähentää jo toimitettua määrää pienemmäksi. Luo sen "
+"sijaan palautus varastointi-sovelluksessa."
 
 #. module: sale_stock
 #. odoo-python
@@ -920,7 +920,7 @@ msgstr "päivää"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "of"
-msgstr "of"
+msgstr " "
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -930,7 +930,7 @@ msgstr "tilattu sen sijasta"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr "käsitelty"
+msgstr "käsitelty tämän sijaan:"
 
 #. module: sale_stock
 #. odoo-javascript

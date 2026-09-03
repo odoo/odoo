@@ -159,6 +159,11 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             ]
         })
 
+        cls.inps_purchase_tax_TC02 = cls.inps_purchase_tax.copy({
+            'name': '4% INPS (TC02)',
+            'l10n_it_pension_fund_type': 'TC02',
+        })
+
         cls.withholding_sale_tax_23_base50_invoice = cls.env['account.move'].with_company(cls.company).create({
             'move_type': 'out_invoice',
             'company_id': cls.company.id,
@@ -307,12 +312,109 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 'price_unit': price_unit,
             } for name, price_unit in self.invoice_lines]
         }])
+        # Line 1 is taken into account because the TC is missing, so we deduce it should be included.
         for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
             self.assertEqual(line.tax_ids, (
                 self.inps_purchase_tax
                 | self.withholding_purchase_tax
                 | self.company.account_purchase_tax_id
             ))
+
+    def test_two_pension_fund_taxes_import_same_vat(self):
+        """
+            Test that different Pension Fund taxes (TipoCassa) applied to the
+            same VAT tax are correctly applied to their respective invoice
+            lines based on the AssoSoftware 'RiferimentoTesto' tags.
+            Total     VAT       Detail        RiferimentoTesto      Pension Fund
+            350.00    22%       AswCassPre                      ->  TC02 + TC22 4% on VAT 22%
+            300.00    22%       AswCassPre    TC02 (4%)         ->  TC02 4% on VAT 22%
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+        """
+
+        applied_xml = """
+            <xpath expr="//DatiGeneraliDocumento/DatiCassaPrevidenziale[1]" position="after">
+                <DatiCassaPrevidenziale>
+                    <TipoCassa>TC02</TipoCassa>
+                    <AlCassa>4.00</AlCassa>
+                    <AliquotaIVA>22.00</AliquotaIVA>
+                </DatiCassaPrevidenziale>
+            </xpath>
+            <xpath expr="//DettaglioLinee[NumeroLinea='2']/AltriDatiGestionali/RiferimentoTesto" position="replace">
+                <RiferimentoTesto>TC02 (4%)</RiferimentoTesto>
+            </xpath>
+        """
+
+        invoice = self._assert_import_invoice('IT00470550013_pfund.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 810.45,
+            'amount_tax': 60.45,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }], applied_xml)
+
+        self.assertEqual(
+            [line.tax_ids for line in invoice.invoice_line_ids], [
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax | self.inps_purchase_tax_TC02,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax_TC02,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+            ]
+        )
+
+    def test_two_pension_fund_taxes_with_different_vat_with_asw_tag(self):
+        """
+            Test that different Pension Fund taxes (TipoCassa) applied to
+            different VAT taxes are correctly applied to their respective
+            invoice lines based on the AssoSoftware 'RiferimentoTesto' tags.
+            Total     VAT       Detail        RiferimentoTesto      Pension Fund
+            350.00    22%       AswCassPre                      ->  TC22 4% on VAT 22%
+            300.00    0% N2.1   AswCassPre    TC02 (4%)         ->  TC02 4% on VAT 0% N2.1
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+            50.00     22%       AswCassPre    TC22 (4%)         ->  TC22 4% on VAT 22%
+        """
+
+        applied_xml = """
+            <xpath expr="//DatiGeneraliDocumento/DatiCassaPrevidenziale[1]" position="after">
+                <DatiCassaPrevidenziale>
+                    <TipoCassa>TC02</TipoCassa>
+                    <AlCassa>4.00</AlCassa>
+                    <AliquotaIVA>0.00</AliquotaIVA>
+                    <Natura>N2.1</Natura>
+                </DatiCassaPrevidenziale>
+            </xpath>
+            <xpath expr="//DettaglioLinee[NumeroLinea='2']/AliquotaIVA" position="replace">
+                <AliquotaIVA>0.00</AliquotaIVA>
+                <Natura>N2.1</Natura>
+            </xpath>
+            <xpath expr="//DettaglioLinee[NumeroLinea='2']/AltriDatiGestionali/RiferimentoTesto" position="replace">
+                <RiferimentoTesto>TC02 (4%)</RiferimentoTesto>
+            </xpath>
+        """
+
+        invoice = self._assert_import_invoice('IT00470550013_pfund.xml', [{
+            'invoice_date': fields.Date.from_string('2022-03-24'),
+            'amount_untaxed': 750.0,
+            'amount_total': 726.96,
+            'amount_tax': -23.04,
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price_unit,
+            } for name, price_unit in self.invoice_lines]
+        }], applied_xml)
+
+        self.assertEqual(
+            [line.tax_ids for line in invoice.invoice_line_ids],
+            [
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+                self.vat_0_N2_1_purchase             | self.withholding_purchase_tax | self.inps_purchase_tax_TC02,  # noqa: E221
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+                self.company.account_purchase_tax_id | self.withholding_purchase_tax | self.inps_purchase_tax,
+            ]
+        )
 
     def test_pension_fund_taxes_import(self):
         invoice = self._assert_import_invoice('IT00470550013_pfun2.xml', [{
@@ -329,6 +431,26 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 | self.withholding_purchase_tax
                 | self.company.account_purchase_tax_id
             ))
+
+    def test_pension_fund_taxes_import_zero_vat_rate(self):
+        """ Test that pension fund taxes with a 0.00% VAT rate are correctly imported."""
+
+        invoice = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
+            'invoice_date': datetime.date(2022, 3, 24),
+            'invoice_date_due': datetime.date(2022, 3, 24),
+            'invoice_line_ids': [{
+                'name': name,
+                'price_unit': price,
+            } for name, price in self.invoice_lines]
+        }])
+
+        for line in invoice.line_ids.filtered(lambda line: line.display_type == 'product'):
+            self.assertTrue(line.tax_ids, f'No taxes imported on line: {line.name}')
+            self.assertIn(
+                self.inps_purchase_tax,
+                line.tax_ids,
+                f'Pension fund tax was not imported on line: {line.name}'
+            )
 
     ####################################################
     # ENASARCO TAX
@@ -438,6 +560,25 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             Payment amount:  Document total                            780.00
         """
         self._assert_export_invoice(self.inps_tax_invoice, 'inps_tax_invoice.xml')
+
+    def test_multiple_pension_funds_per_line(self):
+        """Test that multiple pension fund taxes can be applied to a single invoice line."""
+
+        invoice = self._create_invoice(
+            partner_id=self.italian_partner_a,
+            company_id=self.company,
+            invoice_date='2023-10-01',
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=1000.0, tax_ids=[
+                    self.company.account_sale_tax_id.id,
+                    self.pension_fund_sale_tax.id,
+                    self.enasarco_sale_tax.id,
+                ])
+            ]
+        )
+
+        errors = invoice._l10n_it_edi_export_taxes_check()
+        self.assertEqual(len(errors), 0)
 
     ####################################################
     # RA 23% WITHHOLDING TAX

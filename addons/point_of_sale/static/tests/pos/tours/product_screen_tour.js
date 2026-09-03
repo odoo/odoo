@@ -29,6 +29,9 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
             ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
             // Make sure we don't have any scroll bar on the product list
             {
@@ -942,11 +945,19 @@ registry.category("web_tour.tours").add("test_product_long_press", {
             Dialog.is(),
             {
                 content: "Check that VAT label is present in the product details popup",
-                trigger: ".section-financials .vat-label:contains('VAT')",
+                trigger: ".section-financials .vat-label:contains('Child Tax 1')",
+            },
+            {
+                content: "Check that VAT label is present in the product details popup",
+                trigger: ".section-financials .vat-label:contains('Child Tax 2')",
             },
             {
                 content: "Check that VAT value is correct in the product details popup",
-                trigger: ".section-financials .vat-value:contains('$ 15.00 (Parent Tax)')",
+                trigger: ".section-financials .vat-value:contains('$ 10.00')",
+            },
+            {
+                content: "Check that VAT value is correct in the product details popup",
+                trigger: ".section-financials .vat-value:contains('$ 5.00')",
             },
             Chrome.endTour(),
         ].flat(),
@@ -1101,33 +1112,37 @@ registry
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickFastPaymentButton("Bank"),
                 FeedbackScreen.isShown(),
-                Dialog.confirm(),
-                FeedbackScreen.clickScreen(),
                 ProductScreen.isShown(),
+                Dialog.confirm(),
                 ProductScreen.clickDisplayedProduct("Desk Organizer"),
                 ProductScreen.clickPayButton(),
                 PaymentScreen.clickPaymentMethod("Bank"),
                 PaymentScreen.clickValidate(),
                 FeedbackScreen.isShown(),
-                Dialog.confirm(),
-                FeedbackScreen.clickScreen(),
                 ProductScreen.isShown(),
+                Dialog.confirm(),
             ].flat(),
     });
 
-registry.category("web_tour.tours").add("test_only_existing_lots", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product with existing lots"),
-            ProductScreen.selectNthLotNumber(1),
-            ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
-            inLeftSide({
-                trigger: ".order-container .orderline .lot-number:contains('Lot Number 1001')",
-            }),
-            Chrome.endTour(),
-        ].flat(),
+function existingLotsTour(expectedLot) {
+    return [
+        Chrome.startPoS(),
+        Dialog.confirm("Open Register"),
+        ProductScreen.clickDisplayedProduct("Product with existing lots"),
+        ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
+        inLeftSide({
+            trigger: `.order-container .orderline .lot-number:contains('Lot Number ${expectedLot}')`,
+        }),
+        Chrome.endTour(),
+    ].flat();
+}
+
+registry.category("web_tour.tours").add("test_only_existing_lots_fifo", {
+    steps: () => existingLotsTour("1001"),
+});
+
+registry.category("web_tour.tours").add("test_only_existing_lots_lifo", {
+    steps: () => existingLotsTour("1002"),
 });
 
 registry.category("web_tour.tours").add("test_delete_line", {
@@ -1270,6 +1285,49 @@ registry.category("web_tour.tours").add("test_orderline_merge_with_higher_price_
             ProductScreen.selectedOrderlineHas("High Precision Product", "1.0", "8.25"),
             ProductScreen.clickDisplayedProduct("High Precision Product"),
             ProductScreen.selectedOrderlineHas("High Precision Product", "2.0", "16.49"), // 8.245 * 2 = 16.49
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_default_fiscal_position_allowed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.checkFiscalPosition("Allowed"),
+            ProductScreen.clickControlButtonMore(),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_barcode_scan_preselect_always_variant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("VAR_RED_001"),
+
+            ProductConfiguratorPopup.pickRadio("Large"),
+            Dialog.confirm("Add"),
+            ProductScreen.selectedOrderlineHas(
+                "Variant Barcode Product",
+                "1.0",
+                "10.0",
+                "Red, Large"
+            ),
+
+            scan_barcode("VAR_BLUE_001"),
+            Dialog.confirm("Add"),
+            ProductScreen.selectedOrderlineHas(
+                "Variant Barcode Product",
+                "1.0",
+                "10.0",
+                "Blue, Small"
+            ),
+
             Chrome.endTour(),
         ].flat(),
 });

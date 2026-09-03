@@ -81,7 +81,7 @@ registerWebsitePreviewTour(
         ...clickOnImgAndWaitForLoad,
         {
             content: "Click on Remove",
-            trigger: ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:contains(5.9 kB)) button[data-action-id='removeMedia']",
+            trigger: ".o_customize_tab [data-container-title='Image']:has(.o-hb-image-size-info:contains(3.7 kB)) button[data-action-id='removeMedia']",
             run: "click",
         },
         // If the snippet editor is not visible, the remove process is considered as finished.

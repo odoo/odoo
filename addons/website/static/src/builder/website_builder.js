@@ -9,7 +9,7 @@ import { TranslateSetupEditorPlugin } from "./plugins/translate_setup_editor_plu
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
 import { removePlugins } from "@html_builder/utils/utils";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -19,6 +19,7 @@ import { HighlightPlugin } from "./plugins/highlight/highlight_plugin";
 import { RepeatTranslationStatePlugin } from "./plugins/translation/repeat_translation_state_plugin";
 import { BadgeTranslationPlugin } from "./plugins/translation/badge_translation_plugin";
 import { ButtonTranslationPlugin } from "./plugins/options/button_option_plugin";
+import { NavTabsTranslationPlugin } from "./plugins/options/navtabs_style_option_plugin";
 import { PopupVisibilityPlugin } from "./plugins/popup_visibility_plugin";
 import { SaveTranslationPlugin } from "./plugins/save_translation_plugin";
 import { TranslateAnnouncementScrollPlugin } from "./plugins/translate_announcement_scroll_plugin";
@@ -43,6 +44,7 @@ import { FieldChangeReplicationPlugin } from "@html_builder/core/field_change_re
 import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
+import { DateTimeFieldPlugin } from "@html_builder/plugins/date_time_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
 import { CustomizeTranslationTab } from "@website/builder/plugins/translation_tab/customize_translation_tab";
 import { CustomizeTranslationTabPlugin } from "./plugins/translation_tab/customize_translation_tab_plugin";
@@ -55,6 +57,7 @@ import {
     localStorageNoDialogKey,
     TranslatorInfoDialog,
 } from "./translation_components/translatorInfoDialog";
+import { router } from "@web/core/browser/router";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -78,6 +81,7 @@ const TRANSLATION_PLUGINS = [
     RepeatTranslationStatePlugin,
     BadgeTranslationPlugin,
     ButtonTranslationPlugin,
+    NavTabsTranslationPlugin,
     OperationPlugin,
     EditInteractionPlugin,
     TranslateTableOfContentOptionPlugin,
@@ -86,6 +90,7 @@ const TRANSLATION_PLUGINS = [
     BuilderContentEditablePlugin,
     ImageFieldPlugin,
     MonetaryFieldPlugin,
+    DateTimeFieldPlugin,
     Many2OneOptionPlugin,
     CustomizeTranslationTabPlugin,
     // Those plugin are depended by other Plugin but not used in translation
@@ -126,7 +131,33 @@ export class WebsiteBuilder extends Component {
                 this.dialog.add(TranslatorInfoDialog);
             }
             this.websiteEditService?.clearRpcCache();
+            this.isGuardActive = true;
+            this.pendingHistoryCleanup = false;
+            this.pushHistoryState();
         });
+        onWillUnmount(() => {
+            // If the guard entry is still on top (e.g. save path).
+            if (this.isGuardActive) {
+                this.pendingHistoryCleanup = true;
+                Promise.resolve().then(() => {
+                    if (!this.pendingHistoryCleanup) {
+                        return;
+                    }
+                    this.pendingHistoryCleanup = false;
+                    if (history.state?.skipRouteChange) {
+                        router.skipLoad = true;
+                        history.back();
+                    }
+                });
+            }
+        });
+    }
+
+    pushHistoryState() {
+        const state = { skipRouteChange: true };
+        history.state?.skipRouteChange
+            ? history.replaceState(state, "")
+            : history.pushState(state, "");
     }
 
     async discard() {
@@ -163,20 +194,27 @@ export class WebsiteBuilder extends Component {
             return true;
         }
         if (this.editor.shared.history.canUndo()) {
-            let continueProcess = true;
+            let shouldCloseEditor = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
                     body: _t("If you proceed, your changes will be lost"),
                     confirmLabel: _t("Continue"),
                     confirm: () => resolve(),
                     cancel: () => {
-                        continueProcess = false;
+                        shouldCloseEditor = false;
                         resolve();
                     },
                 });
             });
-            return continueProcess;
+            if (shouldCloseEditor) {
+                this.isGuardActive = false;
+                this.props.builderProps.closeEditor();
+            } else {
+                this.pushHistoryState();
+            }
+            return false;
         }
+        this.isGuardActive = false;
         return true;
     }
 

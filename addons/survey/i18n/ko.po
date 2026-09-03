@@ -7,24 +7,24 @@
 # Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-02-26 06:52+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/survey/ko/"
-">\n"
+"PO-Revision-Date: 2026-08-05 22:15+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/survey/"
+"ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -239,8 +239,8 @@ msgstr ""
 "''\">가구 제작</strong>\n"
 "                    인증서\n"
 "                </p>\n"
-"                <p><strong t-out=\"object.scoring_percentage\"/>%!</p>로 인증"
-"에 통과하신 것을 축하드립니다!\n"
+"                <p><strong t-out=\"object.scoring_percentage\"/>%!</p>로 "
+"인증에 통과하신 것을 축하드립니다!\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -291,8 +291,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        안녕하세요, <t t-out=\"object.partner_id.name or "
-"'participant'\">participant</t>님.<br/><br/>\n"
+"        안녕하세요, <t t-out=\"object.partner_id.name or 'participant'\">"
+"participant</t>님.<br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            새로운 인증서를 받으실 수 있도록 초대합니다.\n"
 "        </t>\n"
@@ -302,8 +302,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    인증 시작하기\n"
@@ -376,8 +376,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/> It is currently not possible to "
 "pass this assessment because no question is configured to give any points."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/> 현재 해당 평가를 통과할 수 없습니"
-"다. 점수를 받을 수 있도록 설정한 문항이 없습니다."
+"<i class=\"fa fa-exclamation-triangle\"/> 현재 해당 평가를 통과할 수 "
+"없습니다. 점수를 받을 수 있도록 설정한 문항이 없습니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -451,8 +451,8 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                            <span id=\"enter-tooltip\">또는 엔터키를 누르세요"
-"</span>\n"
+"                            <span id=\"enter-tooltip\">또는 엔터키를 "
+"누르세요</span>\n"
 "                        </span>"
 
 #. module: survey
@@ -463,8 +463,8 @@ msgid ""
 "                </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                    <span id=\"enter-tooltip\">또는 CTRL+Enter 키를 누르세요"
-"</span>\n"
+"                    <span id=\"enter-tooltip\">또는 CTRL+Enter 키를 "
+"누르세요</span>\n"
 "                </span>"
 
 #. module: survey
@@ -493,8 +493,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">인증서"
-"</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"인증서</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">인증서</span>"
 
@@ -504,8 +504,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or "
 "press Enter</span>"
 msgstr ""
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">또"
-"는 엔터키를 누르세요</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">"
+"또는 엔터키를 누르세요</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -527,8 +527,8 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"o_survey_results_topbar_clear_filters text-primary\">\n"
-"                                <i class=\"fa fa-trash me-1\"/>전체 필터 해"
-"제\n"
+"                                <i class=\"fa fa-trash me-1\"/>전체 필터 "
+"해제\n"
 "                            </span>"
 
 #. module: survey
@@ -732,16 +732,15 @@ msgid ""
 "A positive default time limit is required when the session rewards quick "
 "answers."
 msgstr ""
-"세션에서 빠른 답변에 대한 보상을 제공하는 경우 기본 시간 제한은 양수로 설정해"
-"야 합니다."
+"세션에서 빠른 답변에 대한 보상을 제공하는 경우 기본 시간 제한은 양수로 "
+"설정해야 합니다."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__answer_score
 msgid ""
 "A positive score indicates a correct choice; a negative or null score "
 "indicates a wrong answer"
-msgstr ""
-"양수 점수는 올바른 답을 나타냅니다. 음수 또는 null 점수는 오답을 나타냅니다."
+msgstr "양수 점수는 올바른 답을 나타냅니다. 음수 또는 null 점수는 오답을 나타냅니다."
 
 #. module: survey
 #. odoo-javascript
@@ -862,8 +861,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Date\" questions "
 "need an answer"
 msgstr ""
-"모든 \"Is a scored question = True\" 및 \"Question Type: Date\" 질문에는 답변"
-"이 필요합니다."
+"모든 \"Is a scored question = True\" 및 \"Question Type: Date\" 질문에는 "
+"답변이 필요합니다."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scored_datetime_have_answers
@@ -952,8 +951,8 @@ msgid ""
 "Answer label as either the value itself if not empty or a letter "
 "representing the index of the answer otherwise."
 msgstr ""
-"비어 있지 않으면 값 자체로, 비어 있으면 인덱스를 나타내는 문자로 답에 레이블"
-"을 지정합니다."
+"비어 있지 않으면 값 자체로, 비어 있으면 인덱스를 나타내는 문자로 답에 "
+"레이블을 지정합니다."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -1070,8 +1069,7 @@ msgstr "작성자"
 msgid ""
 "Automated email sent to the user when they succeed the certification, "
 "containing their certification document."
-msgstr ""
-"인증에 성공하면 인증서를 포함한 이메일이 사용자에게 자동으로 전송됩니다."
+msgstr "인증에 성공하면 인증서를 포함한 이메일이 사용자에게 자동으로 전송됩니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -1174,8 +1172,7 @@ msgstr "인간의 눈으로 광자를 직접 볼 수 있습니까?"
 msgid ""
 "Cannot deactivate a language currently used by survey(s) only supporting "
 "that language."
-msgstr ""
-"현재 해당 언어만 지원하는 설문조사에서는 사용 언어를 비활성화할 수 없습니다."
+msgstr "현재 해당 언어만 지원하는 설문조사에서는 사용 언어를 비활성화할 수 없습니다."
 
 #. module: survey
 #. odoo-python
@@ -1183,8 +1180,7 @@ msgstr ""
 msgid ""
 "Cannot deactivate languages currently used by survey(s) only supporting "
 "those languages."
-msgstr ""
-"현재 해당 언어만 지원하는 설문조사에서는 사용 언어를 비활성화할 수 없습니다."
+msgstr "현재 해당 언어만 지원하는 설문조사에서는 사용 언어를 비활성화할 수 없습니다."
 
 #. module: survey
 #. odoo-python
@@ -1289,8 +1285,8 @@ msgstr "선택"
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
 msgstr ""
-"좋아하는 주제를 선택하고 그 주제에 대해 얼마나 잘 알고 있는지 보여주세요. 준"
-"비되셨나요?"
+"좋아하는 주제를 선택하고 그 주제에 대해 얼마나 잘 알고 있는지 보여주세요. "
+"준비되셨나요?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_food_preferences_q3
@@ -1358,8 +1354,8 @@ msgid ""
 "possible; please update the following surveys:\n"
 "- %(survey_names)s"
 msgstr ""
-"로밍과 '각 페이지 뒤에 있는 응답 채점' 항목은 합쳐질 수 없습니다. 다음의 설문"
-"을 업데이트하세요:\n"
+"로밍과 '각 페이지 뒤에 있는 응답 채점' 항목은 합쳐질 수 없습니다. 다음의 "
+"설문을 업데이트하세요:\n"
 "- %(survey_names)s"
 
 #. module: survey
@@ -1575,8 +1571,7 @@ msgstr "테스트 토큰을 만들 수 없습니다."
 msgid ""
 "Creating token for anybody else than employees is not allowed for internal "
 "surveys."
-msgstr ""
-"내부 설문 조사에서는 직원이 아닌 다른 사람을 위해 토큰을 생성할 수 없습니다."
+msgstr "내부 설문 조사에서는 직원이 아닌 다른 사람을 위해 토큰을 생성할 수 없습니다."
 
 #. module: survey
 #. odoo-python
@@ -1590,8 +1585,7 @@ msgstr "보관되었거나 비공개로 진행된 설문 조사에 대한 토큰
 msgid ""
 "Creating token for external people is not allowed for surveys requesting "
 "authentication."
-msgstr ""
-"인증을 요청하는 설문조사에서는 외부인을 위한 토큰 생성이 허용되지 않습니다."
+msgstr "인증을 요청하는 설문조사에서는 외부인을 위한 토큰 생성이 허용되지 않습니다."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
@@ -2071,8 +2065,8 @@ msgstr "백나일강의 길이가 얼마나 되나요?"
 msgid ""
 "How many chairs do you think we should aim to sell in a year (not rated)?"
 msgstr ""
-"의자 항목의 연간 판매 목표 개수는 몇 개로 설정해야 한다고 생각하십니까 (미평"
-"가)?"
+"의자 항목의 연간 판매 목표 개수는 몇 개로 설정해야 한다고 생각하십니까 "
+"(미평가)?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_1
@@ -2112,8 +2106,8 @@ msgid ""
 "And I don't. I do not like to think at all."
 msgstr ""
 "저는 생각하는 것을 좋아하지 않습니다. 제 생각에는 사람들은 제가 생각을 많이 "
-"한다고 생각하는 것 같아요. 저는 그렇지 않습니다. 저는 생각하는것을 전혀 좋아"
-"하지 않아요."
+"한다고 생각하는 것 같아요. 저는 그렇지 않습니다. 저는 생각하는것을 전혀 "
+"좋아하지 않아요."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug2
@@ -2121,8 +2115,8 @@ msgid ""
 "I am fascinated by air. If you remove the air from the sky, all the birds "
 "would fall to the ground. And all the planes, too."
 msgstr ""
-"저는 공기에 매료되었습니다. 하늘에 공기가 없다면 모든 새는 땅으로 떨어질 것입"
-"니다. 모든 비행기도 마찬가지고요."
+"저는 공기에 매료되었습니다. 하늘에 공기가 없다면 모든 새는 땅으로 떨어질 "
+"것입니다. 모든 비행기도 마찬가지고요."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row5
@@ -2178,8 +2172,7 @@ msgstr "숫자를 선택하면 답변해야 할 질문의 수와 응답한 질�
 msgid ""
 "If a customer purchases a 1 year warranty on 6 January 2020, when do we "
 "expect the warranty to expire?"
-msgstr ""
-"2020년 1월 6일에 고객이 1년 보증을 구매했다면 보증 만료일은 언제입니까?"
+msgstr "2020년 1월 6일에 고객이 1년 보증을 구매했다면 보증 만료일은 언제입니까?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_2
@@ -2187,8 +2180,8 @@ msgid ""
 "If a customer purchases a product on 6 January 2020, what is the latest day "
 "we expect to ship it?"
 msgstr ""
-"고객이 2020년 1월 6일에 제품을 구매한 경우 제품이 배송될 것으로 예상되는 가"
-"장 늦은 날짜는 언제입니까?"
+"고객이 2020년 1월 6일에 제품을 구매한 경우 제품이 배송될 것으로 예상되는 "
+"가장 늦은 날짜는 언제입니까?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
@@ -2248,8 +2241,8 @@ msgid ""
 "If randomized is selected, you can configure the number of random questions "
 "by section. This mode is ignored in live session."
 msgstr ""
-"무작위 질문을 선택한 경우 영역별로 질문 수를 다르게 구성할 수 있습니다.  실시"
-"간 세션에서 이 모드는 무시됩니다."
+"무작위 질문을 선택한 경우 영역별로 질문 수를 다르게 구성할 수 있습니다.  "
+"실시간 세션에서 이 모드는 무시됩니다."
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_1_question_5
@@ -2441,8 +2434,8 @@ msgid ""
 "I’ve never really wanted to go to Japan. Simply because I don’t like eating "
 "fish. And I know that’s very popular out there in Africa."
 msgstr ""
-"사실 전 일본에 가고 싶었던 적이 없어요. 저는 생선을 좋아하지 않기 때문입니"
-"다. 그렇지만 생선이 아프리카에서 인기가 많다는 것을 잘 알고 있습니다."
+"사실 전 일본에 가고 싶었던 적이 없어요. 저는 생선을 좋아하지 않기 "
+"때문입니다. 그렇지만 생선이 아프리카에서 인기가 많다는 것을 잘 알고 있습니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -3173,8 +3166,8 @@ msgid ""
 "correct link and are allowed to\n"
 "                        participate or get in touch with its organizer."
 msgstr ""
-"죄송합니다, 설문조사를 열 수 없습니다. 올바른 링크를 사용했으며 설문조사 참"
-"여 권한이 있으시다면\n"
+"죄송합니다, 설문조사를 열 수 없습니다. 올바른 링크를 사용했으며 설문조사 "
+"참여 권한이 있으시다면\n"
 "                        해당 설문의 작성자에게 문의해 주시기 바랍니다 ."
 
 #. module: survey
@@ -3201,10 +3194,10 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"이메일 전송 시 번역할 언어 (ISO 코드)를 선택할 수 있습니다. 선택하지 않을 경"
-"우, 기본 파트너의 사용 언어가 기본 언어로 적용됩니다. 알맞은 언어로 표시되는 "
-"자리표지자가 나타나며, 예를 들어 {{ object.partner_id.lang }} 와 같이 표시됩"
-"니다."
+"이메일 전송 시 번역할 언어 (ISO 코드)를 선택할 수 있습니다. 선택하지 않을 "
+"경우, 기본 파트너의 사용 언어가 기본 언어로 적용됩니다. 알맞은 언어로 "
+"표시되는 자리표지자가 나타나며, 예를 들어 {{ object.partner_id.lang }} 와 "
+"같이 표시됩니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3409,8 +3402,8 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
-"설문조사에 하나 이상의 질문이 포함되어 있는지 확인하십시오. \"섹션 당 페이지"
-"\" 레이아웃을 선택한 경우 최소 하나 이상의 섹션이 필요합니다.<br/>"
+"설문조사에 하나 이상의 질문이 포함되어 있는지 확인하십시오. \"섹션 당 "
+"페이지\" 레이아웃을 선택한 경우 최소 하나 이상의 섹션이 필요합니다.<br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -4162,8 +4155,7 @@ msgstr "권장 답변"
 msgid ""
 "Suggested answer value must not be empty (a text and/or an image must be "
 "provided)."
-msgstr ""
-"제시된 답안 값은 비어 있으면 안 됩니다. (텍스트 및/또는 이미지를 입력해야 함)"
+msgstr "제시된 답안 값은 비어 있으면 안 됩니다. (텍스트 및/또는 이미지를 입력해야 함)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value
@@ -4370,8 +4362,7 @@ msgstr "참여해 주셔서 감사드립니다. 즐거운 시간 보내셨기를
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Thank you very much for your feedback. We highly value your opinion!"
-msgstr ""
-"의견을 공유해주셔서 감사합니다. 여러분의 의견을 소중하게 생각하겠습니다!"
+msgstr "의견을 공유해주셔서 감사합니다. 여러분의 의견을 소중하게 생각하겠습니다!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4393,8 +4384,8 @@ msgid ""
 "responsible still has access to it: \n"
 "%(survey_names)s\n"
 msgstr ""
-"다음 설문조사에 대한 접근이 제한됩니다. 담당자가 해당 설문조사에 권한이 있는"
-"지 확인하세요. \n"
+"다음 설문조사에 대한 접근이 제한됩니다. 담당자가 해당 설문조사에 권한이 "
+"있는지 확인하세요. \n"
 "%(survey_names)s\n"
 
 #. module: survey
@@ -4466,8 +4457,8 @@ msgid ""
 "The following recipients have no user account: %s. You should create user "
 "accounts for them or allow external signup in configuration."
 msgstr ""
-"다음 수신자에게는 사용자 계정이 없습니다: %s. 해당 수신자의 사용자 계정을 새"
-"로 만들거나 외부 로그인 환경 설정을 허용해야합니다."
+"다음 수신자에게는 사용자 계정이 없습니다: %s. 해당 수신자의 사용자 계정을 "
+"새로 만들거나 외부 로그인 환경 설정을 허용해야합니다."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row1
@@ -4493,8 +4484,7 @@ msgstr "설문 시간 제한됨"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scale
 msgid ""
 "The scale must be a growing non-empty range between 0 and 10 (inclusive)"
-msgstr ""
-"척도는 0에서 10을 포함한 숫자 사이의 비어있지 않은 오름차순 범위여야 합니다."
+msgstr "척도는 0에서 10을 포함한 숫자 사이의 비어있지 않은 오름차순 범위여야 합니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -4586,8 +4576,8 @@ msgid ""
 "This code will be used by your attendees to reach your session. Feel free to "
 "customize it however you like!"
 msgstr ""
-"참가자가 세션에 접속하는 데 사용되는 코드입니다. 원하는 방식으로 자유롭게 설"
-"정할 수 있습니다!"
+"참가자가 세션에 접속하는 데 사용되는 코드입니다. 원하는 방식으로 자유롭게 "
+"설정할 수 있습니다!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -4634,8 +4624,8 @@ msgid ""
 "This section is about general information about you. Answering them helps "
 "qualifying your answers."
 msgstr ""
-"여기는 귀하의 일반적인 정보에 관한 부분입니다. 질문에 대한 답은 답변의 정확성"
-"을 높이는 데 도움이 됩니다."
+"여기는 귀하의 일반적인 정보에 관한 부분입니다. 질문에 대한 답은 답변의 "
+"정확성을 높이는 데 도움이 됩니다."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
@@ -4659,8 +4649,8 @@ msgid ""
 "This survey does not allow external people to participate. You should create "
 "user accounts or update survey access mode accordingly."
 msgstr ""
-"이 설문 조사는 외부인의 참여를 허용하지 않습니다. 이에 따라 사용자 계정을 만"
-"들거나 설문 조사 액세스 모드를 업데이트해야 합니다."
+"이 설문 조사는 외부인의 참여를 허용하지 않습니다. 이에 따라 사용자 계정을 "
+"만들거나 설문 조사 액세스 모드를 업데이트해야 합니다."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
@@ -4727,8 +4717,7 @@ msgstr "참여하기:"
 #. odoo-javascript
 #: code:addons/survey/static/src/interactions/survey_form.js:0
 msgid "To take this survey, please close all other tabs on %(hostname)s"
-msgstr ""
-"설문조사에 응하려면 %(hostname)s 항목과 관련된 다른 탭을 모두 닫아주세요"
+msgstr "설문조사에 응하려면 %(hostname)s 항목과 관련된 다른 탭을 모두 닫아주세요"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
@@ -4778,8 +4767,8 @@ msgid ""
 "positioned after this question:\n"
 "\"%s\"."
 msgstr ""
-"다음의 문항을 기반으로 연결된 경우 이 문항 뒤에 배치되기 때문에 작동하지 않습"
-"니다:\n"
+"다음의 문항을 기반으로 연결된 경우 이 문항 뒤에 배치되기 때문에 작동하지 "
+"않습니다:\n"
 "'%s'"
 
 #. module: survey
@@ -4882,8 +4871,8 @@ msgid ""
 "Used on randomized sections to take X random questions from all the "
 "questions of that section."
 msgstr ""
-"무작위 섹션에서 사용되어 해당 섹션의 모든 질문에서 무작위로 X 개의 질문을 받"
-"습니다."
+"무작위 섹션에서 사용되어 해당 섹션의 모든 질문에서 무작위로 X 개의 질문을 "
+"받습니다."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug2
@@ -4975,8 +4964,7 @@ msgstr "참가자 기다리는 중..."
 msgid ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
-msgstr ""
-"답변이 등록되었습니다! 주최자가 다음 질문으로 넘어갈 때까지 기다려 주세요."
+msgstr "답변이 등록되었습니다! 주최자가 다음 질문으로 넘어갈 때까지 기다려 주세요."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
@@ -5192,8 +5180,7 @@ msgstr "네, 사람의 눈으로 볼 수 있는 것은 그것뿐입니다."
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_certification_check
 msgid ""
 "You can only create certifications for surveys that have a scoring mechanism."
-msgstr ""
-"점수 매기기 메커니즘이 있는 설문 조사에 대해서만 인증을 만들 수 있습니다."
+msgstr "점수 매기기 메커니즘이 있는 설문 조사에 대해서만 인증을 만들 수 있습니다."
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
@@ -5231,8 +5218,8 @@ msgid ""
 "You cannot send an invitation for a \"One page per section\" survey if the "
 "survey only contains empty sections."
 msgstr ""
-"설문조사에 비어있는 섹션만 있는 경우 '섹션당 한 페이지' 설문조사에 대한 초대"
-"를 보낼 수 없습니다."
+"설문조사에 비어있는 섹션만 있는 경우 '섹션당 한 페이지' 설문조사에 대한 "
+"초대를 보낼 수 없습니다."
 
 #. module: survey
 #. odoo-python
@@ -5262,8 +5249,7 @@ msgstr "귀하의 점수"
 msgid ""
 "Your responses will help us improve our product range to serve you even "
 "better."
-msgstr ""
-"귀하의 답변은 제품군을 개선하고 더 나은 서비스를 제공하는데 도움이 됩니다."
+msgstr "귀하의 답변은 제품군을 개선하고 더 나은 서비스를 제공하는데 도움이 됩니다."
 
 #. module: survey
 #. odoo-javascript
@@ -5314,8 +5300,7 @@ msgstr "닫기"
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
-msgstr ""
-"예.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
+msgstr "예.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5425,8 +5410,7 @@ msgstr "종료"
 msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
-msgstr ""
-"⚠️ 이 문항은 연결 항목 전체 또는 일부 앞에 배치되며 건너뛸 수 있습니다.."
+msgstr "⚠️ 이 문항은 연결 항목 전체 또는 일부 앞에 배치되며 건너뛸 수 있습니다.."
 
 #~ msgid "$100"
 #~ msgstr "$100"

@@ -1274,3 +1274,34 @@ class TestWebReadGroup(common.TransactionCase):
             )
 
             self.assertEqual(spy_web_read.call_count, 1)
+
+    def test_web_read_group_custom_active_field(self):
+        """ Test web_read_group on a model with a custom active field (x_active) """
+        Model = self.env['test_read_group.aggregate']
+
+        # Add x_active field to the model
+        self.env['ir.model.fields'].create({
+            'model_id': self.env['ir.model']._get(Model._name).id,
+            'name': 'x_active',
+            'ttype': 'boolean',
+        })
+
+        # Invalidate cache to ensure _active_name is updated
+        self.env.registry.clear_cache()
+        Model = self.env[Model._name]
+
+        self.assertEqual(Model._active_name, 'x_active')
+
+        Model.create([
+            {'key': 1, 'value': 10, 'x_active': True},
+            {'key': 1, 'value': 20, 'x_active': False},
+        ])
+
+        result = Model.web_read_group(
+            domain=[('x_active', 'in', [True, False])],
+            groupby=['key'],
+            aggregates=['value:sum']
+        )
+
+        self.assertEqual(result['groups'][0]['value:sum'], 30)
+        self.assertEqual(result['groups'][0]['__count'], 2)

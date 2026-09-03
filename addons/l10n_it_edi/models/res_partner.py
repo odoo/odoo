@@ -85,7 +85,7 @@ class ResPartner(models.Model):
                 else:
                     if not normalized_country:
                         normalized_country = normalized_vat[:2].upper()
-                    normalized_vat = normalized_vat[2:]
+                    normalized_vat = normalized_vat.removeprefix(normalized_country)
             # If customer is from San Marino
             elif is_sm:
                 normalized_vat = normalized_vat if normalized_vat[:2].isdecimal() else normalized_vat[2:]
@@ -221,3 +221,10 @@ class ResPartner(models.Model):
             it_values = self._convert_fields_to_values(('l10n_it_codice_fiscale', 'l10n_it_pa_index'))
             self.parent_id.update(it_values)
         return res
+
+    def _l10n_it_edi_is_italian(self):
+        return (
+            self.country_code == 'IT'
+            or self.l10n_it_codice_fiscale
+            or (self.vat and self.vat.upper().startswith('IT') and iva.is_valid(self.vat))
+        )

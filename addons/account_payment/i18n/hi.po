@@ -2,14 +2,14 @@
 # This file contains the translation of the following modules:
 # * account_payment
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 17:48+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"PO-Revision-Date: 2026-08-06 17:45+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/"
 "account_payment/hi/>\n"
 "Language: hi\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_payment
 #. odoo-python
@@ -131,7 +131,8 @@ msgstr "ग्राहक के %s तक भुगतान करने प�
 msgid ""
 "A payment has already been made on this invoice, please make sure to not pay "
 "twice."
-msgstr "इस इनवॉइस पर पहले ही पेमेंट किया जा चुका है, कृपया दोबारा पेमेंट न करें।"
+msgstr ""
+"इस इनवॉइस पर पहले ही पेमेंट किया जा चुका है, कृपया दोबारा पेमेंट न करें।"
 
 #. module: account_payment
 #. odoo-python
@@ -183,6 +184,11 @@ msgid "Authorized Transactions"
 msgstr "अधिकृत लेन-देन"
 
 #. module: account_payment
+#: model:ir.model,name:account_payment.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr ""
+
+#. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
 msgstr "ट्रांज़ैक्शन कैप्चर करें"
@@ -220,6 +226,7 @@ msgid "Discount Date"
 msgstr "डिस्काउंट की तारीख"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_move__display_name
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__display_name
@@ -284,6 +291,7 @@ msgid "Has a pending refund"
 msgstr "रिफंड बाकी है"
 
 #. module: account_payment
+#: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__id
 #: model:ir.model.fields,field_description:account_payment.field_account_journal__id
 #: model:ir.model.fields,field_description:account_payment.field_account_move__id
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__id
@@ -304,7 +312,8 @@ msgstr "आईडी"
 msgid ""
 "Impossible to pay all the overdue invoices if they don't share the same "
 "currency."
-msgstr "सभी बकाया इनवॉइस का भुगतान करना असंभव है, अगर उनकी मुद्रा एक जैसी नहीं है।"
+msgstr ""
+"सभी बकाया इनवॉइस का भुगतान करना असंभव है, अगर उनकी मुद्रा एक जैसी नहीं है।"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_method_line__payment_provider_state
@@ -658,12 +667,14 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr "आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: ट्रांज़ैक्शन फ़ेल हो गया.<br/>"
+msgstr ""
+"आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: ट्रांज़ैक्शन फ़ेल हो गया.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
-msgstr "आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: अमान्य क्रेडिट कार्ड आईडी।"
+msgstr ""
+"आपके पेमेंट को प्रोसेस करते समय एक गड़बड़ी हुई: अमान्य क्रेडिट कार्ड आईडी।"
 
 #. module: account_payment
 #. odoo-python

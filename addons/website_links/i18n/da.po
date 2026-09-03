@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 13:04+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-05 19:30+0000\n"
+"PO-Revision-Date: 2026-08-06 05:30+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/"
 "website_links/da/>\n"
 "Language: da\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_links
 #. odoo-javascript
@@ -60,8 +61,8 @@ msgstr ""
 "class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
 "href=\"#\">OK</a> eller\n"
 "                                        <a "
-"class=\"o_website_links_cancel_edit o_translate_inline\" "
-"href=\"#\">annullér</a>\n"
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\">"
+"annullér</a>\n"
 "                                    </span>"
 
 #. module: website_links
@@ -71,7 +72,7 @@ msgid ""
 "nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
 "class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
 "                                        <span "
-"class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;\">\n"
+"class=\"o_website_links_edit_tools text-nowrap d-none\">\n"
 "                                            <a role=\"button\" "
 "class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
 "href=\"#\">ok</a> or\n"
@@ -83,14 +84,14 @@ msgstr ""
 "<span class=\"o_website_links_short_url d-flex align-items-center text-"
 "nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
 "class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
-"                                        <span "
-"class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;\">\n"
+"                                       <span "
+"class=\"o_website_links_edit_tools text-nowrap d-none\">\n"
 "                                            <a role=\"button\" "
 "class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
-"href=\"#\">OK</a> eller\n"
-"                                            <a "
-"class=\"o_website_links_cancel_edit o_translate_inline\" "
-"href=\"#\">annullér</a>\n"
+"href=\"#\"> ok</a> eller\n"
+"                                           <a "
+"class=\"o_website_links_cancel_edit o_translate_inline\" href=\"#\"> "
+"annullér</a>\n"
 "                                        </span>"
 
 #. module: website_links
@@ -152,7 +153,7 @@ msgstr "Kopiér"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Create a Link tracker"
-msgstr "Opret et sporingslink"
+msgstr "Opret en linktracker"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -168,7 +169,7 @@ msgstr "Opret mulighed \""
 #. module: website_links
 #: model:ir.model.fields,field_description:website_links.field_link_tracker__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -236,6 +237,16 @@ msgid "Number of Clicks"
 msgstr "Antal klik"
 
 #. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
+msgid ""
+"Only letters (A–Z, a–z), numbers (0–9), underscores (_) and hyphens (-) are "
+"allowed. No spaces."
+msgstr ""
+"Kun bogstaver (A–Z, a–z), tal (0–9), understregninger (_) og bindestreger "
+"(-) er tilladt. Ingen mellemrum."
+
+#. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Read More"
 msgstr "Læs mere"
@@ -246,8 +257,8 @@ msgid ""
 "Share this page with a <strong>short link</strong> that includes "
 "<strong>analytics trackers</strong>."
 msgstr ""
-"Del denne side med et <strong>kort link</strong>, som inkluderer "
-"<strong>analytiske sporinger</strong>."
+"Del denne side med et <strong>kort link</strong>, som inkluderer <strong>"
+"analytiske sporinger</strong>."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -336,7 +347,7 @@ msgstr "lande"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. \"Black Friday Mailing Campaign\""
-msgstr "f.eks. \"Black Friday-mailingkampagne\""
+msgstr "f.eks. \"Black Friday-e-mailkampagne\""
 
 #. module: website_links
 #. odoo-javascript
@@ -360,6 +371,35 @@ msgstr "f.eks. LinkedIn, Facebook, Leads ..."
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/contactus"
 msgstr "f.eks. https://www.odoo.com/contactus"
+
+#~ msgid ""
+#~ "<span class=\"o_website_links_short_url d-flex align-items-center text-"
+#~ "nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
+#~ "class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
+#~ "                                        <span "
+#~ "class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;"
+#~ "\">\n"
+#~ "                                            <a role=\"button\" "
+#~ "class=\"o_website_links_ok_edit btn btn-sm btn-primary "
+#~ "o_translate_inline\" href=\"#\">ok</a> or\n"
+#~ "                                            <a "
+#~ "class=\"o_website_links_cancel_edit o_translate_inline\" "
+#~ "href=\"#\">cancel</a>\n"
+#~ "                                        </span>"
+#~ msgstr ""
+#~ "<span class=\"o_website_links_short_url d-flex align-items-center text-"
+#~ "nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
+#~ "class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
+#~ "                                        <span "
+#~ "class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;"
+#~ "\">\n"
+#~ "                                            <a role=\"button\" "
+#~ "class=\"o_website_links_ok_edit btn btn-sm btn-primary "
+#~ "o_translate_inline\" href=\"#\">OK</a> eller\n"
+#~ "                                            <a "
+#~ "class=\"o_website_links_cancel_edit o_translate_inline\" "
+#~ "href=\"#\">annullér</a>\n"
+#~ "                                        </span>"
 
 #~ msgid ""
 #~ "<a class=\"copy-to-clipboard btn btn-sm btn-primary o_translate_inline\" "

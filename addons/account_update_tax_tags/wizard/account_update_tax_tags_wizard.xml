@@ -5,6 +5,7 @@
         <field name="model">account.update.tax.tags.wizard</field>
         <field name="arch" type="xml">
             <form>
+                <field name="company_id" invisible="1"/> <!-- Required to ensure company_id is loaded in the view so that date_from is properly computed before display_lock_date_warning. -->
                 <div class="alert alert-warning" role="alert">
                     Updating tax tags on existing Journal Entries is an <b>irreversible</b> action that will impact
                     your reports.<br/>

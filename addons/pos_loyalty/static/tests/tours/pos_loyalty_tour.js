@@ -579,7 +579,7 @@ registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Test Product 1", "1"),
             PosLoyalty.enterCode("hellopromo"),
-            PosLoyalty.orderTotalIs("25.87"),
+            PosLoyalty.orderTotalIs("25.88"),
         ].flat(),
 });
 
@@ -589,12 +589,30 @@ registry.category("web_tour.tours").add("RefundRulesProduct", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("product_a"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            ProductScreen.clickDisplayedProduct("Top-up eWallet"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartner("AAAAAAA"),
             PosLoyalty.finalizeOrder("Cash", "1000"),
             ProductScreen.isShown(),
             ...ProductScreen.clickRefund(),
             TicketScreen.filterIs("Paid"),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
+            ProductScreen.clickLine("Gift Card"),
+            ProductScreen.clickNumpad("1"),
+            {
+                content: "Notification: not allowed to refund this product",
+                trigger:
+                    ".o_notification .o_notification_content:contains('Refunding a top up or reward product for an eWallet or gift card program is not allowed.')",
+            },
+            ProductScreen.clickLine("Top-up eWallet"),
+            ProductScreen.clickNumpad("1"),
+            {
+                content: "Notification: not allowed to refund this product",
+                trigger:
+                    ".o_notification .o_notification_content:contains('Refunding a top up or reward product for an eWallet or gift card program is not allowed.')",
+            },
             TicketScreen.confirmRefund(),
             PaymentScreen.isShown(),
         ].flat(),
@@ -802,5 +820,33 @@ registry.category("web_tour.tours").add("test_race_conditions_update_program", {
                     }
                 },
             },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_discount_count_sale_report", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1"),
+            ProductScreen.totalAmountIs("57.50"),
+            ProductScreen.clickNumpad("%", "5"),
+            ProductScreen.totalAmountIs("54.63"),
+            PosLoyalty.finalizeOrder("Cash", "54.63"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_reward_line_tax_grouping_key", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1.00"),
+            ProductScreen.totalAmountIs("82.78"),
+            ProductScreen.checkTaxAmount("14.37"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });

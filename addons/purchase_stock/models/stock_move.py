@@ -128,7 +128,11 @@ class StockMove(models.Model):
 
     def _is_purchase_return(self):
         self.ensure_one()
-        return self.location_dest_id.usage == "supplier" or (self.origin_returned_move_id and self.location_dest_id == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False))
+        return self.location_dest_id.usage == "supplier"\
+            or self.origin_returned_move_id and (
+                self.location_dest_id == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False) or
+                self.origin_returned_move_id.location_usage == "supplier"
+            )
 
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)
@@ -227,8 +231,7 @@ class StockMove(models.Model):
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
         price_unit = self.purchase_line_id.with_context(conversion_date=self.date)._get_stock_move_price_unit()
-        uom_quantity = self.product_uom._compute_quantity(quantity, self.product_id.uom_id)
-        quantity = min(quantity, uom_quantity)
+        quantity = min(quantity, self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id))
         cost_ratio = self._get_cost_ratio(quantity)
         value = price_unit * cost_ratio
         return {

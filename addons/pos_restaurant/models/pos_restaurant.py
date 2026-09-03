@@ -136,3 +136,15 @@ class RestaurantTable(models.Model):
             error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")
             if confs:
                 raise UserError(error_msg)
+
+    def set_parent_id(self, parent_id, config_id):
+        parent_id = self.env['restaurant.table'].browse(parent_id).exists()
+        config_id = self.env['pos.config'].browse(config_id).exists()
+        if parent_id:
+            old_parent = self.parent_id
+            self.parent_id = parent_id
+            if self._has_cycle('parent_id'):
+                self.parent_id = old_parent
+        return {
+            'restaurant.table': self._load_pos_data_read(self, config_id) if config_id else [],
+        }

@@ -1533,6 +1533,7 @@ test(`week numbering`, async () => {
 
 test.tags("desktop");
 test(`render popover`, async () => {
+    onRpc("write", () => expect.step("write"));
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -1573,6 +1574,13 @@ test(`render popover`, async () => {
     ).toHaveText("Partner");
 
     await contains(`.o_cw_popover .o_cw_popover_close`).click();
+    expect(`.o_cw_popover`).toHaveCount(0);
+
+    // Drag and drop with opened popover should work and close popover
+    await clickEvent(2);
+    expect(`.o_cw_popover`).toHaveCount(1);
+    await moveEventToTime(2, "2016-12-13 08:00:00");
+    expect.verifySteps(["write"]);
     expect(`.o_cw_popover`).toHaveCount(0);
 });
 
@@ -5530,7 +5538,7 @@ test("update time while drag and drop on month mode", async () => {
     expect(".o_field_widget[name='stop']").toHaveText("Dec 29, 10:00 AM");
 });
 
-test("html field on calendar shouldn't have a tooltip", async () => {
+test("html and boolean fields on calendar shouldn't have a tooltip", async () => {
     Event._fields.description = fields.Html();
     Event._records[0].description = "<p>test html field</p>";
     await mountView({
@@ -5539,13 +5547,17 @@ test("html field on calendar shouldn't have a tooltip", async () => {
         arch: `
             <calendar date_start="start">
                 <field name="description"/>
+                <field name="is_all_day"/>
             </calendar>
         `,
     });
 
     await clickEvent(MockServer.env["event"][0].id);
     const descriptionField = queryFirst('.o_cw_popover_field .o_field_widget[name="description"]');
-    const parentLi = descriptionField.closest("li");
+    let parentLi = descriptionField.closest("li");
+    expect(parentLi).toHaveAttribute("data-tooltip", "");
+    const isAllDayField = queryFirst('.o_cw_popover_field .o_field_widget[name="is_all_day"]');
+    parentLi = isAllDayField.closest("li");
     expect(parentLi).toHaveAttribute("data-tooltip", "");
 });
 

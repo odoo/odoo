@@ -646,6 +646,15 @@ export class PosOrder extends PosOrderAccounting {
         return false;
     }
 
+    findFiscalPosition(fiscalPosition) {
+        if (fiscalPosition) {
+            return this.models["account.fiscal.position"].find(
+                (position) => position.id === fiscalPosition.id
+            );
+        }
+        return false;
+    }
+
     updatePricelistAndFiscalPosition(newPartner) {
         let newPartnerPricelist, newPartnerFiscalPosition;
         const defaultFiscalPosition = this.models["account.fiscal.position"].find(
@@ -653,11 +662,11 @@ export class PosOrder extends PosOrderAccounting {
         );
 
         if (newPartner) {
-            newPartnerFiscalPosition = newPartner.fiscal_position_id
-                ? this.models["account.fiscal.position"].find(
-                      (position) => position.id === newPartner.fiscal_position_id?.id
-                  )
-                : defaultFiscalPosition;
+            const partnerFiscalPosition = this.findFiscalPosition(newPartner.fiscal_position_id);
+            const isFpAllowed =
+                partnerFiscalPosition &&
+                this.config.fiscal_position_ids.some((fp) => fp.id === partnerFiscalPosition.id);
+            newPartnerFiscalPosition = isFpAllowed ? partnerFiscalPosition : defaultFiscalPosition;
             newPartnerPricelist =
                 this.config.available_pricelist_ids.find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
@@ -728,7 +737,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get floatingOrderName() {
-        return this.floating_order_name || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number?.toString() || "";
     }
 
     sortBySequenceAndCategory(a, b) {
@@ -751,6 +760,17 @@ export class PosOrder extends PosOrderAccounting {
 
     get globalDiscountPc() {
         return this.discountLines?.[0]?.extra_tax_data?.discount_percentage || 0;
+    }
+
+    get isDirectSale() {
+        return false; // Overridden in pos_restaurant
+    }
+
+    get preparationName() {
+        if (this.isDirectSale) {
+            return this.floatingOrderName || this.pos_reference;
+        }
+        return this.getName();
     }
 
     getName() {

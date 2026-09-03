@@ -2,8 +2,9 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
-import { isRemovable } from "./remove_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { scrollTo } from "@html_builder/utils/scrolling";
+import { isRemovable } from "./remove_plugin";
 
 /**
  * @typedef { Object } CloneShared
@@ -18,6 +19,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * Called on the original element before clone.
  */
 
+// TODO remove in master (kept for stable).
 const clonableSelector =
     "a.btn:not(.oe_unremovable, .js_subscribe_btn, .s_website_form_send, .s_website_form_submit)";
 
@@ -47,7 +49,7 @@ export class ClonePlugin extends Plugin {
     }
 
     getActiveOverlayButtons(target) {
-        if (!isClonable(target)) {
+        if (!this.dependencies.builderOptions.isClonable(target)) {
             this.overlayTarget = null;
             return [];
         }
@@ -95,8 +97,7 @@ export class ClonePlugin extends Plugin {
 
         // Scroll to the clone if required and if it is not visible.
         if (scrollToClone && !isElementInViewport(cloneEl)) {
-            // Firefox mis-scrolls with block "center" on tall snippets; keep "start".
-            cloneEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            scrollTo(cloneEl);
         }
 
         for (const onCloned of this.getResource("on_cloned_handlers")) {

@@ -265,3 +265,42 @@ test("shared favorites are partially shown if there is more than 4", async () =>
     expect(".o_favorite_menu .o_expand_shared_favorites").toHaveCount(0);
     expect(".o_favorite_menu .o_favorite_item").toHaveCount(5);
 });
+
+test("display unparseable filter", async () => {
+    const irFilters = [
+        {
+            context: "{123}", // unparseable context
+            domain: "[('foo', '=', 'a')]",
+            id: 987,
+            is_default: false,
+            name: "My favorite",
+            sort: "[]",
+            user_ids: [],
+        },
+    ];
+
+    mockService("action", {
+        doAction(action) {
+            expect.step(`doAction ${action.res_model}: ${action.res_id}`);
+        },
+    });
+
+    const searchBarMenu = await mountWithSearch(SearchBarMenu, {
+        resModel: "foo",
+        searchMenuTypes: ["favorite"],
+        searchViewId: false,
+        irFilters,
+        activateFavorite: false,
+    });
+    await toggleSearchBarMenu();
+    expect(".o_favorite_menu .o_favorite_item").toHaveCount(1);
+    expect(".o_favorite_menu .o_favorite_item span[title]").toHaveAttribute(
+        "data-tooltip",
+        "Disabled due to invalid configuration"
+    );
+    expect(".o_favorite_menu .o_favorite_item span[title]").toHaveClass("text-muted");
+    await contains(".o_favorite_menu .o_favorite_item").click();
+    expect(searchBarMenu.env.searchModel.domain).toEqual([]);
+    await editFavorite("My favorite");
+    expect.verifySteps(["doAction ir.filters: 987"]);
+});

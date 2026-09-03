@@ -147,9 +147,19 @@ test("getProductPriceInfo", async () => {
 
     const models = store.models;
     const product5 = models["product.template"].get(5);
+    const variant5 = models["product.product"].get(5);
     const pricelist = models["product.pricelist"].get(3);
     const inPreset = models["pos.preset"].get(1);
     const outPreset = store.models["pos.preset"].get(2);
+
+    // Template-only call uses first variant lst_price (same default as addToCart).
+    const savedList = product5.list_price;
+    const savedLst = variant5.lst_price;
+    product5.list_price = 1;
+    variant5.lst_price = 222;
+    expect(store.getProductPriceInfo(product5).pricelist_price).toBe(222);
+    product5.list_price = savedList;
+    variant5.lst_price = savedLst;
 
     expect(store.getProductPriceInfo(product5).pricelist_price).toBe(100);
 
@@ -159,10 +169,36 @@ test("getProductPriceInfo", async () => {
     order.setPreset(outPreset);
     expect(store.getProductPriceInfo(product5).pricelist_price).toBe(10);
 
+    const savedPercentPrice = pricelist.item_ids[0].percent_price;
     pricelist.item_ids[0].percent_price = 80;
     inPreset.pricelist_id = pricelist;
     order.setPreset(inPreset);
     expect(store.getProductPriceInfo(product5).pricelist_price).toBe(20);
+    pricelist.item_ids[0].percent_price = savedPercentPrice;
+
+    // Fiscal position on the order (via setPreset) must change display price.
+    store.config.pricelist_id = false;
+    const fpStrip = models["account.fiscal.position"].get(2);
+    const savedOutFp = outPreset.fiscal_position_id;
+    const savedOutPricelist = outPreset.pricelist_id;
+    const savedDefaultFp = store.config.default_fiscal_position_id;
+    outPreset.fiscal_position_id = false;
+    outPreset.pricelist_id = false;
+    store.config.default_fiscal_position_id = false;
+    order.setPreset(outPreset);
+
+    const displayWithTaxes = store.getProductDisplayPrice(product5);
+    expect(displayWithTaxes).toBe(115);
+
+    outPreset.fiscal_position_id = fpStrip;
+    order.setPreset(outPreset);
+    const displayAfterStripFp = store.getProductDisplayPrice(product5);
+    expect(displayAfterStripFp).toBe(100);
+    expect(displayAfterStripFp).not.toBe(displayWithTaxes);
+
+    outPreset.fiscal_position_id = savedOutFp;
+    outPreset.pricelist_id = savedOutPricelist;
+    store.config.default_fiscal_position_id = savedDefaultFp;
 });
 
 describe("addToCart", () => {
@@ -282,11 +318,11 @@ describe("setOrderPrices", () => {
         expect(parentLine.price_subtotal).toBe(0);
         expect(parentLine.price_subtotal_incl).toBe(0);
 
-        expect(comboLine1.price_subtotal).toBe(1500);
-        expect(comboLine1.price_subtotal_incl).toBe(1875);
+        expect(comboLine1.price_subtotal).toBe(200);
+        expect(comboLine1.price_subtotal_incl).toBe(250);
 
-        expect(comboLine2.price_subtotal).toBe(200);
-        expect(comboLine2.price_subtotal_incl).toBe(250);
+        expect(comboLine2.price_subtotal).toBe(1500);
+        expect(comboLine2.price_subtotal_incl).toBe(1875);
     });
 });
 
@@ -423,8 +459,8 @@ describe("getKioskPrintingCategoriesChanges", () => {
 
         const orderLines = store.currentOrder.lines;
         expect(orderLines[0].product_id.pos_categ_ids[0]).toBe(cat3);
-        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat1);
-        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat2);
+        expect(orderLines[2].product_id.pos_categ_ids[0]).toBe(cat1);
         expect(orderLines[3].product_id.pos_categ_ids[0]).toBe(cat1);
         expect(orderLines[4].product_id.pos_categ_ids[0]).toBe(cat2);
         expect(orderLines[4].product_id.pos_categ_ids[1]).toBe(cat3);
@@ -449,8 +485,8 @@ describe("getKioskPrintingCategoriesChanges", () => {
         ]);
         expect(orderLines.length).toBe(5);
         expect(orderLines[0].product_id.id).toBe(this.comboTemplate.id);
-        expect(orderLines[1].product_id.id).toBe(this.comboProduct1.id);
-        expect(orderLines[2].product_id.id).toBe(this.comboProduct2.id);
+        expect(orderLines[1].product_id.id).toBe(this.comboProduct2.id);
+        expect(orderLines[2].product_id.id).toBe(this.comboProduct1.id);
 
         expect(orderLines[3].product_id.id).toBe(this.testProduct1.id);
         expect(orderLines[4].product_id.id).toBe(this.testProduct2.id);
@@ -491,4 +527,41 @@ describe("getKioskPrintingCategoriesChanges", () => {
         expect(orderLines.length).toBe(1);
         expect(orderLines[0].product_id.id).toBe(this.testProduct2.id);
     });
+});
+
+test("product with single 'is_custom' attr is configurable in 'mobile' mode", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const product = store.models["product.template"].get(51);
+    product.attribute_line_ids = [product.attribute_line_ids[1]];
+    const ptv = product.attribute_line_ids[0].product_template_value_ids;
+    expect(ptv.length).toBe(1);
+    expect(ptv[0].is_custom).toBe(true);
+    expect(!!store.isProductConfigurable(product)).toBe(true);
+});
+
+test("product with single 'is_custom' attr is not configurable in 'kiosk' mode", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(51);
+    product.attribute_line_ids = [product.attribute_line_ids[1]];
+    const ptv = product.attribute_line_ids[0].product_template_value_ids;
+    expect(ptv.length).toBe(1);
+    expect(ptv[0].is_custom).toBe(true);
+    expect(!!store.isProductConfigurable(product)).toBe(false);
+});
+
+test("product with single 'multi' display_type attr with single choice is configurable in both mode", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(52);
+    const line = product.attribute_line_ids[0];
+    const ptv = line.product_template_value_ids;
+    expect(ptv.length).toBe(1);
+    expect(ptv[0].is_custom).toBe(false);
+    expect(line.attribute_id.display_type).toBe("multi");
+
+    // Kiosk mode
+    expect(!!store.isProductConfigurable(product)).toBe(true);
+
+    // Mobile mode
+    store.self_ordering_mode = "mobile";
+    expect(!!store.isProductConfigurable(product)).toBe(true);
 });

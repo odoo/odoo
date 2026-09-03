@@ -1,27 +1,49 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { makeGloryHeader, parseGloryXml, serializeGloryXml } from "@pos_glory_cash/utils/glory_xml";
+import { range } from "@web/core/utils/numbers";
+
+describe.current.tags("headless");
 
 const TEST_XML = '<MockElement mockattribute="mock value">Mock Content</MockElement>';
 const TEST_XML_WITH_CHILD = "<MockElement><ChildElement>Child Content</ChildElement></MockElement>";
+const TEST_XML_MULTI_ELEMENT =
+    '<MockElement mockattribute="mock value 0">Mock Content 0</MockElement>' +
+    '<MockElement mockattribute="mock value 1">Mock Content 1</MockElement>' +
+    '<MockElement mockattribute="mock value 2">Mock Content 2</MockElement>';
+
 const TEST_XML_WITH_CONTROL_CHARS = `\x04${TEST_XML}\0`;
 
 describe("parse glory xml", () => {
     test("parses simple XML correctly", async () => {
         const result = await parseGloryXml(new Blob([TEST_XML]));
 
-        expect(result).toBeInstanceOf(Element);
-        expect(result.tagName).toBe("MockElement");
-        expect(result.textContent).toBe("Mock Content");
-        expect(result.getAttribute("mockattribute")).toBe("mock value");
+        expect(result).toHaveLength(1);
+        expect(result[0]).toBeInstanceOf(Element);
+        expect(result[0].tagName).toBe("MockElement");
+        expect(result[0].textContent).toBe("Mock Content");
+        expect(result[0].getAttribute("mockattribute")).toBe("mock value");
     });
 
     test("parses simple XML with control characters correctly", async () => {
         const result = await parseGloryXml(new Blob([TEST_XML_WITH_CONTROL_CHARS]));
 
-        expect(result).toBeInstanceOf(Element);
-        expect(result.tagName).toBe("MockElement");
-        expect(result.textContent).toBe("Mock Content");
-        expect(result.getAttribute("mockattribute")).toBe("mock value");
+        expect(result).toHaveLength(1);
+        expect(result[0]).toBeInstanceOf(Element);
+        expect(result[0].tagName).toBe("MockElement");
+        expect(result[0].textContent).toBe("Mock Content");
+        expect(result[0].getAttribute("mockattribute")).toBe("mock value");
+    });
+
+    test("parses XML with multiple elements correctly", async () => {
+        const result = await parseGloryXml(new Blob([TEST_XML_MULTI_ELEMENT]));
+
+        expect(result).toHaveLength(3);
+        for (const index of range(0, 3)) {
+            expect(result[index]).toBeInstanceOf(Element);
+            expect(result[index].tagName).toBe("MockElement");
+            expect(result[index].textContent).toBe(`Mock Content ${index}`);
+            expect(result[index].getAttribute("mockattribute")).toBe(`mock value ${index}`);
+        }
     });
 });
 

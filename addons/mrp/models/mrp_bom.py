@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
 from odoo.tools.misc import clean_context, OrderedSet
-
-from collections import defaultdict
 
 
 class MrpBom(models.Model):
@@ -403,13 +403,16 @@ class MrpBom(models.Model):
             return bom_by_product
 
         boms = self.search(domain, order='sequence, product_id, id')
-
-        products_ids = set(products.ids)
+        bom_by_product_tmpl = defaultdict(lambda: self.env['mrp.bom'])
         for bom in boms:
-            products_implies = bom.product_id or bom.product_tmpl_id.product_variant_ids
-            for product in products_implies:
-                if product.id in products_ids and product not in bom_by_product:
-                    bom_by_product[product] = bom
+            if bom.product_id and (bom.product_id.product_tmpl_id not in bom_by_product_tmpl) and (bom.product_id not in bom_by_product):
+                bom_by_product[bom.product_id] = bom
+            elif not bom.product_id and bom.product_tmpl_id not in bom_by_product_tmpl:
+                bom_by_product_tmpl[bom.product_tmpl_id] = bom
+
+        for product in products:
+            if product.product_tmpl_id in bom_by_product_tmpl and product not in bom_by_product:
+                bom_by_product[product] = bom_by_product_tmpl[product.product_tmpl_id]
 
         return bom_by_product
 
@@ -486,6 +489,7 @@ class MrpBom(models.Model):
             return
         # Searches for MOs using these BoMs to notify them that their BoM has been updated.
         list_of_domain_by_bom = []
+        list_of_domain_by_bom_to_unmark = []
         for bom in self:
             if bom.product_id:
                 domain_by_products = Domain('product_id', '=', bom.product_id.id)
@@ -498,6 +502,17 @@ class MrpBom(models.Model):
         productions = self.env['mrp.production'].search(Domain.OR(list_of_domain_by_bom))
         if productions:
             productions.is_outdated_bom = True
+        # Manually sets the MO's bom to not outdated if product or its variant is changed.
+        if not self.env.context.get('skip_bom_outdated_unmark'):
+            for bom in self:
+                template_domain = [('state', '=', 'confirmed'), ('is_outdated_bom', '=', True), ('bom_id', '=', bom.id)]
+                if bom.product_id:
+                    template_domain.append(('product_id', '!=', bom.product_id.id))
+                else:
+                    template_domain.append(('product_tmpl_id', '!=', bom.product_tmpl_id.id))
+                list_of_domain_by_bom_to_unmark.append(template_domain)
+            if list_of_domain_by_bom_to_unmark:
+                self.env['mrp.production'].search(Domain.OR(list_of_domain_by_bom_to_unmark)).write({'is_outdated_bom': False})
 
     # -------------------------------------------------------------------------
     # CATALOG
@@ -580,38 +595,29 @@ class MrpBom(models.Model):
             Cases:
                 - no_variant:
                     1. attribute present on the line
-                        => need to be at least one attribute value matching between the one passed as args and the ones one the line
+                        => Every attribute on the line must have at least one of its values match with a value passed as args.
                     2. attribute not present on the line
                         => valid if the line has no attribute value selected for that attribute
                 - always and dynamic: match_all_variant_values()
         """
-        no_variant_bom_attributes = bom_attribule_values.filtered(lambda av: av.attribute_id.create_variant == 'no_variant')
+        no_variant_bom_attribute_values = bom_attribule_values.filtered(lambda av: av.attribute_id.create_variant == 'no_variant')
 
         # Attributes create_variant 'always' and 'dynamic'
-        other_attribute_valid = product._match_all_variant_values(bom_attribule_values - no_variant_bom_attributes)
+        other_attribute_valid = product._match_all_variant_values(bom_attribule_values - no_variant_bom_attribute_values)
 
         # If there are no never attribute values on the line => 'always' and 'dynamic'
-        if not no_variant_bom_attributes:
+        if not no_variant_bom_attribute_values:
             return not other_attribute_valid
 
         # Or if there are never attribute on the line values but no value is passed => impossible to match
         if not never_attribute_values:
             return True
 
-        bom_values_by_attribute = no_variant_bom_attributes.grouped('attribute_id')
-        never_values_by_attribute = never_attribute_values.grouped('attribute_id')
+        # Check that every no-variant attribute on the bom line has a matching value.
+        never_attribute_valid = len((no_variant_bom_attribute_values & never_attribute_values).attribute_id) == len(no_variant_bom_attribute_values.attribute_id)
 
-        # Or if there is no overlap between given line values attributes and the ones on on the bom
-        if not any(never_att_id in no_variant_bom_attributes.attribute_id.ids for never_att_id in never_attribute_values.attribute_id.ids):
-            return True
-
-        # Check that at least one variant attribute is correct
-        for attribute, values in bom_values_by_attribute.items():
-            if never_values_by_attribute.get(attribute) and any(val.id in never_values_by_attribute[attribute].ids for val in values):
-                return not other_attribute_valid
-
-        # None were found, so we skip the line
-        return True
+        # If all the attributes values on the line are accounted for, it should not be skipped.
+        return not (other_attribute_valid and never_attribute_valid)
 
     # -------------------------------------------------------------------------
     # REPLENISHMENT WIZARD
@@ -675,7 +681,7 @@ class MrpBomLine(models.Model):
     def _get_default_product_uom_id(self):
         return self.env['uom.uom'].search([], limit=1, order='id').id
 
-    product_id = fields.Many2one('product.product', 'Component', required=True, check_company=True, index=True)
+    product_id = fields.Many2one('product.product', 'Component', required=True, check_company=True, index=True, domain="[('type', 'in', ['consu', 'service'])]")
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', related='product_id.product_tmpl_id', store=True, index=True)
     company_id = fields.Many2one(
         related='bom_id.company_id', store=True, index=True, readonly=True)

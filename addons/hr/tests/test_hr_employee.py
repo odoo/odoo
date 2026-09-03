@@ -617,6 +617,8 @@ class TestHrEmployee(TestHrCommon):
         ])
         employeeA = self.env['hr.employee'].create({
             'name': 'Employee',
+            'date_version': datetime(2025, 1, 1),
+            'contract_date_start': datetime(2025, 1, 1),
         })
 
         # Testing employeA on regular working schedule
@@ -720,6 +722,21 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(partner.email, second_employee.work_email)
         self.assertNotEqual(partner.email, first_employee.work_email)
 
+    def test_exclude_archived_employees_from_direct_subordinate_filter(self):
+        """ Test that archived subordinates aren't included when searching on child_ids. """
+        employee_1, employee_2 = self.env['hr.employee'].create([
+            {'name': 'first employee'},
+            {'name': 'second employee'}
+        ])
+        employee_2.parent_id = employee_1
+
+        result = self.env['hr.employee'].search([('child_ids', '!=', False)])
+        self.assertIn(employee_1, result)
+
+        employee_2.active = False
+
+        result = self.env['hr.employee'].search([('child_ids', '!=', False)])
+        self.assertNotIn(employee_1, result)
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeLinks(HttpCase):
@@ -829,6 +846,21 @@ class TestVersionCron(TransactionCase):
             self.employee.distance_home_work,
             "distance_home_work should have changed after calling _cron_update_current_version_id()",
         )
+
+    def test_get_version_without_any_version(self):
+        """
+        _get_version() should not raise an IndexError and should return an
+        empty recordset when the employee has no version at all, neither
+        active nor archived (e.g. an employee left over by a faulty
+        migration script).
+        """
+        # Bypass the ORM guards preventing an employee from losing its last
+        # version (_unlink_except_last_version, write() on 'active'), as
+        # this is precisely the invalid state a bad migration can produce.
+        self.env.cr.execute("DELETE FROM hr_version WHERE employee_id = %s", (self.employee.id,))
+        self.employee.invalidate_recordset(['version_ids'])
+        self.assertFalse(self.employee.version_ids)
+        self.assertFalse(self.employee._get_version())
 
 
 @tagged('-at_install', 'post_install')

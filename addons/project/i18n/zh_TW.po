@@ -6,17 +6,17 @@
 # Wil Odoo, 2025
 # Tony Ng, 2025
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025, 2026.
 # Ho Pak Wai <wai@users.noreply.translate.odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:07+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 17:24+0000\n"
+"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/project/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -24,12 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
-
-#. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid " All internal users and invited portal users"
-msgstr " 所有內部使用者及獲邀請的門戶使用者"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -283,16 +278,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
-">\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
+"\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                <t t-out=\"partner.name or ''\">Brandon Freeman</t> 你好！"
-"<br/><br/>\n"
+"                <t t-out=\"partner.name or ''\">Brandon Freeman</t> 你好"
+"！<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                你好！<br/><br/>\n"
@@ -300,9 +295,8 @@ msgstr ""
 "            請抽少許時間，對我們處理「<strong t-out=\"object.name or ''\">工"
 "作規劃及財政預算</strong>」任務的表現評分。\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                該項任務是分派給 <strong t-"
-"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> 處理"
-"的。<br/>\n"
+"                該項任務是分派給 <strong t-out=\"object._rating_get_operator"
+"().name or ''\">Mitchell Admin</strong> 處理的。<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                <br/>\n"
@@ -352,13 +346,13 @@ msgstr ""
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
 "color: #454748;\">註：本次客戶意見調查，是因應有關任務已踏入「<b t-"
-"out=\"object.stage_id.name or ''\">進行中</b>」階段，由系統自動發出。</"
-"span>\n"
+"out=\"object.stage_id.name or ''\">進行中</b>」階段，由系統自動發出。</span>"
+"\n"
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
-"color: #454748;\">任務狀態為「<b t-out=\"object.stage_id.name or ''\">進行中"
-"</b>」期間，以上客戶意見調查會<b t-"
+"color: #454748;\">任務狀態為「<b t-out=\"object.stage_id.name or ''\">進行"
+"中</b>」期間，以上客戶意見調查會<b t-"
 "out=\"object.stage_id.rating_status_period or ''\">每星期</b>自動發出。</"
 "span>\n"
 "            </t>\n"
@@ -369,19 +363,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
-"650-123-4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
+"4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:"
-"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.email or "
-"''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:{{ "
+"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
+"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
+"info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
-"a>\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
+"\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -418,14 +412,14 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
-"color: #454748;\" groups=\"project.group_project_stages\">你收到這封電子郵"
-"件，是因為專案已移至「<b t-out=\"object.stage_id.name or ''\">完成</b>」階"
-"段。</span>\n"
+"color: #454748;\" groups=\"project.group_project_stages\">你收到這封電子郵件"
+"，是因為專案已移至「<b t-out=\"object.stage_id.name or ''\">完成</b>」階段"
+"。</span>\n"
 "            "
 
 #. module: project
@@ -452,19 +446,19 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    <t t-out=\"object.partner_id.name or '客戶'\">Brandon Freeman</t> 你好！"
-"<br/><br/>\n"
+"    <t t-out=\"object.partner_id.name or '客戶'\">Brandon Freeman</t> 你好"
+"！<br/><br/>\n"
 "    多謝聯絡我們，感謝你對我們的產品/服務感興趣。<br/>\n"
 "    我們的團隊目前正在處理你的查詢，會盡快回覆你的電郵。<br/>\n"
-"    其間，如果你還有任何進一步的問題或疑慮，歡迎隨時告訴我們，我們樂意協助。"
-"<br/><br/>\n"
+"    其間，如果你還有任何進一步的問題或疑慮，歡迎隨時告訴我們，我們樂意協助"
+"。<br/><br/>\n"
 "    感謝你耐心等待。<br/>\n"
 "    順祝  安康\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
-"div>\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -546,8 +540,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
-"<span class=\"fa fa-user me-2\" aria-label=\"合作夥伴\" title=\"合作夥伴\"/>"
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"合作夥伴\" title=\"合作夥伴\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
@@ -860,8 +853,10 @@ msgstr "管理員"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
-msgid "Administrator can manage the employees' schedule"
-msgstr "管理員可以管理員工的日程安排"
+msgid ""
+"Administrator: Can manage projects and stages, with access to reporting and "
+"configuration."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -932,6 +927,11 @@ msgstr "所有任務"
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All internal users"
 msgstr "所有內部使用者"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "All internal users and invited portal users"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__allocated_hours
@@ -1159,8 +1159,7 @@ msgstr ""
 msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
-msgstr ""
-"在該階段設定此範本，當任務到達專案的特定階段時，會自動向客戶發送電子郵件"
+msgstr "在該階段設定此範本，當任務到達專案的特定階段時，會自動向客戶發送電子郵件"
 
 #. module: project
 #. odoo-python
@@ -1731,8 +1730,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_project.py:0
 msgid "Customers will be added to the followers of their project and tasks."
-msgstr ""
-"客戶會被加入與他們相關的專案及任務，成為關注者，緊密追蹤工作動向和進度。"
+msgstr "客戶會被加入與他們相關的專案及任務，成為關注者，緊密追蹤工作動向和進度。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status_period__daily
@@ -1897,8 +1895,7 @@ msgstr "刪除階段"
 msgid ""
 "Deliver your services automatically when a milestone is reached by linking "
 "it to a sales order item."
-msgstr ""
-"將里程碑連結至銷售訂單項目，當達到里程碑時，可以自動執行和提供你的服務。"
+msgstr "將里程碑連結至銷售訂單項目，當達到里程碑時，可以自動執行和提供你的服務。"
 
 #. module: project
 #. odoo-javascript
@@ -3419,8 +3416,8 @@ msgid ""
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"載有該別名的母項模型。載有別名參照的模型，不一定是 alias_model_id 提供的模"
-"型，例如：專案（parent_model）與任務（model）"
+"載有該別名的母項模型。載有別名參照的模型，不一定是 alias_model_id 提供的模型"
+"，例如：專案（parent_model）與任務（model）"
 
 #. module: project
 #. odoo-python
@@ -3896,8 +3893,8 @@ msgid ""
 "identify those on hold until dependencies are resolved with the hourglass "
 "icon."
 msgstr ""
-"使用沙漏圖示，快速檢查批准或更改請求的任務狀態，並識別那些處於擱置狀態的任"
-"務，直至解決依賴關係問題。"
+"使用沙漏圖示，快速檢查批准或更改請求的任務狀態，並識別那些處於擱置狀態的任務"
+"，直至解決依賴關係問題。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
@@ -4456,8 +4453,8 @@ msgid ""
 "property."
 msgstr ""
 "使用里程碑、標籤或專用屬性，按衝刺對任務進行排序。在每個衝刺結束時，只需選取"
-"清單中的剩餘任務，然後編輯里程碑、標籤或屬性，便可將任務一次過移至下一個衝"
-"刺。"
+"清單中的剩餘任務，然後編輯里程碑、標籤或屬性，便可將任務一次過移至下一個衝刺"
+"。"
 
 #. module: project
 #. odoo-javascript
@@ -4878,7 +4875,7 @@ msgstr "Tasks.test"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Template"
-msgstr "範本文字"
+msgstr "範本"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
@@ -5545,8 +5542,8 @@ msgstr "使用者設定"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
-msgid "User can user the your employees' schedule"
-msgstr "使用者可使用你員工的日程安排"
+msgid "User: Can manage tasks in projects shared with them."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5721,8 +5718,8 @@ msgid ""
 "of projects linked to %(company_name)s."
 msgstr ""
 "你無法將此階段的公司切換至 %(company_name)s，因為它目前包括與 %"
-"(project_company_name)s 相關的專案。請確保此階段完全只包括與 %"
-"(company_name)s 相關的專案項目。"
+"(project_company_name)s 相關的專案。請確保此階段完全只包括與 %(company_name)"
+"s 相關的專案項目。"
 
 #. module: project
 #. odoo-javascript
@@ -5766,8 +5763,7 @@ msgstr "不可刪除包含專案的階段。你應該先刪除它們的所有專
 msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
-msgstr ""
-"您不能刪除包含任務的階段。 您可以將它們歸檔，也可以先刪除它們的所有任務。"
+msgstr "您不能刪除包含任務的階段。 您可以將它們歸檔，也可以先刪除它們的所有任務。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5813,8 +5809,8 @@ msgid ""
 "you navigate.<br/> You can discard these changes from here or manually save "
 "your task.<br/>Let's save it manually."
 msgstr ""
-"你有未儲存的變更！但請不用擔心，Odoo 會在你瀏覽不同頁面時自動儲存。<br/>這"
-"裏，你可選擇丟棄變更，或手動儲存任務。<br/>讓我們手動儲存吧。"
+"你有未儲存的變更！但請不用擔心，Odoo 會在你瀏覽不同頁面時自動儲存。<br/>這裏"
+"，你可選擇丟棄變更，或手動儲存任務。<br/>讓我們手動儲存吧。"
 
 #. module: project
 #. odoo-javascript
@@ -6050,8 +6046,7 @@ msgstr "將創建任務在您的"
 msgid ""
 "{{ object.project_id.company_id.name or user.env.company.name }}: "
 "Satisfaction Survey"
-msgstr ""
-"{{ object.project_id.company_id.name or user.env.company.name }}：滿意度調查"
+msgstr "{{ object.project_id.company_id.name or user.env.company.name }}：滿意度調查"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -6070,6 +6065,15 @@ msgstr "👤 未指派"
 #: code:addons/project/models/project_task.py:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid " All internal users and invited portal users"
+#~ msgstr " 所有內部使用者及獲邀請的門戶使用者"
+
+#~ msgid "Administrator can manage the employees' schedule"
+#~ msgstr "管理員可以管理員工的日程安排"
+
+#~ msgid "User can user the your employees' schedule"
+#~ msgstr "使用者可使用你員工的日程安排"
 
 #~ msgid "Invalid fields: "
 #~ msgstr "無效欄位： "

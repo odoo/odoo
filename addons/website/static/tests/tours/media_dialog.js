@@ -261,3 +261,123 @@ registerWebsitePreviewTour(
         },
     ]
 );
+
+registerWebsitePreviewTour(
+    "website_media_dialog_insert_file",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({
+            id: "s_text_block",
+            name: "Text",
+            groupName: "Text",
+        }),
+        {
+            content: "Click on the first paragraph",
+            trigger: ":iframe .s_text_block p",
+            run: "editor test",
+        },
+        {
+            content: "Show the powerbox",
+            trigger: ":iframe .s_text_block p:last-child",
+            async run(actions) {
+                await actions.editor(`/`);
+                const wrapwrap = this.anchor.closest("#wrapwrap");
+                wrapwrap.dispatchEvent(
+                    new InputEvent("input", {
+                        inputType: "insertText",
+                        data: "/",
+                    })
+                );
+            },
+        },
+        {
+            content: "Click on the media item from powerbox",
+            trigger: "div.o-we-command-name:contains('Media')",
+            run: "click",
+        },
+        {
+            content: "Click on the 'Documents' tab",
+            trigger: ".o_select_media_dialog a.nav-link:contains('Documents')",
+            run: "click",
+        },
+        {
+            content: "Click on the first document",
+            trigger: ".o_select_media_dialog .o_existing_attachment_cell .o_button_area",
+            run: "click",
+        },
+        {
+            content:
+                "Verify that the document was inserted and reopen the media dialog with a double click",
+            trigger: ":iframe .s_text_block p > .o_file_box",
+            run: "dblclick",
+        },
+        {
+            content: "Verify that the dialog opened on the Documents tab",
+            trigger: ".o_select_media_dialog a.nav-link.active:contains('Documents')",
+        },
+    ]
+);
+
+registerWebsitePreviewTour(
+    "website_replace_remove_image",
+    {
+        url: "/",
+        edition: true,
+    },
+    () => [
+        ...insertSnippet({
+            id: "s_text_image",
+            name: "Text - Image",
+            groupName: "Content",
+        }),
+        {
+            content: "Open the media dialog from the snippet",
+            trigger: ":iframe .s_text_image img",
+            run: "dblclick",
+        },
+        {
+            content: "Click on the toolbar's 'Add URL' button",
+            trigger: ".o_upload_media_url_button",
+            run: "click",
+        },
+        {
+            content: "Edit input field value",
+            trigger: ".o_we_url_input",
+            run: "edit website/static/src/img/backgrounds/city.jpg",
+        },
+        {
+            content: "Click on the toolbar's 'Add URL' button",
+            trigger: ".o_upload_media_url_button",
+            run: "click",
+        },
+        {
+            content: "Open the media dialog from the snippet",
+            trigger: ":iframe .s_text_image img",
+            run: "dblclick",
+        },
+        {
+            content: "Click on remove attachment",
+            trigger: ".o_we_attachment_selected .fa-trash:not(:visible)",
+            run: "click",
+        },
+        {
+            content: "Confirm the removal of the attachment",
+            trigger: ".btn:contains('Ok')",
+            run: "click",
+        },
+        {
+            content: "Click 'Discard' to close the media dialog",
+            trigger: ".modal:not(.o_inactive_modal) .o_select_media_dialog .btn:contains(Discard)",
+            run: "click",
+        },
+        ...clickOnSave(),
+        {
+            content: "Ensure the image is replaced with a placeholder thumbnail",
+            trigger:
+                ":iframe .s_text_image img[src='/html_editor/static/src/img/placeholder_thumbnail.png']",
+        },
+    ]
+);

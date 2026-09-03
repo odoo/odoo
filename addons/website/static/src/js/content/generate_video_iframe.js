@@ -37,6 +37,15 @@ function manageIframeSrcOnLoad(iframeEl, src) {
  * @returns {HTMLIframeElement}
  */
 export function generateVideoIframe(parentEl, manageIframeSrcFct) {
+    // Depending on version / compatibility / instance, the src is saved in the
+    // 'data-src' attribute or the 'data-oe-expression' one.
+    const src = parentEl.dataset.oeExpression || parentEl.dataset.src;
+    // Do not generate an iframe if there is no src, as it means that the
+    // container only contains the SVG placeholder.
+    if (!src) {
+        return;
+    }
+
     // Bug fix / compatibility: empty the <div/> element as all information
     // to rebuild the iframe should have been saved on the <div/> element
     parentEl.replaceChildren();
@@ -48,9 +57,7 @@ export function generateVideoIframe(parentEl, manageIframeSrcFct) {
     extraSizeEl.className = "media_iframe_video_size";
     parentEl.append(extraEditionEl, extraSizeEl);
 
-    // Rebuild the iframe. Depending on version / compatibility / instance, the
-    // src is saved in the 'data-src' attribute or the 'data-oe-expression' one.
-    const src = parentEl.dataset.oeExpression || parentEl.dataset.src;
+    // Rebuild the iframe.
     // Validate the src to only accept supported domains we can trust
     const m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
     if (!m) {

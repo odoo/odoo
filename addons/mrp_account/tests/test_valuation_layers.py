@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo.fields import Command
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon
 from odoo.tests import Form
+from odoo.tests.common import new_test_user
 
 PRICE = 718.75 - 100  # total price minus glass
 
@@ -338,12 +340,114 @@ class TestMrpValuationStandard(TestBomPriceCommon):
 
     def test_kit_product_valuation(self):
         """
-        Verify that kit products are excluded from inventory valuation
-        and have no effect on valuation upon price change.
+        Verify that kit products are excluded from inventory valuation,
+        do not affect valuation when their price changes, and still appear
+        in the quantity history report with total value of zero.
         """
-        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 300}])
+        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 0}])
         self.assertTrue(self.table_head not in self.env.company._get_accounts_by_product())
         old_stock_value = sum(self.env.company.stock_value().values())
         self.table_head.action_bom_cost()
-        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 468.75}])
+        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 0}])
         self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
+        action = self.env['stock.quantity.history'].create({}).open_at_date()
+        products = self.env[action['res_model']].with_context(action['context']).search(action['domain'])
+        self.assertRecordValues(
+            products & self.table_head,
+            [{
+                'standard_price': 468.75,
+                'qty_available': 1,
+                'total_value': 0,
+                'avg_cost': 0,
+            }],
+        )
+
+    def test_mo_valuation_uses_production_company(self):
+        """
+        Verify that when validating an MO while env.company differs from mo.company_id, we read company-dependent
+        fields (product.cost_method / standard_price) in the MO's company, not the caller's env.company
+        """
+        self._make_in_move(self.glass, 1, 10)
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        mo.with_company(self.other_company).button_mark_done()
+        self.assertEqual(self.dining_table.total_value, PRICE + 10)
+
+    def test_kit_in_other_company_does_not_zero_valuation(self):
+        """
+        Check that a product's stock value and on-hand quantity in one company are
+        unaffected by a kit defined for the same product in another company.
+        """
+        company_1 = self.company
+        company_2 = self.other_company
+
+        super_product, component = self.env['product.product'].create([
+            {'name': 'Super product', 'is_storable': True, 'categ_id': self.category_standard.id},
+            {'name': 'Component', 'is_storable': True, 'categ_id': self.category_standard.id},
+        ])
+
+        super_product.with_company(company_1).standard_price = 50
+        self.env['stock.quant']._update_available_quantity(super_product, self.stock_location, 10)
+
+        self.env['mrp.bom'].with_company(company_2).create({
+            'product_id': super_product.id,
+            'product_tmpl_id': super_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'company_id': company_2.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        super_product.invalidate_recordset()
+
+        super_product = super_product.with_context(allowed_company_ids=(company_1 + company_2).ids)
+        self.assertEqual(super_product.total_value, 500)
+        self.assertEqual(super_product.qty_available, 10)
+
+    def test_validate_branch_mo_with_main_company_component(self):
+        """
+        Check that an MRP user of a branch company can process an MO in a multi-company
+        setup where the component belongs to the main company.
+        """
+        sub_company = self.branch
+        self.category_avco.with_company(self.branch).write({'property_valuation': 'real_time', 'property_cost_method': 'average'})
+        final_product, component = self.env['product.product'].create([
+            {
+                'name': 'Finished Product',
+                'is_storable': True,
+                'company_id': self.company.id,
+                'categ_id': self.category_avco.id,
+            },
+            {
+                'name': 'Component',
+                'is_storable': True,
+                'company_id': self.company.id,
+                'categ_id': self.category_avco.id,
+            },
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'company_id': sub_company.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2})],
+        })
+        self._make_in_move(component, 1, 10, company=self.branch)
+        self.assertEqual(component.with_company(self.branch).standard_price, 10.0)
+        mrp_user = new_test_user(
+            self.env,
+            login='test_mrp_sub_user',
+            groups='mrp.group_mrp_user,stock.group_stock_user',
+            company_id=sub_company.id,
+        )
+        mo = self.env['mrp.production'].with_context(allowed_company_ids=sub_company.ids).with_user(mrp_user).create({
+            'product_id': final_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1.0
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(final_product.with_company(self.branch).standard_price, 20.0)

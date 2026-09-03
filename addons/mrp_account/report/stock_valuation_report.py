@@ -11,6 +11,7 @@ class StockValuationReport(models.AbstractModel):
         if not self._must_include_cost_of_production():
             return report_data
         production_locations_valuation_vals = self.env.company._get_location_valuation_vals(
+            date,
             location_domain=[('usage', '=', 'production')]
         )
         cost_of_production = {

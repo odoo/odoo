@@ -256,11 +256,19 @@ export class ProductConfiguratorPopup extends Component {
         }
 
         overridedValues.priceExtra = this.priceExtra;
+        // Extra price of dynamic variants not yet created
+        overridedValues.priceExtra += this.selectedValues
+            .filter((value) => !this.product && value.attribute_id.create_variant !== "no_variant")
+            .reduce((acc, val) => acc + val.price_extra, 0);
 
         const product = this.product || this.props.productTemplate;
         const info = product.getTaxDetails({ overridedValues });
         const total = this.env.utils.formatCurrency(info?.raw_total_included_currency || 0.0);
         return `${this.props.productTemplate.display_name} | ${total}`;
+    }
+    get defaultCode() {
+        const product = this.product || this.props.productTemplate;
+        return product.default_code;
     }
     get showInfoBanner() {
         return this.props.productTemplate.is_storable;

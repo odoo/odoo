@@ -45,7 +45,6 @@ export class BackgroundVideo extends Interaction {
     start() {
         const promise = setupAutoplay(this.videoSrc, !!this.el.dataset.needCookiesApproval);
         if (promise) {
-            this.videoSrc += "&enablejsapi=1";
             this.waitFor(promise).then(this.protectSyncAfterAsync(this.appendBgVideo));
         }
         this.__adjustIframe = this.throttled(this.adjustIframe);

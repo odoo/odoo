@@ -52,7 +52,7 @@ export const pttExtensionHookService = {
             if (
                 source !== window ||
                 origin !== location.origin ||
-                data.from !== "discuss-push-to-talk" ||
+                data?.from !== "discuss-push-to-talk" ||
                 (!rtc && data.type !== "answer-is-enabled")
             ) {
                 return;

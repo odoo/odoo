@@ -2,8 +2,6 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { dragenterFiles } from "@web/../tests/utils";
 
-const CLICK_ON_CHAT_STEP = "click-on-chat-action";
-
 function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
     const steps = [
         { trigger: ".o-mail-Meeting" },
@@ -25,7 +23,6 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         {
             trigger: ".o-mail-Meeting [title='Chat']",
             run: "click",
-            content: CLICK_ON_CHAT_STEP,
         },
         {
             trigger:
@@ -77,18 +74,14 @@ registry
             // Avoid starting with mic/camera to prevent an unhandleable browser permission popup.
             browser.localStorage.setItem("discuss_call_preview_join_mute", "true");
             browser.localStorage.setItem("discuss_call_preview_join_video", "false");
-            const steps = getMeetingViewTourSteps();
-            const clickOnChatIndex = steps.find((step) => step.content === CLICK_ON_CHAT_STEP);
-            steps.splice(
-                clickOnChatIndex,
-                0,
+            return [
                 {
                     trigger: ".o-mail-Composer.o-focused .o-mail-Composer-input",
                     run: "edit Hello everyone!",
                 },
-                { trigger: ".o-mail-Composer button[title='Send']:enabled", run: "click" }
-            );
-            return steps;
+                { trigger: ".o-mail-Composer button[title='Send']:enabled", run: "click" },
+                ...getMeetingViewTourSteps(),
+            ];
         },
     })
     .add("discuss.meeting_view_public_tour", {

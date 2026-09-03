@@ -8,6 +8,7 @@ import {
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { unformat } from "../_helpers/format";
+import { nodeSize } from "@html_editor/utils/position";
 
 before(async () => {
     const font = new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)");
@@ -60,6 +61,79 @@ test("should apply font-size to completely selected multiple list items", async 
         stepFunction: (editor) =>
             execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
         contentAfter: '<ul><li class="h2-fs">[abc</li><li class="h2-fs">def]</li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (1)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;">]<br></li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (2)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li><br>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;"><br>]<br></li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (3)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd<br>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;">abcd<br>]<br></li></ul>',
+    });
+});
+
+test("should not apply font size to list item when selection excludes trailing empty line", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd]<br><br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li><span style="font-size: 56px;">abcd]</span><br><br></li></ul>',
+    });
+});
+
+test("should apply font-size on fully selected list items with empty text nodes at list boundaries", async () => {
+    await testEditor({
+        contentBefore: '<ul><li><a href="#">abc</a></li><li><a href="#">abc</a></li></ul>',
+        contentBeforeEdit:
+            '<ul><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li></ul>',
+        stepFunction: (editor) => {
+            const listItems = editor.editable.querySelectorAll("li");
+            // Set selection here because injected \ufeff can be excluded
+            // from the DOM range.
+            editor.shared.selection.setSelection({
+                anchorNode: listItems[0].firstChild,
+                anchorOffset: 0,
+                focusNode: listItems[1].lastChild,
+                focusOffset: nodeSize(listItems[1].lastChild),
+            });
+            // Empty text node at start of first <li>
+            listItems[0].insertBefore(document.createTextNode(""), listItems[0].firstChild);
+            // Empty text node at end of second <li>
+            listItems[1].appendChild(document.createTextNode(""));
+            setFontSize("32px")(editor);
+        },
+        contentAfterEdit:
+            '<ul><li style="font-size: 32px;">[\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="font-size: 32px;">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
+        contentAfter:
+            '<ul><li style="font-size: 32px;">[<a href="#">abc</a></li><li style="font-size: 32px;"><a href="#">abc</a>]</li></ul>',
+    });
+});
+
+test("should replace list item inline font-size with font-size class", async () => {
+    await testEditor({
+        contentBefore: '<ul><li style="font-size: 18px;">[abc]</li></ul>',
+        stepFunction: (editor) =>
+            execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
+        contentAfter: '<ul><li class="h2-fs">[abc]</li></ul>',
     });
 });
 

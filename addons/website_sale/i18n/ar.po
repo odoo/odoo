@@ -7,16 +7,16 @@
 # Martin Trigaux, 2022
 # Niyas Raphy, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-03-16 14:32+0000\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-08-10 13:20+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/ar/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -57,6 +57,10 @@ msgid ""
 "baseline\">Company name</span>\n"
 "                 -"
 msgstr ""
+"&amp;copy;\n"
+"                <span class=\"o_footer_copyright_name align-baseline\">اسم "
+"الشركة</span>\n"
+"                 -"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -240,6 +244,10 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
+"\n"
+"                    <span class=\"o_label small ms-1\">إضافة إلى عربة "
+"التسوق</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -286,6 +294,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
 "class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+"class=\"o_label small ms-1\">إضافة إلى عربة التسوق</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
@@ -361,8 +371,8 @@ msgid ""
 "        </small>"
 msgstr ""
 "<small class=\"text-muted mb-0\">\n"
-"            <a href=\"/terms\" class=\"o_translate_inline text-"
-"muted\"><u>الشروط والأحكلام</u></a><br/>\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>"
+"الشروط والأحكلام</u></a><br/>\n"
 "            ضمان استرداد الأموال خلال 30 يوم <br/>\n"
 "            الشحن خلال 2-3 أيام عمل\n"
 "        </small>"
@@ -446,6 +456,11 @@ msgid ""
 "small>\n"
 "            </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge text-muted fw-bold text-end\" "
+"name=\"price\">\n"
+"                <small class=\"fw-normal\">قم بتحديده لحساب سعر التوصيل</"
+"small>\n"
+"            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -472,8 +487,8 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
-"<span class=\"s_badge badge text-bg-primary o_animable\" data-"
-"name=\"Badge\">\n"
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">"
+"\n"
 "                                    <i class=\"fa fa-dollar fa-fw o_not-"
 "animable\"/> أسعار في متناول الجميع\n"
 "                                </span>\n"
@@ -541,6 +556,8 @@ msgid ""
 "<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
 "muted\">Price</span>"
 msgstr ""
+"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-muted\">"
+"السعر</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
@@ -549,6 +566,9 @@ msgid ""
 "                        Same as delivery address\n"
 "                    </span>"
 msgstr ""
+"<span name=\"use_delivery_as_billing_text\">\n"
+"                        مثل عنوان التوصيل\n"
+"                   </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.all_products_link_name
@@ -580,8 +600,8 @@ msgid ""
 msgstr ""
 "<span>للأسف، تعذر تأكيد طلبك لأن المبلغ المدفوع يختلف عن المبلغ في عربة "
 "تسوقك.\n"
-"                        يرجى التواصل مع المسؤول عن المحل للمزيد من المعلومات."
-"</span>"
+"                        يرجى التواصل مع المسؤول عن المحل للمزيد من "
+"المعلومات.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -596,12 +616,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "<span>for</span>"
-msgstr ""
+msgstr "<span>بـ</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<strong>Documents</strong>"
-msgstr ""
+msgstr "<strong>المستندات</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -708,8 +728,8 @@ msgstr ""
 "                            <hr/>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;"
-"\">\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
@@ -733,10 +753,10 @@ msgstr ""
 "0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
 "cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: "
-"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: "
-"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"target=\"_blank\" t-attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius: 5px; font-size:13px;\">\n"
 "                            الاستمرار بالطلب\n"
 "                        </a>\n"
@@ -1045,8 +1065,8 @@ msgid ""
 "Allow customers to pick up their online purchases at your store and pay in "
 "person"
 msgstr ""
-"أتح للعملاء إمكانية استلام المشتريات التي قاموا بشرائها عبر الإنترنت من "
-"متجرك والدفع شخصياً"
+"أتح للعملاء إمكانية استلام المشتريات التي قاموا بشرائها عبر الإنترنت من متجرك "
+"والدفع شخصياً"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -1138,7 +1158,7 @@ msgstr "تلقائي"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Auto-crop"
-msgstr ""
+msgstr "القص التلقائي"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1230,7 +1250,7 @@ msgstr "BeNeLux"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Beauty"
-msgstr ""
+msgstr "الجمال"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_beds
@@ -1293,23 +1313,29 @@ msgid ""
 "minimum purchase amount, period). Rewards can be discounts (% or "
 "amount)                            or free products."
 msgstr ""
-"عزز مبيعاتك باستخدام عدة برامج مختلفة: القسائم، العروض "
-"الترويجية،                             بطاقات الهدايا، برامج الولاء. يمكن "
-"تحديد شروط محددة (المنتجات، العملاء،                             الحد الأدنى "
-"لمبلغ الشراء، الفترة الزمنية). يمكنك تقديم مكافآت على شكل خصومات (نسبة مئوية "
-"أو مبلغ محدد)                             أو منتجات مجانية."
+"عزز مبيعاتك باستخدام عدة برامج مختلفة: القسائم، العروض الترويجية،"
+"                             بطاقات الهدايا، برامج الولاء. يمكن تحديد شروط "
+"محددة (المنتجات، العملاء،                             الحد الأدنى لمبلغ الشراء"
+"، الفترة الزمنية). يمكنك تقديم مكافآت على شكل خصومات (نسبة مئوية أو مبلغ "
+"محدد)                             أو منتجات مجانية."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Border-Primary"
-msgstr ""
+msgstr "الحدود - الأساسية"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Bordered"
 msgstr "محاط بحدود"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+msgid "Bottom"
+msgstr "الأسفل"
 
 #. module: website_sale
 #. odoo-python
@@ -1549,7 +1575,7 @@ msgstr "الفئات التابعة"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Chips"
-msgstr "بطاطس مقرمشة"
+msgstr "رقائق"
 
 #. module: website_sale
 #. odoo-python
@@ -2316,8 +2342,8 @@ msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
 msgstr ""
-"عرض سعر الوحدة الأساسي على صفحات التجارة الإلكترونية لديك. قم بتعيين القيمة "
-"كـ 0 لإخفائها لهذا المنتج."
+"عرض سعر الوحدة الأساسي على صفحات التجارة الإلكترونية لديك. قم بتعيين القيمة كـ "
+"0 لإخفائها لهذا المنتج."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_description
@@ -2628,7 +2654,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Fitness"
-msgstr ""
+msgstr "اللياقة البدنية"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2746,7 +2772,7 @@ msgstr "كامل"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__fluid
 #: model:ir.model.fields.selection,name:website_sale.selection__website__shop_page_container__fluid
 msgid "Full-width"
-msgstr ""
+msgstr "العرض الكامل"
 
 #. module: website_sale
 #. odoo-python
@@ -2777,7 +2803,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Gadgets"
-msgstr ""
+msgstr "الأدوات"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_gaming
@@ -3001,8 +3027,8 @@ msgid ""
 "If the setting is set, sent to authenticated visitors who abandoned their "
 "cart"
 msgstr ""
-"إذا تم ضبط الإعداد، سيتم الإرسال إلى الزائرين الذين تركوا عربات التسوق "
-"الخاصة بهم"
+"إذا تم ضبط الإعداد، سيتم الإرسال إلى الزائرين الذين تركوا عربات التسوق الخاصة "
+"بهم"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
@@ -3011,9 +3037,9 @@ msgid ""
 "field or make it selectable.Otherwise, the pricelist will not apply to any "
 "website."
 msgstr ""
-"إذا كنت ترغب في أن تكون قائمة الأسعار متاحة على الموقع الإلكتروني، عليك "
-"تعبئة هذا الحقل أو جعلها قابلة للتحديد. وإلا، فلن تنطبق قائمة الأسعار على أي "
-"موقع إلكتروني."
+"إذا كنت ترغب في أن تكون قائمة الأسعار متاحة على الموقع الإلكتروني، عليك تعبئة "
+"هذا الحقل أو جعلها قابلة للتحديد. وإلا، فلن تنطبق قائمة الأسعار على أي موقع "
+"إلكتروني."
 
 #. module: website_sale
 #. odoo-javascript
@@ -3320,6 +3346,7 @@ msgstr "مخطط"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__left
 msgid "Left"
@@ -3677,8 +3704,8 @@ msgid ""
 "No shipping method is available for your current order and shipping address. "
 "Please contact us for more information."
 msgstr ""
-"لا توجد طريقة توصيل متوفرة لطلبك الحالي وعنوان شحنك. يرجى التواصل معنا "
-"للمزيد من المعلومات."
+"لا توجد طريقة توصيل متوفرة لطلبك الحالي وعنوان شحنك. يرجى التواصل معنا للمزيد "
+"من المعلومات."
 
 #. module: website_sale
 #. odoo-python
@@ -4739,7 +4766,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Responsive"
-msgstr ""
+msgstr "متجاوب"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_id
@@ -5035,13 +5062,13 @@ msgstr "الخدمات"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Shadow-In"
-msgstr ""
+msgstr "ظل للداخل"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Shadow-Out"
-msgstr ""
+msgstr "ظل للخارج"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -5315,8 +5342,7 @@ msgstr ""
 "قم بتحديد قائمة أسعار لضبط الموجز الخاص بك بحيث يُظهِر جميع المنتجات بعملة "
 "معينة. إذا لم يتم تحديد ذلك، فسيتم استخدام قائمة أسعار الموقع الإلكتروني "
 "الافتراضية.\n"
-"يرجى مراعاة أنه يجب أن تكون قائمة الأسعار قابلة للاختيار على الموقع "
-"الإلكتروني."
+"يرجى مراعاة أنه يجب أن تكون قائمة الأسعار قابلة للاختيار على الموقع الإلكتروني."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
@@ -5702,9 +5728,9 @@ msgid ""
 "updated on that cart. Also, the cart might not be visible for the customer "
 "until you update the pricelist of that cart."
 msgstr ""
-"لدى هذا الشريك عربة تسوق مفتوحة. يرجى ملاحظة أنه لن يتم تحديث قائمة الأسعار "
-"في عربة التسوق. إذافة إلى ذلك، قد لا تكون عربة التسوق مرئية للعميل إلى أن "
-"تقوم بتحديث قائمة الأسعار لعربة التسوق."
+"لدى هذا الشريك عربة تسوق مفتوحة. يرجى ملاحظة أنه لن يتم تحديث قائمة الأسعار في "
+"عربة التسوق. إذافة إلى ذلك، قد لا تكون عربة التسوق مرئية للعميل إلى أن تقوم "
+"بتحديث قائمة الأسعار لعربة التسوق."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5721,6 +5747,12 @@ msgstr "لا توجد تركيبة صحيحة لهذا المنتج."
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
 msgid "This product is no longer available."
 msgstr "لم يعد هذا المنتج متوفراً."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -5769,9 +5801,9 @@ msgid ""
 "ones                            in list view and click on 'Portal Access "
 "Management' option in the                            dropdown menu *Action*."
 msgstr ""
-"لإرسال دعوات في وضع B2B، افتح جهة اتصال أو حدد عدة جهات "
-"اتصال                            في عرض القائمة وانقر على خيار \"إدارة "
-"الوصول إلى البوابة\" في                            القائمة المنسدلة *إجراء*."
+"لإرسال دعوات في وضع B2B، افتح جهة اتصال أو حدد عدة جهات اتصال"
+"                            في عرض القائمة وانقر على خيار \"إدارة الوصول إلى "
+"البوابة\" في                            القائمة المنسدلة *إجراء*."
 
 #. module: website_sale
 #. odoo-python
@@ -5874,7 +5906,7 @@ msgstr "غير منشور"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__unset
 msgid "Unset"
-msgstr ""
+msgstr "إلغاء التعيين"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6193,8 +6225,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
 msgid "Website through which this order was placed for eCommerce orders."
 msgstr ""
-"الموقع الإلكتروني الذي قد تم إنشاء هذا الطلب من خلاله لطلبات المتجر "
-"الإلكتروني."
+"الموقع الإلكتروني الذي قد تم إنشاء هذا الطلب من خلاله لطلبات المتجر الإلكتروني."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__website_ids
@@ -6297,8 +6328,7 @@ msgid ""
 "recovery email!"
 msgstr ""
 "ستجد هنا كافة عربات التسوق التي تركها زوارك.\n"
-"                إذا قاموا بإكمال عناوينهم، عليك إرسال بريد إلكتروني "
-"للاسترجاع!"
+"                إذا قاموا بإكمال عناوينهم، عليك إرسال بريد إلكتروني للاسترجاع!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -6366,7 +6396,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Zoom-In"
-msgstr ""
+msgstr "تكبير"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6378,7 +6408,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Zoom-Out"
-msgstr ""
+msgstr "تصغير"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6466,7 +6496,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours."
-msgstr ""
+msgstr "ساعات."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -6872,9 +6902,6 @@ msgstr ""
 
 #~ msgid "Both"
 #~ msgstr "كلاهما"
-
-#~ msgid "Bottom"
-#~ msgstr "الأسفل"
 
 #~ msgid "Brand"
 #~ msgstr "العلامة التجارية"

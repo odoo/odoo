@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
+from freezegun import freeze_time
 from odoo.tests import Form, tagged
 
 from odoo import Command
@@ -89,7 +88,6 @@ class TestSaleMrpKitBom(BaseCommon):
                 # The actual test, there should be no traceback here
                 order_line_change.product_id = product_variant_ids[1]
 
-    @skip('Temporary to fast merge new valuation')
     def test_sale_mrp_kit_cost(self):
         """
          Check the total cost of a KIT:
@@ -151,9 +149,9 @@ class TestSaleMrpKitBom(BaseCommon):
         })
         so.action_confirm()
         line = so.order_line
-        purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(line.move_ids.mapped('description_picking'), ['Kit Product - 1/2', 'Kit Product - 2/2'])
-        self.assertEqual(purchase_price, 92, "The purchase price must be the total cost of the components multiplied by their unit of measure")
+        self.kit_product.button_bom_cost()
+        self.assertEqual(self.kit_product.standard_price, 92, "The cost of the kit must be the total cost of the components multiplied by their unit of measure")
 
     def test_sale_mrp_kit_sale_price(self):
         """Check the total sale price of a KIT:
@@ -850,3 +848,66 @@ class TestSaleMrpKitBom(BaseCommon):
         picking.button_validate()
 
         self.assertEqual(so.order_line.qty_delivered, 1)
+
+    def test_kit_component_packaging_uom_not_converted_so(self):
+        """ The delivery move of a kit component must keep the component's own
+        UoM as packaging UoM."""
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        kit, component = self.env['product.product'].create([
+            {'name': 'Kit UoM', 'uom_id': uom_unit.id},
+            {'name': 'Comp Kg', 'is_storable': True, 'uom_id': uom_kg.id},
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1.0})],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': kit.id, 'product_uom_qty': 1.0})],
+        })
+        so.action_confirm()
+        component_move = so.picking_ids.move_ids
+        self.assertEqual(component_move.product_uom, uom_kg)
+        self.assertEqual(component_move.packaging_uom_id, uom_kg)
+
+    @freeze_time('2020-01-15')
+    def test_qty_delivered_at_date_with_bom(self):
+        """Check the quantity delivered at date is correct for a sale order with a kit"""
+
+        self.kit = self._create_product('Kit', True, 0.00)
+        self.comp = self._create_product('Component', True, 0.00)
+
+        # Create BoM for Kit
+        bom_product_form = Form(self.env['mrp.bom'])
+        bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
+        bom_product_form.product_qty = 1.0
+        bom_product_form.type = 'phantom'
+        with bom_product_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = self.comp
+            bom_line.product_qty = 1
+        self.bom = bom_product_form.save()
+
+        self.customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'name': self.kit.name,
+                    'product_id': self.kit.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 1,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+        picking = so.picking_ids
+        picking.move_ids.write({'quantity': 1, 'picked': True})
+        picking.button_validate()
+
+        self.assertEqual(so.with_context({'accrual_entry_date': '2020-01-15'}).order_line.qty_delivered_at_date, 1)
+        self.assertEqual(so.with_context({'accrual_entry_date': '2020-01-10'}).order_line.qty_delivered_at_date, 0)

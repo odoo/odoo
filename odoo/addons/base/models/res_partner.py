@@ -234,7 +234,7 @@ class ResPartner(models.Model):
         precompute=True,  # avoid queries post-create
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
-    vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat = fields.Char(string='Tax ID', index=True, help="You can use '/' to indicate that the customer has no Tax ID.")
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
     same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
@@ -398,8 +398,11 @@ class ResPartner(models.Model):
     def _compute_lang(self):
         """ While creating / updating child contact, take the parent lang by
         default if any. 0therwise, fallback to default context / DB lang """
-        for partner in self.filtered('parent_id'):
-            partner.lang = partner.parent_id.lang or self.default_get(['lang']).get('lang') or self.env.lang
+        for partner in self:
+            if partner.parent_id:
+                partner.lang = partner.parent_id.lang or partner.default_get(['lang']).get('lang') or partner.env.lang
+            elif not partner.lang:
+                partner.lang = partner.default_get(['lang']).get('lang') or partner.env.lang
 
     @api.depends('lang')
     def _compute_active_lang_count(self):
@@ -421,11 +424,13 @@ class ResPartner(models.Model):
     @api.depends_context("uid")
     @api.depends("user_ids.active", "user_ids.share")
     def _compute_main_user_id(self):
-        for partner in self:
-            if self.env.user.partner_id == partner:
-                partner.main_user_id = self.env.user
-                continue
-            users = partner.user_ids.filtered(lambda u: u.active).with_prefetch(self.user_ids.ids)
+        partners = self
+        if partner := partners & self.env.user.partner_id:
+            partner.main_user_id = self.env.user
+            partners -= partner
+        active_users = partners.user_ids.filtered('active')
+        for partner in partners:
+            users = partner.user_ids & active_users
             # Special case for OdooBot as its user might be archived.
             if not users and partner.id == self.env["ir.model.data"]._xmlid_to_res_id("base.partner_root"):
                 partner.main_user_id = self.env["ir.model.data"]._xmlid_to_res_id("base.user_root")
@@ -750,9 +755,17 @@ class ResPartner(models.Model):
             fields_to_sync = self._commercial_fields()
         sync_vals = commercial_partner._convert_fields_to_values(fields_to_sync)
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
+        children_ids_to_sync = tools.OrderedSet()
         for child in sync_children:
+            if any(
+                self.env['res.partner']._fields[fname].convert_to_write(child[fname], self) != sync_vals[fname]
+                for fname in fields_to_sync
+            ):
+                children_ids_to_sync.add(child.id)
             child._commercial_sync_to_descendants(fields_to_sync)
-        sync_children.write(sync_vals)
+        if children_ids_to_sync:
+            children_to_sync = self.env['res.partner'].browse(children_ids_to_sync)
+            children_to_sync.write(sync_vals)
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children.
@@ -762,6 +775,7 @@ class ResPartner(models.Model):
 
         :param dict values: updated values, triggering sync
         """
+        self.fetch(['parent_id', 'type', 'commercial_partner_id'])
         # 1. From UPSTREAM: sync from parent
         if values.get('parent_id') or values.get('type') == 'contact':
             # 1a. Commercial fields: sync if parent changed
@@ -922,7 +936,7 @@ class ResPartner(models.Model):
         # due to ir.default, compute is not called as there is a default value
         # hence calling the compute manually
         for partner, values in zip(partners, vals_list):
-            if 'lang' not in values and partner.parent_id:
+            if 'lang' not in values:
                 partner._compute_lang()
 
         if self.env.context.get('_partners_skip_fields_sync'):
@@ -970,7 +984,7 @@ class ResPartner(models.Model):
             to_write = {}
             # commercial fields from commercial partner
             if cp_id:
-                to_write = self.browse(cp_id)._convert_fields_to_values(self._commercial_fields())
+                to_write = self.sudo().browse(cp_id)._convert_fields_to_values(self._commercial_fields())
             # address fields from parent
             if add_id:
                 parent = self.browse(add_id)
@@ -1018,7 +1032,7 @@ class ResPartner(models.Model):
 
     @api.depends('complete_name', 'email', 'vat', 'state_id', 'country_id', 'commercial_company_name')
     @api.depends_context(
-        'show_address', 'partner_display_name_hide_company', 'partner_show_db_id',
+        'show_address', 'partner_show_db_id',
         'show_email', 'show_vat', 'lang', 'formatted_display_name'
     )
     def _compute_display_name(self):
@@ -1127,6 +1141,7 @@ class ResPartner(models.Model):
                         result[record.type] = record.id
                     if len(result) == len(adr_pref):
                         return result
+                    record.child_ids.fetch(['type', 'child_ids', 'is_company', 'parent_id'])
                     to_scan = [c for c in record.child_ids
                                  if c not in visited
                                  if not c.is_company] + to_scan
@@ -1232,8 +1247,10 @@ class ResPartner(models.Model):
         return [{
             'contact_type': self.street,
             'street': self.street,
+            'street2': self.street2,
             'zip': self.zip,
             'city': self.city,
+            'state': self.state_id.code,
             'country': self.country_id.code,
         }]
 

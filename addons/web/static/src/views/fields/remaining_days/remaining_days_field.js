@@ -40,15 +40,20 @@ export class RemainingDaysField extends Component {
     }
 
     get diffString() {
-        if (this.diffDays === null) {
+        const diffDays = this.diffDays;
+        if (diffDays === null) {
             return "";
         }
-        if (Math.abs(this.diffDays) > 99) {
+        if (Math.abs(diffDays) > 99) {
             return this.formattedValue;
         }
         const { record, name } = this.props;
         const value = record.data[name];
-        return capitalize(value.toRelativeCalendar());
+        const relativeCalendarOptions = {};
+        if (Math.abs(diffDays) <= 30) {
+            relativeCalendarOptions.unit = "days";
+        }
+        return capitalize(value.toRelativeCalendar(relativeCalendarOptions));
     }
 
     get formattedValue() {

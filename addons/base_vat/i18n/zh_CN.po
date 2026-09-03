@@ -6,13 +6,13 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # Martin Trigaux, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 15:20+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-07 11:16+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-19/base_vat/zh_Hans/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
@@ -33,8 +33,7 @@ msgstr "1-01-85004-3 或 101850043"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
-msgstr ""
-"10XXXXXXXXY 或 20XXXXXXXXY 或 15XXXXXXXXY 或 16XXXXXXXXY 或 17XXXXXXXXY"
+msgstr "10XXXXXXXXY 或 20XXXXXXXXY 或 15XXXXXXXXY 或 16XXXXXXXXY 或 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
@@ -47,6 +46,12 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "123456789 (TIN) or 12345678901234 (PINFL)"
 msgstr ""
 
 #. module: base_vat
@@ -168,8 +173,7 @@ msgstr "ID"
 msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
-msgstr ""
-"如果勾选本复选框，则适用的默认财务状况将取决于欧洲 VIES 服务的核查结果。"
+msgstr "如果勾选本复选框，则适用的默认财务状况将取决于欧洲 VIES 服务的核查结果。"
 
 #. module: base_vat
 #. odoo-python
@@ -224,24 +228,14 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
-"以下记录的 %(vat_label)s 号码 [%(wrong_vat)s] 似乎无效。记录：%"
-"(record_label)s。%(expected_note)s"
+"以下记录的 %(vat_label)s 号码 [%(wrong_vat)s] 似乎无效。记录：%(record_label)"
+"s。%(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
+msgid "The Intra-Community validity has been updated to: %s."
 msgstr ""
-
-#. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳税。"
 
 #. module: base_vat
 #. odoo-python
@@ -285,16 +279,33 @@ msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr "XXXXXXXXX [9 位数]，并应遵守卢恩校验和"
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "CPF 为 11 位数，或 CNPJ 为 14 位数"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "业务伙伴[%s]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "税务识别号。此处的值将根据国家格式进行验证。可以使用“/”表示合作伙伴无需纳"
+#~ "税。"
+
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "CPF 为 11 位数，或 CNPJ 为 14 位数"
 
 #~ msgid ""
 #~ "Connection with the VIES server failed. The VAT number %s could not be "

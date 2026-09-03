@@ -203,7 +203,7 @@ class SaleOrder(models.Model):
         self.coupon_point_ids.coupon_id.sudo().filtered(
             lambda c: not c.program_id.is_nominative and c.order_id in self and not c.use_count)\
             .unlink()
-        self.coupon_point_ids.unlink()
+        self.coupon_point_ids.sudo().unlink()
         return res
 
     def action_open_reward_wizard(self):
@@ -337,6 +337,11 @@ class SaleOrder(models.Model):
             # Gift cards and eWallets are applied on the total order amount
             # Other types of programs are not expected to apply on delivery lines
             lines -= self._get_no_effect_on_threshold_lines()
+        else:
+            # Prevent paying for a payment program's own top-up product using that
+            # same program (e.g. topping up an eWallet by paying with the eWallet).
+            top_up_products = reward.program_id.trigger_product_ids
+            lines -= lines.filtered(lambda line: line.product_id in top_up_products)
 
         discountable = 0
         discountable_per_tax = defaultdict(float)
@@ -345,14 +350,17 @@ class SaleOrder(models.Model):
         base_lines = []
         for line in lines:
             base_line = line._prepare_base_line_for_taxes_computation()
-            taxes = base_line['tax_ids'].flatten_taxes_hierarchy()
+            taxes = base_line['tax_ids']
+            discountable_taxes = base_line['tax_ids'].flatten_taxes_hierarchy()
             if not reward.program_id.is_payment_program:
                 # To compute the discountable amount we get the subtotal and add
                 # non-fixed tax totals. This way fixed taxes will not be discounted
                 # This does not apply to Gift Cards and e-Wallet, where the total
                 # order amount may be paid with the card balance
                 taxes = taxes.filtered(lambda t: t.amount_type != 'fixed')
+                discountable_taxes = discountable_taxes.filtered(lambda t: t.amount_type != 'fixed')
             base_line['discount_taxes'] = taxes
+            base_line['discountable_taxes'] = discountable_taxes
             base_lines.append(base_line)
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
@@ -363,7 +371,7 @@ class SaleOrder(models.Model):
             return {
                 'taxes': base_line['discount_taxes'],
                 'skip': (
-                    tax_data['tax'] not in base_line['discount_taxes']
+                    tax_data['tax'] not in base_line['discountable_taxes']
                     or base_line['record'] not in lines
                 ),
             }
@@ -786,7 +794,8 @@ class SaleOrder(models.Model):
                 points += self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon).points
             # Points already used by rewards
             points -= sum(self.order_line.filtered(lambda l: l.coupon_id == coupon).mapped('points_cost'))
-        points = coupon.currency_id.round(points)
+        if any(rule.reward_point_mode == 'money' for rule in coupon.program_id.rule_ids):
+            points = coupon.currency_id.round(points)
         return points
 
     def _add_points_for_coupon(self, coupon_points):
@@ -815,9 +824,18 @@ class SaleOrder(models.Model):
             ('order_model', '=', self._name),
             ('order_id', '=', self.id),
         ], limit=1)
-        order_coupon_history.update({
-            'used': order_coupon_history.used + points,
-        })
+        if order_coupon_history:
+            order_coupon_history.update({'used': order_coupon_history.used + points})
+        else:
+            issued = self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon_id).points
+            self.env['loyalty.history'].create({
+                'card_id': coupon_id.id,
+                'order_model': self._name,
+                'order_id': self.id,
+                'description': _("Order %s", self.display_name),
+                'issued': issued,
+                'used': points,
+            })
 
     def _remove_program_from_points(self, programs):
         self.coupon_point_ids.filtered(lambda p: p.coupon_id.program_id in programs).sudo().unlink()
@@ -1343,7 +1361,7 @@ class SaleOrder(models.Model):
                     program_result['error'] = _("This program requires a code to be applied.")
                 elif not minimum_amount_matched:
                     program_result['error'] = _(
-                        "A minimum of %(amount)s %(currency)s should be purchased to get the reward",
+                        "To take advantage of this offer, your order must include at least %(amount)s %(currency)s of the eligible products.",
                         amount=min(program.rule_ids.mapped('minimum_amount')),
                         currency=program.currency_id.name,
                     )
@@ -1453,7 +1471,10 @@ class SaleOrder(models.Model):
         coupon = False
         check_date = self._get_confirmed_tx_create_date()
 
-        if rule in self.code_enabled_rule_ids:
+        if (
+            rule in self.code_enabled_rule_ids
+            and program in self.order_line.filtered("is_reward_line").reward_id.program_id
+        ):
             return {'error': _("This promo code is already applied.")}
 
         # No trigger was found from the code, try to find a coupon
@@ -1526,3 +1547,20 @@ class SaleOrder(models.Model):
             self._force_lines_to_invoice_policy_order()
             invoice = self._create_invoices(final=True)
             invoice.action_post()
+
+            if invoice._is_ready_to_be_sent():
+                invoice.is_move_sent = True  # Mark invoice as sent
+                send_context = {'allow_raising': False, 'allow_fallback_pdf': True}
+
+                default_template_param = (
+                    self.env['ir.config_parameter']
+                    .sudo()
+                    .get_param('sale.default_invoice_email_template', False)
+                )
+
+                if default_template_param:
+                    mail_template = self.env['mail.template'].sudo().browse(int(default_template_param))
+                    if mail_template.exists():
+                        send_context['mail_template'] = mail_template
+
+                self.env['account.move.send']._generate_and_send_invoices(invoice, **send_context)

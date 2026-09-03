@@ -92,6 +92,7 @@ class BusBus(models.Model):
 
     channel = fields.Char('Channel')
     message = fields.Char('Message')
+    create_date = fields.Datetime(index=True)
 
     @api.autovacuum
     def _gc_messages(self):

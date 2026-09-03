@@ -7,24 +7,24 @@
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2022
 # Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
-# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-04-02 11:40+0000\n"
-"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"PO-Revision-Date: 2026-08-02 14:26+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/hr/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr
 #. odoo-python
@@ -136,8 +136,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
-"target=\"_blank\"><small><b>LESEN</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
+"<small><b>LESEN</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -248,8 +248,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Tags\"/>"
-msgstr ""
-"<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Stichwörter\"/>"
+msgstr "<i class=\"fa fa-tags fa-fw me-1 text-primary\" title=\"Stichwörter\"/>"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
@@ -1081,8 +1080,8 @@ msgstr ""
 "                                Wir suchen einen qualifizierten Entwickler "
 "mit einer Leidenschaft für Technologie und Innovation.\n"
 "                                <br>\n"
-"                                In dieser Position sind Sie für das "
-"<b>Schreiben von sauberem, wartbarem Code,\n"
+"                                In dieser Position sind Sie für das <b>"
+"Schreiben von sauberem, wartbarem Code,\n"
 "                                die Teilnahme an Code-Prüfungen und die "
 "Fehlerbehebung</b> verantwortlich. Ihre Arbeit umfasst sowohl\n"
 "                                kreative <b>Problemlösungen als auch "
@@ -1259,7 +1258,6 @@ msgid "Attachment Count"
 msgstr "Anzahl Anhänge"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 msgid "Attendance PIN"
 msgstr "PIN für Anwesenheitskontrolle"
@@ -1845,7 +1843,7 @@ msgstr "Benutzer erstellen"
 #. module: hr
 #: model:ir.model,website_form_label:hr.model_res_partner
 msgid "Create a Customer"
-msgstr "Kunden erstellen"
+msgstr "Kunde erstellen"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_create_job_position
@@ -3887,6 +3885,18 @@ msgstr ""
 
 #. module: hr
 #. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+msgid "Open Contact Profile"
+msgstr "Kontaktprofil öffnen"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+msgid "Open Employee Profile (activates company)"
+msgstr "Mitarbeiterprofil öffnen (aktiviert das Unternehmen)"
+
+#. module: hr
+#. odoo-javascript
 #: code:addons/hr/static/src/core/web/thread_actions.js:0
 msgid "Open Profile"
 msgstr "Profil öffnen"
@@ -4771,7 +4781,7 @@ msgstr "Straße"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
 msgid "Street 2..."
-msgstr "Straße 2 …"
+msgstr "Adresszeile 2 …"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -5326,9 +5336,25 @@ msgid "Version"
 msgstr "Version"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__version_revision
+msgid "Version Revision"
+msgstr "Versionsrevision"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__versions_count
 msgid "Versions Count"
 msgstr "Anzahl Versionen"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
+msgid "View"
+msgstr "Ansicht"
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/avatar_card/avatar_card_popover_patch.xml:0
+msgid "View Profile"
+msgstr "Profil anzeigen"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form

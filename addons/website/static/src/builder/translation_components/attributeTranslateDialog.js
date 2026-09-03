@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 
 export class AttributeTranslateDialog extends Component {
@@ -14,23 +14,31 @@ export class AttributeTranslateDialog extends Component {
 
     setup() {
         this.modifiedAttrs = {};
+        this.container = useRef("container");
     }
 
-    onInputChange(ev) {
-        const inputEl = ev.target;
-        const attr = inputEl.previousSibling.textContent;
-        const translateEl = this.props.node;
-        const newValue = inputEl.value;
-        this.modifiedAttrs[attr] = newValue;
-        if (attr !== "textContent") {
-            translateEl.setAttribute(attr, newValue);
-            if (attr === "value") {
+    // TODO: remove in master
+    onInputChange() {}
+
+    updateAttributes() {
+        for (const [attr, oldValue] of Object.entries(this.translationInfos)) {
+            const translateEl = this.props.node;
+            const inputEl = this.container.el.querySelector(`input.${attr}-translation`);
+            const newValue = inputEl.value;
+            if (newValue === oldValue.translation) {
+                continue;
+            }
+            this.modifiedAttrs[attr] = newValue;
+            if (attr !== "textContent") {
+                translateEl.setAttribute(attr, newValue);
+                if (attr === "value") {
+                    translateEl.value = newValue;
+                }
+            } else {
                 translateEl.value = newValue;
             }
-        } else {
-            translateEl.value = newValue;
+            translateEl.classList.add("oe_translated");
         }
-        translateEl.classList.add("oe_translated");
     }
 
     get translationInfos() {
@@ -38,6 +46,12 @@ export class AttributeTranslateDialog extends Component {
     }
 
     addStepAndClose() {
+        this.updateAttributes();
+        // If there are no modifiedAttrs, just close the dialog.
+        if (!Object.keys(this.modifiedAttrs).length) {
+            this.props.close();
+            return;
+        }
         const oldValue = JSON.parse(JSON.stringify(this.translationInfos));
         this.props.applyCustomMutation({
             apply: () => {

@@ -3,18 +3,18 @@
 # * mrp
 #
 # Translators:
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-03-14 09:36+0000\n"
+"PO-Revision-Date: 2026-08-10 11:27+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/mrp/ru/"
-">\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/mrp/ru/>"
+"\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -58,8 +58,8 @@ msgid ""
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
 " <br/><br/> Произведенная продукция будет перемещена на склад <b>%"
-"(destination)s</b>, <br/> как указано в месте назначения для <b>%"
-"(operation)s</b>."
+"(destination)s</b>, <br/> как указано в месте назначения для <b>%(operation)"
+"s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -324,8 +324,8 @@ msgstr ""
 "<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
 "absolute\">Учет рабочего времени</span>\n"
 "                                        <span class=\"o_annotation "
-"o_annotation_2 o_annotation_end position-absolute\">Контроль качества</"
-"span>\n"
+"o_annotation_2 o_annotation_end position-absolute\">Контроль качества</span>"
+"\n"
 "                                        <span class=\"o_annotation "
 "o_annotation_3 o_annotation_start position-absolute\">Обратная связь</span>\n"
 "                                        <span class=\"o_annotation "
@@ -382,7 +382,7 @@ msgstr "<span class=\"o_stat_text\">Ребенок МО</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Копировать существующие операции</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -481,8 +481,8 @@ msgid ""
 "                                    <span invisible=\"time_mode == "
 "'manual'\"> / last </span>"
 msgstr ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">мин.</"
-"span>\n"
+"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">мин.</span>"
+"\n"
 "                                    <span invisible=\"time_mode == "
 "'manual'\"> / посл. </span>"
 
@@ -1025,8 +1025,7 @@ msgstr "Автоматическая печать Выполненный про�
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
 msgid "Auto Print Generated Lot/SN Label"
-msgstr ""
-"Автоматическая печать сгенерированной этикетки партии/секретного номера"
+msgstr "Автоматическая печать сгенерированной этикетки партии/секретного номера"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_lot
@@ -3308,8 +3307,8 @@ msgid ""
 "when this product is in a bill of material."
 msgstr ""
 "Скройте документ, если его нужно видеть только в карточке товара. \n"
-"Чтобы документ отображался как вложение и в спецификации, установите флажок "
-"«Спецификация»."
+"Чтобы документ отображался как вложение и в спецификации, установите флажок «"
+"Спецификация»."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3957,10 +3956,8 @@ msgstr "Не найдено ни одного заказа на сборку"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
-#, fuzzy
-#| msgid "Assign serial numbers to production order"
 msgid "No valid serial numbers provided."
-msgstr "Назначить серийные номера производственному заказу"
+msgstr "Не указаны действительные серийные номера."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -4011,9 +4008,9 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
-"Обратите внимание, что архивированный рабочий центр(ы): '%s' все еще "
-"связан(ы) с активной спецификацией материалов, что означает, что на нем(них) "
-"все еще могут планироваться операции. Чтобы предотвратить это, рекомендуется "
+"Обратите внимание, что архивированный рабочий центр(ы): '%s' все еще связан"
+"(ы) с активной спецификацией материалов, что означает, что на нем(них) все "
+"еще могут планироваться операции. Чтобы предотвратить это, рекомендуется "
 "удалить рабочий центр."
 
 #. module: mrp
@@ -4551,7 +4548,7 @@ msgstr "Допроизводственный этап"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "Prepare MO"
-msgstr ""
+msgstr "Подготовить производственный заказ"
 
 #. module: mrp
 #. odoo-javascript
@@ -5411,7 +5408,7 @@ msgstr "Показать вкладку спецификации"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_copy_operations_button
 msgid "Show Copy Operations Button"
-msgstr ""
+msgstr "Показывать кнопку «Копировать операции»"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5426,7 +5423,7 @@ msgstr "Показать Финальные Партии"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_generate_bom
 msgid "Show Generate BOM"
-msgstr "Показать «Сгенерировать спецификацию»"
+msgstr "Показать «Создать спецификацию»"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__show_lock
@@ -5788,6 +5785,7 @@ msgid ""
 "Technical field used to control the visibility of the 'Copy Existing "
 "Operations' button."
 msgstr ""
+"Техническое поле для управления видимостью кнопки «Копировать операции»."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
@@ -5996,7 +5994,7 @@ msgstr "На рабочем центре %s нет определенного к
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
 msgid "There is no serial numbers to apply."
-msgstr ""
+msgstr "Нет серийных номеров для применения."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -7200,8 +7198,8 @@ msgstr ""
 "                       <b invisible=\"consumption != 'strict'\">\n"
 "                            Пожалуйста, пересмотрите расход компонентов или "
 "попросите менеджера подтвердить\n"
-"                           <span invisible=\"mrp_production_count != "
-"1\">этот производственный заказ</span>\n"
+"                           <span invisible=\"mrp_production_count != 1\">"
+"этот производственный заказ</span>\n"
 "                           <span invisible=\"mrp_production_count == 1\">эти "
 "производственные заказы</span>.\n"
 "                       </b>"

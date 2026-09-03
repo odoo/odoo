@@ -59,7 +59,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 '' AS CompAuxLib,
                 '-' AS PieceRef,
                 %(formatted_date_from)s AS PieceDate,
-                '/' AS EcritureLib,
+                'Balance initiale' AS EcritureLib,
                 replace(CASE WHEN COALESCE(sum(account_move_line.balance), 0) <= 0 THEN '0,00' ELSE to_char(SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Debit,
                 replace(CASE WHEN COALESCE(sum(account_move_line.balance), 0) >= 0 THEN '0,00' ELSE to_char(-SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Credit,
                 '' AS EcritureLet,
@@ -142,7 +142,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                 unaffected_earnings_account = self.env['account.account'].search([
                     *self.env['account.account']._check_company_domain(company),
                     ('account_type', '=', 'equity_unaffected'),
-                ], limit=1)
+                ], order='code desc', limit=1)
                 unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
                 if unaffected_earnings_account:
                     # compute the benefit/loss of last year to add in the initial balance of the current year earnings account
@@ -167,7 +167,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                         '' AS CompAuxLib,
                         '-' AS PieceRef,
                         %(formatted_date_from)s AS PieceDate,
-                        '/' AS EcritureLib,
+                        'Balance initiale' AS EcritureLib,
                         replace(CASE WHEN sum(account_move_line.balance) <= 0 THEN '0,00' ELSE to_char(SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Debit,
                         replace(CASE WHEN sum(account_move_line.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Credit,
                         '' AS EcritureLet,
@@ -182,7 +182,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     aa_code=aa_code,
                     aa_name=aa_name,
                 ))
-                self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id', sql_query))
+                self.env.cr.execute(SQL('%s GROUP BY account_move_line__account_id.id HAVING SUM(account_move_line.balance) != 0', sql_query))
 
                 currency_digits = 2
                 for row in self.env.cr.fetchall():
@@ -214,7 +214,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     # search an unaffected earnings account
                     unaffected_earnings_account = self.env['account.account'].search([
                         ('account_type', '=', 'equity_unaffected')
-                    ], limit=1)
+                    ], order='code desc', limit=1)
                     if unaffected_earnings_account:
                         unaffected_earnings_results[4] = unaffected_earnings_account.code
                         unaffected_earnings_results[5] = unaffected_earnings_account.name
@@ -240,7 +240,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                         COALESCE(replace(account_move_line__partner_id.name, '|', '/'), '') AS CompAuxLib,
                         '-' AS PieceRef,
                         %(formatted_date_from)s AS PieceDate,
-                        '/' AS EcritureLib,
+                        'Balance initiale' AS EcritureLib,
                         replace(CASE WHEN sum(account_move_line.balance) <= 0 THEN '0,00' ELSE to_char(SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Debit,
                         replace(CASE WHEN sum(account_move_line.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(account_move_line.balance), '000000000000000D99') END, '.', ',') AS Credit,
                         '' AS EcritureLet,
@@ -255,7 +255,7 @@ class L10n_FrFecExportWizard(models.TransientModel):
                     aa_code=aa_code,
                     aa_name=aa_name,
                 ))
-                self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id', sql_query))
+                self.env.cr.execute(SQL('%s GROUP BY account_move_line__partner_id.id, account_move_line__account_id.id HAVING SUM(account_move_line.balance) != 0', sql_query))
 
                 for row in self.env.cr.fetchall():
                     listrow = list(row)
@@ -304,9 +304,25 @@ class L10n_FrFecExportWizard(models.TransientModel):
                             ELSE REGEXP_REPLACE(replace(%(move_alias)s.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
                         END AS PieceRef,
                         TO_CHAR(COALESCE(%(move_alias)s.invoice_date, %(move_alias)s.date), 'YYYYMMDD') AS PieceDate,
-                        CASE WHEN account_move_line.name IS NULL OR account_move_line.name = '' THEN '/'
-                            WHEN account_move_line.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
-                            ELSE REGEXP_REPLACE(replace(account_move_line.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
+                        REGEXP_REPLACE(replace(
+                            CASE
+                                WHEN NULLIF(BTRIM(account_move_line.name, ' \t\n\r'), '') IS NOT NULL
+                                    THEN account_move_line.name
+                                WHEN %(account_alias)s.account_type IN ('asset_receivable', 'liability_payable')
+                                    THEN CONCAT_WS(' - ',
+                                        NULLIF(%(partner_alias)s.name, ''),
+                                        COALESCE(
+                                            NULLIF(%(move_alias)s.ref, ''),
+                                            %(move_alias)s.name
+                                        )
+                                    )
+                                ELSE
+                                    COALESCE(
+                                        NULLIF(%(move_alias)s.ref, ''),
+                                        %(move_alias)s.name
+                                    )
+                            END
+                        , '|', '/'), '[\\t\\n\\r]', ' ', 'g') AS EcritureLib,
                         replace(CASE WHEN account_move_line.debit = 0 THEN '0,00' ELSE to_char(account_move_line.debit, '000000000000000D99') END, '.', ',') AS Debit,
                         replace(CASE WHEN account_move_line.credit = 0 THEN '0,00' ELSE to_char(account_move_line.credit, '000000000000000D99') END, '.', ',') AS Credit,
                         CASE WHEN %(full_alias)s.id IS NULL THEN ''::text ELSE %(full_alias)s.id::text END AS EcritureLet,

@@ -234,8 +234,25 @@ class PaymentProvider(models.Model):
         inline_form_values = {
             'email': partner.email,
             'public_key': self.mercado_pago_public_key,
+            'locale': self._mercado_pago_get_locale(),
         }
         return json.dumps(inline_form_values)
+
+    def _mercado_pago_get_locale(self):
+        """Return the Mercado Pago locale matching the active website language.
+
+        Note: `self.ensure_one()`
+
+        :return: The locale (e.g. `es-AR`), defaulting to `en-US` for unsupported languages.
+        :rtype: str
+        """
+        self.ensure_one()
+
+        # The locale is keyed by country;
+        # for "Spanish (Latin America)" (es_419), fall back on the company's country.
+        lang = self.env.context.get("lang") or ""
+        country_code = self.company_id.country_id.code if lang == "es_419" else lang.split("_")[-1]
+        return const.COUNTRY_LOCALES.get(country_code, "en-US")
 
     # === REQUEST HELPERS === #
 

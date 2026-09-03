@@ -56,8 +56,10 @@ class DriverController(http.Controller):
             return False
 
         data['session_id'] = session_id  # ensure session_id is in data as for websocket communication
-        _logger.debug("Calling action %s for device %s", data.get('action', ''), device_identifier)
+        start_operation_time = time.perf_counter()
+        _logger.info("Longpolling: calling action %s for device %s", data.get('action', ''), device_identifier)
         iot_device.action(data)
+        _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
         return True
 
     @helpers.toggleable

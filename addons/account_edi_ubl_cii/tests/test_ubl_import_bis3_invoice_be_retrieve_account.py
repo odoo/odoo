@@ -11,12 +11,16 @@ class TestUblImportBis3InvoiceBERetrieveAccount(TestUblImportBis3InvoiceBE):
     def test_partial_import_account_invoice_predictive(self):
         self.ensure_installed('account_accountant')
 
-        account = self.company_data['default_account_revenue'].copy()
+        account = self.company_data['default_account_revenue'].copy(default={'name': "turlututu"})
+        product = self._create_product(name='turlututu', barcode='12345678912345')
 
-        # First invoice to train the prediction.
+        # Invoice to train the prediction.
+        # We also make an exact match with the name to ensure the prediction will
+        # also retrieve the product. This is made that way to avoid the call to
+        # '_get_most_frequent_account_for_partner' in '_compute_account_id'.
         self._create_invoice_one_line(
             name="turlututu",
-            price_unit=1.0,
+            product_id=product,
             account_id=account.id,
             partner_id=self.partner_be,
             post=True,
@@ -31,4 +35,5 @@ class TestUblImportBis3InvoiceBERetrieveAccount(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice.invoice_line_ids, [{
             'name': "turlutututu",
             'account_id': account.id,
+            'product_id': product.id,
         }])

@@ -48,7 +48,7 @@ export class AutoComplete extends Component {
         value: "",
         placeholder: "",
         title: "",
-        autocomplete: "new-password",
+        autocomplete: "off",
         autoSelect: false,
         dropdown: true,
         onInput: () => {},

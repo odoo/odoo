@@ -25,9 +25,9 @@ export class EventRegistrationListController extends ListController {
             this.dialog.add(
                 EventRegistrationSummaryDialog,
                 {
-                    model: this.model,
                     registration: result
-                }
+                },
+                { onClose: () => this.model.load() }
             );
         } else {
             return super.openRecord(record);

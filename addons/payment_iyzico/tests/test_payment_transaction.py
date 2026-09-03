@@ -50,7 +50,7 @@ class TestPaymentTransaction(IyzicoCommon, PaymentHttpCommon):
                 'ip': '0',
             },
             'callbackUrl': return_url,
-            'conversationId': tx.reference,
+            'basketId': tx.reference,
             'currency': tx.currency_id.name,
             'locale': 'tr' if tx.env.lang == 'tr_TR' else 'en',
             'paidPrice': tx.amount,

@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
-
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
@@ -10,7 +8,6 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTestCommon):
 
     @classmethod
@@ -21,6 +18,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
     @classmethod
     def _create_product(cls, **create_vals):
+        create_vals.setdefault('invoice_policy', 'order')
         if create_vals.get('is_storable'):
             create_vals['categ_id'] = cls.stock_account_product_categ.id
         return super()._create_product(**create_vals)
@@ -95,7 +93,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 })],
         })
         so.action_confirm()
-        so.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+        for move in so.picking_ids.move_ids:
+            move.quantity = move.product_uom_qty
+        so.picking_ids.move_ids.picked = True
         so.picking_ids.button_validate()
 
         invoice = so.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
@@ -104,9 +104,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         # Check the resulting accounting entries
         amls = invoice.line_ids
         self.assertEqual(len(amls), 4)
-        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
-        self.assertEqual(stock_out_aml.debit, 0)
-        self.assertAlmostEqual(stock_out_aml.credit, 1.53, msg="Should not include the value of consumable component")
+        stock_val_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
+        self.assertEqual(stock_val_aml.debit, 0)
+        self.assertAlmostEqual(stock_val_aml.credit, 1.53, msg="Should not include the value of consumable component")
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertAlmostEqual(cogs_aml.debit, 1.53, msg="Should not include the value of consumable component")
         self.assertEqual(cogs_aml.credit, 0)
@@ -241,6 +241,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         in_moves._action_confirm()
         in_moves.write({'quantity': 1, 'picked': True})
         in_moves._action_done()
+        in_moves[0].value = 10
+        in_moves[1].value = 20
+        in_moves[2].value = 60
 
         # Sell 3 kits
         so = self.env['sale.order'].create({
@@ -304,7 +307,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         reverse_invoice.action_post()
 
         amls = reverse_invoice.line_ids
-        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
         self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned component')
         self.assertEqual(stock_out_aml.credit, 0)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
@@ -342,6 +345,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         in_moves._action_confirm()
         in_moves.write({'quantity': 1, 'picked': True})
         in_moves._action_done()
+        in_moves[0].value = 10
+        in_moves[1].value = 20
+        in_moves[2].value = 60
 
         # Sell 3 kits
         so = self.env['sale.order'].create({
@@ -404,9 +410,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         reverse_invoice.action_post()
 
         amls = reverse_invoice.line_ids
-        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
-        self.assertEqual(stock_out_aml.debit, 20, 'Should be to the value of the returned component')
-        self.assertEqual(stock_out_aml.credit, 0)
+        stock_val_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
+        self.assertEqual(stock_val_aml.debit, 20, 'Should be to the value of the returned component')
+        self.assertEqual(stock_val_aml.credit, 0)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned component')
@@ -512,7 +518,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             # pylint: disable=bad-whitespace
             {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 10},
             {'account_id': self.company_data['default_account_receivable'].id,  'debit': 10,    'credit': 0},
-            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 30},
+            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 30},
             {'account_id': self.company_data['default_account_expense'].id,     'debit': 30,    'credit': 0},
         ])
 
@@ -607,7 +613,7 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         # Check the resulting accounting entries
         amls = invoice.line_ids
         self.assertEqual(len(amls), 4)
-        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_valuation'])
         self.assertEqual(stock_out_aml.debit, 0)
         self.assertAlmostEqual(stock_out_aml.credit, 8.00, msg="Should include include the components from all subkits, with the price adapted for 1 Main kit")
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
@@ -615,9 +621,9 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         self.assertEqual(cogs_aml.credit, 0)
 
     def test_sell_kit_invoice_before_delivery(self):
-        """ When a kit product is invoiced prior to delivery, we want to make sure to reconcile all
-        the AMLs from its explosion together, else we risk re-reconciliation attempts (which will
-        block certain actions from being performed altogether).
+        """ Invoicing a kit before it is delivered posts the kit's full COGS at
+        invoice time (one COGS pair per exploded component), and validating the
+        delivery afterwards neither errors nor posts any further accounting move.
         """
         self.stock_account_product_categ.property_cost_method = 'average'
 
@@ -641,31 +647,205 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
+                Command.create({'product_id': kit.id, 'product_uom_qty': 1, 'price_unit': 10, 'tax_ids': False}),
+                Command.create({'product_id': compo02.id, 'product_uom_qty': 1, 'price_unit': 5, 'tax_ids': False}),
+            ],
+        })
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        cogs_amls = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
+        self.assertRecordValues(cogs_amls, [
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'product_id': kit.id,     'debit': 0,    'credit': 30},
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'product_id': compo02.id, 'debit': 0,    'credit': 20},
+            {'account_id': self.company_data['default_account_expense'].id,         'product_id': compo02.id, 'debit': 20,   'credit': 0},
+            {'account_id': self.company_data['default_account_expense'].id,         'product_id': kit.id,     'debit': 30,   'credit': 0},
+        ])
+
+        delivery = sale_order.picking_ids
+        delivery.move_ids.quantity = 1
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+        self.assertFalse(delivery.move_ids.account_move_id)
+
+    def test_invoice_additional_kit_component_from_delivery(self):
+        """
+        Sell a kit, deliver more than expected which should automatically
+        update the sol with component lines then invoice.
+        """
+        component = self._create_product(name="Lovely Component", is_storable=True, standard_price=10)
+        kit = self._create_product(name="Kit", is_storable=True, standard_price=30)
+        (component + kit).write({'invoice_policy': 'delivery'})
+        warehouse = self.company_data['default_warehouse']
+        self.env['stock.quant']._update_available_quantity(component, warehouse.lot_stock_id, 10.0)
+        self.env['mrp.bom'].create({
+            'type': 'phantom',
+            'product_id': kit.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [
+                Command.create({'product_id': component.id, 'product_qty': 1}),
+            ],
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
                 Command.create({
                     'product_id': kit.id,
                     'product_uom_qty': 1,
                     'price_unit': 10,
                 }),
-                Command.create({
-                    'product_id': compo02.id,
-                    'product_uom_qty': 1,
-                    'price_unit': 5,
-                }),
             ],
         })
         sale_order.action_confirm()
+        delivery = sale_order.picking_ids
+        with Form(delivery) as delivery_form:
+            with delivery_form.move_ids.new() as move:
+                move.product_id = kit
+                move.product_uom_qty = 1.0
+        delivery.button_validate()
+        self.assertRecordValues(sale_order.order_line.sorted(lambda sol: sol.product_id.id), [
+            {'product_id': component.id, 'product_uom_qty': 0.0, 'qty_delivered': 1.0},
+            {'product_id': kit.id, 'product_uom_qty': 1.0, 'qty_delivered': 1.0},
+        ])
         invoice = sale_order.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
         invoice.action_post()
-        delivery = sale_order.picking_ids
-        # would fail due to attempted re-reconciliation prior to this commit
-        delivery.button_validate()
-        stock_output_amls = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_out'].id)], order='id asc')
-        self.assertRecordValues(stock_output_amls,
-            [
-                {'product_id': kit.id,       'reconciled': True,    'debit': 0.0,     'credit':  30.0},
-                {'product_id': compo02.id,   'reconciled': True,    'debit': 0.0,     'credit':  20.0},
-                {'product_id': compo01.id,   'reconciled': True,    'debit': 10.0,    'credit':  0.0},
-                {'product_id': compo02.id,   'reconciled': True,    'debit': 20.0,    'credit':  0.0},
-                {'product_id': compo02.id,   'reconciled': True,    'debit': 20.0,    'credit':  0.0},
-            ]
-        )
+        cogs_amls = invoice.line_ids.filtered(lambda aml: aml.display_type == 'cogs').sorted(lambda l: (l.balance, l.product_id.id))
+        self.assertRecordValues(cogs_amls, [
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'product_id': component.id, 'debit': 0,    'credit': 10},
+            {'account_id': self.company_data['default_account_stock_valuation'].id, 'product_id': kit.id,       'debit': 0,    'credit': 10},
+            {'account_id': self.company_data['default_account_expense'].id,         'product_id': component.id, 'debit': 10,   'credit': 0},
+            {'account_id': self.company_data['default_account_expense'].id,         'product_id': kit.id,       'debit': 10,   'credit': 0},
+        ])
+
+    def test_kit_comp_fifo_deliver_and_invoice_in_two_waves(self):
+        """
+        Check that if a kit with fifo comp is partially delivered and invoiced
+        and then the rest is delivered and invoiced the cogs are correct
+        """
+        self.stock_account_product_categ.property_cost_method = 'fifo'
+
+        kit = self._create_product(name='Simple Kit', is_storable=True, standard_price=0)
+        component = self._create_product(name='Compo A', is_storable=True, standard_price=0)
+        kit.property_account_expense_id = self.company_data['default_account_expense']
+        (component + kit).invoice_policy = 'delivery'
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1.0})]
+        })
+
+        # Receive 2 components: one @10, one @20
+        in_moves = self.env['stock.move'].create([{
+            'product_id': component.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': component.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in [10, 20]])
+        in_moves._action_confirm()
+        in_moves.write({'quantity': 1, 'picked': True})
+        in_moves._action_done()
+        in_moves[0].value = 10
+        in_moves[1].value = 20
+
+        # Sell 2 kits
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 2.0,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+
+        # Deliver first and invoice (cogs should be 10)
+        picking = so.picking_ids
+        picking.move_ids.write({'quantity': 1, 'picked': True})
+        action = picking.button_validate()
+        if isinstance(action, dict):
+            Form.from_action(self.env, action).save().process()
+        backorder = picking.backorder_ids
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+        invoice_1_cogs_amls = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
+        self.assertRecordValues(invoice_1_cogs_amls, [
+            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 10},
+            {'account_id': self.company_data['default_account_expense'].id,           'debit': 10,    'credit': 0},
+        ])
+
+        # Deliver second and invoice (cogs should be 20)
+        backorder.move_ids.write({'quantity': 1, 'picked': True})
+        action = backorder.button_validate()
+        if isinstance(action, dict):
+            Form.from_action(self.env, action).save().process()
+        invoice_2 = so._create_invoices()
+        invoice_2.action_post()
+        invoice_2_cogs_amls = invoice_2.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
+        self.assertRecordValues(invoice_2_cogs_amls, [
+            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 20},
+            {'account_id': self.company_data['default_account_expense'].id,           'debit': 20,    'credit': 0},
+        ])
+
+    def test_cogs_kit_multi_steps_first_step_validated(self):
+        """ Check that cogs are correct for a kit with multiple components product when we are in multi steps delivery
+        and only the first picking is validated
+        """
+        warehouse = self.company_data['default_warehouse']
+        warehouse.delivery_steps = 'pick_ship'
+        self.stock_account_product_categ.property_cost_method = 'standard'
+
+        compo01 = self._create_product(name='Compo 01', is_storable=True, standard_price=10)
+        compo02 = self._create_product(name='Compo 02', is_storable=True, standard_price=20)
+        kit = self._create_product(name='Kit', is_storable=True, standard_price=0)
+
+        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1)
+        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1)
+
+        self.env['mrp.bom'].create({
+            'product_id': kit.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_uom_id': kit.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                (0, 0, {
+                    'name': kit.name,
+                    'product_id': kit.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 100,
+                    'tax_ids': False,
+                })],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_ids.write({'quantity': 1, 'picked': True})
+        picking.button_validate()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+        invoice_cogs_amls = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs').sorted('balance')
+        self.assertRecordValues(invoice_cogs_amls, [
+            {'account_id': self.company_data['default_account_stock_valuation'].id,   'debit': 0,     'credit': 30},
+            {'account_id': self.company_data['default_account_expense'].id,           'debit': 30,    'credit': 0},
+        ])

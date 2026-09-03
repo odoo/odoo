@@ -611,7 +611,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         """When in multi/async mode, the generation of XML can fail silently (without raising).
         This needs to be reflected as an error and put the move in Peppol Error state.
         """
-        def mocked_export_invoice_constraints(self, invoice, vals):
+        def mocked_export_document_node_constraints(self, vals):
             return {'test_error_key': 'test_error_description'}
 
         self.valid_partner.invoice_edi_format = 'ubl_bis3'
@@ -621,8 +621,8 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
         wizard = self.create_send_and_print(move_1 + move_2)
         with patch(
-            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUBL20._export_invoice_constraints',
-            mocked_export_invoice_constraints
+            'odoo.addons.account_edi_ubl_cii.models.account_edi_ubl.AccountEdiUBL._export_document_node_constraints',
+            mocked_export_document_node_constraints
         ), self.enter_registry_test_mode():
             wizard.action_send_and_print()
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
@@ -669,13 +669,33 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'refresh_token': FAKE_UUID[1],
             }
         ])
+        branch_user = self.env['res.users'].create({
+            'name': 'User With Unprivileged Branch',
+            'login': 'branch_user',
+            'company_ids': [branch_spoiled.id],
+            'company_id': branch_spoiled.id,
+            'group_ids': self.get_default_groups().ids,
+        })
 
         # Branch uses parent's active peppol connection
-        spoiled_move = self.create_move(self.valid_partner, company=branch_spoiled)
-        spoiled_move.action_post()
-        wizard = self.create_send_and_print(spoiled_move, sending_methods=['peppol'])
-        wizard.action_send_and_print()
-        self.assertEqual(spoiled_move.peppol_move_state, 'processing')
+        with self.with_user(branch_user.login):
+            spoiled_move = self.create_move(self.valid_partner, company=branch_spoiled)
+            spoiled_move.action_post()
+            spoiled_move.action_send_and_print()
+            wizard = self.env['account.move.send.wizard']\
+                .with_context(active_model='account.move', active_ids=spoiled_move.ids)\
+                .create({'sending_methods': ['peppol']})
+            wizard.action_send_and_print()
+            self.assertEqual(spoiled_move.peppol_move_state, 'processing')
+
+        # Check that the supplier is the parent company in the xml (and not the branch company)
+        tree = etree.fromstring(spoiled_move.ubl_cii_xml_id.raw)
+        namespaces = {
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+        }
+        supplier_name = tree.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
+        self.assertEqual(supplier_name[0], branch_spoiled.parent_id.name)
 
         # Branch uses peppol configuration independent of their parent
         independent_move = self.create_move(self.valid_partner, company=branch_independent)
@@ -683,6 +703,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         wizard = self.create_send_and_print(independent_move, sending_methods=['peppol'])
         wizard.action_send_and_print()
         self.assertEqual(independent_move.peppol_move_state, 'processing')
+
+        # Check that the supplier is the branch company in the xml (and not the parent)
+        tree_independent = etree.fromstring(independent_move.ubl_cii_xml_id.raw)
+        supplier_name_independent = tree_independent.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
+        self.assertEqual(supplier_name_independent[0], branch_independent.name)
 
     def test_compute_available_peppol_eas_multi_partner(self):
         """Check _compute_available_peppol_eas works with multiple partners"""
@@ -803,11 +828,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         tax_21 = self.percent_tax(21.0, type_tax_use='sale')
 
         # Set up the self-billing reception journal
-        sale_journal = self.env['account.journal'].search([
-            ('company_id', '=', self.env.company.id),
-            ('type', '=', 'sale'),
-        ], limit=1)
-        self.env.company.peppol_self_billing_reception_journal_id = sale_journal
+        self_billing_sale_journal = self.env['account.journal'].create({
+            'name': "Self-Billing sales journal",
+            'type': 'sale',
+            'is_self_billing': True,
+        })
         cls = self.__class__
         cls.mocked_incoming_invoice_fname = 'incoming_self_billed_invoice'
 
@@ -824,12 +849,12 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertRecordValues(move, [{
             'peppol_move_state': 'done',
             'move_type': 'out_invoice',
-            'journal_id': self.env.company.peppol_self_billing_reception_journal_id.id,
+            'journal_id': self_billing_sale_journal.id,
         }])
 
         self.assertRecordValues(move.line_ids, [
             {
-                'name': 'product_a',
+                'name': 'product_a\nproduct_a',
                 'quantity': 1.0,
                 'price_unit': 100.0,
                 'tax_ids': tax_21.ids,
@@ -930,3 +955,48 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             embedded_pdfs and embedded_pdfs[0].text,
             "Peppol XML must embed the already-generated PDF"
         )
+
+    def test_receive_self_billed_invoice_from_peppol_multi_company(self):
+        """Test that when two companies exist in the database and both are registered on Peppol, receiving a
+        self-billed invoice from Peppol assigns the invoice to the correct company."""
+
+        other_company = self.setup_other_company()['company']
+        other_company.write(
+            {
+                "country_id": self.env.ref("base.be").id,
+                "peppol_eas": "0208",
+                "peppol_endpoint": "0477472701",
+                "account_peppol_proxy_state": "receiver",
+            }
+        )
+        edi_identification = self.env["account_edi_proxy_client.user"]._get_proxy_identification(
+            other_company, "peppol"
+        )
+        self.env["account_edi_proxy_client.user"].create(
+            {
+                "company_id": other_company.id,
+                "id_client": "random-id",
+                "proxy_type": "peppol",
+                "edi_mode": "test",
+                "edi_identification": edi_identification,
+                "private_key_id": self.private_key.id,
+                "refresh_token": FAKE_UUID[0],
+            },
+        )
+
+        cls = self.__class__
+        cls.mocked_incoming_invoice_fname = 'incoming_self_billed_invoice'
+
+        def restore_mocked_incoming_invoice_fname():
+            cls.mocked_incoming_invoice_fname = 'incoming_invoice'
+        self.addCleanup(restore_mocked_incoming_invoice_fname)
+
+        # Receive the self-billed invoices (using existing mock data)
+        self.env["account_edi_proxy_client.user"]._cron_peppol_get_new_documents()
+
+        # Verify that 1 invoice was received in each company
+        moves = self.env["account.move"].search([("peppol_message_uuid", "=", FAKE_UUID[1])])
+        self.assertEqual(len(moves), 2)
+        self.assertEqual(len(moves.company_id), 2)
+        self.assertEqual(len(moves.line_ids), 4)
+        self.assertEqual(set(moves.mapped("move_type")), {"out_invoice"})

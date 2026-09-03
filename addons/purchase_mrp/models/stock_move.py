@@ -1,27 +1,47 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models, fields
-from odoo.tools.float_utils import float_is_zero, float_round
+from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
+    @api.depends('bom_line_id')
+    def _compute_packaging_uom_id(self):
+        super()._compute_packaging_uom_id()
+        for move in self:
+            if move.bom_line_id and move.bom_line_id.bom_id.type == 'phantom':
+                move.packaging_uom_id = move.product_uom
+
     def _get_cost_ratio(self, quantity):
         self.ensure_one()
-        if self.bom_line_id.bom_id.type == "phantom":
+        if self.bom_line_id.bom_id.type == "phantom" and self.purchase_line_id.product_id != self.product_id:
             uom_quantity = self.product_uom._compute_quantity(self.quantity, self.product_id.uom_id)
-            if not self.product_uom.is_zero(uom_quantity):
+            if not self.product_id.uom_id.is_zero(uom_quantity):
                 unit_kit_purchase = 1
                 if self.purchase_line_id:
+                    # A same component may be exploded by several bom lines: only the moves
+                    # sharing this move's bom line and cost share carry the same demand.
                     active_moves = self.purchase_line_id.move_ids.filtered(lambda m:
-                        m.state != 'cancel' and m.product_id == self.product_id and m.picking_id != self.picking_id,
+                        m.state != 'cancel'
+                        and m.product_id == self.product_id
+                        and m.picking_id != self.picking_id
+                        and m.bom_line_id == self.bom_line_id
+                        and float_compare(m.cost_share, self.cost_share, precision_digits=6) == 0,
                     )
-                    active_quantity = quantity + sum(active_moves.mapped('quantity'))
+                    active_quantity = quantity + sum(
+                        move.product_uom._compute_quantity(move.quantity, self.product_id.uom_id)
+                        for move in active_moves
+                    )
                     if active_quantity:
-                        unit_kit_purchase = (quantity / active_quantity) * self.purchase_line_id.product_qty
+                        purchase_qty = self.purchase_line_id.product_uom_id._compute_quantity(
+                            self.purchase_line_id.product_qty,
+                            self.purchase_line_id.product_id.uom_id,
+                        )
+                        unit_kit_purchase = (quantity / active_quantity) * purchase_qty
                 return (self.cost_share / 100) * (quantity / uom_quantity) * unit_kit_purchase
         return super()._get_cost_ratio(quantity)
 
@@ -42,6 +62,12 @@ class StockMove(models.Model):
         if self.purchase_line_id:
             vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+
+    def _merge_moves_fields(self):
+        res = super()._merge_moves_fields()
+        if not self.env.context.get('merge_extra'):
+            res['cost_share'] = sum(self.mapped('cost_share'))
+        return res
 
     def _get_valuation_price_and_qty(self, related_aml, to_curr):
         valuation_price_unit_total, valuation_total_qty = super()._get_valuation_price_and_qty(related_aml, to_curr)

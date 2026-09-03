@@ -341,6 +341,7 @@ class AccountMove(models.Model):
             'mimetype': 'application/json',
             'company_id': self.company_id.id,
         })
+        self.l10n_in_edi_attachment_id = attachment.id
         self.l10n_in_edi_status = 'sent'
         message = []
         for partner in partners:

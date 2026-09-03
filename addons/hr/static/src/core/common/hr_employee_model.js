@@ -4,6 +4,8 @@ export class HrEmployee extends Record {
     static _name = "hr.employee";
     static id = "id";
 
+    /** @type {Boolean} */
+    active;
     /** @type {number} */
     id;
     /** @type {number} */

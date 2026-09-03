@@ -9,15 +9,15 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-04-07 09:11+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-04 21:48+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "fi/>\n"
 "Language: fi\n"
@@ -25,21 +25,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr "1-01-85004-3 or 101850043"
+msgstr "1-01-85004-3 tai 101850043"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
-"10XXXXXXXXXXY tai 20XXXXXXXXXXXXY tai 15XXXXXXXXXXY tai 16XXXXXXXXXXY tai "
-"17XXXXXXXXXXY"
+"10XXXXXXXXY tai 20XXXXXXXXY tai 15XXXXXXXXY tai 16XXXXXXXXY tai 17XXXXXXXXY"
 
 #. module: base_vat
 #. odoo-python
@@ -54,6 +53,12 @@ msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
 "12345678 tai UA12345678 (EDRPOU), 1234567890 (RNOPP) tai 123456789012 (IPN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "123456789 (TIN) or 12345678901234 (PINFL)"
+msgstr "123456789 (TIN) tai 12345678901234 (PINFL)"
 
 #. module: base_vat
 #. odoo-python
@@ -219,7 +224,7 @@ msgstr "Suorita VIES-tarkastus"
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
-msgstr "Verotunniste"
+msgstr "Verotunnus"
 
 #. module: base_vat
 #. odoo-python
@@ -244,19 +249,8 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
-msgstr "Yhteisön sisäinen voimassaolo on päivitetty."
-
-#. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Verotunniste. Tässä olevat arvot validoidaan maamuodon perusteella. Voit "
-"käyttää '/'-merkkiä osoittaaksesi, että kumppani ei ole verovelvollinen."
+msgid "The Intra-Community validity has been updated to: %s."
+msgstr "Yhteisön sisäinen voimassaolo on päivitetty: %s."
 
 #. module: base_vat
 #. odoo-python
@@ -304,16 +298,39 @@ msgstr ""
 "tarkistussummaa"
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr "Voit käyttää '/' osoittaaksesi, ettei asiakkaalla ole verotunnusta."
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "joko 11 numeroa CPF:n osalta tai 14 numeroa CNPJ:n osalta"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr "joko 11 numeroa CPF:lle tai 14 merkkiä CNPJ:lle"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "kumppani [%s]"
+
+#~ msgid "XXXXXXXXX [9 digits]"
+#~ msgstr "XXXXXXXXX [9 numeroa]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Verotunniste. Tässä olevat arvot validoidaan maamuodon perusteella. Voit "
+#~ "käyttää '/'-merkkiä osoittaaksesi, että kumppani ei ole verovelvollinen."
+
+#~ msgid "The Intra-Community validity has been updated."
+#~ msgstr "Yhteisön sisäinen voimassaolo on päivitetty."
+
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "joko 11 numeroa CPF:n osalta tai 14 numeroa CNPJ:n osalta"
 
 #~ msgid ""
 #~ "Connection with the VIES server failed. The VAT number %s could not be "

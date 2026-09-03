@@ -2,14 +2,15 @@
 # This file contains the translation of the following modules:
 # * auth_totp_mail
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-16 15:20+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-09 11:33+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
 "auth_totp_mail/fa/>\n"
 "Language: fa\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -56,6 +57,27 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-out=\"object.partner_id.name or ''\"/> عزیز<br/><br/>\n"
+"        <t t-out=\"user.name or ''\"/> از شما درخواست کرده است که احراز هویت "
+"دو مرحله‌ای را برای محافظت از حساب خود فعال کنید.<br/><br/>\n"
+"        احراز هویت دو مرحله‌ای (\"2FA\") یک سیستم احراز هویت دوگانه است.\n"
+"        اولین مورد با رمز عبور شما و مورد دوم با کدی که از برنامه اختصاصی "
+"تلفن همراه دریافت می‌کنید، انجام می‌شود.\n"
+"        محبوب‌ترین برنامه‌ها عبارتند از Authy، احراز هویت گوگل، یا احراز هویت "
+"مایکروسافت.\n"
+"    </p>\n"
+"    <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"        <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;\">"
+"\n"
+"            فعال‌سازی احراز هویت دو مرحله‌ای من\n"
+"        </a>\n"
+"    </p>\n"
+"</div>"
 
 #. module: auth_totp_mail
 #: model:mail.template,body_html:auth_totp_mail.mail_template_totp_mail_code
@@ -103,6 +125,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"<t t-out=\"object.partner_id.name or ''\"/> گرامی،<br/><br/>\n"
+"<p>شخصی در تلاش است با دستگاه جدیدی وارد حساب کاربری شما شود.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">نامشخص</t>\n"
+"    <li>مکان: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>دستگاه: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>مرورگر: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>آدرس IP: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>اگر این شما هستید، لطفاً کد زیر را برای تکمیل ورود وارد کنید:</p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>لطفاً توجه داشته باشید که این کد در <t t-out=\"expiration\"/> منقضی "
+"می‌شود.</small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    اگر شما این ورود را آغاز نکرده‌اید،\n"
+"    باید فوراً کلمه عبور خود را برای اطمینان از امنیت حساب تغییر دهید.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    همچنین برای کمک به امنیت حساب خود، قویاً توصیه می‌کنیم احراز هویت "
+"دو‌مرحله‌ای را با استفاده از برنامه احراز هویت فعال کنید.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        فعال‌سازی احراز هویت دو‌مرحله‌ای من\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
@@ -122,17 +185,20 @@ msgid ""
 "                            Recommended for extra security.\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                            برای امنیت بیشتر توصیه می‌شود.\n"
+"                        </span>"
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
 msgid "<span>Consider also</span>"
-msgstr ""
+msgstr "<span>همچنین</span>"
 
 #. module: auth_totp_mail
 #. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 msgid "A new device was used to sign in to your account."
-msgstr ""
+msgstr "یک دستگاه جدید برای ورود به حساب شما استفاده شد."
 
 #. module: auth_totp_mail
 #. odoo-python
@@ -161,7 +227,7 @@ msgstr "نمی‌توان ایمیل فرستاد: کاربر %s نشانی ای
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Click to enable 2FA."
-msgstr ""
+msgstr "برای فعال کردن احراز هویت دو مرحله‌ای کلیک کنید."
 
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_config_settings

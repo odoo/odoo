@@ -9,15 +9,15 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:40+0000\n"
-"PO-Revision-Date: 2026-03-16 11:29+0000\n"
+"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"PO-Revision-Date: 2026-08-08 00:05+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/web/fr/>\n"
 "Language: fr\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: web
 #. odoo-javascript
@@ -277,8 +277,8 @@ msgid ""
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
 "Barbara\n"
-"                                       Rd<br/>Pleasant Hill CA 94523<br/"
-">United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>"
+"United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -451,10 +451,8 @@ msgstr ""
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "AB"
 msgid "A"
-msgstr "AB"
+msgstr "A"
 
 #. module: web
 #. odoo-javascript
@@ -1054,10 +1052,8 @@ msgstr "Avatar"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "AB"
 msgid "B"
-msgstr "AB"
+msgstr "B"
 
 #. module: web
 #. odoo-javascript
@@ -1280,10 +1276,8 @@ msgstr "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "CD"
 msgid "C"
-msgstr "CD"
+msgstr "C"
 
 #. module: web
 #. odoo-javascript
@@ -2014,8 +2008,7 @@ msgstr "Plage personnalisée"
 #. odoo-python
 #: code:addons/web/controllers/view.py:0
 msgid "Custom view %(view)s does not belong to user %(user)s"
-msgstr ""
-"La vue personnalisée %(view)s n'appartient pas à l'utilisateur %(user)s"
+msgstr "La vue personnalisée %(view)s n'appartient pas à l'utilisateur %(user)s"
 
 #. module: web
 #. odoo-javascript
@@ -2293,6 +2286,12 @@ msgstr "Désactiver l'ouverture"
 #: code:addons/web/static/src/views/fields/float_toggle/float_toggle_field.js:0
 msgid "Disable readonly"
 msgstr "Désactiver la lecture seule"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_bar_menu/search_bar_menu.xml:0
+msgid "Disabled due to invalid configuration"
+msgstr "Désactivé en raison d’une configuration invalide"
 
 #. module: web
 #. odoo-javascript
@@ -3222,6 +3221,12 @@ msgstr "Masquer les zéros finaux"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/password/password_field.js:0
+msgid "Hide value"
+msgstr "Masquer la valeur"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/float/float_field.js:0
 #: code:addons/web/static/src/views/fields/monetary/monetary_field.js:0
 msgid ""
@@ -3680,8 +3685,8 @@ msgid ""
 "It will be removed for everyone using the \"%(parentName)s\" %"
 "(parentFieldLabel)s."
 msgstr ""
-"Cet élément sera supprimé pour tous les utilisateurs du/ de \"%"
-"(parentName)s\" %(parentFieldLabel)s."
+"Cet élément sera supprimé pour tous les utilisateurs du/ de \"%(parentName)"
+"s\" %(parentFieldLabel)s."
 
 #. module: web
 #. odoo-javascript
@@ -4144,10 +4149,8 @@ msgstr "Couleur secondaire du logo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "AM"
 msgid "M"
-msgstr "AM"
+msgstr "M"
 
 #. module: web
 #. odoo-javascript
@@ -4278,13 +4281,8 @@ msgstr "Sujet de la réunion"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "Memory limit (in bytes)"
-msgstr "Limite mémoire (en bytes)"
-
-#. module: web
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
-msgid "Memory profile"
-msgstr "Profil mémoire"
+msgid "Memory (heuristic)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4889,10 +4887,8 @@ msgstr "Nombre de fichiers"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "OK"
 msgid "O"
-msgstr "OK"
+msgstr "O"
 
 #. module: web
 #. odoo-javascript
@@ -5141,8 +5137,8 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 msgid "Oops! You cannot edit the %(parentFieldLabel)s \"%(parentName)s\"."
 msgstr ""
-"Oups ! Vous ne pouvez pas modifier le/la %(parentFieldLabel)s \"%"
-"(parentName)s\"."
+"Oups ! Vous ne pouvez pas modifier le/la %(parentFieldLabel)s \"%(parentName)"
+"s\"."
 
 #. module: web
 #. odoo-javascript
@@ -5240,10 +5236,8 @@ msgstr "Style de dépassement"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "PC"
 msgid "P"
-msgstr "PC"
+msgstr "P"
 
 #. module: web
 #. odoo-javascript
@@ -5298,6 +5292,8 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/password/password_field.js:0
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Password"
 msgstr "Mot de passe"
@@ -5662,7 +5658,7 @@ msgstr "Qweb Champ Image"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "R"
-msgstr ""
+msgstr "R"
 
 #. module: web
 #. odoo-javascript
@@ -5919,6 +5915,12 @@ msgstr "Réinitialiser aux couleurs du logo"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/password/password_field.js:0
+msgid "Reveal value"
+msgstr "Afficher la valeur"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/file_viewer/file_viewer.xml:0
 msgid "Rotate (r)"
 msgstr "Faire tourner (r)"
@@ -6073,6 +6075,12 @@ msgstr "Enregistrer comme valeur par défaut"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 msgid "Save manually"
 msgstr "Enregistrer manuellement"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/translation_button.js:0
+msgid "Save this record and its parent to translate"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6363,8 +6371,7 @@ msgstr "Définissez un champ entier pour utiliser des couleurs avec le badge."
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.js:0
 msgid "Set an integer field to use colors with the tags."
-msgstr ""
-"Définir un champ entier pour utiliser des couleurs avec les étiquettes."
+msgstr "Définir un champ entier pour utiliser des couleurs avec les étiquettes."
 
 #. module: web
 #. odoo-javascript
@@ -6788,17 +6795,6 @@ msgid "Text file"
 msgstr "Fichier texte"
 
 #. module: web
-#: model:ir.model.fields,help:web.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Le numéro d'identification fiscale. Les valeurs ici seront validées en "
-"fonction du format du pays. Vous pouvez utiliser '/' pour indiquer que le "
-"partenaire n'est pas sujet à la taxe."
-
-#. module: web
 #. odoo-python
 #: code:addons/web/controllers/action.py:0
 msgid "The action “%s” does not exist"
@@ -6857,8 +6853,8 @@ msgstr "Le fichier n’est pas une image, le redimensionnement est impossible"
 #: code:addons/web/models/res_users_settings_embedded_action.py:0
 msgid "The ids in %(field_name)s must not be duplicated: “%(action_ids)s”"
 msgstr ""
-"Les ids dans %(field_name)s ne doivent pas être dupliqués : \"%"
-"(action_ids)s\""
+"Les ids dans %(field_name)s ne doivent pas être dupliqués : \"%(action_ids)"
+"s\""
 
 #. module: web
 #. odoo-python
@@ -6867,8 +6863,8 @@ msgid ""
 "The ids in %(field_name)s must only be integers or \"false\": “%"
 "(action_ids)s”"
 msgstr ""
-"Les ids dans %(field_name)s doivent uniquement être des entiers ou "
-"\"false\" : \"%(action_ids)s\""
+"Les ids dans %(field_name)s doivent uniquement être des entiers ou \"false\" "
+": \"%(action_ids)s\""
 
 #. module: web
 #. odoo-javascript
@@ -7055,6 +7051,12 @@ msgstr "Jeu."
 #: code:addons/web/static/src/views/fields/float_time/float_time_field.js:0
 msgid "Time"
 msgstr "Temps"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/debug/profiling/profiling_item.xml:0
+msgid "Time Limit (seconds)"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -7577,8 +7579,7 @@ msgstr "Format convivial"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
 msgid "Usually contains a source address or a complementary address."
-msgstr ""
-"Contient généralement une adresse source ou une adresse complémentaire."
+msgstr "Contient généralement une adresse source ou une adresse complémentaire."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.address_layout
@@ -7915,6 +7916,11 @@ msgstr "Vous pouvez installer l'application depuis le menu du navigateur"
 #: code:addons/web/models/properties_base_definition.py:0
 msgid "You can not read that field definition."
 msgstr "Vous ne pouvez pas lire cette définition de champ."
+
+#. module: web
+#: model:ir.model.fields,help:web.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -15604,10 +15610,8 @@ msgstr "hóngbāo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "in"
 msgid "i"
-msgstr "dans"
+msgstr "i"
 
 #. module: web
 #. odoo-javascript
@@ -18950,10 +18954,8 @@ msgstr "écrous"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "No"
 msgid "o"
-msgstr "Non"
+msgstr "o"
 
 #. module: web
 #. odoo-javascript
@@ -19181,7 +19183,6 @@ msgstr "oops"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#: model_terms:ir.ui.view,arch_db:web.config_speedscope_index
 msgid "open"
 msgstr "ouvrir"
 
@@ -21045,10 +21046,8 @@ msgstr "silencieux"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "or"
 msgid "r"
-msgstr "ou"
+msgstr "r"
 
 #. module: web
 #. odoo-javascript
@@ -25244,10 +25243,8 @@ msgstr "urne"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "tv"
 msgid "v"
-msgstr "tv"
+msgstr "v"
 
 #. module: web
 #. odoo-javascript
@@ -26632,10 +26629,8 @@ msgstr "forcé"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
-#, fuzzy
-#| msgid "ox"
 msgid "x"
-msgstr "bœuf"
+msgstr "x"
 
 #. module: web
 #. odoo-javascript
@@ -26923,97 +26918,112 @@ msgstr "ココ"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "サ"
-msgstr ""
+msgstr "サ"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "割"
-msgstr ""
+msgstr "割"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "可"
-msgstr ""
+msgstr "可"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "合"
-msgstr ""
+msgstr "合"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "営"
-msgstr ""
+msgstr "営"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "得"
-msgstr ""
+msgstr "得"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "指"
-msgstr ""
+msgstr "指"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "月"
-msgstr ""
+msgstr "月"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "有"
-msgstr ""
+msgstr "有"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "満"
-msgstr ""
+msgstr "満"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "無"
-msgstr ""
+msgstr "無"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "申"
-msgstr ""
+msgstr "申"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "祝"
-msgstr ""
+msgstr "祝"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "禁"
-msgstr ""
+msgstr "禁"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "秘"
-msgstr ""
+msgstr "秘"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "空"
-msgstr ""
+msgstr "空"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Le numéro d'identification fiscale. Les valeurs ici seront validées en "
+#~ "fonction du format du pays. Vous pouvez utiliser '/' pour indiquer que le "
+#~ "partenaire n'est pas sujet à la taxe."
+
+#~ msgid "Memory limit (in bytes)"
+#~ msgstr "Limite mémoire (en bytes)"
+
+#~ msgid "Memory profile"
+#~ msgstr "Profil mémoire"
 
 #~ msgid "00"
 #~ msgstr "00"

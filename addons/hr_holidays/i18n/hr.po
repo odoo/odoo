@@ -18,15 +18,16 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
 # Martin Trigaux, 2023
 # Bole <bole@dajmi5.com>, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Boris Peko <boris.peko@ecodica.eu>, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-11 07:41+0000\n"
-"Last-Translator: Boris Peko <boris.peko@ecodica.eu>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-02 18:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/hr/>\n"
 "Language: hr\n"
@@ -35,7 +36,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -183,8 +184,20 @@ msgstr "%(name)s (%(time)g preostalo od %(maximum)g sati)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+"%(name)s nema valjanu dodjelu za vrstu odsustva %(leave_type)s kojom bi se "
+"pokrio taj zahtjev."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
-msgstr "%(name)s: %(duration)s"
+msgstr ""
+"\n"
+"%(ime)s: %(trajanje)s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -255,30 +268,6 @@ msgstr "ov sažetak ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr "ov sažetak u ovom razdoblju"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
-#| msgid "Day(s)"
-msgid "(s)"
-msgstr "Dan(a)"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-"(ovima)\n"
-"                                    i ograničenje stanja postavljeno je na"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1376,12 +1365,10 @@ msgid ""
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"Promjena ugovora ovog zaposlenika mijenja njegov radni raspored u razdoblju "
-"kada je već koristio slobodno. Promjena radnog rasporeda mijenja trajanje "
-"tih odsustava na način da zaposlenik više nema potrebnu alokaciju za njih. "
-"Molimo pregledajte ta odsustva i/ili alokacije prije promjene ugovora."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1446,6 +1433,11 @@ msgstr "Kliknite na ovaj gumb za traženje slobodnog"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
 msgstr "Boja"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__company_id
@@ -1834,6 +1826,7 @@ msgstr "Odbaci"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
@@ -2391,6 +2384,7 @@ msgstr "Prikaz HR ikone"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
@@ -3354,8 +3348,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "Oops! %(state)s Time-Off requests can only be deleted by Administrators."
-msgstr ""
-"Ups! %(state)s zahtjeve za slobodnim mogu obrisati samo administratori."
+msgstr "Ups! %(state)s zahtjeve za slobodnim mogu obrisati samo administratori."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -4037,6 +4030,14 @@ msgstr ""
 "Ovdje odabrana boja koristiti će se na svakom zaslonu s vrstom odsustva."
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/res_company.py:0
+msgid ""
+"The company country cannot be changed while time off leaves or allocations "
+"with the country exist."
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The days carried over will be effective for"
 msgstr "Preneseni dani bit će važeći za"
@@ -4167,12 +4168,6 @@ msgid ""
 msgstr ""
 "Nema postavljenog zaposlenika za odsustvo. Molimo provjerite jeste li "
 "prijavljeni u ispravnu tvrtku."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "Nema valjanih dodjela koje bi pokrile ovaj zahtjev."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5110,8 +5105,7 @@ msgstr "Ne možete resetirati odsustvo. Otkažite/obrišite ovo i kreirajte drug
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You can't reset an allocation. Cancel/delete this one and create an other"
-msgstr ""
-"Ne možete resetirati alokaciju. Otkažite/obrišite ovu i kreirajte drugu"
+msgstr "Ne možete resetirati alokaciju. Otkažite/obrišite ovu i kreirajte drugu"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5297,6 +5291,12 @@ msgstr "datum alokacije"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "i"
@@ -5333,6 +5333,12 @@ msgstr "kliknite ovdje"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "datumi"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr "dan(a)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5420,6 +5426,12 @@ msgstr "od početka alokacije"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5442,6 +5454,12 @@ msgid ""
 msgstr ""
 "odsustva tipa 'odrađeno vrijeme' uvijek trebaju biti prihvatljiva za "
 "akrualnu stopu."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr "mjesec(i)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5568,6 +5586,35 @@ msgstr "vrijedi do"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "za odobriti"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr "godina(e)"
+
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr ""
+#~ "(ovima)\n"
+#~ "                                    i ograničenje stanja postavljeno je na"
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Nema valjanih dodjela koje bi pokrile ovaj zahtjev."
+
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "Promjena ugovora ovog zaposlenika mijenja njegov radni raspored u "
+#~ "razdoblju kada je već koristio slobodno. Promjena radnog rasporeda "
+#~ "mijenja trajanje tih odsustava na način da zaposlenik više nema potrebnu "
+#~ "alokaciju za njih. Molimo pregledajte ta odsustva i/ili alokacije prije "
+#~ "promjene ugovora."
 
 #~ msgid " days"
 #~ msgstr "dana"
@@ -6105,14 +6152,5 @@ msgstr "za odobriti"
 #~ msgid "You cannot delete a time off which is in %s state"
 #~ msgstr "Ne možete obrisati odsustvo u statusu %s"
 
-#~ msgid "day(s)"
-#~ msgstr "dan(a)"
-
 #~ msgid "in"
 #~ msgstr "u"
-
-#~ msgid "month(s)"
-#~ msgstr "mjesec(i)"
-
-#~ msgid "year(s)"
-#~ msgstr "godina(e)"

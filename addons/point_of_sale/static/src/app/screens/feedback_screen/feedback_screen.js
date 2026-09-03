@@ -1,8 +1,7 @@
 import { registry } from "@web/core/registry";
-import { Component, useRef, onMounted, useEffect, useState, onWillUnmount } from "@odoo/owl";
+import { Component, useRef, onMounted, onWillStart, useState, onWillUnmount } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class FeedbackScreen extends Component {
@@ -28,29 +27,26 @@ export class FeedbackScreen extends Component {
             this.scaleText();
         });
 
-        useEffect(
-            () => {
-                const waiter = async () => {
-                    try {
-                        if (this.props.waitFor) {
-                            await this.props.waitFor;
-                        }
-                    } finally {
-                        this.state.loading = false;
-                        this.timeout = setTimeout(() => {
-                            this.goNext();
-                        }, 5000);
-                    }
-                };
-
-                waiter();
-            },
-            () => []
-        );
+        onWillStart(() => {
+            this.waiter();
+        });
 
         onWillUnmount(() => {
             clearTimeout(this.timeout);
         });
+    }
+
+    async waiter() {
+        try {
+            if (this.props.waitFor) {
+                await this.props.waitFor;
+            }
+        } finally {
+            this.state.loading = false;
+            this.timeout = setTimeout(() => {
+                this.goNext();
+            }, 1500);
+        }
     }
 
     scaleText() {
@@ -67,12 +63,6 @@ export class FeedbackScreen extends Component {
 
     onClick() {
         if (this.state.loading) {
-            this.notification.add(
-                _t("A request is still being processed in the background. Please wait."),
-                {
-                    type: "warning",
-                }
-            );
             return;
         }
         clearTimeout(this.timeout);

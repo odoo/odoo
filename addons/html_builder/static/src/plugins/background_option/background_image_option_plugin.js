@@ -63,7 +63,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         // target as its image source will be deleted.
         oldEditingEl.classList.remove("o_modified_image_to_save");
         const filterColorAction = this.dependencies.builderActions.getAction("selectFilterColor");
-        const editingElement = this.getResource("get_target_element_providers")[0](oldEditingEl);
+        const editingElement = this.getTargetElement(oldEditingEl);
         const filter = filterColorAction.getValue({ editingElement });
         this.setImageBackground(oldEditingEl, "");
         if (filter) {
@@ -123,7 +123,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         if (backgroundURL) {
             el.classList.add("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box");
         } else {
-            const editingElement = this.getResource("get_target_element_providers")[0](el);
+            const editingElement = this.getTargetElement(el);
             this.dependencies.builderActions
                 .getAction("selectFilterColor")
                 .apply({ editingElement });
@@ -148,12 +148,22 @@ export class BackgroundImageOptionPlugin extends Plugin {
      * @param {Object} [context.params]
      */
     removeBackgroundImage({ editingElement, params }) {
+        this.getTargetElement(editingElement).querySelector(":scope > .o_we_bg_filter")?.remove();
         this.applyReplaceBackgroundImage({
             editingElement,
             loadResult: "",
             params: { ...params, forceClean: true },
         });
         this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+    }
+
+    getTargetElement(el) {
+        for (const fn of this.getResource("get_target_element_providers")) {
+            const targetEl = fn(el);
+            if (targetEl) {
+                return targetEl;
+            }
+        }
     }
 }
 
@@ -166,7 +176,7 @@ export class SelectFilterColorAction extends StyleAction {
 
         // If no value is provided, use the current one if any.
         if (filterEl && value === undefined) {
-            value = filterEl.style.backgroundImage;
+            value = filterEl.style.backgroundImage || filterEl.style.backgroundColor;
         }
         // If the filter would be transparent, remove it / don't create it.
         const rgba = value && convertCSSColorToRgba(value);

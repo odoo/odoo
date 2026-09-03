@@ -15,6 +15,7 @@ import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_se
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { unformat } from "./_helpers/format";
 import { parseHTML } from "@html_editor/utils/html";
+import { oeTab } from "./_helpers/tabs";
 
 // Press a key combination, then wait for useEffect to kick in.
 const pressAndWait = async (...args) => {
@@ -182,6 +183,46 @@ test("inserting a code block in an empty paragraph with a style placeholder acti
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
         ),
         contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
+    });
+});
+
+test("inserting a code block converts non-breaking spaces to regular spaces and activates syntax highlighting", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: "<p>a&nbsp;&nbsp;b&nbsp;&nbsp;c[]</p>",
+        stepFunction: insertPre,
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "a  b  c", textareaRange: 7 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a  b  c</pre>[]`,
+    });
+});
+
+test("inserting a code block converts oe-tabs to spaces in syntax highlighting", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: `<p>a${oeTab()}b${oeTab()}c[]</p>`,
+        // @todo: add contentBeforeEdit in some test cases to test the addition
+        // of the contenteditable="false" attribute by setup.
+        stepFunction: insertPre,
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "a    b    c", textareaRange: 11 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">a    b    c</pre>[]`,
+    });
+});
+
+test("replaces leading non-breaking spaces with regular spaces when syntax highlighting is activated", async () => {
+    await testEditorWithHighlightedContent({
+        contentBefore: `<p>&nbsp;&nbsp;a${oeTab()}b${oeTab()}c[]</p>`,
+        // @todo: add contentBeforeEdit in some test cases to test the addition
+        // of the contenteditable="false" attribute by setup.
+        stepFunction: insertPre,
+        contentAfterEdit:
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "  a    b    c", textareaRange: 13 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
+        contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext">  a    b    c</pre>[]`,
     });
 });
 
@@ -1254,6 +1295,60 @@ test("should keep textarea focused after copying code content", async () => {
 
     // Ensure focus remains on the textarea after copying
     expect(document.activeElement).toBe(textarea);
+});
+
+test("should focus textarea when creating new code block inside a new list", async () => {
+    const { editor } = await setupEditor(`<p>[]</p>`, {
+        config: configWithEmbeddings,
+    });
+    // Create list
+    await insertText(editor, "1. ");
+    expect(getContent(editor.editable)).toBe(
+        `<ol><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol>`
+    );
+    // Insert code block
+    await insertPre(editor);
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        "<ol><li>" +
+            '<p data-selection-placeholder=""><br></p>' +
+            highlightedPre({ value: "", textareaRange: 0 }) +
+            '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>' +
+            "</li></ol>",
+        "The syntax highlighting wrapper was inserted, and the selection is inside the textarea.",
+        editor
+    );
+
+    // Focus should move to textarea
+    const textarea = editor.document.querySelector("textarea");
+    expect(editor.document.activeElement).toBe(textarea);
+});
+
+test.tags("desktop");
+test("should not open the odoo global command bar when pressing ctrl+k inside a syntax-highlighted code block", async () => {
+    const { editor } = await setupEditor(`<p>a[]b</p><pre>xy</pre>`, {
+        config: configWithEmbeddings,
+    });
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        unformat(
+            `<p>a[]b</p>
+            ${highlightedPre({ value: "xy" })}
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        "Initial code block is highlighted",
+        editor
+    );
+
+    // Focus the textarea inside the code block
+    const textarea = editor.document.querySelector("textarea");
+    await click(textarea);
+    expect(editor.document.activeElement).toBe(textarea);
+
+    // Pressing ctrl+k to open odoo global command bar
+    await press(["ctrl", "k"]);
+    await animationFrame();
+    expect('.o_command span[title="Create link"]').toHaveCount(0);
 });
 
 describe("Arrow navigation (up/down) across syntax-highlighted code blocks", () => {

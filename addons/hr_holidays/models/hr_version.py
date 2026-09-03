@@ -54,14 +54,15 @@ class HrVersion(models.Model):
         try:
             if all_new_leave_vals:
                 self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
-        except ValidationError:
+        except ValidationError as e:
             # In case a validation error is thrown due to holiday creation with the new resource calendar (which can
             # increase their duration), we catch this error to display a more meaningful error message.
             raise ValidationError(
                 self.env._("Changing the contract on this employee changes their working schedule in a period "
                            "they already took leaves. Changing this working schedule changes the duration of "
                            "these leaves in such a way the employee no longer has the required allocation for "
-                           "them. Please review these leaves and/or allocations before changing the contract."))
+                           "them. Please review these leaves and/or allocations before changing the contract.\n\n"
+                           "This error has been triggered by:\n") + str(e))
         return created_versions
 
     def write(self, vals):
@@ -70,32 +71,53 @@ class HrVersion(models.Model):
             all_new_leave_origin = []
             all_new_leave_vals = []
             leaves_state = {}
+            for contract in self:
+                resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
+                extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
+                leaves = contract._get_leaves(extra_domain=extra_domain)
+                for leave in leaves:
+                    super(HrVersion, contract).write(vals)
+                    overlapping_contracts = self._check_overlapping_contract(leave)
+                    if not overlapping_contracts:
+                        continue
+                    leaves_state = self._update_leave_state(leave, leaves_state, True)
+                    specific_contracts += contract
+                    all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
+                        all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
             try:
-                for contract in self:
-                    resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
-                    extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
-                    leaves = contract._get_leaves(
-                        extra_domain=extra_domain
-                    )
-                    for leave in leaves:
-                        super(HrVersion, contract).write(vals)
-                        overlapping_contracts = self._check_overlapping_contract(leave)
-                        if not overlapping_contracts:
-                            continue
-                        leaves_state = self._refuse_leave(leave, leaves_state)
-                        specific_contracts += contract
-                        all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
-                            all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
                 if all_new_leave_vals:
                     self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
-            except ValidationError:
+            except ValidationError as e:
                 # In case a validation error is thrown due to holiday creation with the new resource calendar (which can
                 # increase their duration), we catch this error to display a more meaningful error message.
                 raise ValidationError(self.env._("Changing the contract on this employee changes their working schedule in a period "
                                         "they already took leaves. Changing this working schedule changes the duration of "
                                         "these leaves in such a way the employee no longer has the required allocation for "
-                                        "them. Please review these leaves and/or allocations before changing the contract."))
-        return super(HrVersion, self - specific_contracts).write(vals)
+                                        "them. Please review these leaves and/or allocations before changing the contract.\n\n"
+                                        "This error has been triggered by:\n") + str(e))
+        res = super(HrVersion, self - specific_contracts).write(vals)
+
+        if 'resource_calendar_id' in vals:
+            # Hour-based allocations store their duration in number_of_days, from
+            # which the accrued hours (number_of_hours_display) are derived using
+            # the employee's hours per day. When the working schedule changes
+            # number_of_days is left stale: the next accrual adds to it and
+            # number_of_hours_display is then recomputed at the new hours per day,
+            # revaluing the hours accrued under the old schedule and losing part of
+            # the balance. Recompute number_of_days now from the still-correct
+            # number_of_hours_display so the accrued hours are preserved. It is set
+            # explicitly rather than through the compute graph because
+            # number_of_days and number_of_hours_display depend on each other and
+            # the recomputation order is not guaranteed.
+            allocations = self.env['hr.leave.allocation'].search([
+                ('employee_id', 'in', self.employee_id.ids),
+            ])
+            hour_allocations = allocations.filtered(lambda a: a.type_request_unit == 'hour')
+            for allocation in hour_allocations:
+                hours_per_day = allocation.employee_id._get_hours_per_day(allocation.date_from)
+                if hours_per_day:
+                    allocation.number_of_days = allocation.number_of_hours_display / hours_per_day
+        return res
 
     def _get_leaves(self, extra_domain=None):
         domain = [
@@ -110,7 +132,7 @@ class HrVersion(models.Model):
 
     def _get_leaves_from_vals(self, vals):
         domain = [
-            ('state', '!=', 'refuse'),
+            ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', vals['employee_id']),
             ('date_to', '>=', fields.Date.from_string(vals.get('contract_date_start', vals.get('date_version', fields.Date.today())))),
             ('resource_calendar_id', '!=', vals.get('resource_calendar_id')),
@@ -183,3 +205,13 @@ class HrVersion(models.Model):
                 render_values={'self': new_leave, 'origin': all_new_leave_origin[index]},
                 subtype_xmlid='mail.mt_note',
             )
+
+    def _update_leave_state(self, leave, leaves_state, refuse_leave=False):
+        if leave.id not in leaves_state:
+            leaves_state[leave.id] = leave.state
+        if leave.state not in ['refuse', 'confirm']:
+            if refuse_leave:
+                leave.action_refuse()
+            else:
+                leave.action_back_to_approval()
+        return leaves_state

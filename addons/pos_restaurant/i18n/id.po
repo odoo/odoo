@@ -7,16 +7,17 @@
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Andhitia Rama <andhitia.r@gmail.com>, 2022
 # Abe Manyo, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# "Abe Manyo (abem)" <abem@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
+# "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-12-09 14:05+0000\n"
-"Last-Translator: \"Abe Manyo (abem)\" <abem@odoo.com>\n"
+"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"PO-Revision-Date: 2026-08-13 03:54+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/id/>\n"
 "Language: id\n"
@@ -24,19 +25,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid " and $1"
-msgstr " dan $1"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "% discount"
 msgstr "% diskon"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid ""
+"%(amount)s is more than 25% of the order's total amount. Are you sure of "
+"this tip amount?"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
+msgid "%(original)s + %(tip)s tip = %(overall)s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -159,12 +168,12 @@ msgstr "Izinkan Pisah Bon"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr "Izinkan mencetak bon sebelum pembayaran"
+msgstr "Izinkan mencetak struk sebelum pembayaran"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr "Ijinkan cetak bon sebelum pembayaran"
+msgstr "Izinkan mencetak Tagihan sebelum pembayaran."
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_anchovy
@@ -190,6 +199,7 @@ msgstr "Diarsipkan"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+#: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
 msgstr "Apakah Anda yakin?"
 
@@ -379,7 +389,7 @@ msgstr "Course index"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__course_ids
 msgid "Courses"
-msgstr "Kursus-kursus"
+msgstr "Kursus"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
@@ -437,7 +447,7 @@ msgstr "Makan di Tempat"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/pos_order.js:0
 msgid "Direct Sale"
-msgstr "Sale Langsung"
+msgstr "Penjualan Langsung"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -687,7 +697,7 @@ msgstr "Ice Tea"
 msgid ""
 "If false, the table is deactivated and will not be available in the point of "
 "sale"
-msgstr "Jika salah, tabel dinonaktifkan dan tidak akan tersedia pada pos"
+msgstr "Jika false, meja dinonaktifkan dan tidak akan tersedia pada pos"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -724,6 +734,18 @@ msgstr "Terakhir Diperbarui oleh"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
 msgstr "Terakhir Diperbarui pada"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Link Table %(sourceTable)s with %(destinationTable)s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1081,6 +1103,12 @@ msgstr "Penghapusan table tidak dapat dibatalkan"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
+msgid "Removing floor %s"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Rename"
 msgstr "Ganti nama"
@@ -1223,7 +1251,7 @@ msgstr "Bentuk"
 #. module: pos_restaurant
 #: model:product.attribute,name:pos_restaurant.pa_sides
 msgid "Sides"
-msgstr "Sides"
+msgstr "Pelengkap"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1302,7 +1330,7 @@ msgstr "Ganti Tampilan Lantai"
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
-msgstr "Tabel"
+msgstr "Meja"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1328,7 +1356,7 @@ msgstr "Nomor Meja"
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__pos_config__default_screen__tables
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
-msgstr "Tabel"
+msgstr "Meja"
 
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_takeout_preset
@@ -1391,8 +1419,7 @@ msgstr "Tinggi meja dalam pixel"
 msgid ""
 "The table's horizontal position from the left side to the table's center, in "
 "pixels"
-msgstr ""
-"Posisi horizontal meja dari sisi kiri ke pusat meja, dalam satuan pixel"
+msgstr "Posisi horizontal meja dari sisi kiri ke pusat meja, dalam satuan pixel"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
@@ -1643,6 +1670,9 @@ msgstr "item"
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
 msgstr "produk terpilih"
+
+#~ msgid " and $1"
+#~ msgstr " dan $1"
 
 #~ msgid "________________________"
 #~ msgstr "________________________"

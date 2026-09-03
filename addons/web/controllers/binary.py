@@ -72,13 +72,14 @@ class Binary(http.Controller):
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                        filename=None, filename_field='name', mimetype=None, unique=False,
                        download=False, access_token=None, nocache=False):
+        download = str2bool(download)
         with replace_exceptions(UserError, by=request.not_found()):
             record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token, field=field)
-            stream = request.env['ir.binary']._get_stream_from(record, field, filename, filename_field, mimetype)
+            stream = request.env['ir.binary']._get_stream_from(record.with_context(download_attachments=download), field, filename, filename_field, mimetype)
             if request.httprequest.args.get('access_token'):
                 stream.public = True
 
-        send_file_kwargs = {'as_attachment': str2bool(download)}
+        send_file_kwargs = {'as_attachment': download}
         if unique:
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG
@@ -185,10 +186,11 @@ class Binary(http.Controller):
                       filename_field='name', filename=None, mimetype=None, unique=False,
                       download=False, width=0, height=0, crop=False, access_token=None,
                       nocache=False):
+        download = str2bool(download)
         try:
             record = request.env['ir.binary']._find_record(xmlid, model, id and int(id), access_token, field=field)
             stream = request.env['ir.binary']._get_image_stream_from(
-                record, field, filename=filename, filename_field=filename_field,
+                record.with_context(download_attachments=download), field, filename=filename, filename_field=filename_field,
                 mimetype=mimetype, width=int(width), height=int(height), crop=crop,
             )
             if request.httprequest.args.get('access_token'):
@@ -201,11 +203,11 @@ class Binary(http.Controller):
                 width, height = image_guess_size_from_field_name(field)
             record = request.env.ref('web.image_placeholder').sudo()
             stream = request.env['ir.binary']._get_image_stream_from(
-                record, 'raw', width=int(width), height=int(height), crop=crop,
+                record.with_context(download_attachments=download), 'raw', width=int(width), height=int(height), crop=crop,
             )
             stream.public = False
 
-        send_file_kwargs = {'as_attachment': str2bool(download)}
+        send_file_kwargs = {'as_attachment': download}
         if unique:
             send_file_kwargs['immutable'] = True
             send_file_kwargs['max_age'] = http.STATIC_CACHE_LONG

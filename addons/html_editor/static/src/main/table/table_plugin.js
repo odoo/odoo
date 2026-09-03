@@ -1,7 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isBlock } from "@html_editor/utils/blocks";
-import { fillEmpty, fillShrunkPhrasingParent, removeClass } from "@html_editor/utils/dom";
+import {
+    fillEmpty,
+    fillShrunkPhrasingParent,
+    removeClass,
+    removeStyle,
+} from "@html_editor/utils/dom";
 import {
     getDeepestPosition,
     isProtected,
@@ -18,6 +23,7 @@ import {
     descendants,
     firstLeaf,
     lastLeaf,
+    selectElements,
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
@@ -27,6 +33,7 @@ import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/t
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { rgbaToHex } from "@web/core/utils/colors";
 
 export const BORDER_SENSITIVITY = 5;
 
@@ -114,11 +121,12 @@ export class TablePlugin extends Plugin {
         ],
 
         /** Handlers */
-        selectionchange_handlers: this.updateSelectionTable.bind(this),
+        selectionchange_handlers: withSequence(5, this.updateSelectionTable.bind(this)),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
+        before_insert_processors: this.normalizeTableStructure.bind(this),
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
@@ -144,8 +152,15 @@ export class TablePlugin extends Plugin {
                 return true;
             }
         },
-        normalize_handlers: this.distributeTableColorsToAllCells.bind(this),
+        normalize_handlers: [
+            this.distributeTableColorsToAllCells.bind(this),
+            this.populateTableSpans.bind(this),
+        ],
         overlay_selection_target_rect_providers: this.getTableSelectionRangeRect.bind(this),
+        selected_background_color_providers: withSequence(
+            5,
+            this.computeBackgroundColorForTable.bind(this)
+        ),
     };
 
     setup() {
@@ -173,6 +188,18 @@ export class TablePlugin extends Plugin {
             }
         });
         this.onMousemove = this.onMousemove.bind(this);
+
+        this.normalizeTableStructure(this.editable);
+        // Move table width and margin to tbody to prevent scrollbars on the editable.
+        this.editable.querySelectorAll("table").forEach((table) => {
+            const tBody = table.tBodies[0];
+            for (const property of ["width", "marginLeft"]) {
+                if (table.style[property]) {
+                    tBody.style[property] = table.style[property];
+                }
+            }
+            removeStyle(table, "width", "margin-left");
+        });
     }
 
     handleTab() {
@@ -210,7 +237,9 @@ export class TablePlugin extends Plugin {
         [...root.querySelectorAll("table")]
             .filter((table) => table.style["color"] || table.style["backgroundColor"])
             .forEach((table) => {
-                const tds = table.querySelectorAll("td");
+                const tds = [...table.querySelectorAll("td")].filter(
+                    (td) => closestElement(td, "table") === table
+                );
                 for (const td of tds) {
                     td.style["color"] = td.style["color"] || table.style["color"];
                     td.style["backgroundColor"] =
@@ -249,28 +278,28 @@ export class TablePlugin extends Plugin {
      */
     addColumn(position, reference) {
         const columnIndex = getColumnIndex(reference);
-        const table = closestElement(reference, "table");
-        const tableWidth = table.style.width && parseFloat(table.style.width);
-        const referenceColumn = table.querySelectorAll(
+        const tBody = closestElement(reference, "tbody");
+        const tBodyWidth = tBody.style.width && parseFloat(tBody.style.width);
+        const referenceColumn = tBody.querySelectorAll(
             `tr :is(td, th):nth-of-type(${columnIndex + 1})`
         );
         const referenceCellWidth = reference.style.width
             ? parseFloat(reference.style.width)
             : reference.clientWidth;
         // Temporarily set widths so proportions are respected.
-        const firstRow = table.querySelector("tr");
+        const firstRow = tBody.querySelector("tr");
         const firstRowCells = [...firstRow.children].filter(
             (child) => child.nodeName === "TD" || child.nodeName === "TH"
         );
         let totalWidth = 0;
-        if (tableWidth) {
+        if (tBodyWidth) {
             for (const cell of firstRowCells) {
                 const width = parseFloat(cell.style.width);
                 cell.style.width = width + "px";
                 // Spread the widths to preserve proportions.
                 // -1 for the width of the border of the new column.
                 const newWidth = Math.max(
-                    Math.round((width * tableWidth) / (tableWidth + referenceCellWidth - 1)),
+                    Math.round((width * tBodyWidth) / (tBodyWidth + referenceCellWidth - 1)),
                     13
                 );
                 cell.style.width = newWidth + "px";
@@ -288,21 +317,21 @@ export class TablePlugin extends Plugin {
             if (rowIndex === 0 && cell.classList.contains("o_table_header")) {
                 newCell.classList.add("o_table_header");
             }
-            if (rowIndex === 0 && tableWidth) {
+            if (rowIndex === 0 && tBodyWidth) {
                 newCell.style.width = cell.style.width;
                 totalWidth += parseFloat(cell.style.width);
             }
         });
-        if (tableWidth) {
-            if (totalWidth !== tableWidth - 1) {
+        if (tBodyWidth) {
+            if (totalWidth !== tBodyWidth - 1) {
                 // -1 for the width of the border of the new column.
                 firstRowCells[firstRowCells.length - 1].style.width =
                     parseFloat(firstRowCells[firstRowCells.length - 1].style.width) +
-                    (tableWidth - totalWidth - 1) +
+                    (tBodyWidth - totalWidth - 1) +
                     "px";
             }
             // Fix the table and row's width so it doesn't change.
-            table.style.width = tableWidth + "px";
+            tBody.style.width = tBodyWidth + "px";
         }
     }
     /**
@@ -493,12 +522,12 @@ export class TablePlugin extends Plugin {
     /**
      * @param {HTMLTableElement} table
      */
-    normalizeColumnWidth(table) {
-        const rows = [...table.rows];
+    normalizeColumnWidth(tBody) {
+        const rows = [...tBody.rows];
         const firstRowCells = [...rows[0].cells];
-        const tableWidth = parseFloat(table.style.width);
-        if (tableWidth) {
-            const expectedCellWidth = tableWidth / firstRowCells.length;
+        const tBodyWidth = parseFloat(tBody.style.width);
+        if (tBodyWidth) {
+            const expectedCellWidth = tBodyWidth / firstRowCells.length;
             firstRowCells.forEach((cell, i) => {
                 const cellWidth = parseFloat(cell.style.width);
                 if (cellWidth && Math.abs(cellWidth - expectedCellWidth) <= 1) {
@@ -517,12 +546,12 @@ export class TablePlugin extends Plugin {
             return;
         }
 
-        const table = closestElement(cell, "table");
-        const tableWidth = parseFloat(table.style.width);
+        const tBody = closestElement(cell, "tbody");
+        const tBodyWidth = parseFloat(tBody.style.width);
         const currentRow = cell.parentElement;
         const currentRowCells = [...currentRow.cells];
         const rowCellCount = currentRowCells.length;
-        const expectedCellWidth = tableWidth / rowCellCount;
+        const expectedCellWidth = tBodyWidth / rowCellCount;
         const widthDifference = currentCellWidth - expectedCellWidth;
         const currentColumnIndex = getColumnIndex(cell);
 
@@ -583,15 +612,15 @@ export class TablePlugin extends Plugin {
                 adjCellWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
             }px`;
         });
-        this.normalizeColumnWidth(table);
+        this.normalizeColumnWidth(tBody);
     }
 
     /**
      * @param {HTMLTableElement} table
      */
-    resetTableSize(table) {
-        table.removeAttribute("style");
-        const cells = [...table.querySelectorAll("tr, td, th")];
+    resetTableSize(tBody) {
+        tBody.removeAttribute("style");
+        const cells = [...tBody.querySelectorAll("tr, td, th")];
         cells.forEach((cell) => {
             const cStyle = cell.style;
             if (cell.tagName === "TR") {
@@ -751,8 +780,8 @@ export class TablePlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         if (closestElement(selection.commonAncestorContainer, "table.o_selected_table")) {
             let [startTd, endTd] = [
-                closestElement(selection.anchorNode, "td"),
-                closestElement(selection.focusNode, "td"),
+                closestElement(selection.anchorNode, isTableCell),
+                closestElement(selection.focusNode, isTableCell),
             ];
             if (selection.direction === DIRECTIONS.LEFT) {
                 [startTd, endTd] = [endTd, startTd];
@@ -915,6 +944,10 @@ export class TablePlugin extends Plugin {
             } else {
                 ev.preventDefault();
                 this.selectTableCells(this.dependencies.selection.getEditableSelection());
+                // For an empty cell with a div inside, we need to use setSelection to trigger the selectionchange event.
+                this.dependencies.selection.setSelection(
+                    this.dependencies.selection.getEditableSelection()
+                );
             }
             return;
         }
@@ -1010,26 +1043,37 @@ export class TablePlugin extends Plugin {
                 this.selectTableCells(selection);
             }
         } else if (!targetedNodes.every((node) => closestElement(node.parentElement, "table"))) {
-            const endSelectionTable = closestElement(selection.focusNode, "table");
-            const endSelectionTableTds = endSelectionTable && getTableCells(endSelectionTable);
+            const startEdgeSelectionTable = closestElement(selection.startContainer, "table");
+            const endEdgeSelectionTable = closestElement(selection.endContainer, "table");
+            const startsInTable = !!startEdgeSelectionTable;
+            const edgeSelectionTable = startEdgeSelectionTable || endEdgeSelectionTable;
+            const edgeSelectionTableTds = edgeSelectionTable && getTableCells(edgeSelectionTable);
             const targetedTds = new Set(
                 targetedNodes.map((node) => closestElement(node, isTableCell))
             );
-            const isTableFullySelected = endSelectionTableTds?.every((td) => targetedTds.has(td));
-            if (endSelectionTable && !isTableFullySelected) {
+            const isTableFullySelected = edgeSelectionTableTds?.every((td) => targetedTds.has(td));
+            if (edgeSelectionTable && !isTableFullySelected) {
                 // Make sure all the cells are targeted in actual selection
                 // when selecting full table. If not, they will be selected
                 // forcefully and updateSelectionTable will be called again.
                 const targetTd =
-                    selection.direction === DIRECTIONS.RIGHT
-                        ? endSelectionTableTds.pop()
-                        : endSelectionTableTds.shift();
-                this.dependencies.selection.setSelection({
-                    anchorNode: selection.anchorNode,
-                    anchorOffset: selection.anchorOffset,
-                    focusNode: targetTd,
-                    focusOffset: selection.direction === DIRECTIONS.RIGHT ? nodeSize(targetTd) : 0,
-                });
+                    edgeSelectionTableTds[startsInTable ? 0 : edgeSelectionTableTds.length - 1];
+                const targetOffset = startsInTable ? 0 : nodeSize(targetTd);
+                if (selection.direction === DIRECTIONS.RIGHT) {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: startsInTable ? targetTd : selection.anchorNode,
+                        anchorOffset: startsInTable ? targetOffset : selection.anchorOffset,
+                        focusNode: startsInTable ? selection.focusNode : targetTd,
+                        focusOffset: startsInTable ? selection.focusOffset : targetOffset,
+                    });
+                } else {
+                    this.dependencies.selection.setSelection({
+                        anchorNode: startsInTable ? selection.anchorNode : targetTd,
+                        anchorOffset: startsInTable ? selection.anchorOffset : targetOffset,
+                        focusNode: startsInTable ? targetTd : selection.focusNode,
+                        focusOffset: startsInTable ? targetOffset : selection.focusOffset,
+                    });
+                }
             }
             const targetedTables = new Set(
                 targetedNodes
@@ -1068,6 +1112,13 @@ export class TablePlugin extends Plugin {
                     // which deselects the single cell. Hence, we need a label
                     // to keep it selected.
                     this._isFirefoxDoubleMousedown = true;
+                }
+                if (ev.detail === 2) {
+                    // Specifically for double click on empty cell, to trigger
+                    // selectionchange event and update the toolbar button states.
+                    this.dependencies.selection.setSelection(
+                        this.dependencies.selection.getEditableSelection()
+                    );
                 }
                 if (ev.detail === 3) {
                     // Doing a tripleclick on a text will change the selection.
@@ -1126,13 +1177,9 @@ export class TablePlugin extends Plugin {
         const startTd = closestElement(selection.startContainer, isTableCell);
         const endTd = closestElement(selection.endContainer, isTableCell);
         if (startTd && startTd === endTd && !isProtected(startTd) && !isProtecting(startTd)) {
-            const selectedNodes = this.dependencies.selection
-                .getTargetedNodes()
-                .filter(this.dependencies.selection.areNodeContentsFullySelected);
             const cellContents = descendants(startTd);
-            const areCellContentsFullySelected = cellContents
-                .filter((d) => !isBlock(d))
-                .every((child) => selectedNodes.includes(child));
+            const areCellContentsFullySelected =
+                this.dependencies.selection.areNodeContentsFullySelected(startTd);
             if (areCellContentsFullySelected) {
                 const SENSITIVITY = 5;
                 if (!this._mouseMovePositionWhenAllContentsSelected) {
@@ -1309,6 +1356,33 @@ export class TablePlugin extends Plugin {
         }
     }
 
+    computeBackgroundColorForTable() {
+        const selectedTds = Array.from(this.editable.querySelectorAll(".o_selected_td"));
+        if (selectedTds.length === 0) {
+            return null;
+        }
+
+        const firstStyle = getComputedStyle(selectedTds[0]);
+        const backgroundColor = firstStyle.backgroundColor;
+        const backgroundImage = firstStyle.backgroundImage;
+        // If the first selected cell doesn't have any background style, we
+        // consider that there's no common background style.
+        if (backgroundImage === "none" && backgroundColor === "rgba(0, 0, 0, 0)") {
+            return null;
+        }
+
+        const allSameStyle = selectedTds.slice(1).every((td) => {
+            const s = getComputedStyle(td);
+            return s.backgroundColor === backgroundColor && s.backgroundImage === backgroundImage;
+        });
+
+        if (!allSameStyle) {
+            return "#00000000";
+        }
+
+        return backgroundImage !== "none" ? backgroundImage : rgbaToHex(backgroundColor);
+    }
+
     adjustTargetedNodes(targetedNodes) {
         const modifiedTargetedNodes = [];
         const visitedTables = new Set();
@@ -1342,6 +1416,45 @@ export class TablePlugin extends Plugin {
             focusNode: anchorTD.lastChild,
             focusOffset: nodeSize(anchorTD.lastChild),
         });
+    }
+
+    /**
+     * Normalize the structure of all tables contained in `container`.
+     *
+     * Ensures every table has a `<tbody>` and merges or converts `<thead>`
+     * elements when necessary. Table operations rely on the presence of a
+     * `<tbody>`, so every table must contain one.
+     *
+     * @param {HTMLElement | DocumentFragment} container
+     * @returns {HTMLElement | DocumentFragment}
+     */
+    normalizeTableStructure(container) {
+        container.querySelectorAll("table").forEach((table) => {
+            let tbody = table.tBodies[0];
+            const thead = table.tHead;
+
+            if (thead) {
+                const thChildren = thead.querySelectorAll("th");
+                thChildren.forEach((th) => th.classList.add("o_table_header"));
+
+                if (tbody) {
+                    // If a <tbody> already exists, move all rows from
+                    // <thead> into the start of <tbody>.
+                    tbody.prepend(...thead.rows);
+                    thead.remove();
+                } else {
+                    // Otherwise, replace the <thead> with <tbody>
+                    tbody = this.dependencies.dom.setTagName(thead, "TBODY");
+                }
+            }
+
+            if (!tbody) {
+                tbody = table.ownerDocument.createElement("tbody");
+                tbody.innerHTML = `<tr><td><div class="o-paragraph"><br></div></td></tr>`;
+                table.append(tbody);
+            }
+        });
+        return container;
     }
 
     /**
@@ -1394,5 +1507,61 @@ export class TablePlugin extends Plugin {
         }
         this.deselectTable(clonedContents);
         return clonedContents;
+    }
+
+    populateTableSpans(root) {
+        for (const table of selectElements(root, "table")) {
+            const matrix = [];
+            let width = 0;
+
+            // Build the logical matrix.
+            for (let r = 0; r < table.rows.length; r++) {
+                const row = table.rows[r];
+                matrix[r] ||= [];
+
+                let c = 0;
+                for (const cell of row.cells) {
+                    while (matrix[r][c] !== undefined) {
+                        c++;
+                    }
+
+                    const rowspan = cell.rowSpan;
+                    const colspan = cell.colSpan;
+                    for (let dr = 0; dr < rowspan; dr++) {
+                        matrix[r + dr] ||= [];
+
+                        for (let dc = 0; dc < colspan; dc++) {
+                            matrix[r + dr][c + dc] = dr === 0 && dc === 0 ? cell : null;
+                        }
+                    }
+
+                    cell.removeAttribute("rowspan");
+                    cell.removeAttribute("colspan");
+
+                    c += colspan;
+                    width = Math.max(width, c);
+                }
+            }
+
+            // Populate each row in place.
+            for (let r = 0; r < table.rows.length; r++) {
+                const row = table.rows[r];
+                matrix[r] ||= [];
+                let domIndex = 0;
+
+                for (let c = 0; c < width; c++) {
+                    const entry = matrix[r][c];
+                    if (!entry) {
+                        const cell = this.document.createElement("td");
+                        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                        baseContainer.append(this.document.createElement("br"));
+                        cell.append(baseContainer);
+                        row.insertBefore(cell, row.children[domIndex] ?? null);
+                    }
+                    domIndex++;
+                }
+            }
+        }
+        return root;
     }
 }

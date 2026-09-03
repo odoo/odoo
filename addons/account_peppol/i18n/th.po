@@ -2,15 +2,16 @@
 # This file contains the translation of the following modules:
 # * account_peppol
 #
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-09 11:31+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-03 23:54+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/th/>\n"
@@ -19,18 +20,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Customer not on Peppol)"
-msgstr ""
+msgstr " (ลูกค้าไม่ได้ใช้ Peppol)"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Demo)"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (Missing %(eas)s)"
 msgstr ""
 
 #. module: account_peppol
@@ -47,12 +54,6 @@ msgstr ""
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (no access)"
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid " Expected format: %(expected_format)s."
 msgstr ""
@@ -64,6 +65,13 @@ msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "%s has requested electronic invoices reception on Peppol."
@@ -71,7 +79,7 @@ msgstr "%s ได้ขอรับใบกำกับสินค้าทา
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
+msgid "<b>Authenticate</b>"
 msgstr ""
 
 #. module: account_peppol
@@ -200,8 +208,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;"
-"\">การแจ้งเตือน</span>\n"
+"                                    <span style=\"font-size: 10px;\">การแจ้งเตื"
+"อน</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -210,26 +218,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            ส่งใบแจ้งหนี้\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -245,15 +253,15 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td style=\"font-size: 14px;\">\n"
-"                                    <p>เรียน <t t-out=\"object.name or "
-"''\">YourCompany</t>,</p>\n"
+"                                    <p>เรียน <t t-out=\"object.name or ''\">"
+"YourCompany</t>,</p>\n"
 "\n"
-"                                    <p>เราได้เพิ่มบริษัทของคุณเข้าในบัญชี "
-"<strong>เน็ตเวิร์กของ Peppol</strong> เรียบร้อยแล้ว</p>\n"
+"                                    <p>เราได้เพิ่มบริษัทของคุณเข้าในบัญชี <strong>เน็ตเ"
+"วิร์กของ Peppol</strong> เรียบร้อยแล้ว</p>\n"
 "\n"
 "                                    <p>ตอนนี้คุณสามารถ<strong>ส่ง<t t-"
-"if=\"object.account_peppol_proxy_state == 'receiver'\"> และรับ</t></"
-"strong>ใบแจ้งหนี้ทางอิเล็กทรอนิกส์ผ่าน Odoo ได้ฟรีโดยสมบูรณ์</p>\n"
+"if=\"object.account_peppol_proxy_state == 'receiver'\"> และรับ</t></strong>ใบแ"
+"จ้งหนี้ทางอิเล็กทรอนิกส์ผ่าน Odoo ได้ฟรีโดยสมบูรณ์</p>\n"
 "\n"
 "                                    <p>ขอแสดงความนับถือ</p>\n"
 "\n"
@@ -279,10 +287,9 @@ msgid ""
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
-"มีการได้รับใบตอบรับ (Receipt)   สำหรับข้อความที่เคยส่งออกโดย MSH แล้ว "
-"แต่เนื้อหาของใบตอบรับไม่ตรงกับเนื้อหาของข้อความเดิม ตัวอย่างเช่น "
-"บางส่วนของข้อความยังไม่ได้รับการยืนยัน หรือ ค่าแฮชที่แนบมากับใบตอบรับไม่ตรงกับค่าแฮชของลายเซ็น "
-"(ในกรณีของ NRR)"
+"มีการได้รับใบตอบรับ (Receipt)   สำหรับข้อความที่เคยส่งออกโดย MSH แล้ว แต่เนื้อหาของใบตอบรับ"
+"ไม่ตรงกับเนื้อหาของข้อความเดิม ตัวอย่างเช่น บางส่วนของข้อความยังไม่ได้รับการยืนยัน หรือ ค่าแฮชที่แ"
+"นบมากับใบตอบรับไม่ตรงกับค่าแฮชของลายเซ็น (ในกรณีของ NRR)"
 
 #. module: account_peppol
 #. odoo-python
@@ -290,6 +297,12 @@ msgstr ""
 msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "A connection to '%s' already exists."
 msgstr ""
 
 #. module: account_peppol
@@ -307,8 +320,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
-"ได้รับชิ้นส่วนแล้ว แต่มีข้อความชิ้นส่วนมากกว่าหนึ่งรายการในกลุ่มชิ้นส่วน "
-"ระบุค่าสำหรับองค์ประกอบการบีบอัด"
+"ได้รับชิ้นส่วนแล้ว แต่มีข้อความชิ้นส่วนมากกว่าหนึ่งรายการในกลุ่มชิ้นส่วน ระบุค่าสำหรับองค์ประกอบการบีบ"
+"อัด"
 
 #. module: account_peppol
 #. odoo-python
@@ -317,8 +330,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
-"มีการรับข้อมูลแบบแยกส่วน (fragment) "
-"แต่มีมากกว่าหนึ่งข้อความในกลุ่มเดียวกันที่ระบุค่าขององค์ประกอบนี้ ซึ่งไม่ถูกต้อง"
+"มีการรับข้อมูลแบบแยกส่วน (fragment) แต่มีมากกว่าหนึ่งข้อความในกลุ่มเดียวกันที่ระบุค่าขององค์ประกอ"
+"บนี้ ซึ่งไม่ถูกต้อง"
 
 #. module: account_peppol
 #. odoo-python
@@ -342,8 +355,8 @@ msgid ""
 "A participant with these details has already been registered on the network. "
 "If you have previously registered to a Peppol service, please deregister."
 msgstr ""
-"ผู้เข้าร่วมที่มีรายละเอียดเหล่านี้ได้ลงทะเบียนบนเครือข่ายแล้ว หากคุณเคยลงทะเบียนบริการ Peppol "
-"ไว้แล้ว โปรดยกเลิกการลงทะเบียน"
+"ผู้เข้าร่วมที่มีรายละเอียดเหล่านี้ได้ลงทะเบียนบนเครือข่ายแล้ว หากคุณเคยลงทะเบียนบริการ Peppol ไว้"
+"แล้ว โปรดยกเลิกการลงทะเบียน"
 
 #. module: account_peppol
 #. odoo-python
@@ -412,11 +425,6 @@ msgid "Activate"
 msgstr "เปิดใช้งาน"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "เปิดใช้งานระบบออกใบแจ้งหนี้ทางอิเล็กทรอนิกส์"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -424,6 +432,7 @@ msgstr "เปิดใช้งานระบบออกใบแจ้งห
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "เปิดใช้งาน Peppol"
 
@@ -475,9 +484,8 @@ msgid ""
 "attribute contains a value that could not be recognized and therefore could "
 "not be used by the MSH."
 msgstr ""
-"แม้ว่าเอกสารข้อความจะถูกจัดรูปแบบอย่างถูกต้องและเป็นไปตามสคีมา "
-"แต่บางองค์ประกอบหรือแอตทริบิวต์มีค่าที่ไม่สามารถระบุได้ และด้วยเหตุนี้จึงไม่สามารถใช้งานโดย MSH "
-"(Message Service Handler)"
+"แม้ว่าเอกสารข้อความจะถูกจัดรูปแบบอย่างถูกต้องและเป็นไปตามสคีมา แต่บางองค์ประกอบหรือแอตทริบิวต์"
+"มีค่าที่ไม่สามารถระบุได้ และด้วยเหตุนี้จึงไม่สามารถใช้งานโดย MSH (Message Service Handler)"
 
 #. module: account_peppol
 #. odoo-python
@@ -487,9 +495,9 @@ msgid ""
 "attribute value cannot be processed as expected because the related feature "
 "is not supported by the MSH."
 msgstr ""
-"แม้ว่าเอกสารข้อความจะถูกต้องตามรูปแบบและสอดคล้องกับแบบแผนมาแล้ว "
-"แต่ค่าของบางองค์ประกอบหรือแอตทริบิวต์ไม่สามารถประมวลผลได้ตามที่คาดไว้ "
-"เนื่องจากฟีเจอร์ที่เกี่ยวข้องนั้นไม่ได้รับการรองรับโดย MSH (Message Service Handler)"
+"แม้ว่าเอกสารข้อความจะถูกต้องตามรูปแบบและสอดคล้องกับแบบแผนมาแล้ว แต่ค่าของบางองค์ประกอบหรือ"
+"แอตทริบิวต์ไม่สามารถประมวลผลได้ตามที่คาดไว้ เนื่องจากฟีเจอร์ที่เกี่ยวข้องนั้นไม่ได้รับการรองรับโดย "
+"MSH (Message Service Handler)"
 
 #. module: account_peppol
 #. odoo-python
@@ -500,9 +508,9 @@ msgid ""
 "attribute, or with the processing mode of the MSH, or with the normative "
 "requirements of the ebMS specification."
 msgstr ""
-"แม้ว่าเอกสารข้อความจะมีรูปแบบที่ดีและโครงร่างถูกต้อง แต่ค่าองค์ประกอบ/"
-"แอตทริบิวต์บางอย่างไม่สอดคล้องกับเนื้อหาขององค์ประกอบ/แอตทริบิวต์อื่น "
-"หรือกับโหมดการประมวลผลของ MSH หรือกับข้อกำหนดเชิงบรรทัดฐานของข้อกำหนด ebMS"
+"แม้ว่าเอกสารข้อความจะมีรูปแบบที่ดีและโครงร่างถูกต้อง แต่ค่าองค์ประกอบ/แอตทริบิวต์บางอย่างไม่สอดค"
+"ล้องกับเนื้อหาขององค์ประกอบ/แอตทริบิวต์อื่น หรือกับโหมดการประมวลผลของ MSH หรือกับข้อกำหนดเชิง"
+"บรรทัดฐานของข้อกำหนด ebMS"
 
 #. module: account_peppol
 #. odoo-python
@@ -523,9 +531,8 @@ msgid ""
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
-"แม้ว่าข้อความจะถูกส่งภายใต้ข้อกำหนดการส่งมอบที่รับประกัน "
-"แต่โมดูลความน่าเชื่อถือไม่สามารถรับประกันได้ว่าข้อความจะถูกส่งอย่างถูกต้อง "
-"แม้ว่าจะพยายามส่งซ้ำอีกครั้งก็ตาม"
+"แม้ว่าข้อความจะถูกส่งภายใต้ข้อกำหนดการส่งมอบที่รับประกัน แต่โมดูลความน่าเชื่อถือไม่สามารถรับประกัน"
+"ได้ว่าข้อความจะถูกส่งอย่างถูกต้อง แม้ว่าจะพยายามส่งซ้ำอีกครั้งก็ตาม"
 
 #. module: account_peppol
 #. odoo-python
@@ -551,8 +558,8 @@ msgid ""
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
 msgstr ""
-"มีการจับคู่รายการหนึ่งในฟังก์ชันการกำหนดเส้นทาง ซึ่งกำหนดให้ข้อความถูกส่งต่อไปยัง MPC "
-"สำหรับการดึงข้อมูล แต่ MSH ตัวกลางไม่สามารถจัดเก็บข้อความนี้ไว้กับ MPC ที่กำหนดได้"
+"มีการจับคู่รายการหนึ่งในฟังก์ชันการกำหนดเส้นทาง ซึ่งกำหนดให้ข้อความถูกส่งต่อไปยัง MPC สำหรับการดึ"
+"งข้อมูล แต่ MSH ตัวกลางไม่สามารถจัดเก็บข้อความนี้ไว้กับ MPC ที่กำหนดได้"
 
 #. module: account_peppol
 #. odoo-python
@@ -583,10 +590,9 @@ msgid ""
 "was prepared to wait for the message to be pulled, and that limit has been "
 "reached."
 msgstr ""
-"ตัวกลาง MSH ได้กำหนดให้ข้อความนี้ไปยัง MPC สำหรับการเรียกใช้ (pull) "
-"และได้จัดเก็บข้อความนั้นเรียบร้อยแล้ว อย่างไรก็ตาม "
-"ตัวกลางได้ตั้งค่าระยะเวลาสูงสุดที่พร้อมจะรอให้มีการเรียกใช้ข้อความดังกล่าว "
-"และขณะนี้ระยะเวลาดังกล่าวได้สิ้นสุดลงแล้ว"
+"ตัวกลาง MSH ได้กำหนดให้ข้อความนี้ไปยัง MPC สำหรับการเรียกใช้ (pull) และได้จัดเก็บข้อความนั้นเ"
+"รียบร้อยแล้ว อย่างไรก็ตาม ตัวกลางได้ตั้งค่าระยะเวลาสูงสุดที่พร้อมจะรอให้มีการเรียกใช้ข้อความดังกล่า"
+"ว และขณะนี้ระยะเวลาดังกล่าวได้สิ้นสุดลงแล้ว"
 
 #. module: account_peppol
 #. odoo-python
@@ -600,6 +606,12 @@ msgstr ""
 msgid ""
 "Any self-billed invoices / credit notes received via Peppol will be created "
 "in draft in this journal. Defaults to the first sale journal."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
 msgstr ""
 
 #. module: account_peppol
@@ -627,6 +639,11 @@ msgid "Available Peppol Sending Methods"
 msgstr "วิธีการส่ง Peppol ที่มีจำหน่าย"
 
 #. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "By clicking the button below:"
 msgstr ""
@@ -652,6 +669,8 @@ msgid "Can send, pending registration to receive"
 msgstr "สามารถส่งได้รอการลงทะเบียนเพื่อรับ"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Cancel"
 msgstr "ยกเลิก"
@@ -837,7 +856,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
@@ -864,6 +883,12 @@ msgid "Display Use Parent Connection Selection"
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Do you want to proceed?"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
 msgid "Document Identifier"
 msgstr "ตัวระบุเอกสาร"
@@ -872,6 +897,36 @@ msgstr "ตัวระบุเอกสาร"
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_name
 msgid "Document Name"
 msgstr "ชื่อเอกสาร"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document cancelled successfully"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document reset to draft successfully"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to cancel this document instead?"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to reset this document to draft instead?"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -902,8 +957,8 @@ msgstr "ผู้ใช้ EDI"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "EDI user should be of type Peppol"
-msgstr "ผู้ใช้ EDI ควรเป็นประเภท Peppol"
+msgid "EDI user should be of one of the following types: %s"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -954,6 +1009,13 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Free on Odoo"
@@ -984,7 +1046,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
@@ -1034,7 +1096,7 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
 
 #. module: account_peppol
@@ -1046,11 +1108,6 @@ msgstr "การส่งใบแจ้งหนี้"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__is_branch_company
 msgid "Is Branch Company"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
 msgstr ""
 
 #. module: account_peppol
@@ -1131,6 +1188,12 @@ msgid "No valid AS4 participant endpoint were found."
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "No, Keep It"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
@@ -1180,7 +1243,8 @@ msgstr "PEPPOL"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid ""
 "PEPPOL allows for complete automation of sending and receiving e-invoices."
-msgstr "PEPPOL ช่วยให้การส่งและรับใบแจ้งหนี้อิเล็กทรอนิกส์เป็นระบบอัตโนมัติสมบูรณ์แบบ"
+msgstr ""
+"PEPPOL ช่วยให้การส่งและรับใบแจ้งหนี้อิเล็กทรอนิกส์เป็นระบบอัตโนมัติสมบูรณ์แบบ"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1290,6 +1354,18 @@ msgid "Peppol Contact Email"
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Peppol Documents Cannot Be Deleted"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Peppol Documents: Cannot Delete Invoice"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
@@ -1324,6 +1400,12 @@ msgid "Peppol ID should be different from main company."
 msgstr ""
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
+msgid "Peppol Is Sent"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
 msgid "Peppol Metadata"
 msgstr ""
@@ -1348,6 +1430,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_purchase_journal_id
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "Peppol Purchase Journal"
+msgstr ""
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
+msgid "Peppol Purchase Journal Required"
 msgstr ""
 
 #. module: account_peppol
@@ -1549,6 +1636,12 @@ msgid "Remove from Peppol"
 msgstr "ลบออกจาก Peppol"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Reset to draft"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Save"
 msgstr "บันทึก"
@@ -1635,8 +1728,8 @@ msgid ""
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
-"ฟังก์ชันด้านความน่าเชื่อถือบางอย่างที่ถูกพัฒนาโดยโมดูล Reliability ยังไม่สามารถใช้งานได้ "
-"หรือสถานะความน่าเชื่อถือที่เชื่อมโยงกับชุดข้อความนี้ไม่ถูกต้อง"
+"ฟังก์ชันด้านความน่าเชื่อถือบางอย่างที่ถูกพัฒนาโดยโมดูล Reliability ยังไม่สามารถใช้งานได้ หรือสถา"
+"นะความน่าเชื่อถือที่เชื่อมโยงกับชุดข้อความนี้ไม่ถูกต้อง"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1808,8 +1901,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
-"ส่วนหัว ebMS ไม่ได้จัดรูปแบบอย่างถูกต้องในฐานะเอกสาร XML "
-"หรือไม่เป็นไปตามกฎการจัดแพ็กเกจของ ebMS"
+"ส่วนหัว ebMS ไม่ได้จัดรูปแบบอย่างถูกต้องในฐานะเอกสาร XML หรือไม่เป็นไปตามกฎการจัดแพ็กเกจขอ"
+"ง ebMS"
 
 #. module: account_peppol
 #. odoo-python
@@ -1819,8 +1912,8 @@ msgid ""
 "the MSH is not compatible with the expected content, based on the associated "
 "P-Mode."
 msgstr ""
-"ส่วนหัว ebMS หรือส่วนหัวอื่น (เช่น ความน่าเชื่อถือ ความปลอดภัย) ที่ MSH "
-"คาดหวังไว้ไม่เข้ากันกับเนื้อหาที่คาดหวังไว้ โดยอิงจาก P-Mode ที่เกี่ยวข้อง"
+"ส่วนหัว ebMS หรือส่วนหัวอื่น (เช่น ความน่าเชื่อถือ ความปลอดภัย) ที่ MSH คาดหวังไว้ไม่เข้ากันกับเนื้อ"
+"หาที่คาดหวังไว้ โดยอิงจาก P-Mode ที่เกี่ยวข้อง"
 
 #. module: account_peppol
 #. odoo-python
@@ -1829,8 +1922,8 @@ msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
-"ข้อมูลที่ถูกเข้ารหัสซึ่งอ้างอิงถึงส่วนหัว Security ที่ตั้งใจไว้สำหรับ \"ebms\" SOAP actor "
-"ไม่สามารถถอดรหัสได้โดยโมดูลรักษาความปลอดภัย"
+"ข้อมูลที่ถูกเข้ารหัสซึ่งอ้างอิงถึงส่วนหัว Security ที่ตั้งใจไว้สำหรับ \"ebms\" SOAP actor ไม่สามาร"
+"ถถอดรหัสได้โดยโมดูลรักษาความปลอดภัย"
 
 #. module: account_peppol
 #. odoo-python
@@ -1838,7 +1931,26 @@ msgstr ""
 msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
-msgstr "หมายเลขปลายทางอาจไม่ถูกต้อง โปรดตรวจสอบว่าคุณป้อนหมายเลขประจำตัวที่ถูกต้องหรือไม่"
+msgstr ""
+"หมายเลขปลายทางอาจไม่ถูกต้อง โปรดตรวจสอบว่าคุณป้อนหมายเลขประจำตัวที่ถูกต้องหรือไม่"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s Peppol document(s) will be reset to draft:\n"
+"\n"
+"• %s"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s draft Peppol document(s) will be cancelled:\n"
+"\n"
+"• %s"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1848,8 +1960,8 @@ msgid ""
 "configured here. If you wish to configure them differently, please contact "
 "support."
 msgstr ""
-"บริการต่อไปนี้แสดงอยู่ในรายชื่อผู้เข้าร่วมของคุณ แต่ไม่สามารถกำหนดค่าได้ที่นี่ "
-"หากคุณต้องการกำหนดค่าให้แตกต่างออกไป โปรดติดต่อฝ่ายช่วยเหลือ"
+"บริการต่อไปนี้แสดงอยู่ในรายชื่อผู้เข้าร่วมของคุณ แต่ไม่สามารถกำหนดค่าได้ที่นี่ หากคุณต้องการกำหนดค่าใ"
+"ห้แตกต่างออกไป โปรดติดต่อฝ่ายช่วยเหลือ"
 
 #. module: account_peppol
 #. odoo-python
@@ -1890,6 +2002,12 @@ msgid ""
 "The processor determined that the message's security methods, parameters, "
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "The remaining %s document(s) will be deleted."
 msgstr ""
 
 #. module: account_peppol
@@ -2010,8 +2128,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
-"ผู้ใช้นี้ไม่ใช่ผู้ใช้ Peppol โดย proxy_type ที่เกี่ยวข้องต้องเป็น \"peppol\" "
-"ซึ่งเป็นข้อกำหนดสำหรับการสร้างผู้เข้าร่วม Peppol"
+"ผู้ใช้นี้ไม่ใช่ผู้ใช้ Peppol โดย proxy_type ที่เกี่ยวข้องต้องเป็น \"peppol\" ซึ่งเป็นข้อกำหนดสำหรับ"
+"การสร้างผู้เข้าร่วม Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2023,17 +2141,25 @@ msgstr ""
 msgid ""
 "To generate complete electronic invoices, also set a country for this "
 "partner."
-msgstr "หากต้องการสร้างใบแจ้งหนี้อิเล็กทรอนิกส์ที่สมบูรณ์ ให้ตั้งค่าประเทศสำหรับพาร์ทเนอร์รายนี้ด้วย"
+msgstr ""
+"หากต้องการสร้างใบแจ้งหนี้อิเล็กทรอนิกส์ที่สมบูรณ์ ให้ตั้งค่าประเทศสำหรับพาร์ทเนอร์รายนี้ด้วย"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "To use the Approved Platform for French E-Invoicing install the module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
 msgstr ""
-
-#. module: account_peppol
-#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
-msgid "UBL 2.0"
-msgstr "UBL 2.0"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
@@ -2085,6 +2211,12 @@ msgid "Use Parent Connection Selection"
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "ยืนยัน"
@@ -2127,6 +2259,12 @@ msgstr "Peppol คืออะไร และทำไมถึงดี?"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use French E-Invoicing ?"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use PEPPOL ?"
 msgstr "ทำไมฉันจึงต้องใช้ PEPPOL?"
 
@@ -2142,18 +2280,24 @@ msgid "Wizard"
 msgstr "ตัวช่วย"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Yes, Cancel It"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Yes, Proceed"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
 "You are about to register with your VAT number. Make sure you register with "
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "You are not allowed to send invoice on behalf of %s."
 msgstr ""
 
 #. module: account_peppol
@@ -2198,6 +2342,16 @@ msgstr "คุณสามารถส่งใบแจ้งหนี้นี
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/account_journal.py:0
+msgid ""
+"You can't change the type of a journal used for Peppol invoice reception toa "
+"type different than 'Purchase'.\n"
+"Please change the journal used for Peppol reception before changing the type "
+"of this journal."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
 msgstr ""
@@ -2209,8 +2363,8 @@ msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
 msgstr ""
-"คุณส่งเอกสารครบจำนวนสูงสุดที่กำหนดในวันนี้แล้ว ลองใหม่อีกครั้งในภายหลัง "
-"โปรดติดต่อฝ่ายสนับสนุนหากคุณคิดว่าจำเป็นต้องเพิ่มจำนวนเอกสาร"
+"คุณส่งเอกสารครบจำนวนสูงสุดที่กำหนดในวันนี้แล้ว ลองใหม่อีกครั้งในภายหลัง โปรดติดต่อฝ่ายสนับสนุนหาก"
+"คุณคิดว่าจำเป็นต้องเพิ่มจำนวนเอกสาร"
 
 #. module: account_peppol
 #. odoo-python
@@ -2227,7 +2381,8 @@ msgid ""
 "assistance."
 msgstr ""
 "การลงทะเบียนของคุณถูกปฏิเสธ เหตุผลได้ถูกส่งถึงคุณทางอีเมลแล้ว\n"
-"                            โปรดติดต่อฝ่ายสนับสนุนของเราหากคุณต้องการความช่วยเหลือเพิ่มเติม"
+"                            โปรดติดต่อฝ่ายสนับสนุนของเราหากคุณต้องการความช่วยเหลือเพิ่มเ"
+"ติม"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2261,8 +2416,8 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
-"บริษัทของคุณได้ลงทะเบียนบน Access Point (%s) สำหรับรับใบแจ้งหนี้เรียบร้อยแล้ว "
-"เราจะลงทะเบียนคุณบน Odoo ในฐานะผู้ส่งเท่านั้น"
+"บริษัทของคุณได้ลงทะเบียนบน Access Point (%s) สำหรับรับใบแจ้งหนี้เรียบร้อยแล้ว เราจะลงทะเบีย"
+"นคุณบน Odoo ในฐานะผู้ส่งเท่านั้น"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2271,6 +2426,14 @@ msgid ""
 "database duplication or restoration.\n"
 "                                        Make sure to reconnect the correct "
 "database."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
 msgstr ""
 
 #. module: account_peppol
@@ -2312,8 +2475,8 @@ msgid ""
 "Your registration on Peppol network should be activated within a day. The "
 "updated status will be visible in Settings."
 msgstr ""
-"การลงทะเบียนของคุณบนเครือข่าย Peppol ควรเปิดใช้งานภายในหนึ่งวัน "
-"สถานะที่อัปเดตจะปรากฏในการตั้งค่า"
+"การลงทะเบียนของคุณบนเครือข่าย Peppol ควรเปิดใช้งานภายในหนึ่งวัน สถานะที่อัปเดตจะปรากฏในกา"
+"รตั้งค่า"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2378,6 +2541,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr ""
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "เปิดใช้งานระบบออกใบแจ้งหนี้ทางอิเล็กทรอนิกส์"
+
+#~ msgid "EDI user should be of type Peppol"
+#~ msgstr "ผู้ใช้ EDI ควรเป็นประเภท Peppol"
+
+#~ msgid "UBL 2.0"
+#~ msgstr "UBL 2.0"
 
 #~ msgid "Peppol error: %s"
 #~ msgstr "PEPPOL เกิดข้อผิดพลาด: %s"

@@ -1,6 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
+// TODO: Remove me in master (dead code)
 export class PortalDetails extends Interaction {
     static selector = ".o_portal_details";
     dynamicContent = {

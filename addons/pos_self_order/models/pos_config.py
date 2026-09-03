@@ -11,6 +11,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
+from odoo.service.common import exp_version
 
 
 class PosConfig(models.Model):
@@ -190,8 +191,10 @@ class PosConfig(models.Model):
         return res
 
     def _ensure_public_attachments(self):
-        self.self_ordering_image_background_ids.write({"public": True})
-        self.self_ordering_image_home_ids.write({"public": True})
+        attachments = self.self_ordering_image_background_ids | self.self_ordering_image_home_ids
+        attachments = attachments.filtered(lambda a: not a.public)
+        if attachments:
+            attachments.sudo().write({"public": True})
 
     @api.depends("module_pos_restaurant")
     def _compute_self_order(self):
@@ -302,8 +305,8 @@ class PosConfig(models.Model):
 
     def _load_self_data_models(self):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
-            'res.currency', 'pos.printer', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
-            'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
+            'pos.printer', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
+            'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'res.currency', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
             'res.country', 'res.country.state', 'mail.template']
@@ -318,6 +321,7 @@ class PosConfig(models.Model):
         if not read_records:
             return read_records
         record = read_records[0]
+        record['_server_version'] = exp_version()
         record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.ids
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_pos_special_products_ids'] = config._get_special_products().ids
@@ -326,6 +330,7 @@ class PosConfig(models.Model):
             'primaryTextColor': self.env.company.email_primary_color,
         }
         record['_self_order_pos'] = True
+        record['_base_url'] = config.get_base_url()
         return read_records
 
     def load_self_data(self):
@@ -413,7 +418,7 @@ class PosConfig(models.Model):
         return self.self_ordering_url
 
     def _supported_kiosk_payment_terminal(self):
-        return ['adyen', 'razorpay', 'stripe', 'pine_labs']
+        return ['adyen', 'razorpay', 'stripe', 'pine_labs', 'viva_com']
 
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """

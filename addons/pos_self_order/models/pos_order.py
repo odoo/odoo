@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import math
 
 from odoo import Command, models, fields, api, _
 from odoo.exceptions import UserError
@@ -45,7 +46,7 @@ class PosOrder(models.Model):
     ])
 
     def write(self, vals):
-        if 'table_id' in vals and self.self_ordering_table_id:
+        if 'table_id' in vals and vals['table_id'] and self.self_ordering_table_id:
             # Clear stale self-order table link when the order is transferred to a new table.
             vals['self_ordering_table_id'] = vals['table_id']
         return super().write(vals)
@@ -81,18 +82,11 @@ class PosOrder(models.Model):
             config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
             config._notify('ORDER_STATE_CHANGED', {})
 
+    # TODO: remove in master
     def _send_self_order_receipt(self):
+        """Hook for receipt processing extensions such as the blackbox module."""
         self.ensure_one()
-        if (
-            self.state not in ('paid', 'done')
-            or not self.email
-            or not self.preset_id.mail_template_id
-        ):
-            return
-        try:
-            self.action_send_self_order_receipt(self.email, self.preset_id.mail_template_id.id, False, False)
-        except UserError as e:
-            _logger.warning("Error while sending email: %s", e.args[0])
+        return
 
     def action_send_self_order_receipt(self, email, mail_template_id, ticket_image, basic_image):
         self.ensure_one()
@@ -101,7 +95,7 @@ class PosOrder(models.Model):
         if not mail_template:
             raise UserError(_("The mail template with xmlid %s has been deleted.", mail_template_id))
         email_values = {'email_to': email}
-        if self.state == 'paid' and ticket_image:
+        if self.state in ('paid', 'done') and ticket_image:
             email_values['attachment_ids'] = self._get_mail_attachments(self.name, ticket_image, basic_image)
         mail_template.send_mail(self.id, force_send=True, email_values=email_values)
 
@@ -141,15 +135,39 @@ class PosOrder(models.Model):
             command = Command.CREATE if line[0] == Command.CREATE else Command.UPDATE
             id_to_use = line[1] if line[0] == Command.UPDATE else 0
 
+            # An update must target a line of the order being synced. Without this an arbitrary
+            # line id would be written, and reparented to this order through the order_id below.
+            if command == Command.UPDATE and id_to_use not in existing_lines.ids:
+                return []
+
+            # A public payload must carry finite, strictly positive quantities. A negative or
+            # non-finite quantity is a way to zero a combo total (see _compute_combo_price):
+            # returns, if ever needed, require a separate authorized refund flow.
+            qty = line_data.get('qty')
+            if command == Command.CREATE or qty is not None:
+                if isinstance(qty, bool) or not isinstance(qty, (int, float)) or not math.isfinite(qty) or qty <= 0:
+                    raise UserError(_("Invalid quantity"))
+
+            # Attribute extras are priced server-side (their price_extra is summed into the line
+            # price, see _compute_combo_price). The payload must therefore not attach an attribute
+            # that does not belong to the ordered product's template, otherwise an unrelated
+            # possibly negative, attribute extra could be applied to this line.
+            requested_attr_ids = [id for id in line_data.get('attribute_value_ids', []) if isinstance(id, int)]
+            attribute_values = pos_config.env['product.template.attribute.value'].browse(requested_attr_ids).exists()
+            if set(attribute_values.ids) != set(requested_attr_ids) or any(
+                ptav.product_tmpl_id != product.product_tmpl_id for ptav in attribute_values
+            ):
+                raise UserError(_("Invalid product attribute"))
+
             return [command, id_to_use, {
                 'combo_id': line_data.get('combo_id'),
                 'product_id': line_data.get('product_id'),
                 'tax_ids': tax_ids.ids,
-                'attribute_value_ids': [id for id in line_data.get('attribute_value_ids', []) if isinstance(id, int)],
+                'attribute_value_ids': attribute_values.ids,
                 'price_unit': line_data.get('price_unit'),
-                'qty': line_data.get('qty'),
-                'price_subtotal': line_data.get('price_subtotal'),
-                'price_subtotal_incl': line_data.get('price_subtotal_incl'),
+                'qty': qty,
+                'price_subtotal': 0.0,  # always recomputed server-side by recompute_prices().
+                'price_subtotal_incl': 0.0,  # always recomputed server-side by recompute_prices().
                 'price_extra': line_data.get('price_extra'),
                 'price_type': line_data.get('price_type'),
                 'full_product_name': line_data.get('full_product_name'),
@@ -172,6 +190,12 @@ class PosOrder(models.Model):
 
         if not preset_id and pos_config.use_presets:
             raise UserError(_("Invalid preset"))
+
+        if preset_id and not preset_id.available_in_self and preset_id != pos_config.default_preset_id:
+            raise UserError(_("Preset is not available in self-ordering"))
+
+        if preset_id and not preset_id in pos_config.available_preset_ids:
+            raise UserError(_("Preset is not available in this configuration"))
 
         existing_order = pos_config.env['pos.order']._get_open_order(order)
         if not existing_order.exists():
@@ -196,10 +220,17 @@ class PosOrder(models.Model):
         partner_id = order.get('partner_id')
         partner = pos_config.env['res.partner'].browse(partner_id) if partner_id else None
 
+        if order.get('id') and order.get('uuid') and isinstance(order['id'], int):
+            exists = pos_config.env['pos.order'].search_count([
+                ('id', '=', order['id']),
+                ('uuid', '=', order['uuid']),
+            ])
+            if not exists:
+                raise UserError(_("The order ID isn't linked to the order UUID. This is a sign of a tampered payload."))
+
         return {
             'id': order.get('id'),
             'table_stand_number': order.get('table_stand_number'),
-            'access_token': order.get('access_token'),
             'customer_count': order.get('customer_count'),
             'self_ordering_table_id': table.id if table else False,
             'last_order_preparation_change': order.get('last_order_preparation_change'),
@@ -220,9 +251,8 @@ class PosOrder(models.Model):
             'tracking_number': tracking_number,
             'source': 'kiosk' if device_type == 'kiosk' else 'mobile',
             'email': partner.email if partner else order.get('email'),
-            'mobile': order.get('mobile'),
-            'state': order.get('state'),
-            'account_move': order.get('account_move'),
+            'mobile': partner.phone if partner else order.get('mobile'),
+            'state': 'draft',
             'floating_order_name': floating_order_name,
             'general_customer_note': order.get('general_customer_note'),
             'nb_print': order.get('nb_print'),
@@ -238,14 +268,55 @@ class PosOrder(models.Model):
             'relations_uuid_mapping': order.get('relations_uuid_mapping', {}),
         }
 
+    def _check_combo_lines(self):
+        """
+        Refuse an order whose combo hierarchy has been tampered with.
+
+        A combo child is the only line whose price is derived from another line instead of
+        from its own product (see _compute_combo_price), so a parent or a combo item chosen
+        freely from the public self-order route is a way to get any product for the price of
+        a combo item.
+        """
+        for line in self.lines:
+            parent = line.combo_parent_id
+            combo_item = line.combo_item_id
+            children = line.combo_line_ids
+
+            if not parent and not combo_item and not children:
+                continue
+
+            # Child -> parent edge: a combo child must point up to a valid parent and item of
+            # this order. This rejects a child whose parent belongs to another order, or a child
+            # sold through an unrelated combo item.
+            if parent or combo_item:
+                if (
+                    parent.order_id != self
+                    or parent.product_id.type != 'combo'
+                    or combo_item.combo_id not in parent.product_id.combo_ids
+                    or combo_item.product_id != line.product_id
+                ):
+                    raise UserError(_("Invalid combo line"))
+
+            # Parent -> child edge: every line reachable through a parent's inverse collection
+            # must belong to this order and point back to it. The upward check alone is
+            # one-directional; without this a foreign child injected into combo_line_ids would
+            # never be validated
+            for child in children:
+                if child.order_id != self or child.combo_parent_id != line:
+                    raise UserError(_("Invalid combo line"))
+
     def recompute_prices(self):
         self.ensure_one()
+        self._check_combo_lines()
         company = self.company_id
 
         for line in self.lines:
             if len(line.combo_line_ids):
                 self._compute_combo_price(line)
             elif not line.combo_parent_id:
+                # Lines without a combo parent are priced on their own. A line whose combo
+                # parent doesn't belong to this order is never reached by _compute_combo_price,
+                # so it is priced the same way instead of keeping its frontend price.
                 self._compute_line_price(line)
 
         order_lines = self.lines
@@ -267,8 +338,23 @@ class PosOrder(models.Model):
         price = pricelist._get_product_price(product, 1.0, currency=self.currency_id)
         line.price_unit = price
         line.tax_ids = line.product_id.taxes_id._filter_taxes_by_company(self.company_id)
-        tax_ids_after_fiscal_position = self.fiscal_position_id.map_tax(line.tax_ids)
-        taxes = tax_ids_after_fiscal_position.compute_all(price, self.currency_id, line.qty, product=product, partner=self.partner_id)
+        self._compute_line_subtotals(line)
+
+    def _compute_line_subtotals(self, line):
+        """
+        Recompute the price_subtotal and price_subtotal_incl of a line based on its
+        price_unit, quantity, and taxes.
+        In self order the price_unit is always computed server-side, so this method
+        is called after the price_unit is set.
+        """
+        product = line.product_id.with_context(line.product_id._get_product_price_context(line.attribute_value_ids))
+        taxes = line.tax_ids_after_fiscal_position.compute_all(
+            line.price_unit,
+            self.currency_id,
+            line.qty,
+            product=product,
+            partner=self.partner_id,
+        )
         line.price_subtotal = taxes['total_excluded']
         line.price_subtotal_incl = taxes['total_included']
 
@@ -297,9 +383,10 @@ class PosOrder(models.Model):
             max_free = combo.qty_free
 
             for line in child_lines:
+                qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
                 qty_free = max(0, max_free - free_count)
-                free_qty = min(line.qty, qty_free)
-                extra_qty = line.qty - free_qty
+                free_qty = min(qty_per_line, qty_free)
+                extra_qty = qty_per_line - free_qty
 
                 if free_qty > 0:
                     child_line_free.append(line)
@@ -308,7 +395,13 @@ class PosOrder(models.Model):
                 if extra_qty > 0:
                     child_line_extra.append(line)
 
-        original_total = sum(line.combo_item_id.combo_id.base_price * line.qty for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0)
+        original_total = sum(
+            line.combo_item_id.combo_id.base_price * (
+                line.qty / line.combo_parent_id.qty
+                if line.combo_parent_id.qty
+                else line.qty
+            ) for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0
+        )
         remaining_total = parent_lst_price
 
         for index, child in enumerate(child_line_free):
@@ -316,7 +409,7 @@ class PosOrder(models.Model):
             combo = combo_item.combo_id
             unit_devision_factor = original_total or 1
             price_unit = currency.round(combo.base_price * parent_lst_price / unit_devision_factor)
-            remaining_total -= price_unit * child.qty
+            remaining_total -= price_unit * (child.qty / child.combo_parent_id.qty if child.combo_parent_id.qty else child.qty)
 
             if index == len(child_line_free) - 1:
                 price_unit += remaining_total
@@ -352,3 +445,11 @@ class PosOrder(models.Model):
             price_extra = sum(attr.price_extra for attr in selected_attributes)
             total_price = price_unit + price_extra + child.combo_item_id.extra_price
             child.price_unit = total_price
+
+        # The whole combo price is carried by the child lines, the parent line is always free.
+        parent_line.price_unit = 0.0
+        # Only the unit prices are computed above; the subtotals the order total is derived from
+        # must be recomputed too, on the parent line as well as on every child line.
+        combo_lines = parent_line | parent_line.combo_line_ids
+        for line in combo_lines:
+            self._compute_line_subtotals(line)

@@ -663,6 +663,7 @@ class MailActivity(models.Model):
             Store.One("create_uid", Store.One("partner_id", "name")),
             "date_deadline",
             "date_done",
+            "display_name",
             "icon",
             "note",
             "res_id",

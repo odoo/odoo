@@ -145,6 +145,7 @@ class Float(Field[float]):
         return self._min_display_digits
 
     _related__digits = property(attrgetter('_digits'))
+    _related__min_display_digits = property(attrgetter('_min_display_digits'))
 
     def _description_digits(self, env: Environment) -> tuple[int, int] | None:
         return self.get_digits(env)
@@ -302,7 +303,7 @@ class Monetary(Field[float]):
         env = records.env
         field_cache = self._get_cache(env)
         currency_field = records._fields[self.get_currency_field(records)]
-        return records.browse(
+        ids_to_update = tuple(
             record_id
             for record_id, record_sudo in zip(
                 records._ids, records.sudo().with_context(prefetch_fields=False)
@@ -313,3 +314,4 @@ class Monetary(Field[float]):
                 and currency.with_env(env).round(value) == cache_value
             )
         )
+        return records.__class__(records.env, ids_to_update, records._prefetch_ids)

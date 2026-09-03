@@ -13,14 +13,17 @@
 # Jasmina Macur <jasmina@hbs.si>, 2022
 # Martin Trigaux, 2022
 # Tomaž Jug <tomaz@editor.si>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:28+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-08-08 07:29+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/portal/"
 "sl/>\n"
 "Language: sl\n"
@@ -29,12 +32,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid "\" to validate your action."
-msgstr ""
+msgstr " za potrditev vašega dejanja."
 
 #. module: portal
 #. odoo-javascript
@@ -49,28 +53,38 @@ msgstr "1. Vnesite svoje geslo in potrdite, da ste lastnik tega računa"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid ""
 "2. Confirm you want to delete your account by\n"
 "                                        copying down your login ("
 msgstr ""
+"2. Potrdite, da želite izbrisati svoj račun, tako da\n"
+"                                        prepišete svoje uporabniško ime ("
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> My "
 "Account"
 msgstr ""
+"<i class=\"fa fa-fw fa-id-card-o me-1 small text-primary-emphasis\"/> Moj "
+"račun"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-sign-out me-1 small text-primary-emphasis\"/> Logout"
 msgstr ""
+"<i class=\"fa fa-fw fa-sign-out me-1 small text-primary-emphasis\"/> Odjava"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Apps"
 msgstr ""
+"<i class=\"fa fa-fw fa-th me-1 small text-primary-emphasis\"/> Aplikacije"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.side_content
@@ -79,8 +93,9 @@ msgstr "<i class=\"fa fa-pencil\"/> Uredi podatke"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
+#, fuzzy
 msgid "<i class=\"fw-light fa fa-angle-left me-2\"/>Discard"
-msgstr ""
+msgstr "<i class=\"fw-light fa fa-angle-left me-2\"/>Zavrzi"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -89,22 +104,29 @@ msgstr "<i class=\"oi oi-arrow-right me-1\"/>Nazaj v način urejanja"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
+#, fuzzy
 msgid ""
 "<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Prejšnji\" "
+"title=\"Prejšnji\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
+#, fuzzy
 msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Naslednji\" "
+"title=\"Naslednji\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
+#, fuzzy
 msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"oi oi-plus me-2\"/>Dodaj naslov"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -120,11 +142,13 @@ msgstr "<option value=\"\">Država...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid "<option value=\"\">State / Province...</option>"
-msgstr ""
+msgstr "<option value=\"\">Zvezna država / provinca...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid ""
 "<small class=\"form-text text-muted\">\n"
 "                            Changing VAT number is not allowed once "
@@ -134,18 +158,31 @@ msgid ""
 "                            operation.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            Spreminjanje številke DDV ni dovoljeno, ko so "
+"bili za vaš račun\n"
+"                            izdani dokumenti. Za to dejanje nas prosimo "
+"neposredno\n"
+"                            kontaktirajte.\n"
+"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid ""
 "<small class=\"form-text text-muted\">\n"
 "                            The VAT number can only be updated on the "
 "company account.\n"
 "                        </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                            Davčno številko je mogoče posodobiti samo na "
+"računu podjetja.\n"
+"                        </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid ""
 "<small class=\"form-text text-muted\">\n"
 "                    Changing country is not allowed once document(s) have\n"
@@ -154,20 +191,32 @@ msgid ""
 "                    operation.\n"
 "                </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                    Spreminjanje države ni dovoljeno, ko so bili za vaš "
+"račun\n"
+"                    izdani dokumenti. Za ta postopek se obrnite neposredno "
+"na nas.\n"
+"                </small>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
+#, fuzzy
 msgid ""
 "<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-left\" role=\"img\" aria-label=\"Prejšnji\" "
+"title=\"Prejšnji\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
+#, fuzzy
 msgid ""
 "<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Next\" "
 "title=\"Next\"/>"
 msgstr ""
+"<span class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Naslednji\" "
+"title=\"Naslednji\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
@@ -230,8 +279,9 @@ msgstr "Dodaj opombo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
+#, fuzzy
 msgid "Add an address"
-msgstr ""
+msgstr "Dodaj naslov"
 
 #. module: portal
 #. odoo-javascript
@@ -251,8 +301,9 @@ msgstr "Dodajte dodatno vsebino za prikaz v e-pošti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
+#, fuzzy
 msgid "Add, remove or modify your addresses"
-msgstr ""
+msgstr "Dodajte, odstranite ali spremenite svoje naslove"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -261,8 +312,9 @@ msgstr "Dodano"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
+#, fuzzy
 msgid "Address Management"
-msgstr ""
+msgstr "Upravljanje naslovov"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -272,18 +324,21 @@ msgstr "Naslovi"
 
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
+#, fuzzy
 msgid "Already Registered"
-msgstr ""
+msgstr "Že registriran"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid "Apartment, suite, etc."
-msgstr ""
+msgstr "Stanovanje, apartma itd."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid "Are you sure you want to do this?"
-msgstr ""
+msgstr "Ste prepričani, da želite to storiti?"
 
 #. module: portal
 #. odoo-javascript
@@ -326,16 +381,20 @@ msgstr ""
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid ""
 "Changing your country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Sprememba države ni dovoljena, ko so dokumenti izdani za tvoj konto. Za to "
+"operacijo se obrni neposredno na nas."
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_security.js:0
+#, fuzzy
 msgid "Check failed"
-msgstr ""
+msgstr "Preverjanje ni uspelo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -370,7 +429,7 @@ msgstr "Uredi nastavitve"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Configure your connection parameters"
-msgstr ""
+msgstr "Spremenite nastavitve računa"
 
 #. module: portal
 #. odoo-javascript
@@ -388,7 +447,7 @@ msgstr "Potrdite geslo"
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Connection &amp; Security"
-msgstr ""
+msgstr "Povezava &amp; Varnost"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -412,8 +471,9 @@ msgstr "Stiki"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
+#, fuzzy
 msgid "Could not save file %s"
-msgstr ""
+msgstr "Datoteke ni bilo mogoče shraniti %s"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -441,8 +501,9 @@ msgstr "Ustvarjeno"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
+#, fuzzy
 msgid "Customer API Keys"
-msgstr ""
+msgstr "API-ključi strank"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -451,8 +512,9 @@ msgstr "URL portala za stranke"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
+#, fuzzy
 msgid "Customers can generate API Keys"
-msgstr ""
+msgstr "Stranke lahko ustvarijo ključe API"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -478,8 +540,9 @@ msgstr "Naslov za dostavo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_management
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
+#, fuzzy
 msgid "Delivery address"
-msgstr ""
+msgstr "Naslov za dostavo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -493,11 +556,13 @@ msgstr "Podrobnosti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid "Developer API Keys"
-msgstr ""
+msgstr "Ključi API-ja razvijalca"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid ""
 "Disable your account, preventing any further login.<br/>\n"
 "                                        <b>\n"
@@ -506,6 +571,13 @@ msgid ""
 "                                            This action cannot be undone.\n"
 "                                        </b>"
 msgstr ""
+"Onemogočite svoj račun in preprečite vsako nadaljnjo prijavo.<br/>\n"
+"                                        <b>\n"
+"                                            <i class=\"fa fa-exclamation-"
+"triangle text-danger\"/>\n"
+"                                            Tega dejanja ni mogoče "
+"razveljaviti.\n"
+"                                        </b>"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_ir_http__display_name
@@ -548,8 +620,9 @@ msgstr "E-pošta"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, fuzzy
 msgid "Email Address already taken by another user"
-msgstr ""
+msgstr "E-poštni naslov že uporablja drug uporabnik"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -582,12 +655,12 @@ msgstr "Določite trajanje veljavnosti ključa"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Go Back"
-msgstr ""
+msgstr "Pojdi nazaj"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr ""
+msgstr "Dovoli Dostop"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -598,7 +671,7 @@ msgstr "Dovolite dostop do portala"
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.actions.server,name:portal.partner_wizard_action_create_and_open
 msgid "Grant portal access"
-msgstr ""
+msgstr "Dovolite dostop do portala"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -608,10 +681,13 @@ msgstr "HTTP usmerjanje"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
+#, fuzzy
 msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                Your login is still necessary for interactive usage."
 msgstr ""
+"Tukaj je vaš novi API ključ, uporabite ga namesto gesla za dostop RPC.\n"
+"                Za interaktivno uporabo je še vedno potrebna vaša prijava."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -637,16 +713,21 @@ msgstr "ID"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid ""
 "If you are ordering for an external person, please place your order via the "
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
+"Če naročate za zunanjo osebo, oddajte naročilo prek zaledja. Če želite "
+"spremeniti svoje ime ali e-poštni naslov, to storite v nastavitvah računa "
+"ali se obrnite na skrbnika."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid "If you want to modify it, update"
-msgstr ""
+msgstr "Če ga želite spremeniti, posodobite"
 
 #. module: portal
 #. odoo-javascript
@@ -666,8 +747,9 @@ msgstr "Neveljavno"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, fuzzy
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "Napačen naslov elektronske pošte"
 
 #. module: portal
 #. odoo-python
@@ -689,26 +771,32 @@ msgstr "Sporočilo povabila"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_share.py:0
+#, fuzzy
 msgid "Invitation to access %s"
-msgstr ""
+msgstr "Povabilo za dostop do %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_internal
+#, fuzzy
 msgid "Is Internal"
-msgstr ""
+msgstr "Je interno"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__is_portal
+#, fuzzy
 msgid "Is Portal"
-msgstr ""
+msgstr "Je portal"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
+#, fuzzy
 msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
 msgstr ""
+"Zelo pomembno je, da je ta opis jasen\n"
+"                in popoln,"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -747,8 +835,9 @@ msgstr "Odjava iz vseh naprav"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
+#, fuzzy
 msgid "Main Address"
-msgstr ""
+msgstr "Glavni naslov"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -758,16 +847,20 @@ msgstr "Sporočilo"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/models/mail_thread.py:0
+#, fuzzy
 msgid ""
 "Model %(model_name)s does not support token signature, as it does not have %"
 "(field_name)s field."
 msgstr ""
+"Model %(model_name)s ne podpira podpisa žetona, ker nima polja %(field_name)"
+"s."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid "Multi company reports are not supported."
-msgstr ""
+msgstr "Poročila za več podjetij niso podprta."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -776,8 +869,9 @@ msgstr "Moj račun"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
+#, fuzzy
 msgid "My addresses"
-msgstr ""
+msgstr "Moji naslovi"
 
 #. module: portal
 #. odoo-javascript
@@ -795,7 +889,7 @@ msgstr "Nov ključ API-ja"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr ""
+msgstr "Novo Geslo:"
 
 #. module: portal
 #. odoo-javascript
@@ -816,8 +910,9 @@ msgstr "Odoo logotip"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/models/res_users_apikeys_description.py:0
+#, fuzzy
 msgid "Only internal and portal users can create API keys"
-msgstr ""
+msgstr "Ključe API lahko ustvarijo samo interni in portalni uporabniki"
 
 #. module: portal
 #. odoo-javascript
@@ -837,13 +932,14 @@ msgstr "Geslo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid "Password Updated!"
-msgstr ""
+msgstr "Geslo posodobljeno!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Geslo:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
@@ -870,8 +966,9 @@ msgstr "URL dostop do portala"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
+#, fuzzy
 msgid "Portal Mixin"
-msgstr ""
+msgstr "Portalni miksin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
@@ -896,9 +993,12 @@ msgstr "Nazaj"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid ""
 "Put my email and phone in a block list to make sure I'm never contacted again"
 msgstr ""
+"Dodaj moj e-poštni naslov in telefonsko številko na seznam blokiranih, da me "
+"ne bo nihče več kontaktiral"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
@@ -908,7 +1008,7 @@ msgstr "QWeb"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Ponovno Povabi"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -932,18 +1032,19 @@ msgstr "Povezan dokumentni model"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_card
+#, fuzzy
 msgid "Remove this address"
-msgstr ""
+msgstr "Odstrani ta naslov"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Prekini Dostop"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Revoke All Sessions"
-msgstr ""
+msgstr "Prekliči vse seje"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_addresses
@@ -952,8 +1053,9 @@ msgstr "Enako kot naslov za dostavo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_footer
+#, fuzzy
 msgid "Save Address"
-msgstr ""
+msgstr "Shrani naslov"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1021,16 +1123,20 @@ msgstr "Prijava"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.frontend_layout
+#, fuzzy
 msgid "Skip to Content"
-msgstr ""
+msgstr "Preskoči na vsebino"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/interactions/portal_composer.js:0
+#, fuzzy
 msgid ""
 "Some fields are required. Please make sure to write a message or attach a "
 "document"
 msgstr ""
+"Nekatera polja so obvezna. Poskrbite, da napišete sporočilo ali priložite "
+"dokument."
 
 #. module: portal
 #. odoo-python
@@ -1050,8 +1156,9 @@ msgstr "Status"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid "Street and Number"
-msgstr ""
+msgstr "Ulica in hišna številka"
 
 #. module: portal
 #. odoo-javascript
@@ -1062,27 +1169,31 @@ msgstr "Hvala Vam!"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid "The %(field_name)s is managed on your company account."
-msgstr ""
+msgstr "Polje %(field_name)s se upravlja v računu vašega podjetja."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid "The %(field_name)s is managed on your main account address."
-msgstr ""
+msgstr "Polje %(field_name)s se upravlja na vašem glavnem naslovu računa."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
+msgstr "Priloge %s ni mogoče odstraniti, ker je povezana s sporočilom."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
+msgstr "Priloge %s ni mogoče odstraniti, ker ni v stanju čakanja."
 
 #. module: portal
 #. odoo-python
@@ -1093,9 +1204,12 @@ msgstr "Priponka ne obstaja ali pa nimate pravic za dostop do nje."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid ""
 "The company name and VAT number can only be updated on your main account."
 msgstr ""
+"Ime podjetja in številko DDV je mogoče posodobiti samo v vašem glavnem "
+"računu."
 
 #. module: portal
 #. odoo-python
@@ -1112,8 +1226,9 @@ msgstr "Stik \"%s\" ima enak e-poštni naslov kot obstoječi uporabnik"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
+#, fuzzy
 msgid "The key cannot be retrieved later and provides"
-msgstr ""
+msgstr "Ključa pozneje ni mogoče pridobiti in zagotavlja"
 
 #. module: portal
 #. odoo-javascript
@@ -1143,16 +1258,20 @@ msgstr "Partner \"%s\"že ima dostop do portala."
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
+#, fuzzy
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "Partner \"%s\" nima dostopa do portala ali pa je interni uporabnik."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
+#, fuzzy
 msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
+"Predloge »Portal: new user« ni mogoče najti za pošiljanje e-pošte uporabniku "
+"portala."
 
 #. module: portal
 #. odoo-python
@@ -1167,15 +1286,18 @@ msgstr "To je predogled portala za stranke."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, fuzzy
 msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Ta partner je povezan z notranjim uporabnikom in že ima dostop do portala."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"To besedilo bo vključeno na koncu e-pošte, poslane novim uporabnikom portala."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1185,8 +1307,9 @@ msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
+#, fuzzy
 msgid "Toggle filters"
-msgstr ""
+msgstr "Preklopi filtre"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__user_id
@@ -1196,8 +1319,9 @@ msgstr "Uporabnik"
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid "User Dashboard"
-msgstr ""
+msgstr "Uporabniška nadzorna plošča"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids
@@ -1217,13 +1341,14 @@ msgstr "Velja"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
+#, fuzzy
 msgid "Valid Email Address"
-msgstr ""
+msgstr "Veljaven e-poštni naslov"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Potrdi Novo Geslo:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1343,8 +1468,9 @@ msgstr "Napačno geslo."
 #. module: portal
 #. odoo-python
 #: code:addons/portal/controllers/portal.py:0
+#, fuzzy
 msgid "You cannot archive your main address"
-msgstr ""
+msgstr "Svojega glavnega naslova ne morete arhivirati"
 
 #. module: portal
 #. odoo-python
@@ -1360,14 +1486,16 @@ msgstr "Morate biti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid "You should enter \""
-msgstr ""
+msgstr "Vnesti morate \""
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
+#, fuzzy
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Najprej morate partnerju \"%s\" omogočiti dostop do portala."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_contact
@@ -1398,10 +1526,13 @@ msgstr "vas je povabil/a k dostopu do sledečega"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
+#, fuzzy
 msgid ""
 "it will be the only way to\n"
 "                identify the key once created"
 msgstr ""
+"to bo edini način za\n"
+"                prepoznavanje ključa, ko bo ustvarjen"
 
 #. module: portal
 #. odoo-javascript
@@ -1411,13 +1542,15 @@ msgstr "prijavljeni"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
+#, fuzzy
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
+#, fuzzy
 msgid "password"
-msgstr ""
+msgstr "Geslo"
 
 #. module: portal
 #. odoo-javascript
@@ -1428,13 +1561,15 @@ msgstr "za komentiranje."
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_security.xml:0
+#, fuzzy
 msgid "to your user account, it is very important to store it securely."
-msgstr ""
+msgstr "v vaš uporabniški račun, zelo pomembno je, da ga varno shranite."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.address_form_fields
+#, fuzzy
 msgid "your account details"
-msgstr ""
+msgstr "podatki vašega računa"
 
 #~ msgid "<i class=\"fa fa-pencil\"/> Edit"
 #~ msgstr "<i class=\"fa fa-pencil\"/> Urejanje"

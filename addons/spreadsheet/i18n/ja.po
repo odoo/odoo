@@ -2,15 +2,16 @@
 # This file contains the translation of the following modules:
 # * spreadsheet
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Ryoko Tsuda <ryoko@quartile.co>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-02-11 17:42+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-08-13 06:09+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "spreadsheet/ja/>\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -257,6 +258,12 @@ msgstr "%s 一致、全シート内で"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "(Blanks)"
 msgstr "(空欄)"
@@ -277,7 +284,7 @@ msgstr "(次へ)"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "(previous)"
-msgstr "(前へ)"
+msgstr "(前)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -316,8 +323,8 @@ msgid ""
 "0 = first match, 1 = all matches as an array, 2 = capturing groups from the "
 "first match as an array."
 msgstr ""
-"0 = 最初の一致、1 = すべての一致を配列として、2 = 最初の一致のキャプチャグ"
-"ループを配列として。"
+"0 = 最初の一致、1 = すべての一致を配列として、2 = 最初の一致の"
+"キャプチャグループを配列として。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -362,8 +369,8 @@ msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
 msgstr ""
-"A1スタイル表記（TRUE）とR1C1スタイル表記（FALSE）のどちらを使うかを示すブーリ"
-"アン"
+"A1スタイル表記（TRUE）とR1C1スタイル表記（FALSE）のどちらを使うかを示す"
+"ブーリアン"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -378,8 +385,7 @@ msgstr "A1スタイル表記を使うかR1C1スタイル表記を使うかを示
 msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
-msgstr ""
-"ブーリアン:TRUE の場合、文字列引数で選択された空のセルは結果に含まれません。"
+msgstr "ブーリアン:TRUE の場合、文字列引数で選択された空のセルは結果に含まれません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -388,8 +394,8 @@ msgid ""
 "A column or row containing true or false values corresponding to the first "
 "column or row of range."
 msgstr ""
-"範囲の最初のカラムまたは行に対応する、TUREまたはFALSEの値を含むカラムまたは"
-"行。"
+"範囲の最初のカラムまたは行に対応する、TUREまたはFALSEの値を含むカラムまたは行"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -421,8 +427,7 @@ msgstr "傾きを計算するかどうかを指定するフラグ"
 msgid ""
 "A flag specifying whether to return additional regression statistics or only "
 "the linear coefficients and the y-intercept"
-msgstr ""
-"追加の回帰統計量を返すか、線形係数とy-interceptのみを返すかを指定するフラグ。"
+msgstr "追加の回帰統計量を返すか、線形係数とy-interceptのみを返すかを指定するフラグ。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1036,8 +1041,7 @@ msgstr ""
 msgid ""
 "An expression or reference to a cell containing an expression that "
 "represents some logical value, i.e. TRUE or FALSE."
-msgstr ""
-"ある論理値、すなわちTRUEまたはFALSEを表す式を含むセルへの式または参照。"
+msgstr "ある論理値、すなわちTRUEまたはFALSEを表す式を含むセルへの式または参照。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1114,31 +1118,10 @@ msgstr "画像転送中に予期せぬエラーが発生しました"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"コンテンツを貼り付ける際に予期しないエラーが発生しました\n"
-"          追加情報は、ブラウザのコンソールでご確認いただけます。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"コンテンツを貼付ける際に予期しないエラーが発生しました。\n"
-"          スプレッドシートのバージョンが一致していないことが原因である可能性"
-"が高いです。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred. Submit a support ticket at odoo.com/help."
 msgstr ""
-"予期せぬエラーが発生しました。odoo.com/helpでサポートチケットを提出して下さ"
-"い。"
+"予期せぬエラーが発生しました。odoo.com/helpでサポートチケットを提出して下さい"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1343,10 +1326,8 @@ msgstr "考慮するデータセットを含む配列または範囲。"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, fuzzy
-#| msgid "Array result was not expanded because it would overwrite data in %s."
 msgid "Array result was not expanded because it would overwrite data."
-msgstr "%sのデータを上書きしてしまうため、配列の結果は展開されませんでした。"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1716,8 +1697,7 @@ msgstr "2つの配列の値の2乗の差の和を計算します。"
 msgid ""
 "Calculates the sum of the products of corresponding entries in equal-sized "
 "ranges."
-msgstr ""
-"同じサイズの範囲にある対応する要素同士を掛け算し、その積の合計を計算します。"
+msgstr "同じサイズの範囲にある対応する要素同士を掛け算し、その積の合計を計算します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2413,8 +2393,8 @@ msgid ""
 "Consider using a dynamic pivot formula: %s. Or re-insert the static pivot "
 "from the Data menu."
 msgstr ""
-"動的なピボット式の使用を検討して下さい: %s。または、データメニューから静的ピ"
-"ボットを再挿入します。"
+"動的なピボット式の使用を検討して下さい: %s。または、データメニューから静的"
+"ピボットを再挿入します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2591,8 +2571,7 @@ msgstr "値のない国々"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Counts number of unique values in a range, filtered by a set of criteria."
-msgstr ""
-"一連の基準でフィルタリングされた、範囲内の一意の値の数をカウントします。"
+msgstr "一連の基準でフィルタリングされた、範囲内の一意の値の数をカウントします。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3485,8 +3464,7 @@ msgstr ""
 msgid ""
 "Displays values as a percentage of the value of the Base item in the Base "
 "field."
-msgstr ""
-"ベースフィールドのベース項目の値に対するパーセンテージとして値を表示します。"
+msgstr "ベースフィールドのベース項目の値に対するパーセンテージとして値を表示します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3503,8 +3481,8 @@ msgid ""
 "Displays values as the percentage difference from the value of the Base item "
 "in the Base field."
 msgstr ""
-"ベースフィールドのベース項目の値からのパーセンテージ差異として値を表示しま"
-"す。"
+"ベースフィールドのベース項目の値からのパーセンテージ差異として値を表示します"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3733,8 +3711,8 @@ msgstr "2つの日付の間の正確な年数"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Excluded due to chart limits. Drag to swap with another range."
 msgstr ""
-"グラフ制限により除外されました。別の範囲と入れ替えるにはドラッグしてくださ"
-"い。"
+"グラフ制限により除外されました。別の範囲と入れ替えるにはドラッグしてください"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3975,8 +3953,7 @@ msgstr "検索対象の文字列が文字列内で最初に見つかった位置
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "First position of string found in text, ignoring case."
-msgstr ""
-"検索対象の文字列が文字列内で最初に見つかった位置(大文字と小文字を区別しない)"
+msgstr "検索対象の文字列が文字列内で最初に見つかった位置(大文字と小文字を区別しない)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4164,8 +4141,7 @@ msgstr "関数"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Function %s expects the parameter '%s' to be reference to a cell or range."
-msgstr ""
-"関数 %s はパラメータ '%s' がセルまたは範囲の参照であることを想定しています。"
+msgstr "関数 %s はパラメータ '%s' がセルまたは範囲の参照であることを想定しています。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4197,35 +4173,15 @@ msgstr "関数 [[FUNCTION_NAME]] の結果が見つかりませんでした。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"関数 [[FUNCTION_NAME]] では、criteria_range と criterion はペアで指定する必要"
-"があります。"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"関数 [[FUNCTION_NAME]] では、criteria_range の次元が同一である必要があります"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
-msgstr ""
-"関数 [[FUNCTION_NAME]] は %s に数値を必要としますが、ブール値が渡されました。"
+msgstr "関数 [[FUNCTION_NAME]] は %s に数値を必要としますが、ブール値が渡されました。"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a string."
-msgstr ""
-"関数 [[FUNCTION_NAME]] は %s に数値を必要としますが、文字列が渡されました。"
+msgstr "関数 [[FUNCTION_NAME]] は %s に数値を必要としますが、文字列が渡されました。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4233,8 +4189,7 @@ msgstr ""
 msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got an empty "
 "value."
-msgstr ""
-"関数 [[FUNCTION_NAME]] は %s に数値を必要としますが、空の値が渡されました。"
+msgstr "関数 [[FUNCTION_NAME]] は %s に数値を必要としますが、空の値が渡されました。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4823,12 +4778,8 @@ msgstr "[[FUNCTION_NAME]]の検証で '%s' が見つかりません( '%s' 内)�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
-"[[FUNCTION_NAME]]内で the number of columns of the first matrix初めのマトリク"
-"ス (%s)の行数は \n"
-"          2つ目のマトリクス (%s)の列数と同等である必要があります。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4904,8 +4855,7 @@ msgstr ""
 msgid ""
 "Indicates which column in database contains the values to be extracted and "
 "operated on."
-msgstr ""
-"データベース内のどの列に、抽出および操作対象の値が含まれているかを示します。"
+msgstr "データベース内のどの列に、抽出および操作対象の値が含まれているかを示します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5126,9 +5076,8 @@ msgid ""
 "Invalid number of arguments for the %(functionName)s function. Expected %"
 "(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
 msgstr ""
-"関数 %(functionName)s に対する引数の数が無効です。最低でも %"
-"(minArgRequired)s 個の引数が必要ですが、渡されたのは %(nbrArgSupplied)s 個で"
-"す。"
+"関数 %(functionName)s に対する引数の数が無効です。最低でも %(minArgRequired)"
+"s 個の引数が必要ですが、渡されたのは %(nbrArgSupplied)s 個です。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5547,7 +5496,7 @@ msgstr "さらに読み込む..."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Locale"
-msgstr "ローカル"
+msgstr "ロケール"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5728,7 +5677,7 @@ msgstr "5月"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Measure"
-msgstr "測定対象"
+msgstr "集計項目"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5803,8 +5752,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Merging these cells will only preserve the top-leftmost value. Merge anyway?"
-msgstr ""
-"これらのセルをマージすると一番左上の値のみが保持されます。マージしますか？"
+msgstr "これらのセルをマージすると一番左上の値のみが保持されます。マージしますか？"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6093,7 +6041,7 @@ msgstr "非定期のキャッシュフローに基づく正味現在価値。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Net working days between two dates (specifying weekends)."
-msgstr "2 つの日付の間の正味稼働日数(週末を指定)。"
+msgstr "2つの日付の間の正味の営業日数(週末を指定)。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6112,6 +6060,12 @@ msgstr "新規ピボット"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "決済日後の次回クーポン日"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6672,13 +6626,13 @@ msgstr "ピボット #%(formulaId)s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/index.js:0
 msgid "Pivot #%(pivot_id)s"
-msgstr "ピボット数%(pivot_id)s"
+msgstr "ピボット #%(pivot_id)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Pivot #%s"
-msgstr "ピボット数%s"
+msgstr "ピボット #%s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6705,8 +6659,8 @@ msgid ""
 "Pivot updates only work with dynamic pivot tables. Use the formula '%s' or "
 "re-insert the static pivot from the Data menu."
 msgstr ""
-"ピボットの更新は、動的ピボットテーブルでのみ機能します。式 '%s' を使用する"
-"か、データメニューから静的ピボットを再度挿入してください。"
+"ピボットの更新は、動的ピボットテーブルでのみ機能します。式 '%s' を使用するか"
+"、データメニューから静的ピボットを再度挿入してください。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7133,7 +7087,7 @@ msgstr "範囲を並べ替え"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Replace"
-msgstr "置き換える"
+msgstr "置換"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7214,6 +7168,12 @@ msgstr "出現回数が 1 回のみの項目を返す"
 #: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
 msgid "Return the current value of a spreadsheet filter."
 msgstr "スプレッドシートフィルタの現在の値を返します。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/pivot/pivot_functions.js:0
+msgid "Return the label of the current value of a spreadsheet filter."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7686,7 +7646,7 @@ msgstr "セミコロン"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Separator"
-msgstr "セパレータ"
+msgstr "区切り文字"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8045,8 +8005,8 @@ msgstr "文字列を列に分割"
 msgid ""
 "Splits text into rows or columns using specified column and row delimiters."
 msgstr ""
-"指定された列区切り文字と行区切り文字を使って、文字列を行または列に分割しま"
-"す。"
+"指定された列区切り文字と行区切り文字を使って、文字列を行または列に分割します"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8328,8 +8288,8 @@ msgstr "記号"
 msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order."
 msgstr ""
-"ソート列(sort_column)を昇順で並べ替えるかどうかを示す、TRUE または FALSE の"
-"値。"
+"ソート列(sort_column)を昇順で並べ替えるかどうかを示す、TRUE または FALSE の値"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8559,8 +8519,7 @@ msgstr "年率換算した利率"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The argument %s is not a valid measure. Here are the measures: %s"
-msgstr ""
-"引数 %sは有効な対策ではありません。ここでの対策は以下のとおりです。: %s"
+msgstr "引数 %sは有効な対策ではありません。ここでの対策は以下のとおりです。: %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8586,8 +8545,7 @@ msgstr "引数square_matrixは同じ列数と行数にして下さい。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "The arguments array_x and array_y must contain at least one pair of numbers."
-msgstr ""
-"引数array_xとarray_yには、少なくとも1組の数値が含まれていなければなりません。"
+msgstr "引数array_xとarray_yには、少なくとも1組の数値が含まれていなければなりません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8620,8 +8578,8 @@ msgid ""
 "The array or range containing dependent (y) values that are already known, "
 "used to curve fit an ideal exponential growth curve."
 msgstr ""
-"理想的な指数関数的成長曲線を曲線当てはめさせるために使用される、既知の従属"
-"（y）値を含む配列または範囲。"
+"理想的な指数関数的成長曲線を曲線当てはめさせるために使用される、既知の従属（y"
+"）値を含む配列または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8675,8 +8633,7 @@ msgstr ""
 msgid ""
 "The array or range of values whose squares will be added to the squares of "
 "corresponding entries in array_x and added together."
-msgstr ""
-"array_x の対応するエントリの2乗に2乗を足して合算する値の配列または範囲。"
+msgstr "array_x の対応するエントリの2乗に2乗を足して合算する値の配列または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8684,8 +8641,7 @@ msgstr ""
 msgid ""
 "The array or range of values whose squares will be added to the squares of "
 "corresponding entries in array_y and added together."
-msgstr ""
-"array_y の対応するエントリの2乗に2乗を足して合算する値の配列または範囲。"
+msgstr "array_y の対応するエントリの2乗に2乗を足して合算する値の配列または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8693,8 +8649,7 @@ msgstr ""
 msgid ""
 "The array or range of values whose squares will be reduced by the squares of "
 "corresponding entries in array_y and added together."
-msgstr ""
-"array_y の対応するエントリの2乗から2乗を減らして合算した値の配列または範囲。"
+msgstr "array_y の対応するエントリの2乗から2乗を減らして合算した値の配列または範囲。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8703,8 +8658,8 @@ msgid ""
 "The array or range of values whose squares will be subtracted from the "
 "squares of corresponding entries in array_x and added together."
 msgstr ""
-"array_x の対応するエントリの2乗からその2乗を引いて合算する値の配列または範"
-"囲。"
+"array_x の対応するエントリの2乗からその2乗を引いて合算する値の配列または範囲"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8873,8 +8828,7 @@ msgstr "カラムの引数(%s)は、配列のカラム数以上である必要�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The columns arguments must be between -%s and %s (got %s), excluding 0."
-msgstr ""
-"カラムの引数は -%s から %s (%sを取得) の間でなければなりません。0を除きます。"
+msgstr "カラムの引数は -%s から %s (%sを取得) の間でなければなりません。0を除きます。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8931,8 +8885,8 @@ msgid ""
 "The current window is too small to display this sheet properly. Consider "
 "resizing your browser window or adjusting frozen rows and columns."
 msgstr ""
-"現在のウィンドウが小さすぎて、シートが正しく表示されません。ブラウザのウィン"
-"ドウサイズを変更するか、固定された行とカラムを調整して下さい。"
+"現在のウィンドウが小さすぎて、シートが正しく表示されません。ブラウザの"
+"ウィンドウサイズを変更するか、固定された行と列を調整して下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9155,8 +9109,8 @@ msgid ""
 "The desired instance of the delimiter before which we extract the text. A "
 "negative number searches from the end."
 msgstr ""
-"文字列を抽出する区切り文字の指定位置。負の数値を指定すると末尾から検索しま"
-"す。"
+"文字列を抽出する区切り文字の指定位置。負の数値を指定すると末尾から検索します"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9385,8 +9339,7 @@ msgstr "最初の加数"
 msgid ""
 "The first and second arguments of [[FUNCTION_NAME]] must be non-empty "
 "matrices."
-msgstr ""
-"[[FUNCTION_NAME]] の第1引数と第2引数は、空でない行列である必要があります。"
+msgstr "[[FUNCTION_NAME]] の第1引数と第2引数は、空でない行列である必要があります。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9580,8 +9533,8 @@ msgstr "フォーマッティング単位は 'k', 'm' または 'b'である必�
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The formatting unit. Use 'k', 'm', or 'b' to force the unit"
 msgstr ""
-"フォーマティング単位。単位を強制するには'k', 'm', または 'b'を使用して下さ"
-"い。"
+"フォーマティング単位。単位を強制するには'k', 'm', または 'b'を使用して下さい"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9846,8 +9799,8 @@ msgid ""
 "The last_period (%(last)s) must be smaller or equal to the number_of_periods "
 "(%(nPeriods)s)."
 msgstr ""
-"終了期間 (last_period (%(last)s)) は期間数 (number_of_periods (%"
-"(nPeriods)s)) 以下でなければなりません。"
+"終了期間 (last_period (%(last)s)) は期間数 (number_of_periods (%(nPeriods)"
+"s)) 以下でなければなりません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9903,8 +9856,7 @@ msgstr "行列は反転できません。"
 msgid ""
 "The maturity (%(maturity)s) must be strictly greater than the settlement (%"
 "(settlement)s)."
-msgstr ""
-"満期日 (%(maturity)s) は受渡日 (%(settlement)s) より後でなければなりません。"
+msgstr "満期日 (%(maturity)s) は受渡日 (%(settlement)s) より後でなければなりません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9926,8 +9878,8 @@ msgstr "額面金額または価値で償還される証券の満期日または
 msgid ""
 "The maximum (%s) and minimum (%s) must be integers when whole_number is TRUE."
 msgstr ""
-"最大 (%s) および最小(%s) は whole_numberがTRUEの時、整数である必要がありま"
-"す。"
+"最大 (%s) および最小(%s) は whole_numberがTRUEの時、整数である必要があります"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9976,8 +9928,8 @@ msgid ""
 "The menu linked to this chart doesn't have an corresponding action. Please "
 "link the chart to another menu."
 msgstr ""
-"このチャートにリンクされたメニューには対応するアクションがありません。チャー"
-"トを他のメニューにリンクして下さい。"
+"このチャートにリンクされたメニューには対応するアクションがありません。"
+"チャートを他のメニューにリンクして下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10157,8 +10109,7 @@ msgstr "start_dateとend_dateの間の日数"
 msgid ""
 "The number of days between start_date and end_date after subtracting whole "
 "months"
-msgstr ""
-"start_date と end_date の間の日数から、丸ごとの月数を差し引いた残りの日数"
+msgstr "start_date と end_date の間の日数から、丸ごとの月数を差し引いた残りの日数"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10495,8 +10446,8 @@ msgid ""
 "The pattern or test to apply to criteria_range1, such that each cell that "
 "evaluates to TRUE will be included in the filtered set."
 msgstr ""
-"criteria_range1に適用するパターンまたはテストで、TRUEと評価される各セルがフィ"
-"ルタされたセットに含まれるようにします。"
+"criteria_range1に適用するパターンまたはテストで、TRUEと評価される各セルが"
+"フィルタされたセットに含まれるようにします。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10695,8 +10646,8 @@ msgid ""
 "only a single row or column and should not be used if using the "
 "search_result_array method."
 msgstr ""
-"結果を返す範囲。返される値は、search_key が search_range 内で見つかったロケー"
-"ションに対応します。この範囲は1つのみの行またはカラムである必要があり、"
+"結果を返す範囲。返される値は、search_key が search_range 内で見つかった"
+"ロケーションに対応します。この範囲は1つのみの行またはカラムである必要があり、"
 "search_result_array 法を使用する場合は、使用しないで下さい。"
 
 #. module: spreadsheet
@@ -11018,8 +10969,7 @@ msgstr "行の引数 (%s) は配列の行数以上にして下さい。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The rows arguments must be between -%s and %s (got %s), excluding 0."
-msgstr ""
-"行の引数は -%s から %s (%sを取得) の間でなければなりません。0を除きます。"
+msgstr "行の引数は -%s から %s (%sを取得) の間でなければなりません。0を除きます。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11065,8 +11015,8 @@ msgid ""
 "The search and match mode combination is not supported for XLOOKUP "
 "evaluation."
 msgstr ""
-"この検索モードと一致モードの組み合わせは、XLOOKUP ではサポートされていませ"
-"ん。"
+"この検索モードと一致モードの組み合わせは、XLOOKUP ではサポートされていません"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11080,8 +11030,8 @@ msgid ""
 msgstr ""
 "検索方法は数値で指定します(1、0、または -1)。1 は、範囲が昇順に並んでいる場合"
 "に、search_key 以下の最大の値を検索します。0 は、範囲が並んでいない場合に、"
-"search_key に完全一致する値を検索します。-1 は、範囲が降順に並んでいる場合"
-"に、search_key 以上の最小の値を検索します。"
+"search_key に完全一致する値を検索します。-1 は、範囲が降順に並んでいる場合に"
+"、search_key 以上の最小の値を検索します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11144,8 +11094,8 @@ msgid ""
 "The settlement date (%(settlement)s) must at most one year after the "
 "maturity date (%(maturity)s)."
 msgstr ""
-"受渡日 (%(settlement)s) は満期日 (%(maturity)s) の1年以内でなければなりませ"
-"ん。"
+"受渡日 (%(settlement)s) は満期日 (%(maturity)s) の1年以内でなければなりません"
+"。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11153,8 +11103,7 @@ msgstr ""
 msgid ""
 "The settlement date (%(settlement)s) must be greater or equal to the issue "
 "date (%(issue)s)."
-msgstr ""
-"受渡日 (%(settlement)s) は発行日 (%(issue)s) 以降でなければなりません。"
+msgstr "受渡日 (%(settlement)s) は発行日 (%(issue)s) 以降でなければなりません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11162,8 +11111,7 @@ msgstr ""
 msgid ""
 "The settlement date (%(settlement)s) must be strictly greater than the issue "
 "date (%(issue)s)."
-msgstr ""
-"受渡日 (%(settlement)s) は発行日 (%(issue)s) より後でなければなりません。"
+msgstr "受渡日 (%(settlement)s) は発行日 (%(issue)s) より後でなければなりません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11197,7 +11145,7 @@ msgstr "参照元文字列。"
 msgid ""
 "The start date of the period from which to calculate the number of net "
 "working days."
-msgstr "正味労働日数を計算する期間の開始日"
+msgstr "正味の営業日数の計算対象となる期間の開始日。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12209,8 +12157,8 @@ msgid ""
 "This formula has over 1000 parts. It can't be processed properly, consider "
 "splitting it into multiple cells"
 msgstr ""
-"この数式は1000を超える部分で構成されています。適切に処理できません。複数のセ"
-"ルに分割することを検討してください"
+"この数式は1000を超える部分で構成されています。適切に処理できません。複数の"
+"セルに分割することを検討してください"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12219,8 +12167,8 @@ msgid ""
 "This function takes in two currency codes as arguments, and returns the "
 "exchange rate from the first currency to the second as float."
 msgstr ""
-"この関数は2つの通貨コードを引数に取り、最初の通貨から2番目の通貨への為替レー"
-"トを浮動小数で返します。"
+"この関数は2つの通貨コードを引数に取り、最初の通貨から2番目の通貨への為替"
+"レートを浮動小数で返します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12240,8 +12188,7 @@ msgstr "この操作は、複数選択を許可されていません。"
 msgid ""
 "This operation is not possible due to a merge. Please remove the merges "
 "first than try again."
-msgstr ""
-"マージのためこの操作ができません。マージを削除してから再試行して下さい。"
+msgstr "マージのためこの操作ができません。マージを削除してから再試行して下さい。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12282,16 +12229,15 @@ msgid ""
 "inconsistencies. Irregularities may indicate potential errors in formula "
 "structures, references, or arguments. (Click to turn off)"
 msgstr ""
-"このツールは、スプレッドシートの数式を分析し、パターンを特定し、不整合をハイ"
-"ライトします。不規則性は、数式の構造、参照、または引数における潜在的なエラー"
-"を示す場合があります。(クリックしてオフにします)"
+"このツールは、スプレッドシートの数式を分析し、パターンを特定し、不整合を"
+"ハイライトします。不規則性は、数式の構造、参照、または引数における潜在的な"
+"エラーを示す場合があります。(クリックしてオフにします)"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "This will overwrite data in the subsequent columns. Split anyway?"
-msgstr ""
-"これにより、後続のカラムのデータが上書きされます。それでも分割しますか？"
+msgstr "これにより、後続のカラムのデータが上書きされます。それでも分割しますか？"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12660,7 +12606,7 @@ msgstr "無題スプレッドシート"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Up to current column"
-msgstr "現在のカラムまで"
+msgstr "現在の列まで"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13149,13 +13095,9 @@ msgstr "区切り文字に含まれる各文字の周囲で文字列を分割す
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"分割結果から空の文字列メッセージを削除するかどうか。デフォルトでは \n"
-"       連続する区切り文字を1つにします (TRUEの場合)。FALSE の場合、連続する区"
-"切り文字の間に空のセルの値が追加されます。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13193,8 +13135,7 @@ msgstr "データをカラムでフィルタするか、行でフィルタする
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether to ignore certain types of values. By default, no values are ignored."
-msgstr ""
-"特定のタイプの値を無視するかどうか。デフォルトでは、値は無視されません。"
+msgstr "特定のタイプの値を無視するかどうか。デフォルトでは、値は無視されません。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13238,8 +13179,7 @@ msgstr "重複のないエントリのみを返すかどうか"
 msgid ""
 "Whether to switch to straight-line depreciation when the depreciation is "
 "greater than the declining balance calculation."
-msgstr ""
-"減価償却費が定率計算より大きい場合、定額法による減価償却に切り替えるかどうか"
+msgstr "減価償却費が定率計算より大きい場合、定額法による減価償却に切り替えるかどうか"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13287,7 +13227,7 @@ msgstr "世界"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Wrap"
-msgstr "ラップ"
+msgstr "折り返し"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13378,6 +13318,12 @@ msgstr "年"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "昨日"
@@ -13393,6 +13339,14 @@ msgstr "既存のフィルタ内でセルを結合することはできません
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "重複するテーブルは作成できません。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13637,7 +13591,7 @@ msgstr "以下ではない："
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "number of columns"
-msgstr "カラム数"
+msgstr "列数"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13800,6 +13754,54 @@ msgstr "昨日"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "ゼロ"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          Additional information can be found in the browser console."
+#~ msgstr ""
+#~ "コンテンツを貼り付ける際に予期しないエラーが発生しました\n"
+#~ "          追加情報は、ブラウザのコンソールでご確認いただけます。"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "コンテンツを貼付ける際に予期しないエラーが発生しました。\n"
+#~ "          スプレッドシートのバージョンが一致していないことが原因である可能"
+#~ "性が高いです。"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "関数 [[FUNCTION_NAME]] では、criteria_range と criterion はペアで指定する"
+#~ "必要があります。"
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "関数 [[FUNCTION_NAME]] では、criteria_range の次元が同一である必要がありま"
+#~ "す"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "          number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]]内で the number of columns of the first matrix初めのマト"
+#~ "リクス (%s)の行数は \n"
+#~ "          2つ目のマトリクス (%s)の列数と同等である必要があります。"
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "分割結果から空の文字列メッセージを削除するかどうか。デフォルトでは \n"
+#~ "       連続する区切り文字を1つにします (TRUEの場合)。FALSE の場合、連続す"
+#~ "る区切り文字の間に空のセルの値が追加されます。"
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

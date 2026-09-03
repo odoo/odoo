@@ -1285,6 +1285,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Office furnitures',
             'parent_id': product_category_base.id
         })
+        product_tag = self.env['product.tag'].create({'name': 'Random tag'})
 
         self.productA = self.env['product.product'].create(
             {
@@ -1305,6 +1306,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'available_in_pos': True,
                 'taxes_id': False,
                 'categ_id': product_category_office.id,
+                'product_tag_ids': [(4, product_tag.id)]
             }
         )
 
@@ -1367,7 +1369,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_mode': 'per_order',
                 'discount': 10,
                 'discount_applicability': 'specific',
-                'discount_product_domain': '["&", ("categ_id", "not ilike", "Saleable"), ("name", "=", "Product B")]',
+                'discount_product_domain': '["&", "&", ("categ_id", "not ilike", "Saleable"), ("name", "=", "Product B"), ("product_tag_ids", "not ilike", "test")]',
             }),
             (0, 0, {
                 'reward_type': 'discount',
@@ -1376,7 +1378,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_mode': 'per_order',
                 'discount': 10,
                 'discount_applicability': 'specific',
-                'discount_product_domain': '["&", ("categ_id", "ilike", "Saleable"), ("name", "=", "Product B")]',
+                'discount_product_domain': '["&", "&", ("categ_id", "ilike", "Saleable"), ("name", "=", "Product B"), ("product_tag_ids", "not ilike", "test")]',
             })],
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
@@ -2697,6 +2699,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
 
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        self.create_programs([('arbitrary_name', 'gift_card')])
+
+        self.env['res.partner'].create({'name': 'AAAAAAA'})
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
+        self.create_programs([('arbitrary_name', 'ewallet')])
+
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
             "/pos/ui/%d" % self.main_pos_config.id,
@@ -3414,6 +3423,149 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
 
+    def test_free_product_multiple_reward_products(self):
+        """
+        Test that with a free product reward on several products having the same
+        price, adding quantity on a product other than the one of the reward line
+        still gives the second free product.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        promo_tag = self.env['product.tag'].create({'name': 'Promo Item'})
+        self.env['product.product'].create([{
+            'name': 'Promo Item %s' % suffix,
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        } for suffix in ('A', 'B', 'C')])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+                'product_tag_id': promo_tag.id,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': promo_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_free_product_multiple_reward_products",
+            login="pos_user",
+        )
+
+    def test_free_product_tag_quantity_set_with_numpad(self):
+        """
+        Test that a free product reward defined by a product tag is claimed when
+        the quantity reaching the required points is set with the numpad, and not
+        only when the product is clicked.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+
+        promo_tag = self.env['product.tag'].create({'name': 'Promo Item'})
+        self.env['product.product'].create([{
+            'name': 'Promo Item A',
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }, {
+            'name': 'Promo Item B',
+            'list_price': 5,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+                'product_tag_id': promo_tag.id,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': promo_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_free_product_tag_quantity_set_with_numpad",
+            login="pos_user",
+        )
+
+    def test_free_product_tag_quantity_from_gs1_barcode(self):
+        """
+        Test that a free product reward defined by a product tag is claimed when the
+        quantity reaching the required points comes from a GS1 barcode.
+        """
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.main_pos_config.company_id.nomenclature_id = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature')
+        self.main_pos_config.fallback_nomenclature_id = self.env.ref('barcodes.default_barcode_nomenclature')
+
+        promo_tag = self.env['product.tag'].create({'name': 'Promo Item'})
+        self.env['product.product'].create([{
+            'name': 'Promo Item A',
+            'list_price': 10,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'barcode': '08431673020125',
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }, {
+            'name': 'Promo Item B',
+            'list_price': 5,
+            'available_in_pos': True,
+            'taxes_id': False,
+            'product_tag_ids': [Command.link(promo_tag.id)],
+        }])
+
+        self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1',
+            'program_type': 'buy_x_get_y',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'unit',
+                'minimum_qty': 1,
+                'product_tag_id': promo_tag.id,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_tag_id': promo_tag.id,
+                'reward_product_qty': 1,
+                'required_points': 2,
+            })],
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_free_product_tag_quantity_from_gs1_barcode",
+            login="pos_user",
+        )
+
     def test_discount_after_unknown_scan(self):
         """
         Make sure discount is still applied after scanning an unknow barcode
@@ -3694,3 +3846,83 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
         self.assertEqual(len(gift_card_program.coupon_ids), 2)
+
+    def test_discount_count_sale_report(self):
+        """ This test make sure that discount from loyalty rewards are correctly counted in the sales report """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+
+        self.env['loyalty.program'].create({
+            'name': 'Auto Promo Program - Cheapest Product',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {})],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 50,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })]
+        })
+
+        self.product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "is_storable": True,
+                "list_price": 100,
+                "available_in_pos": True,
+            }
+        )
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("test_discount_count_sale_report")
+        session = self.main_pos_config.current_session_id
+        session.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
+        self.assertEqual(report['discount_number'], 2)
+        self.assertEqual(report['discount_amount'], 60.38)
+
+    def test_reward_line_tax_grouping_key(self):
+        """
+        This test make sure that taxes are correctly computed when using the "round_globally" rounding method and some specific prices that
+        can result in rounding issues.
+        """
+        self.company.tax_calculation_rounding_method = 'round_globally'
+        self.env['loyalty.program'].search([]).write({'pos_ok': False})
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Coupon Program - Pricelist',
+            'program_type': 'coupons',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        self.product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "is_storable": True,
+                "list_price": 76.01,
+                "available_in_pos": True,
+                "taxes_id": [Command.create({
+                    "name": "Test Tax 1",
+                    "amount_type": "percent",
+                    "amount": 21.0})]
+            }
+        )
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.start_pos_tour("test_reward_line_tax_grouping_key", pos_config=self.main_pos_config)
+        self.main_pos_config.current_session_id.action_pos_session_closing_control()

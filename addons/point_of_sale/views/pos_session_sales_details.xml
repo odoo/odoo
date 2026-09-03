@@ -11,6 +11,7 @@
                             <div class="text-start" style="font-size:0.85rem;">
                                 <span t-esc="company.name"/>
                                 <address class="mb-0 text-muted" t-field="env.company.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                                <span t-if="company.vat" class="company-vat">VAT: <t t-esc="company.vat"/></span>
                             </div>
                         </div>
                         <div class="col-6 text-center">
@@ -28,7 +29,7 @@
                     <div class="col-12 text-end mt-2">
                         <span class="badge bg-light text-dark border border-dark p-2">
                             <t t-set="date_format" t-value="env['res.lang']._get_data(code=env.user.lang).date_format"/>
-                            <strong>    As of <span t-esc="context_timestamp(datetime.datetime.now()).strftime(date_format)"/>
+                            <strong>    As of <span t-esc="datetime.datetime.now()" t-options="{'widget': 'datetime'}"/>
                             </strong>
                         </span>
                     </div>
@@ -388,6 +389,19 @@
                     <h6 class="bg-secondary p-1 fw-bold">Session Control</h6>
                     <div class="oe_structure"></div>
                     <div style="break-inside: avoid;">
+                        <t t-if="cash_rounding_total">
+                            <strong>Cash Rounding:
+                                <span t-if="currency['position']">
+                                    <span t-out='cash_rounding_total' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
+                                    <span t-out='currency["symbol"]'>$</span>
+                                </span>
+                                <span t-else="">
+                                    <span t-out='currency["symbol"]'>$</span>
+                                    <span t-out='cash_rounding_total' t-options="{'widget': 'float', 'precision': currency['precision']}">0.00</span>
+                                </span>
+                            </strong>
+                            <br/>
+                        </t>
                         <strong>Total:
                             <span t-if="currency['position']">
                                 <span t-out='currency["total_paid"]' t-options="{'widget': 'float', 'precision': currency['precision']}">99.99</span><span t-out='currency["symbol"]'>$</span>

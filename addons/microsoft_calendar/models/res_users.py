@@ -40,11 +40,14 @@ class ResUsers(models.Model):
     def _refresh_microsoft_calendar_token(self, service='calendar'):
         self.ensure_one()
         try:
-            access_token, ttl = self.env['microsoft.service']._refresh_microsoft_token('calendar', self.sudo().microsoft_calendar_rtoken)
-            self.sudo().write({
+            access_token, ttl, new_rtoken = self.env['microsoft.service']._refresh_microsoft_token_with_refresh('calendar', self.sudo().microsoft_calendar_rtoken)
+            vals = {
                 'microsoft_calendar_token': access_token,
                 'microsoft_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
-            })
+            }
+            if new_rtoken:
+                vals['microsoft_calendar_rtoken'] = new_rtoken
+            self.sudo().write(vals)
         except requests.HTTPError as error:
             if error.response.status_code in (400, 401):  # invalid grant or invalid client
                 # Delete refresh token and make sure it's commited
@@ -78,7 +81,6 @@ class ResUsers(models.Model):
 
     def _sync_microsoft_calendar(self):
         self.ensure_one()
-        self.sudo().microsoft_last_sync_date = datetime.now()
         if self._get_microsoft_sync_status() != "sync_active":
             return False
 

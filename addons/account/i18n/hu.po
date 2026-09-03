@@ -19,17 +19,17 @@
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Szabolcs Rádi, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # Nagy Géza <geza.nagy@oregional.hu>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Sarbó Gergely <sarbo.gergely@gmail.com>, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-09 11:26+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-05 00:28+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
 "account/hu/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -182,6 +182,18 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "%(label)s at %(currency_amount)s (Draft)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_bank_statement_line.py:0
 msgid ""
 "%(move)s reached an invalid state regarding its related statement line.\n"
@@ -191,12 +203,6 @@ msgstr ""
 "%(move)s érvénytelen állapotot ért el a nyilatkozatsort illetően.\n"
 "A következetesség érdekében a könyvelési tételnek mindig pontosan egy függő "
 "tételsort kell tartalmaznia."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid "%(name)s - Draft at (%(currency_amount)s)"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -305,18 +311,6 @@ msgstr "%s nem tárolt mező"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s taxes"
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "%s, or / if not applicable"
-msgstr "%s, vagy / ha nem alkalmazható"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "%s, or not applicable"
 msgstr ""
 
 #. module: account
@@ -433,12 +427,6 @@ msgstr "... (%(nb_of_values)s egyéb)"
 #: code:addons/account/static/src/components/x2many_buttons/x2many_buttons.xml:0
 msgid "... (View all)"
 msgstr "... (Összes megtekintése)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-msgid "/ if not applicable"
-msgstr "/ ha nem alkalmazható"
 
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
@@ -800,8 +788,8 @@ msgstr "<em>Számlatervezet</em>"
 msgid ""
 "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" aria-label=\"Dátum\" role=\"img\" title=\"Dátum\"/"
-">"
+"<i class=\"fa fa-clock-o\" aria-label=\"Dátum\" role=\"img\" "
+"title=\"Dátum\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -857,8 +845,8 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-fw fa-clock-o\" aria-label=\"Opened\" title=\"Opened\" "
 "role=\"img\"/>\n"
-"                                     <span class=\"d-none d-md-"
-"inline\">Fizetésre vár</span>"
+"                                     <span class=\"d-none d-md-inline\">"
+"Fizetésre vár</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -980,8 +968,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
-"'fixed'\">%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
+"%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -2035,8 +2023,7 @@ msgstr "Egy szakasz címe"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "A single exception must change exactly one lock date field."
-msgstr ""
-"Egyetlen kivételnek pontosan egy zárolási dátum mezőt kell módosítania."
+msgstr "Egyetlen kivételnek pontosan egy zárolási dátum mezőt kell módosítania."
 
 #. module: account
 #. odoo-python
@@ -2711,6 +2698,12 @@ msgstr "Elhatárolt összesen"
 #. module: account
 #: model:account.account,name:account.2_account_account_us_acc_depreciation
 msgid "Accumulated Depreciation"
+msgstr ""
+
+#. module: account
+#: model:account.account,name:account.1_retained_earnings
+#: model:account.account,name:account.2_account_account_us_retained_earnings
+msgid "Accumulated Retained Earnings"
 msgstr ""
 
 #. module: account
@@ -3643,6 +3636,11 @@ msgstr ""
 "megfelelő kritériumok (ÁFA/Ország) teljesülnek."
 
 #. module: account
+#: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Appropriation of the profit or loss"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
 msgid "April"
 msgstr "Április"
@@ -4004,8 +4002,8 @@ msgstr "A egyenleg százalék nem lehet 0"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_45
-#: model:account.account,name:account.2_bank_journal_default_account_150
+#: model:account.account,name:account.1_bank_journal_default_account_47
+#: model:account.account,name:account.2_bank_journal_default_account_153
 #: model:account.journal,name:account.1_bank
 #: model:account.journal,name:account.2_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
@@ -4196,8 +4194,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__acc_type
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
-msgstr ""
-"Bankszámla típusa: normál vagy IBAN. Következtetve a bankszámlaszámból."
+msgstr "Bankszámla típusa: normál vagy IBAN. Következtetve a bankszámlaszámból."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -4763,7 +4760,7 @@ msgstr "Átvinni ide"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
-#: model:account.account,name:account.1_cash_journal_default_account_161
+#: model:account.account,name:account.1_cash_journal_default_account_163
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__cash
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -4776,12 +4773,12 @@ msgid "Cash Account"
 msgstr "Készpénzszámla"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_158
+#: model:account.account,name:account.1_cash_journal_default_account_160
 msgid "Cash Bakery"
 msgstr ""
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_160
+#: model:account.account,name:account.1_cash_journal_default_account_162
 msgid "Cash Bar"
 msgstr ""
 
@@ -4823,7 +4820,7 @@ msgid "Cash Basis Transition Account"
 msgstr "Készpénzes Alapú Átmeneti Számla"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_157
+#: model:account.account,name:account.1_cash_journal_default_account_159
 msgid "Cash Clothes Shop"
 msgstr ""
 
@@ -4885,7 +4882,7 @@ msgid "Cash Discount Write-Off Loss Account"
 msgstr "Készpénz Kedvezmény Elengedés Veszteség Számla"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_156
+#: model:account.account,name:account.1_cash_journal_default_account_158
 msgid "Cash Furn. Shop"
 msgstr ""
 
@@ -4896,7 +4893,7 @@ msgid "Cash Registers"
 msgstr "Pénztár"
 
 #. module: account
-#: model:account.account,name:account.1_cash_journal_default_account_159
+#: model:account.account,name:account.1_cash_journal_default_account_161
 msgid "Cash Restaurant"
 msgstr ""
 
@@ -5486,8 +5483,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "Consider paying the %(btn_start)sfull amount%(btn_end)s."
-msgstr ""
-"Fontolja meg, hogy a %(btn_start)s teljes összeget %(btn_end)s fizesse."
+msgstr "Fontolja meg, hogy a %(btn_start)s teljes összeget %(btn_end)s fizesse."
 
 #. module: account
 #. odoo-python
@@ -5547,8 +5543,8 @@ msgstr "Menő, úgy tűnik, hogy nincs kifizetetlen összeged."
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
 msgstr ""
-"A sérült adatok a naplóbejegyzésen, amelynek az azonosítója %(id)s (%"
-"(name)s)."
+"A sérült adatok a naplóbejegyzésen, amelynek az azonosítója %(id)s (%(name)s)"
+"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -5577,6 +5573,11 @@ msgstr "Árbevételek költsége"
 #. module: account
 #: model:account.account,description:account.2_account_account_us_equipment
 msgid "Cost of office furniture, fixtures, and business equipment"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+msgid "Cost of revenue"
 msgstr ""
 
 #. module: account
@@ -5620,6 +5621,16 @@ msgstr ""
 #: code:addons/account/static/src/components/upload_drop_zone/upload_drop_zone.js:0
 msgid "Could not upload files"
 msgstr "Nem sikerült feltölteni a fájlokat"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines
+msgid "Count Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__count_reconciled_lines_excluding_exchange_diff
+msgid "Count Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -5715,8 +5726,9 @@ msgstr "Hozzon létre kifizetéseket"
 
 #. module: account
 #: model:ir.model,website_form_label:account.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Ügyfél létrehozása"
 
 #. module: account
 #. odoo-python
@@ -6121,6 +6133,11 @@ msgid ""
 msgstr ""
 "A felhalmozott egyenleg a domain és a nézetben választott rendelés "
 "függvényében."
+
+#. module: account
+#: model:account.account,description:account.2_account_account_us_retained_earnings
+msgid "Cumulative undistributed profits and losses"
+msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6772,8 +6789,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
-msgstr ""
-"Határozza meg a készpénzes fizetéshez használt valuta legkisebb érméjét"
+msgstr "Határozza meg a készpénzes fizetéshez használt valuta legkisebb érméjét"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_group__company_id
@@ -7722,6 +7738,11 @@ msgid "Electronic Data Interchange"
 msgstr "Elektronikus Adatcsere"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Electronic Invoicing"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
 msgid "Electronic format"
 msgstr "Elektronikus formátum"
@@ -8044,6 +8065,7 @@ msgid "Exchange Gain or Loss Journal"
 msgstr "Árfolyam nyereség vagy veszteség napló"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__exchange_move_ids
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__exchange_move_id
 msgid "Exchange Move"
 msgstr "Exchange Move"
@@ -8347,6 +8369,16 @@ msgstr "Első sor index"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
 msgstr "Első új szekvencia"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_id
+msgid "First Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__first_reconciled_lines_excluding_exchange_diff_id
+msgid "First Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -9463,8 +9495,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "If set, this account is used to automatically balance entries."
-msgstr ""
-"Ha be van állítva, ez a fiók automatikusan kiegyenlíti a bejegyzéseket."
+msgstr "Ha be van állítva, ez a fiók automatikusan kiegyenlíti a bejegyzéseket."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -10435,8 +10466,7 @@ msgstr "Jóváhagyandó számlák"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr ""
-"A számlák, amelyek napló tételeit ezekkel a kifizetésekkel egyeztették."
+msgstr "A számlák, amelyek napló tételeit ezekkel a kifizetésekkel egyeztették."
 
 #. module: account
 #: model:res.groups,comment:account.group_account_invoice
@@ -10525,6 +10555,12 @@ msgstr "Szerkesztő"
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
 msgstr "Is Entries"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
+#: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+msgid "Is Exact Move Duplicate"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -11404,6 +11440,7 @@ msgid "Looks great!"
 msgstr "Nagyszerű!"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__loss
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Loss"
 msgstr "Veszteség"
@@ -12055,6 +12092,12 @@ msgstr "Legközelebbi"
 #: model:ir.model.fields,field_description:account.field_account_payment__need_cancel_request
 msgid "Need Cancel Request"
 msgstr "Need Cancel Request"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Need to update"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -13086,6 +13129,7 @@ msgid "Owner's Current Account"
 msgstr ""
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "P&L Accounts"
 msgstr "P&L számlák"
@@ -13116,11 +13160,6 @@ msgstr "PDF fájl"
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "PDF without Payment"
 msgstr "PDF fizetés nélkül"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-msgid "PEPPOL Electronic Invoicing"
-msgstr "PEPPOL elektronikus számlázás"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_peppol
@@ -14033,6 +14072,7 @@ msgstr "Termék kategóriák"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14113,6 +14153,19 @@ msgstr "Profit és veszteség"
 #: model:ir.model.fields,field_description:account.field_account_journal__profit_account_id
 msgid "Profit Account"
 msgstr "Nyereség számla"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#: model:account.account,name:account.1_profit_or_loss
+#: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+msgid "Profit or Loss Appropriation"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__analytic_profitability
+msgid "Profitability"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -14211,7 +14264,7 @@ msgstr "Beszerzési adó"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Purchase Taxes"
-msgstr "Vásárlási adók"
+msgstr "Beszerzési adók"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -14301,12 +14354,6 @@ msgstr "Gyors kódolási értékek"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__quick_edit_mode
 msgid "Quick encoding"
 msgstr "Gyors kódolás"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Quick search: %s"
-msgstr ""
 
 #. module: account
 #: model:account.account,name:account.1_expense_rd
@@ -14815,6 +14862,7 @@ msgstr ""
 #: code:addons/account/wizard/accrued_orders.py:0
 #: model:account.group,name:account.2_us_group_4
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
 msgstr "Bevétel"
@@ -14861,8 +14909,9 @@ msgstr "Reverzálása"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
+#, fuzzy
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr ""
+msgstr "Jóváírva: %(move_name)s, %(reason)s"
 
 #. module: account
 #. odoo-python
@@ -15278,6 +15327,7 @@ msgstr "Keresés név vagy adószám alapján..."
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2one_account_account/many2one_account_account.js:0
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Search: %s"
 msgstr "Keresés: %s"
@@ -16008,8 +16058,8 @@ msgid ""
 "Some payment methods supposed to be unique already exists somewhere else.\n"
 "(%s)"
 msgstr ""
-"Néhány fizetési mód, amelynek egyedinek kellene lennie, már létezik "
-"máshol.  \n"
+"Néhány fizetési mód, amelynek egyedinek kellene lennie, már létezik máshol.  "
+"\n"
 "(%s)"
 
 #. module: account
@@ -17071,8 +17121,11 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "The Bill/Refund date is required to validate this document."
 msgstr ""
+"A számla/visszatérítési dátum szükséges ennek a dokumentumnak az "
+"érvényesítéséhez"
 
 #. module: account
 #. odoo-python
@@ -17142,17 +17195,6 @@ msgid ""
 msgstr ""
 "A fizetési határidőnek legalább egy százalékos sort kell tartalmaznia, és a "
 "százalékok összege 100%-nak kell lennie"
-
-#. module: account
-#: model:ir.model.fields,help:account.field_base_document_layout__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"A adóazonosító szám. Az itt megadott értékeket az ország formátuma alapján "
-"érvényesítik. Azt is jelezheti, hogy a partner nem adóköteles, ha '/'-t "
-"használ"
 
 #. module: account
 #. odoo-python
@@ -17676,8 +17718,7 @@ msgstr "A naplóelem nincs összekapcsolva a megfelelő pénzügyi számlával"
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_month
 msgid "The last day of the month will be used if the chosen day doesn't exist."
-msgstr ""
-"A hónap utolsó napját fogják használni, ha a választott nap nem létezik"
+msgstr "A hónap utolsó napját fogják használni, ha a választott nap nem létezik"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_group_check_length_prefix
@@ -17990,8 +18031,8 @@ msgid ""
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 "A sorozat minden hónap elején 1-től újraindul. Az itt észlelt év '%(year)s', "
-"a hónap pedig '%(month)s'. Az ebben az esetben növekvő szám '%"
-"(formatted_seq)s'"
+"a hónap pedig '%(month)s'. Az ebben az esetben növekvő szám '%(formatted_seq)"
+"s'"
 
 #. module: account
 #. odoo-python
@@ -18043,15 +18084,13 @@ msgstr "A nyilatkozat sora, amely létrehozta ezt a bejegyzést"
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
-msgstr ""
-"A cég adószáma a jelenlegi pénzügyi helyzet által térképezett régióban."
+msgstr "A cég adószáma a jelenlegi pénzügyi helyzet által térképezett régióban."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "The tax group must have the same country_id as the tax using it."
-msgstr ""
-"A adócsoportnak meg kell egyeznie a használó adó ország_azonosítójával."
+msgstr "A adócsoportnak meg kell egyeznie a használó adó ország_azonosítójával."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -18098,8 +18137,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "There are no journal items in the draft state to post."
-msgstr ""
-"Nincsenek naplóelemek a vázlat állapotában, amelyeket közzé lehet tenni"
+msgstr "Nincsenek naplóelemek a vázlat állapotában, amelyeket közzé lehet tenni"
 
 #. module: account
 #. odoo-python
@@ -18371,8 +18409,7 @@ msgstr "Ez a bejegyzés visszavonásra került a %s címről"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "This entry transfers the following amounts to %(destination)s"
-msgstr ""
-"Ez a bejegyzés a következő összegeket utalja át a %(destination)s címre"
+msgstr "Ez a bejegyzés a következő összegeket utalja át a %(destination)s címre"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -18618,7 +18655,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "To pay"
-msgstr "Fizetni"
+msgstr "Fizetetlen"
 
 #. module: account
 #. odoo-python
@@ -18814,7 +18851,7 @@ msgstr "A vevő összes tartozása a vállalat felé."
 #: model:ir.model.fields,help:account.field_res_partner__debit
 #: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
-msgstr "Teljes összeg, melyet ennek a beszállítónak ki kell fizetnie."
+msgstr "Teljes összeg, melyet ennek a beszállítónak ki kell fizetni."
 
 #. module: account
 #. odoo-python
@@ -18912,8 +18949,9 @@ msgstr "Belső utalás ide %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+#, fuzzy
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Lefordított termék név"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -19014,18 +19052,15 @@ msgstr ""
 "érdemes lenne átrendezni a tranzakciókat a folytatás előtt"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_analytic_line__analytic_profitability__uncategorized
+msgid "Uncategorized"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 msgid "Undefined Yet"
 msgstr "Nem definiált még"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/company.py:0
-#: model:account.account,name:account.1_unaffected_earnings_account
-#: model:account.account,name:account.2_unaffected_earnings_account
-msgid "Undistributed Profits/Losses"
-msgstr "Megosztatlan Nyereség/Veszteség"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
@@ -19071,13 +19106,15 @@ msgstr "Egységár:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Units"
-msgstr ""
+msgstr "Egység"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Egységek és csomagolások"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -19227,6 +19264,12 @@ msgstr "Feltételek frissítése"
 #: code:addons/account/models/res_config_settings.py:0
 msgid "Update Terms & Conditions"
 msgstr "Frissítse a feltételeket és a kikötéseket"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+msgid "Update app"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20004,6 +20047,11 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,help:account.field_base_document_layout__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You can't block a paid invoice."
@@ -20454,6 +20502,13 @@ msgid ""
 msgstr ""
 "Nem csökkentheti a már könyvelési bejegyzésekhez használt valuta "
 "tizedesjegyeinek számát."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
+msgid "You cannot register payments for blocked invoices."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21119,12 +21174,6 @@ msgstr ""
 "számított 8 napon belül"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/partner.py:0
-msgid "not applicable"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 msgid "of tax"
 msgstr "adó"
@@ -21336,8 +21385,7 @@ msgstr ""
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Hiteljegy (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} Hiteljegy (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -21366,6 +21414,27 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+
+#~ msgid "PEPPOL Electronic Invoicing"
+#~ msgstr "PEPPOL elektronikus számlázás"
+
+#~ msgid "%s, or / if not applicable"
+#~ msgstr "%s, vagy / ha nem alkalmazható"
+
+#~ msgid "/ if not applicable"
+#~ msgstr "/ ha nem alkalmazható"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "A adóazonosító szám. Az itt megadott értékeket az ország formátuma "
+#~ "alapján érvényesítik. Azt is jelezheti, hogy a partner nem adóköteles, ha "
+#~ "'/'-t használ"
+
+#~ msgid "Undistributed Profits/Losses"
+#~ msgstr "Megosztatlan Nyereség/Veszteség"
 
 #~ msgid "1.05"
 #~ msgstr "1.05"

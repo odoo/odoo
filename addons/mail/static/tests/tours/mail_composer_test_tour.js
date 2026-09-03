@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 const bodyContent = document.querySelector(
                     '.o_field_html[name="body"]'
                 ).textContent;
-                if (!bodyContent.includes("blahblah @Not A Demo User")) {
+                if (!bodyContent.replace(/\uFEFF/g, "").includes("blahblah @Not A Demo User")) {
                     console.error(
                         `Full composer should contain text from small composer ("blahblah @Not A Demo User") in body input (actual: ${bodyContent})`
                     );
@@ -124,6 +124,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Check channel mention is present in body",
             trigger: '.o_field_html[name="body"] .o_channel_redirect:contains(general)',
+        },
+        {
+            // Wait for the mention popover to close, as the composer shows no
+            // dropzone while the popover owns the UI active element.
+            trigger: "body:not(:has(.o-mail-MentionList))",
         },
         {
             content: "Drop a file on the full composer",

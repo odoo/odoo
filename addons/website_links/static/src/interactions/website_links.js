@@ -85,6 +85,7 @@ class WebsiteLinks extends Interaction {
         }
         utmFormEl.classList.remove("d-none");
         this.el.querySelector("#generated_tracked_link").classList.add("d-none");
+        this.el.querySelector("input#url").disabled = "";
         this.el.querySelector("#btn_shorten_url").classList.remove("d-none");
         this.el.querySelector("input#url").value = "";
     }
@@ -147,6 +148,7 @@ class WebsiteLinks extends Interaction {
             const link = result[0];
 
             this.el.querySelector("#generated_tracked_link").classList.remove("d-none");
+            this.el.querySelector("input#url").disabled = "disabled";
             this.el.querySelector("#btn_shorten_url").classList.add("d-none");
             this.el.querySelector(".copy-to-clipboard").dataset.clipboardText = link.short_url;
             this.el.querySelector("#short-url-host").textContent = link.short_url_host;

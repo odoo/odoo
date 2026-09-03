@@ -7,7 +7,6 @@ import { getContent } from "./_helpers/selection";
 import { unformat } from "./_helpers/format";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { captionEmbedding } from "@html_editor/others/embedded_components/backend/caption/caption";
 
 describe.current.tags("desktop");
 
@@ -45,9 +44,6 @@ test("should show the hook when hovering a figure element", async () => {
         {
             config: {
                 Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
-                resources: {
-                    embedded_components: [captionEmbedding],
-                },
             },
             styleContent: styles,
         }
@@ -200,7 +196,7 @@ describe("drag", () => {
         await handle.moveTo(dropzones[9]);
         await handle.drop();
         expect(getContent(el)).toBe(
-            `<ul class="o_checklist"><li>b</li><li>c</li><li>d</li></ul><p>e</p><ul class="o_checklist"><li>a</li>[]</ul>`
+            `<ul class="o_checklist"><li>b</li><li>c</li><li>d</li></ul><p>e</p><ul class="o_checklist"><li>a[]</li></ul>`
         );
     });
     test("should wrap non-LI element in LI and insert it into list at correct position", async () => {
@@ -223,7 +219,7 @@ describe("drag", () => {
         await handle.moveTo(dropzones[3]);
         await handle.drop();
         expect(getContent(el)).toBe(
-            `<ul class="o_checklist"><li>a</li><li>b</li><li><p>e</p>[]</li><li>c</li><li>d</li></ul>`
+            `<ul class="o_checklist"><li>a</li><li>b</li><li><p>[]e</p></li><li>c</li><li>d</li></ul>`
         );
     });
     test("should do nothing when dropping outside the editable", async () => {
@@ -268,6 +264,93 @@ describe("drag", () => {
         expect(getContent(el)).toBe(
             `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
         );
+    });
+    test("should move cursor to moved node start if selection was outside", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table>
+                    <tbody>
+                        <tr>
+                            <td>ab</td>
+                            <td>cd</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>ef[]</p>
+                <p>gh</p>`
+            ),
+            {
+                styleContent: styles,
+            }
+        );
+        const table = el.querySelector("table");
+        await hover(table);
+        expect(".oe-dropzone-box-side").toHaveCount(0);
+        const { drop } = await contains(".oe-sidewidget-move").drag();
+        expect(".oe-dropzone-box-side").toHaveCount(6);
+        await drop(".oe-dropzone-box-side:eq(3)");
+        expect(getContent(el)).toBe(
+            unformat(
+                `<p>ef</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>[]ab</td>
+                            <td>cd</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>gh</p>`
+            )
+        );
+    });
+    test("should preserve selection if inside moved node", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table>
+                    <tbody>
+                        <tr>
+                            <td>ab</td>
+                            <td>c[]d</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>ef</p>
+                <p>gh</p>`
+            ),
+            {
+                styleContent: styles,
+            }
+        );
+        const table = el.querySelector("table");
+        await hover(table);
+        expect(".oe-dropzone-box-side").toHaveCount(0);
+        const { drop } = await contains(".oe-sidewidget-move").drag();
+        expect(".oe-dropzone-box-side").toHaveCount(6);
+        await drop(".oe-dropzone-box-side:eq(3)");
+        expect(getContent(el)).toBe(
+            unformat(
+                `<p>ef</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>ab</td>
+                            <td>c[]d</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>gh</p>`
+            )
+        );
+    });
+    test("should show the hook on the right side in RTL mode", async () => {
+        const { el } = await setupEditor("<p>a[]</p><p>b</p>", {
+            styleContent: styles,
+            config: { direction: "rtl" },
+        });
+        await hover(el.querySelector("p"));
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        expect(".oe-sidewidget-move").toHaveRect({ top: 0, left: 135 });
     });
 });
 
@@ -321,6 +404,49 @@ describe("click", () => {
                             <td class="o_selected_td"><p>[<br></p></td>
                             <td class="o_selected_td"><p><br></p></td>
                             <td class="o_selected_td"><p>]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should select the table with empty fonts when clicked on a hook", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><font style="color: rgb(0, 255, 0);">[]\u200b</font></p></td>
+                            <td><p><font style="color: rgb(0, 255, 0);">\u200b</font></p></td>
+                            <td><p><font style="color: rgb(0, 255, 0);">\u200b</font></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `),
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const firstTable = el.querySelector("table");
+        await hover(firstTable);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">[\u200b</font></p></td>
+                            <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">\u200b</font></p></td>
+                            <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">\u200b]</font></p></td>
                         </tr>
                     </tbody>
                 </table>

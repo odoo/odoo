@@ -3,12 +3,12 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
-import { isIconElement, isZwnbsp } from "../../utils/dom_info";
+import { ICON_SELECTOR, isElement, isIconElement, isZwnbsp } from "@html_editor/utils/dom_info";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "dialog"];
+    static dependencies = ["history", "selection", "color", "dialog"];
     toolbarNamespace = "icon";
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -63,13 +63,14 @@ export class IconPlugin extends Plugin {
                     return;
                 }
                 const isIconInTargetedNodes = targetedNodes.some(isIconElement);
-                // All nodes should be icons or their ZWS children.
+                // All nodes should be icons, their ZWS children, or their ancestors.
                 // FEFF nodes are only considered valid if an icon is selected and the
                 // FEFF is directly adjacent to it.
                 const isIconRelatedNode = (node) => {
                     if (
                         node.classList?.contains("fa") ||
-                        node.parentElement?.classList.contains("fa")
+                        node.parentElement?.classList.contains("fa") ||
+                        (node.querySelector?.(":scope > .fa") && node.isContentEditable !== false)
                     ) {
                         return true;
                     }
@@ -78,6 +79,14 @@ export class IconPlugin extends Plugin {
                             node.nextElementSibling?.classList?.contains("fa") ||
                             node.previousElementSibling?.classList?.contains("fa")
                         );
+                    }
+                    // Node is applying style on the icon.
+                    if (
+                        isElement(node) &&
+                        node.children.length === 1 &&
+                        isIconElement(node.children[0])
+                    ) {
+                        return true;
                     }
                     return false;
                 };
@@ -141,6 +150,11 @@ export class IconPlugin extends Plugin {
                 text: _t("Replace"),
             },
         ],
+        /** Providers */
+        selected_background_color_providers: withSequence(
+            5,
+            this.computeBackgroundColorForIcon.bind(this)
+        ),
     };
 
     getTargetedIcon() {
@@ -211,5 +225,19 @@ export class IconPlugin extends Plugin {
             prevIcon.setAttribute(attribute.nodeName, attribute.nodeValue);
         }
         this.dependencies.history.addStep();
+    }
+
+    computeBackgroundColorForIcon() {
+        const nodes = this.dependencies.selection
+            .getTargetedNodes()
+            .filter((node) => node.classList?.contains("fa"));
+        if (nodes.length === 0) {
+            return;
+        }
+        const el = closestElement(nodes[0], "font");
+        if (!el) {
+            return;
+        }
+        return this.dependencies.color.getElementColors(el).backgroundColor;
     }
 }

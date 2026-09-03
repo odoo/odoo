@@ -11,6 +11,7 @@ import {
     htmlReplace,
     htmlReplaceAll,
     htmlTrim,
+    isHtmlEmpty,
     setElementContent,
 } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -18,7 +19,7 @@ import { getOrigin } from "@web/core/utils/urls";
 import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
-    /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
+    /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}(?:\.{1})?(?:[a-z]{2,13}))\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
 const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
 
 /**
@@ -256,22 +257,25 @@ function generateMentionsLinks(
 ) {
     const mentions = [];
     for (const partner of partners) {
-        const placeholder = `@-mention-partner-${partner.id}`;
+        const placeholder = `@-mention-partner-${partner.id}!`;
         const text = `@${thread?.getPersonaName(partner) ?? partner.name}`;
         mentions.push({
             link: generatePartnerMentionElement(partner, thread),
             placeholder,
+            text,
         });
-        body = htmlReplace(body, text, placeholder);
     }
     for (const thread of threads) {
-        const placeholder = `#-mention-channel-${thread.id}`;
+        const placeholder = `#-mention-channel-${thread.id}!`;
         const text = `#${thread.fullNameWithParent}`;
         mentions.push({
             link: generateThreadMentionElement(thread),
             placeholder,
+            text,
         });
-        body = htmlReplace(body, text, placeholder);
+    }
+    for (const mention of mentions.sort((m1, m2) => m2.text.length - m1.text.length)) {
+        body = htmlReplace(body, mention.text, mention.placeholder);
     }
     for (const special of specialMentions) {
         const text = `@${special}`;
@@ -366,6 +370,90 @@ export function convertBrToLineBreak(str) {
     return createDocumentFragmentFromContent(str).body.textContent;
 }
 
+/**
+ * @param {string|ReturnType<markup>} content
+ * @returns {ReturnType<markup>}
+ */
+export function trimEmptyBlocksAround(content) {
+    if (isHtmlEmpty(content)) {
+        return content;
+    }
+    const body = createDocumentFragmentFromContent(content).body;
+    let changed = false;
+
+    const removeNode = (node) => {
+        node.remove();
+        changed = true;
+    };
+
+    /** @typedef {"start" | "end"} BoundarySide */
+
+    /**
+     * @param {Element | null | undefined} element
+     * @param {BoundarySide} side
+     * @returns {ChildNode | null}
+     */
+    const getBoundaryChild = (element, side) => {
+        if (!element) {
+            return null;
+        }
+        return side === "start" ? element.firstChild : element.lastChild;
+    };
+
+    /**
+     * @param {Element | null | undefined} element
+     * @param {BoundarySide} side
+     * @returns {Element | null}
+     */
+    const getBoundaryElement = (element, side) => {
+        if (!element) {
+            return null;
+        }
+        return side === "start" ? element.firstElementChild : element.lastElementChild;
+    };
+
+    const trimTextNodes = (element, side) => {
+        let node = getBoundaryChild(element, side);
+        while (node?.nodeType === Node.TEXT_NODE && !node.textContent.trim()) {
+            removeNode(node);
+            node = getBoundaryChild(element, side);
+        }
+    };
+
+    const trimEmptyParagraphs = (side) => {
+        trimTextNodes(body, side);
+        let paragraph = getBoundaryElement(body, side);
+        while (["P", "DIV"].includes(paragraph?.tagName) && isHtmlEmpty(paragraph.innerHTML)) {
+            removeNode(paragraph);
+            trimTextNodes(body, side);
+            paragraph = getBoundaryElement(body, side);
+        }
+    };
+
+    const trimBoundaryParagraph = (side) => {
+        trimEmptyParagraphs(side);
+        const paragraph = getBoundaryElement(body, side);
+        if (!paragraph || !["P", "DIV"].includes(paragraph.tagName)) {
+            return;
+        }
+        trimTextNodes(paragraph, side);
+        let node = getBoundaryChild(paragraph, side);
+        while (node?.nodeName === "BR") {
+            removeNode(node);
+            trimTextNodes(paragraph, side);
+            node = getBoundaryChild(paragraph, side);
+        }
+        trimEmptyParagraphs(side);
+        if (getBoundaryElement(body, side) !== paragraph) {
+            trimBoundaryParagraph(side);
+        }
+    };
+    trimBoundaryParagraph("start");
+    trimBoundaryParagraph("end");
+    // markup: innerHTML of the body is safe as it is generated from a DocumentFragment created from a trusted source and operations on body, the trim and removeNode, preserve it "safe".
+    return changed ? markup(body.innerHTML) : content;
+}
+
 export function cleanTerm(term) {
     return typeof term === "string" ? normalize(term) : "";
 }
@@ -392,7 +480,38 @@ export function parseEmail(text) {
     return [text, false];
 }
 
-export const EMOJI_REGEX = /\p{Emoji_Presentation}|\p{Emoji}\uFE0F|\u200d/gu;
+const r = String.raw;
+/**
+ * Match Country Subdivision Flags.
+ * Black Flag emoji + tag-encoded subdivision name + cancel tag
+ * Example:
+ * 🏴 + [B] + [E] + [W] + [A] + [L] + [CANCEL] = Flag for Wallonia (BE-WAL)
+ */
+const SUBDIVISION_FLAG = r`🏴[\u{E0020}-\u{E007E}]+\u{E007F}`;
+/**
+ * Match Keycaps (e.g., 5️⃣, #️⃣).
+ * Numpad character + Variation Selector-16 + Combining Enclosing Keycap
+ */
+const KEYCAP = r`[#*\d]\uFE0F\u20E3`;
+const EMOJI_WITH_SKIN_TONE = r`\p{Emoji_Modifier_Base}\p{Emoji_Modifier}`;
+/**
+ * Match "regular" emojis.
+ * iOS keyboard sometimes appends an extraneous Variation Selector-16, which the
+ * optional \uFE0F accounts for.
+ */
+const EMOJI_PRESENTATION = r`\p{Emoji_Presentation}\uFE0F?`;
+/**
+ * Match "text-default" emojis (☃, ♥, ☂) that are followed by a Variation
+ * Selector-16 (U+FE0F), enabling their emoji representation (☃ → ☃️).
+ * Negative lookahead prevents matching incomplete keycap sequences.
+ */
+const QUALIFIED_TEXT = r`(?![#*\d])\p{Emoji}\uFE0F`;
+const EMOJI = r`(?:${SUBDIVISION_FLAG}|${KEYCAP}|${EMOJI_WITH_SKIN_TONE}|${EMOJI_PRESENTATION}|${QUALIFIED_TEXT})`;
+export const EMOJI_REGEX = new RegExp(
+    r`\p{Regional_Indicator}{2}|` + // Regional Indicator pairs (e.g., 🇧🇪)
+        r`${EMOJI}(?:\u200D${EMOJI})*`, // Zero Width Joiner sequences (e.g., 👨‍👩‍👧‍👦)
+    "gu"
+);
 
 /**
  * Wrap emojis present in the given text with a title and return a safe HTML

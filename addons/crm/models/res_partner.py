@@ -54,9 +54,8 @@ class ResPartner(models.Model):
             'search_default_filter_won': 1,
             'search_default_filter_ongoing': 1,
             'search_default_filter_lost': 1,
-            'active_test': False,
         }
         # we want the list view first
         action['views'] = sorted(action['views'], key=lambda view: view[1] != 'list')
-        action['domain'] = self._get_contact_opportunities_domain()
+        action['domain'] = [('active', 'in', [True, False])] + self._get_contact_opportunities_domain()
         return action

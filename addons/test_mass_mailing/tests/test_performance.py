@@ -49,7 +49,8 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         # runbot needs +101 compared to local
         with (
             self.mock_mail_gateway(mail_unlink_sent=True),
-            self.assertQueryCount(__system__=1379, marketing=1383),  # 1227, 1229
+            # contains notably 1 query / record for unlink in mail
+            self.assertQueryCount(__system__=1380, marketing=1384),  # 1231, 1235
         ):
             mailing.action_send_mail()
 
@@ -93,7 +94,8 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +153 compared to local
-        with self.assertQueryCount(__system__=1410, marketing=1417):  # 1257, 1260
+        # contains notably 1 query / record for unlink in mail
+        with self.assertQueryCount(__system__=1412, marketing=1419):  # 1259, 1266
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)

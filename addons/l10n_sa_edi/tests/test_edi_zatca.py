@@ -298,6 +298,80 @@ class TestEdiZatca(TestSaEdiCommon):
                     move=refund_invoice,
                 )
 
+    @freeze_time('2022-09-05')
+    def test_invoice_with_reversed_downpayment_invoice(self):
+        """ SO with a reversed downpayment + a new downpayment must
+        not crash when generating the ZATCA XML of the final invoice.
+        """
+        if 'sale' not in self.env["ir.module.module"]._installed():
+            self.skipTest("Sale module is not installed")
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
+
+        saudi_pricelist = self.env['product.pricelist'].create({
+            'name': 'SAR',
+            'currency_id': self.env.ref('base.SAR').id,
+        })
+        sale_order = self.env['sale.order'].create({  # noqa: OLS03001
+            'partner_id': self.partner_sa.id,
+            'pricelist_id': saudi_pricelist.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000,
+                'product_uom_qty': 1,
+                'tax_ids': [Command.set(self.tax_15.ids)],
+            })],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.customer_invoice_journal.id,
+        }
+
+        # Mark the product SOL as delivered so the final invoice contains it.
+        sale_order.order_line.filtered(lambda l: not l.is_downpayment).qty_delivered = 1
+
+        # 1. First downpayment, then reverse it through the Credit Note
+        dp1_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 115,
+        })
+        dp1 = dp1_wizard._create_invoices(sale_order)
+        dp1.invoice_date_due = '2022-09-22'
+        dp1.action_post()
+
+        reversal_wizard = self.env['account.move.reversal'].with_context(
+            active_model='account.move',
+            active_ids=dp1.ids,
+        ).create({
+            'journal_id': dp1.journal_id.id,
+            'reason': 'Repro opw-6116265',
+            'l10n_sa_reason': 'BR-KSA-17-reason-5',
+        })
+        reversal_wizard.reverse_moves(is_modify=True)
+        self.assertEqual(dp1.payment_state, 'reversed')
+
+        # 2. DP2 is the draft produced by the reversal wizard; post it.
+        dp2 = reversal_wizard.new_move_ids
+        self.assertEqual(len(dp2), 1)
+        dp2.invoice_date_due = '2022-09-22'
+        dp2.action_post()
+
+        # 3. Final invoice — should not raise "Expected singleton" during XML generation
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})  # noqa: OLS03001
+        final = final_wizard._create_invoices(sale_order)
+        final.invoice_line_ids.filtered('is_downpayment').name = 'Down Payment'
+        final.invoice_date_due = '2022-09-22'
+        final.action_post()
+        final.l10n_sa_confirmation_datetime = datetime.now()
+
+        # Must not raise: previously crashed with "Expected singleton: account.move(dp1, dp2)"
+        final._l10n_sa_generate_unsigned_data()
+        generated_file = self.env['account.edi.format']._l10n_sa_generate_zatca_template(final)
+        self.assertIn(dp2.name, generated_file.decode() if isinstance(generated_file, bytes) else generated_file)
+
     def testInvoiceWithRetention(self):
         """Test standard invoice generation."""
 
@@ -628,3 +702,99 @@ class TestEdiZatca(TestSaEdiCommon):
             namespaces=self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_get_namespaces()
         )[0].text.strip()
         self.assertEqual(payable_amount, '115.00')
+
+    @freeze_time('2022-09-05 08:20:02')
+    def test_invoice_global_rounding_payable_amount(self):
+        """Test that prepaid tax amounts are calculated correctly when using global rounding.
+
+        Scenario: 8 invoice lines * 5.001 raw tax = 40.008 → 40.01 (correct, after global rounding)
+                  vs 5.00 + 5.00... = 40.00 (incorrect, from summing pre-rounded values)
+        """
+        self.ensure_installed('sale')
+
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_salesman')
+
+        self.company.tax_calculation_rounding_method = 'round_globally'
+
+        # Create sale order with 8 lines at 33.34 each (triggers rounding precision issues)
+        sale_order = self.env['sale.order'].create({  # noqa: OLS03001
+            'partner_id': self.partner_sa.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 33.34,
+                    'product_uom_qty': 1,
+                    'tax_ids': [Command.set(self.tax_15.ids)],
+                }) for _dummy in range(8)
+            ],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'active_id': sale_order.id,
+            'default_journal_id': self.customer_invoice_journal.id,
+        }
+
+        downpayment_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({  # noqa: OLS03001
+            'advance_payment_method': 'percentage',
+            'amount': 100,
+        })
+        downpayment = downpayment_wizard._create_invoices(sale_order)
+        downpayment.action_post()
+
+        # Create final invoice that includes downpayment lines
+        final_wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})  # noqa: OLS03001
+        final = final_wizard._create_invoices(sale_order)
+        final.action_post()
+
+        EdiHandler = self.env['account.edi.xml.ubl_21.zatca']
+
+        # Generate EDI document and verify tax amount and payable amount
+        xml_content = self.env['account.edi.format']._l10n_sa_generate_zatca_template(final)
+        xml_root = etree.fromstring(xml_content)
+        namespaces = EdiHandler._l10n_sa_get_namespaces()
+
+        # Verify tax amount is correctly calculated with global rounding
+        tax_total_nodes = xml_root.xpath(
+            "//cac:TaxTotal/cbc:TaxAmount",
+            namespaces=namespaces,
+        )
+        tax_amount = tax_total_nodes[0].text.strip()
+        self.assertEqual(
+            tax_amount,
+            '40.01',
+            f"Tax amount should be 40.01 (correct global rounding), got {tax_amount}",
+        )
+
+        payable_amount_nodes = xml_root.xpath(
+            "//cbc:PayableAmount",
+            namespaces=namespaces,
+        )
+        self.assertTrue(payable_amount_nodes, "PayableAmount node not found in XML")
+        payable_amount = payable_amount_nodes[0].text.strip()
+        self.assertEqual(
+            payable_amount,
+            '0.00',
+            f"Payable amount should be 0.00 (fully prepaid), got {payable_amount}",
+        )
+
+    def test_csr_validation_with_multibyte_characters(self):
+        vals = self._get_company_vals({"name": "مجموعة النخبة العالمية للاستشارات الفنية"})
+        new_company = self._create_company(**vals)
+        journal = self.env['account.journal'].search([
+            ('company_id', '=', new_company.id),
+            ('type', '=', 'sale'),
+        ], limit=1)
+
+        wizard = self.env['l10n_sa_edi.otp.wizard'].create({
+            'journal_id': journal.id,
+            'l10n_sa_otp': '123456',
+        })
+        self.assertFalse(journal.l10n_sa_csr_errors)
+        wizard.validate()
+        self.assertRegex(
+            journal.l10n_sa_csr_errors,
+            r"Please make sure the following fields are shorter than 64 bytes.*Company Name",
+        )

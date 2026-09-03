@@ -26,7 +26,7 @@ export class MailCoreWeb {
             } else if (payload.activity_deleted) {
                 countDiff = -1;
             }
-            this.store.activityCounter += countDiff;
+            this.store.activityCounter = Math.max(this.store.activityCounter + countDiff, 0);
         });
         this.env.bus.addEventListener("mail.message/delete", ({ detail: { message, notifId } }) => {
             if (message.needaction && notifId > this.store.inbox.counter_bus_id) {

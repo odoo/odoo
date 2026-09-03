@@ -188,8 +188,8 @@
                 <separator/>
                 <filter name="date_filter" string="Date" date="date"/>
                 <filter name="current_month" string="Current Month" domain="[
-                    ('date', '&gt;=', '=1d'),
-                    ('date', '&lt;', '=1d +1m')]"/>
+                    ('date', '&gt;=', 'today =1d'),
+                    ('date', '&lt;', 'today =1d +1m')]"/>
                 <separator/>
                 <filter name="group_employee" string="Employee" context="{'group_by': 'employee_id'}"/>
                 <filter name="group_department" string="Department" context="{'group_by': 'department_id'}"/>

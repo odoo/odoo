@@ -6,7 +6,6 @@ CURRENCY_MAPPING = {
     'AE': 'AED',
     'EG': 'EGP',
     'OM': 'OMR',
-    'PK': 'PKR',
     'SA': 'SAR',
 }
 
@@ -15,7 +14,6 @@ API_MAPPING = {
     'AE': 'uae',
     'EG': 'accept',
     'OM': 'oman',
-    'PK': 'pakistan',
     'SA': 'ksa',
 }
 
@@ -37,8 +35,6 @@ PAYMENT_METHODS_MAPPING = {
     'TAMARA': 'tamara',
     'STCPAY': 'stcpay',
     'OMANNET': 'omannet',
-    'EASYPAISADIRECT': 'easypaisa',
-    'JAZZCASH': 'jazzcash',
 }
 
 # The codes of the payment methods to activate when Paymob is activated.

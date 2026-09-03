@@ -21,6 +21,7 @@ from odoo.tools import _, frozendict, get_lang
 from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.json import stringify_keys
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -124,7 +125,7 @@ class IrActionsActions(models.Model):
            NOTE: ondelete cascade will not work on ir.actions.actions so we will need to do it manually."""
         todos = self.env['ir.actions.todo'].search([('action_id', 'in', self.ids)])
         todos.unlink()
-        filters = self.env['ir.filters'].search([('action_id', 'in', self.ids)])
+        filters = self.env['ir.filters'].with_context(active_test=False).search([('action_id', 'in', self.ids)])
         filters.unlink()
         res = super().unlink()
         # self.get_bindings() depends on action records
@@ -953,6 +954,7 @@ class IrActionsServer(models.Model):
                         payload.update(sample_record.read(self.webhook_field_ids.mapped('name'), load=None)[0])
                     else:
                         payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
+            payload = stringify_keys(payload)
             action.webhook_sample_payload = json.dumps(payload, indent=4, sort_keys=True, default=str)
 
     @api.constrains('code')
@@ -1169,12 +1171,12 @@ class IrActionsServer(models.Model):
                  correctly without return action
         """
         res = False
-        for action in self.sudo():
-            eval_context = self._get_eval_context(action)
+        for action in self:
+            eval_context = self._get_eval_context(action.sudo())
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
             action._can_execute_action_on_records(records)
-            res = action._run(records, eval_context)
+            res = action.sudo()._run(records, eval_context)
         return res
 
     def _run(self, records, eval_context):
@@ -1212,31 +1214,32 @@ class IrActionsServer(models.Model):
 
     def _can_execute_action_on_records(self, records):
         self.ensure_one()
+        su_self = self.sudo()
 
-        action_groups = self.group_ids
+        action_groups = su_self.group_ids
         if action_groups:
             if not (action_groups & self.env.user.all_group_ids):
                 raise AccessError(_("You don't have enough access rights to run this action."))
         else:
-            model_name = self.model_id.model
+            model_name = su_self.model_id.model
             try:
                 self.env[model_name].check_access("write")
             except AccessError:
                 _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                    self.name, self.env.user.login, model_name,
+                    su_self.name, self.env.user.login, model_name,
                 )
-                raise
+                raise AccessError(_("You don't have enough access rights to run this action."))
 
-        if not self.group_ids and records.ids:
+        if not su_self.group_ids and records.ids:
             # check access rules on real records only; base automations of
             # type 'onchange' can run server actions on new records
             try:
                 records.check_access('write')
             except AccessError:
                 _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                    self.name, self.env.user.login, records,
+                    su_self.name, self.env.user.login, records,
                 )
-                raise
+                raise AccessError(_("You don't have enough access rights to run this action."))
 
     @api.depends('evaluation_type', 'update_field_id')
     def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead

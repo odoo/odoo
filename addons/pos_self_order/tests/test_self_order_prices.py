@@ -5,7 +5,7 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestSelfOrderCombo(SelfOrderCommonTest):
+class TestSelfOrderPrice(SelfOrderCommonTest):
     def setUp(self):
         super().setUp()
 

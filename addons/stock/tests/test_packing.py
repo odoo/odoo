@@ -2064,8 +2064,8 @@ class TestPackagePropagation(TestPackingCommon):
 
         self.assertEqual(delivery.move_line_ids.result_package_id, pallet | box)
         self.assertEqual(delivery2.move_line_ids.result_package_id, box2)
-        self.assertEqual(delivery.move_line_ids.outermost_result_package_id, pallet)
-        self.assertEqual(delivery2.move_line_ids.outermost_result_package_id, pallet2)
+        self.assertEqual(delivery.move_line_ids.result_package_id.outermost_package_id, pallet)
+        self.assertEqual(delivery2.move_line_ids.result_package_id.outermost_package_id, pallet2)
         self.assertEqual(delivery.shipping_weight, 31)
         self.assertEqual(delivery2.shipping_weight, 17)
 

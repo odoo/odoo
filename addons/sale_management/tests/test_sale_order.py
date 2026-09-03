@@ -5,6 +5,8 @@ from itertools import chain
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.sale_management.controllers.portal import CustomerPortal
 from odoo.addons.sale_management.tests.common import SaleManagementCommon
 
 
@@ -549,3 +551,85 @@ class TestSaleOrder(SaleManagementCommon):
             so.order_line[2]._can_be_edited_on_portal(),
             "Discount line on optional section should not be editable on portal",
         )
+
+    def test_optional_lines_discount_is_not_recomputed_on_portal(self):
+        sale_order_with_option = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.optional_product.id}),
+            ],
+        })
+
+        optional_product_line = self._get_optional_product_lines(sale_order_with_option)
+        optional_product_line.discount = 20
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                sale_order_with_option.id, optional_product_line.id, input_quantity=10
+            )
+            self.assertEqual(optional_product_line.discount, 20)
+
+    def test_optional_lines_price_recomputed_with_pricelist_on_portal(self):
+        """Test that optional line prices are recomputed based on pricelist quantity rules."""
+        pricelist = self.env["product.pricelist"].create({
+            "name": "Qty-based Pricelist",
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.optional_product.product_tmpl_id.id,
+                    "min_quantity": 1,
+                    "compute_price": "fixed",
+                    "fixed_price": 100.0,
+                }),
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.optional_product.product_tmpl_id.id,
+                    "min_quantity": 10,
+                    "compute_price": "fixed",
+                    "fixed_price": 80.0,
+                }),
+            ],
+        })
+        self.sale_order.write({
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                Command.create({
+                    "display_type": "line_section",
+                    "name": "Optional products",
+                    "is_optional": True,
+                }),
+                Command.create({"product_id": self.optional_product.id, "product_uom_qty": 1}),
+            ],
+        })
+
+        line = self._get_optional_product_lines(self.sale_order)
+        self.assertEqual(line.price_unit, 100.0)
+
+        # Manually update the price unit
+        line.price_unit = 150.0
+        self.assertNotEqual(line.price_unit, line.technical_price_unit)
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=2
+            )
+        self.assertEqual(line.price_unit, 150.0)
+        line.price_unit = 100.0
+
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=10
+            )
+        self.assertEqual(line.price_unit, 80.0)
+
+        self.env["ir.config_parameter"].sudo().set_param("sale.disable_sale_update", True)
+        with MockRequest(self.env):
+            CustomerPortal().portal_quote_option_update(
+                self.sale_order.id, line.id, input_quantity=1
+            )
+        self.assertEqual(line.price_unit, 80.0)

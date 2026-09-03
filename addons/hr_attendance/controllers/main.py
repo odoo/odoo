@@ -74,6 +74,14 @@ class HrAttendance(http.Controller):
 
         return response
 
+    @staticmethod
+    def _get_active_company(request):
+        cids = request.httprequest.cookies.get('cids')
+        if cids:
+            return int(cids.split("-")[0])
+
+        return request.env.company
+
     @http.route('/hr_attendance/kiosk_mode_menu/<int:company_id>', auth='user', type='http')
     def kiosk_menu_item_action(self, company_id):
         if request.env.user.has_group("hr_attendance.group_hr_attendance_user"):
@@ -179,13 +187,16 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
-    @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
     def scan_barcode(self, token, barcode):
+        return self.scan_barcode_with_geolocation(token, barcode)
+
+    @http.route('/hr_attendance/attendance_barcode_scanned', type="jsonrpc", auth="public")
+    def scan_barcode_with_geolocation(self, token, barcode, latitude=False, longitude=False):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().search([('barcode', '=', barcode), ('company_id', '=', company.id)], limit=1)
             if employee:
-                employee._attendance_action_change(self._get_geoip_response('kiosk', device_tracking_enabled=company.attendance_device_tracking))
+                employee._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude, device_tracking_enabled=company.attendance_device_tracking))
                 return self._get_employee_info_response(employee)
         return {}
 
@@ -202,6 +213,8 @@ class HrAttendance(http.Controller):
     @http.route('/hr_attendance/employees_infos', type="jsonrpc", auth="public")
     def employees_infos(self, token, limit, offset, domain):
         for condition in domain:
+            if not isinstance(condition, (list, tuple)) or len(condition) != 3:
+                continue
             field_name, operator, _value = condition  # Force '&' implicit syntax
             if field_name not in ('name', 'department_id') or operator not in ('=', 'ilike'):
                 raise UserError(_(
@@ -227,7 +240,7 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/systray_check_in_out', type="jsonrpc", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
-        employee = request.env.user.employee_id
+        employee = request.env.user.with_company(self._get_active_company(request)).employee_id
         geo_ip_response = self._get_geoip_response(mode='systray',
                                                   latitude=latitude,
                                                   longitude=longitude,
@@ -237,7 +250,7 @@ class HrAttendance(http.Controller):
 
     @http.route('/hr_attendance/attendance_user_data', type="jsonrpc", auth="user", readonly=True)
     def user_attendance_data(self):
-        employee = request.env.user.employee_id
+        employee = request.env.user.with_company(self._get_active_company(request)).employee_id
         return self._get_user_attendance_data(employee)
 
     def has_password(self):

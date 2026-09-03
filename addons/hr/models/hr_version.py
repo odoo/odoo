@@ -10,7 +10,18 @@ from odoo.exceptions import ValidationError
 from odoo.tools import get_lang, babel_locale_parse
 
 import logging
+import operator as py_operator
 _logger = logging.getLogger(__name__)
+
+PY_OPERATORS = {
+    '>': py_operator.gt,
+    '<': py_operator.lt,
+    '>=': py_operator.ge,
+    '<=': py_operator.le,
+    '=': py_operator.eq,
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+}
 
 
 def format_date_abbr(env, date):
@@ -173,7 +184,7 @@ class HrVersion(models.Model):
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     contract_type_id = fields.Many2one('hr.contract.type', "Contract Type", tracking=True,
                                        groups="hr.group_hr_manager")
-    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True, copy=False)
 
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
@@ -569,10 +580,77 @@ class HrVersion(models.Model):
                 version.date_end = version.contract_date_end
 
     def _search_start_date(self, operator, value):
-        return [('contract_date_start', operator, value)]
+        if operator in ('>', '>='):
+            return [
+                '|',
+                    ('date_version', operator, value),
+                    ('contract_date_start', operator, value),
+            ]
+
+        if operator in ('<', '<='):
+            return [
+                '&',
+                    ('date_version', operator, value),
+                    '|',
+                        ('contract_date_start', '=', False),
+                        ('contract_date_start', operator, value),
+            ]
+
+        if operator == '=':
+            return [
+                '|',
+                    '&',
+                        ('date_version', '=', value),
+                        '|',
+                            ('contract_date_start', '=', False),
+                            ('contract_date_start', '<=', value),
+                    '&',
+                        ('contract_date_start', '=', value),
+                        ('date_version', '<=', value),
+            ]
+
+        if operator == '!=':
+            return ['!', *self._search_start_date('=', value)]
+
+        return NotImplemented
 
     def _search_end_date(self, operator, value):
-        return [('contract_date_end', operator, value)]
+
+        def _compare_dates(date_end, operator, value):
+            op = PY_OPERATORS.get(operator)
+            if not op:
+                return False
+            if not date_end and operator in ('>', '>=', '<', '<='):
+                return False
+            return op(date_end, value)
+
+        all_versions = self.search([('company_id', 'in', self.env.companies.ids)])
+        matching_ids = []
+
+        next_version_map = {}
+        prev_version_per_employee = {}
+
+        for version in all_versions:
+            emp_id = version.employee_id.id
+            if emp_id in prev_version_per_employee:
+                next_version_map[prev_version_per_employee[emp_id].id] = version
+            prev_version_per_employee[emp_id] = version
+
+        for version in all_versions:
+            next_version = next_version_map.get(version.id)
+            date_version_end = next_version.date_version + relativedelta(days=-1) if next_version else False
+
+            if date_version_end and version.contract_date_end:
+                date_end = min(date_version_end, version.contract_date_end)
+            elif date_version_end:
+                date_end = date_version_end
+            else:
+                date_end = version.contract_date_end
+
+            if _compare_dates(date_end, operator, value):
+                matching_ids.append(version.id)
+
+        return [('id', 'in', matching_ids)]
 
     @api.model
     def _get_marital_status_selection(self):
@@ -618,4 +696,17 @@ class HrVersion(models.Model):
             'context': {
                 'version_id': self.id,
             },
+        }
+
+    def action_open_version_form_view(self):
+        self.ensure_one()
+        view_id = self.env.ref('hr.hr_contract_template_form_view').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.version',
+            'res_id': self.id,
+            'views': [[view_id, "form"]],
+            'target': 'current',
+            'context': self.env.context,
         }

@@ -55,8 +55,10 @@
                 padding: 0;
             }
 
-            div[class*="col-"] + div[class*="col-"] {
-                border-left: 1px solid $dropdown-divider-bg;
+            @include media-breakpoint-up(sm) {
+                > div + div {
+                    border-left: 1px solid $dropdown-divider-bg;
+                }
             }
             > div:last-child {
                 @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);

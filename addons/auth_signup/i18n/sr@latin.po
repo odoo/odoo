@@ -5,14 +5,14 @@
 # Translators:
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-16 15:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"PO-Revision-Date: 2026-08-04 02:09+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
 "odoo-19/auth_signup/sr_Latn/>\n"
 "Language: sr@latin\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -114,8 +114,8 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 8px 0px 8px; border-collapse:separate;\">\n"
-"                <t t-set=\"invited_users\" t-"
-"value=\"ctx.get('invited_users', [])\"/>\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get"
+"('invited_users', [])\"/>\n"
 "                <td style=\"text-align : left\">\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        Pozivnice na čekanju\n"
@@ -130,22 +130,22 @@ msgstr ""
 "                        <ul>\n"
 "                            <t t-foreach=\"invited_users\" t-"
 "as=\"invited_user\">\n"
-"                                <li t-out=\"invited_user or "
-"''\">demo@example.com</li>\n"
+"                                <li t-out=\"invited_user or ''\">"
+"demo@example.com</li>\n"
 "                            </t>\n"
 "                        </ul>\n"
 "                        Ispratite ovo sa njima kako bi mogli da pristupe "
 "bazi podataka i počeli da rade sa vama.\n"
 "                        <br/><br/>\n"
 "                        Želimo vam ugodan dan!<br/>\n"
-"                        --<br/> <t t-out=\"object.company_id.name or "
-"''\">YourCompany</t> Tim\n"
+"                        --<br/> <t t-out=\"object.company_id.name or ''\">"
+"YourCompany</t> Tim\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
-"                  <hr width=\"100%\" style=\"background-"
-"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
-"size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -572,6 +572,7 @@ msgstr "Već imate nalog?"
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/models/res_users.py:0
 msgid "Another user is already registered using this email address."
 msgstr "Drugi korisnik je već registrovan uz pomoć ove email adrese."
 
@@ -702,8 +703,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
-"Ukoliko ovo niste očekivali, možete sa sigurnošću ignorisati ovaj email.<br/"
-"><br/>\n"
+"Ukoliko ovo niste očekivali, možete sa sigurnošću ignorisati ovaj email.<br/>"
+"<br/>\n"
 "                                Hvala,"
 
 #. module: auth_signup
@@ -954,8 +955,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "Da biste poslali pozivnice u B2B režimu, otvorite kontakt ili izaberite "
-"nekoliko u prikazu liste i kliknite na opciju „Upravljanje pristupom "
-"portalu“ u padajućem meniju *Akcija*."
+"nekoliko u prikazu liste i kliknite na opciju „Upravljanje pristupom portalu"
+"“ u padajućem meniju *Akcija*."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users

@@ -52,6 +52,9 @@ class StripeController(http.Controller):
         except ValidationError:
             _logger.error("Failed to process the return from Stripe.")
         else:
+            if tx_sudo.reference != response_content["description"]:
+                _logger.warning("Received payment data with incorrect reference")
+                raise Forbidden()
             if tx_sudo.operation != 'validation':
                 self._include_payment_intent_in_payment_data(response_content, data)
             else:
@@ -106,6 +109,9 @@ class StripeController(http.Controller):
                     stripe_object['payment_method'] = payment_method
                     self._include_setup_intent_in_payment_data(stripe_object, data)
                 elif event['type'] == 'charge.refunded':  # Refund operation (refund creation).
+                    if not stripe_object['captured']:  # The charge was authorized and then voided
+                        return request.make_json_response('')  # Don't process void-related events
+
                     refunds = stripe_object['refunds']['data']
 
                     # The refunds linked to this charge are paginated, fetch the remaining refunds.
@@ -123,7 +129,10 @@ class StripeController(http.Controller):
                         has_more = additional_refunds['has_more']
 
                     # Process the refunds for which a refund transaction has not been created yet.
-                    processed_refund_ids = tx_sudo.child_transaction_ids.filtered(
+                    # Include refunds of capture transactions, as they are grandchildren of the
+                    # source transaction found from the charge.
+                    child_txs = tx_sudo.child_transaction_ids
+                    processed_refund_ids = (child_txs | child_txs.child_transaction_ids).filtered(
                         lambda tx: tx.operation == 'refund'
                     ).mapped('provider_reference')
                     for refund in filter(lambda r: r['id'] not in processed_refund_ids, refunds):
@@ -193,7 +202,7 @@ class StripeController(http.Controller):
         webhook_secret = stripe_utils.get_webhook_secret(tx_sudo.provider_id)
         if not webhook_secret:
             _logger.warning("ignored webhook event due to undefined webhook secret")
-            return
+            raise Forbidden()
 
         notification_payload = request.httprequest.data.decode('utf-8')
         signature_entries = request.httprequest.headers['Stripe-Signature'].split(',')

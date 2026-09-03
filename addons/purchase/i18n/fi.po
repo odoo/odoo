@@ -31,14 +31,14 @@
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Mikko Salmela <salmemik@gmail.com>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-03-30 13:42+0000\n"
+"PO-Revision-Date: 2026-08-24 05:53+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/purchase/"
 "fi/>\n"
@@ -47,7 +47,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -171,16 +171,16 @@ msgstr ""
 "Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Tämä on muistutus, että ostotilauksen <span style=\"font-weight:bold;"
-"\" t-out=\"object.name or ''\">P00015</span> odotettu toimitus\n"
+"        Tämä on muistutus, että ostotilauksen <span style=\"font-"
+"weight:bold;\" t-out=\"object.name or ''\">P00015</span> odotettu toimitus\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref "
 "or ''\">REF_XXX</t>)</span>\n"
 "        </t>\n"
 "        on \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-"
-"out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date"
+"(object.date_planned) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">määrittelemätön</span>.\n"
@@ -258,8 +258,8 @@ msgstr ""
 "        Tässä on liitteenä ostotilaus <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">P00015</span>,\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            jonka viite on: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-"t>\n"
+"            jonka viite on: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+"\n"
 "        </t>\n"
 "        ja jonka summa on <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
@@ -332,8 +332,8 @@ msgstr ""
 "        Liitteenä tarjouspyyntö <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">P00015</span>,\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            jonka viite on: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
-"t>,\n"
+"            jonka viite on: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
+",\n"
 "        </t>\n"
 "        lähettäjältä <t t-out=\"object.company_id.name or ''\">YourCompany</"
 "t>.\n"
@@ -436,8 +436,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
-"\">Tarjouspyyntö </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Tarjouspyyntö </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Ostotilaus </span>"
 
@@ -622,7 +622,7 @@ msgid ""
 "supplier to deliver goods or services to the buyer at a preset price for a "
 "period of time."
 msgstr ""
-"Yleisostotilaus on ostajan ja tavarantoimittajan välinen ostosopimus "
+"Puiteostotilaus on ostajan ja tavarantoimittajan välinen ostosopimus "
 "tavaroiden tai palvelujen toimittamisesta ostajalle ennalta määrättyyn "
 "hintaan tietyn ajanjakson ajan."
 
@@ -828,7 +828,7 @@ msgstr "Salli ostotilausten muokkaaminen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr "Sallitut mittayksiköt"
+msgstr "Sallittu mittayksikkö"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__aml_id
@@ -1628,8 +1628,7 @@ msgstr ""
 msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
-msgstr ""
-"Jos asennettu, tuotevariantit lisätään ostotilaukselle taulukon kautta."
+msgstr "Jos asennettu, tuotevariantit lisätään ostotilaukselle taulukon kautta."
 
 #. module: purchase
 #. odoo-python
@@ -1859,7 +1858,7 @@ msgstr "Varmista että maksat vain laskut joista olet saanut tilatut tuotteet"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage blanket orders and purchase templates"
-msgstr "Hallinnoi yleistilauksia ja ostomalleja"
+msgstr "Hallinnoi puitetilauksia ja ostopohjia"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1895,7 +1894,7 @@ msgstr "Yhdistetyt tarjouspyynnöt"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -2225,7 +2224,7 @@ msgstr "Tilausrivit"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Order Reference"
-msgstr "Tilauksen viite"
+msgstr "Tilausviite"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -2373,18 +2372,18 @@ msgstr "Tuotteen mittayksikön hinta"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_qty
 msgid "Product Uom Qty"
-msgstr "Tuotteen mittayksikön määrä"
+msgstr "Tuotteen mittayksikön lukumäärä"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
-msgstr "Tuotevariaatiot"
+msgstr "Tuotevariantit"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_no_variant_attribute_value_ids
@@ -2755,7 +2754,7 @@ msgstr "Tarjouspyynnöt ja ostot"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -3029,7 +3028,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3190,12 +3189,12 @@ msgstr "Veron pyöristysmenettely"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax excl.:"
-msgstr "Veroton."
+msgstr "Veroton:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Tax incl.:"
-msgstr "Vero sis."
+msgstr "sis. verot:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
@@ -3285,8 +3284,7 @@ msgstr "Tilillesi ei ole tällä hetkellä tarjouspyyntöjä."
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
-msgstr ""
-"Ostotilaukseen ei ole lisättäviä tuotteita. Ovatko nämä ennakkomaksuja?"
+msgstr "Ostotilaukseen ei ole lisättäviä tuotteita. Ovatko nämä ennakkomaksuja?"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3568,7 +3566,7 @@ msgstr "Toimittaja"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
 msgid "Vendor Bill"
-msgstr "Ostolasku"
+msgstr "Toimittajan lasku"
 
 #. module: purchase
 #. odoo-python
@@ -3681,7 +3679,7 @@ msgstr "Verkkosivun ilmoitukset"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
@@ -3693,11 +3691,11 @@ msgid ""
 "dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
-"Kun luot ostotilausta, katso toimittajan <i>Toimitettu ajallaan</i> "
-"-prosentti: ajallaan toimitettujen tuotteiden prosenttiosuus. Jos se on "
-"liian alhainen, aktivoi <i>automaattiset muistutukset</i>. Muutama päivä "
-"ennen erääntynyttä toimitusta Odoo lähettää toimittajalle sähköpostin, jossa "
-"se pyytää vahvistusta toimituspäivistä ja pitää sinut ajan tasalla, jos "
+"Kun luot ostotilausta, katso toimittajan <i>Toimitettu ajallaan</i> -"
+"prosentti: ajallaan toimitettujen tuotteiden prosenttiosuus. Jos se on liian "
+"alhainen, aktivoi <i>automaattiset muistutukset</i>. Muutama päivä ennen "
+"erääntynyttä toimitusta Odoo lähettää toimittajalle sähköpostin, jossa se "
+"pyytää vahvistusta toimituspäivistä ja pitää sinut ajan tasalla, jos "
 "viivästyksiä ilmenee. Saat myyjän suoritustilastot näkyviin napsauttamalla "
 "OTD-astetta."
 

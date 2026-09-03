@@ -5,14 +5,14 @@
 # Translators:
 # Martin Trigaux, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-02-16 10:58+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 14:04+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "es/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
@@ -47,8 +47,13 @@ msgstr "11111111111 (NIN) o 2222222222 (VKN)"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
+msgstr "12345678 o UA12345678 (EDRPOU), 1234567890 (RNOPP) o 123456789012 (IPN)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "123456789 (TIN) or 12345678901234 (PINFL)"
 msgstr ""
-"12345678 o UA12345678 (EDRPOU), 1234567890 (RNOPP) o 123456789012 (IPN)"
 
 #. module: base_vat
 #. odoo-python
@@ -72,7 +77,7 @@ msgstr "49-098-576 o 49098576"
 #. module: base_vat
 #: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
 msgid "Base VAT: Sync updates from IAP VIES"
-msgstr ""
+msgstr "IVA base: sincronizar actualizaciones desde IAP VIES"
 
 #. module: base_vat
 #. odoo-python
@@ -197,7 +202,7 @@ msgstr "Validez intracomunitaria"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "Invalid IAP VIES endpoint"
-msgstr ""
+msgstr "Endpoint IAP VIES no válido"
 
 #. module: base_vat
 #. odoo-python
@@ -241,32 +246,22 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
-msgstr ""
-
-#. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"El número de identificación fiscal. Los valores establecidos aquí se "
-"validarán según el formato del país. Puede utilizar \"/\" para indicar que "
-"el contacto no está sujeto a impuestos."
+msgid "The Intra-Community validity has been updated to: %s."
+msgstr "La validez intracomunitaria se ha actualizado a: %s."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
 msgstr ""
+"La verificación de VIES ha fallado. Revisa el número de IVA manualmente."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check is pending. The status will be updated soon."
 msgstr ""
+"La verificación de VIES está pendiente. El estado se actualizará pronto."
 
 #. module: base_vat
 #. odoo-python
@@ -302,16 +297,40 @@ msgstr ""
 "Luhn"
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "ya sea 11 dígitos para CPF o 14 dígitos para CNPJ"
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr "11 dígitos para CPF o 14 dígitos para CNPJ"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "contacto [%s]"
+
+#~ msgid "XXXXXXXXX [9 digits]"
+#~ msgstr "XXXXXXXXX [9 dígitos]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "El número de identificación fiscal. Los valores establecidos aquí se "
+#~ "validarán según el formato del país. Puede utilizar \"/\" para indicar "
+#~ "que el contacto no está sujeto a impuestos."
+
+#~ msgid "The Intra-Community validity has been updated."
+#~ msgstr "Se ha actualizado la validez intracomunitaria."
+
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "ya sea 11 dígitos para CPF o 14 dígitos para CNPJ"
 
 #~ msgid ""
 #~ "Connection with the VIES server failed. The VAT number %s could not be "

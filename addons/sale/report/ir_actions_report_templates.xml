@@ -16,21 +16,29 @@
                              and doc.partner_invoice_id != doc.partner_id
                              or doc.partner_shipping_id != doc.partner_invoice_id">
             <t t-set="information_block">
-                <strong>
-                    <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
+                <t t-if="doc.partner_shipping_id == doc.partner_invoice_id">
+                    <strong>
                         Invoicing and Shipping Address
-                    </t>
-                    <t t-else="">
-                        Invoicing Address
-                    </t>
-                </strong>
-                <div t-field="doc.partner_invoice_id"
-                    t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                <t t-if="doc.partner_shipping_id != doc.partner_invoice_id">
-                    <strong class="d-block mt-3">Shipping Address</strong>
-                    <div t-field="doc.partner_shipping_id"
+                    </strong>
+                    <div t-field="doc.partner_invoice_id"
                         t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                 </t>
+                <div t-else="" class="row">
+                    <div t-if="doc.partner_id != doc.partner_invoice_id" t-att-class="doc.partner_id != doc.partner_shipping_id and 'col-6 pe-1'">
+                        <strong>
+                            Invoicing Address
+                        </strong>
+                        <div t-field="doc.partner_invoice_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                    <div t-if="doc.partner_id != doc.partner_shipping_id" t-att-class="doc.partner_id != doc.partner_invoice_id and 'col-6 ps-1'">
+                        <strong>
+                            Shipping Address
+                        </strong>
+                        <div t-field="doc.partner_shipping_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </div>
             </t>
         </t>
         <div class="page">
@@ -87,14 +95,27 @@
             <table class="o_has_total_table table o_main_table table-borderless">
                 <!-- In case we want to repeat the header, remove "display: table-row-group" -->
                 <thead style="display: table-row-group">
+                    <!-- Initialize the dynamic column counter -->
+                    <t t-set="colspan_count" t-value="0"/>
                     <tr>
-                        <th name="th_description" class="text-start">Description</th>
-                        <th name="th_quantity" class="text-end text-nowrap">Quantity</th>
-                        <th name="th_priceunit" class="text-end text-nowrap">Unit Price</th>
+                        <th name="th_description" class="text-start">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                            Description
+                        </th>
+                        <th name="th_quantity" class="text-end text-nowrap">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                            Quantity
+                        </th>
+                        <th name="th_priceunit" class="text-end text-nowrap">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
+                            Unit Price
+                        </th>
                         <th name="th_discount" t-if="display_discount" class="text-end">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
                             <span>Disc.%</span>
                         </th>
                         <th name="th_taxes" t-if="display_taxes" class="text-end">
+                            <t t-set="colspan_count" t-value="colspan_count + 1"/>
                             <span>Taxes</span>
                         </th>
                         <th name="th_subtotal" class="text-end">
@@ -106,7 +127,8 @@
 
                     <t t-set="current_section" t-value="None"/>
                     <t t-set="current_subsection" t-value="None"/>
-                    <t t-set="price_field" t-value="'price_total' if hide_taxes_details else 'price_subtotal'"/>
+                    <t t-set="price_field" t-value="'price_total' if (hide_taxes_details or doc.company_price_include == 'tax_included') else 'price_subtotal'"/>
+
 
                     <t t-foreach="lines_to_report" t-as="line">
 
@@ -147,8 +169,18 @@
                                 t-att-class="'fw-bolder o_line_section' if is_section else 'fw-bold o_line_subsection'"
                             >
                                 <t
+                                    t-set="show_section_total"
+                                    t-value="(
+                                        (
+                                            is_section
+                                            or not line.parent_id.collapse_prices
+                                        )
+                                        and not line.is_downpayment
+                                    )"
+                                />
+                                <t
                                     t-set="section_name_colspan"
-                                    t-value="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                    t-value="colspan_count"
                                 />
                                 <t t-if="not show_section_total">
                                     <t t-set="section_name_colspan" t-value="99"/>
@@ -183,7 +215,7 @@
                             <tr t-elif="is_combo" name="tr_combo" class="fw-bold o_line_subsection">
                                 <td
                                     name="td_combo_name"
-                                    t-att-colspan="3 + (1 if display_discount else 0) + (1 if display_taxes else 0)"
+                                    t-att-colspan="colspan_count"
                                     t-att-class="padding_class"
                                 >
                                     <span t-field="line.name">Combo Product</span>
@@ -239,8 +271,8 @@
                                 <td t-if="display_taxes" name="td_product_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
-                                <td t-if="not line.is_downpayment" name="td_product_subtotal" class="text-end o_price_total">
-                                    <t t-if="not collapse_prices">
+                                <td name="td_product_subtotal" class="text-end o_price_total">
+                                    <t t-if="not line.is_downpayment and not collapse_prices">
                                         <span
                                             t-if="price_field == 'price_subtotal'"
                                             t-field="line.price_subtotal"
@@ -323,7 +355,10 @@
             </div>
             <div class="oe_structure"></div>
 
-            <div t-if="not doc.signature" class="oe_structure"></div>
+            <div
+                t-if="not doc.signature or not doc.env.context.get('sale_include_signature')"
+                class="oe_structure"
+            />
             <div t-else="" class="mt-4 ml64 mr4" name="signature">
                 <div class="offset-8">
                     <strong>Signature</strong>
@@ -348,11 +383,6 @@
                 </p>
             </div>
             <div class="oe_structure"/>
-            <t t-set="base_address" t-value="doc.env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
-            <t t-set="portal_url" t-value="base_address + '/my/orders/' + str(doc.id) + '#portal_connect_software_modal_btn'"/>
-            <div t-if="any(u._is_portal() for u in doc.partner_id.user_ids) and doc._get_edi_builders()" class="text-center">
-                <a t-att-href="portal_url">Connect your software</a> with <t t-out="doc.company_id.name"/> to create quotes automatically.
-            </div>
         </div>
     </t>
 </template>

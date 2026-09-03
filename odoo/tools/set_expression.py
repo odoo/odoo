@@ -20,7 +20,8 @@ class SetDefinitions:
         """ Initialize the object with ``definitions``, a dict which maps each
         set id to a dict with optional keys ``"ref"`` (value is the set's name),
         ``"supersets"`` (value is a collection of set ids), and ``"disjoints"``
-        (value is a collection of set ids).
+        (value is a collection of set ids). `"ref"` can be replaced by `"refs"`
+        if you need to set multiple aliases.
 
         Here is an example of set definitions, with natural numbers (N), integer
         numbers (Z), rational numbers (Q), irrational numbers (R\\Q), real
@@ -54,11 +55,18 @@ class SetDefinitions:
         self.__leaves: dict[int | str, Leaf] = {}
 
         for leaf_id, info in definitions.items():
-            ref = info['ref']
+            ref = (
+                info.get('ref')
+                or next(iter(info.get('refs', ())), None)
+                or str(leaf_id)
+            )
             assert ref != '*', "The set reference '*' is reserved for the universal set."
             leaf = Leaf(leaf_id, ref)
             self.__leaves[leaf_id] = leaf
             self.__leaves[ref] = leaf
+            for ref in info.get('refs', ()):
+                assert ref != '*', "The set reference '*' is reserved for the universal set."
+                self.__leaves[ref] = leaf
 
         # compute transitive closure of subsets and supersets
         subsets = {leaf.id: leaf.subsets for leaf in self.__leaves.values()}

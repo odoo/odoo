@@ -16,6 +16,7 @@ import {
 } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
 import { isHtmlContentSupported } from "./selection_plugin";
+import { getRowIndex } from "@html_editor/utils/table";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -94,7 +95,7 @@ export const CLIPBOARD_WHITELISTS = {
         /^btn/,
         /^fa/,
     ],
-    attributes: ["class", "href", "src", "target"],
+    attributes: ["class", "href", "src", "target", "colspan", "rowspan"],
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
 };
 
@@ -205,10 +206,12 @@ export class ClipboardPlugin extends Plugin {
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 
-        this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
-            this.handlePasteOdooEditorHtml(ev.clipboardData) ||
-            this.handlePasteHtml(selection, ev.clipboardData) ||
-            this.handlePasteText(selection, ev.clipboardData);
+        if (!this.delegateTo("paste_overrides", selection, ev.clipboardData)) {
+            this.handlePasteUnsupportedHtml(selection, ev.clipboardData) ||
+                this.handlePasteOdooEditorHtml(ev.clipboardData) ||
+                this.handlePasteHtml(selection, ev.clipboardData) ||
+                this.handlePasteText(selection, ev.clipboardData);
+        }
 
         this.dispatchTo("after_paste_handlers", selection);
         this.dependencies.history.addStep();
@@ -491,19 +494,12 @@ export class ClipboardPlugin extends Plugin {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
-            if (node.nodeName === "THEAD") {
-                const tbody = node.nextElementSibling;
-                if (tbody) {
-                    // If a <tbody> already exists, move all rows from
-                    // <thead> into the start of <tbody>.
-                    tbody.prepend(...node.children);
-                    node.remove();
-                    node = tbody;
-                } else {
-                    // Otherwise, replace the <thead> with <tbody>
-                    node = this.dependencies.dom.setTagName(node, "TBODY");
+            if (["TD", "TH"].includes(node.nodeName)) {
+                // Convert table headers to cells when they are not
+                // in the first row.
+                if (node.nodeName === "TH" && getRowIndex(node) !== 0) {
+                    node = this.dependencies.dom.setTagName(node, "td");
                 }
-            } else if (["TD", "TH"].includes(node.nodeName)) {
                 // Insert base container into empty TD.
                 if (isEmptyBlock(node)) {
                     const baseContainer = this.dependencies.baseContainer.createBaseContainer();
@@ -680,6 +676,16 @@ export class ClipboardPlugin extends Plugin {
                 const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
                 deleteAndSetSelection(range.startContainer, range.startOffset);
             }
+        }
+        if (
+            this.delegateTo(
+                "html_drop_overrides",
+                this.dependencies.selection.getEditableSelection(),
+                ev.dataTransfer
+            )
+        ) {
+            this.dependencies.history.addStep();
+            return;
         }
         if (odooEditorHtml) {
             const fragment = parseHTML(this.document, odooEditorHtml);

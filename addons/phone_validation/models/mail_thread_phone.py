@@ -6,7 +6,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
-from odoo.tools import create_index, make_identifier
+from odoo.tools import create_index, index_exists, make_identifier, ormcache
 
 PHONE_REGEX_PATTERN = r'[\s\\./\(\)\-]'
 
@@ -46,12 +46,33 @@ class MailThreadPhone(models.AbstractModel):
             when there is both a mobile and phone field in a model.")
     phone_mobile_search = fields.Char("Phone Number", store=False, search='_search_phone_mobile_search')
 
-    def init(self):
-        super().init()
+    @api.model
+    @ormcache('self._table', cache='stable')
+    def _phone_sanitized_search_index_exists(self):
+        index_name = make_identifier(f'{self._table}_phone_sanitized_partial_tgm')
+        return index_exists(self.env.cr, index_name)
+
+    @api.model
+    def _phone_get_phone_mobile_search_fields(self):
+        """Return stored phone fields to include in phone_mobile_search lookups.
+
+        phone_sanitized (E164-normalized) is added alongside the raw
+        _phone_get_number_fields so that searching by a normalized number
+        (e.g. "+3212345678") also matches records whose raw numbers are
+        stored in a different format (e.g. "012345678", "003212345678")."""
         phone_fields = [
             fname for fname in self._phone_get_number_fields()
             if fname in self._fields and self._fields[fname].store
         ]
+        phone_fields.append('phone_sanitized')
+        return phone_fields
+
+    def init(self):
+        super().init()
+        # Skip AbstractModel tables (no physical table to index).
+        if not self._auto:
+            return
+        phone_fields = self._phone_get_phone_mobile_search_fields()
         # Add supporting indexes for searching on `phone_mobile_search`
         for fname in phone_fields:
             regex_expression = rf"regexp_replace(({fname}::text), '{PHONE_REGEX_PATTERN}'::text, ''::text, 'g'::text)"
@@ -76,10 +97,12 @@ class MailThreadPhone(models.AbstractModel):
         if operator == 'in':
             return Domain.OR(self._search_phone_mobile_search('=', v) for v in value)
         value = value.strip() if isinstance(value, str) else value
-        phone_fields = [
-            fname for fname in self._phone_get_number_fields()
-            if fname in self._fields and self._fields[fname].store
-        ]
+        phone_fields = self._phone_get_phone_mobile_search_fields()
+        # TODO: remove in master. On databases not upgraded since
+        # phone_sanitized got its index, searching on it would trigger a
+        # full table scan, so it is skipped when the index is missing.
+        if 'phone_sanitized' in phone_fields and not self._phone_sanitized_search_index_exists():
+            phone_fields.remove('phone_sanitized')
         if not phone_fields:
             raise UserError(_('Missing definition of phone fields.'))
 

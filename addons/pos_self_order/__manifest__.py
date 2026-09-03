@@ -85,6 +85,7 @@
             "point_of_sale/static/src/app/components/order_display/*",
             "point_of_sale/static/src/app/components/orderline/*",
             "point_of_sale/static/src/app/components/centered_icon/*",
+            "point_of_sale/static/src/app/components/validation_animation/*",
             "point_of_sale/static/src/app/components/epos_templates.xml",
             "point_of_sale/static/src/css/pos_receipts.css",
             "point_of_sale/static/src/app/screens/receipt_screen/receipt/**/*",
@@ -113,6 +114,7 @@
             "point_of_sale/static/src/app/utils/devices_identifier_sequence.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
             "point_of_sale/static/src/app/utils/debug-formatter.js",
+            "pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [
@@ -121,6 +123,7 @@
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
             "point_of_sale/static/tests/generic_helpers/dialog_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
+            "point_of_sale/static/tests/pos/tours/utils/chrome_util.js",
         ],
         'web.assets_tests': [
             'pos_self_order/static/tests/pos/**/*',

@@ -9,14 +9,15 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Greta Šeštokė <greta@vialaurea.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 13:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-06-05 19:30+0000\n"
+"PO-Revision-Date: 2026-08-05 04:36+0000\n"
+"Last-Translator: Greta Šeštokė <greta@vialaurea.com>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "website_links/lt/>\n"
 "Language: lt\n"
@@ -24,9 +25,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
+": n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_links
 #. odoo-javascript
@@ -66,7 +67,7 @@ msgid ""
 "nowrap text-truncate\" id=\"short_url\"><span id=\"short-url-host\" "
 "class=\"text-truncate\"/><span id=\"o_website_links_code\"/></span>\n"
 "                                        <span "
-"class=\"o_website_links_edit_tools text-nowrap\" style=\"display:none;\">\n"
+"class=\"o_website_links_edit_tools text-nowrap d-none\">\n"
 "                                            <a role=\"button\" "
 "class=\"o_website_links_ok_edit btn btn-sm btn-primary o_translate_inline\" "
 "href=\"#\">ok</a> or\n"
@@ -109,7 +110,7 @@ msgstr "<strong>Nukreiptas URL</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Source</strong>"
-msgstr "<strong>Šaltinis</strong>"
+msgstr "<strong>Šaltinis:</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -217,6 +218,14 @@ msgstr "Naujausia"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Number of Clicks"
 msgstr "Paspaudimų skaičius"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/interactions/website_links_code_editor.js:0
+msgid ""
+"Only letters (A–Z, a–z), numbers (0–9), underscores (_) and hyphens (-) are "
+"allowed. No spaces."
+msgstr ""
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url

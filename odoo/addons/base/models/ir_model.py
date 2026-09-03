@@ -171,9 +171,17 @@ def upsert_en(model, fnames, rows, conflict):
         excluded=comma(
             (
                 SQL(
-                    "COALESCE(%s, '{}'::jsonb) || EXCLUDED.%s",
-                    SQL.identifier(model._table, fname),
-                    SQL.identifier(fname),
+                    """CASE
+                        WHEN %(old)s ->> 'en_US' IS DISTINCT FROM %(new)s ->> 'en_US'
+                            -- the source text changed: existing translations were
+                            -- made for a source that no longer exists, drop them so
+                            -- they get reloaded fresh instead of being kept as if
+                            -- they still applied to the current source
+                            THEN %(new)s
+                        ELSE COALESCE(%(old)s, '{}'::jsonb) || %(new)s
+                       END""",
+                    old=SQL.identifier(model._table, fname),
+                    new=SQL("EXCLUDED.%s", SQL.identifier(fname)),
                 )
                 if model._fields[fname].translate is True
                 else SQL("EXCLUDED.%s", SQL.identifier(fname))
@@ -484,7 +492,7 @@ class IrModel(models.Model):
             '_description': model_data['name'],
             '_module': False,
             '_custom': True,
-            '_abstract': bool(model_data['abstract']),
+            '_abstract': bool(model_data.get('abstract', False)),
             '_transient': bool(model_data['transient']),
             '_order': model_data['order'],
             '_fold_name': model_data['fold_name'],
@@ -666,13 +674,26 @@ class IrModelFields(models.Model):
                     field_name=name,
                     related_field=self.related,
                 ))
-            model_name = field.relation
             if index < last and not field.relation:
                 raise UserError(_(
                     'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
                     field_name=name,
                     related_field=self.related,
                 ))
+            if index < last and self.env.registry.ready and not (
+                field.store or (
+                    (model := self.env.get(model_name)) is not None
+                    and (model_field := model._fields.get(field.name))
+                    and model_field._description_searchable
+                )
+            ):
+                raise UserError(_(
+                    'Field "%(field_name)s" in related path "%(related_field)s" is not searchable. '
+                    'Non-searchable fields cannot be used in related fields.',
+                    field_name=name,
+                    related_field=self.related,
+                ))
+            model_name = field.relation
         return field
 
     @api.constrains('related')
@@ -2338,6 +2359,7 @@ class IrModelData(models.Model):
 
         # query xml_ids by prefix
         result = []
+        self.flush_model()
         cr = self.env.cr
         for prefix, suffixes in bymodule.items():
             query = """
@@ -2501,7 +2523,10 @@ class IrModelData(models.Model):
                         field_.setup(model)
                         has_shared_field = True
         if has_shared_field:
-            reset_cached_properties(self.env.registry)
+            registry = self.env.registry
+            reset_cached_properties(registry)
+            registry._field_trigger_trees.clear()
+            registry._is_modifying_relations.clear()
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []

@@ -37,5 +37,6 @@
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
     'pre_init_hook': '_pre_init_nemhandel',
+    'post_init_hook': '_post_init_nemhandel',
     'uninstall_hook': 'uninstall_hook',
 }

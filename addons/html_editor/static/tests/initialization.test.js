@@ -98,12 +98,14 @@ describe("No orphan inline elements compatibility mode", () => {
         });
     });
 
-    test("should wrap a div.o_image direct child of the editable into a block", async () => {
+    test("should wrap a div.o_file_box direct child of the editable into a block", async () => {
         await testEditor({
-            contentBefore: '<p>abc</p><div class="o_image"></div><p>def</p>',
+            contentBefore:
+                '<p>abc</p><span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span><p>def</p>',
             contentBeforeEdit:
-                '<p>abc</p><div><div class="o_image" contenteditable="false"></div></div><p>def</p>',
-            contentAfter: '<p>abc</p><div><div class="o_image"></div></div><p>def</p>',
+                '<p>abc</p><div class="o-paragraph">\ufeff<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>\ufeff</div><p>def</p>',
+            contentAfter:
+                '<p>abc</p><div><span class="o_file_box"><a href="#" title="document" data-mimetype="application/pdf"></a></span></div><p>def</p>',
         });
     });
 });
@@ -382,6 +384,75 @@ describe("Editor config initialization", () => {
         await testEditor({
             config: { content: "" },
             contentAfter: "<p><br></p>",
+        });
+    });
+});
+
+describe("table normalization", () => {
+    test("should normalize complex table spans", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td rowspan="2" colspan="2">A</td>
+                            <td>B</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">C</td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td rowspan="2">E</td>
+                            <td>F</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">G</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `),
+            contentAfter: unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>A</td>
+                            <td><p><br></p></td>
+                            <td>B</td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td>C</td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td>E</td>
+                            <td>F</td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td>G</td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `),
+        });
+    });
+
+    test("should populate ragged table rows even without any rowspan/colspan", async () => {
+        await testEditor({
+            contentBefore: unformat(
+                `<table><tbody><tr><td>A</td></tr><tr><td>B</td><td>C</td></tr></tbody></table>`
+            ),
+            contentAfter: unformat(
+                `<table><tbody><tr><td>A</td><td><p><br></p></td></tr><tr><td>B</td><td>C</td></tr></tbody></table>`
+            ),
         });
     });
 });

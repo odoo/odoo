@@ -6,14 +6,14 @@
 # Sarah Park, 2023
 # Martin Trigaux, 2023
 #
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
-"PO-Revision-Date: 2026-01-30 07:44+0000\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-02 18:27+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "ko/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_vat
 #. odoo-python
@@ -49,6 +49,12 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "123456789 (TIN) or 12345678901234 (PINFL)"
 msgstr ""
 
 #. module: base_vat
@@ -171,8 +177,8 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
-"선택란에 표시하면, 재정 위치 기본값은 유럽 VIES 서비스 확인 결과에 따라서 다"
-"르게 적용됩니다."
+"선택란에 표시하면, 재정 위치 기본값은 유럽 VIES 서비스 확인 결과에 따라서 "
+"다르게 적용됩니다."
 
 #. module: base_vat
 #. odoo-python
@@ -218,8 +224,7 @@ msgstr "사업자등록번호"
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
 "(expected_note)s"
-msgstr ""
-"%(vat_label)s [%(wrong_vat)s] 번호는 유효하지 않습니다. %(expected_note)s"
+msgstr "%(vat_label)s [%(wrong_vat)s] 번호는 유효하지 않습니다. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -228,25 +233,14 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
 msgstr ""
-"%(record_label)s 에 대한 %(vat_label)s 번호 [%(wrong_vat)s] 가 유효하지 않습"
-"니다. %(expected_note)s"
+"%(record_label)s 에 대한 %(vat_label)s 번호 [%(wrong_vat)s] 가 유효하지 "
+"않습니다. %(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The Intra-Community validity has been updated."
+msgid "The Intra-Community validity has been updated to: %s."
 msgstr ""
-
-#. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_partner__vat
-#: model:ir.model.fields,help:base_vat.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니"
-"다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
 
 #. module: base_vat
 #. odoo-python
@@ -264,8 +258,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr ""
-"(유효) 부가가치세 없음으로 명확히 표시하려면 '/' 기호를 대신 사용합니다. "
+msgstr "(유효) 부가가치세 없음으로 명확히 표시하려면 '/' 기호를 대신 사용합니다. "
 
 #. module: base_vat
 #. odoo-python
@@ -291,16 +284,33 @@ msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr "XXXXXXXXX [9자리]이며, Luhn 알고리즘 체크섬을 준수해야 합니다."
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "either 11 digits for CPF or 14 digits for CNPJ"
-msgstr "CPF의 경우 11자리 또는 CNPJ의 경우 14자리입니다."
+msgid "either 11 digits for CPF or 14 characters for CNPJ"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "협력사 [%s]"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "세무 신고용 등록 번호입니다. 국가별로 지정된 형식을 기준으로 값을 검증합니"
+#~ "다. 협력사가 과세 대상이 아닌 경우에는 '/'를 입력하세요."
+
+#~ msgid "either 11 digits for CPF or 14 digits for CNPJ"
+#~ msgstr "CPF의 경우 11자리 또는 CNPJ의 경우 14자리입니다."
 
 #~ msgid ""
 #~ "Connection with the VIES server failed. The VAT number %s could not be "

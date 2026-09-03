@@ -27,8 +27,8 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
         return;
     }
 
-    if (!parent.matches('.js_main_product') || !combination.product_id) {
-        // if we're not on product page or the product is dynamic
+    if (!parent.matches('.js_main_product')) {
+        // if we're not on product page
         return;
     }
 
@@ -54,7 +54,9 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
         }
-    } else if (has_max_combo_quantity) {
+    }
+
+    if (has_max_combo_quantity) {
         if (addQtyInput) {
             addQtyInput.dataset.max = combination.max_combo_quantity || 1;
             if (qty > combination.max_combo_quantity) {
@@ -80,8 +82,7 @@ VariantMixin._onChangeCombinationStock = async function (ev, parent, combination
         }
     }
 
-    document.querySelector('.oe_website_sale')
-        .querySelectorAll('.availability_message_' + combination.product_template)
+    this.el.querySelectorAll('.availability_message_' + combination.product_template)
         .forEach(el => el.remove());
     if (combination.out_of_stock_message) {
         combination.out_of_stock_message = markup(combination.out_of_stock_message);

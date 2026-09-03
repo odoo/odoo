@@ -12,3 +12,10 @@ export function clickScreen() {
         run: "click",
     };
 }
+
+export function isSuccess() {
+    return {
+        content: "feedback screen shows success state with icon, Amount Paid and amount",
+        trigger: ".feedback-screen:has(svg):has(.amount-paid):has(.amount)",
+    };
+}

@@ -249,8 +249,8 @@ export class SnippetModel extends Reactive {
                 : snippet.name;
             if (this.isCustomInnerContent(customSnippetName)) {
                 customInnerContent.unshift(snippet);
-                customSnippets.splice(i, 1);
-            } else if (!this.isCustomStructure(customSnippetName)) {
+            }
+            if (!this.isCustomStructure(customSnippetName)) {
                 // If no structure snippet could be found, it means that the
                 // module is not installed (i.e. the original snippet has no
                 // `data-snippet` attribute).
@@ -268,14 +268,15 @@ export class SnippetModel extends Reactive {
                 {
                     body: message,
                     confirm: async () => {
-                        const isInnerContent =
-                            this.snippetsByCategory.snippet_custom_content.includes(snippet);
-                        const snippetCustom = isInnerContent
-                            ? this.snippetsByCategory.snippet_custom_content
-                            : this.snippetsByCategory.snippet_custom;
-                        const index = snippetCustom.findIndex((s) => s.id === snippet.id);
-                        if (index > -1) {
-                            snippetCustom.splice(index, 1);
+                        for (const categoryKey of ["snippet_custom", "snippet_custom_content"]) {
+                            const snippetList = this.snippetsByCategory[categoryKey] || [];
+                            const snippetIndex = snippetList.findIndex(
+                                (item) => item.id === snippet.id
+                            );
+
+                            if (snippetIndex > -1) {
+                                snippetList.splice(snippetIndex, 1);
+                            }
                         }
                         await this.orm.call("ir.ui.view", "delete_snippet", [], {
                             view_id: snippet.viewId,
@@ -353,6 +354,20 @@ export class SnippetModel extends Reactive {
     }
 
     /**
+     * Applies a callback function to all snippets in a given category.
+     *
+     * @param {String} category the category of snippets to update.
+     * @param {Function} callback the function to apply to each
+     * snippet's content.
+     */
+    async updateContent(category, callback) {
+        const snippets = this.snippetsByCategory[category] || [];
+        for (const snippet of snippets) {
+            await callback(snippet.content);
+        }
+    }
+
+    /**
      * Saves the given snippet as a custom one and reloads all the snippets
      * to have access to it directly.
      *
@@ -393,6 +408,8 @@ export class SnippetModel extends Reactive {
                             ? snippetCopyEl.firstElementChild
                             : snippetCopyEl;
                         cleanForSaveHandlers.forEach((handler) => handler({ root: rootEl }));
+
+                        snippetCopyEl.classList.remove("oe_unremovable", "oe_unmovable");
 
                         const defaultSnippetName = isButton
                             ? _t("Custom Button")

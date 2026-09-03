@@ -158,16 +158,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def _get_shop_domain(self, search, category, attribute_value_dict, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
+            search_fields = request.env['product.template']._get_website_sale_search_fields(
+                search_in_description
+            )
             for srch in search.split(" "):
-                subdomains = [
-                    Domain('name', 'ilike', srch),
-                    Domain('variants_default_code', 'ilike', srch),
-                ]
-                if search_in_description:
-                    subdomains.extend((
-                        Domain('website_description', 'ilike', srch),
-                        Domain('description_sale', 'ilike', srch),
-                    ))
+                subdomains = [Domain(field, 'ilike', srch) for field in search_fields]
                 extra_subdomain = self._add_search_subdomains_hook(srch)
                 if extra_subdomain:
                     subdomains.append(extra_subdomain)
@@ -376,15 +371,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
             options, post, search, website
         )
 
+        search_term = fuzzy_search_term if fuzzy_search_term else search
+        product_domain = self._get_shop_domain(search_term, category, attribute_value_dict)
+
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             Product = request.env['product.template'].with_context(bin_size=True)
-            search_term = fuzzy_search_term if fuzzy_search_term else search
-            domain = self._get_shop_domain(search_term, category, attribute_value_dict)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
-            query = Product._search(domain)
+            query = Product._search(product_domain)
             sql = query.select(
                 SQL(
                     "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",
@@ -425,8 +421,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         Category = request.env['product.public.category']
         categs_domain = Domain('parent_id', '=', False) & website_domain
         if search:
+            # using a sub-query is more efficient than using a query in the shape of "ids in (...)"
+            # when there are 100k product ids to match.
+            product_query = request.env['product.template']._search(product_domain)
             search_categories = Category.search(
-                Domain('product_tmpl_ids', 'in', search_product.ids) & website_domain
+                Domain('product_tmpl_ids', 'in', product_query)
             ).parents_and_self
             categs_domain &= Domain('id', 'in', search_categories.ids)
         else:
@@ -435,10 +434,24 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         category_entries = Category
         if category:
-            category_entries = not search and category.child_id or category.child_id.filtered(lambda c: c.id in search_categories.ids)
+            available_categories = category.child_id.filtered(
+                lambda c: c.can_access_from_current_website()
+            )
+            category_entries = (
+                (not search
+                and available_categories)
+                or available_categories.filtered(lambda c: c.id in search_categories.ids)
+            )
             if not category_entries:
                 parent = category.parent_id
-                category_entries = not search and parent.child_id or parent.child_id.filtered(lambda c: c.id in search_categories.ids)
+                available_categories = parent.child_id.filtered(
+                    lambda c: c.can_access_from_current_website()
+                )
+                category_entries = (
+                    (not search
+                    and available_categories)
+                    or available_categories.filtered(lambda c: c.id in search_categories.ids)
+                )
             if not search and not request.env.user._is_internal():
                 # We know the user has access to `categs` and `search_categories` because they come
                 # from a regular `search`, but we have not checked access to `category`'s children,
@@ -462,10 +475,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttribute = request.env['product.attribute']
         if products:
             # get all products without limit
-            search_term = fuzzy_search_term if fuzzy_search_term else search
-            product_query = request.env['product.template']._search(
-                self._get_shop_domain(search_term, category, attribute_value_dict)
-            )
+            product_query = request.env['product.template']._search(product_domain)
             attributes_grouped = request.env['product.template.attribute.line']._read_group(
                 domain=[
                     ('product_tmpl_id', 'in', product_query),
@@ -799,7 +809,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductCategory = request.env['product.public.category']
         product_markup_data = [product._to_markup_data(request.website)]
         original_category = category
-        category = category or product.public_categ_ids[:1]
+        category = category or product.public_categ_ids.filtered(
+            lambda c: c.can_access_from_current_website()
+        )[:1]
         if category:
             # Add breadcrumb's SEO data.
             product_markup_data.append(self._prepare_breadcrumb_markup_data(
@@ -824,7 +836,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
                             and ptav.product_attribute_value_id.id in attribute_value_ids
                         )
                     )[:1]
-                ) or ptal.product_template_value_ids.filtered('ptav_active')[:1]
+                )
+                or (
+                    ptal.product_template_value_ids.filtered(
+                        lambda ptav: (
+                            ptav.ptav_active and ptal.attribute_id.display_type != "multi"
+                        )
+                    )[:1]
+                )
             )
             combination_info = product._get_combination_info(
                 combination=request.env['product.template.attribute.value'].concat(combination)
@@ -1566,7 +1585,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
     )
     def express_checkout_shipping_address_compute_taxes(self):
         order_sudo = request.cart
-        order_sudo._recompute_taxes()
+        try:
+            order_sudo.with_context(is_express_checkout_flow=True)._recompute_taxes()
+        except ValidationError:
+            return {'external_tax_error': True}
+
         amount_without_delivery = order_sudo._compute_amount_total_without_delivery()
 
         return payment_utils.to_minor_currency_units(
@@ -1739,6 +1762,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # Check that public orders are allowed.
         if request.env.user._is_public() and request.website.account_on_checkout == 'mandatory':
             return request.redirect('/web/login?redirect=/shop/checkout')
+
+        # Check that the cart does not contain products priced at 0 while the
+        # website forbids the sale of zero-priced products
+        if zero_priced_lines := order_sudo._get_zero_priced_lines():
+            zero_priced_lines.shop_warning = request.env._(
+                "This product is not available for purchase in your country."
+            )
+            order_sudo.shop_warning = request.env._(
+                "Some products in your cart are not available for purchase in your"
+                " country. Please remove them or contact us."
+            )
+            return request.redirect('/shop/cart')
 
     def _check_addresses(self, order_sudo):
         """ Check whether the cart's addresses are complete and valid.

@@ -36,7 +36,20 @@ class ReportStockReport_Reception(models.AbstractModel):
             return format_date(self.env, source.date_start)
         return super()._get_formatted_scheduled_date(source)
 
+    def _action_assign(self, in_move, out_move):
+        super()._action_assign(in_move, out_move)
+        parent_doc = out_move._get_source_document()
+        child_doc = in_move._get_source_document()
+        if parent_doc and child_doc and parent_doc._name == 'mrp.production' and child_doc._name == 'mrp.production':
+            parent_doc.production_group_id.child_ids += child_doc.production_group_id
+            child_doc.production_group_id.parent_ids += parent_doc.production_group_id
+
     def _action_unassign(self, in_move, out_move):
         super()._action_unassign(in_move, out_move)
         if in_move.production_id:
             in_move.production_id.move_dest_ids -= out_move
+        parent_doc = out_move._get_source_document()
+        child_doc = in_move._get_source_document()
+        if parent_doc and child_doc and parent_doc._name == 'mrp.production' and child_doc._name == 'mrp.production':
+            parent_doc.production_group_id.child_ids -= child_doc.production_group_id
+            child_doc.production_group_id.parent_ids -= parent_doc.production_group_id

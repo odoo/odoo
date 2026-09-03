@@ -12,6 +12,7 @@
                             t-attf-class="btn btn-light fa {{button.icon}}"
                             t-att-class="{ active: activeMode === button.mode }"
                             t-on-click="button.run"
+                            t-on-pointerdown.prevent="() => {}"
                         />
                     </t>
                 </div>

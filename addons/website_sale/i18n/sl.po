@@ -16,15 +16,18 @@
 # Martin Trigaux, 2022
 # Blaž Korenček, 2023
 # Tomaž Jug <tomaz@editor.si>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Žiga Trček <ziga.trcek@implex.si>, 2026.
+# Jan Zorko <jan.zorko@implex.si>, 2026.
+# NEDŽAD BEUS <nedzad.beus@implex.si>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-08 19:06+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"PO-Revision-Date: 2026-08-08 04:00+0000\n"
+"Last-Translator: NEDŽAD BEUS <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/sl/>\n"
 "Language: sl\n"
@@ -33,7 +36,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
 "n%100==4 ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -58,12 +61,17 @@ msgstr "%s ocen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid ""
 "&amp;copy;\n"
 "                <span class=\"o_footer_copyright_name align-"
 "baseline\">Company name</span>\n"
 "                 -"
 msgstr ""
+"&amp;copy;\n"
+"                <span class=\"o_footer_copyright_name align-baseline\">Ime "
+"podjetja</span>\n"
+"                 -"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -72,16 +80,19 @@ msgstr "'. Prikazani rezultati za '"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
+#, fuzzy
 msgid "(Tax excluded)"
-msgstr ""
+msgstr "(brez davka)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
+#, fuzzy
 msgid "(Tax included)"
-msgstr ""
+msgstr "(Vključen davek)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.empty_cart_svg
+#, fuzzy
 msgid ""
 ".heartBeat {\n"
 "                    animation: heartBeat 1.3s ease-in-out forwards;\n"
@@ -126,18 +137,62 @@ msgid ""
 "                    }\n"
 "                }"
 msgstr ""
+" .heartBeat {\n"
+"                    animation: heartBeat 1.3s ease-in-out forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: 80.5px 28.5px;\n"
+"                }\n"
+"                .tilt {\n"
+"                    animation: tilt 1s ease forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                    transform-origin: bottom left;\n"
+"                }\n"
+"                @keyframes heartBeat {\n"
+"                    0% {\n"
+"                    transform: scale(1);\n"
+"                    }\n"
+"\n"
+"                    14% {\n"
+"                        transform: scale(1.2);\n"
+"                    }\n"
+"\n"
+"                    28% {\n"
+"                        transform: scale(1);\n"
+"                    }\n"
+"\n"
+"                    42% {\n"
+"                        transform: scale(1.2);\n"
+"                    }\n"
+"\n"
+"                    70% {\n"
+"                        transform: scale(1);\n"
+"                    }\n"
+"                }\n"
+"                @keyframes tilt {\n"
+"                    0% {\n"
+"                        transform: rotate(0deg);\n"
+"                    }\n"
+"                    50% {\n"
+"                        transform: rotate(-7deg);\n"
+"                    }\n"
+"                    100% {\n"
+"                        transform: rotate(0deg);\n"
+"                    }\n"
+"                }"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "1 Column"
-msgstr ""
+msgstr "1 stolpec"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "2 Columns"
-msgstr ""
+msgstr "2 stolpca"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -165,15 +220,19 @@ msgstr "<b>Razvrsti po</b>"
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_tags
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_filters_form
 msgid "<b>Tags</b>"
-msgstr ""
+msgstr "<b>Oznake</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
+#, fuzzy
 msgid ""
 "<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
 "                                    <span class=\"d-none d-md-inline\">Add "
 "to cart</span>"
 msgstr ""
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                    <span class=\"d-none d-md-inline\">Dodaj "
+"v košarico</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -181,6 +240,8 @@ msgid ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                    Continue shopping"
 msgstr ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                    Nadaljuj z nakupovanjem"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -188,6 +249,8 @@ msgid ""
 "<i class=\"fa fa-bolt me-2\"/>\n"
 "                Buy now"
 msgstr ""
+"<i class=\"fa fa-bolt me-2\"/>\n"
+"                Kupi zdaj"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
@@ -196,11 +259,16 @@ msgstr "<i class=\"fa fa-cart-plus me-2\"/>Dodaj v košarico"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_buttons
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
+"\n"
+"                    <span class=\"o_label small ms-1\">Dodaj v košarico</"
+"span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -209,28 +277,30 @@ msgstr "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid "<i class=\"fa fa-long-arrow-right\"/> All Products"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-right\"/> Vsi izdelki"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Uredi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
+#, fuzzy
 msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Želite račun?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-print me-2\"/>Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-2\"/>Natisni"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "<i class=\"fa fa-rotate-left me-2\"/>Quick reorder"
-msgstr ""
+msgstr "<i class=\"fa fa-rotate-left me-2\"/>Hitro ponovno naročanje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_re_order_btn
@@ -243,17 +313,23 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
 "class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
+"<i class=\"fa fa-shopping-cart fa-fw\" role=\"presentation\"/><span "
+"class=\"o_label small ms-1\">Dodaj v košarico</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                    Add to cart"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                    Dodaj v košarico"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -261,6 +337,8 @@ msgid ""
 "<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Previous\" title=\"Previous\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-left oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"Prejšnji\" title=\"Prejšnji\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -268,12 +346,15 @@ msgid ""
 "<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
 "role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
+"<i class=\"oi oi-chevron-right oe_unmovable border bg-white text-900\" "
+"role=\"img\" aria-label=\"Naslednji\" title=\"Naslednji\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
+#, fuzzy
 msgid "<i class=\"oi oi-plus me-2\"/>Add Address"
-msgstr ""
+msgstr "<i class=\"oi oi-plus me-2\"/>Dodaj naslov"
 
 #. module: website_sale
 #. odoo-python
@@ -296,14 +377,19 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
 "                                        <i class=\"oi oi-close\" "
 "role=\"presentation\"/>"
 msgstr ""
+"<small class=\"mx-auto\"><b>Počisti filtre</b></small>\n"
+"                                        <i class=\"oi oi-close\" "
+"role=\"presentation\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_terms_and_conditions
+#, fuzzy
 msgid ""
 "<small class=\"text-muted mb-0\">\n"
 "            <a href=\"/terms\" class=\"o_translate_inline text-"
@@ -312,19 +398,28 @@ msgid ""
 "            Shipping: 2-3 Business Days\n"
 "        </small>"
 msgstr ""
+"<small class=\"text-muted mb-0\">\n"
+"            <a href=\"/terms\" class=\"o_translate_inline text-muted\"><u>"
+"Pogoji in določila</u></a><br/>\n"
+"            30-dnevno jamstvo za vračilo denarja<br/>\n"
+"            Dostava: 2-3 delovni dni\n"
+"        </small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, fuzzy
 msgid "<span class=\"align-middle\">Already have an account?</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">Že imate račun?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+#, fuzzy
 msgid "<span class=\"align-middle\">to follow your order.</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">za spremljanje vašega naročila.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
@@ -332,9 +427,15 @@ msgid ""
 "class=\"oe_currency_value\">1,500.00</span>\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">1,500.00</span>\n"
+"                                            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
@@ -342,9 +443,15 @@ msgid ""
 "class=\"oe_currency_value\">140.00</span>\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">140.00</span>\n"
+"                                            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
@@ -352,9 +459,15 @@ msgid ""
 "class=\"oe_currency_value\">33.00</span>\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">33.00</span>\n"
+"                                            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
 "data-oe-expression=\"data['price']\">\n"
@@ -362,9 +475,15 @@ msgid ""
 "class=\"oe_currency_value\">750.00</span>\n"
 "                                            </span>"
 msgstr ""
+"<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
+"data-oe-expression=\"data['price']\">\n"
+"                                                <span "
+"class=\"oe_currency_value\">750.00</span>\n"
+"                                            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
+#, fuzzy
 msgid ""
 "<span class=\"o_wsale_delivery_price_badge text-muted fw-bold text-end\" "
 "name=\"price\">\n"
@@ -372,6 +491,11 @@ msgid ""
 "small>\n"
 "            </span>"
 msgstr ""
+"<span class=\"o_wsale_delivery_price_badge text-muted fw-bold text-end\" "
+"name=\"price\">\n"
+"                <small class=\"fw-normal\">Izberite za izračun cene dostave</"
+"small>\n"
+"            </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -380,6 +504,7 @@ msgstr "<span class=\"px-3\">ali</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid ""
 "<span class=\"s_badge badge text-bg-primary o_animable\" data-"
 "name=\"Badge\">\n"
@@ -398,6 +523,22 @@ msgid ""
 "animable\"/> Fast Shipping\n"
 "                                </span>"
 msgstr ""
+"<span class=\"s_badge badge text-bg-primary o_animable\" data-name=\"Badge\">"
+"\n"
+"                                    <i class=\"fa fa-dollar fa-fw o_not-"
+"animable\"/> Nizke cene\n"
+"                                </span>\n"
+"                                <span class=\"s_badge badge text-bg-primary "
+"o_animable\" data-name=\"Badge\">\n"
+"                                    <i class=\"fa fa-shopping-basket fa-fw "
+"o_not-animable\"/>\n"
+"                                    Enostavna vračila\n"
+"                                </span>\n"
+"                                <span class=\"s_badge badge text-bg-primary "
+"o_animable\" data-name=\"Badge\">\n"
+"                                    <i class=\"fa fa-truck fa-fw o_not-"
+"animable\"/> Hitra dostava\n"
+"                                </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -423,21 +564,26 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Glede "
+"na variante</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "<span class=\"text-muted\">Search results for </span>'"
-msgstr ""
+msgstr "<span class=\"text-muted\">Rezultati iskanja za </span>'"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "<span class=\"text-muted\">Searching</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Iskanje</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "<span class=\"text-muted\">in</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">v</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
@@ -447,23 +593,31 @@ msgstr "<span class=\"visually-hidden\">filtriranje omogočeno</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
+#, fuzzy
 msgid ""
 "<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-"
 "muted\">Price</span>"
 msgstr ""
+"<span name=\"o_wsale_cta_wrapper_boxed_price_label\" class=\"text-muted\">"
+"Cena</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
+#, fuzzy
 msgid ""
 "<span name=\"use_delivery_as_billing_text\">\n"
 "                        Same as delivery address\n"
 "                    </span>"
 msgstr ""
+"<span name=\"use_delivery_as_billing_text\">\n"
+"                        Enako kot naslov za dostavo\n"
+"                    </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.all_products_link_name
+#, fuzzy
 msgid "<span placeholder=\"All products\">All products</span>"
-msgstr ""
+msgstr "<span placeholder=\"All products\">Vsi izdelki</span>"
 
 #. module: website_sale
 #: model_terms:web_tour.tour,rainbow_man_message:website_sale.test_01_admin_shop_tour
@@ -478,7 +632,7 @@ msgstr "<span>Naročilo</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
 msgid "<span>Publish on website</span>"
-msgstr ""
+msgstr "<span>Objavi na spletno strani</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -500,23 +654,26 @@ msgstr "<span>Video predogled</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
+#, fuzzy
 msgid "<span>days after publication.</span>"
-msgstr ""
+msgstr "<span>dni po objavi.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
+#, fuzzy
 msgid "<span>for</span>"
-msgstr ""
+msgstr "<span>za</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
+#, fuzzy
 msgid "<strong>Documents</strong>"
-msgstr ""
+msgstr "<strong>Dokumenti</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "<strong>No suitable delivery method could be found.</strong>"
-msgstr ""
+msgstr "<strong>Ni bilo mogoče najti ustrezne možnosti plačila.</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -531,6 +688,7 @@ msgstr "<strong>Opozorilo!</strong>"
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
+#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"padding: 0px; background-color: white; color: #454748; border-"
@@ -598,6 +756,71 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 0px; background-color: white; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">V VAŠI KOŠARICI JE NEKAJ.</"
+"h1>\n"
+"                    Želite dokončati nakup?<br/><br/>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-"
+"as=\"line\">\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; "
+"width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Slika izdelka\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-"
+"out=\"line.product_id.display_name or ''\">[FURN_7800] Kombinacija pisalne "
+"mize</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Kombinacija "
+"pisalne mize Kombinacija mize, črno-rjava: stol + miza + predal.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) "
+"or ''\">10000</t> <t t-out=\"line.product_uom_id.name or ''\">Enot</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr/>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px "
+"0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
+"cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: {"
+"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: {"
+"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"radius: 5px; font-size:13px;\">\n"
+"                            Nadaljuj naročilo\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Hvala, ker "
+"nakupujete pri <t t-out=\"company.name or ''\">My Company (San Francisco)</t>"
+"!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -608,6 +831,8 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Opis izdelka, ki ga želite sporočiti svojim strankam. Ta opis bo kopiran v "
+"vsako prodajno naročilo, dobavnico in račun/obvestilo strank."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -615,6 +840,8 @@ msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
 "'/' to discover more features."
 msgstr ""
+"Podroben opis izdelka za promocijo na tej strani. Uporabite '/' za "
+"odkrivanje več funkcij."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -623,6 +850,8 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
+"Podroben opis izdelka za promocijo na tej strani. Vtipkajte '/' za "
+"odkrivanje več funkcij."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -636,10 +865,13 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_feed.py:0
+#, fuzzy
 msgid ""
 "A single feed cannot contain more than %(limit)s products. Please separate "
 "products with Categories."
 msgstr ""
+"En vir ne sme vsebovati več kot %(limit)s izdelkov. Izdelke ločite s "
+"kategorijami."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -679,8 +911,9 @@ msgstr "O navzkrižni prodaji izdelkov"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
+#, fuzzy
 msgid "Accept Terms"
-msgstr ""
+msgstr "Sprejmi pogoje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -746,8 +979,9 @@ msgstr "Dodajte multimedijo"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Add More"
-msgstr ""
+msgstr "Dodaj več"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
@@ -757,19 +991,25 @@ msgstr "Akcija dodajanja v košarico"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to "
 "the                           sale price"
 msgstr ""
+"Dodajte referenčno ceno na mersko enoto pri izdelkih (tj. $/kg), poleg"
+"                           prodajne cene"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
 #: model:ir.model.fields,help:website_sale.field_product_template__compare_list_price
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__group_product_price_comparison
+#, fuzzy
 msgid ""
 "Add a strikethrough price to your /shop and product pages for comparison "
 "purposes.It will not be displayed if pricelists apply."
 msgstr ""
+"Dodajte prečrtano ceno na strani /shop in strani izdelkov za primerjavo. Če "
+"se uporabljajo ceniki, ne bo prikazana."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -779,8 +1019,9 @@ msgstr "Za primerjavo dodajte prečrtano ceno"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
+#, fuzzy
 msgid "Add an address"
-msgstr ""
+msgstr "Dodaj naslov"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
@@ -823,15 +1064,19 @@ msgstr "Samodejno dokončanje naslova"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__align_category_content
+#, fuzzy
 msgid "Align Category Content"
-msgstr ""
+msgstr "Poravnaj vsebino kategorije"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__align_category_content
+#, fuzzy
 msgid ""
 "Align the category content on the shop page. Corresponds to the 'Center "
 "Content' editor option."
 msgstr ""
+"Poravnajte vsebino kategorije na strani trgovine. Ustreza možnosti "
+"urejevalnika »Sredinska poravnava vsebine«."
 
 #. module: website_sale
 #. odoo-javascript
@@ -864,7 +1109,7 @@ msgstr "Vsi proizvodi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "All products"
-msgstr ""
+msgstr "Vsi proizvodi"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
@@ -874,14 +1119,14 @@ msgstr "Vsi uporabniki"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "All websites"
-msgstr ""
+msgstr "Vse Spletne Strani"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Allow customers to pick up their online purchases at your store and pay in "
 "person"
-msgstr ""
+msgstr "Omogočite strankam osebni prevzem in plačevanje naročil v trgovinah"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -906,12 +1151,13 @@ msgstr "Število zapuščenih vozičkov"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Anonymous express checkout partner for order %s"
-msgstr ""
+msgstr "Anonimni partner za hitro blagajno za naročilo %s"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid "Apparel"
-msgstr ""
+msgstr "Oblačila"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -920,14 +1166,16 @@ msgstr "Uporabi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Apply specific prices or currency per country, customer, products, etc."
 msgstr ""
+"Uporabite posebne cene ali valuto glede na državo, stranko, izdelke itd."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "Are you sure you want to delete this ribbon?"
-msgstr ""
+msgstr "Ali ste prepričani, da želite izbrisati ta trak?"
 
 #. module: website_sale
 #. odoo-javascript
@@ -959,8 +1207,9 @@ msgstr "Lastnosti"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_augmented_reality
+#, fuzzy
 msgid "Augmented Reality Tools"
-msgstr ""
+msgstr "Orodja za obogateno resničnost"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__auto
@@ -972,13 +1221,15 @@ msgstr "Samodejno"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Auto-crop"
-msgstr ""
+msgstr "Samodejno obrezovanje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Automate abandoned checkout emails"
-msgstr ""
+msgstr "Avtomatizirajte e-poštna sporočila za opuščene nakupe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
@@ -987,13 +1238,15 @@ msgstr "Povprečna ocena"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
+#, fuzzy
 msgid "Back Button Label"
-msgstr ""
+msgstr "Oznaka gumba za nazaj"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
+#, fuzzy
 msgid "Back to address"
-msgstr ""
+msgstr "Nazaj na naslov"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
@@ -1002,8 +1255,9 @@ msgstr "Nazaj v košarico"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
+#, fuzzy
 msgid "Back to extra info"
-msgstr ""
+msgstr "Nazaj na dodatne informacije"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1020,8 +1274,9 @@ msgstr "Barva ozadja"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Background Zoom"
-msgstr ""
+msgstr "Povečava ozadja"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1054,8 +1309,9 @@ msgstr "Osnovne enote"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_bathroom
+#, fuzzy
 msgid "Bathroom Cabinets"
-msgstr ""
+msgstr "Kopalniške omarice"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -1064,8 +1320,9 @@ msgstr "BeNeLux"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid "Beauty"
-msgstr ""
+msgstr "Lepota"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_beds
@@ -1110,8 +1367,9 @@ msgstr "Koši"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
+#, fuzzy
 msgid "Blocks Design"
-msgstr ""
+msgstr "Oblikovanje blokov"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1121,6 +1379,7 @@ msgstr "Krepko"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Boost your sales with multiple kinds of programs: Coupons, "
 "Promotions,                            Gift Card, Loyalty. Specific "
@@ -1128,18 +1387,29 @@ msgid ""
 "minimum purchase amount, period). Rewards can be discounts (% or "
 "amount)                            or free products."
 msgstr ""
+"Povečajte prodajo z več vrstami programov: Kuponi, promocije, darilne "
+"kartice, programi zvestobe. Določite lahko posebne pogoje (izdelki, stranke, "
+"najmanjši znesek nakupa, obdobje). Nagrade so lahko popusti (% or znesek) "
+"ali brezplačni izdelki."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Border-Primary"
-msgstr ""
+msgstr "Primarna obroba"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Bordered"
 msgstr "Obrobljeno"
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+msgid "Bottom"
+msgstr "Spodaj"
 
 #. module: website_sale
 #. odoo-python
@@ -1175,7 +1445,7 @@ msgstr "URL gumba"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_contact_us_button_url
 msgid "Button Url"
-msgstr ""
+msgstr "URL Gumba"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1192,13 +1462,15 @@ msgstr "Takojšnji nakup"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__shop_opt_products_design_classes
+#, fuzzy
 msgid "CSS class for shop products design"
-msgstr ""
+msgstr "Razred CSS za oblikovanje izdelkov v trgovini"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid "Cabinet with Doors"
-msgstr ""
+msgstr "Omara z vrati"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
@@ -1208,8 +1480,9 @@ msgstr "Omare"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__cache_expiry
+#, fuzzy
 msgid "Cache Expiry"
-msgstr ""
+msgstr "Potek predpomnilnika"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
@@ -1234,8 +1507,9 @@ msgstr "Kartice"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
+#, fuzzy
 msgid "Cards Design"
-msgstr ""
+msgstr "Oblika kartic"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1296,24 +1570,27 @@ msgstr "Kategorija"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_footer
 msgid "Category Footer"
-msgstr ""
+msgstr "Noga Kategorije"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_public_category_default
+#, fuzzy
 msgid "Category Image"
-msgstr ""
+msgstr "Slika kategorije"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_category_list
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_category_list
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
+#, fuzzy
 msgid "Category List"
-msgstr ""
+msgstr "Seznam kategorij"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
+#, fuzzy
 msgid "Category image"
-msgstr ""
+msgstr "Slika kategorije"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1322,8 +1599,9 @@ msgstr "Kategorija:"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_ceiling
+#, fuzzy
 msgid "Ceiling Lamps"
-msgstr ""
+msgstr "Stropne svetilke"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1335,8 +1613,9 @@ msgstr "Center"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_header_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_header_shop_options.xml:0
+#, fuzzy
 msgid "Center Content"
-msgstr ""
+msgstr "Centriraj vsebino"
 
 #. module: website_sale
 #. odoo-python
@@ -1351,13 +1630,15 @@ msgstr "Stolice"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_chandelier
+#, fuzzy
 msgid "Chandeliers"
-msgstr ""
+msgstr "Lestenci"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
+#, fuzzy
 msgid "Change location"
-msgstr ""
+msgstr "Spremeni lokacijo"
 
 #. module: website_sale
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_delivery
@@ -1378,14 +1659,16 @@ msgstr "Podrejene kategorije"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Chips"
-msgstr ""
+msgstr "Čips"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Chips Contained"
-msgstr ""
+msgstr "Vsebovani čipi"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1396,8 +1679,11 @@ msgstr "Izberite prevzemno mesto"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Choose one pre-made preset and customise it as you wish"
 msgstr ""
+"Izberite eno od vnaprej pripravljenih prednastavitev in jo prilagodite po "
+"svojih željah"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1427,8 +1713,9 @@ msgstr "Klasična"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Classic Grid"
-msgstr ""
+msgstr "Klasična mreža"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -1438,8 +1725,9 @@ msgstr "Počisti filtre"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "Clear search for this category"
-msgstr ""
+msgstr "Počisti iskanje za to kategorijo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
@@ -1486,8 +1774,9 @@ msgstr "Kliknite, da izberete"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
+#, fuzzy
 msgid "Clickable items"
-msgstr ""
+msgstr "Klikljivi elementi"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1513,13 +1802,15 @@ msgstr "Zbijanje kategorije Rekurzivno"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Collapse sidebar sections"
-msgstr ""
+msgstr "Strni odseke stranske vrstice"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_collapsible
+#, fuzzy
 msgid "Collapsible Boxes"
-msgstr ""
+msgstr "Zložljive škatle"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1530,8 +1821,9 @@ msgstr "Barva"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Color combinations are defined in the Theme Tab"
-msgstr ""
+msgstr "Barvne kombinacije so določene na zavihku Tema"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1549,7 +1841,7 @@ msgstr "Columns"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_combos
 msgid "Combo Choices"
-msgstr ""
+msgstr "Kombo izbire"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1591,19 +1883,22 @@ msgstr "Sestavni deli"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/checkout.js:0
+#, fuzzy
 msgid "Computed after delivery"
-msgstr ""
+msgstr "Izračunano po dostavi"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Condensed List"
-msgstr ""
+msgstr "Strnjen seznam"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid "Conference Chair"
-msgstr ""
+msgstr "Konferenčni stol"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
@@ -1618,20 +1913,25 @@ msgstr "Nastavi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Konfigurirajte načine dostave"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure Methods"
-msgstr ""
+msgstr "Konfiguracija metod"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Konfigurirajte načine dostave ali uporabljajte ponudnike dostave z "
+"obstoječimi integracijami."
 
 #. module: website_sale
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_extra
@@ -1647,13 +1947,14 @@ msgstr "Potrdi naročilo"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Confirm order"
-msgstr ""
+msgstr "Potvrdit objednávku"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__confirmation_email_template_id
 #: model:ir.model.fields,field_description:website_sale.field_website__confirmation_email_template_id
+#, fuzzy
 msgid "Confirmation Email Template"
-msgstr ""
+msgstr "Predloga potrditvenega e-poštnega sporočila"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1667,8 +1968,9 @@ msgstr "Potrjena naročila"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Connect your eCommerce via a product file."
-msgstr ""
+msgstr "Povežite svojo e-trgovino prek datoteke z izdelki."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -1699,8 +2001,9 @@ msgstr "Širina vsebine"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_list
+#, fuzzy
 msgid "Copy URL"
-msgstr ""
+msgstr "Kopiraj URL"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
@@ -1709,8 +2012,9 @@ msgstr "Kavči"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
+#, fuzzy
 msgid "Coupon, Gift card, Promo-code?"
-msgstr ""
+msgstr "Kupon, darilna kartica, promocijska koda?"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__cover_image
@@ -1720,8 +2024,9 @@ msgstr "Naslovna slika"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_template
+#, fuzzy
 msgid "Crafting Beautiful Spaces"
-msgstr ""
+msgstr "Ustvarjanje čudovitih prostorov"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1827,7 +2132,7 @@ msgstr "Stranke"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Customizable Desk"
-msgstr ""
+msgstr "Prilagodljiva miza"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1843,13 +2148,14 @@ msgstr "Prilagodite predloge e-pošte"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr ""
+msgstr "POVLECITE GRADNIKE SEM, DA BODO NA VOLJO V VSEH IZDELKIH"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
+#, fuzzy
 msgid "Darken overlay"
-msgstr ""
+msgstr "Zatemni prekrivno plast"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1871,8 +2177,9 @@ msgstr "Privzeto (1/1)"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Default Color"
-msgstr ""
+msgstr "Privzeta barva"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1900,10 +2207,11 @@ msgstr "Določite novo kategorijo"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_ribbon_action
 msgid "Define a new ribbon"
-msgstr ""
+msgstr "Definirajte nov trak"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__assign
+#, fuzzy
 msgid ""
 "Defines how this ribbon is assigned to products:\n"
 "- Manually: You assign the ribbon manually to products.\n"
@@ -1911,25 +2219,37 @@ msgid ""
 "- New: Applied based on the New period you will define.\n"
 "- Out Of Stock: Applied when the product is out of stock."
 msgstr ""
+"Določa, kako je ta trak dodeljen izdelkom:\n"
+"- Ročno: Trak izdelkom dodelite ročno.\n"
+"- Razprodaja: Uporabi se, ko je izdelek vidno v akciji.\n"
+"- Novo: Uporabi se na podlagi obdobja novosti, ki ga boste določili.\n"
+"- Ni na zalogi: Uporabi se, ko izdelka ni na zalogi.\n"
+"Lokacija: "
+"model:ir.model.fields,help:website_sale.field_product_ribbon__assign"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_ribbon__style
+#, fuzzy
 msgid ""
 "Defines the display style:\n"
 "- Ribbon: Shows a ribbon banner on the product image.\n"
 "- Badge: Shows a small badge label on the product image."
 msgstr ""
+"Določa slog prikaza:\n"
+"- Trak: Prikaže trak z napisom na sliki izdelka.\n"
+"- Značka: Prikaže majhno značko z oznako na sliki izdelka."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 msgid "Delete Ribbon"
-msgstr ""
+msgstr "Izbrišite Trak"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+#, fuzzy
 msgid "Deliver to pickup point"
-msgstr ""
+msgstr "Dostavi na prevzemno mesto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
@@ -1940,8 +2260,9 @@ msgstr "Dostava"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
+#, fuzzy
 msgid "Delivery &amp; Billing"
-msgstr ""
+msgstr "Dostava &amp; obračunavanje"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
@@ -1956,17 +2277,19 @@ msgstr "Načini dostave"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "Delivery address"
-msgstr ""
+msgstr "Naslov za dostavo"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
+#, fuzzy
 msgid "Delivery and Installation"
-msgstr ""
+msgstr "Dostava in montaža"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
+#, fuzzy
 msgid "Delivery method"
-msgstr ""
+msgstr "Način dostave"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1981,7 +2304,7 @@ msgstr "Opis"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "Opis, prikazan na spletni trgovini in na spletnih ponudbah."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_description
@@ -1996,18 +2319,21 @@ msgstr "Opis za spletno stran"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_design_and_planning
+#, fuzzy
 msgid "Design and Planning"
-msgstr ""
+msgstr "Oblikovanje in načrtovanje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_template
+#, fuzzy
 msgid "Designing elegant, inviting environments that inspire and delight."
 msgstr ""
+"Oblikovanje elegantnih, vabljivih okolij, ki navdihujejo in razveseljujejo."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_desk
 msgid "Desk Lamps"
-msgstr ""
+msgstr "Namizne Luči"
 
 #. module: website_sale
 #. odoo-python
@@ -2020,14 +2346,16 @@ msgstr "Mize"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Desktop Ratio"
-msgstr ""
+msgstr "Razmerje za namizne računalnike"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Desktop ratio in enforced with this design"
-msgstr ""
+msgstr "Razmerje namizja je vsiljeno s tem dizajnom"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2060,7 +2388,7 @@ msgstr "Onemogočeno (kupite kot gost)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Discount code..."
-msgstr ""
+msgstr "Koda za popust..."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2143,17 +2471,23 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_description
+#, fuzzy
 msgid ""
 "Display the category description on the shop page. Corresponds to the 'Show "
 "Description' editor option."
 msgstr ""
+"Prikažite opis kategorije na strani trgovine. Ustreza možnosti urejevalnika »"
+"Prikaži opis«."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__show_category_title
+#, fuzzy
 msgid ""
 "Display the category title on the shop page. Corresponds to the 'Show Title' "
 "editor option."
 msgstr ""
+"Prikažite naslov kategorije na strani trgovine. Ustreza možnosti "
+"urejevalnika »Prikaži naslov«."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -2162,8 +2496,9 @@ msgstr "Prikazano na dnu strani z izdelki"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__cover_image
+#, fuzzy
 msgid "Displayed only in the Category List Snippet."
-msgstr ""
+msgstr "Prikazano samo v izrezku seznama kategorij."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
@@ -2188,6 +2523,8 @@ msgstr ""
 msgid ""
 "Documents shown on product page cannot be restricted to a specific variant"
 msgstr ""
+"Dokumenti, prikazani na strani izdelka, ne morejo biti omejeni na specifično "
+"varianto"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2201,18 +2538,24 @@ msgid ""
 "Drag building blocks here to customize the footer for\n"
 "                                    \""
 msgstr ""
+"Povlecite gradnike sem, da prilagodite nogo za\n"
+"                                    \""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid ""
 "Drag building blocks here to customize the header for\n"
 "                                        \""
 msgstr ""
+"Povlecite gradnike sem, da prilagodite glavo za\n"
+"                                        "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "Drag building blocks here to customize the header for the shop page."
-msgstr ""
+msgstr "Povlecite gradnike sem, da prilagodite glavo strani trgovine."
 
 #. module: website_sale
 #. odoo-python
@@ -2246,7 +2589,7 @@ msgstr "E-trgovina Dodatne informacije, prikazane na strani izdelka"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_form
 msgid "E-commerce"
-msgstr ""
+msgstr "E-trgovina"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -2260,24 +2603,25 @@ msgstr "EUR"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
+#, fuzzy
 msgid "Ecommerce"
-msgstr ""
+msgstr "E-trgovina"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__ecommerce_access
 #: model:ir.model.fields,field_description:website_sale.field_website__ecommerce_access
 msgid "Ecommerce Access"
-msgstr ""
+msgstr "Ecommerce Dostop"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Ecommerce Description"
-msgstr ""
+msgstr "Ecommerce Opis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Ecommerce Shop"
-msgstr ""
+msgstr "E-trgovina"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
@@ -2293,8 +2637,9 @@ msgstr "Uredi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, fuzzy
 msgid "Edit address"
-msgstr ""
+msgstr "Uredi naslov"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2305,7 +2650,7 @@ msgstr "Uredite ceno tega proizvoda s klikom na znesek."
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_education
 msgid "Education Tools"
-msgstr ""
+msgstr "Izobraževalna Orodja"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2320,8 +2665,9 @@ msgstr "Vgrajena koda"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
+#, fuzzy
 msgid "Enter a customized value"
-msgstr ""
+msgstr "Vnesite vrednost po meri"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2333,18 +2679,20 @@ msgstr "Vnesite ime svojega novega izdelka"
 #. odoo-python
 #: code:addons/website_sale/models/product_public_category.py:0
 msgid "Error! You cannot create recursive categories."
-msgstr ""
+msgstr "Napaka! Reukrzivne kategorije niso mogoče."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid "Essentials"
-msgstr ""
+msgstr "Osnovne potrebščine"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_dynamic_snippet_categories/dynamic_snippet_category.js:0
+#, fuzzy
 msgid "Explore Now"
-msgstr ""
+msgstr "Raziščite zdaj"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_extra
@@ -2354,8 +2702,9 @@ msgstr "Dodatne informacije"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Extra Media"
-msgstr ""
+msgstr "Dodatni mediji"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_template_image_ids
@@ -2367,7 +2716,7 @@ msgstr "Dodatni mediji za izdelke"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Extra Step"
-msgstr ""
+msgstr "Dodaten korak"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
@@ -2394,14 +2743,16 @@ msgstr "Izpostavljeni"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__feed_cache
+#, fuzzy
 msgid "Feed Cache"
-msgstr ""
+msgstr "Predpomnilnik vira"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_feed.py:0
+#, fuzzy
 msgid "Feed cache successfully reset."
-msgstr ""
+msgstr "Predpomnilnik vira je bil uspešno ponastavljen."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
@@ -2421,7 +2772,7 @@ msgstr "Naziv polja"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_file
 msgid "File Drawers"
-msgstr ""
+msgstr "Predali"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2434,77 +2785,92 @@ msgstr "Filtri"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
+#, fuzzy
 msgid ""
 "Final price may vary based on selection. Tax will be calculated at checkout."
 msgstr ""
+"Končna cena se lahko razlikuje glede na izbiro. Davek bo obračunan ob "
+"zaključku nakupa."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Poiščite ponudnika dostave"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid "Fitness"
-msgstr ""
+msgstr "Fitnes"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Fixed 33%"
-msgstr ""
+msgstr "Fiksnih 33 %"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Fixed 33% width"
-msgstr ""
+msgstr "Fiksna širina 33 %"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Fixed 50%"
-msgstr ""
+msgstr "Fiksno 50 %"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Fixed 50% width"
-msgstr ""
+msgstr "Fiksna širina 50 %"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Fixed 66%"
-msgstr ""
+msgstr "Fiksno 66 %"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Floating"
-msgstr ""
+msgstr "Plavajoče"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Floating sticky Toolbar"
-msgstr ""
+msgstr "Plavajoča lepljiva orodna vrstica"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Focused"
-msgstr ""
+msgstr "Osredotočeno"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_foldable
+#, fuzzy
 msgid "Foldable Desks"
-msgstr ""
+msgstr "Zložljive pisalne mize"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Follow up abandoned carts"
-msgstr ""
+msgstr "Nadaljnje spremljanje opuščenih nakupovalnih košaric"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -2531,15 +2897,20 @@ msgstr "Font Size"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_storage
+#, fuzzy
 msgid "Food Storage Bins"
-msgstr ""
+msgstr "Posode za shranjevanje hrane"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+#, fuzzy
 msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                    sale orders or checkout."
 msgstr ""
+"Pri oblikovanju cen s formulo ali pri fiksnih cenah izvirna cena ni "
+"prikazana v\n"
+"                    prodajnih naročilih ali zaključku nakupa."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2563,14 +2934,16 @@ msgstr "Polno"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__fluid
 #: model:ir.model.fields.selection,name:website_sale.selection__website__shop_page_container__fluid
+#, fuzzy
 msgid "Full-width"
-msgstr ""
+msgstr "Celotna širina"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Functional"
-msgstr ""
+msgstr "Funkcionalno"
 
 #. module: website_sale
 #. odoo-python
@@ -2583,24 +2956,28 @@ msgstr "Pohištvo"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
+#, fuzzy
 msgid "GMC 1"
-msgstr ""
+msgstr "GMC 1"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_feed.py:0
+#, fuzzy
 msgid "GMC: Product Limit Exceeded"
-msgstr ""
+msgstr "GMC: Omejitev števila izdelkov presežena"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid "Gadgets"
-msgstr ""
+msgstr "Pripomočki"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_gaming
+#, fuzzy
 msgid "Gaming Desks"
-msgstr ""
+msgstr "Gaming mize"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2616,21 +2993,24 @@ msgstr "Splošno"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
+#, fuzzy
 msgid "Glass Desks"
-msgstr ""
+msgstr "Steklene pisalne mize"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
+#, fuzzy
 msgid "Global options for all inner blocks."
-msgstr ""
+msgstr "Globalne možnosti za vse notranje bloke."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
+#, fuzzy
 msgid "Go to Checkout"
-msgstr ""
+msgstr "Nadaljuj na blagajno"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2641,15 +3021,17 @@ msgstr "Pojdi v košarico"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Google Address Validation"
-msgstr ""
+msgstr "Googlovo preverjanje naslova"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_gmc_src
 #: model:ir.model.fields.selection,name:website_sale.selection__product_feed__target__gmc
+#, fuzzy
 msgid "Google Merchant Center"
-msgstr ""
+msgstr "Google Merchant Center"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2663,8 +3045,9 @@ msgstr "Mreža"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_gap
+#, fuzzy
 msgid "Grid-gap on the shop"
-msgstr ""
+msgstr "Razmik mreže v trgovini"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
@@ -2679,8 +3062,9 @@ msgstr "Ima sporočilo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__has_published_products
+#, fuzzy
 msgid "Has Published Products"
-msgstr ""
+msgstr "Ima objavljene izdelke"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -2709,38 +3093,44 @@ msgstr "Skrij 'Dodaj v košarico', ko je cena = 0"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Hide Images"
-msgstr ""
+msgstr "Skrij slike"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Hide all filters"
-msgstr ""
+msgstr "Skrij vse filtre"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__6_5
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio_mobile__6_5
+#, fuzzy
 msgid "Horizontal (6/5)"
-msgstr ""
+msgstr "Vodoravno (6/5)"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hover
+#, fuzzy
 msgid "Hover"
-msgstr ""
+msgstr "Ob prehodu miške"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Hover Effect"
-msgstr ""
+msgstr "Učinek ob prehodu miške"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
+#, fuzzy
 msgid "Href"
-msgstr ""
+msgstr "Href"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2824,11 +3214,15 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__website_id
+#, fuzzy
 msgid ""
 "If you want a pricelist to be available on a website,you must fill in this "
 "field or make it selectable.Otherwise, the pricelist will not apply to any "
 "website."
 msgstr ""
+"Če želite, da je cenik na voljo na spletnem mestu, morate izpolniti to polje "
+"ali omogočiti njegovo izbiranje. V nasprotnem primeru cenik ne bo veljal za "
+"nobeno spletno mesto."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2866,8 +3260,9 @@ msgstr "Slika 512"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Image Grid"
-msgstr ""
+msgstr "Mreža slik"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -2877,14 +3272,16 @@ msgstr "Ime slike"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Image Ratio"
-msgstr ""
+msgstr "Razmerje slike"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Image Shadow"
-msgstr ""
+msgstr "Senca slike"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2897,14 +3294,16 @@ msgstr "Slike"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Images Area"
-msgstr ""
+msgstr "Območje slik"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Inherit desktop"
-msgstr ""
+msgstr "Podeduj namizje"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2919,15 +3318,17 @@ msgstr "Instagram"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__preview_variants
+#, fuzzy
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
-msgstr ""
+msgstr "Takoj ustvarjene različice so na voljo za izbiro na vaši strani /shop."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#, fuzzy
 msgid "Invalid category."
-msgstr ""
+msgstr "Neveljavna kategorija."
 
 #. module: website_sale
 #. odoo-python
@@ -2938,24 +3339,28 @@ msgstr "Neveljavna slika"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
+#, fuzzy
 msgid "Invalid request parameters."
-msgstr ""
+msgstr "Neveljavni parametri zahteve."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#, fuzzy
 msgid "Invalid video URL provided."
-msgstr ""
+msgstr "Navedeni URL videoposnetka ni veljaven."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_cols_order__inverse
+#, fuzzy
 msgid "Inverse order"
-msgstr ""
+msgstr "Obratni vrstni red"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Invoice automatically on payment."
-msgstr ""
+msgstr "Samodejno izdajanje računa ob plačilu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2984,6 +3389,8 @@ msgid ""
 "It seems that a delivery method is not compatible with your address. Please "
 "refresh the page and try again."
 msgstr ""
+"Izgleda, da določen način dostave ni kompatibilen z vašim naslovom.Prosimo "
+"osvežite spletno stran in poskusite znova."
 
 #. module: website_sale
 #. odoo-python
@@ -2992,6 +3399,8 @@ msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
 msgstr ""
+"Izgleda, da transakcija za vaše naročilo že obstaja; načina dostave ne "
+"morete več spreminjati."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -3000,13 +3409,14 @@ msgstr "Temeljnica"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_kitchen
+#, fuzzy
 msgid "Kitchen Cabinets"
-msgstr ""
+msgstr "Kuhinjske omarice"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_kitchen
 msgid "Kitchen Drawer Units"
-msgstr ""
+msgstr "Enote Kuhinjskih Predalnikov"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -3054,20 +3464,23 @@ msgstr "Široko"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Large Grid"
-msgstr ""
+msgstr "Velika mreža"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Large Image"
-msgstr ""
+msgstr "Velika slika"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Large Images"
-msgstr ""
+msgstr "Velike slike"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3078,8 +3491,9 @@ msgstr "Prejšnji mesec"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__last_notification_date
+#, fuzzy
 msgid "Last Notification Date"
-msgstr ""
+msgstr "Datum zadnjega obvestila"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__write_uid
@@ -3119,8 +3533,9 @@ msgstr "Prejšnje leto"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_laundry
+#, fuzzy
 msgid "Laundry Bins"
-msgstr ""
+msgstr "Koši za perilo"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3130,6 +3545,7 @@ msgstr "Postavitev"
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__position__left
 msgid "Left"
@@ -3166,8 +3582,9 @@ msgstr "Prikaz davka pri vmesnih seštevkih"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Link Color"
-msgstr ""
+msgstr "Barva povezave"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3183,34 +3600,39 @@ msgstr "Nalaganje …"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
+#, fuzzy
 msgid "Logged in users"
-msgstr ""
+msgstr "Prijavljeni uporabniki"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
+#, fuzzy
 msgid "Login to reorder"
-msgstr ""
+msgstr "Prijavite se za ponovno naročilo"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_luxury
+#, fuzzy
 msgid "Luxury Boxes"
-msgstr ""
+msgstr "Luksuzne škatle"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
+#, fuzzy
 msgid "Main Button Label"
-msgstr ""
+msgstr "Oznaka glavnega gumba"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Main Image"
-msgstr ""
+msgstr "Glavna Slika"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Manage feeds"
-msgstr ""
+msgstr "Upravljanje virov"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
@@ -3242,8 +3664,9 @@ msgstr "Mediji"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_medicine
+#, fuzzy
 msgid "Medicine Cabinets"
-msgstr ""
+msgstr "Omarice za zdravila"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3256,8 +3679,9 @@ msgstr "Medij"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menu_image_menu
+#, fuzzy
 msgid "Mega menu default image"
-msgstr ""
+msgstr "Privzeta slika mega menija"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_has_error
@@ -3281,14 +3705,16 @@ msgstr "Mobilni telefon"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Mobile Ratio"
-msgstr ""
+msgstr "Mobilno razmerje"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
+#, fuzzy
 msgid "Modern Grid"
-msgstr ""
+msgstr "Sodobna mreža"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_module_module
@@ -3298,7 +3724,7 @@ msgstr "Modul"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
 msgid "More Information"
-msgstr ""
+msgstr "Več Informacij"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3361,14 +3787,16 @@ msgstr "Kratki naziv"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Needs 'Reviews' to be enabled in the Product Page"
-msgstr ""
+msgstr "Za to morajo biti na strani izdelka omogočene »Ocene«"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Needs at least two images to be defined in the Product Page"
-msgstr ""
+msgstr "Na strani izdelka morata biti določeni vsaj dve sliki"
 
 #. module: website_sale
 #. odoo-python
@@ -3378,13 +3806,15 @@ msgstr "Novo"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
+#, fuzzy
 msgid "New Collection"
-msgstr ""
+msgstr "Nova zbirka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__new_period
+#, fuzzy
 msgid "New Period"
-msgstr ""
+msgstr "Novo obdobje"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_product_action_add
@@ -3393,8 +3823,9 @@ msgstr "Nov proizvod"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, fuzzy
 msgid "New address"
-msgstr ""
+msgstr "Nov naslov"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -3429,8 +3860,9 @@ msgstr "Nadaljuj (desna puščica)"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_nightstand
+#, fuzzy
 msgid "Nightstand Drawers"
-msgstr ""
+msgstr "Predali nočne omarice"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -3441,8 +3873,9 @@ msgstr "Najdenih ni nobenih zapuščenih vozičkov"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
+#, fuzzy
 msgid "No previous products available for reorder."
-msgstr ""
+msgstr "Za ponovno naročilo ni na voljo nobenega prejšnjega izdelka."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3452,7 +3885,7 @@ msgstr "Izdelek ni opredeljen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in this category."
-msgstr ""
+msgstr "V tej kategoriji ni določenega izdelka."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -3494,7 +3927,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "No shipping method is selected."
-msgstr ""
+msgstr "Noben način dostave ni nastavljen."
 
 #. module: website_sale
 #. odoo-javascript
@@ -3515,19 +3948,20 @@ msgstr "Ne objavljeno"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product/product.xml:0
 msgid "Not available for sale"
-msgstr ""
+msgstr "Ni na voljo za prodajo"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/variant_mixin.js:0
 msgid "Not available with %s"
-msgstr ""
+msgstr "Ni na voljo z %s"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/reorder.py:0
+#, fuzzy
 msgid "Nothing can be reordered in this order"
-msgstr ""
+msgstr "V tem naročilu ni mogoče ničesar ponovno naročiti"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
@@ -3571,13 +4005,15 @@ msgstr "Število izdelkov v mreži v trgovini"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Off-screen Menu"
-msgstr ""
+msgstr "Meni zunaj zaslona"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_office
+#, fuzzy
 msgid "Office Desks"
-msgstr ""
+msgstr "Pisarniške mize"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3587,18 +4023,21 @@ msgstr "Ob Hover (prekrivanje) učinku"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__preview_variants
+#, fuzzy
 msgid "On Product Cards"
-msgstr ""
+msgstr "Na karticah izdelkov"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__sale
+#, fuzzy
 msgid "On Sale"
-msgstr ""
+msgstr "Na razprodaji"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
+#, fuzzy
 msgid "On the website original price is crossed out."
-msgstr ""
+msgstr "Na spletni strani je izvirna cena prečrtana."
 
 #. module: website_sale
 #. odoo-python
@@ -3614,8 +4053,9 @@ msgstr "Ko kliknete <b>Shrani</b>, se izdelek posodobi."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "One product might have different attributes (size, color, etc.)"
-msgstr ""
+msgstr "En izdelek ima lahko različne atribute (velikost, barva itd.)"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -3630,8 +4070,9 @@ msgstr "Analiza spletne prodaje"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
+#, fuzzy
 msgid "Online catalog"
-msgstr ""
+msgstr "Spletni katalog"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -3641,8 +4082,9 @@ msgstr "Samo storitve"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_ribbon.py:0
+#, fuzzy
 msgid "Only one ribbon with the assign %s is allowed."
-msgstr ""
+msgstr "Dovoljen je samo en trak z dodelitvijo %s."
 
 #. module: website_sale
 #. odoo-python
@@ -3657,8 +4099,9 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Opacity of the overlay"
-msgstr ""
+msgstr "Prosojnost prekrivnega sloja"
 
 #. module: website_sale
 #. odoo-python
@@ -3731,7 +4174,7 @@ msgstr "Postavke naloga prikazane na spletni strani"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order summary"
-msgstr ""
+msgstr "Povzetek naročila"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3742,8 +4185,9 @@ msgstr "Naročila"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Orders Assignment"
-msgstr ""
+msgstr "Dodelitev naročil"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_order_action_to_invoice
@@ -3753,13 +4197,15 @@ msgstr "Nalogi za obračun"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.price_dynamic_filter_template_product_product
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
+#, fuzzy
 msgid "Original price"
-msgstr ""
+msgstr "Originalna cena"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
+#, fuzzy
 msgid "Our payment methods"
-msgstr ""
+msgstr "Naše metode plačila"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.out_of_stock_ribbon
@@ -3769,8 +4215,9 @@ msgstr "Ni na zalogi"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Overlay"
-msgstr ""
+msgstr "Prekrivanje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.packaging_title
@@ -3785,8 +4232,9 @@ msgstr "Stran"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Page Width"
-msgstr ""
+msgstr "Širina strani"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -3848,8 +4296,9 @@ msgstr "Plačilne transakcije"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
+#, fuzzy
 msgid "Payment is already being processed."
-msgstr ""
+msgstr "Plačilo je že v obdelavi."
 
 #. module: website_sale
 #. odoo-python
@@ -3866,8 +4315,9 @@ msgstr "Telefonska številka"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
+#, fuzzy
 msgid "Pickup Location"
-msgstr ""
+msgstr "Lokacija prevzema"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3911,13 +4361,15 @@ msgstr "Prednastavitev"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Presets"
-msgstr ""
+msgstr "Prednastavitve"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_history
+#, fuzzy
 msgid "Press 'Enter' to add to cart"
-msgstr ""
+msgstr "Pritisnite »Enter«, da dodate v košarico"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
@@ -3969,8 +4421,9 @@ msgstr "Cena na enoto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
+#, fuzzy
 msgid "Price information"
-msgstr ""
+msgstr "Informacije o ceni"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
@@ -3980,7 +4433,7 @@ msgstr "Cenik, ki je na voljo za to e-trgovino/spletno stran"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Price will be updated after choosing a delivery method"
-msgstr ""
+msgstr "Cena bo posodobljena po izbiri metode odpreme"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -3993,7 +4446,7 @@ msgstr "Cenik"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Pravilo Cenika"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
@@ -4052,20 +4505,22 @@ msgstr "Kategorija proizvoda"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Product Details"
-msgstr ""
+msgstr "Podrobnosti izdelka"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "Dokument izdelka"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_feed
 #: model:res.groups,name:website_sale.group_product_feed
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
+#, fuzzy
 msgid "Product Feed"
-msgstr ""
+msgstr "Vir izdelkov"
 
 #. module: website_sale
 #. odoo-python
@@ -4073,8 +4528,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:website_sale.action_product_feeds
 #: model:ir.ui.menu,name:website_sale.menu_product_feeds
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_list
+#, fuzzy
 msgid "Product Feeds"
-msgstr ""
+msgstr "Viri izdelkov"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_image
@@ -4096,7 +4552,7 @@ msgstr "Naziv izdelka"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 msgid "Product Names"
-msgstr ""
+msgstr "Nazivi Izdelkov"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4107,8 +4563,9 @@ msgstr "Stran izdelka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_container
+#, fuzzy
 msgid "Product Page Container"
-msgstr ""
+msgstr "Vsebnik strani izdelka"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
@@ -4127,18 +4584,21 @@ msgstr "Postavitev slike na strani izdelka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_ratio
+#, fuzzy
 msgid "Product Page Image Ratio"
-msgstr ""
+msgstr "Razmerje stranic slike na strani izdelka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_ratio_mobile
+#, fuzzy
 msgid "Product Page Image Ratio Mobile"
-msgstr ""
+msgstr "Razmerje stranic slike na strani izdelka za mobilne naprave"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_roundness
+#, fuzzy
 msgid "Product Page Image Roundness"
-msgstr ""
+msgstr "Zaobljenost slike na strani izdelka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_spacing
@@ -4152,8 +4612,9 @@ msgstr "Širina slike na strani izdelka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_cols_order
+#, fuzzy
 msgid "Product Page main columns order"
-msgstr ""
+msgstr "Vrstni red glavnih stolpcev strani izdelka"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_product_pages_list
@@ -4173,13 +4634,13 @@ msgstr "Referenčna cena izdelka"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 msgid "Product Ribbon"
-msgstr ""
+msgstr "Trak Artikla"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_ribbon_action
 #: model:ir.ui.menu,name:website_sale.product_catalog_product_ribbons
 msgid "Product Ribbons"
-msgstr ""
+msgstr "Traki Izdelkov"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
@@ -4204,7 +4665,7 @@ msgstr "Postavka lastnosti predloge izdelka"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Vrednost atributa predloge produkta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
@@ -4264,8 +4725,9 @@ msgstr "Proizvodi"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Products Design"
-msgstr ""
+msgstr "Oblikovanje izdelkov"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4297,13 +4759,15 @@ msgstr "Promocijska koda"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Promote"
-msgstr ""
+msgstr "Promoviraj"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Promotions, coupons, loyalty cards, gift cards & eWallet"
-msgstr ""
+msgstr "Promocije, kuponi, kartice zvestobe, darilne kartice in e-denarnica"
 
 #. module: website_sale
 #. odoo-python
@@ -4322,8 +4786,9 @@ msgstr "Datum objave"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
+#, fuzzy
 msgid "Publish on website"
-msgstr ""
+msgstr "Objavi na svoji spletni strani"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -4335,14 +4800,16 @@ msgstr "Objavljeno"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Purchase Options"
-msgstr ""
+msgstr "Možnosti nakupa"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Purchase Style"
-msgstr ""
+msgstr "Način nakupa"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4377,7 +4844,7 @@ msgstr "Količina"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
 msgid "Quick reorder"
-msgstr ""
+msgstr "Hitro ponovno naročanje"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4444,13 +4911,15 @@ msgstr "Nedavno prodani izdelki"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
+#, fuzzy
 msgid "Recently Viewed Products (per user)"
-msgstr ""
+msgstr "Nedavno ogledani izdelki (na uporabnika)"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_recliners
+#, fuzzy
 msgid "Recliners"
-msgstr ""
+msgstr "Počivalniki"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -4474,8 +4943,9 @@ msgstr "Navadni"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_cols_order__regular
+#, fuzzy
 msgid "Regular order"
-msgstr ""
+msgstr "Redni vrstni red"
 
 #. module: website_sale
 #. odoo-python
@@ -4485,8 +4955,9 @@ msgstr "Okrepljeno za težke obremenitve"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_relocation_and_moving
+#, fuzzy
 msgid "Relocation and Moving"
-msgstr ""
+msgstr "Selitve in prevozi"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4498,8 +4969,9 @@ msgstr "Odstrani"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Remove All"
-msgstr ""
+msgstr "Odstrani vse"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -4508,8 +4980,9 @@ msgstr "Odstranite iz košarice"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+#, fuzzy
 msgid "Remove from recently viewed"
-msgstr ""
+msgstr "Odstrani iz nedavno ogledanih"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
@@ -4520,13 +4993,15 @@ msgstr "Odstrani ga"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Render a button to show the Off-screen Menu"
-msgstr ""
+msgstr "Izriši gumb za prikaz menija zunaj zaslona"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_repair_and_maintenance
+#, fuzzy
 msgid "Repair and Maintenance"
-msgstr ""
+msgstr "Popravila in vzdrževanje"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4539,19 +5014,22 @@ msgstr "Replace"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
+#, fuzzy
 msgid "Replace image"
-msgstr ""
+msgstr "Zamenjajte sliko"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.action_invalidate_cache
+#, fuzzy
 msgid "Reset Cache"
-msgstr ""
+msgstr "Ponastavi predpomnilnik"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Responsive"
-msgstr ""
+msgstr "Odzivno"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_id
@@ -4561,7 +5039,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_id
 msgid "Restrict to a specific website."
-msgstr ""
+msgstr "Omeji na specifično spletno stran."
 
 #. module: website_sale
 #. odoo-python
@@ -4577,10 +5055,13 @@ msgstr "Vračila"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid ""
 "Reverses the horizontal order of items on desktop and larger screens (mobile "
 "layout remains unchanged)"
 msgstr ""
+"Obrne vodoravni vrstni red elementov na namiznih in večjih zaslonih "
+"(postavitev za mobilne naprave ostane nespremenjena)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4600,7 +5081,7 @@ msgstr "Trak"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__name
 msgid "Ribbon Name"
-msgstr ""
+msgstr "Ime Traku"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4614,13 +5095,15 @@ msgstr "Desno"
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Roundness"
-msgstr ""
+msgstr "Zaobljenost"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_rustic
+#, fuzzy
 msgid "Rustic Boxes"
-msgstr ""
+msgstr "Rustikalne škatle"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
@@ -4646,8 +5129,9 @@ msgstr "Analiza prodaje"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
+#, fuzzy
 msgid "Sale price"
-msgstr ""
+msgstr "Prodajna cena"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.sale_report_action_carts
@@ -4722,37 +5206,43 @@ msgstr "Iskalna vrstica"
 #: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "Search Products"
-msgstr ""
+msgstr "Išči izdelke"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "Search globally"
-msgstr ""
+msgstr "Išči globalno"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.product_search
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "Search in"
-msgstr ""
+msgstr "Iskanje po"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
+#, fuzzy
 msgid "Search {{0}} ({{1}})"
-msgstr ""
+msgstr "Išči {{0}} ({{1}})"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#, fuzzy
 msgid "Search {{0}} globally"
-msgstr ""
+msgstr "Išči {{0}} globalno"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Secondary Image"
-msgstr ""
+msgstr "Sekundarna slika"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4779,19 +5269,21 @@ msgstr "Izberite količino"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_method
 msgid "Select a location"
-msgstr ""
+msgstr "Izberite lokacijo"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Select a website"
-msgstr ""
+msgstr "Izberite spletno stran"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_feed__lang_id
+#, fuzzy
 msgid ""
 "Select the language to translate product names, descriptions, and other text "
 "in the feed."
 msgstr ""
+"Izberite jezik za prevod imen izdelkov, opisov in drugega besedila v viru."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__selectable
@@ -4827,8 +5319,9 @@ msgstr "Seo ime"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Separators"
-msgstr ""
+msgstr "Ločila"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -4848,14 +5341,16 @@ msgstr "Storitve"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Shadow-In"
-msgstr ""
+msgstr "Notranja senca"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Shadow-Out"
-msgstr ""
+msgstr "Zunanja senca"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -4888,25 +5383,28 @@ msgstr "Prodajalna - potrjeno"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Method"
-msgstr ""
+msgstr "Trgovina - Izberite način plačila"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#, fuzzy
 msgid "Shop Checkout"
-msgstr ""
+msgstr "Prodajalna - izhod"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#, fuzzy
 msgid "Shop Checkout - Extra Information"
-msgstr ""
+msgstr "Blagajna trgovine – dodatne informacije"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#, fuzzy
 msgid "Shop Confirmation"
-msgstr ""
+msgstr "Potrditev trgovine"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_default_sort
@@ -4915,111 +5413,126 @@ msgstr "Trgovina Privzeto razvrščanje"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_opt_products_design_classes
+#, fuzzy
 msgid "Shop Design Class"
-msgstr ""
+msgstr "Razred oblikovanja trgovine"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_header_shop_option_plugin.js:0
+#, fuzzy
 msgid "Shop Header"
-msgstr ""
+msgstr "Glava trgovine"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_page_container
+#, fuzzy
 msgid "Shop Page Container"
-msgstr ""
+msgstr "Vsebnik strani trgovine"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#, fuzzy
 msgid "Shop Payment"
-msgstr ""
+msgstr "Plačilo v trgovini"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Shop, products, cart and wishlist visibility"
-msgstr ""
+msgstr "Vidnost trgovine, izdelkov, košarice in seznama želja"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
+#, fuzzy
 msgid "Shopping Cart"
-msgstr ""
+msgstr "Košarica"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Show B2B Fields"
-msgstr ""
+msgstr "Prikaži polja B2B"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__show_category_description
+#, fuzzy
 msgid "Show Category Description"
-msgstr ""
+msgstr "Prikaži opis kategorije"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__show_category_title
+#, fuzzy
 msgid "Show Category Title"
-msgstr ""
+msgstr "Prikaži naslov kategorije"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_header_category_options.xml:0
+#, fuzzy
 msgid "Show Description"
-msgstr ""
+msgstr "Prikaži opis"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
 msgid "Show Empty"
-msgstr ""
+msgstr "Prikaži prazno"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__is_thumbnail_visible
+#, fuzzy
 msgid "Show Thumbnails"
-msgstr ""
+msgstr "Prikaži sličice"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_header_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_header_shop_options.xml:0
+#, fuzzy
 msgid "Show Title"
-msgstr ""
+msgstr "Prikaži naslov"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Show a filmstrip navigation at the Top"
-msgstr ""
+msgstr "Prikaži navigacijo v obliki filmskega traku na vrhu"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Show filters into Sidebar"
-msgstr ""
+msgstr "Prikaži filtre v stranski vrstici"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Show into Sidebar"
-msgstr ""
+msgstr "Prikaži v stranski vrstici"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
 msgid "Show on Ecommerce"
-msgstr ""
+msgstr "Prikaži na spletni trgovini"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
+#, fuzzy
 msgid "Show the button even if the Cart/Wishlist is empty"
-msgstr ""
+msgstr "Prikaži gumb, tudi če je košarica/seznam želja prazna"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_products_option.xml:0
 msgid "Show variants"
-msgstr ""
+msgstr "Prikaži različice"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5099,12 +5612,13 @@ msgstr "Razprodano"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
-msgstr ""
+msgstr "Žal vašega naročila nismo mogli odpremiti."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
+#, fuzzy
 msgid "Sort By"
-msgstr ""
+msgstr "Razvrsti po"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5121,11 +5635,15 @@ msgstr "Razmik"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_feed__pricelist_id
+#, fuzzy
 msgid ""
 "Specify a pricelist to localize the feed with a specific currency. If not "
 "set, the default website pricelist will be used.\n"
 "Note that the pricelist must be selectable on the website."
 msgstr ""
+"Določite cenik za lokalizacijo vira z določeno valuto. Če ni nastavljen, bo "
+"uporabljen privzeti cenik spletnega mesta.\n"
+"Upoštevajte, da mora biti cenik mogoče izbrati na spletnem mestu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
@@ -5136,18 +5654,21 @@ msgstr "Navedite enoto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_mega_menu_menus_logos
+#, fuzzy
 msgid "Spring collection has arrived!"
-msgstr ""
+msgstr "Pomladna kolekcija je prispela!"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_stackable
+#, fuzzy
 msgid "Stackable Boxes"
-msgstr ""
+msgstr "Škatle, ki jih je mogoče zlagati"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_standing
+#, fuzzy
 msgid "Standing Desks"
-msgstr ""
+msgstr "Dvižne pisalne mize"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -5161,8 +5682,9 @@ msgstr "Ostanite na strani izdelka"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_storage
+#, fuzzy
 msgid "Storage Cabinets"
-msgstr ""
+msgstr "Omare za shranjevanje"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5176,8 +5698,9 @@ msgstr "Stil"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Subtle"
-msgstr ""
+msgstr "Subtilno"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -5203,7 +5726,7 @@ msgstr "Predlagani dodatki"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
 msgid "Suggested accessories"
-msgstr ""
+msgstr "Predlagani dodatki"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -5249,6 +5772,7 @@ msgstr "Navedba davka"
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
 msgid "Tax included or excluded depending on the website configuration."
 msgstr ""
+"Davki so vključeni ali izključeni glede na konfiguracijo spletnega mesta."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -5258,10 +5782,13 @@ msgstr "Davki"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__variants_default_code
 #: model:ir.model.fields,help:website_sale.field_product_template__variants_default_code
+#, fuzzy
 msgid ""
 "Technical field to enhance performance when looking up default code of "
 "productvariants (LIKE/ILIKE)"
 msgstr ""
+"Tehnično polje za izboljšanje zmogljivosti pri iskanju privzete kode "
+"različic izdelka (LIKE/ILIKE)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -5283,8 +5810,9 @@ msgstr "Besedilo"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Text & content"
-msgstr ""
+msgstr "Besedilo in vsebina"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
@@ -5309,15 +5837,16 @@ msgstr "Žeton za dostop je neveljaven."
 
 #. module: website_sale
 #: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
+#, fuzzy
 msgid ""
 "The building block will remain empty until the user visits a product page."
-msgstr ""
+msgstr "Gradnik bo ostal prazen, dokler uporabnik ne obišče strani izdelka."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
-msgstr ""
+msgstr "Košarica je bila že plačana. Prosimo osvežite stran."
 
 #. module: website_sale
 #. odoo-python
@@ -5332,21 +5861,28 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
 msgstr ""
+"Podjetje spletnega mesta, s katerega želite prodati (%(website_company)s), "
+"se razlikuje od podjetja, ki ga želite uporabiti (%(company)s)"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
+#, fuzzy
 msgid "The delivery method is not compatible with your delivery address."
-msgstr ""
+msgstr "Način dostave ni združljiv z vašim naslovom za dostavo."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_feed.py:0
+#, fuzzy
 msgid ""
 "The feed %(feed_name)s contains more than %(limit)s products, which may not "
 "be fully updated. Consider refining the feed by adjusting the product "
 "categories."
 msgstr ""
+"Vir %(feed_name)s vsebuje več kot %(limit)s izdelkov, ki morda ne bodo v "
+"celoti posodobljeni. Razmislite o izboljšanju vira s prilagoditvijo "
+"kategorij izdelkov."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
@@ -5357,15 +5893,18 @@ msgstr "Polna URL povezava za dostop do dokumenta preko spletne strani."
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_absolute_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_absolute_url
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_absolute_url
+#, fuzzy
 msgid "The full absolute URL to access the document through the website."
 msgstr ""
+"Polna absolutna URL povezava za dostop do dokumenta preko spletne strani."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 #: model:ir.model.fields,help:website_sale.field_website_checkout_step__website_url
+#, fuzzy
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "Celoten relativni URL za dostop do dokumenta prek spletnega mesta."
 
 #. module: website_sale
 #. odoo-python
@@ -5389,11 +5928,15 @@ msgstr "Ta izdelek nima cene, zato ga ni mogoče dodati v košarico."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "The mode selected here applies as invoicing policy of any new "
 "product                            created but not of products already "
 "existing."
 msgstr ""
+"Tukaj izbrani način velja kot politika izdajanja računov za vsak nov izdelek"
+"                            , ki je ustvarjen, vendar ne za že obstoječe "
+"izdelke."
 
 #. module: website_sale
 #. odoo-python
@@ -5423,8 +5966,7 @@ msgstr "Ekipa."
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
-msgstr ""
-"Čas za označitev vozička kot opuščenega lahko spremenite v nastavitvah."
+msgstr "Čas za označitev vozička kot opuščenega lahko spremenite v nastavitvah."
 
 #. module: website_sale
 #. odoo-python
@@ -5439,14 +5981,16 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Theme Preset n°"
-msgstr ""
+msgstr "Prednastavitev teme št."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Theme Preset n°1 (default)"
-msgstr ""
+msgstr "Prednastavitev teme št. 1 (privzeto)"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_theme_utils
@@ -5462,8 +6006,9 @@ msgstr "Barve teme"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Theme default"
-msgstr ""
+msgstr "Privzeta tema"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -5484,13 +6029,15 @@ msgstr "Pri nalaganju zemljevida je prišlo do napake"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.alternative_products
+#, fuzzy
 msgid "These other products might interest you"
-msgstr ""
+msgstr "Ti drugi izdelki bi vas morda zanimali"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
+#, fuzzy
 msgid "This content will be shared across all product pages."
-msgstr ""
+msgstr "Ta vsebina bo v skupni rabi na vseh straneh izdelkov."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -5526,6 +6073,13 @@ msgid "This product is no longer available."
 msgstr "Ta izdelek ni več na voljo."
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+#, fuzzy
+msgid "This product is not available (anymore) in this unit of measure."
+msgstr "Ta izdelek v tej merski enoti ni (več) na voljo."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
 msgid "This product is unpublished."
 msgstr "Ta izdelek ni objavljen"
@@ -5537,8 +6091,9 @@ msgstr "Ta promocijska koda ni na voljo."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid "Three-Seat Sofa"
-msgstr ""
+msgstr "Trosedežni kavč"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5554,22 +6109,32 @@ msgstr "TikTok"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
+#, fuzzy
 msgid "Time when the 'Send abandoned cart email' feature was activated."
 msgstr ""
+"Čas, ko je bila aktivirana funkcija »Pošlji e-pošto za zapuščeno nakupovalno "
+"košarico«."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Title Style"
-msgstr ""
+msgstr "Slog naslova"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "To send invitations in B2B mode, open a contact or select several "
 "ones                            in list view and click on 'Portal Access "
 "Management' option in the                            dropdown menu *Action*."
 msgstr ""
+"Če želiš poslati povabila v načinu B2B, odpri vizitko stika ali jih izberi "
+"več                            \n"
+"v pogledu seznama in klikni na možnost “Upravljanje dostopa do portala\" v "
+"spustnem meniju                            \n"
+"*Ukrep*."
 
 #. module: website_sale
 #. odoo-python
@@ -5580,8 +6145,9 @@ msgstr "Danes"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
+#, fuzzy
 msgid "Toolbar"
-msgstr ""
+msgstr "Orodna vrstica"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5604,17 +6170,18 @@ msgstr "Skupno število ogledov izdelkov"
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.js:0
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Total: %s"
-msgstr ""
+msgstr "Skupaj: %s"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps_touch
 msgid "Touch Lamps"
-msgstr ""
+msgstr "Luči na Dotik"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_toy
+#, fuzzy
 msgid "Toy Bins"
-msgstr ""
+msgstr "Koši za igrače"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_snippet_filter__product_cross_selling
@@ -5642,8 +6209,9 @@ msgstr "URL videoposnetka za predstavitev izdelka."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
+#, fuzzy
 msgid "Under-bed Drawers"
-msgstr ""
+msgstr "Predali pod posteljo"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_base_unit
@@ -5671,8 +6239,9 @@ msgstr "Neobjavljeno"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__unset
+#, fuzzy
 msgid "Unset"
-msgstr ""
+msgstr "Ni nastavljeno"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5687,25 +6256,30 @@ msgstr "Url"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "Use Google Places API to validate addresses"
-msgstr ""
+msgstr "Uporabite Google Places API za preverjanje naslovov"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Use auto values or force the link-color defined in the Theme Tab"
 msgstr ""
+"Uporabi samodejne vrednosti ali vsili barvo povezav, določeno na zavihku Tema"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__is_thumbnail_visible
+#, fuzzy
 msgid "Use product variant images instead of the attribute values displays."
-msgstr ""
+msgstr "Uporabite slike različic izdelka namesto prikazov vrednosti atributov."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/add_to_cart_snippet.js:0
+#, fuzzy
 msgid "User Error"
-msgstr ""
+msgstr "Uporabniška napaka"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5716,13 +6290,14 @@ msgstr "Različica"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variant_ribbon_id
 msgid "Variant Ribbon"
-msgstr ""
+msgstr "Variant Traka"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variants_default_code
 #: model:ir.model.fields,field_description:website_sale.field_product_template__variants_default_code
+#, fuzzy
 msgid "Variants Default Code"
-msgstr ""
+msgstr "Privzeta koda različic"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5741,15 +6316,17 @@ msgstr "Spletni naslov videoposnetka"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/website_sale.js:0
+#, fuzzy
 msgid "View Less"
-msgstr ""
+msgstr "Prikaži manj"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/website_sale.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
+#, fuzzy
 msgid "View More"
-msgstr ""
+msgstr "Poglej več"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5765,13 +6342,15 @@ msgstr "Gledalec"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes_vintage
+#, fuzzy
 msgid "Vintage Boxes"
-msgstr ""
+msgstr "Starinske škatle"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia_virtual_design
+#, fuzzy
 msgid "Virtual Design Tools"
-msgstr ""
+msgstr "Virtualna oblikovalska orodja"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
@@ -5814,13 +6393,15 @@ msgstr "Pogledi na izdelek za obiskovalce Zgodovina"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
+#, fuzzy
 msgid "Visitor's Choice"
-msgstr ""
+msgstr "Izbira obiskovalca"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes
+#, fuzzy
 msgid "Wardrobes"
-msgstr ""
+msgstr "Garderobne omare"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__shop_warning
@@ -5837,8 +6418,9 @@ msgstr "Garancija"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
+#, fuzzy
 msgid "Warranty (2 year)"
-msgstr ""
+msgstr "Garancija (2 leti)"
 
 #. module: website_sale
 #: model:product.template,description_sale:website_sale.product_product_1_product_template
@@ -5853,10 +6435,13 @@ msgstr ""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "We weren't able to update your cart. Please refresh your page before trying "
 "again."
 msgstr ""
+"Vaše košarice ni bilo mogoče posodobiti. Pred ponovnim poskusom osvežite "
+"stran."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -5882,18 +6467,20 @@ msgstr "Spletna stran"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_absolute_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_absolute_url
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__website_absolute_url
+#, fuzzy
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "Spletni absolutni URL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_normalized
 msgid "Website Category"
-msgstr ""
+msgstr "Kategorija Spletne Strani"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
+#, fuzzy
 msgid "Website Checkout Step"
-msgstr ""
+msgstr "Korak zaključka nakupa na spletnem mestu"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
@@ -6004,8 +6591,9 @@ msgstr "Kaj je treba storiti pri \"Dodaj v košarico\"?"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__new
+#, fuzzy
 msgid "When New"
-msgstr ""
+msgstr "Ko je novo"
 
 #. module: website_sale
 #. odoo-python
@@ -6018,16 +6606,18 @@ msgstr "Tabla"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__16_9
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio_mobile__16_9
+#, fuzzy
 msgid "Wide (16/9)"
-msgstr ""
+msgstr "Široko (16/9)"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__21_9
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio_mobile__21_9
+#, fuzzy
 msgid "Wider (21/9)"
-msgstr ""
+msgstr "Širše (21/9)"
 
 #. module: website_sale
 #. odoo-python
@@ -6038,8 +6628,9 @@ msgstr "S tremi nogami"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+#, fuzzy
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
-msgstr ""
+msgstr "Napačen format: prejeto `pricelist=%s`, pričakovano celo število"
 
 #. module: website_sale
 #. odoo-python
@@ -6049,6 +6640,7 @@ msgstr "Včeraj"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, fuzzy
 msgid ""
 "You are editing your <b>delivery and billing</b> addresses\n"
 "                            at the same time!<br/>\n"
@@ -6057,12 +6649,18 @@ msgid ""
 "                            <a class=\"o_translate_inline\" href=\"/shop/"
 "address?address_type=billing\">new address</a>."
 msgstr ""
+"Urejate svoja <b>naslova za dostavo in obračun</b>\n"
+"                            hkrati!<br/>\n"
+"                            Če želite spremeniti svoj naslov za obračun, "
+"ustvarite\n"
+"                            <a class=\"o_translate_inline\" href=\"/shop/"
+"address?address_type=billing\">nov naslov</a>."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "You can't use a video as the product's main image."
-msgstr ""
+msgstr "Video ni mogoče uporabiti kot glavno sliko izdelka."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -6118,13 +6716,14 @@ msgstr "Vaš nakupovalni voziček je prazen!"
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Your cart is empty."
-msgstr ""
+msgstr "Vaš nakupovalni voziček je prazen."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Your cart is not ready to be paid, please verify previous steps."
 msgstr ""
+"Vaša košarica ni pripravljena za plačilo, prosimo preverite prejšnje korake."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -6150,32 +6749,37 @@ msgstr "Predpona poštne številke"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
+#, fuzzy
 msgid "Zoom on click"
-msgstr ""
+msgstr "Povečava ob kliku"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Zoom-In"
-msgstr ""
+msgstr "Približaj"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Zoom-In Light"
-msgstr ""
+msgstr "Nežno povečanje"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Zoom-Out"
-msgstr ""
+msgstr "Pomanjšaj"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid "Zoom-Out Light"
-msgstr ""
+msgstr "Nežno pomanjšanje"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6213,19 +6817,21 @@ msgstr "eCommerce kategorije"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_search
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#, fuzzy
 msgid "eCommerce Category"
-msgstr ""
+msgstr "eCommerce kategorija"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__description_ecommerce
 #: model:ir.model.fields,field_description:website_sale.field_product_template__description_ecommerce
 msgid "eCommerce Description"
-msgstr ""
+msgstr "Opis elektronske trgovine"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
+#, fuzzy
 msgid "eCommerce Filter"
-msgstr ""
+msgstr "Filter e-trgovine"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
@@ -6235,7 +6841,7 @@ msgstr "vidnost filtrov e-trgovine"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Media"
-msgstr ""
+msgstr "eCommerce Multimedijska Vsebina"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -6245,7 +6851,7 @@ msgstr "prodaja E-trgovine"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
 msgid "eCommerce cart"
-msgstr ""
+msgstr "Košarica elektronske trgovine"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
@@ -6254,8 +6860,9 @@ msgstr "e-trgovina: pošiljanje e-pošte strankam o zapuščeni košarici"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+#, fuzzy
 msgid "hours."
-msgstr ""
+msgstr "ure"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -6279,53 +6886,66 @@ msgstr "v kategoriji \""
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
+#, fuzzy
 msgid "is_abandoned_cart"
-msgstr ""
+msgstr "je zapuščena nakupovalna košarica"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
+#, fuzzy
 msgid "list_price asc"
-msgstr ""
+msgstr "prodajna cena naraščajoče"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
+#, fuzzy
 msgid "list_price desc"
-msgstr ""
+msgstr "prodajna cena padajoče"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
+#, fuzzy
 msgid "model"
-msgstr ""
+msgstr "Model"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
+#, fuzzy
 msgid "name asc"
-msgstr ""
+msgstr "ime naraščajoče"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid ""
 "o_wsale_products_opt_actions_inline o_wsale_products_opt_wishlist_inline\n"
 "            o_wsale_products_opt_actions_promote o_wsale_products_opt_cc "
 "o_wsale_products_opt_cc1"
 msgstr ""
+"o_wsale_products_opt_actions_inline o_wsale_products_opt_wishlist_inline\n"
+"            o_wsale_products_opt_actions_promote o_wsale_products_opt_cc "
+"o_wsale_products_opt_cc1"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid ""
 "o_wsale_products_opt_actions_onhover o_wsale_products_opt_wishlist_fixed\n"
 "            o_wsale_products_opt_actions_subtle"
 msgstr ""
+"o_wsale_products_opt_actions_onhover o_wsale_products_opt_wishlist_fixed\n"
+"            o_wsale_products_opt_actions_subtle"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid ""
 "o_wsale_products_opt_name_color_regular\n"
 "            o_wsale_products_opt_thumb_cover "
@@ -6335,22 +6955,35 @@ msgid ""
 "            o_wsale_products_opt_has_wishlist "
 "o_wsale_products_opt_has_comparison"
 msgstr ""
+"o_wsale_products_opt_name_color_regular\n"
+"            o_wsale_products_opt_thumb_cover "
+"o_wsale_products_opt_img_secondary_show\n"
+"            o_wsale_products_opt_img_hover_zoom_out_light "
+"o_wsale_products_opt_has_cta\n"
+"            o_wsale_products_opt_has_wishlist "
+"o_wsale_products_opt_has_comparison"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
+#, fuzzy
 msgid ""
 "o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_cover\n"
 "            o_wsale_products_opt_has_cta\n"
 "            o_wsale_products_opt_has_wishlist\n"
 "            o_wsale_products_opt_actions_inline"
 msgstr ""
+"o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_cover\n"
+"            o_wsale_products_opt_has_cta\n"
+"            o_wsale_products_opt_has_wishlist\n"
+"            o_wsale_products_opt_actions_inline"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
+#, fuzzy
 msgid "publish_date desc"
-msgstr ""
+msgstr "datum objave padajoče"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
@@ -6359,13 +6992,15 @@ msgstr "pravila in pogoji"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
+#, fuzzy
 msgid "{{0}} image"
-msgstr ""
+msgstr "{{0}} slika"
 
 #~ msgid "100 %"
 #~ msgstr "100 %"
@@ -6618,9 +7253,6 @@ msgstr ""
 
 #~ msgid "Both"
 #~ msgstr "Oboje"
-
-#~ msgid "Bottom"
-#~ msgstr "Spodaj"
 
 #~ msgid "Brand"
 #~ msgstr "Znamka"

@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, UserError
 from datetime import date
 
 from collections import defaultdict
+from unittest.mock import patch
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
@@ -941,6 +942,41 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_tax': 167.96,
             'amount_total': 1127.95,
         })
+
+    def test_biggest_tax_rounding_with_invoice_address(self):
+        """
+        Test that we can post an invoice with partner_id != commercial_partner_id
+        and a cash rounding with the 'biggest tax' strategy
+        """
+        original_write = self.env.registry['account.move.line'].write
+
+        def _patch_write(self, vals):
+            # Some extension of the write method call the super() before using self
+            # In our case, the rounding line was deleted during the sync_tax_lines process
+            # leading to a MissingError
+            res = original_write(self, vals)
+            self.filtered(lambda line: line.move_id.move_type == 'in_invoice')
+            return res
+
+        self.env['res.config.settings'].write({'group_sale_delivery_address': True})
+
+        invoice_address = self.env['res.partner'].create({
+            'name': 'test invoice address',
+            'type': 'invoice',
+            'parent_id': self.partner_a.id,
+        })
+
+        invoice = self._create_invoice(
+            move_type='in_invoice',
+            partner_id=invoice_address,
+            invoice_cash_rounding_id=self.cash_rounding_b,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=100.03, tax_ids=self.company_data['default_tax_sale'])
+            ]
+        )
+
+        with patch.object(self.env.registry['account.move.line'], 'write', _patch_write):
+            invoice.action_post()
 
     def test_in_invoice_line_onchange_currency_1(self):
         self.other_currency.rounding = 0.001

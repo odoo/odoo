@@ -75,7 +75,7 @@ describe("Html Paste cleaning - whitelist", () => {
                 );
             },
             contentAfter:
-                '<p>123a</p><table class="table table-bordered o_table"><tbody><tr><th>h</th></tr><tr><td>b</td></tr></tbody></table><p>d[]</p>',
+                '<p>123a</p><table class="table table-bordered o_table"><tbody><tr><th class="o_table_header">h</th></tr><tr><td>b</td></tr></tbody></table><p>d[]</p>',
         });
     });
 
@@ -104,6 +104,39 @@ describe("Html Paste cleaning - whitelist", () => {
                         <tr>
                             <td><p>[]<br></p></td>
                         </tr>
+                    </tbody>
+                </table>
+            `),
+        });
+    });
+
+    test("should convert table headers in non-first rows to normal cells on paste", async () => {
+        await testEditor({
+            contentBefore: `
+                <p>[]<br></p>
+            `,
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    unformat(`
+                        <table>
+                            <thead>
+                                <tr><th>Header 1</th></tr>
+                                <tr><th>Header 2</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Cell</td></tr>
+                            </tbody>
+                        </table>
+                    `)
+                );
+            },
+            contentAfter: unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><th class="o_table_header">Header 1</th></tr>
+                        <tr><td>Header 2</td></tr>
+                        <tr><td>Cell[]</td></tr>
                     </tbody>
                 </table>
             `),
@@ -4184,8 +4217,8 @@ ${"            "}
             </tr>
             <tr>
                 <td>14pt MONO TEXT
-                []</td>
-            </tr>
+                </td>
+            <td><p>[]<br></p></td></tr>
         </tbody></table>`,
         });
     });
@@ -4294,8 +4327,8 @@ ${"        "}
                     text on color background</td>
             </tr>
             <tr>
-                <td>14pt MONO TEXT[]</td>
-            </tr>
+                <td>14pt MONO TEXT</td>
+            <td><p>[]<br></p></td></tr>
         </tbody>
     </table>`,
         });
@@ -4423,9 +4456,9 @@ ${"        "}
         </tr>
         <tr>
             <td>
-                14pt MONO TEXT[]
+                14pt MONO TEXT
             </td>
-        </tr>
+        <td><p>[]<br></p></td></tr>
     </tbody></table>`,
         });
     });
@@ -4493,8 +4526,8 @@ ${"        "}
                         <table class="table table-bordered o_table">
                             <tbody>
                                 <tr>
-                                    <th>1</th>
-                                    <th>2</th>
+                                    <th class="o_table_header">1</th>
+                                    <th class="o_table_header">2</th>
                                 </tr>
                                 <tr>
                                     <td>1</td>
@@ -4531,8 +4564,8 @@ ${"        "}
                         <table class="table table-bordered o_table">
                             <tbody>
                                 <tr>
-                                    <th>1</th>
-                                    <th>2[]</th>
+                                    <th class="o_table_header">1</th>
+                                    <th class="o_table_header">2[]</th>
                                 </tr>
                             </tbody>
                         </table>

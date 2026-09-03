@@ -374,4 +374,12 @@ test("Search message with filter in chatter", async () => {
     await click("button[title='Filter Messages']");
     await click("span", { text: "All" });
     await contains(".o-mail-SearchMessageResult .o-mail-Message", { count: 2 });
+    // works when no search term
+    await insertText(".o_searchview_input", "", { replace: true });
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "Conversations" });
+    await contains(".o-mail-SearchMessageResult .o-mail-Message:has(:text(Hermit))");
+    await click("button[title='Filter Messages']");
+    await click("span", { text: "Tracked Changes" });
+    await contains(".o-mail-SearchMessageResult .o-mail-Message:has(:text(NoneHermit(Many2one)))");
 });

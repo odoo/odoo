@@ -1792,6 +1792,26 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(mo_1.is_outdated_bom, True,
             "Even if the BoM's changes don't imply actual changes for the MO, it should be marked as updated.")
 
+        # Updates the BoM again (change product template after marking it as outdated)
+        bom.product_tmpl_id = self.product_4.product_tmpl_id
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "if the BoM's product template changes MO's BoM should not be marked as outdated")
+        # Test with a new product (Sofa) and a new MO for that product.
+        bom.product_tmpl_id = self.product_7_template.id
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': self.product_7_1.id,
+            'product_qty': 1.0,
+        })
+        self.assertEqual(mo_2.bom_id, bom)
+        mo_2.action_confirm()
+        # Mark BoM as outdated by modifying quantity on the BoM
+        bom.product_qty *= 2
+        self.assertTrue(mo_2.is_outdated_bom)
+        # Change the sofa variant to be specific to Blue on the BoM
+        bom.product_id = self.product_7_2
+        self.assertFalse(mo_2.is_outdated_bom,
+            "MO's BoM should no longer be outdated because this BoM is no longer for the Red Sofa.")
+
     def test_bom_updates_mo_with_different_uom(self):
         """ Creates a Manufacturing Order using a BoM and produces 1 dozen of the finished product,
         then modifies the BoM's component's quantity and update the MO.
@@ -1971,8 +1991,11 @@ class TestBoM(TestMrpCommon):
         mo_form.bom_id = self.bom_1
         mo_form.picking_type_id = self.picking_type_manu
         mo_1 = mo_form.save()
+        picking_type_manu_clone = self.picking_type_manu.copy({'sequence_code': 'NEW_CODE'})
+        mo_1.picking_type_id = picking_type_manu_clone
         mo_1.action_confirm()
         picking = mo_1.picking_ids
+        self.assertEqual(picking.origin, mo_1.name)
         self.assertRecordValues(picking.move_ids, [
             {'product_id': self.product_2.id, 'product_uom_qty': 2},
             {'product_id': self.product_1.id, 'product_uom_qty': 4},
@@ -2595,6 +2618,8 @@ class TestBoM(TestMrpCommon):
     def test_bom_never_attribute_mix(self):
         """ For a product that has two 'no_variant' attributes but only one used in its bom,
             check that it computes properly which line to get when using the other attribute.
+            Additionally check that to match a bom line, a product must have at least one
+            matching value for every attribute specified on the bom line.
         """
         color, size = self.env['product.attribute'].create([{
             'name': name,
@@ -2603,9 +2628,9 @@ class TestBoM(TestMrpCommon):
         } for name in ['color', 'size']])
 
         self.env['product.attribute.value'].create([{
-            'name': 'Meh',
+            'name': name,
             'attribute_id': attribute.id,
-        } for attribute in [color, size]])
+        } for name, attribute in [("Meh", color), ("Noice", color), ("Meh", size)]])
 
         tmpl_attr_line_color, tmpl_attr_line_size = self.env['product.template.attribute.line'].create([{
             'attribute_id': attribute.id,
@@ -2636,6 +2661,36 @@ class TestBoM(TestMrpCommon):
             ],
         })
         self.assertEqual(len(order.move_raw_ids), 0, "No component should be selected")
+
+        bom.write({
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_4.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [
+                        Command.link(tmpl_attr_line_color.product_template_value_ids[0].id), Command.link(tmpl_attr_line_color.product_template_value_ids[1].id),
+                    ],
+                }),
+                Command.create({
+                    'product_id': self.product_3.id,
+                    'product_qty': 1,
+                    'bom_product_template_attribute_value_ids': [
+                        Command.link(tmpl_attr_line_color.product_template_value_ids[0].id), Command.link(tmpl_attr_line_size.product_template_value_ids[0].id),
+                    ],
+                }),
+            ],
+        })
+        order2 = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'bom_id': bom.id,
+            'never_product_template_attribute_value_ids': [
+                Command.link(tmpl_attr_line_color.product_template_value_ids[0].id),
+            ],
+        })
+        self.assertRecordValues(order2.move_raw_ids, [
+            {'product_id': self.product_2.id, 'product_uom_qty': 1.0},
+            {'product_id': self.product_4.id, 'product_uom_qty': 1.0},
+            ])
 
     def test_workorders_on_bom_changes(self):
         """

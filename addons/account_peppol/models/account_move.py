@@ -8,7 +8,11 @@ from odoo.addons.account.models.company import PEPPOL_MAILING_COUNTRIES
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    peppol_message_uuid = fields.Char(string='PEPPOL message ID', copy=False)
+    peppol_message_uuid = fields.Char(
+        string='PEPPOL message ID',
+        index='btree_not_null',
+        copy=False,
+    )
     peppol_move_state = fields.Selection(
         selection=[
             ('ready', 'Ready to send'),
@@ -22,6 +26,7 @@ class AccountMove(models.Model):
         string='PEPPOL status',
         copy=False,
     )
+    peppol_is_sent = fields.Boolean(compute='_compute_peppol_is_sent')
 
     def action_send_and_print(self):
         for move in self:
@@ -29,9 +34,9 @@ class AccountMove(models.Model):
         return super().action_send_and_print()
 
     def action_cancel_peppol_documents(self):
-        # if the peppol_move_state is processing/done
+        # if the peppol_move_state is processing/done/has been replied to
         # then it means it has been already sent to peppol proxy and we can't cancel
-        if any(move.peppol_move_state in {'processing', 'done'} for move in self):
+        if any(move.peppol_is_sent for move in self):
             raise UserError(_("Cannot cancel an entry that has already been sent to PEPPOL"))
         self.peppol_move_state = False
         self.sending_data = False
@@ -57,11 +62,22 @@ class AccountMove(models.Model):
             elif (
                 move.state == 'draft'
                 and move.is_sale_document(include_receipts=True)
-                and move.peppol_move_state not in ('processing', 'done')
+                and not move.peppol_is_sent
             ):
                 move.peppol_move_state = False
             else:
                 move.peppol_move_state = move.peppol_move_state
+
+    @api.depends('peppol_move_state')
+    def _compute_peppol_is_sent(self):
+        for move in self:
+            move.peppol_is_sent = move.peppol_move_state not in {False, 'ready', 'to_send', 'error', 'skipped'}
+
+    @api.depends('peppol_is_sent')
+    def _compute_show_reset_to_draft_button(self):
+        # EXTEND 'account' to hide the reset to draft button for sent Peppol invoices
+        super()._compute_show_reset_to_draft_button()
+        self.filtered(lambda move: move.peppol_is_sent and move.is_sale_document(include_receipts=True)).show_reset_to_draft_button = False
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
@@ -79,7 +95,18 @@ class AccountMove(models.Model):
         if company_on_peppol and company_country in PEPPOL_MAILING_COUNTRIES and invoice_country in PEPPOL_MAILING_COUNTRIES:
             render_context['peppol_info'] = {
                 'peppol_country': invoice_country,
-                'is_peppol_sent': invoice.peppol_move_state in ('processing', 'done'),
+                'is_peppol_sent': invoice.peppol_is_sent,
+                'is_partner_b2c': len(invoice.commercial_partner_id.vat or '') <= 1,
                 'partner_on_peppol': invoice.commercial_partner_id.peppol_verification_state in ('valid', 'not_valid_format'),
             }
         return render_context
+
+    def action_peppol_cancel_and_remove_sequence(self):
+        self.button_cancel()
+        self.write({'name': '/'})
+
+    def action_peppol_reset_documents(self, ids_to_delete=None):
+        self.filtered(lambda m: m.state == 'draft').action_peppol_cancel_and_remove_sequence()
+        self.filtered(lambda m: m.state not in ('draft', 'cancel') and not m.inalterable_hash).button_draft()
+        if ids_to_delete:
+            self.env['account.move'].browse(ids_to_delete).exists().unlink()

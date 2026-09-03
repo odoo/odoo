@@ -7,16 +7,17 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Camille Dantinne <cmd@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-03-14 09:33+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-05 21:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/fr/>\n"
 "Language: fr\n"
@@ -25,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -173,6 +174,14 @@ msgstr "%(name)s (%(time)g restant sur %(maximum)g heures)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s : %(duration)s"
 
@@ -244,30 +253,6 @@ msgstr ": résumé ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr ": résumé pour cette période"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
-#| msgid "Day(s)"
-msgid "(s)"
-msgstr "Jour(s)"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-"(s)\n"
-"                                    et un plafond de solde est défini à"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1253,19 +1238,19 @@ msgstr "Par étiquette d'employé"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__manager
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Approver"
-msgstr "Par responsable de l'employé"
+msgstr "Par l'approbateur de l'employé"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "Par responsable de l'employé et le gestionnaire des congés"
+msgstr "Par l'approbateur de l'employé et le responsable RH"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Par gestionnaire des congés"
+msgstr "Par le responsable RH"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
@@ -1315,7 +1300,7 @@ msgstr "Annuler"
 #: code:addons/hr_holidays/static/src/views/view_dialog/form_view_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Cancel Time Off"
-msgstr "Annulé le congé"
+msgstr "Annuler le congé"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
@@ -1370,13 +1355,18 @@ msgid ""
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"La modification du contrat de cet employé modifie également son horaire de "
-"travail au cours d'une période où il a déjà pris des congés. La modification "
-"de cet horaire de travail modifie la durée de ces congés de telle sorte que "
-"l'employé ne dispose plus de l'allocation requise pour ces congés. Veuillez "
-"revoir ces congés et/ou allocations avant de modifier le contrat."
+"La modification du contrat de cet employé entraîne également une "
+"modification de son horaire de travail sur une période où il a déjà pris des "
+"congés. Cette modification de l’horaire de travail affecte la durée de ces "
+"congés, de sorte que l’employé ne dispose plus de l’allocation requise. "
+"Veuillez vérifier ces congés et/ou les allocations avant de modifier le "
+"contrat.\n"
+"\n"
+"Cette erreur a été déclenchée par :\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1442,6 +1432,11 @@ msgstr "Cliquez sur ce bouton pour demander un congé"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
 msgstr "Couleur"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__company_id
@@ -1830,6 +1825,7 @@ msgstr "Ignorer"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
@@ -1880,9 +1876,9 @@ msgid ""
 "Due to a change in global time offs, %s extra day(s) have been taken from "
 "your allocation. Please review this leave if you need it to be changed."
 msgstr ""
-"En raison d'une modification des congés globaux, %s jour(s) "
-"supplémentaire(s) a (ont) été déduit(s) de votre allocation. Veuillez revoir "
-"ce congé si vous devez le modifier."
+"En raison d'une modification des congés globaux, %s jour(s) supplémentaire"
+"(s) a (ont) été déduit(s) de votre allocation. Veuillez revoir ce congé si "
+"vous devez le modifier."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1902,8 +1898,8 @@ msgstr ""
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr ""
-"En raison d'un changement dans les congés mondiaux, vous récupérez %s "
-"jour(s)."
+"En raison d'un changement dans les congés mondiaux, vous récupérez %s jour(s)"
+"."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
@@ -2391,6 +2387,7 @@ msgstr "Visibilité de l'icône RH"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
@@ -4062,6 +4059,14 @@ msgstr ""
 "congé."
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/res_company.py:0
+msgid ""
+"The company country cannot be changed while time off leaves or allocations "
+"with the country exist."
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The days carried over will be effective for"
 msgstr "Les jours reportés seront valables pendant"
@@ -4197,12 +4202,6 @@ msgid ""
 msgstr ""
 "Aucun employé n'est défini sur le congé. Assurez vous que vous êtes connecté "
 "à la bonne entreprise."
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "Il n'y a pas d'allocation valable pour couvrir cette demande."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5364,6 +5363,12 @@ msgstr "date d’allocation"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "et le"
@@ -5400,6 +5405,12 @@ msgstr "cliquez ici"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "dates"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr "jour(s)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5488,6 +5499,12 @@ msgstr "à partir du début de l’allocation"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5510,6 +5527,12 @@ msgid ""
 msgstr ""
 "les congés de type \"Temps travaillé\" doivent toujours être éligibles au "
 "taux d’acquisition."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr "mois"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5636,6 +5659,42 @@ msgstr "valide jusqu'au"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "valider"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr "année(s)"
+
+#~ msgid "(s)"
+#~ msgstr "(s)"
+
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr ""
+#~ "(s)\n"
+#~ "                                    et un plafond de solde est défini à"
+
+#~ msgid "(s)."
+#~ msgstr "(s)."
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Il n'y a pas d'allocation valable pour couvrir cette demande."
+
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "La modification du contrat de cet employé modifie également son horaire "
+#~ "de travail au cours d'une période où il a déjà pris des congés. La "
+#~ "modification de cet horaire de travail modifie la durée de ces congés de "
+#~ "telle sorte que l'employé ne dispose plus de l'allocation requise pour "
+#~ "ces congés. Veuillez revoir ces congés et/ou allocations avant de "
+#~ "modifier le contrat."
 
 #~ msgid ""
 #~ "You cannot refuse this allocation request since the employee has already "
@@ -6689,9 +6748,6 @@ msgstr "valider"
 #~ msgid "day of the month"
 #~ msgstr "jour du mois"
 
-#~ msgid "day(s)"
-#~ msgstr "jour(s)"
-
 #~ msgid "days of the months"
 #~ msgstr "jours des mois"
 
@@ -6704,9 +6760,6 @@ msgstr "valider"
 #~ msgid "lost"
 #~ msgstr "perdus"
 
-#~ msgid "month(s)"
-#~ msgstr "mois"
-
 #~ msgid "postponed"
 #~ msgstr "postposés"
 
@@ -6715,6 +6768,3 @@ msgstr "valider"
 
 #~ msgid "validated"
 #~ msgstr "validé"
-
-#~ msgid "year(s)"
-#~ msgstr "année(s)"

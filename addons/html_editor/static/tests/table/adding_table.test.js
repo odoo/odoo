@@ -196,6 +196,7 @@ test("add table inside empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             </li>
         </ul>`
     );
@@ -248,6 +249,7 @@ test("add table inside non-empty list", async () => {
                         </tr>
                     </tbody>
                 </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             </li>
         </ul>`
     );

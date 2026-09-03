@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_account_payment_form_inherit_l10n_pl" model="ir.ui.view">
+            <field name="name">account.payment.form.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group2']" position="after">
+                    <group name="group_bank_account_verification" string="Bank verification" invisible="not l10n_pl_verification_id">
+                        <field name="l10n_pl_verification_status"/>
+                        <field name="l10n_pl_verification_timestamp"/>
+                        <field name="l10n_pl_verification_request_id" invisible="not l10n_pl_verification_request_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

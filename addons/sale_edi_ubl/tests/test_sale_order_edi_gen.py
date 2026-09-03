@@ -12,7 +12,9 @@ from lxml import etree
 class TestSaleOrderEDIGen(TestSaleCommon):
     def test_sale_order_download_edi(self):
         self.env.company.vat = 'BE0477472701'
+        self.partner_a.country_id = self.env.ref('base.nl')
         self.partner_a.vat = 'NL123456782B90'
+        tax = self.company_data['default_tax_sale']
 
         so = self.env['sale.order'].create({
             'name': 'My SO',
@@ -25,12 +27,14 @@ class TestSaleOrderEDIGen(TestSaleCommon):
                     'product_uom_qty': 10.0,
                     'price_unit': 50.0,
                     'discount': 10.0,
+                    'tax_ids': [Command.set(tax.ids)],
                 }),
                 Command.create({
                     'product_id': self.product_a.id,
                     'name': 'Product A description',
                     'product_uom_qty': 1.0,
                     'price_unit': 10.0,
+                    'tax_ids': [Command.set(tax.ids)],
                 })
             ]
         })

@@ -7,8 +7,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState, onWillRender } from "@odoo/owl";
-const { DateTime } = luxon;
+import { Component, useState } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -59,18 +58,7 @@ export class ImageField extends Component {
             );
         }
         const field = this.props.record.fields[this.props.name];
-        if (field.related?.includes(".")) {
-            this.uniqueId = DateTime.now();
-            let key = this.props.record.data[this.props.name];
-            onWillRender(() => {
-                const nextKey = this.props.record.data[this.props.name];
-                if (key !== nextKey) {
-                    this.uniqueId = DateTime.now();
-                }
-
-                key = nextKey;
-            });
-        }
+        this.isImageOnAnotherRecord = field.related?.includes(".") || this.fieldType === "many2one";
     }
 
     get imgAlt() {
@@ -89,7 +77,10 @@ export class ImageField extends Component {
     }
 
     get rawCacheKey() {
-        return this.uniqueId || this.props.record.data.write_date;
+        if (this.isImageOnAnotherRecord) {
+            return null;
+        }
+        return this.props.record.data.write_date;
     }
 
     get sizeStyle() {

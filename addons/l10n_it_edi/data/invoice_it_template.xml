@@ -45,7 +45,13 @@
 </template>
 
 <template id="account_invoice_it_FatturaPA_export">
-<p:FatturaElettronica t-att-versione="formato_trasmissione" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 http://www.fatturapa.gov.it/export/fatturazione/sdi/fatturapa/v1.2/Schema_del_file_xml_FatturaPA_versione_1.2.xsd">
+<p:FatturaElettronica
+    t-att-versione="formato_trasmissione"
+    xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+    xmlns:p="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2 https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.4/Schema_VFPR12_v1.2.3.xsd"
+>
     <FatturaElettronicaHeader>
         <DatiTrasmissione>
             <IdTrasmittente>
@@ -149,7 +155,6 @@
                 </t>
                 <DatiBollo t-if="record.l10n_it_stamp_duty">
                     <BolloVirtuale t-translation="off">SI</BolloVirtuale>
-                    <ImportoBollo t-out="format_numbers(record.l10n_it_stamp_duty)"/>
                 </DatiBollo>
                 <t t-foreach="pension_fund_values" t-as="pension_fund">
                     <DatiCassaPrevidenziale>
@@ -175,9 +180,14 @@
                 <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
                 <Data t-out="format_date(record.debit_origin_id.date)"/>
             </DatiFattureCollegate>
-            <DatiOrdineAcquisto t-elif="record.ref and not record.reversed_entry_id">
-                <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
-            </DatiOrdineAcquisto>
+            <t t-elif="record.ref and not record.reversed_entry_id">
+                <DatiFattureCollegate t-if="is_self_invoice">
+                    <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
+                </DatiFattureCollegate>
+                <DatiOrdineAcquisto t-else="">
+                    <IdDocumento t-out="format_alphanumeric(record.ref, 20)"/>
+                </DatiOrdineAcquisto>
+            </t>
             <DatiContratto t-if="origin_document_type == 'contract'">
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
             </DatiContratto>
@@ -185,7 +195,7 @@
                 <t t-call="l10n_it_edi.account_invoice_FatturaPA_origin_document"/>
             </DatiConvenzione>
             <DatiFattureCollegate t-foreach="linked_moves" t-as="linked_move">
-                <IdDocumento t-out="format_alphanumeric(linked_move.name, -20)"/>
+                <IdDocumento t-out="format_alphanumeric((linked_move.ref if linked_move.move_type in ('in_invoice', 'in_refund') else None) or linked_move.name, -20)"/>
                 <Data t-out="format_date(linked_move.date if linked_move.l10n_it_edi_is_self_invoice else linked_move.invoice_date)"/>
             </DatiFattureCollegate>
             <DatiDDT t-if="record.l10n_it_ddt_id">

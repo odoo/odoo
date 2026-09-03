@@ -22,23 +22,23 @@
 # Anna, 2023
 # Leaanika Randmets, 2023
 # JanaAvalah, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-09 11:32+0000\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-03 18:56+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/mail/et/"
-">\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/mail/"
+"et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -261,8 +261,8 @@ msgid ""
 "(open_em)sto %(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
 "%(open_samp)s Escape%(close_samp)s %(open_em)s to %(open_cancel)s tühista %"
-"(close_cancel)s%(close_em)s%(open_samp)s CTRL-Enter%(close_samp)s %"
-"(open_em)s to %(open_save)s salvesta %(close_save)s %(close_em)s"
+"(close_cancel)s%(close_em)s%(open_samp)s CTRL-Enter%(close_samp)s %(open_em)"
+"s to %(open_save)s salvesta %(close_save)s %(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -572,9 +572,9 @@ msgid ""
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
 "<p><b>Kirjuta siia</b>kanali liikmetele sõnum.</p> <p>Saate liikmeid "
-"teavitada kui märgite kasutaja <i>\"@\"</i> abil või märkides kanali "
-"<i>\"#\"</i>. Võimalike käskude loendi kuvamiseks alustage sõnumit märgiga "
-"<i>\"/\"</i>.</p>"
+"teavitada kui märgite kasutaja <i>\"@\"</i> abil või märkides kanali <i>"
+"\"#\"</i>. Võimalike käskude loendi kuvamiseks alustage sõnumit märgiga <i>"
+"\"/\"</i>.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -1184,24 +1184,27 @@ msgid "Add Star"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_actions.js:0
-msgid "Add a Reaction"
-msgstr "Lisa reaktsioon"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "GIF-ide toe aktiveerimiseks lisa Tenor GIF API võti."
+msgid ""
+"Add a Klipy GIF API key to enable GIFs support. If you were using a Tenor "
+"GIF API key (service shutdown on June 30, 2026), please replace it here with "
+"a Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
 msgid ""
-"Add a Tenor GIF API key to enable GIFs support. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+"Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/"
+"getting-started\n"
+"If you were using a Tenor GIF API key (service shutdown on June 30, 2026), "
+"please replace it here with a Klipy GIF API key"
 msgstr ""
-"GIF-ide toe aktiveerimiseks lisa Tenor GIF API võti. https://"
-"developers.google.com/tenor/guides/quickstart#setup"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/message_actions.js:0
+msgid "Add a Reaction"
+msgstr "Lisa reaktsioon"
 
 #. module: mail
 #. odoo-javascript
@@ -2072,8 +2075,8 @@ msgid ""
 "Bounce/Catchall '%(matching_alias_name)s' is already used by %"
 "(document_name)s. Choose another alias or change it on the other document."
 msgstr ""
-"Bounce/catchall '%(matching_alias_name)s' on juba kasutusel %"
-"(document_name)s. Kasuta teist aliast või muuda teisel dokumendil."
+"Bounce/catchall '%(matching_alias_name)s' on juba kasutusel %(document_name)"
+"s. Kasuta teist aliast või muuda teisel dokumendil."
 
 #. module: mail
 #. odoo-python
@@ -5546,8 +5549,7 @@ msgstr ""
 msgid ""
 "If you don't recognize it, you should change your password immediately via "
 "this link:<br/>"
-msgstr ""
-"Kui te ei tuvasta seda, peaksite muutma parooli selle lingi kaudu:<br/>"
+msgstr "Kui te ei tuvasta seda, peaksite muutma parooli selle lingi kaudu:<br/>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain_id
@@ -5567,6 +5569,14 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "If you want to use twilio as TURN/STUN server provider"
 msgstr "Kui soovid kasutada twilio-t TURN/STURN serveri pakkujana."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid ""
+"If you were using a Tenor API key, please replace it with a Klipy API key in "
+"the General Settings."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
@@ -6221,6 +6231,16 @@ msgstr "Võti"
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Kind Regards"
 msgstr "Parimate soovidega"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
+msgid "Klipy API key"
+msgstr ""
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+msgid "Klipy GIF API key"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7096,7 +7116,7 @@ msgstr "Sõnumi id mida peaks kuvama enne eraldajat"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
+#: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Message posted on \"%s\""
 msgstr "Sõnum postitatud \"%s\""
 
@@ -9913,6 +9933,12 @@ msgstr "Otsi sissetulevad meiliservereid"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
+msgid "Search Klipy"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_messages_panel.js:0
 msgid "Search Message"
 msgstr ""
@@ -9967,12 +9993,6 @@ msgstr "Otsi nime järgi"
 #: code:addons/mail/static/src/core/public_web/discuss_search.xml:0
 msgid "Search conversations"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
-msgid "Search for a GIF"
-msgstr "Otsi GIFi"
 
 #. module: mail
 #. odoo-javascript
@@ -11002,16 +11022,6 @@ msgid "Templates"
 msgstr "Mallid"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_res_config_settings__tenor_api_key
-msgid "Tenor API key"
-msgstr "Tenori API võti"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
-msgid "Tenor GIF API key"
-msgstr "Tenor GIF API võti"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
@@ -11069,18 +11079,6 @@ msgid ""
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_res_partner__vat
-#: model:ir.model.fields,help:mail.field_res_users__vat
-msgid ""
-"The Tax Identification Number. Values here will be validated based on the "
-"country format. You can use '/' to indicate that the partner is not subject "
-"to tax."
-msgstr ""
-"Maksukohustuslase number. Väärtused valideeritakse vastavalt riigi "
-"formaadile. Saate kasutada '/' näitamaks, et partner ei ole "
-"maksukohustuslane."
-
-#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The activity can be launched, with these additional effects:"
@@ -11100,8 +11098,8 @@ msgid ""
 "\"%(plan_name)s\" because it is limited to the model \"%"
 "(activity_type_model)s\"."
 msgstr ""
-"Tegevuse tüüp \"%(activity_type_name)s\" ei ühildu plaaniga \"%"
-"(plan_name)s\", sest see on piiratud mudelile \"%(activity_type_model)s\""
+"Tegevuse tüüp \"%(activity_type_name)s\" ei ühildu plaaniga \"%(plan_name)"
+"s\", sest see on piiratud mudelile \"%(activity_type_model)s\""
 
 #. module: mail
 #. odoo-javascript
@@ -11198,10 +11196,10 @@ msgid ""
 "                 Please make sure you are using the correct address or "
 "contact us at %(default_email)s instead."
 msgstr ""
-"Allolevat sõnumit ei saanud antud aadress %(alias_display_name)svastu "
-"võtta. \n"
-"Ainult %(contact_description)s on lubatud selle aadressiga ühendust võtta."
-"<br /><br />\n"
+"Allolevat sõnumit ei saanud antud aadress %(alias_display_name)svastu võtta. "
+"\n"
+"Ainult %(contact_description)s on lubatud selle aadressiga ühendust "
+"võtta.<br /><br />\n"
 "Veendu, et kasutas õiget aadressi või võta meiega ühendust aadressil %"
 "(default_email)s."
 
@@ -11213,8 +11211,8 @@ msgid ""
 "(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Allolevat sõnumit ei saanud antud aadress%(alias_display_name)s vastu "
-"võtta. \n"
+"Allolevat sõnumit ei saanud antud aadress%(alias_display_name)s vastu võtta. "
+"\n"
 "Proovi hiljem uuesti või võta ühendust %(company_name)s-ga."
 
 #. module: mail
@@ -12864,8 +12862,8 @@ msgid ""
 msgstr ""
 "Dokumente printides ja andmete impordil/ekspordil arvutatakse ajaväärtused "
 "ajavöönditele vastavalt.\n"
-"Kui ajavöönd ei ole määratud, kasutatakse UTC'd (Coordinated Unversal "
-"Time).\n"
+"Kui ajavöönd ei ole määratud, kasutatakse UTC'd (Coordinated Unversal Time)"
+".\n"
 "Igal pool mujal arvutatakse ajaväärtused teie veebikliendi kohalikust ajast."
 
 #. module: mail
@@ -13074,6 +13072,18 @@ msgstr "Saate vestelda ainult nende partneritega, kellel on selleks kasutaja."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_permission_dialog.js:0
 msgid "You can still turn off your %s anytime."
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_res_partner__vat
+#: model:ir.model.fields,help:mail.field_res_users__vat
+msgid "You can use '/' to indicate that the customer has no Tax ID."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias_domain.py:0
+msgid "You cannot assign an empty domain name."
 msgstr ""
 
 #. module: mail
@@ -13364,10 +13374,8 @@ msgstr "lõi selle kanali."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-#, fuzzy
-#| msgid "id"
 msgid "d"
-msgstr "id"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -13917,6 +13925,34 @@ msgstr "“%(member_name)s” selles kanalis “%(channel_name)s”"
 #: code:addons/mail/static/src/core/web/activity.js:0
 msgid "“%s”"
 msgstr ""
+
+#~ msgid "Search for a GIF"
+#~ msgstr "Otsi GIFi"
+
+#~ msgid ""
+#~ "The Tax Identification Number. Values here will be validated based on the "
+#~ "country format. You can use '/' to indicate that the partner is not "
+#~ "subject to tax."
+#~ msgstr ""
+#~ "Maksukohustuslase number. Väärtused valideeritakse vastavalt riigi "
+#~ "formaadile. Saate kasutada '/' näitamaks, et partner ei ole "
+#~ "maksukohustuslane."
+
+#~ msgid "Add a Tenor GIF API key to enable GIFs support."
+#~ msgstr "GIF-ide toe aktiveerimiseks lisa Tenor GIF API võti."
+
+#~ msgid ""
+#~ "Add a Tenor GIF API key to enable GIFs support. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+#~ msgstr ""
+#~ "GIF-ide toe aktiveerimiseks lisa Tenor GIF API võti. https://"
+#~ "developers.google.com/tenor/guides/quickstart#setup"
+
+#~ msgid "Tenor API key"
+#~ msgstr "Tenori API võti"
+
+#~ msgid "Tenor GIF API key"
+#~ msgstr "Tenor GIF API võti"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"

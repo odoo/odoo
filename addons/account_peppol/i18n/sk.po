@@ -3,15 +3,15 @@
 # * account_peppol
 #
 # Odoo Translation Bot <c3p@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Tomáš Píšek <Tomas.Pisek@seznam.cz>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-09 11:32+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"PO-Revision-Date: 2026-08-03 02:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/"
 "account_peppol/sk/>\n"
 "Language: sk\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -36,6 +36,12 @@ msgstr " (Demo)"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (Missing %(eas)s)"
+msgstr " (Chýba %(eas)s)"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Test)"
 msgstr " (Test)"
 
@@ -44,12 +50,6 @@ msgstr " (Test)"
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (no VAT)"
 msgstr " (bez IČ DPH (VAT))"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (no access)"
-msgstr " (bez prístupu)"
 
 #. module: account_peppol
 #. odoo-python
@@ -64,6 +64,14 @@ msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
+msgstr ""
+"%(processed)s spracované dokumenty Peppol, odstránené dokumenty %(deleted)s "
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "%s has requested electronic invoices reception on Peppol."
@@ -71,8 +79,8 @@ msgstr "%s požiadal o zasielanie elektronických faktúr prostredníctvom Peppo
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "<b>Authentify with itsme</b>"
-msgstr "<b>Autentizovať pomocou itsme</b>"
+msgid "<b>Authenticate</b>"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -82,8 +90,8 @@ msgid ""
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 "<br/>\n"
-"                                V Belgicku je elektronická fakturácia "
-"<u>povinná od januára 2026</u> – neváhajte s registráciou."
+"                                V Belgicku je elektronická fakturácia <u>"
+"povinná od januára 2026</u> – neváhajte s registráciou."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -206,8 +214,8 @@ msgstr ""
 "collapse:separate;\">\n"
 "                            <tr>\n"
 "                                <td valign=\"middle\">\n"
-"                                    <span style=\"font-size: 10px;"
-"\">Oznámenie</span>\n"
+"                                    <span style=\"font-size: 10px;\">"
+"Oznámenie</span>\n"
 "                                    <br/>\n"
 "                                    <span style=\"font-size: 20px; font-"
 "weight: bold;\">\n"
@@ -216,26 +224,26 @@ msgstr ""
 "                                    <div style=\"margin-bottom: 5px; margin-"
 "top: 18px;\">\n"
 "                                        <a t-attf-href=\"/odoo/accounting/\" "
-"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: "
-"{{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none !"
-"important; font-weight: 400; background-color: "
-"{{ object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {"
+"{ object.email_primary_color or '#FFFFFF' }}; text-decoration: none "
+"!important; font-weight: 400; background-color: {{ "
+"object.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
 "                                            Odoslať faktúry\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td>\n"
 "                                <td valign=\"middle\" align=\"right\">\n"
-"                                    <t t-if=\"not "
-"object.uses_default_logo\">\n"
-"                                        <img t-att-src=\"'/logo.png?"
-"company=%s' % object.id\" style=\"height: auto; width: 80px; margin-right: "
-"10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
+"                                    <t t-if=\"not object.uses_default_logo\">"
+"\n"
+"                                        <img t-att-src=\"'/"
+"logo.png?company=%s' % object.id\" style=\"height: auto; width: 80px; margin-"
+"right: 10px;\" t-att-alt=\"'%s' % object.name\"/>\n"
 "                                    </t>\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr>\n"
-"                                <td colspan=\"2\" style=\"text-align:center;"
-"\">\n"
+"                                <td colspan=\"2\" style=\"text-"
+"align:center;\">\n"
 "                                    <hr style=\"background-color:#CCCCCC; "
 "border:none; height:1px; margin:16px 0;\"/>\n"
 "                                </td>\n"
@@ -299,6 +307,12 @@ msgid ""
 msgstr ""
 "Nebola prijatá potvrdenka pre správu, ktorú predtým odoslala MSH, čo "
 "spôsobilo túto chybu."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "A connection to '%s' already exists."
+msgstr "Prepojenie na „%s “ už existuje."
 
 #. module: account_peppol
 #. odoo-python
@@ -429,11 +443,6 @@ msgid "Activate"
 msgstr "Aktivovať"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
-msgid "Activate Electronic Invoicing"
-msgstr "Aktivovať elektronickú fakturáciu"
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Activate Electronic Invoicing (via Peppol)"
@@ -441,6 +450,7 @@ msgstr "Aktivovať elektronickú fakturáciu (prostredníctvom Peppol)"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+#: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Activate Peppol"
 msgstr "Aktivovať Peppol"
 
@@ -631,6 +641,12 @@ msgstr ""
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Authentication canceled"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication failed"
 msgstr "Overenie zlyhalo"
 
@@ -651,6 +667,11 @@ msgstr "Dostupné formáty Peppol EDI"
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__available_peppol_sending_methods
 msgid "Available Peppol Sending Methods"
 msgstr "Dostupné metódy odosielania Peppol"
+
+#. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr "Základné nástroje pre UBL"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -678,6 +699,8 @@ msgid "Can send, pending registration to receive"
 msgstr "Môže odosielať, čaká na registráciu na prijímanie"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Cancel"
 msgstr "Zrušiť"
@@ -868,7 +891,7 @@ msgstr "Zobraziť Itsme prihlásenie"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
@@ -895,6 +918,12 @@ msgid "Display Use Parent Connection Selection"
 msgstr "Zobraziť výber Použiť rodičovské pripojenie"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Do you want to proceed?"
+msgstr "Chcete pokračovať?"
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
 msgid "Document Identifier"
 msgstr "Identifikátor dokumentu"
@@ -903,6 +932,42 @@ msgstr "Identifikátor dokumentu"
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_name
 msgid "Document Name"
 msgstr "Názov dokumentu"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document cancelled successfully"
+msgstr "Dokument bol úspešne zrušený"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document reset to draft successfully"
+msgstr "Dokument bol úspešne obnovený do stavu návrh"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to cancel this document instead?"
+msgstr ""
+"Dokumenty odoslané/prijaté prostredníctvom Peppol nie je možné vymazať.\n"
+"\n"
+"Chcete namiesto toho zrušiť tento dokument?"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to reset this document to draft instead?"
+msgstr ""
+"Dokumenty odoslané/prijaté prostredníctvom Peppol nie je možné vymazať.\n"
+"\n"
+"Chcete namiesto toho tento dokument obnoviť ako koncept?"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -933,8 +998,8 @@ msgstr "Používateľ EDI"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "EDI user should be of type Peppol"
-msgstr "Používateľ EDI by mal byť typu Peppol"
+msgid "EDI user should be of one of the following types: %s"
+msgstr "Užívateľ EDI by mal byť jedným z nasledujúcich typov: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -985,9 +1050,16 @@ msgid ""
 msgstr ""
 "Nepodarilo sa pripojiť k prístupovému bodu Peppol. K tejto situácii môže "
 "dôjsť, ak ste obnovili databázu zo zálohy alebo ju skopírovali bez "
-"neutralizácie. Na opravu tohto problému prejdite do Nastavenia > Účtovníctvo "
-"> Elektronická fakturácia PEPPOL a kliknite na „Znovu pripojiť túto "
-"databázu“."
+"neutralizácie. Na opravu tohto problému prejdite do Nastavenia > "
+"Účtovníctvo > Elektronická fakturácia PEPPOL a kliknite na „Znovu pripojiť "
+"túto databázu“."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "France - E-Invoicing (Approved Platform)"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1021,7 +1093,7 @@ msgstr "Potvrdzujem, že mám povolené zaregistrovať túto spoločnosť."
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
@@ -1078,9 +1150,10 @@ msgstr "Denník prijatých faktúr"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
-"Faktúra %s je príliš veľká na odoslanie prostredníctvom Peppol (limit 64 MB)"
+"Veľkosť faktúry %s presahuje limit 64 MB pre odoslanie prostredníctvom "
+"Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1092,11 +1165,6 @@ msgstr "Odosielanie faktúr"
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__is_branch_company
 msgid "Is Branch Company"
 msgstr "Je pobočkou spoločnosti"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "Itsme"
-msgstr "Itsme"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__service_json
@@ -1178,6 +1246,12 @@ msgstr "Službe Peppol Outbound Service nebol poskytnutý žiadny dokument UBL."
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
 msgstr "Nebol nájdený žiadny platný koncový bod účastníka AS4."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "No, Keep It"
+msgstr "Nie, ponechať"
 
 #. module: account_peppol
 #. odoo-python
@@ -1344,6 +1418,18 @@ msgid "Peppol Contact Email"
 msgstr "Kontaktný e-mail Peppol"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Peppol Documents Cannot Be Deleted"
+msgstr "Dokumenty Peppol nemožno vymazať"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Peppol Documents: Cannot Delete Invoice"
+msgstr "Dokumenty Peppol: Faktúru nie je možné vymazať"
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_endpoint
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_endpoint
@@ -1380,6 +1466,12 @@ msgid "Peppol ID should be different from main company."
 msgstr "Peppol ID by sa malo líšiť od hlavnej spoločnosti."
 
 #. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
+#: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
+msgid "Peppol Is Sent"
+msgstr "Peppol je odoslaný"
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
 msgid "Peppol Metadata"
 msgstr "Peppol metadáta"
@@ -1405,6 +1497,11 @@ msgstr "Rola účastníka siete Peppol"
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_purchase_journal_id
 msgid "Peppol Purchase Journal"
 msgstr "Peppol nákupný denník"
+
+#. module: account_peppol
+#: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_purchase_journal_required
+msgid "Peppol Purchase Journal Required"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_account_invoice_filter
@@ -1492,6 +1589,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Zadajte číslo mobilného telefónu v správnom medzinárodnom formáte.\n"
+"Napríklad: +32123456789, kde +32 je kód krajiny."
 
 #. module: account_peppol
 #. odoo-python
@@ -1609,6 +1708,12 @@ msgstr "Zamietnuté"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Remove from Peppol"
 msgstr "Odstrániť z Peppol"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Reset to draft"
+msgstr "Obnoviť na návrh"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1916,8 +2021,8 @@ msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
-"Šifrované údaje odkazujúce na hlavičku zabezpečenia určenú pre aktéra SOAP "
-"„ebms“ nemohli byť dešifrované modulom zabezpečenia."
+"Šifrované údaje odkazujúce na hlavičku zabezpečenia určenú pre aktéra SOAP „"
+"ebms“ nemohli byť dešifrované modulom zabezpečenia."
 
 #. module: account_peppol
 #. odoo-python
@@ -1928,6 +2033,30 @@ msgid ""
 msgstr ""
 "Číslo koncového bodu (endpoint) nemusí byť správne. Skontrolujte, či ste "
 "zadali správne identifikačné číslo."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s Peppol document(s) will be reset to draft:\n"
+"\n"
+"• %s"
+msgstr ""
+"Nasledujúce dokumenty Peppol %s budú resetované do stavu „návrh“:\n"
+"\n"
+"• %s"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s draft Peppol document(s) will be cancelled:\n"
+"\n"
+"• %s"
+msgstr ""
+"Nasledujúce %s návrhy dokumentov Peppol na budú zrušené:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1985,6 +2114,12 @@ msgstr ""
 "Procesor zistil, že bezpečnostné metódy, parametre, rozsah alebo iné "
 "požiadavky alebo dohody na úrovni bezpečnostnej politiky správy neboli "
 "splnené."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "The remaining %s document(s) will be deleted."
+msgstr "Zostávajúce dokumenty %s budú vymazané."
 
 #. module: account_peppol
 #. odoo-python
@@ -2117,8 +2252,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
-"Tento používateľ nie je používateľom Peppol. Pridružený proxy_type musí byť "
-"„peppol“. To je potrebné na vytvorenie účastníka Peppol."
+"Tento používateľ nie je používateľom Peppol. Pridružený proxy_type musí byť „"
+"peppol“. To je potrebné na vytvorenie účastníka Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2135,14 +2270,21 @@ msgstr ""
 "partnera aj krajinu."
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "To use the Approved Platform for French E-Invoicing install the module"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "To use the Approved Platform for French E-Invoicing, install the module"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
 msgstr "Token není synchronizován"
-
-#. module: account_peppol
-#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
-msgid "UBL 2.0"
-msgstr "UBL 2.0"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
@@ -2194,6 +2336,12 @@ msgid "Use Parent Connection Selection"
 msgstr "Použite nadriadené pripojenie - výber"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid "Verification pending"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Verify"
 msgstr "Overiť"
@@ -2238,6 +2386,12 @@ msgstr "Čo je Peppol a prečo je skvelý?"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Why should I use French E-Invoicing ?"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use PEPPOL ?"
 msgstr "Prečo by som mal používať PEPPOL?"
 
@@ -2253,6 +2407,18 @@ msgid "Wizard"
 msgstr "Sprievodca"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Yes, Cancel It"
+msgstr "Áno, zrušiť"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Yes, Proceed"
+msgstr "Áno, pokračovať"
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2263,12 +2429,6 @@ msgstr ""
 "Chystáte sa zaregistrovať svojím IČ DPH (VAT). Nezabudnite sa najskôr "
 "zaregistrovať v registri spoločností (BCE/KBO), aby ste splnili požiadavky "
 "nového nariadenia."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "You are not allowed to send invoice on behalf of %s."
-msgstr "Nie je povolené zasielať faktúry v mene %s."
 
 #. module: account_peppol
 #. odoo-python
@@ -2312,6 +2472,20 @@ msgstr "Teraz môžete posielať elektronické faktúry prostredníctvom Peppol.
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "You can send this invoice electronically via Peppol."
 msgstr "Túto faktúru môžete zaslať elektronicky prostredníctvom Peppol."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_journal.py:0
+msgid ""
+"You can't change the type of a journal used for Peppol invoice reception toa "
+"type different than 'Purchase'.\n"
+"Please change the journal used for Peppol reception before changing the type "
+"of this journal."
+msgstr ""
+"Typ denníka používaného na príjem faktúr Peppol nemožno zmeniť na iný typ "
+"ako „Nákup“.\n"
+"Pred zmenou typu tohto denníka prosím zmeňte denník používaný na príjem "
+"Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -2400,6 +2574,14 @@ msgstr ""
 "správnu databázu."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
+msgid ""
+"Your details are being verified. There is nothing else to do on your end: "
+"your Peppol registration will be finalized automatically."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
@@ -2429,8 +2611,7 @@ msgstr "Zadaný identifikátor je pre Peppol neplatný."
 msgid ""
 "Your registration has been rejected. Please contact the support for further "
 "assistance."
-msgstr ""
-"Vaša registrácia bola zamietnutá. Pre ďalšiu pomoc kontaktujte podporu."
+msgstr "Vaša registrácia bola zamietnutá. Pre ďalšiu pomoc kontaktujte podporu."
 
 #. module: account_peppol
 #. odoo-python
@@ -2509,6 +2690,32 @@ msgstr "posielať faktúry, ale táto"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "využíva"
+
+#~ msgid "<b>Authentify with itsme</b>"
+#~ msgstr "<b>Autentizovať pomocou itsme</b>"
+
+#~ msgid "Activate Electronic Invoicing"
+#~ msgstr "Aktivovať elektronickú fakturáciu"
+
+#~ msgid "Itsme"
+#~ msgstr "Itsme"
+
+#~ msgid " (no access)"
+#~ msgstr " (bez prístupu)"
+
+#~ msgid "You are not allowed to send invoice on behalf of %s."
+#~ msgstr "Nie je povolené zasielať faktúry v mene %s."
+
+#~ msgid "EDI user should be of type Peppol"
+#~ msgstr "Používateľ EDI by mal byť typu Peppol"
+
+#~ msgid "Invoice %s is too big to send via peppol (64MB limit)"
+#~ msgstr ""
+#~ "Faktúra %s je príliš veľká na odoslanie prostredníctvom Peppol (limit 64 "
+#~ "MB)"
+
+#~ msgid "UBL 2.0"
+#~ msgstr "UBL 2.0"
 
 #~ msgid "Peppol error: %s"
 #~ msgstr "Chyba Peppol: %s"

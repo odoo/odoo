@@ -25,7 +25,7 @@ class TestPosSafaricom(TransactionCase):
             'safaricom_test_mode': True,
             'consumer_key': 'test_consumer_key',
             'consumer_secret': 'test_consumer_secret',
-            'business_short_code': '174379',
+            'business_short_code': '174379-174379',
             'passkey': 'test_passkey',
             'company_id': cls.company.id,
         })
@@ -40,7 +40,7 @@ class TestPosSafaricom(TransactionCase):
                 'safaricom_test_mode': True,
                 'consumer_key': 'test_consumer_key',
                 'consumer_secret': 'test_consumer_secret',
-                'business_short_code': '174379',
+                'business_short_code': '174379-174379',
                 'company_id': cls.company.id,
             })
 

@@ -161,7 +161,7 @@ test("Searching for a GIF", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search Klipy']", "search");
     await contains("i[aria-label='back']");
     await contains(".o-discuss-Gif", { count: 2 });
 });
@@ -176,7 +176,7 @@ test("Open a GIF category trigger the search for the category", async () => {
     await click("button[title='Add GIFs']");
     await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
     await contains(".o-discuss-Gif", { count: 2 });
-    await contains("input[placeholder='Search for a GIF']", { value: "cry" });
+    await contains("input[placeholder='Search Klipy']", { value: "cry" });
 });
 
 test("Can have GIF categories with same name", async () => {
@@ -267,7 +267,7 @@ test("Searching for a GIF with a failling RPC should display an error", async ()
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add GIFs']");
-    await insertText("input[placeholder='Search for a GIF']", "search");
+    await insertText("input[placeholder='Search Klipy']", "search");
     await contains(".o-discuss-GifPicker-error");
 });
 

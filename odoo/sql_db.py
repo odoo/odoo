@@ -81,7 +81,7 @@ def categorize_query(decoded_query: str) -> tuple[typing.Literal['from', 'into']
 
 sql_counter: int = 0
 
-MAX_IDLE_TIMEOUT = 60 * 10
+MAX_IDLE_TIMEOUT = int(os.getenv("ODOO_DB_MAX_IDLE_TIMEOUT", "600"))
 
 
 class Savepoint:
@@ -429,6 +429,13 @@ class Cursor(BaseCursor):
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         start = real_time()
+        update_query_endtime_functions = []
+        current_thread = threading.current_thread()
+        for hook in getattr(current_thread, 'query_hooks', ()):
+            func = hook(self, query, params, start, 10)
+            if func and callable(func):
+                update_query_endtime_functions.append(func)
+
         try:
             self._obj.execute(query, params)
         except Exception as e:
@@ -444,15 +451,14 @@ class Cursor(BaseCursor):
         self.sql_log_count += 1
         sql_counter += 1
 
-        current_thread = threading.current_thread()
         if hasattr(current_thread, 'query_count'):
             current_thread.query_count += 1
         if hasattr(current_thread, 'query_time'):
             current_thread.query_time += delay
 
         # optional hooks for performance and tracing analysis
-        for hook in getattr(current_thread, 'query_hooks', ()):
-            hook(self, query, params, start, delay)
+        for update_query_endtime_function in update_query_endtime_functions:
+            update_query_endtime_function(delay)
 
         # advanced stats
         if _logger.isEnabledFor(logging.DEBUG):
@@ -836,7 +842,7 @@ def close_db(db_name: str) -> None:
     if _Pool:
         _Pool.close_all(connection_info_for(db_name)[1])
     if _Pool_readonly:
-        _Pool_readonly.close_all(connection_info_for(db_name)[1])
+        _Pool_readonly.close_all(connection_info_for(db_name, readonly=True)[1])
 
 
 def close_all() -> None:

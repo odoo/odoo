@@ -7,16 +7,16 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Marianna Ciofani, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-18 08:23+0000\n"
-"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"PO-Revision-Date: 2026-08-02 16:48+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "hr_holidays/it/>\n"
 "Language: it\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -173,6 +173,16 @@ msgstr "%(name)s (%(time)g restanti di %(maximum)g ore)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid ""
+"%(name)s does not have a valid allocation for the leave type %(leave_type)s "
+"to cover that request."
+msgstr ""
+"%(name)s non ha un'assegnazione valida per il tipo di ferie %(leave_type)s "
+"per coprire la richiesta."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(name)s: %(duration)s"
 msgstr "%(name)s: %(duration)s"
 
@@ -244,30 +254,6 @@ msgstr "riassunto ("
 #: code:addons/hr_holidays/static/src/leave_stats/leave_stats.xml:0
 msgid "'s summary in this period"
 msgstr ": riassunto in questo periodo"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-#, fuzzy
-#| msgid "Day(s)"
-msgid "(s)"
-msgstr "Giorno(i)"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid ""
-"(s)\n"
-"                                    and a balance cap is set to"
-msgstr ""
-"(i)\n"
-"                                    e un limite di saldo e impostato su"
-
-#. module: hr_holidays
-#. odoo-javascript
-#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
-msgid "(s)."
-msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -906,8 +892,7 @@ msgstr "Tipo di assegnazione"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation must be \"To Approve\" in order to approve it."
-msgstr ""
-"L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
+msgstr "L'assegnazione deve essere \"Da approvare\" per poter essere approvata."
 
 #. module: hr_holidays
 #. odoo-python
@@ -1373,13 +1358,18 @@ msgid ""
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"La modifica del contratto di questo dipendente cambia il suo orario di "
-"lavoro in un periodo in cui ha già usufruito di permessi. La modifica "
-"dell'orario di lavoro cambia la durata di questi permessi in modo tale che "
-"il dipendente non abbia più l'assegnazione richiesta. Si prega di rivedere "
-"questi permessi e/o assegnazioni prima di modificare il contratto."
+"La modifica del contratto di questo dipendente modifica il suo orario di "
+"lavoro in un periodo in cui ha già usufruito di ferie. La modifica di questo "
+"orario di lavoro modifica la durata di tali permessi in modo tale che il "
+"dipendente non disponga più dell'assegnazione necessaria per essi. Si prega "
+"di verificare tali permessi e/o assegnazioni prima di modificare il "
+"contratto.\n"
+"\n"
+"Questo errore è stato generato da:\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1448,6 +1438,11 @@ msgstr "Fai clic su questo pulsante per richiedere ferie"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Color"
 msgstr "Colore"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_res_company
+msgid "Companies"
+msgstr "Aziende"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__company_id
@@ -1836,6 +1831,7 @@ msgstr "Abbandona"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__display_name
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__display_name
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__display_name
@@ -2397,6 +2393,7 @@ msgstr "Visualizzazione icona RU"
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:hr_holidays.field_mail_message_subtype__id
 #: model:ir.model.fields,field_description:hr_holidays.field_report_hr_holidays_report_holidayssummary__id
+#: model:ir.model.fields,field_description:hr_holidays.field_res_company__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_partner__id
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__id
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__id
@@ -3315,8 +3312,7 @@ msgstr "Solo un responsabile/manager delle ferie può approvare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can approve an allocation."
-msgstr ""
-"Solo un responsabile/manager delle ferie può approvare un'assegnazione."
+msgstr "Solo un responsabile/manager delle ferie può approvare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3328,8 +3324,7 @@ msgstr "Solo un responsabile/manager delle ferie può rifiutare un congedo."
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Only a Time Off Officer/Manager can refuse an allocation."
-msgstr ""
-"Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
+msgstr "Solo un responsabile/manager delle ferie può rifiutare un'assegnazione."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4067,6 +4062,16 @@ msgstr ""
 "congedo."
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/res_company.py:0
+msgid ""
+"The company country cannot be changed while time off leaves or allocations "
+"with the country exist."
+msgstr ""
+"Il Paese dell’azienda non può essere modificato finché sono presenti ferie o "
+"assegnazioni relative a quel Paese."
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "The days carried over will be effective for"
 msgstr "I giorni riportati saranno effettivi dal"
@@ -4207,12 +4212,6 @@ msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
-#: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "There is no valid allocation to cover that request."
-msgstr "Non vi è nessuna assegnazione valida per coprire questa richiesta."
-
-#. module: hr_holidays
-#. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "This allocation have already ran once, any modification won't be effective "
@@ -4241,8 +4240,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__approver_id
 msgid ""
 "This area is automatically filled by the user who validates the allocation"
-msgstr ""
-"Sezione compilata automaticamente dall'utente che valida l'assegnazione"
+msgstr "Sezione compilata automaticamente dall'utente che valida l'assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__second_approver_id
@@ -4256,8 +4254,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
-msgstr ""
-"Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
+msgstr "Questo campo definisce l'unità di tempo dopo la quale finisce il rateo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
@@ -5180,8 +5177,8 @@ msgstr "Non è possibile convalidare il giorno di ferie."
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 msgid "You cannot allow requests on top of leaves of type 'Absence'."
 msgstr ""
-"Non è possibile consentire richieste in aggiunta alle ferie di tipo "
-"“Assenza”."
+"Non è possibile consentire richieste in aggiunta alle ferie di tipo “Assenza"
+"”."
 
 #. module: hr_holidays
 #. odoo-python
@@ -5361,6 +5358,12 @@ msgstr "data assegnazione"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "and a balance cap is set to"
+msgstr "e il limite di bilanciamento è impostato su"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "and the"
 msgstr "e il"
@@ -5397,6 +5400,12 @@ msgstr "fai clic qui"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_form
 msgid "dates"
 msgstr "date"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "day(s)"
+msgstr "giorno/i"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5484,6 +5493,12 @@ msgstr "dall'inizio dell'assegnazione"
 
 #. module: hr_holidays
 #. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "hour(s)"
+msgstr "ora(e)"
+
+#. module: hr_holidays
+#. odoo-javascript
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -5506,6 +5521,12 @@ msgid ""
 msgstr ""
 "le ferie di tipo \"Ore di lavoro\" devono essere sempre idonee per il tasso "
 "di maturazione."
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "month(s)"
+msgstr "mese(i)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -5632,6 +5653,42 @@ msgstr "validi fino al"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "convalidare"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.js:0
+msgid "year(s)"
+msgstr "anno(i)"
+
+#~ msgid "(s)"
+#~ msgstr "(s)"
+
+#~ msgid ""
+#~ "(s)\n"
+#~ "                                    and a balance cap is set to"
+#~ msgstr ""
+#~ "(i)\n"
+#~ "                                    e un limite di saldo e impostato su"
+
+#~ msgid "(s)."
+#~ msgstr "(s)."
+
+#~ msgid "There is no valid allocation to cover that request."
+#~ msgstr "Non vi è nessuna assegnazione valida per coprire questa richiesta."
+
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "La modifica del contratto di questo dipendente cambia il suo orario di "
+#~ "lavoro in un periodo in cui ha già usufruito di permessi. La modifica "
+#~ "dell'orario di lavoro cambia la durata di questi permessi in modo tale "
+#~ "che il dipendente non abbia più l'assegnazione richiesta. Si prega di "
+#~ "rivedere questi permessi e/o assegnazioni prima di modificare il "
+#~ "contratto."
 
 #~ msgid ""
 #~ "You cannot refuse this allocation request since the employee has already "
@@ -6488,9 +6545,6 @@ msgstr "convalidare"
 #~ msgid "day of the month"
 #~ msgstr "giorno del mese"
 
-#~ msgid "day(s)"
-#~ msgstr "giorno/i"
-
 #~ msgid "days of the months"
 #~ msgstr "giorni dei mesi"
 
@@ -6500,9 +6554,6 @@ msgstr "convalidare"
 #~ msgid "last day"
 #~ msgstr "ultimo giorno"
 
-#~ msgid "month(s)"
-#~ msgstr "mese(i)"
-
 #~ msgid "postponed"
 #~ msgstr "rimandato"
 
@@ -6511,6 +6562,3 @@ msgstr "convalidare"
 
 #~ msgid "validated"
 #~ msgstr "convalidata"
-
-#~ msgid "year(s)"
-#~ msgstr "anno(i)"

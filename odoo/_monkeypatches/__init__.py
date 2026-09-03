@@ -59,7 +59,10 @@ def patch_init() -> None:
         time.tzset()
 
     for submodule in pkgutil.iter_modules(__path__):
-        HOOK_IMPORT.add_hook(submodule.name)
+        if not submodule.name.startswith('_'):
+            HOOK_IMPORT.add_hook(submodule.name)
+
+    patch_module('_cpython')
 
 
 def patch_module(name: str) -> None:

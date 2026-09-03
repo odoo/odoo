@@ -82,7 +82,7 @@ class HrApplicant(models.Model):
     last_stage_id = fields.Many2one('hr.recruitment.stage', "Last Stage",
                                     help="Stage of the applicant before being in the current stage. Used for lost cases analysis.")
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
-    company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
+    company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True, domain=lambda self: [('id', 'in', self.env.companies.ids)])
     user_id = fields.Many2one(
         'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True, store=True, readonly=False)
@@ -242,9 +242,14 @@ class HrApplicant(models.Model):
                 applicant.partner_id = applicant._partner_find_from_emails_single(
                     [applicant.email_from], no_create=False,
                     additional_values={
-                        email_normalized: {'lang': self.env.lang}
+                        email_normalized: {
+                            'lang': self.env.lang,
+                            'name': applicant.partner_name,
+                            'phone': applicant.partner_phone,
+                        },
                     },
                 )
+                continue
             if applicant.partner_name and applicant.partner_name != applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
             if email_normalized and email_normalized != applicant.partner_id.email:
@@ -524,7 +529,7 @@ class HrApplicant(models.Model):
         domains = []
         # Map statuses to domain filters
         if 'refused' in value:
-            domains.append([('active', '=', True), ('refuse_reason_id', '!=', None)])
+            domains.append([('active', '=', False), ('refuse_reason_id', '!=', None)])
         if 'hired' in value:
             domains.append([('active', '=', True), ('date_closed', '!=', False)])
         if 'archived' in value or False in value:
@@ -555,17 +560,17 @@ class HrApplicant(models.Model):
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
         return stages.browse(stage_ids)
 
-    @api.depends('job_id', 'department_id')
+    @api.depends('job_id', 'department_id', 'job_id.company_id')
     def _compute_company(self):
         for applicant in self:
             company_id = False
-            if applicant.department_id:
+            if applicant.department_id.company_id == applicant.job_id.company_id:
                 company_id = applicant.department_id.company_id.id
             if not company_id and applicant.job_id:
                 company_id = applicant.job_id.company_id.id
             applicant.company_id = company_id or self.env.company.id
 
-    @api.depends('job_id')
+    @api.depends('job_id', 'job_id.department_id')
     def _compute_department(self):
         for applicant in self:
             applicant.department_id = applicant.job_id.department_id.id
@@ -702,6 +707,11 @@ class HrApplicant(models.Model):
                         model_description="Applicant",
                     )
         return res
+
+    def copy(self, default=None):
+        if self.filtered("is_pool_applicant"):
+            raise UserError(self.env._("You cannot duplicate the talent(s)."))
+        return super().copy(default=default)
 
     @api.model
     def get_empty_list_help(self, help_message):

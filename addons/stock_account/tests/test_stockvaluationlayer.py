@@ -1,13 +1,10 @@
 """ Implementation of "INVENTORY VALUATION TESTS" spreadsheet. """
 
-from datetime import timedelta
-from freezegun import freeze_time
-
-from odoo import fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
+from odoo import Command
 
 
 class TestStockValuationStandard(TestStockValuationCommon):
@@ -179,7 +176,9 @@ class TestStockValuationStandard(TestStockValuationCommon):
             self.env.user.company_id = old_company
 
     def test_multicompany(self):
-        """Standard: total_value = standard_price * qty, isolated per company."""
+        """Standard: total_value = standard_price * qty, isolated per company.
+        Additional check: if the companies don't have same currency, the conversion is applied
+        when selecting both"""
         self.product.with_company(self.company).standard_price = 10
         self.product.with_company(self.other_company).standard_price = 50
 
@@ -206,6 +205,20 @@ class TestStockValuationStandard(TestStockValuationCommon):
         product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
         self.assertEqual(product_both.qty_available, 115)
         self.assertEqual(product_both.total_value, 5150)
+
+        other_currency = self.env['res.currency'].create({
+            'name': 'Other curr',
+            'symbol': 'O',
+            'rounding': 0.1,
+            'rate_ids': [
+                Command.create({'name': '2020-01-01', 'rate': 0.5}),
+            ],
+        })
+        self.other_company.currency_id = other_currency
+        self.product.invalidate_recordset(['total_value'])
+        # total value should now be 150 (from comp 1) + 10000 (5000 from comp 2 converted to 10000
+        # in the currency of comp 1 which is the main company selected) = 10150
+        self.assertEqual(product_both.total_value, 10150)
 
     def test_change_qty_and_locations_of_done_sml(self):
         sub_stock_loc = self.env['stock.location'].create({
@@ -323,14 +336,7 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product.total_value, 0)
         self.assertEqual(self.product.qty_available, 0)
 
-    @freeze_time("2026-03-10 10:00:00")
     def test_return_receipt_1(self):
-        """
-        Receive a product twice, return one unit and deliver the other one.
-        The total value should be 0 and the price should be (10+20)/2 = 15.
-        Return the delivery and set the original quantity to 0.
-        The total value should be 15.
-        """
         move1 = self._make_in_move(self.product, 1, unit_cost=10, create_picking=True)
         self._make_in_move(self.product, 1, unit_cost=20)
         move2 = self._make_out_move(self.product, 1)
@@ -342,7 +348,8 @@ class TestStockValuationAVCO(TestStockValuationCommon):
 
         self._make_return(move2, 1)
         move2.quantity = 0
-        self.assertEqual(self.product.with_context(to_date=fields.Datetime.now() + timedelta(days=1)).total_value, 15.0)
+        self.assertEqual(self.product.qty_available, 2)
+        self.assertEqual(self.product.total_value, 30.0)
 
     def test_return_delivery_1(self):
         self._make_in_move(self.product, 1, unit_cost=10)

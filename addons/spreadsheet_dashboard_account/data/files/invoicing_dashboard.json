@@ -605,7 +605,7 @@
         "B1": "=PIVOT.VALUE(5,\"price_subtotal\")",
         "B2": "=IFERROR(PIVOT.VALUE(6,\"price_subtotal\")/B3)",
         "B3": "=PIVOT.VALUE(6,\"move_id\")",
-        "B4": "=YEAR(TODAY())",
+        "B4": "=YEAR(ODOO.FISCALYEAR.START(TODAY()))",
         "B5": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"asset_receivable\"),$B$4)",
         "B6": "=-ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"income\"),$B$4)",
         "B7": "=ODOO.BALANCE(ODOO.ACCOUNT.GROUP(\"expense_direct_cost\"),$B$4)",

@@ -29,15 +29,16 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@futural.fi>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 14:48+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"PO-Revision-Date: 2026-08-05 20:13+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@futural.fi>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/survey/"
 "fi/>\n"
 "Language: fi\n"
@@ -45,7 +46,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_count
@@ -257,8 +258,8 @@ msgstr ""
 "'participant'\">osallistuja</span></p>\n"
 "                <p>\n"
 "                    Ohessa on liitteenä\n"
-"                       <strong t-out=\"object.survey_id.display_name or "
-"''\">Huonekalujen luominen</strong>\n"
+"                       <strong t-out=\"object.survey_id.display_name or ''\">"
+"Huonekalujen luominen</strong>\n"
 "                    sertifiointi\n"
 "                </p>\n"
 "                <p>Onnittelut testin läpäisystä: pistemääräsi oli <strong t-"
@@ -313,8 +314,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hyvä <t t-out=\"object.partner_id.name or "
-"'participant'\">osallistuja</t><br/><br/>\n"
+"        Hyvä <t t-out=\"object.partner_id.name or 'participant'\">"
+"osallistuja</t><br/><br/>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Sinut on kutsuttu suorittamaan uusi sertifiointi.\n"
 "        </t>\n"
@@ -324,8 +325,8 @@ msgstr ""
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" t-attf-"
 "style=\"background-color: {{user.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-"{{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {"
+"{user.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; "
 "font-size:13px;\">\n"
 "                <t t-if=\"object.survey_id.certification\">\n"
 "                    Aloita sertifiointi\n"
@@ -336,8 +337,8 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or "
-"''\">05/05/2021</t> mennessä.<br/><br/>\n"
+"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or ''\">"
+"05/05/2021</t> mennessä.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Toivotamme sinulle onnea!\n"
@@ -437,8 +438,8 @@ msgstr "<i class=\"oi oi-fw oi-arrow-right\"/>Siirry kyselyyn"
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Avg</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 "
-"pt-1\">Keskimääräinen</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">"
+"Keskimääräinen</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -453,8 +454,8 @@ msgstr ""
 msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Min</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 "
-"pt-1\">Vähintään</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">"
+"Vähintään</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -474,8 +475,8 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"fw-bold text-muted ms-2 d-none d-md-inline\">\n"
-"                            <span id=\"enter-tooltip\">tai paina Enter</"
-"span>\n"
+"                            <span id=\"enter-tooltip\">tai paina Enter</span>"
+"\n"
 "                        </span>"
 
 #. module: survey
@@ -515,8 +516,8 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
-"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; "
-"2\">Sertifikaatit</span>\n"
+"<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">"
+"Sertifikaatit</span>\n"
 "                        <span class=\"o_stat_text\" "
 "invisible=\"certifications_count &gt; 1\">Sertifikaatti</span>"
 
@@ -526,8 +527,8 @@ msgid ""
 "<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">or "
 "press Enter</span>"
 msgstr ""
-"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-"
-"inline\">tai paina Enter</span>"
+"<span class=\"o_survey_enter fw-bold text-muted ms-2 d-none d-md-inline\">"
+"tai paina Enter</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_selection_key
@@ -969,7 +970,7 @@ msgstr "Vastaustyyppi"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__deadline
 msgid "Answer deadline"
-msgstr "Vastausaika"
+msgstr "Vastauksen määräaika"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_answer__value_label
@@ -1458,8 +1459,7 @@ msgstr "Konferenssin puheenjohtaja"
 #. module: survey
 #: model_terms:web_tour.tour,rainbow_man_message:survey.survey_tour
 msgid "Congratulations! You are now ready to collect feedback like a pro :-)"
-msgstr ""
-"Onnittelut! Olet nyt valmis keräämään palautetta kuin ammattilainen :-)"
+msgstr "Onnittelut! Olet nyt valmis keräämään palautetta kuin ammattilainen :-)"
 
 #. module: survey
 #: model_terms:gamification.badge,description:survey.vendor_certification_badge
@@ -1721,8 +1721,7 @@ msgstr "Määräaika"
 #: model:ir.model.fields,help:survey.field_survey_question__survey_session_speed_rating_time_limit
 #: model:ir.model.fields,help:survey.field_survey_survey__session_speed_rating_time_limit
 msgid "Default time given to receive additional points for right answers"
-msgstr ""
-"Oletusaika, jonka kuluessa oikeista vastauksista voi saada lisäpisteitä"
+msgstr "Oletusaika, jonka kuluessa oikeista vastauksista voi saada lisäpisteitä"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_gamification_challenge__challenge_category
@@ -2636,7 +2635,7 @@ msgstr "Avataan juuri lähettämäsi kysely."
 #. odoo-python
 #: code:addons/survey/models/templates/survey_survey.py:0
 msgid "Likely"
-msgstr "Todennäköisesti"
+msgstr "Todennäköinen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -2728,8 +2727,8 @@ msgstr "Maksimipäivämäärä ei voi olla pienempi kuin minimipäivämäärä!"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_datetime
 msgid "Max datetime cannot be smaller than min datetime!"
 msgstr ""
-"Maksimipäivämäärä ja -aika ei voi olla pienempi kuin minimipäivämäärä ja "
-"-aika!"
+"Maksimipäivämäärä ja -aika ei voi olla pienempi kuin minimipäivämäärä ja -"
+"aika!"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_length
@@ -2781,7 +2780,7 @@ msgstr "Ehkä etsit"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
@@ -3437,7 +3436,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_placeholder
 msgid "Placeholder"
-msgstr "Paikanvaraaja"
+msgstr "Paikkamerkki"
 
 #. module: survey
 #. odoo-python
@@ -3632,7 +3631,7 @@ msgstr "Harvoin (1-3 kertaa kuukaudessa)"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__rating_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__rating_ids
 msgid "Ratings"
-msgstr "Arvioinnit"
+msgstr "Arvostelut"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__session_state__ready
@@ -3974,7 +3973,7 @@ msgstr "Lähetetään osallistujalle, kun jaat kyselyn"
 #: model:ir.model.fields,field_description:survey.field_survey_question__sequence
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_code
@@ -4375,7 +4374,7 @@ msgstr "Takaaki Kajita"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Take Again"
-msgstr "Koita uudelleen"
+msgstr "Vastaa uudelleen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

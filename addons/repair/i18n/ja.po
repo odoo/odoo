@@ -6,15 +6,15 @@
 # Martin Trigaux, 2022
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-01-23 07:33+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"PO-Revision-Date: 2026-08-24 03:11+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/repair/"
 "ja/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: repair
 #. odoo-python
@@ -155,8 +155,7 @@ msgstr "<strong>ステータス:</strong>"
 msgid ""
 "? , but get ready to have fun taking inventory to fix the negative stock "
 "quantity!"
-msgstr ""
-"? しかし、マイナス在庫を修正するために棚卸作業が待っているかもしれません!"
+msgstr "? しかし、マイナス在庫を修正するために棚卸作業が待っているかもしれません!"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -258,8 +257,8 @@ msgid ""
 "you want to change it, please archive the product and create a new one."
 msgstr ""
 "このプロダクトでは、すでに例:%(problem_uom)sなど、他の測定単位(%(uom)sではな"
-"く) が使用されているため、測定単位の変更はできません。変更する場合は、プロダ"
-"クトをアーカイブし、新しいプロダクトを作成して下さい。"
+"く) が使用されているため、測定単位の変更はできません。変更する場合は、"
+"プロダクトをアーカイブし、新しいプロダクトを作成して下さい。"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -442,6 +441,7 @@ msgid "Details"
 msgstr "詳細"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:repair.field_product_product__display_name
 #: model:ir.model.fields,field_description:repair.field_product_template__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
@@ -521,6 +521,7 @@ msgid "Has Uncomplete Moves"
 msgstr "未完了の移動あり"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__id
 #: model:ir.model.fields,field_description:repair.field_product_product__id
 #: model:ir.model.fields,field_description:repair.field_product_template__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
@@ -619,6 +620,11 @@ msgstr "Jane Smith"
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "John Doe"
 msgstr "例: ジョン・ドー"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
+msgstr "仕訳明細"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1180,7 +1186,7 @@ msgstr "返却済"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS送信エラー"
+msgstr "SMS配信エラー"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__sale_order_id
@@ -1237,7 +1243,7 @@ msgstr "シリアル番号は、修理するプロダクトに必要です: %s"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Set to Draft"
-msgstr "ドラフトに設定"
+msgstr "下書きに設定"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1323,8 +1329,8 @@ msgid ""
 "This is the default destination location for the product to be repaired in "
 "repair orders with this operation type."
 msgstr ""
-"これは、このオペレーションタイプの修理オーダで修理されるプロダクトのデフォル"
-"トの移動先ロケーションです。"
+"これは、このオペレーションタイプの修理オーダで修理されるプロダクトの"
+"デフォルトの移動先ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking_type__default_recycle_location_dest_id
@@ -1350,8 +1356,8 @@ msgid ""
 "This is the default source location for the product to be repaired in repair "
 "orders with this operation type."
 msgstr ""
-"これは、このオペレーションタイプの修理オーダで修理されるプロダクトのデフォル"
-"トの移動元ロケーションです。"
+"これは、このオペレーションタイプの修理オーダで修理されるプロダクトの"
+"デフォルトの移動元ロケーションです。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
@@ -1427,7 +1433,7 @@ msgstr "オペレーションタイプ"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "記録上の例外活動の種類。"
+msgstr "レコード上の例外の活動タイプ。"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1540,8 +1546,8 @@ msgid ""
 "Concerned repair order(s):\n"
 "%(ref_str)s"
 msgstr ""
-"関連する見積書を作成するためには、修理オーダの顧客を定義する必要がありま"
-"す。\n"
+"関連する見積書を作成するためには、修理オーダの顧客を定義する必要があります"
+"。\n"
 "該当する修理オーダ:\n"
 "%(ref_str)s"
 
@@ -1730,9 +1736,6 @@ msgstr "sale_order_id"
 
 #~ msgid "Journal Entry"
 #~ msgstr "仕訳"
-
-#~ msgid "Journal Item"
-#~ msgstr "仕訳明細"
 
 #~ msgid "No Invoice"
 #~ msgstr "請求外"

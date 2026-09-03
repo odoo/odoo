@@ -234,7 +234,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     async _openProductConfigurator(edit = false, selectedComboItems = []) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
-        const ptavIds = this._getVariantPtavIds(saleOrderLine);
+        const ptavIds = [...this._getVariantPtavIds(saleOrderLine)];
         let customPtavs = [];
 
         if (edit) {

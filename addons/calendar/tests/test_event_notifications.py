@@ -141,6 +141,7 @@ class TestEventNotifications(CalendarMailCommon):
     def test_assert_initial_values(self):
         self.assertFalse(self.event.partner_ids)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite(self):
         self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -168,6 +169,7 @@ class TestEventNotifications(CalendarMailCommon):
                 'partner_ids': [(4, self.partner.id)],
             }])
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite_email_notif_mass_queued(self):
         """Check that more than 20 notified attendees means mails are queued."""
         self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
@@ -206,6 +208,22 @@ class TestEventNotifications(CalendarMailCommon):
     def test_message_datetime_changed(self):
         self.event.partner_ids = self.partner
         "Invitation to Presentation of the new Calendar"
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'user_notification',
+            'subtype': 'mail.mt_note',
+        }):
+            self.event.start = fields.Datetime.now() + relativedelta(days=1)
+
+    @freeze_time('2018')  # class event has hardcoded dates
+    def test_message_datetime_changed_with_activity(self):
+        self.env['mail.activity'].create({
+            'activity_type_id': self.env.ref('mail.mail_activity_data_meeting').id,
+            'calendar_event_id': self.event.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': self.customers[0].id,
+        })
+        self.event.partner_ids = self.partner
+
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
@@ -259,6 +277,7 @@ class TestEventNotifications(CalendarMailCommon):
         with self.assertNoNotifications():
             self.event.start_date += relativedelta(days=-1)
 
+    @freeze_time('2018')  # class event has hardcoded dates
     def test_message_add_and_date_changed(self):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -306,6 +325,52 @@ class TestEventNotifications(CalendarMailCommon):
                     'stop': now + relativedelta(minutes=55),
                     'partner_ids': [(4, self.partner.id)],
                     'alarm_ids': [(4, alarm.id)]
+                })
+
+    def test_bus_notif_organizer(self):
+        """Test that Admin user receives bus alarm notifications."""
+        alarm = self.env['calendar.alarm'].create({
+            'name': "Alarm",
+            'alarm_type': "notification",
+            'interval': "minutes",
+            'duration': 30,
+        })
+        now = fields.Datetime.now()
+        admin_partner = self.user_admin.partner_id
+        event = self.env['calendar.event'].with_user(self.user_admin).with_context(no_mail_to_attendees=True).create({
+            'name': "Admin Meeting",
+            'start': now + relativedelta(minutes=50),
+            'stop': now + relativedelta(minutes=55),
+            'user_id': self.user_admin.id,
+            'partner_ids': [fields.Command.set(admin_partner.ids)],
+            'alarm_ids': [fields.Command.set([alarm.id])],
+        })
+        self._reset_bus()
+
+        def get_bus_params():
+            return (
+                [(self.env.cr.dbname, "res.partner", admin_partner.id)],
+                [
+                    {
+                        'type': "calendar.alarm",
+                        'payload': [
+                            {
+                                'alarm_id': alarm.id,
+                                'event_id': event.id,
+                                'title': "Admin Meeting",
+                                'message': event.display_time,
+                                'timer': 20 * 60,
+                                'notify_at': fields.Datetime.to_string(now + relativedelta(minutes=20)),
+                            },
+                        ],
+                    },
+                ],
+            )
+
+        with freeze_time(now):
+            with self.assertBus(get_params=get_bus_params):
+                event.with_context(no_mail_to_attendees=True).write({
+                    'alarm_ids': [fields.Command.set([alarm.id])],
                 })
 
     def test_email_alarm(self):

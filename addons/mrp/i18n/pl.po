@@ -37,16 +37,16 @@
 # Maksym <ms@myodoo.pl>, 2023
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
-# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025, 2026.
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-08 14:23+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"PO-Revision-Date: 2026-08-03 23:08+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/mrp/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -91,9 +91,8 @@ msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/> Wyprodukowane produkty zostaną przesunięte do <b>%"
-"(destination)s</b>, <br/> jak określono w miejscu docelowym<b>%(operation)s</"
-"b>."
+" <br/><br/> Wyprodukowane produkty zostaną przesunięte do <b>%(destination)"
+"s</b>, <br/> jak określono w miejscu docelowym<b>%(operation)s</b>."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -990,8 +989,8 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Ponieważ dla tego produktu zostały już użyte inne jednostki miary niż %"
-"(uom)s (np. %(problem_uom)s), zmiana jednostki miary nie jest możliwa. Jeśli "
+"Ponieważ dla tego produktu zostały już użyte inne jednostki miary niż %(uom)"
+"s (np. %(problem_uom)s), zmiana jednostki miary nie jest możliwa. Jeśli "
 "chcesz ją zmienić, zarchiwizuj produkt i utwórz nowy."
 
 #. module: mrp
@@ -1183,12 +1182,12 @@ msgstr "Powrót do produkcji"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr "Linia potwierdzenia zamówienia zaległego"
+msgstr "Pozycja potwierdzenia zamówienia zaległego"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Linie potwierdzenia zamówienia zaległego"
+msgstr "Pozycje potwierdzenia zamówienia zaległego"
 
 #. module: mrp
 #. odoo-python
@@ -1223,7 +1222,7 @@ msgstr "Kod kreskowy"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_mode_batch
 msgid "Based on"
-msgstr "Bazując na"
+msgstr "Na podstawie"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__batch_size
@@ -1247,7 +1246,7 @@ msgstr "Przed"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Bill of Material"
-msgstr "Zestawienie materiałowe"
+msgstr "Zestawienie materiałów"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
@@ -1257,12 +1256,12 @@ msgstr "Pozycja zestawienia materiałów"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr "Pozycja zestawienia materiałowego"
+msgstr "Pozycja zestawienia materiałów"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
 msgid "Bill of Material used on the Production Order"
-msgstr "Zestawienie Materiałów używanych w Zamówieniu Produkcji"
+msgstr "Zestawienie Materiałów używane w Zamówieniu Produkcyjnym"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -1277,14 +1276,14 @@ msgstr "Zestawienie Materiałów używanych w Zamówieniu Produkcji"
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Bill of Materials"
-msgstr "Zestawienia materiałowe"
+msgstr "Zestawienia materiałów"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_replenishment_info_stock_mrp_inherit
 msgid "Bills of Materials"
-msgstr "Zestawienia materiałowe"
+msgstr "Zestawienia materiałów"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__bom_id
@@ -1305,9 +1304,9 @@ msgid ""
 "manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"Zestawienia materiałów pozwalają zdefiniować listę wymaganych surowców\n"
-"materiałów wykorzystywanych do wytworzenia gotowego produktu; poprzez\n"
-"zamówienie lub paczkę produktów."
+"Zestawienia materiałów pozwalają zdefiniować listę wymaganych surowców "
+"wykorzystywanych do wytworzenia gotowego produktu; poprzez zlecenie "
+"produkcyjne lub pakiet produktów."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
@@ -1381,13 +1380,13 @@ msgstr "Komponenty zest. mat."
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Cost"
-msgstr "Koszt BoM"
+msgstr "Koszt Zest. Mat."
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "BoM Costs"
-msgstr "Koszty BoM"
+msgstr "Koszty Zest. Mat."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -2643,7 +2642,7 @@ msgstr "Zwiń"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_follower_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__message_follower_ids
 msgid "Followers"
-msgstr "Obserwatorzy"
+msgstr "Obserwujący"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_partner_ids
@@ -2652,7 +2651,7 @@ msgstr "Obserwatorzy"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Obserwatorzy (partnerzy)"
+msgstr "Obserwujący (partnerzy)"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
@@ -2692,8 +2691,8 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Prognozowana ilość (liczona jako ilość na stanie - wychodzące + przychodzące "
-"- ilość do usunięcia)\n"
+"Prognozowana ilość (liczona jako ilość na stanie - wychodzące + "
+"przychodzące - ilość do usunięcia)\n"
 "W kontekście pojedynczej lokalizacji magazynowej obejmuje to towary "
 "przechowywane w tej lokalizacji lub w dowolnym z jej elementów podrzędnych.\n"
 "W kontekście jednego magazynu obejmuje to towary przechowywane w lokalizacji "
@@ -2968,8 +2967,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
-msgstr ""
-"Możesz zgasić to pole, że jeśli nie chcesz widzieć zasobu bez usuwania."
+msgstr "Możesz zgasić to pole, że jeśli nie chcesz widzieć zasobu bez usuwania."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_mrp_reception_report_labels
@@ -3981,10 +3979,8 @@ msgstr "Nie znaleziono polecenia demontażu"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
-#, fuzzy
-#| msgid "Assign serial numbers to production order"
 msgid "No valid serial numbers provided."
-msgstr "Przypisz numery seryjne do zlecenia produkcyjnego"
+msgstr "Nie podano żadnych prawidłowych numerów seryjnych."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -4280,8 +4276,7 @@ msgstr "Operacje które nie mogą się rozpocząć przed ukończeniem tej operac
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__blocked_by_operation_ids
 msgid "Operations that need to be completed before this operation can start."
-msgstr ""
-"Operacje które muszą zostać zakończone przed rozpoczęciem tej operacji."
+msgstr "Operacje które muszą zostać zakończone przed rozpoczęciem tej operacji."
 
 #. module: mrp
 #. odoo-python
@@ -4408,8 +4403,7 @@ msgstr "Skompletuj komponenty a następnie wyprodukuj (2 kroki)"
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
 msgid "Pick components, manufacture and then store products (3 steps)"
-msgstr ""
-"Wybierz komponenty, wyprodukuj a następnie magazynuj produkty (3 kroki)"
+msgstr "Wybierz komponenty, wyprodukuj a następnie magazynuj produkty (3 kroki)"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
@@ -4571,7 +4565,7 @@ msgstr "Preprodukcja"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
 msgid "Prepare MO"
-msgstr ""
+msgstr "Przygotuj zlecenie produkcji"
 
 #. module: mrp
 #. odoo-javascript
@@ -6626,8 +6620,7 @@ msgstr "Oczekiwanie na dostępność"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "Waiting the previous work order, planned from %(start)s to %(end)s"
-msgstr ""
-"Oczekiwanie na poprzednie zlecenie, zaplanowane od %(start)s do %(end)s"
+msgstr "Oczekiwanie na poprzednie zlecenie, zaplanowane od %(start)s do %(end)s"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse

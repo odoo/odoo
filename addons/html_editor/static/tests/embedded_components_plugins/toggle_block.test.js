@@ -94,6 +94,66 @@ describe("deleteBackward applied to toggle", () => {
                 <p data-selection-placeholder=""><br></p>`)
         );
     });
+    test("delete paragraph not direct child of content should not create new paragraph after toggle block", async () => {
+        browser.sessionStorage.setItem(`html_editor.ToggleBlock1.showContent`, "true");
+        const { editor, el } = await setupEditor(
+            unformat(
+                `<div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
+                    <div data-embedded-editable="title">
+                        <p>Hello World</p>
+                    </div>
+                    <div data-embedded-editable="content">
+                        <table class="table table-bordered o_table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="o-paragraph">abc</div>
+                                        <div class="o-paragraph"><br>[]</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`
+            ),
+            {
+                config: getConfig([toggleBlockEmbedding]),
+            }
+        );
+        await embeddedToggleMountedPromise;
+        deleteBackward(editor);
+        expect(getContent(el)).toBe(
+            unformat(`<p data-selection-placeholder=""><br></p>
+                    <div data-embedded="toggleBlock" data-oe-protected="true" data-embedded-props='{ "toggleBlockId": "1" }' contenteditable="false">
+                        <div class="d-flex flex-row align-items-center">
+                            <button class="btn p-0 border-0 align-items-center justify-content-center btn-light" type="button">
+                                <i class="fa align-self-center fa-caret-down"></i>
+                            </button>
+                            <div class="flex-fill ms-1">
+                                <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
+                                    <p>Hello World</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ps-4 ms-1">
+                            <div data-embedded-editable="content" data-oe-protected="false" contenteditable="true">
+                                <p data-selection-placeholder=""><br></p>
+                                <table class="table table-bordered o_table">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="o-paragraph">abc[]</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                            </div>
+                        </div>
+                    </div>
+                    <p data-selection-placeholder=""><br></p>`)
+        );
+    });
     test("toggle closed, after toggle: should append to title", async () => {
         const { editor, el } = await setupEditor(
             unformat(

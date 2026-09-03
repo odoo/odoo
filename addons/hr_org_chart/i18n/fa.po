@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* hr_org_chart
+# * hr_org_chart
 #
 # Translators:
 # Farid Hariri <fhari1234@gmail.com>, 2023
@@ -8,20 +8,22 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2023
-#
+# Aliraza Habibitanha <alireza.habibitanha@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2023\n"
-"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"PO-Revision-Date: 2026-08-09 11:33+0000\n"
+"Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
+"Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/"
+"hr_org_chart/fa/>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
@@ -30,6 +32,9 @@ msgid ""
 "label=\"Full Chart\"/>\n"
 "                        Full Chart"
 msgstr ""
+"<i class=\"fa fa-share-alt fa-rotate-90 ms-1 mt-1\" role=\"img\" aria-"
+"label=\"Full Chart\"/>\n"
+"                        چارت کامل"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -37,6 +42,8 @@ msgid ""
 "<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
 "                                <span class=\"fw-bolder\">Zoom</span>"
 msgstr ""
+"<i class=\"fa fa-sitemap me-1 mt-1\"/>\n"
+"                                <span class=\"fw-bolder\">بزرگ‌نمایی</span>"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_public_view_form_inherit_org_chart
@@ -44,33 +51,35 @@ msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">چارت "
+"سازمانی</span>"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_all_count
 msgid "Child All Count"
-msgstr ""
+msgstr "تعداد کل زیرمجموعه‌ها"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__child_count
 msgid "Child Count"
-msgstr ""
+msgstr "تعداد زیرمجموعه"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
 msgid "Create an employee."
-msgstr ""
+msgstr "کارمند جدیدی ایجاد کنید."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__department_color
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__department_color
 msgid "Department Color"
-msgstr ""
+msgstr "رنگ دپارتمان"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__child_count
 msgid "Direct Subordinates Count"
-msgstr ""
+msgstr "تعداد کارکنان تابع مستقیم"
 
 #. module: hr_org_chart
 #: model:ir.model.fields,help:hr_org_chart.field_hr_employee__subordinate_ids
@@ -98,13 +107,13 @@ msgstr "کارمند"
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_department_hierarchy_view
 msgid "Employees"
-msgstr ""
+msgstr "کارمندان"
 
 #. module: hr_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr_org_chart.action_hr_employee_public_org_chart
 msgid "Find all the information on employees."
-msgstr ""
+msgstr "تمام اطلاعات مربوط به کارمندان را یکجا مدیریت کنید."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__id
@@ -127,7 +136,7 @@ msgstr "زیردستان غیر مستقیم"
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee_public__is_subordinate
 msgid "Is Subordinate"
-msgstr ""
+msgstr "زیرمجموعه است"
 
 #. module: hr_org_chart
 #. odoo-javascript
@@ -139,7 +148,7 @@ msgstr "مدیران بیشتر"
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_org_chart
 #: model:ir.actions.act_window,name:hr_org_chart.action_hr_employee_public_org_chart
 msgid "Org Chart"
-msgstr ""
+msgstr "چارت سازمانی"
 
 #. module: hr_org_chart
 #: model_terms:ir.ui.view,arch_db:hr_org_chart.hr_employee_view_form_inherit_org_chart
@@ -161,7 +170,7 @@ msgstr "مشاهده همه"
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "Set a manager or reports to show in org chart."
-msgstr ""
+msgstr "برای نمایش در چارت سازمانی، یک مدیر یا نفرات زیرمجموعه را تعیین کنید."
 
 #. module: hr_org_chart
 #: model:ir.model.fields,field_description:hr_org_chart.field_hr_employee__subordinate_ids
@@ -185,13 +194,13 @@ msgstr "جمع کل:"
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/fields/hr_org_chart.xml:0
 msgid "View employee"
-msgstr ""
+msgstr "مشاهده کارمند"
 
 #. module: hr_org_chart
 #. odoo-javascript
 #: code:addons/hr_org_chart/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
 msgid "people"
-msgstr ""
+msgstr "نفر"
 
 #~ msgid "Basic Employee"
 #~ msgstr "کارمند پایه"

@@ -15,7 +15,6 @@
         <field name="line_ids">
             <record id="account_tax_report_line_supplies" model="account.report.line">
                 <field name="name">Supplies</field>
-                <field name="aggregation_formula">BOX1.balance + BOX2.balance + BOX3.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_std_rated_supplies" model="account.report.line">
@@ -24,8 +23,18 @@
                         <field name="expression_ids">
                             <record id="account_tax_report_line_std_rated_supplies_tag" model="account.report.expression">
                                 <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">BOX1.sub_balance_a + BOX1.sub_balance_b</field>
+                            </record>
+                            <record id="account_tax_report_line_std_rated_supplies_sub_balance_a" model="account.report.expression">
+                                <field name="label">sub_balance_a</field>
                                 <field name="engine">tax_tags</field>
                                 <field name="formula">-Box 1</field>
+                            </record>
+                            <record id="account_tax_report_line_std_rated_supplies_sub_balance_b" model="account.report.expression">
+                                <field name="label">sub_balance_b</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">Box 1_P</field>
                             </record>
                         </field>
                     </record>
@@ -59,7 +68,6 @@
             </record>
             <record id="account_tax_report_line_purchases" model="account.report.line">
                 <field name="name">Taxable Purchases and Imports</field>
-                <field name="aggregation_formula">BOX_5.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_total_taxable_purchases" model="account.report.line">
@@ -77,7 +85,6 @@
             </record>
             <record id="account_tax_report_line_taxes" model="account.report.line">
                 <field name="name">Taxes</field>
-                <field name="aggregation_formula">BOX6.balance + BOX7.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_output_tax_due" model="account.report.line">
@@ -111,7 +118,6 @@
             </record>
             <record id="account_tax_report_line_applicable" model="account.report.line">
                 <field name="name">Applicable to Taxable Persons under Major Exported Scheme / Approved 3rd Party Logistics Company / Other Approved Schemes Only</field>
-                <field name="aggregation_formula">BOX_9.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_applicable_goods_imported_value" model="account.report.line">
@@ -129,7 +135,6 @@
             </record>
             <record id="account_tax_report_line_claims" model="account.report.line">
                 <field name="name">Did you make the following claims in Box 7?</field>
-                <field name="aggregation_formula">BOX_10.balance + BOX_11.balance + BOX_12.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_claim_refunded_to_tourist" model="account.report.line">
@@ -170,7 +175,6 @@
             </record>
             <record id="account_tax_report_line_revenues" model="account.report.line">
                 <field name="name">Revenue</field>
-                <field name="aggregation_formula">BOX_13.balance + BOX_14.balance + BOX_15.balance + BOX_16.balance + BOX_17.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_revenues_accounting_period" model="account.report.line">
@@ -192,7 +196,7 @@
                             <record id="account_tax_report_line_revenues_reverse_charge_tag" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">-Box 14</field>
+                                <field name="formula">Box 14</field>
                             </record>
                         </field>
                     </record>
@@ -233,7 +237,6 @@
             </record>
             <record id="account_tax_report_line_deferment" model="account.report.line">
                 <field name="name">Import GST Deferment Scheme</field>
-                <field name="aggregation_formula">BOX_20.balance + BOX_21.balance</field>
                 <field name="hierarchy_level">0</field>
                 <field name="children_ids">
                     <record id="account_tax_report_line_deferment_net_gst" model="account.report.line">

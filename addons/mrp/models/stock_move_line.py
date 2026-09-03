@@ -28,20 +28,33 @@ class StockMoveLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
+        lines_without_production_id = self.env['stock.move.line']
         for line in res:
-            # If the line is added in a done production, we need to map it
-            # manually to the produced move lines in order to see them in the
-            # traceability report
-            if line.move_id.raw_material_production_id and line.state == 'done':
-                mo = line.move_id.raw_material_production_id
-                finished_lots = mo.lot_producing_ids
-                finished_lots |= mo.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id).move_line_ids.lot_id
-                if finished_lots:
-                    produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(lambda sml: sml.lot_id in finished_lots)
-                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
-                else:
-                    produced_move_lines = mo.move_finished_ids.move_line_ids
-                    line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+            if self.env.context.get('force_manual_consumption'):
+                if line.quantity:
+                    line.move_id.manual_consumption = True
+                line.move_id.picked = True
+            if line.move_id.raw_material_production_id:
+                if line.state == 'done':
+                    # If the line is added in a done production, we need to map it
+                    # manually to the produced move lines in order to see them in the
+                    # traceability report
+                    mo = line.move_id.raw_material_production_id
+                    finished_lots = mo.lot_producing_ids
+                    finished_lots |= mo.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id).move_line_ids.lot_id
+                    if finished_lots:
+                        produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(lambda sml: sml.lot_id in finished_lots)
+                        line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+                    else:
+                        produced_move_lines = mo.move_finished_ids.move_line_ids
+                        line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
+                elif not line.production_id:
+                    lines_without_production_id |= line
+        for move, lines in lines_without_production_id.grouped('move_id').items():
+            lines.write({
+                'production_id': move.raw_material_production_id.id,
+                'workorder_id': move.workorder_id.id,
+            })
         return res
 
     def _get_similar_move_lines(self):

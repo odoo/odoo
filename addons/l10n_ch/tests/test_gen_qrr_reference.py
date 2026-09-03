@@ -74,3 +74,33 @@ class TestGenQRRReference(AccountTestInvoicingCommon):
         self.invoice.partner_bank_id = self.bank_acc_qriban
         self.invoice.currency_id = self.env.ref("base.BTN")
         self.assertFalse(self.invoice.get_l10n_ch_qrr_number())
+
+    def test_payment_reference_foreign_debtor(self):
+        """Swiss communication standard must set a QRR reference even for non-CH/LI debtors."""
+        foreign_partner = self.env['res.partner'].create({
+            'name': 'US Customer',
+            'country_id': self.env.ref('base.us').id,
+        })
+        sale_journal = self.company_data['default_journal_sale']
+        sale_journal.invoice_reference_model = 'ch'
+        partner_bank = self.env['res.partner.bank'].create({
+            'acc_number': QR_IBAN,
+            'bank_id': self.bank.id,
+            'partner_id': self.env.company.partner_id.id,
+            'allow_out_payment': True,
+        })
+
+        invoice = self._create_invoice(
+            invoice_date='2026-01-01',
+            partner_id=foreign_partner,
+            partner_bank_id=partner_bank,
+            currency_id=self.env.ref('base.CHF'),
+            post=True
+        )
+
+        invoice_ref = ''.join(filter(str.isdigit, invoice.name))
+        expected_qrr = self.env['account.move']._compute_qrr_number(invoice_ref)
+
+        self.assertTrue(invoice.payment_reference)
+        self.assertEqual(invoice.payment_reference, expected_qrr)
+        self.assertEqual(len(invoice.payment_reference), 27)
