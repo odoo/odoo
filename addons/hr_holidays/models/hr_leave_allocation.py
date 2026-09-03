@@ -585,12 +585,12 @@ class HrLeaveAllocation(models.Model):
             Accrual inconsistent (see the comment under the class declaration)
         """
         self.ensure_one()
-        period_start = current_level._get_previous_date(allocation_data['nextcall'])
+        period_start = current_level._get_previous_date(allocation_data['nextcall'], self.date_from)
         current_lvl_start_date = current_level._get_start_date(self.date_from)
         if allocation_data['nextcall'] == period_start or allocation_data['nextcall'] == current_lvl_start_date:
             accrual_start_date = allocation_data['nextcall']
             accrual_end_date = next_accrual
-            period_end = current_level._get_next_date(allocation_data['nextcall'])
+            period_end = current_level._get_next_date(allocation_data['nextcall'], self.date_from)
             if current_level.frequency not in current_level._get_hourly_frequencies() + ['daily']:
                 accrual_end_date -= relativedelta(days=1)
                 period_end -= relativedelta(days=1)
@@ -602,12 +602,12 @@ class HrLeaveAllocation(models.Model):
             Accrual inconsistent (see the comment under the class declaration)
         """
         self.ensure_one()
-        next_date = current_level._get_next_date(allocation_data['lastcall'])
+        next_date = current_level._get_next_date(allocation_data['lastcall'], self.date_from)
         current_level_last_date = self._get_next_lvl_start(current_level_idx)
         if allocation_data['nextcall'] == next_date or allocation_data['nextcall'] == current_level_last_date:
             accrual_start_date = allocation_data['last_accrual'] or first_level_start_date
             accrual_end_date = allocation_data['nextcall']
-            period_start = current_level._get_previous_date(allocation_data['lastcall'])
+            period_start = current_level._get_previous_date(allocation_data['lastcall'], self.date_from)
             period_end = next_date
             if current_level.frequency not in current_level._get_hourly_frequencies() + ['daily']:
                 accrual_end_date -= relativedelta(days=1)
@@ -630,7 +630,7 @@ class HrLeaveAllocation(models.Model):
         if self.accrual_plan_id.accrued_gain_time == 'start':
             nextcall = lastcall
         else:
-            nextcall = first_level._get_next_date(lastcall)
+            nextcall = first_level._get_next_date(lastcall, self.date_from)
             if self.accrual_plan_id.can_be_carryover:
                 carryover_date = self._get_next_carryover_date(lastcall)
                 nextcall = min(carryover_date, nextcall)
@@ -655,7 +655,7 @@ class HrLeaveAllocation(models.Model):
         boundaries = [self.accrual_plan_id.level_ids[0]._get_start_date(self.date_from)]
         for level in self.accrual_plan_id.level_ids[1:]:
             expected_lvl_start = level._get_start_date(self.date_from)
-            lvl_start = level._get_next_date(expected_lvl_start + relativedelta(days=-1))
+            lvl_start = level._get_next_date(expected_lvl_start + relativedelta(days=-1), self.date_from)
             boundaries.append(lvl_start)
         return boundaries
 
@@ -708,7 +708,7 @@ class HrLeaveAllocation(models.Model):
                 allocation_data['leaves_taken'] = _get_leaves_taken(allocation, allocation_data)
                 plan_levels = allocation._get_current_accrual_plan_level_idx_for_accrual(allocation_data['nextcall'])
                 (current_level, current_level_idx), (accrual_level, accrual_level_idx) = plan_levels["current_level"], plan_levels["accrual_level"]
-                nextcall = current_level._get_next_date(allocation_data['nextcall'])
+                nextcall = current_level._get_next_date(allocation_data['nextcall'], allocation.date_from)
 
                 # There are 3 more accrual "events" (added to the start-end of each period of each level):
                 # Level transition, carryover date and carriedover expiring days date

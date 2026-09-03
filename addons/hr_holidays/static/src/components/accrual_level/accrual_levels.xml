@@ -42,8 +42,12 @@
                                 every day.
                                 <br/>
                             </t>
-                            <t t-elif="level.data.frequency == 'weekly'">
+                            <t t-elif="level.data.frequency == 'weekly' and level.data.weekly_option == 'date'">
                                 every week on <t t-out="this.getFullDay(level.data.week_day)"/>.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'weekly' and level.data.weekly_option == 'anniversary'">
+                                every week on the Allocation date's day of the week.
                                 <br/>
                             </t>
                             <t t-elif="level.data.frequency == 'bimonthly'">
@@ -53,9 +57,13 @@
                                 of the month.
                                 <br/>
                             </t>
-                            <t t-elif="level.data.frequency == 'monthly'">
+                            <t t-elif="level.data.frequency == 'monthly' and level.data.monthly_option == 'date'">
                                 every month on the <t t-out="level.data.first_day"/>
                                 of the month.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'monthly' and level.data.monthly_option == 'anniversary'">
+                                every month on the Allocation date's day of the month.
                                 <br/>
                             </t>
                             <t t-elif="level.data.frequency == 'biyearly'">
@@ -67,9 +75,13 @@
                                 of <t t-out="this.getFullMonth(level.data.second_month)"/>.
                                 <br/>
                             </t>
-                            <t t-elif="level.data.frequency == 'yearly'">
+                            <t t-elif="level.data.frequency == 'yearly' and level.data.yearly_option == 'date'">
                                 every year on the <t t-out="level.data.yearly_day"/>
                                 of <t t-out="this.getFullMonth(level.data.yearly_month)"/>.
+                                <br/>
+                            </t>
+                            <t t-elif="level.data.frequency == 'yearly' and level.data.yearly_option == 'anniversary'">
+                                every year on the Allocation date's anniversary.
                                 <br/>
                             </t>
                         </h4>

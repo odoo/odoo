@@ -18,14 +18,22 @@
                                 <field nolabel="1" class="me-1 o_hr_narrow_field-4" name="added_value_type"
                                        readonly="not can_modify_value_type"/>
                                 <field nolabel="1" class="o_hr_narrow_field" name="frequency"/>
-                                <span name="weekly" invisible="frequency != 'weekly'">
-                                    on
-                                    <field nolabel="1" name="week_day" class="o_hr_narrow_field-6" required="frequency == 'weekly'" placeholder="select a weekday"/>
+                                <span name="weekly" invisible="frequency != 'weekly'" class="d-inline-flex align-items-center gap-2 ms-2">
+                                    <field nolabel="1" name="weekly_option"
+                                        widget="radio_followed_by_element"
+                                        options="{'links': {'date': 'weekly_date'}, 'observe': 'weekly_option'}"/>
+                                    <span id="weekly_date" class="ms-1 d-inline-flex align-items-center gap-1">
+                                        <field nolabel="1" name="week_day" class="o_hr_narrow_field-6" required="frequency == 'weekly'" placeholder="select a weekday"/>
+                                    </span>
                                 </span>
-                                <span name="monthly" invisible="frequency != 'monthly'">
-                                    on the
-                                    <field nolabel="1" name="first_day" class="o_hr_narrow_field-3" required="frequency == 'monthly'" placeholder="select a day"/>
-                                    of the month.
+                                <span name="monthly" invisible="frequency != 'monthly'" class="d-inline-flex align-items-center gap-2 ms-2">
+                                    <field nolabel="1" name="monthly_option"
+                                        widget="radio_followed_by_element"
+                                        options="{'links': {'date': 'monthly_date'}, 'observe': 'monthly_option'}"/>
+                                    <span id="monthly_date" class="d-inline-flex align-items-center gap-1">
+                                        <field nolabel="1" name="first_day" class="ms-1 o_hr_narrow_field-3" required="frequency == 'monthly'" placeholder="select a day"/>
+                                        of the month.
+                                    </span>                                    
                                 </span>
                                 <span name="bimonthly" invisible="frequency != 'bimonthly'" style="width: 100%">
                                     on the
@@ -44,11 +52,15 @@
                                     of
                                     <field nolabel="1" name="second_month" class="o_hr_narrow_field-5" placeholder="select a month" required="frequency == 'biyearly'"/>
                                 </span>
-                                <span name="yearly" invisible="frequency != 'yearly'">
-                                    on the
-                                    <field nolabel="1" name="yearly_day" class="o_hr_narrow_field-3" widget="day_selection" month_field="yearly_month" required="frequency == 'yearly'" placeholder="select a day"/>
-                                    of
-                                    <field nolabel="1" name="yearly_month" class="o_hr_narrow_field-5" required="frequency == 'yearly'" placeholder="select a month"/>
+                                <span name="yearly" invisible="frequency != 'yearly'" class="d-inline-flex align-items-center gap-2 ms-2">
+                                    <field nolabel="1" name="yearly_option"
+                                        widget="radio_followed_by_element"
+                                        options="{'links': {'date': 'yearly_date'}, 'observe': 'yearly_option'}"/>
+                                    <span id="yearly_date" class="d-inline-flex align-items-center gap-1">
+                                        <field nolabel="1" name="yearly_day" class="ms-1 o_hr_narrow_field-3" widget="day_selection" month_field="yearly_month" required="frequency == 'yearly'" placeholder="select a day"/>
+                                        of
+                                        <field nolabel="1" name="yearly_month" class="o_hr_narrow_field-5" required="frequency == 'yearly'" placeholder="select a month"/>
+                                    </span>
                                 </span>
                             </span>
                             <span name="yearly_gain" class="text-muted">
