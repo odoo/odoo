@@ -6,7 +6,6 @@ export class ResourceAvatarField extends ImageField {
     static template = "resource.ResourceAvatarField";
 
     isUserResource = computed(() => this.props.record.data.resource_type === "user");
-    backgroundClass = computed(() => `o_colorlist_item_color_${this.props.record.data.color}`);
 }
 
 registry.category("fields").add("resource_avatar", {
@@ -14,7 +13,6 @@ registry.category("fields").add("resource_avatar", {
     component: ResourceAvatarField,
     fieldDependencies: [
         ...imageField.fieldDependencies,
-        { name: "color", type: "integer" },
         { name: "resource_type", type: "selection" },
     ],
 });
