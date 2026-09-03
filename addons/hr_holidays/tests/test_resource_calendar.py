@@ -122,3 +122,17 @@ class TestResourceCalendar(TestHolidayContract):
         })
 
         self.assertEqual(leave.number_of_days, 5)
+
+        # Monday (pm start) -> Wednesday (am end): Monday and Wednesday are half days,
+        # Tuesday in between is a full day.
+        leave_partial = self.env['hr.leave'].create({
+            'name': 'Half day Monday to half day Wednesday',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2026, 4, 27),
+            'request_date_to': date(2026, 4, 29),
+            'request_date_from_period': 'pm',
+            'request_date_to_period': 'am',
+        })
+        self.assertEqual(leave_partial.number_of_days, 2)
+        self.assertEqual(leave_partial.number_of_hours, 13.44)
