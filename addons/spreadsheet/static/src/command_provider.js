@@ -32,7 +32,7 @@ function setupSpreadsheetCategories(spreadsheetEnv) {
 
 function setupSpreadsheetCommandProvider(spreadsheetEnv) {
     commandProviderRegistry.add("spreadsheet_provider", {
-        provide: (env, options) => {
+        provide() {
             const result = [];
             for (const menu of topbarMenuRegistry.getMenuItems()) {
                 const name = menu.name(spreadsheetEnv);

@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { TourRecorderPlugin } from "./tour_recorder_plugin";
 
 registry.category("command_provider").add("tour_recorder", {
-    provide: (env, options) => {
+    provide(options) {
         const recorder = usePlugin(TourRecorderPlugin);
         const result = [];
         if (options.searchValue.toLowerCase() === "record") {
