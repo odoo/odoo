@@ -1134,7 +1134,7 @@ test("update activity view after creating multiple activities", async () => {
     await click(
         ".o_list_renderer table tbody tr:nth-child(2) td:nth-child(2) .o-mail-ActivityButton"
     );
-    await webContains(".o-mail-ActivityListPopover > button.btn-secondary").click();
+    await webContains(".o-mail-ActivityListPopover-footer button").click();
     const modalSchedule = await waitFor(".modal:has(.o_form_view)");
     await insertText(`.o_form_view .o_field_widget[name='summary'] input`, "test1", {
         target: modalSchedule,

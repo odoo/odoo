@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ActivityListPopover">
-        <div class="o-mail-ActivityListPopover d-flex flex-column" t-ref="this.rootRef">
-            <div class="overflow-y-auto d-flex flex-column flex-grow-1">
-                <span t-if="this.activities.length === 0" class="p-3 text-center fst-italic text-500 border-bottom fs-6">Schedule activities to help you get things done.</span>
+        <div class="o-mail-ActivityListPopover d-flex flex-column" t-att-class="{ 'o-mail-ActivityListPopover-empty': this.activities.length === 0 }" t-ref="this.rootRef">
+            <div t-if="this.activities.length === 0" class="o-mail-ActivityListPopover-help p-3 text-center fst-italic text-muted border-bottom">Schedule activities to help you get things done.</div>
+            <div t-else="" class="o-mail-ActivityListPopover-content overflow-y-auto d-flex flex-column flex-grow-1">
                 <t t-if="this.overdueActivities.length > 0">
-                    <div class="d-flex bg-100 py-2 border-bottom">
+                    <div class="o-mail-ActivityListPopover-header d-flex bg-100 py-2 border-bottom">
                         <span class="text-danger fw-bold mx-3">Overdue</span>
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-danger mx-3 align-self-center" t-out="this.overdueActivities.length"/>
@@ -13,7 +13,7 @@
                     <ActivityListPopoverItem t-foreach="this.overdueActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged" onClickEditActivityButton="this.props.close" onClickDoneAndScheduleNext="this.props.close"/>
                 </t>
                 <t t-if="this.todayActivities.length > 0">
-                    <div class="d-flex bg-100 py-2 border-bottom">
+                    <div class="o-mail-ActivityListPopover-header d-flex bg-100 py-2 border-bottom">
                         <span class="o-mail-ActivityListPopover-todayTitle text-warning fw-bold mx-3">Today</span>
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-warning mx-3 align-self-center" t-out="this.todayActivities.length"/>
@@ -21,7 +21,7 @@
                     <ActivityListPopoverItem t-foreach="this.todayActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged" onClickEditActivityButton="this.props.close" onClickDoneAndScheduleNext="this.props.close"/>
                 </t>
                 <t t-if="this.plannedActivities.length > 0">
-                    <div class="d-flex bg-100 py-2 border-bottom">
+                    <div class="o-mail-ActivityListPopover-header d-flex bg-100 py-2 border-bottom">
                         <span class="text-success fw-bold mx-3">Planned</span>
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-success mx-3 align-self-center" t-out="this.plannedActivities.length"/>
@@ -29,7 +29,7 @@
                     <ActivityListPopoverItem t-foreach="this.plannedActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged" onClickEditActivityButton="this.props.close" onClickDoneAndScheduleNext="this.props.close"/>
                 </t>
                 <t t-if="this.doneActivities.length > 0">
-                    <div class="o-mail-ActivityListPopover-done d-flex bg-100 py-2 border-bottom">
+                    <div class="o-mail-ActivityListPopover-header o-mail-ActivityListPopover-done d-flex bg-100 py-2 border-bottom">
                         <span class="fw-bold mx-3">Done</span>
                         <span class="flex-grow-1"/>
                         <span class="badge rounded-pill text-bg-secondary mx-3 align-self-center" t-out="this.doneActivities.length"/>
@@ -37,10 +37,13 @@
                     <ActivityListPopoverItem t-foreach="this.doneActivities" t-as="activity" t-key="activity.id" activity="activity" onActivityChanged="this.props.onActivityChanged"/>
                 </t>
             </div>
-            <button class="btn btn-secondary p-3 text-center" t-on-click="this.onClickAddActivityButton">
-                <t t-if="this.props.resIds"><i class="oi oi-fw" data-icon="add"/><strong>Schedule an activity on selected records</strong></t>
-                <t t-else=""><i class="oi oi-fw" data-icon="add"/><strong>Schedule an activity</strong></t>
-            </button>
+            <div class="o-mail-ActivityListPopover-footer p-3">
+                <button class="btn" t-att-class="this.activities.length === 0 ? 'btn-primary w-100' : 'btn-secondary'" t-on-click="this.onClickAddActivityButton">
+                    <i class="oi oi-fw" data-icon="add" aria-hidden="true"/>
+                    <t t-if="this.props.resIds">Schedule an activity on selected records</t>
+                    <t t-else="">Schedule an activity</t>
+                </button>
+            </div>
         </div>
     </t>
 </templates>

@@ -1,4 +1,34 @@
 .o-mail-ActivityListPopover {
-    width: #{"min(95vw, 350px)"};
+    --o-mail-ActivityListPopover-maxWidth: min(95vw, 350px);
+    --o-mail-ActivityListPopover-minWidth: var(--o-mail-ActivityListPopover-maxWidth);
+
+    min-width: var(--o-mail-ActivityListPopover-minWidth);
+    max-width: var(--o-mail-ActivityListPopover-maxWidth);
     max-height: #{"min(95vh, 525px)"};
+    // Carry the popover's radius down so the section headers can clip to it.
+    border-radius: inherit;
+
+    &.o-mail-ActivityListPopover-empty {
+        // No list to size against: shrink, and cap narrower than the list state so
+        // the help sentence wraps to a readable measure instead of one long line.
+        --o-mail-ActivityListPopover-minWidth: 0;
+        --o-mail-ActivityListPopover-maxWidth: min(95vw, 14rem);
+    }
+
+    .o-mail-ActivityListPopover-help {
+        text-wrap: balance;
+    }
+
+    .o-mail-ActivityListPopover-content {
+        // Clips the first section header's background to the popover's top corners.
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
+    }
+}
+
+// Bottom placement only: overridde the fill as the handle points at the header
+// rather than the body, so Bootstrap's default `$popover-bg` fill leaves a pale
+// notch on the header.
+.o_popover[data-popper-placement^="bottom"]:has(.o-mail-ActivityListPopover-header) > .popover-arrow::after {
+    border-bottom-color: $o-gray-100;
 }
