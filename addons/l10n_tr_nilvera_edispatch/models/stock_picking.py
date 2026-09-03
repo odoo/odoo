@@ -169,6 +169,17 @@ class StockPicking(models.Model):
             partners_requiring_tax_office._l10n_tr_nilvera_validate_partner_details(tax_office_required=True)
         )
 
+        if self.company_id.partner_id.l10n_tr_nilvera_customer_status == 'einvoice':
+            mandatory_categories = self.env['res.partner.category']._get_l10n_tr_official_mandatory_categories()
+            company_partner = self.company_id.partner_id
+            if not company_partner.category_id.filtered(lambda c: c.parent_id in mandatory_categories):
+                error_messages['missing_company_official_codes'] = {
+                    'message': self.env._("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                    'action_text': self.env._("View Company"),
+                    'action': company_partner._get_records_action(name=self.env._("Check tags on company")),
+                    'level': 'danger',
+                }
+
         if self.l10n_tr_nilvera_dispatch_type == 'MATBUDAN':
             if not self.l10n_tr_nilvera_delivery_date:
                 error_messages['invalid_matbudan_date'] = {
