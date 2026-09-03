@@ -147,6 +147,7 @@ class HrLeaveAllocation(models.Model):
 
     # ============================== Accrual type allocation fields ==============================
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', index='btree_not_null', tracking=True)
+    hide_accrual_plan_id = fields.Boolean(compute='_compute_hide_accrual_plan_id')
     # `last_accrual`, `lastcall` and `nextcall` will be assigned a value when:
     # `date_from <= first_level_start <= today` AND `_process_accrual_plans` has been called
     last_accrual = fields.Date("Date of the last accrual allocation", export_string_translation=False)
@@ -160,6 +161,16 @@ class HrLeaveAllocation(models.Model):
     def _check_date_from_date_to(self):
         if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
             raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
+
+    @api.constrains('accrual_plan_id')
+    def _check_accrual_plan_id(self):
+        if any(allocation.accrual_plan_id and not allocation.accrual_plan_id.work_entry_type_id for allocation in self):
+            raise UserError(_("The selected accrual plan has no time type set. Please set a time type on the accrual plan."))
+
+    @api.constrains('accrual_plan_id', 'work_entry_type_id')
+    def _check_accrual_plan_work_entry_type(self):
+        if any(allocation.accrual_plan_id and allocation.accrual_plan_id.work_entry_type_id != allocation.work_entry_type_id for allocation in self):
+            raise UserError(_("Selected Time Type must be the same one set on accrual plan"))
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
@@ -315,6 +326,15 @@ class HrLeaveAllocation(models.Model):
                     default_work_entry_type_id = self._default_work_entry_type_id()
                 allocation.work_entry_type_id = default_work_entry_type_id
 
+                if allocation.accrual_plan_id and allocation.work_entry_type_id != allocation.accrual_plan_id.work_entry_type_id:
+                    allocation.work_entry_type_id = allocation.accrual_plan_id.work_entry_type_id
+
+    @api.onchange('work_entry_type_id')
+    def _onchange_work_entry_type_id(self):
+        for allocation in self:
+            if allocation.accrual_plan_id and allocation.work_entry_type_id != allocation.accrual_plan_id.work_entry_type_id:
+                allocation.accrual_plan_id = False
+
     def _inverse_number_of_days_display(self):
         for allocation in self:
             allocation.number_of_days = allocation.number_of_days_display
@@ -368,6 +388,11 @@ class HrLeaveAllocation(models.Model):
     def _compute_type_request_unit(self):
         for allocation in self:
             allocation.type_request_unit = allocation._get_request_unit()
+
+    @api.depends("work_entry_type_id")
+    def _compute_hide_accrual_plan_id(self):
+        for allocation in self:
+            allocation.hide_accrual_plan_id = allocation.work_entry_type_id and not self.env['hr.leave.accrual.plan'].sudo().search_count([('work_entry_type_id', '=', allocation.work_entry_type_id.id)])
 
     def _get_next_carryover_date(self, date_from, date_from_included=True):
         """ Returns the next carry-over date, `date_from` included or not """

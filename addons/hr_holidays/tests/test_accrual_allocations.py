@@ -133,12 +133,20 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'added_value': 2,
             }),
         ]
+        cls.work_entry_type_day = _create_work_entry_type(work_entry_type_by_signature, {
+            'count_as': 'absence',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
         cls.accrual_plan_start1 = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'start',
             'carryover_date': 'allocation',
             'can_be_carryover': True,
             'level_ids': accrual_plan1_levels,
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.accrual_plan_end1 = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -146,13 +154,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'carryover_date': 'allocation',
             'can_be_carryover': True,
             'level_ids': accrual_plan1_levels,
-        })
-        cls.work_entry_type_day = _create_work_entry_type(work_entry_type_by_signature, {
-            'count_as': 'absence',
-            'requires_allocation': 'yes',
-            'allocation_validation_type': 'no_validation',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.accrual_plan_monthly_end = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -166,6 +168,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
 
         accrual_plan2_levels_fields = {
@@ -196,6 +199,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'added_value': 2,
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.accrual_plan_monthly_end_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -212,6 +216,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': True,
                 'maximum_leave': 10,
             })],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.accrual_plan_yearly_max_carriedover_days_start = _create_accrual_plan(accrual_plan_by_signature, {
             'name': '21 days per year, 5 carryover max',
@@ -229,6 +234,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     "max_carriedover_duration": 5,
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.accrual_plan_monthly_start_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'name': '1 day per month start - carryover 1st of Mai',
@@ -245,6 +251,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     "action_with_unused_accruals": "lost",
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type_hour_day.id,
         })
         first_accrual_plan_level = Command.create({
             'milestone_date': 'creation',
@@ -270,6 +277,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [first_accrual_plan_level],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_monthly_end_carryover_year_start = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -277,6 +285,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [first_accrual_plan_level],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
 
         cls.accrual_plan_monthly_end_carryover_year_start_2_lvls = _create_accrual_plan(accrual_plan_by_signature, {
@@ -286,6 +295,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'carryover_date': 'year_start',
             'transition_mode': 'immediately',
             'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
 
         cls.accrual_plan_monthly_start_carryover_year_start_2_lvls = _create_accrual_plan(accrual_plan_by_signature, {
@@ -295,6 +305,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'carryover_date': 'year_start',
             'transition_mode': 'immediately',
             'level_ids': [first_accrual_plan_level, second_accrual_plan_level],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
 
         cls.accrual_plan_monthly_start_carryover_lost_hour = _create_accrual_plan(accrual_plan_by_signature, {
@@ -312,6 +323,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     "action_with_unused_accruals": "lost",
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type_day_hour.id,
         })
 
         cls.based_on_work_time_accrual_plan_daily = _create_accrual_plan(accrual_plan_by_signature, {
@@ -323,6 +335,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'added_value_type': 'day',
                 'frequency': 'daily',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
 
         cls.accrual_plan_daily_end_max_1_leave = _create_accrual_plan(accrual_plan_by_signature, {
@@ -338,6 +351,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 1,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
 
         cls.accrual_plan_daily_1_hour_4_max_leave = _create_accrual_plan(accrual_plan_by_signature, {
@@ -353,6 +367,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 4,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
 
         cls.weekly_accrual_plan = _create_accrual_plan(accrual_plan_by_signature, {
@@ -366,6 +381,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
 
         cls.accrual_plan_monthly_end_carry_over_lost_year_start = _create_accrual_plan(accrual_plan_by_signature, {
@@ -381,6 +397,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
 
         cls.work_entry_type_no_negative = cls.env['hr.work.entry.type'].create({
@@ -407,7 +424,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'unit_of_measure': 'day',
         })
 
-        cls.accrual_plan_period_end_montlhy_max_carryover_year_start = _create_accrual_plan(accrual_plan_by_signature, {
+        cls.accrual_plan_period_end_monthly_max_carryover_year_start_no_negative = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
@@ -421,9 +438,28 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 5,
             })],
+            'work_entry_type_id': cls.work_entry_type_no_negative.id,
+        })
+        # skipping the signature check for this as the test is batch creating allocations with diff work entry type.
+        cls.accrual_plan_period_end_monthly_max_carryover_year_start_negative = cls.env['hr.leave.accrual.plan'].create({
+            'can_be_carryover': True,
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value_type': 'day',
+                'milestone_date': 'creation',
+                'added_value': 1,
+                'frequency': 'monthly',
+                'first_day': '31',
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
+                'max_carriedover_duration': 5,
+            })],
+            'work_entry_type_id': cls.work_entry_type_negative.id,
         })
         cls.dummy_accrual_plan = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_hourly_based_on_work = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': True,
@@ -437,6 +473,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'hourly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_daily_end = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -450,6 +487,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'cap_accrued_time': False,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_daily_end_after_1d = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -464,6 +502,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'cap_accrued_time': False,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_weekly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -476,6 +515,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'weekly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_bimonthly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -490,6 +530,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'second_day': 15,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_monthly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -502,6 +543,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_biyearly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -514,6 +556,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'biyearly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_yearly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -526,6 +569,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'yearly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_hourly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -540,6 +584,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': True,
                 'maximum_leave': 10000,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_based_on_worked_time = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': True,
@@ -553,6 +598,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'weekly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_monthly_31th_max_carryover_duration = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -568,6 +614,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 4,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_2_lvls_weekly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -590,6 +637,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 1,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_daily_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -604,6 +652,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 20,
                 'action_with_unused_accruals': 'lost',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_yearly_carryover_limited_10 = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -616,6 +665,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 10,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_daily_max_leave_carryover_limited = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -633,6 +683,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 15,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_biyearly_2_levels = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -651,6 +702,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'biyearly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_3_levels_monthly_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -685,6 +737,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'first_day': 31,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_yearly_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -698,6 +751,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'lost',
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_weekly_5_max_leave = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -711,6 +765,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_weekly_hour_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -724,6 +779,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type_hour.id,
         })
         cls.accrual_plan_daily_5_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -736,6 +792,16 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 5,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
+        })
+        cls.work_entry_type_absence_hour_hour = _create_work_entry_type(work_entry_type_by_signature, {
+            'name': 'Test Leave Type 2',
+            'code': 'Test Leave Type 2',
+            'count_as': 'absence',
+            'requires_allocation': True,
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'hour',
+            'unit_of_measure': 'hour',
         })
         cls.accrual_plan_hourly_max_leaves_capped_yearly = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -750,6 +816,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave_yearly': 16,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type_absence_hour_hour.id,
         })
         cls.accrual_plan_monthly_start_15_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -764,6 +831,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 4,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
 
         cls.accrual_plan_2_lvls_start_weekly_max_leaves = _create_accrual_plan(accrual_plan_by_signature, {
@@ -790,6 +858,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 5,
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.work_entry_type_absence_half_day_day = _create_work_entry_type(work_entry_type_by_signature, {
             'name': 'Paid Time Off 2',
@@ -841,6 +910,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 69,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_3_lvls_monthly_biyearly_yearly_carryover_policy_change = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'end',
@@ -892,6 +962,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'lost',
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_weekly_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -904,16 +975,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'cap_accrued_time': False,
                 'action_with_unused_accruals': 'lost',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
-        cls.work_entry_type_absence_hour_hour = _create_work_entry_type(work_entry_type_by_signature, {
-            'name': 'Test Leave Type 2',
-            'code': 'Test Leave Type 2',
-            'count_as': 'absence',
-            'requires_allocation': True,
-            'allocation_validation_type': 'no_validation',
-            'request_unit': 'hour',
-            'unit_of_measure': 'hour',
-        })
+
         cls.accrual_plan_monthly_hour = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
             'can_be_carryover': True,
@@ -927,6 +991,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'monthly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type_absence_hour_hour.id,
         })
         cls.accrual_plan_monthly_start_carryover_allocation_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -940,6 +1005,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'first_day': 27,
                 'action_with_unused_accruals': 'lost',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_monthly_carryover_all = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': False,
@@ -957,6 +1023,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 100,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_daily_start_max_leaves_carryover_year_start = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -973,6 +1040,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'maximum_leave': 10,
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.accrual_plan_daily_carryover_year_start_all_work_time = _create_accrual_plan(accrual_plan_by_signature, {
             'is_based_on_worked_time': True,
@@ -990,6 +1058,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'action_with_unused_accruals': 'all',
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_2_lvls_yearly_carryover_lost = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1012,6 +1081,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'start_type': 'month',
                 'action_with_unused_accruals': 'lost',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_2_lvls_monthly_carryover_lost_limited = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -1037,6 +1107,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'max_carriedover_duration': 5,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_2_lvls_start_yearly_carryover_lost_all = _create_accrual_plan(accrual_plan_by_signature, {
             'accrued_gain_time': 'start',
@@ -1060,6 +1131,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'start_type': 'month',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_2_lvls_biyearly_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1088,6 +1160,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 2,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_2_lvls_yearly_monthly_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1116,6 +1189,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 3,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_monthly_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1134,6 +1208,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 2,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_yearly_start_max_carriedover_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1153,6 +1228,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 4,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_2_levels_biyearly_start_limited_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1183,6 +1259,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'max_carriedover_duration': 10,
                 },
             )],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_yearly_carryover_limited_expiring = _create_accrual_plan(accrual_plan_by_signature, {
             'can_be_carryover': True,
@@ -1201,6 +1278,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 5,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_yearly_start_max_leave_carryover_limited = _create_accrual_plan(accrual_plan_by_signature, {
             'transition_mode': 'immediately',
@@ -1217,12 +1295,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 "carryover_options": "limited",
                 "max_carriedover_duration": 7,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_no_level_start_carryover_year_start = _create_accrual_plan(accrual_plan_by_signature, {
             'transition_mode': 'immediately',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.employee_without_calendar = cls.env['hr.employee'].create({
             'name': 'employee without calendar',
@@ -1240,6 +1320,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'frequency': 'hourly',
                 'action_with_unused_accruals': 'all',
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.accrual_plan_daily_hour = _create_accrual_plan(accrual_plan_by_signature, {
             'name': 'Accrual Plan For Test',
@@ -1251,6 +1332,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'added_value': 1,
                 'frequency': 'daily',
             })],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.work_entry_type_absence_requires_alloc_half_day_day = _create_work_entry_type(work_entry_type_by_signature, {
             'name': 'Test Leave Type 2',
@@ -1302,6 +1384,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'maximum_leave': 28,
                 }),
             ],
+            'work_entry_type_id': cls.work_entry_type_day.id,
         })
         cls.accrual_plan_monthly_start = _create_accrual_plan(accrual_plan_by_signature, {
             'name': '2 Days Every 1st of Month',
@@ -1314,6 +1397,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'action_with_unused_accruals': 'all',
                 'milestone_date': 'creation',
             })],
+            'work_entry_type_id': cls.work_entry_type_hour_day.id,
         })
         cls.calendar_8h_per_day = cls.env['resource.calendar'].create({
             'name': 'Standard 40h Test Calendar',
@@ -1338,6 +1422,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'accrual_validity_type': 'month',
                 'accrual_validity_count': 1,
             })],
+            'work_entry_type_id': cls.work_entry_type.id,
         })
         cls.work_entry_type_absence_requires_alloc_negativ = _create_work_entry_type(work_entry_type_by_signature, {
             'name': 'Test Accrual',
@@ -1356,6 +1441,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         }])
         cls.accrual_plan_daily_hour_work_time = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Daily Worked Time Accrual',
+            'work_entry_type_id': cls.work_entry_type_hour.id,
             'is_based_on_worked_time': True,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -2607,6 +2693,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with Form(allocation, 'hr_holidays.hr_leave_allocation_view_form_manager') as form:
             form.accrual_plan_id = self.accrual_plan_weekly_hour_max_leaves
+            form.work_entry_type_id = self.work_entry_type_hour
             self.assertEqual(form.type_request_unit, 'hour')
             form.date_from = '2023-11-01'
             # Max amount of allocated duration is reached (10h)
@@ -2693,16 +2780,15 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """ Assert `hr.leave._cancel_invalid_leaves` changes the `state` of a leave that is not affordable
             by an accrual plan, taking the `work.entry.type` `allows_negative` parameter into account
         """
-        accrual_plan = self.accrual_plan_period_end_montlhy_max_carryover_year_start
         self.env['hr.leave.allocation'].create([{
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type_no_negative.id,
-                'accrual_plan_id': accrual_plan.id,
+                'accrual_plan_id': self.accrual_plan_period_end_monthly_max_carryover_year_start_no_negative.id,
                 'number_of_days': 1,
             }, {
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': self.work_entry_type_negative.id,
-                'accrual_plan_id': accrual_plan.id,
+                'accrual_plan_id': self.accrual_plan_period_end_monthly_max_carryover_year_start_negative.id,
                 'number_of_days': 1,
             },
         ])
@@ -3326,6 +3412,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with self.assertRaisesRegex(ValidationError, 'The first day must be lower than the second day.'):
             self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan with no carryover',
+                'work_entry_type_id': self.work_entry_type.id,
                 'accrued_gain_time': 'start',
                 'carryover_date': 'year_start',
                 'level_ids': [Command.create({
@@ -3375,7 +3462,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.accrual_plan_daily_hour
         work_entry_type_day = self.work_entry_type_absence_requires_alloc_half_day_day
-
+        accrual_plan.update({'work_entry_type_id': work_entry_type_day.id})
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
             'employee_id': self.employee_emp.id,
@@ -3890,6 +3977,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         work_entry_type = self.work_entry_type_absence_requires_alloc_negativ
         accrual_plan = self.dummy_accrual_plan
+        accrual_plan.update({'work_entry_type_id': work_entry_type.id})
         allocation = self.env['hr.leave.allocation'].create({
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': work_entry_type.id,
@@ -3954,6 +4042,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             sets the number_of_days of the generated accrual allocation, and that it is not recomputed if
             the cron is run on the same day
         """
+        self.accrual_plan_monthly_end.update({'work_entry_type_id': self.work_entry_type.id})
         wizard = self.env['hr.leave.allocation.generate.multi.wizard'].create({
             'name': 'Keep Manual Setting',
             'employee_ids': [(4, self.employee_emp.id)],
@@ -3981,6 +4070,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         with freeze_time('2025-12-01'):
             accrual_plan = self.accrual_plan_monthly_start_carryover_year_start
+            accrual_plan.update({'work_entry_type_id': self.work_entry_type_day.id})
             allocation = self._create_form_test_accrual_allocation(self.work_entry_type_day, '2025-12-01', self.employee_emp, accrual_plan)
             allocation.action_approve()
 
