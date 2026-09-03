@@ -34,7 +34,7 @@ class ResConfigSettings(models.TransientModel):
 
     def _peppol_allows_document_reception(self):
         self.ensure_one()
-        return True
+        return self.company_id._peppol_allows_document_reception()
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
