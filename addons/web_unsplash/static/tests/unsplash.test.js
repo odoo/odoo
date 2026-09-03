@@ -3,7 +3,8 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, waitFor } from "@odoo/hoot-dom";
-import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, makeMockEnv, onRpc, mountWithCleanup, defineModels, models } from "@web/../tests/web_test_helpers";
+import { CustomMediaDialog } from "@html_editor/fields/x2many_field/custom_media_dialog";
 
 test("Unsplash is inserted in the Media Dialog", async () => {
     const imageRecord = {
@@ -61,6 +62,59 @@ test("Unsplash is inserted in the Media Dialog", async () => {
     await click(".o_button_area[aria-label='Username']");
     await waitFor(".o-wysiwyg img[alt='unsplash_image']");
     expect(".o-wysiwyg img[alt='unsplash_image']").toHaveCount(1);
+});
+
+test("Unsplash images are processed correctly in CustomMediaDialog", async () => {
+    class IrAttachment extends models.Model {
+        _name = "ir.attachment";
+    }
+    defineModels([IrAttachment]);
+
+    const fetchDef = Promise.withResolvers();
+    onRpc("/web_unsplash/fetch_images", () => {
+        fetchDef.resolve();
+        return {
+            total: 1,
+            total_pages: 1,
+            results: [{
+                id: "unsplash123",
+                urls: { regular: "/web/static/img/logo2.png" },
+                user: { name: "Logo", links: { html: "" } },
+                links: { download_location: "" },
+            }],
+        }
+    });
+    onRpc("/html_editor/media_library_search", () => {
+        return { media: [], results: null };
+    });
+    onRpc("/web_unsplash/attachment/add", async (request) => {
+        const { params } = await request.json();
+        expect(params.res_model).toBe("product.product");
+        return [{ id: 99, mimetype: "image/png", image_src: "/web/static/img/logo2.png" }];
+    });
+    onRpc("ir.attachment", "search_read", () => []);
+    onRpc("ir.attachment", "generate_access_token", () => ["12345"]);
+
+    let savePayload;
+    const env = await makeMockEnv();
+    env.dialogData = { close: () => {}, isActive: true, scrollToOrigin: () => {} },
+    await mountWithCleanup(CustomMediaDialog, {
+        env,
+        props: {
+            resModel: "product.product",
+            resId: 1,
+            close: () => {},
+            save: () => {},
+            imageSave: (attachments) => { savePayload = attachments; },
+            document: document,
+        },
+    });
+    contains("input.o_we_search").edit("Logo");
+    await fetchDef.promise;
+    await waitFor("img[title='Logo']");
+    await click(".o_button_area[aria-label='Logo']");
+    await click(".o_select_media_dialog .btn-primary");
+    expect(savePayload).toEqual([{ id: 99 }]);
 });
 
 test("Unsplash error is displayed when there is no key", async () => {
