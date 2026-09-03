@@ -11,7 +11,7 @@ import { Record } from "./record";
 import { StoreInternal } from "./store_internal";
 import { ModelInternal } from "./model_internal";
 
-import { signal, useApp } from "@odoo/owl";
+import { onWillDestroy, signal, useApp } from "@odoo/owl";
 
 /** @returns {import("models").Store} */
 export function makeStore(env, { localRegistry } = {}) {
@@ -174,5 +174,6 @@ export function makeStore(env, { localRegistry } = {}) {
         store[Model.getName()] = Model;
     }
     Object.assign(store, { Models, storeReady: true });
+    onWillDestroy(() => store._runDisposeFns());
     return store._proxy;
 }
