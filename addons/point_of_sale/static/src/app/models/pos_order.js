@@ -70,6 +70,10 @@ export class PosOrder extends PosOrderAccounting {
         };
     }
 
+    setOrderUiState(updates = {}) {
+        this.uiState = { ...this.uiState, ...updates };
+    }
+
     get user() {
         return this.models["res.users"].getFirst();
     }

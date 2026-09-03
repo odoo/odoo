@@ -46,7 +46,7 @@ patch(PosStore.prototype, {
             this.hasLoggedIn = saved_cashier ? true : false;
         }
     },
-    createNewOrder() {
+    createNewOrder(data = {}, opt = {}) {
         const order = super.createNewOrder(...arguments);
 
         if (this.config.module_pos_hr) {

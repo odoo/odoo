@@ -101,12 +101,12 @@ patch(PosStore.prototype, {
         return pack_lot_ids;
     },
 
-    createNewOrder(data = {}) {
+    createNewOrder(data = {}, opt = {}) {
         data = {
             ...data,
             picking_type_id: this.pickingType,
         };
-        return super.createNewOrder(data);
+        return super.createNewOrder(data, opt);
     },
 
     async pay() {
