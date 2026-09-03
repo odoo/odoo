@@ -439,12 +439,8 @@ export async function start(options) {
     // Note that loading the emojis cannot be called before setting up the env because
     // it depends on translations being loaded.
     await emojiLoader.load();
-    const storeService = getService("mail.store");
     const popoutService = getService("mail.popout");
-    after(() => {
-        storeService._runDisposeFns();
-        popoutService.resetAll();
-    });
+    after(() => popoutService.resetAll());
     return Object.assign(Object.create(getMockEnv()), { target });
 }
 

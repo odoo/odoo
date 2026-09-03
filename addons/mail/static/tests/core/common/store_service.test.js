@@ -4,9 +4,21 @@ import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
 
 import { expect, test } from "@odoo/hoot";
 
-import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { destroyApp, getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
+
+test("destroying the app disposes the store", async () => {
+    await start();
+    const store = getService("mail.store");
+    store.onChange(
+        () => [],
+        () => () => expect.step("store disposed")
+    );
+    await expect.waitForSteps([]);
+    destroyApp();
+    await expect.waitForSteps(["store disposed"]);
+});
 
 test("store.insert can delete record", async () => {
     await start();
