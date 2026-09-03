@@ -667,9 +667,12 @@ class ProductProduct(models.Model):
                     allowed_company_ids=self.env.company.ids
                 )._with_valuation_context()
                 products_with_incremental_recompute.fetch(['qty_available'])
+                incrementally_recomputed = self.env['product.product']
                 for product in products_with_incremental_recompute:
-                    added_value = extra_value.get(product)
-                    added_qty = extra_quantity.get(product)
+                    added_value = extra_value.get(product, 0)
+                    added_qty = extra_quantity.get(product, 0)
+                    if cost_method == 'fifo' and product.uom_id.is_zero(added_qty):
+                        continue
                     previous_qty = product.qty_available - added_qty
                     if (
                             product.uom_id.compare(previous_qty, 0) > 0
@@ -681,7 +684,8 @@ class ProductProduct(models.Model):
                     else:
                         continue
                     product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_avg_cost
-                products = products - products_with_incremental_recompute
+                    incrementally_recomputed |= product
+                products = products - incrementally_recomputed
 
             if cost_method == 'fifo':
                 for product in products:
@@ -693,7 +697,7 @@ class ProductProduct(models.Model):
                             product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
 
             elif cost_method == 'average':
-                new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
+                new_standard_price_by_product = products._run_average_batch(force_recompute=True)[0]
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]
