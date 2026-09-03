@@ -250,7 +250,9 @@
                                 mode="list,kanban"
                                 aggregated_fields="price_subtotal"
                                 context="{'default_state': 'draft'}"
-                                readonly="state == 'cancel' or locked"
+                                create="not locked"
+                                delete="not locked"
+                                readonly="state == 'cancel'"
                                 options="{ 'subsections': True }">
                                 <list string="Purchase Order Lines" editable="bottom" limit="200"
                                       decoration-warning="purchase_line_warn_msg">
@@ -268,7 +270,7 @@
                                     <field name="product_type" column_invisible="True"/>
                                     <field name="invoice_lines" column_invisible="True"/>
                                     <field name="technical_price_unit" column_invisible="True"/>
-                                    <field name="sequence" widget="handle"/>
+                                    <field name="sequence" widget="handle" column_invisible="parent.locked"/>
                                     <!-- optional="show" allows name (description) to be editable -->
                                     <field
                                         name="product_id"
@@ -280,11 +282,12 @@
                                         options="{'show_label_warning': True}"
                                         force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
                                     <field name="name" optional="show"/>
-                                    <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment"/>
+                                    <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="parent.locked or is_downpayment"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
-                                           options="{'product_field': 'product_id', 'business_domain': 'purchase_order', 'amount_field': 'price_subtotal'}"/>
-                                    <field name="product_qty" readonly="is_downpayment"/>
+                                           options="{'product_field': 'product_id', 'business_domain': 'purchase_order', 'amount_field': 'price_subtotal'}"
+                                           readonly="parent.locked"/>
+                                    <field name="product_qty" readonly="parent.locked or is_downpayment"/>
                                     <field name="qty_received_manual" column_invisible="True"/>
                                     <field name="qty_received_method" column_invisible="True"/>
                                     <field name="qty_received" string="Received" column_invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual' or is_downpayment" optional="show"/>
@@ -295,9 +298,9 @@
                                         options="{'no_create': True, 'no_open': True, 'quantity_field': 'product_qty'}"
                                         widget="many2one_uom"
                                         force_save="1" optional="show"/>
-                                    <field name="price_unit" readonly="qty_invoiced != 0"/>
-                                    <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="is_downpayment"/>
-                                    <field name="discount" string="Disc.%" width="50px" readonly="qty_invoiced != 0" optional="hide"/>
+                                    <field name="price_unit" readonly="parent.locked or qty_invoiced != 0"/>
+                                    <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id), ('active', '=', True)]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}" optional="show" readonly="parent.locked or is_downpayment"/>
+                                    <field name="discount" string="Disc.%" width="50px" readonly="parent.locked or qty_invoiced != 0" optional="hide"/>
                                     <field name="price_subtotal" string="Amount" column_invisible="parent.document_tax_mode == 'tax_included'"/>
                                     <field name="price_total" string="Amount" column_invisible="parent.document_tax_mode == 'tax_excluded'"/>
                                 </list>
@@ -316,7 +319,7 @@
                                                 />
                                                 <label for="product_qty"/>
                                                 <div class="o_row">
-                                                    <field name="product_qty"/>
+                                                    <field name="product_qty" readonly="parent.locked"/>
                                                     <field name="uom_id" groups="uom.group_uom"
                                                         readonly="state in ('purchase', 'cancel') or is_downpayment"
                                                         required="not display_type and not is_downpayment"
@@ -325,20 +328,21 @@
                                                 <field name="qty_received_method" invisible="1"/>
                                                 <field name="qty_received" string="Received Quantity" invisible="parent.state != 'purchase'" readonly="qty_received_method != 'manual'"/>
                                                 <field name="qty_invoiced" string="Billed Quantity" invisible="parent.state != 'purchase'"/>
-                                                <field name="price_unit"/>
-                                                <field name="discount"/>
-                                                <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}"/>
+                                                <field name="price_unit" readonly="parent.locked"/>
+                                                <field name="discount" readonly="parent.locked"/>
+                                                <field name="tax_ids" widget="many2many_tax_tags" domain="[('type_tax_use', '=', 'purchase'), ('company_id', 'parent_of', parent.company_id), ('country_id', '=', parent.tax_country_id)]" options="{'no_create': True}" readonly="parent.locked"/>
                                             </group>
                                             <group>
-                                                <field name="date_planned" required="not display_type and not is_downpayment"/>
+                                                <field name="date_planned" required="not display_type and not is_downpayment" readonly="parent.locked"/>
                                                 <field name="analytic_distribution" widget="analytic_distribution"
                                                        groups="analytic.group_analytic_accounting"
-                                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
+                                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"
+                                                       readonly="parent.locked"/>
                                             </group>
                                             <group>
                                             <notebook colspan="4">
                                                 <page string="Notes" name="notes">
-                                                    <field name="name"/>
+                                                    <field name="name" readonly="parent.locked"/>
                                                 </page>
                                                 <page string="Invoices and Incoming Shipments" name="invoices_incoming_shiptments">
                                                     <field name="invoice_lines"/>
@@ -349,7 +353,7 @@
                                         <label for="name" string="Section Name (eg. Products, Services)" invisible="display_type != 'line_section'"/>
                                         <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                         <label for="name" string="Note" invisible="display_type != 'line_note'"/>
-                                        <field name="name" nolabel="1"  invisible="not display_type"/>
+                                        <field name="name" nolabel="1"  invisible="not display_type" readonly="parent.locked"/>
                                 </form>
                                 <kanban class="o_kanban_mobile">
                                      <field name="display_type"/>
