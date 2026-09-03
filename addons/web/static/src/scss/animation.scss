@@ -45,12 +45,11 @@
 }
 
 // ------------------------------------------------------------------
-// Star animation
+// Acknowledgement animations
 // ------------------------------------------------------------------
 
 // Shared by the favourite and the priority fields: both fill the same star and
 // should acknowledge it the same way.
-
 @keyframes o-star-pop {
     0% { transform: scale(1); }
     11% { transform: scale(.8); }
@@ -59,19 +58,24 @@
     100% { transform: scale(1); }
 }
 
-@keyframes o-star-ringBurst {
-    0%, 12.5% { opacity: 0; transform: scale(.3); }
+// The ring every mark sends off as it is set — a filled star, a ticked
+// checkmark. Sized in `em`, so it follows the glyph it belongs to, and the only
+// tuning left to the caller is where it starts: out of the middle of the mark,
+// or off its edge.
+@keyframes o-ringBurst {
+    0%, 12.5% { opacity: 0; transform: scale(var(--ringBurst-scaleFrom, .3)); }
     20% { opacity: 1; }
     37.5% { opacity: .4; }
     75% { opacity: .1; }
     100% { opacity: 0; transform: scale(1.3); }
 }
 
-// The burst rides a pseudo-element: `.oi` already spends its `::before` on the
-// glyph itself.
-@mixin o-star-fillAnimation($-color) {
+// The ring rides `::after`: `.oi` already spends its `::before` on the glyph
+// itself.
+@mixin o-ringBurst($-color: currentColor, $-duration: .4s, $-delay: 0s, $-scaleFrom: .3) {
     position: relative;
-    animation: o-star-pop .45s ease-out;
+
+    --ringBurst-scaleFrom: #{$-scaleFrom};
 
     &::after {
         content: "";
@@ -85,6 +89,91 @@
         border-radius: 50%;
         opacity: 0;
         pointer-events: none;
-        animation: o-star-ringBurst .4s ease-out;
+        animation: o-ringBurst $-duration ease-out $-delay both;
+    }
+}
+
+@mixin o-star-fillAnimation($-color) {
+    animation: o-star-pop .45s ease-out;
+
+    @include o-ringBurst($-color);
+}
+
+// ------------------------------------------------------------------
+// Active highlight
+// ------------------------------------------------------------------
+
+// What marks the picked row of a list rides a `::before` layer rather than the
+// row's own background: a background cannot be moved, a layer can. The layer is
+// always there, narrowed and transparent, and picking the row only fades it in
+// to full width — so the mark grows into place instead of blinking on.
+//
+// The layer takes the radius of the row it covers, so a row rounds its corners
+// as it always did and the layer follows.
+$o-activeHighlight-duration: .2s;
+
+@mixin o-activeHighlight($-background) {
+    position: relative;
+    // A layer sent behind the content would otherwise be sent behind the
+    // backgrounds of everything the row sits in, and disappear under them: this
+    // keeps the whole stack inside the row.
+    isolation: isolate;
+
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        background: $-background;
+        opacity: 0;
+        transform: scaleX(.32);
+        transition:
+            opacity $o-activeHighlight-duration linear,
+            transform $o-activeHighlight-duration linear;
+    }
+}
+
+// Hung on whatever class marks the row as picked. @see o-activeHighlight
+@mixin o-activeHighlight-shown {
+    // The row hands its own background over to the layer.
+    background-color: transparent;
+
+    &::before {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+// ------------------------------------------------------------------
+// Animations played on mount
+// ------------------------------------------------------------------
+
+// A CSS animation runs whenever its element is mounted, and a panel is mounted
+// on page load and on every view change too. So the animations below are hung on
+// a class that the interaction itself sets — never on the element, never on a
+// lasting state — and every one of them goes through this mixin, so that the
+// timing and the reduced-motion opt-out are not left to each call site.
+$o-mountAnimation-duration: .2s;
+
+@mixin o-mountAnimation($-name, $-duration: $o-mountAnimation-duration) {
+    animation: $-name $-duration ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+// Shared by every togglable side panel: they all grow from nothing at the same
+// pace. `min-width` comes down with the width because a panel is either a flex
+// item, floored at its min-content width, or carries the size of a past resize
+// as an inline `min-width` — either would keep the growth from moving at all,
+// and a keyframe outranks both. A panel that grows from something rather than
+// from nothing — one taking the place of a collapsed strip — says so with
+// `--sidePanel-expand-minWidth`.
+@keyframes o-sidePanel-expand {
+    from {
+        width: 0;
+        min-width: var(--sidePanel-expand-minWidth, 0);
     }
 }
