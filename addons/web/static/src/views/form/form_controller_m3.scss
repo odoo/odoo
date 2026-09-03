@@ -13,11 +13,8 @@
             padding: var(--field-spacing-unit) calc(1.5 * var(--field-spacing-unit));
             background-color: #{$o-view-background-color};
 
-            &:has(.o_required_modifier):not(:has(.o_readonly_modifier, .o_field_invalid, :focus-within)) {
-                --o-field-box-border-color: var(--gray-600);
-            }
             &:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
-                background-color: rgba($body-color, .04);
+                background-color: var(--body-bg);
             }
             &:has(.o_field_invalid):not(:has(:focus-within)) {
                 --o-field-box-border-color: #{o-text-color('danger')};
@@ -49,7 +46,7 @@
             background: linear-gradient(0deg, transparent 0%, $o-view-background-color 45%, $o-view-background-color 55%, transparent 100%);
 
             font-size: $font-size-sm !important;
-            font-weight: $font-weight-bold !important;
+            font-weight: $font-weight-normal;
 
             // Avoid overflowing outside the viewport
             max-width: calc(100% - 5%);
@@ -92,6 +89,10 @@
                     @extend %-o-field-label;
                 }
 
+                &:has(+ .o_cell .o_required_modifier:not(.o_readonly_modifier)) .o_form_label {
+                    font-weight: $font-weight-semibold;
+                }
+
                 &:has(+ * .o_field_invalid) .o_form_label {
                     color: o-text-color('danger');
                 }
@@ -121,6 +122,10 @@
                 label {
                     @extend %-o-field-label;
 
+                    &:has(+ .o_property_field_value .o_required_modifier:not(.o_readonly_modifier)) {
+                        font-weight: $font-weight-semibold;
+                    }
+
                     &:has(+ *:focus-within) {
                         color: $o-action;
                     }
@@ -142,6 +147,10 @@
 
         .o_form_label:has(+ .o_outlined) {
             @extend %-o-field-label;
+
+            &:has(+ .o_outlined .o_required_modifier:not(.o_readonly_modifier)) {
+                font-weight: $font-weight-semibold;
+            }
         }
 
         button.fa.o_priority_star {
