@@ -1,8 +1,14 @@
-/** @odoo-module **/
-
-import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, queryFirst, waitUntil } from "@odoo/hoot-dom";
-import { Component, useProps, xml } from "@odoo/owl";
+import {
+    afterEach,
+    animationFrame,
+    beforeEach,
+    describe,
+    expect,
+    queryFirst,
+    test,
+    waitUntil,
+} from "@odoo/hoot";
+import { Component, xml } from "@odoo/owl";
 import {
     getService,
     makeTestApp,
@@ -185,7 +191,6 @@ test("a failing tour logs the step that failed in run", async () => {
                 <button class="button2">Button 2</button>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -260,7 +265,6 @@ test("a failing tour with disabled element", async () => {
                 <button class="button2">Button 2</button>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -315,7 +319,6 @@ test("a failing tour logs the step that failed", async () => {
                 <button class="button7">Button 7</button>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -396,7 +399,6 @@ test("check tour with inactive steps", async () => {
                 </div>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -450,7 +452,6 @@ test("automatic tour with invisible element", async () => {
                 </div>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -501,7 +502,6 @@ test("automatic tour with invisible element but use :not(:visible))", async () =
                 </div>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -577,7 +577,6 @@ test("automatic tour with alternative trigger", async () => {
                 </div>
             </t>
         `;
-        props = useProps();
     }
     await mountWithCleanup(Root);
     await odoo.startTour("tour_des_flandres", { mode: "auto" });
@@ -593,7 +592,6 @@ test("check not possible to click below modal", async () => {
         dir: () => {},
     });
     class DummyDialog extends Component {
-        props = useProps();
         static components = { Dialog };
         static template = xml`
             <Dialog>
@@ -614,7 +612,6 @@ test("check not possible to click below modal", async () => {
                 </div>
             </t>
         `;
-        props = useProps();
         setup() {
             this.dialogService = useService("dialog");
         }
@@ -667,7 +664,6 @@ test("a tour where hoot trigger failed", async () => {
                 <button class="button2">Button 2</button>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -704,7 +700,6 @@ test("Tour redirect to given url", async () => {
                 <button class="button2">Button 2</button>
             </t>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);

@@ -30,7 +30,6 @@ test("simple case", async () => {
         static template = xml`
             <div class="overlayed"></div>
         `;
-        props = useProps();
     }
 
     const remove = getService(OverlayPlugin).add(MyComp, {});
@@ -47,7 +46,6 @@ test("shadow DOM overlays are visible when registered before main component is m
         static template = xml`
             <div class="overlayed"></div>
         `;
-        props = useProps();
     }
 
     const root = document.createElement("div");
@@ -70,7 +68,6 @@ test("onRemove callback", async () => {
     await mountWithCleanup(MainComponentsContainer);
     class MyComp extends Component {
         static template = xml``;
-        props = useProps();
     }
 
     const onRemove = () => expect.step("onRemove");
@@ -156,7 +153,6 @@ test("allow scope as option", async () => {
     }
 
     class Overlay extends Component {
-        props = useProps();
         static template = xml`
             <ul class="outer">
                 <li>A=<t t-out="this.p.A"/></li>
@@ -186,11 +182,9 @@ test("add() does not leak as a reactive dependency into an unrelated caller's ef
         static template = xml`
             <div class="overlayed"></div>
         `;
-        props = useProps();
     }
     class OtherComp extends Component {
         static template = xml``;
-        props = useProps();
     }
 
     const plugin = getService(OverlayPlugin);

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     Country,
     Partner,
@@ -28,7 +28,6 @@ async function makeDomainSelectorDialog(params = {}) {
     class Parent extends Component {
         static components = { DomainSelectorDialog };
         static template = xml`<DomainSelectorDialog t-props="this.domainSelectorProps"/>`;
-        props = useProps();
         setup() {
             this.domainSelectorProps = {
                 readonly: false,

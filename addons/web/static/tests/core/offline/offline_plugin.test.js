@@ -1,4 +1,4 @@
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
 
@@ -111,7 +111,6 @@ test("offlineUI: disable interactive elements except [data-available-offline]", 
                 <button type="button" class="button_available_offline" data-available-offline=""> Don't disable this button </button>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -137,7 +136,6 @@ test("offlineUI: don't disable already disabled elements", async () => {
                 <input type="checkbox" class="checkbox" disabled="disabled"/>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -168,7 +166,6 @@ test("offlineUI: react to [data-available-offline] attribute changes", async () 
                 </button>
             </div>
         `;
-        props = useProps();
 
         setup() {
             this.state = proxy({

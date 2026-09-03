@@ -19,7 +19,6 @@ import { useActiveElement } from "@web/core/ui/ui_plugin";
 
 class TestComponent extends Component {
     static template = xml`<div />`;
-    props = useProps();
 }
 
 class Parent extends Component {
@@ -107,7 +106,6 @@ test("useCommand hook when the activeElement change", async () => {
 
     class OtherComponent extends Component {
         static template = xml`<div t-ref="this.activeRef"><div tabindex="1">visible</div></div>`;
-        props = useProps();
         activeRef = signal.ref();
         setup() {
             useActiveElement(this.activeRef);
@@ -185,7 +183,6 @@ test("global command with hotkey", async () => {
 
     class MyComponent extends Component {
         static template = xml`<div t-ref="this.activeRef"><button>visible</button></div>`;
-        props = useProps();
         activeRef = signal.ref();
         setup() {
             useActiveElement(this.activeRef);
@@ -358,7 +355,6 @@ test("data-hotkey added to command palette", async () => {
                 <TestComponent />
             </div>
         `;
-        props = useProps();
         onClick() {
             expect.step("Hodor");
         }
@@ -405,7 +401,6 @@ test("access to hotkeys from the command palette", async () => {
                 <TestComponent />
             </div>
         `;
-        props = useProps();
         onClickB() {
             expect.step("B");
         }
@@ -862,7 +857,6 @@ test("data-command-category", async () => {
             <TestComponent />
             </div>
         `;
-        props = useProps();
     }
     await mountWithCleanup(MyComponent);
 
@@ -888,7 +882,6 @@ test("display shortcuts correctly for non-MacOS ", async () => {
                 <TestComponent />
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -931,7 +924,6 @@ test("display shortcuts correctly for MacOS ", async () => {
             <TestComponent />
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -972,7 +964,6 @@ test("display shortcuts correctly for non-MacOS with a new overlayModifier", asy
                 <TestComponent />
                 </div>
             `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -997,7 +988,6 @@ test("display shortcuts correctly for MacOS with a new overlayModifier", async (
             <TestComponent />
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);

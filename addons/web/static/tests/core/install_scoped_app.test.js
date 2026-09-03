@@ -1,5 +1,5 @@
 import { animationFrame, expect, getFixture, test } from "@odoo/hoot";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { contains, makeTestApp, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -49,7 +49,6 @@ test("Installation page displays the app info correctly", async () => {
     });
 
     class Parent extends Component {
-        props = useProps();
         static components = { InstallScopedApp };
         static template = xml`<InstallScopedApp/>`;
     }
@@ -96,7 +95,6 @@ test("Installation page displays the error message when browser is not supported
     });
 
     class Parent extends Component {
-        props = useProps();
         static components = { InstallScopedApp };
         static template = xml`<InstallScopedApp/>`;
     }

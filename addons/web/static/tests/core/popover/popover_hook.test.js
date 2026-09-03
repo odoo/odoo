@@ -77,7 +77,6 @@ test("popover opened from another", async () => {
                 <button class="pop-open" t-on-click="(ev) => this.popover.open(ev.target, {})">open popover</button>
             </div>
         `;
-        props = useProps();
         setup() {
             this.popover = usePopover(Comp, {
                 popoverClass: `popover-${++Comp.id}`,

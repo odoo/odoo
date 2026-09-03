@@ -1,7 +1,7 @@
 import { render } from "@web/owl2/utils";
 import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -29,7 +29,6 @@ async function makeExpressionEditorDialog(params = {}) {
     class Parent extends Component {
         static components = { ExpressionEditorDialog };
         static template = xml`<ExpressionEditorDialog t-props="this.expressionEditorProps"/>`;
-        props = useProps();
         setup() {
             this.expressionEditorProps = {
                 expression: "1",

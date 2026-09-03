@@ -6,16 +6,15 @@ import {
     unfoldAllOptionsGroups,
 } from "@html_builder/../tests/helpers";
 import { Builder } from "@html_builder/builder";
-import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { useDomState } from "@html_builder/core/utils";
 import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
-import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { Component, onWillStart, xml, useProps } from "@odoo/owl";
+import { animationFrame, describe, expect, queryAllTexts, queryFirst, test } from "@odoo/hoot";
+import { Component, onWillStart, xml } from "@odoo/owl";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -524,7 +523,6 @@ test("stay on the 'Theme' tab if no more option match the selected element", asy
             super.setup();
             this.ThemeTab = class DummyThemeTab extends Component {
                 static template = xml`<div>Dummy Theme Tab</div>`;
-                props = useProps();
             };
         },
     });

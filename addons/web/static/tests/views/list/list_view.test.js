@@ -20972,7 +20972,6 @@ test(`custom button that creates record in list with sample data`, async () => {
 test(`widget visibility with invisible attribute`, async () => {
     class TestWidget extends Component {
         static template = xml`<div class="test_widget">Widget Content</div>`;
-        props = useProps();
     }
     registry.category("view_widgets").add("test_widget", { component: TestWidget });
 
@@ -20994,7 +20993,6 @@ test(`widget visibility with invisible attribute`, async () => {
 test(`widget column visibility with column_invisible attribute`, async () => {
     class TestWidget extends Component {
         static template = xml`<div class="test_widget">Widget Content</div>`;
-        props = useProps();
     }
     registry.category("view_widgets").add("test_widget", { component: TestWidget });
 

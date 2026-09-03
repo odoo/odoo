@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-import { Component, onError, proxy, useProps, xml } from "@odoo/owl";
+import { Component, onError, proxy, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -39,7 +39,6 @@ defineModels([Foo]);
 
 test(`display a simple field`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <div class="root">
@@ -69,7 +68,6 @@ test(`display a simple field`, async () => {
 
 test(`can be updated with different resId`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" resId="this.state.resId" fieldNames="['foo']" t-slot-scope="data">
@@ -100,7 +98,6 @@ test(`can be updated with different resId`, async () => {
 
 test(`can be receive a context as props`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <div class="root">
@@ -127,7 +124,6 @@ test(`can be receive a context as props`, async () => {
 
 test(`predefined fields and values`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
@@ -162,7 +158,6 @@ test(`predefined fields and values`, async () => {
 test(`Record with onRootLoaded props`, async () => {
     let record;
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" t-slot-scope="data" hooks="this.hooks">
@@ -197,7 +192,6 @@ test(`Record with onRootLoaded props`, async () => {
 
 test(`Record with onRecordChanged props`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data" hooks="this.hooks">
@@ -243,7 +237,6 @@ test(`Record with onRecordChanged props`, async () => {
 
 test(`Record with onWillSaveRecord and onRecordSavedProps`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" hooks="this.hooks">
@@ -278,7 +271,6 @@ test(`Record with onWillSaveRecord and onRecordSavedProps`, async () => {
 
 test(`can access record changes`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" t-slot-scope="data">
@@ -317,7 +309,6 @@ test(`handles many2one fields: value is an object`, async () => {
     defineModels([Bar]);
 
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Many2OneField };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data" hooks="this.hooks">
@@ -377,7 +368,6 @@ test(`handles many2one fields: value is a pair id, display_name`, async () => {
     defineModels([Bar]);
 
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Many2OneField };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data" hooks="this.hooks">
@@ -436,7 +426,6 @@ test(`handles many2one fields: value is an id`, async () => {
     defineModels([Bar]);
 
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Many2OneField };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
@@ -476,7 +465,6 @@ test(`handles many2one fields: value is an object with id only`, async () => {
     defineModels([Bar]);
 
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Many2OneField };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="this.values" t-slot-scope="data">
@@ -516,7 +504,6 @@ test(`handles x2many fields`, async () => {
     defineModels([Tag]);
 
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Many2ManyTagsField };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['tags']" activeFields="this.activeFields" fields="this.fields" values="this.values" t-slot-scope="data">
@@ -558,7 +545,6 @@ test(`handles x2many fields`, async () => {
 
 test(`supports passing dynamic values -- full control to the user of Record`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <Record resModel="'foo'" fieldNames="['foo']" fields="this.fields" values="{ foo: this.values.foo }" t-slot-scope="data" hooks="this.hooks">
@@ -607,7 +593,6 @@ test(`supports passing dynamic values -- full control to the user of Record`, as
 
 test(`can switch records`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <a id="increment" t-on-click="() => this.state.num++" t-out="this.state.num"/>
@@ -651,7 +636,6 @@ test(`can switch records`, async () => {
 
 test(`can switch records with values`, async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <a id="next" t-on-click="this.next">NEXT</a>
@@ -721,7 +705,6 @@ test(`faulty useRecordObserver in widget`, async () => {
     });
 
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <t t-if="!this.state.error">
@@ -785,7 +768,6 @@ test(`don't duplicate a useRecordObserver effect when switching back and forth b
     }
 
     class Parent extends Component {
-        props = useProps();
         static components = { Record, Field };
         static template = xml`
             <a id="setRecord" t-on-click="this.setRecord">SET</a>

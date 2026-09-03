@@ -17,7 +17,6 @@ test("Simple rendering with a single dialog", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Welcome'">content</Dialog>`;
-        props = useProps();
     }
     expect(".o_dialog").toHaveCount(0);
     getService(DialogPlugin).add(CustomDialog);
@@ -33,7 +32,6 @@ test("Simple rendering and close a single dialog", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Welcome'">content</Dialog>`;
-        props = useProps();
     }
     expect(".o_dialog").toHaveCount(0);
     const removeDialog = getService(DialogPlugin).add(CustomDialog);
@@ -102,7 +100,6 @@ test.tags("desktop");
 test("a popover with an autofocus child can become the UI active element", async () => {
     class TestPopover extends Component {
         static template = xml`<input type="text" t-ref="this.autofocusRef" />`;
-        props = useProps();
         autofocusRef = signal.ref();
         setup() {
             useAutofocus({ ref: this.autofocusRef });
@@ -194,7 +191,6 @@ test("dialog component crashes", async () => {
     class FailingDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Error'">content</Dialog>`;
-        props = useProps();
         setup() {
             throw new Error("Some Error");
         }

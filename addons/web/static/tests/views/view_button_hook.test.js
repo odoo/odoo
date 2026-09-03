@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { contains, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, signal, useProps, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtonHandler, useViewButtons } from "@web/views/view_button/view_button_hook";
@@ -29,7 +29,6 @@ test("action can be prevented", async () => {
 
     class MyComponent extends Component {
         static template = xml`<div t-ref="this.rootRef" t-on-click="this.onClick" class="myComponent">Some text</div>`;
-        props = useProps();
         rootRef = signal.ref();
         setup() {
             useViewButtons(this.rootRef, {
@@ -99,7 +98,6 @@ test("ViewButton clicked in Dropdown close the Dropdown", async () => {
                 </Dropdown>
             </div>
         `;
-        props = useProps();
         rootRef = signal.ref();
         setup() {
             useViewButtons(this.rootRef);
@@ -124,7 +122,6 @@ test("execute action in new window", async () => {
 
     class MyComponent extends Component {
         static template = xml`<div t-ref="this.rootRef" t-on-click="this.onClick" class="myComponent">Some text</div>`;
-        props = useProps();
         rootRef = signal.ref();
         setup() {
             useViewButtons(this.rootRef);
@@ -159,7 +156,6 @@ test("execute action in new window - 2", async () => {
                 <div t-ref="this.rootRef" class="myComponent">
                     <ViewButton tag="'a'" clickParams="{ type:'action' }" string="'coucou'" record="{ resId: 1 }" />
                 </div>`;
-        props = useProps();
         rootRef = signal.ref();
         setup() {
             useViewButtons(this.rootRef);
@@ -178,7 +174,6 @@ test("default label for button special cancel", async () => {
                 <div t-ref="this.rootRef" class="myComponent">
                     <ViewButton tag="'button'" clickParams="{ special:'cancel' }"/>
                 </div>`;
-        props = useProps();
         rootRef = signal.ref();
         setup() {
             useViewButtons(this.rootRef);

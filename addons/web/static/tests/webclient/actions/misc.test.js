@@ -1,7 +1,7 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onWillStart, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -232,7 +232,6 @@ test("getCurrentAction (virtual controller)", async () => {
     stepAllNetworkCalls();
     class ClientAction extends Component {
         static template = xml`<div class="o_client_action_test">Hello World</div>`;
-        props = useProps();
         static path = "plop";
         setup() {
             onWillStart(async () => {
@@ -748,7 +747,6 @@ test("action is removed while waiting for another action with selectMenu", async
     let def;
     class SlowClientAction extends Component {
         static template = xml`<div>My client action</div>`;
-        props = useProps();
 
         setup() {
             onWillStart(() => def?.promise);

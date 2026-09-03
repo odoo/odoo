@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml, useProps } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { startInteractions } from "@web/../tests/public/helpers";
 import { switchToEditMode } from "../helpers";
@@ -11,8 +11,6 @@ const publicComponentRegistryEdit = registry.category("public_components.edit");
 test(`owl components are neutered in edit mode`, async () => {
     class MyPublicComp extends Component {
         static template = xml`<div>hello</div>`;
-        props = useProps();
-        setup() {}
     }
     publicComponentRegistry.add("my_public_comp", MyPublicComp);
 
@@ -50,8 +48,6 @@ test(`owl components are neutered in edit mode`, async () => {
 test(`edit owl components are not neutered in edit mode`, async () => {
     class MyPublicComp extends Component {
         static template = xml`<div>hello</div>`;
-        props = useProps();
-        setup() {}
     }
     publicComponentRegistry.add("my_public_comp", MyPublicComp);
     publicComponentRegistryEdit.add("my_public_comp", MyPublicComp);
