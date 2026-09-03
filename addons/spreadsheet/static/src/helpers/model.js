@@ -1,6 +1,6 @@
 // @ts-check
 
-import { parse, helpers, iterateAstNodes } from "@odoo/o-spreadsheet";
+import { parse, helpers, iterateAstNodes, Model } from "@odoo/o-spreadsheet";
 import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -174,7 +174,9 @@ export async function freezeOdooData(model) {
     }
     data.lists = {};
     exportGlobalFiltersToSheet(model, data);
-    return data;
+    // the model must be created with config.mode !== "export_verification"
+    const newModel = new Model(data, /*do not evaluate here !*/);
+    return newModel._exportData(true);
 }
 
 function toFrozenContent(evaluatedCell) {
