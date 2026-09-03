@@ -1023,6 +1023,36 @@ export class ListPlugin extends Plugin {
      * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
      */
     processContentForClipboard(clonedContents, selection) {
+        const closestLi = closestElement(selection.commonAncestorContainer, "LI");
+        if (
+            closestLi &&
+            closestLi.childNodes.length > 1 &&
+            this.dependencies.selection.areNodeContentsFullySelected(
+                selection.commonAncestorContainer
+            )
+        ) {
+            const outermostSingleChildAncestor = closestElement(
+                selection.commonAncestorContainer,
+                (el) => el === closestLi || el.parentElement?.childNodes.length !== 1
+            );
+            if (
+                outermostSingleChildAncestor === closestLi ||
+                outermostSingleChildAncestor.parentElement === closestLi
+            ) {
+                let [li, list] = [closestLi.cloneNode(), closestLi.parentElement.cloneNode()];
+                if (outermostSingleChildAncestor.parentElement === closestLi) {
+                    [li, list] = [
+                        outermostSingleChildAncestor.parentElement.cloneNode(),
+                        outermostSingleChildAncestor.parentElement.parentElement.cloneNode(),
+                    ];
+                    li.append(outermostSingleChildAncestor.cloneNode(true));
+                } else {
+                    li.append(...childNodes(clonedContents));
+                }
+                list.append(li);
+                return (clonedContents = list);
+            }
+        }
         if (clonedContents.firstChild.nodeName === "LI") {
             const list = selection.commonAncestorContainer.cloneNode();
             list.replaceChildren(...childNodes(clonedContents));
