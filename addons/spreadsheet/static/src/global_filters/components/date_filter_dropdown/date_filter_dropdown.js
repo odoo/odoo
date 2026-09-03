@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 import {
     dateFilterValueToString,
     getDateRange,
@@ -28,8 +28,9 @@ export class DateFilterDropdown extends Component {
 
     setup() {
         this._computeDefaultSelectedValues();
-        this._applyCurrentValueToSelectedValues(this.props.value);
-        onWillUpdateProps((nextProps) => this._applyCurrentValueToSelectedValues(nextProps.value));
+        useEffect(() => {
+            this._applyCurrentValueToSelectedValues();
+        });
     }
 
     /**
@@ -53,7 +54,8 @@ export class DateFilterDropdown extends Component {
      * Updates the default selected values based on the current value.
      * This method is called whenever the component's props are updated.
      */
-    _applyCurrentValueToSelectedValues(value) {
+    _applyCurrentValueToSelectedValues() {
+        const value = this.props.value;
         this._setRangeToCurrentValue(value);
         if (value?.type) {
             const filterType = value.type === "relative" ? value.period : value.type;

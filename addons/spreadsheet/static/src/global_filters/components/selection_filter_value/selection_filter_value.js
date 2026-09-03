@@ -1,11 +1,13 @@
 /** @ts-check */
 
 import {
+    asyncComputed,
+    computed,
     Component,
     onWillStart,
-    onWillUpdateProps,
     signal,
     t,
+    toRaw,
     onMounted,
     useProps,
 } from "@odoo/owl";
@@ -36,40 +38,61 @@ export class SelectionFilterValue extends Component {
         this.tags = [];
         this.sources = [];
         this.fields = useService("field");
-        onWillStart(() => this._computeTagsAndSources(this.props));
-        onWillUpdateProps((nextProps) => this._computeTagsAndSources(nextProps));
+        this.fieldData = asyncComputed(() => {
+            this.props.value;
+            return this.fields.loadFields(this.props.resModel);
+        });
+
+        this.tags = computed(() => {
+            this.props.value;
+            const field = this.fieldData()[this.props.field];
+            if (!field) {
+                throw new Error(
+                    `Field "${this.props.field}" not found in model "${this.props.resModel}"`
+                );
+            }
+            const selection = field.selection;
+
+            return this.props.value.map((value) => ({
+                id: value,
+                text: selection.find(([key]) => key === value)?.[1] ?? value,
+                onDelete: () => {
+                    this.props.onValueChanged(this.props.value.filter((v) => v !== value));
+                },
+            }));
+        });
+
+        this.sources = computed(() => {
+            this.props.value;
+            const field = this.fieldData()?.[this.props.field];
+            if (!field) {
+                throw new Error(
+                    `Field "${this.props.field}" not found in model "${this.props.resModel}"`
+                );
+            }
+            const selection = field.selection;
+            const alreadySelected = new Set(this.props.value);
+
+            return [
+                {
+                    options: selection
+                        .filter(([value]) => !alreadySelected.has(value))
+                        .map(([value, formattedValue]) => ({
+                            label: formattedValue,
+                            onSelect: () => {
+                                this.props.onValueChanged([...toRaw(this.props.value), value]);
+                            },
+                        })),
+                },
+            ];
+        });
+
+        onWillStart(async () => {
+            await this.fieldData.currentPromise();
+        });
     }
 
     get placeholder() {
-        return this.tags.length ? "" : this.props.placeholder;
-    }
-
-    async _computeTagsAndSources(props) {
-        const fields = await this.fields.loadFields(props.resModel);
-        const field = fields[props.field];
-        if (!field) {
-            throw new Error(`Field "${props.field}" not found in model "${props.resModel}"`);
-        }
-        const selection = field.selection;
-        this.tags = props.value.map((value) => ({
-            id: value,
-            text: selection.find((option) => option[0] === value)?.[1] ?? value,
-            onDelete: () => {
-                props.onValueChanged(props.value.filter((v) => v !== value));
-            },
-        }));
-        const alreadySelected = new Set(props.value);
-        this.sources = [
-            {
-                options: selection
-                    .filter((option) => !alreadySelected.has(option[0]))
-                    .map(([value, formattedValue]) => ({
-                        label: formattedValue,
-                        onSelect: () => {
-                            props.onValueChanged([...props.value, value]);
-                        },
-                    })),
-            },
-        ];
+        return this.tags()?.length ? "" : this.props.placeholder;
     }
 }
