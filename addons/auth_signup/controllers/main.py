@@ -46,6 +46,7 @@ class AuthSignupHome(Home):
 
         if 'error' not in qcontext and request.httprequest.method == 'POST':
             try:
+                signup_host_id = request.env.context.get('website_id') or request.env.context.get('host_id')
                 self.do_signup(qcontext)
 
                 # Set user to public if they were not signed in by do_signup
@@ -62,6 +63,7 @@ class AuthSignupHome(Home):
                 template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
                 if user_sudo and template:
                     template.sudo().with_context(
+                        host_id=signup_host_id,
                         email_notification_force_header=True,
                         email_notification_force_footer=True,
                         email_notification_subtitles=[_lt("Your Account"), user_sudo.name or ''],
