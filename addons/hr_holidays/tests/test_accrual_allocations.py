@@ -693,6 +693,45 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
             self.assertAlmostEqual(allocation.number_of_days, 1.3315, 4, 'There should be 1.3315 day allocated.')
 
+    def test_frequency_yearly_annual(self):
+        with freeze_time('2026-09-01'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'name': 'Accrual Plan For Test',
+                'can_be_carryover': True,
+                'carryover_date': 'allocation',
+                'level_ids': [(0, 0, {
+                    'added_value_type': 'day',
+                    'added_value': 24,
+                    'frequency': 'yearly',
+                    'yearly_option': 'anniversary',
+                    'action_with_unused_accruals': 'all',
+                })],
+            })
+            # this sets up an accrual on the 1st of January
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'work_entry_type_id': self.work_entry_type.id,
+                'number_of_days': 0,
+            })
+            self.setAllocationCreateDate(allocation.id, '2026-09-01 00:00:00')
+            allocation.action_approve()
+            self.assertEqual(allocation.nextcall, datetime.date(2027, 9, 1))
+            self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
+        with freeze_time('2027-08-31'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0, 'There should be 0 days allocated, tomorrow is accrual date.')
+            self.assertEqual(allocation.nextcall, datetime.date(2027, 9, 1), 'The next call date of the cron should be September 1st 2028')
+        with freeze_time('2027-09-01'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 24, 'There should be 24 days allocated.')
+            self.assertEqual(allocation.nextcall, datetime.date(2028, 9, 1), 'The next call date of the cron should be September 1st 2028')
+        with freeze_time('2028-09-01'):
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 48, 'There should be 48 days allocated.')
+            self.assertEqual(allocation.nextcall, datetime.date(2029, 9, 1), 'The next call date of the cron should be September 1st 2029')
+
     def test_check_gain(self):
         # 2 accruals, one based on worked time, one not
         # check gain

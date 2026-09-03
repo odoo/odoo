@@ -85,6 +85,10 @@ class HrLeaveAccrualLevel(models.Model):
         ('11', 'November'),
         ('12', 'December')
     ], default="7", export_string_translation=False)
+    yearly_option = fields.Selection([
+        ('date', 'On the'),
+        ('anniversary', 'On the Confirmation date\'s anniversary')
+    ], default='date')
     yearly_month = fields.Selection([
         ('1', 'January'),
         ('2', 'February'),
@@ -295,7 +299,7 @@ class HrLeaveAccrualLevel(models.Model):
     def _get_hourly_frequencies(self):
         return ['hourly']
 
-    def _get_next_date(self, last_call):
+    def _get_next_date(self, last_call, allocation_start_date):
         """
         Returns the next date with the given last call
         """
@@ -330,16 +334,22 @@ class HrLeaveAccrualLevel(models.Model):
                 return second_date
             return last_call + relativedelta(month=int(self.first_month), day=int(self.first_month_day), years=1)
 
-        if self.frequency == 'yearly':
+        if self.frequency == 'yearly' and self.yearly_option == 'date':
             date = last_call + relativedelta(month=int(self.yearly_month), day=int(self.yearly_day))
             if last_call < date:
                 return date
             return last_call + relativedelta(month=int(self.yearly_month), day=int(self.yearly_day), years=1)
 
+        if self.frequency == 'yearly' and self.yearly_option == 'anniversary':
+            year_date = last_call + relativedelta(month=allocation_start_date.month, day=allocation_start_date.day)
+            if last_call < year_date:
+                return year_date
+            return last_call + relativedelta(month=allocation_start_date.month, day=allocation_start_date.day, years=1)
+
         raise ValidationError(_("Your frequency selection is not correct: please choose a frequency between theses options:"
             "Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year and Yearly."))
 
-    def _get_previous_date(self, last_call):
+    def _get_previous_date(self, last_call, allocation_start_date):
         """
         Returns the date a potential previous call would have been at
         For example if you have a monthly level giving 16/02 would return 01/02
@@ -376,11 +386,17 @@ class HrLeaveAccrualLevel(models.Model):
                 return first_date
             return last_call + relativedelta(month=int(self.second_month), day=int(self.second_month_day), years=-1)
 
-        if self.frequency == 'yearly':
+        if self.frequency == 'yearly' and self.yearly_option == 'date':
             year_date = last_call + relativedelta(month=int(self.yearly_month), day=int(self.yearly_day))
             if last_call >= year_date:
                 return year_date
             return last_call + relativedelta(month=int(self.yearly_month), day=int(self.yearly_day), years=-1)
+
+        if self.frequency == 'yearly' and self.yearly_option == 'anniversary':
+            year_date = last_call + relativedelta(month=allocation_start_date.month, day=allocation_start_date.day)
+            if last_call >= year_date:
+                return year_date
+            return last_call + relativedelta(month=allocation_start_date.month, day=allocation_start_date.day, years=-1)
 
         raise ValidationError(_("Your frequency selection is not correct: please choose a frequency between theses options:"
             "Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year and Yearly."))
