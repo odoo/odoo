@@ -1228,10 +1228,14 @@ class AccountChartTemplate(models.AbstractModel):
         return f"account.{company.id}_{xmlid}"
 
     def ref(self, xmlid, raise_if_not_found=True):
-        return (
-            self.env.ref(self.company_xmlid(xmlid), raise_if_not_found=False)
-            or self.env.ref(self.company_xmlid(xmlid, self.env.company.parent_ids[0]), raise_if_not_found)
-        )
+        record = self.env.ref(self.company_xmlid(xmlid), raise_if_not_found=False)
+        if not record:
+            parent_company = self.env.company.sudo().parent_ids[:1]
+            if parent_company:
+                return self.env.ref(self.company_xmlid(xmlid, parent_company), raise_if_not_found)
+        if record:
+            return record
+        return self.env.ref(self.company_xmlid(xmlid), raise_if_not_found)
 
     def _get_parent_template(self, code):
         parents = []
