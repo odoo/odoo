@@ -40,4 +40,7 @@ export class BorderConfigurator extends BaseOptionComponent {
         const values = (styleActionValue || "0").match(/\d+/g);
         return values.some((value) => parseInt(value) > 0);
     }
+    getOnClick(variable) {
+        return () => this.env.editThemeOption(variable, "theme-target-id");
+    }
 }
