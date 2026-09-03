@@ -832,11 +832,10 @@ class HrLeave(models.Model):
             if any(leave.state == 'cancel' for leave in self):
                 raise UserError(_('Only a manager can modify a canceled leave.'))
 
-        # If a leave changes state from validated or if the dates of a validated leave change
-        # unlink the corresponding resource calendar leave
-        date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to'}
+        # If a leave changes state from validated unlink the corresponding resource calendar leave
         validated_leaves = self.filtered(lambda l: l.state == 'validate')
-        if validated_leaves and (('state' in values and values['state'] != 'validate') or date_fields.intersection(values)):
+        state_invalidated = 'state' in values and values['state'] != 'validate'
+        if validated_leaves and state_invalidated:
             validated_leaves._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
@@ -854,6 +853,13 @@ class HrLeave(models.Model):
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
         result = super().write(values)
+
+        # If the dates of a validated leave were changed, amend the resource calendar leave dates
+        date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to', 'request_hour_from', 'request_hour_to'}
+        dates_amended = bool(date_fields.intersection(values))
+        if validated_leaves and dates_amended and not state_invalidated:
+            validated_leaves._amend_resource_leave_dates()
+
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 self._check_validity()
@@ -944,6 +950,22 @@ class HrLeave(models.Model):
         if self.has_access('write'):
             return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).sudo().unlink()
         return self.env['resource.calendar.leaves'].search([('holiday_id', 'in', self.ids)]).unlink()
+
+    def _amend_resource_leave_dates(self):
+        """
+        This method updates the dates of an existing resource calendar leave object for already validated leaves.
+        For cases where overrides change the leave dates but not the validated state.
+        """
+        resource_leaves = self.env['resource.calendar.leaves'].sudo().search([
+            ('holiday_id', 'in', self.ids),
+        ])
+
+        resource_leaves_by_holiday_id = {resource_leave.holiday_id: resource_leave for resource_leave in resource_leaves}
+
+        for leave in self:
+            resource_leave = resource_leaves_by_holiday_id.get(leave)
+            if resource_leave:
+                resource_leave.write(leave._prepare_resource_leave_vals())
 
     def _validate_leave_request(self):
         """ Validate time off requests
