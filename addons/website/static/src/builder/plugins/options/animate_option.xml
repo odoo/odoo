@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.animateOnScrollInOut">
-    <BuilderButtonGroup t-if="isActiveItem('animation_on_scroll_opt')" preview="false" action="'forceAnimation'">
+    <BuilderButtonGroup t-if="isActiveItem('animation_on_scroll_opt')" preview="false">
         <BuilderButton classAction="''">In</BuilderButton>
         <BuilderButton classAction="'o_animate_out'">Out</BuilderButton>
     </BuilderButtonGroup>
@@ -17,12 +17,10 @@
                             id="'no_animation_opt'"
                             t-if="!props.requireAnimation">None</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onAppearance'"
-                            actionParam="{forceAnimation: true}"
                             classAction="'o_animate'"
                             id="'animation_on_appearance_opt'">On Appearance</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onScroll'"
                             classAction="'o_animate o_animate_on_scroll'"
-                            actionParam="{forceAnimation: true}"
                             id="'animation_on_scroll_opt'"
                             t-if="!state.isLimitedEffect">On Scroll</BuilderSelectItem>
                 <BuilderSelectItem action="'setAnimationMode'" actionValue="'onHover'"
@@ -31,7 +29,7 @@
                             t-if="state.canHover">On Hover</BuilderSelectItem>
             </BuilderSelect>
             <t t-if="!!props.slots?.animationRowTrailing" t-slot="animationRowTrailing"/>
-            <t t-else="" t-call="website.animateOnScrollInOut"/> 
+            <t t-else="" t-call="website.animateOnScrollInOut"/>
         </BuilderRow>
         <BuilderRow label.translate="On Scroll" level="1" t-if="!!props.slots?.animationRowTrailing">
             <t t-call="website.animateOnScrollInOut"/>
@@ -49,7 +47,7 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow label.translate="Direction" level="1" t-if="state.hasAnimateClass and !state.isLimitedEffect">
-            <BuilderSelect id="'animation_direction_opt'" action="'forceAnimation'">
+            <BuilderSelect id="'animation_direction_opt'">
                 <t t-foreach="state.directionItems" t-as="item" t-key="item.className">
                     <BuilderSelectItem classAction="item.className" t-out="item.label" />
                 </t>
@@ -57,7 +55,7 @@
         </BuilderRow>
         <!-- Trigger -->
         <BuilderRow label.translate="Trigger" level="1">
-            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !state.isInDropdown">
+            <BuilderSelect t-if="this.isActiveItem('animation_on_appearance_opt') and !state.isInDropdown" preview="false">
                 <BuilderSelectItem classAction="''">First Time Only</BuilderSelectItem>
                 <BuilderSelectItem classAction="'o_animate_both_scroll'">Every Time</BuilderSelectItem>
             </BuilderSelect>
@@ -74,18 +72,18 @@
         </BuilderRow>
         <!-- Scroll Zone -->
         <BuilderRow label.translate="Scroll Zone" level="1" t-if="this.isActiveItem('animation_on_scroll_opt')" preview="false">
-            <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneStart'" action="'forceAnimation'" />
+            <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneStart'" />
             <span class="mx-2">to</span>
-            <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneEnd'" action="'forceAnimation'" />
+            <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneEnd'" />
         </BuilderRow>
         <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt')">
             <!-- Start After -->
             <BuilderRow label.translate="Start After" level="1">
-                <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" unit="'s'" />
+                <BuilderNumberInput styleAction="'animation-delay'" unit="'s'" min="0" step="0.1" preview="false"/>
             </BuilderRow>
             <!-- Duration -->
             <BuilderRow label.translate="Duration" level="1">
-                <BuilderNumberInput styleAction="'animation-duration'" action="'forceAnimation'" default="0.4" unit="'s'" />
+                <BuilderNumberInput styleAction="'animation-duration'" default="0.4" unit="'s'" min="0" step="0.1" preview="false"/>
             </BuilderRow>
         </BuilderContext>
         <t t-if="this.isActiveItem('animation_on_hover_opt')">
