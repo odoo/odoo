@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, edit, keyDown, keyUp, press, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { Component, signal, xml } from "@odoo/owl";
 import {
     contains,
     defineWebModels,
@@ -11,14 +12,13 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
+import { useAutofocus } from "@web/core/utils/hooks";
+import { WebClient } from "@web/webclient/webclient";
 import { TourRecorder } from "@web_tour/tour_recorder/tour_recorder";
 import {
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
     tourRecorderState,
 } from "@web_tour/tour_recorder/tour_recorder_state";
-import { Component, signal, xml } from "@odoo/owl";
-import { useAutofocus } from "@web/core/utils/hooks";
-import { WebClient } from "@web/webclient/webclient";
 
 describe.current.tags("desktop");
 
@@ -367,7 +367,6 @@ test("Selecting item in autocomplete field through Enter", async () => {
     class Dummy extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="this.sources"/>`;
-        static props = ["*"];
 
         sources = [
             {
@@ -404,7 +403,6 @@ test("Edit input after autofocus", async () => {
                 </div>
             </t>
         `;
-        static props = ["*"];
 
         inputRef = signal.ref();
 
