@@ -5,12 +5,18 @@
         <button
             type="button"
             class="o_card o_account_dashboard_kpi_card btn text-start"
-            t-att-class="{'o_account_dashboard_kpi_invoice_layout_card': this.props.card.is_invoice_layout_card}"
+            t-att-class="{
+                'o_account_dashboard_kpi_cashflow_card': this.props.card.is_cashflow_card,
+                'o_account_dashboard_kpi_invoice_layout_card': this.props.card.is_invoice_layout_card,
+            }"
             t-att-disabled="!this.props.card.action_id"
+            t-att-data-kpi-id="this.props.card.id"
             t-on-click="this.onClick"
         >
-            <span class="o_account_dashboard_kpi_content">
-                <span class="o_account_dashboard_kpi_name" t-out="this.props.card.name"/>
+            <span t-if="this.props.card.name" class="o_account_dashboard_kpi_content">
+                <span class="o_account_dashboard_kpi_header">
+                    <span class="o_account_dashboard_kpi_name" t-out="this.props.card.name"/>
+                </span>
                 <span
                     t-if="this.props.card.has_total"
                     class="o_account_dashboard_kpi_value"

@@ -35,7 +35,7 @@ export class AccountDashboardKpis extends Component {
         );
     }
 
-    onClickCard(card) {
+    async onClickCard(card) {
         if (!card.action_id) {
             return;
         }
@@ -49,6 +49,11 @@ export class AccountDashboardKpis extends Component {
             return;
         }
 
-        this.action.doAction(card.action_id);
+        if (card.action_method) {
+            const action = await this.orm.call("account.journal", card.action_method, []);
+            return this.action.doAction(action);
+        }
+
+        return this.action.doAction(card.action_id);
     }
 }

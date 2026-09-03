@@ -207,7 +207,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
 
     @freeze_time("2026-07-15")
-    def test_sale_purchase_graph_monthly_paid_unpaid_values(self):
+    def test_sale_purchase_graph_monthly_total_values(self):
         sale_journal = self.company_data['default_journal_sale']
         purchase_journal = self.company_data['default_journal_purchase']
 
@@ -281,20 +281,20 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             ('account_id', '=', self.company_data['default_account_payable'].id),
         ]).reconcile()
 
-        self.env['account.move'].flush_model(['amount_total_signed', 'amount_residual_signed'])
+        self.env['account.move'].flush_model(['amount_total', 'amount_total_signed'])
         graph_data = (sale_journal + purchase_journal)._get_sale_purchase_graph_data()
         sale_graph = graph_data[sale_journal.id][0]
         purchase_graph = graph_data[purchase_journal.id][0]
 
-        self.assertEqual(sale_graph['type'], 'monthly_paid_unpaid')
-        self.assertEqual(purchase_graph['type'], 'monthly_paid_unpaid')
+        self.assertEqual(sale_graph['type'], 'monthly_total')
+        self.assertEqual(purchase_graph['type'], 'monthly_total')
         self.assertNotIn('is_sample_data', sale_graph)
         self.assertNotIn('is_sample_data', purchase_graph)
 
-        self.assertEqual(sale_graph['paid_values'][-1], 25)
-        self.assertEqual(sale_graph['unpaid_values'][-1], 75)
-        self.assertEqual(purchase_graph['paid_values'][-1], 50)
-        self.assertEqual(purchase_graph['unpaid_values'][-1], 150)
+        self.assertEqual(sale_graph['key'], 'Total')
+        self.assertEqual(purchase_graph['key'], 'Total')
+        self.assertEqual(sale_graph['values'][-1], 100)
+        self.assertEqual(purchase_graph['values'][-1], 200)
 
     def test_disable_dashboard_graph_skips_sale_purchase_graph(self):
         sale_journal = self.company_data['default_journal_sale']
@@ -308,7 +308,7 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         sale_journal._kanban_dashboard_graph()
 
         graph_data = json.loads(sale_journal.kanban_dashboard_graph)
-        self.assertEqual(graph_data[0]['type'], 'monthly_paid_unpaid')
+        self.assertEqual(graph_data[0]['type'], 'monthly_total')
 
     @freeze_time("2023-03-15")
     def test_purchase_journal_numbers_and_sums(self):
@@ -577,57 +577,74 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         }])
 
         profit_and_loss_action = self.env.ref('account_reports.action_account_report_pl')
-        partner_ledger_action = self.env.ref('account_reports.action_account_report_partner_ledger')
+        open_items_action = self.env.ref('account_reports.action_account_report_followup')
         cashflow_analysis_action = self.env.ref('account.action_account_cashflow_analysis')
         invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
         kpis = self.env['account.journal'].get_account_dashboard_kpis()
         self.assertEqual(kpis, [{
             'action_id': profit_and_loss_action.id,
-            'has_total': True,
-            'id': 'gross_margin',
-            'name': 'Gross Margin',
-            'value': '$\xa0-675.00',
-        }, {
-            'action_id': profit_and_loss_action.id,
+            'action_method': 'action_open_revenue_journal_items',
             'has_total': True,
             'id': 'revenue',
             'name': 'Revenue',
             'value': '$\xa075.00',
         }, {
             'action_id': profit_and_loss_action.id,
-            'has_total': True,
-            'id': 'net_margin',
-            'name': 'Net Margin',
-            'value': '$\xa0-675.00',
-        }, {
-            'action_id': profit_and_loss_action.id,
+            'action_method': 'action_open_expense_journal_items',
             'has_total': True,
             'id': 'expenses',
             'name': 'Expenses',
             'value': '$\xa0750.00',
         }, {
-            'action_id': partner_ledger_action.id,
-            'has_total': False,
-            'id': 'unpaid',
-            'name': 'Unpaid',
-            'values': [
-                {'label': 'Customers', 'value': '$\xa075.00'},
-                {'label': 'Suppliers', 'value': '$\xa0750.00'},
-            ],
+            'action_id': profit_and_loss_action.id,
+            'has_total': True,
+            'id': 'gross_margin',
+            'name': 'Gross Margin',
+            'value': '$\xa075.00',
         }, {
             'action_id': cashflow_analysis_action.id,
             'has_total': False,
             'id': 'cashflow',
-            'name': 'Cash Flow',
+            'is_cashflow_card': True,
             'values': [
-                {'label': 'Cash In', 'value': '$\xa010,000.00'},
-                {'label': 'Cash Out', 'value': '$\xa00.00'},
+                {'label': 'Cash In', 'value': '$\xa010,000'},
+                {'label': 'Cash Out', 'value': '$\xa00'},
             ],
+        }, {
+            'action_id': open_items_action.id,
+            'action_method': 'action_open_receivable_items',
+            'has_total': True,
+            'id': 'receivable',
+            'name': 'Receivable',
+            'value': '$\xa075.00',
+        }, {
+            'action_id': open_items_action.id,
+            'action_method': 'action_open_payable_items',
+            'has_total': True,
+            'id': 'payable',
+            'name': 'Payable',
+            'value': '$\xa0750.00',
         }, {
             'action_id': invoice_layout_action.id,
             'has_total': False,
             'id': 'invoice_layout',
             'image': '/web/static/img/mimetypes/document.svg',
             'is_invoice_layout_card': True,
-            'name': 'Invoice Layout',
+            'name': 'Setup Your Invoice Layout',
         }])
+
+    def test_account_dashboard_open_items_actions(self):
+        journal = self.env['account.journal']
+        for action_method, account_type in (
+            (journal.action_open_receivable_items, 'trade_receivable'),
+            (journal.action_open_payable_items, 'trade_payable'),
+        ):
+            action = action_method()
+            self.assertEqual(action['params'], {
+                'options': {
+                    'account_type': [
+                        {'id': account_type, 'selected': True},
+                    ],
+                },
+                'ignore_session': True,
+            })
