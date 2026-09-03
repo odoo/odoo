@@ -1,14 +1,14 @@
 import { t, useEffect, useProps } from "@odoo/owl";
 import {
-    ProductLabelSectionAndNoteField,
-    productLabelSectionAndNoteField,
-} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
+    accountProductField,
+    AccountProductField,
+} from "@account/components/account_product_field/account_product_field";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { saleProductMixin } from "../sale_product_mixin";
 import { many2OneFieldProps } from "@web/views/fields/many2one/many2one_field";
 
-export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
+export class SaleOrderLineProductField extends AccountProductField {
     static template = "sale.SaleProductField";
     props = useProps({
         ...many2OneFieldProps,
@@ -50,7 +50,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 return product_id_data.display_name.split("\n")[0];
             }
         }
-        return super.productName;
+        return this.props.record.data[this.props.name].display_name;
     }
 
     get isProductClickable() {
@@ -69,6 +69,10 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
 
     get m2oProps() {
         const props = super.m2oProps;
+        let value = props.value && { ...props.value };
+        if (this.props.readonly && this.productName) {
+            value = { ...value, display_name: this.productName };
+        }
         return {
             ...props,
             canOpen: this.props.canOpen && (!this.props.readonly || this.isProductClickable),
@@ -77,6 +81,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
                 this.wasCombo = this.isCombo;
                 return props.update(value);
             },
+            value,
         };
     }
 
@@ -85,7 +90,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
     }
 
     get value() {
-        debugger;
         return this.props.record.data[this.props.name];
     }
 
@@ -111,11 +115,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
 patch(SaleOrderLineProductField.prototype, saleProductMixin());
 
 export const saleOrderLineProductField = {
-    ...productLabelSectionAndNoteField,
+    ...accountProductField,
     component: SaleOrderLineProductField,
     extractProps(fieldInfo, dynamicInfo) {
         return {
-            ...productLabelSectionAndNoteField.extractProps(fieldInfo, dynamicInfo),
+            ...accountProductField.extractProps(fieldInfo, dynamicInfo),
             readonlyField: dynamicInfo.readonly,
         };
     },

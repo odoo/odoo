@@ -1295,7 +1295,7 @@
                                             <field
                                                 name="product_id"
                                                 optional="hide"
-                                                widget="product_label_section_and_note_field"
+                                                widget="account_product_field"
                                                 domain="
                                                     context.get('default_move_type') in ('out_invoice', 'out_refund', 'out_receipt')
                                                     and [('sale_ok', '=', True)]
@@ -1304,7 +1304,8 @@
                                             />
                                             <field
                                                 name="name"
-                                                decoration-it="display_type == 'product'"
+                                                placeholder="Enter a description"
+                                                decoration-it="display_type == 'product' and product_id"
                                                 optional="show"
                                                 widget="text"
                                             />

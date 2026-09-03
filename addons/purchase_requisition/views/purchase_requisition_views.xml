@@ -91,7 +91,7 @@
                                 <field name="sequence" widget="handle"/>
                                 <column name="product_and_description">
                                     <field name="product_id"
-                                           widget="product_label_section_and_note_field"
+                                           widget="account_product_field"
                                            required="not display_type"
                                            domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
                                     <field name="name" optional="show"/>

@@ -3,7 +3,7 @@ import {
     ProductLabelSectionAndNoteListRender,
     productLabelSectionAndNoteOne2Many,
     ProductLabelSectionAndNoteOne2Many,
-} from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field_o2m";
+} from "@account/components/product_label_section_and_note_o2m/product_label_section_and_note_field_o2m";
 import {
     getSectionRecords,
     sectionAndNoteFieldOne2Many,
