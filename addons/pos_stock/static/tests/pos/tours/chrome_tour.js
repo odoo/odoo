@@ -23,7 +23,7 @@ registry.category("web_tour.tours").add("test_edit_paid_order_stock", {
             FeedbackScreen.clickEditPayment(),
             // Add customer
             PaymentScreen.clickPartnerButton(),
-            PaymentScreen.clickCustomer("Partner Test 1"),
+            PaymentScreen.clickCustomer("Partner Test 1", true),
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),

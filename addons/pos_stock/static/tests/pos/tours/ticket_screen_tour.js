@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("LotTour", {
                 ].flat()
             ),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner Test 1", true),
             ProductScreen.clickDisplayedProduct("Product A"),
             StockProductScreen.enterLotNumber("3"),
             ProductScreen.selectedOrderlineHas("Product A", "3"),
