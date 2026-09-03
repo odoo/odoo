@@ -568,6 +568,7 @@ class EventTrack(models.Model):
                 'auto_delete_keep_log': False,
                 'composition_mode': 'comment',
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+                'email_notification_allow_header': False,
             })
         return res
 

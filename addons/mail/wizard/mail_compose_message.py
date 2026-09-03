@@ -112,6 +112,7 @@ class MailComposeMessage(models.TransientModel):
         'Email Notification Layout',
         compute='_compute_email_layout_xmlid', readonly=False, store=True,
         copy=False, compute_sudo=False)
+    email_notification_allow_header = fields.Boolean(default=True)
     email_add_signature = fields.Boolean(
         'Add signature',
         compute='_compute_email_add_signature', readonly=False, store=True)
@@ -882,7 +883,7 @@ class MailComposeMessage(models.TransientModel):
         implementation of it if not available (as message_notify). """
         self.ensure_one()
         post_values_all = self._manage_mail_values(self._prepare_mail_values(res_ids))
-        ActiveModel = self.env[self.model] if self.model and hasattr(self.env[self.model], 'message_post') else self.env['mail.thread']
+        ActiveModel = (self.env[self.model] if self.model and hasattr(self.env[self.model], 'message_post') else self.env['mail.thread']).with_context(email_notification_allow_header=self.email_notification_allow_header)
         if self.composition_batch:
             # add context key to avoid subscribing the author
             ActiveModel = ActiveModel.with_context(
@@ -1375,7 +1376,7 @@ class MailComposeMessage(models.TransientModel):
                     mail_body = record._notify_by_email_render_layout(
                         message_inmem,
                         recipients_group_data,
-                        render_values=render_values,
+                        render_values={**render_values, 'email_notification_allow_header': self.email_notification_allow_header},
                     )
                     mail_values['body_html'] = mail_body
 
