@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUnmount, proxy } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount, proxy, signal } from '@odoo/owl';
 import { useService } from "@web/core/utils/hooks";
 import { ItemAddedNotification } from '@website_sale/js/cart_notification/item_added_notification/item_added_notification';
 import { WarningNotification } from '@website_sale/js/cart_notification/warning_notification/warning_notification';
@@ -9,41 +9,19 @@ export class CartNotificationContainer extends Component {
     static props = {
         notifications: Set,
     }
+    notificationStackRef = signal.ref();
 
     setup() {
         this.state = proxy({
             notifications: this.props.notifications,
-            topOffset: 0,
         });
-        this.website_menus = useService('website_menus');
+        this.publicInteractions = useService("public.interactions");
 
-        // Ensure the notification is never on top of any header.
-        let cleanup;
         onMounted(() => {
-            this._adaptToHeaderChange();
-            cleanup = this.website_menus.registerCallback(
-                this._adaptToHeaderChange.bind(this)
-            );
+            this.publicInteractions.startInteractions(this.notificationStackRef());
         });
-        onWillUnmount(() => cleanup?.());
-    }
-
-    /**
-     * Set the top position (in px) of the notification based on the navbar height.
-     *
-     * This prevents the notification from being shown in front of the navbar.
-     */
-    _adaptToHeaderChange() {
-        let position = 0;
-
-        for (const el of document.querySelectorAll('.o_top_fixed_element')) {
-            const { height, top } = el.getBoundingClientRect()
-            // Add the element’s visible height; top < 0 for the portion scrolled out
-            position += height + top;
-        }
-
-        if (this.state.topOffset !== position) {
-            this.state.topOffset = position;
-        }
+        onWillUnmount(() => {
+            this.publicInteractions.stopInteractions(this.notificationStackRef());
+        });
     }
 }
