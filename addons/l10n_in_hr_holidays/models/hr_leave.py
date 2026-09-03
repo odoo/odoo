@@ -17,9 +17,7 @@ class HrLeave(models.Model):
 
     def _l10n_in_get_default_leave_hours(self):
         self.ensure_one()
-        calendar = self.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
-        if not calendar:
-            return 0.0
+        calendar = self.employee_id.resource_calendar_id
         start_dt = self._to_utc(self.request_date_from, 0.0, self.employee_id)
         end_dt = self._to_utc(self.request_date_to, 24.0, self.employee_id)
         work_data = self.employee_id._get_work_days_data_batch(

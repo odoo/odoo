@@ -146,33 +146,32 @@ class HrEmployee(models.Model):
 
         # get periods from calendar
         for lookahead_day in lookahead_days:
-            for company, company_employees in remaining.grouped('company_id').items():
-                periods = company_employees._get_calendar_periods(min_dt.date(), min_dt.date() + timedelta(days=lookahead_day))
-                calendar_employee = defaultdict(OrderedSet)
-                max_end = None
-                for employee, intervals in periods.items():
-                    for (_start, end, calendar) in intervals:
-                        calendar_employee[calendar or company.resource_calendar_id].add(employee.id)
-                        if not max_end or end > max_end:
-                            max_end = end
-                for calendar, employee_ids in calendar_employee.items():
-                    employees = self.browse(employee_ids).with_prefetch(remaining._ids)
-                    resources_per_tz = employees._get_resources_per_tz(min_dt)
-                    work_intervals = calendar._work_intervals_batch(
-                        min_dt, datetime.combine(max_end, time.max, UTC) + timedelta(1), resources_per_tz=resources_per_tz)
-                    # intersect work intervals with periods
-                    for resource_id, work_interval in work_intervals.items():
-                        employee_id = self.env['resource.resource'].browse(resource_id).employee_id.id
-                        if not employee_id or not work_interval or not (period := periods.get(self.browse(employee_id))):
-                            continue
-                        ctz = next(tz for tz, resources in resources_per_tz.items() if resource_id in resources._ids)
-                        work_interval &= [(
-                            datetime.combine(p[0], time.min, ctz),
-                            datetime.combine(p[1], time.max, ctz),
-                            p[2],
-                        ) for p in period if p[2] == calendar]
-                        if work_interval:
-                            collect_employees({employee_id: work_interval})
+            periods = remaining._get_calendar_periods(min_dt.date(), min_dt.date() + timedelta(days=lookahead_day))
+            calendar_employee = defaultdict(OrderedSet)
+            max_end = None
+            for employee, intervals in periods.items():
+                for (_start, end, calendar) in intervals:
+                    calendar_employee[calendar].add(employee.id)
+                    if not max_end or end > max_end:
+                        max_end = end
+            for calendar, employee_ids in calendar_employee.items():
+                employees = self.browse(employee_ids).with_prefetch(remaining._ids)
+                resources_per_tz = employees._get_resources_per_tz(min_dt)
+                work_intervals = calendar._work_intervals_batch(
+                    min_dt, datetime.combine(max_end, time.max, UTC) + timedelta(1), resources_per_tz=resources_per_tz)
+                # intersect work intervals with periods
+                for resource_id, work_interval in work_intervals.items():
+                    employee_id = self.env['resource.resource'].browse(resource_id).employee_id.id
+                    if not employee_id or not work_interval or not (period := periods.get(self.browse(employee_id))):
+                        continue
+                    ctz = next(tz for tz, resources in resources_per_tz.items() if resource_id in resources._ids)
+                    work_interval &= [(
+                        datetime.combine(p[0], time.min, ctz),
+                        datetime.combine(p[1], time.max, ctz),
+                        p[2],
+                    ) for p in period if p[2] == calendar]
+                    if work_interval:
+                        collect_employees({employee_id: work_interval})
             remaining = self.filtered(lambda e: e.id not in result)
             if not remaining:
                 return result
@@ -180,7 +179,7 @@ class HrEmployee(models.Model):
         # get from the resource calendar
         for lookahead_day in lookahead_days:
             for calendar, employees in remaining.grouped(
-                lambda e: e.resource_calendar_id or e.company_id.resource_calendar_id
+                lambda e: e.version_id.resource_calendar_id
             ).items():
                 resources_per_tz = employees._get_resources_per_tz(min_dt)
                 work_intervals = calendar._work_intervals_batch(
@@ -737,7 +736,8 @@ class HrEmployee(models.Model):
         if not self:
             return 0
         calendars = self._get_calendars(date_from)
-        return calendars[self.id].hours_per_day if calendars[self.id] else 24
+        calendar = calendars[self.id]
+        return 24 if calendar._is_fully_flexible() else calendar.hours_per_day
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         super()._store_avatar_card_fields(res)
@@ -763,19 +763,17 @@ class HrEmployee(models.Model):
         calendar = self.env.company.resource_calendar_id
         if self:
             version = self._get_version(target_date)
-            if version.is_fully_flexible:
+            if version._is_fully_flexible():
                 return (0, 24)
             calendar = version.resource_calendar_id
             duration_based_attendances = calendar.attendance_ids.filtered('duration_based')._filter_by_date(target_date)
-            if version.is_flexible or duration_based_attendances or count_non_working_days:
+            if version._is_flexible() or duration_based_attendances or count_non_working_days:
                 # Quick calculation to center flexible hours around 12PM midday
-                if version.is_flexible:
-                    hours_day = version.hours_per_day
+                if version._is_flexible() or count_non_working_days:
+                    hours_day = calendar.hours_per_day
                     # no average hours configured: treat as fully flexible (full day)
                     if not hours_day:
                         return (0, 24)
-                elif count_non_working_days:
-                    hours_day = calendar.hours_per_day
                 else:
                     hours_day = sum(duration_based_attendances.mapped('duration_hours'))
                 datetimes = [12.0 - hours_day / 2.0, 12.0, 12.0 + hours_day / 2.0]

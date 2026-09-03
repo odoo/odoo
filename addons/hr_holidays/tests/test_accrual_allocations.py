@@ -4184,9 +4184,14 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         check that creating an accrual allocation for an employee without working hours doesn't raise a traceback error
         """
         with freeze_time("2017-12-05"):
+            calendar_without_hours = self.env['resource.calendar'].create({
+                'name': 'Calendar without working hours',
+                'calendar_type': 'flexible',
+                'attendance_ids': [],
+            })
             employee_without_calendar = self.env['hr.employee'].create({
                 'name': 'employee without calendar',
-                'resource_calendar_id': False,
+                'resource_calendar_id': calendar_without_hours.id,
             })
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'is_based_on_worked_time': True,

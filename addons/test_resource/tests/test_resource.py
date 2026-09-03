@@ -81,9 +81,14 @@ class TestResource(TestResourceCommon):
         self.assertEqual(53, sum_work_intervals_patel, "Sum of the work intervals for the calendar of patel should be 4h+14h+35h = 53h")
 
     def test_resource_without_calendar(self):
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+        })
         resource = self.env['resource.resource'].create({
             'name': 'resource',
-            'calendar_id': False,
+            'calendar_id': flexible_calendar.id,
         })
 
         resource.company_id.resource_calendar_id = False

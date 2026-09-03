@@ -67,23 +67,17 @@ class ResourceCalendarLeaves(models.Model):
             ['company_id'],
             ['id:recordset', 'resource_id:recordset', 'date_from:min', 'date_to:max'],
         )
-        flexible_resources_by_company = dict(self.env['hr.employee'].sudo()._read_group(
-            [('is_flexible', '=', True), ('is_fully_flexible', '=', False)],
-            ['company_id'],
-            ['resource_id:recordset'],
-        ))
+
         for company, leaves, resources, date_from_min, date_to_max in comp_leaves_read_group:
-            flexible_resources = flexible_resources_by_company.get(company, self.env['resource.resource'])
-            all_calendars = resource_calendars.ids + [False] if flexible_resources else resource_calendars.ids
-            for calendar_id in all_calendars:
-                if calendar_id and (calendar_company := calendars_dict[calendar_id].company_id) and calendar_company != company:
+            for calendar_id in resource_calendars.ids:
+                if (calendar_company := calendars_dict[calendar_id].company_id) and calendar_company != company:
                     continue  # only consider global leaves of the same company as the calendar
                 calendar_data = cal_attendance_intervals_dict.get(calendar_id)
                 if calendar_data is None:
                     calendar_data = {
                         'date_from': date_from_min.replace(tzinfo=UTC),
                         'date_to': date_to_max.replace(tzinfo=UTC),
-                        'resources': resources | flexible_resources,
+                        'resources': resources,
                         'leaves': leaves,
                     }
                     cal_attendance_intervals_dict[calendar_id] = calendar_data
@@ -91,7 +85,7 @@ class ResourceCalendarLeaves(models.Model):
                     calendar_data.update(
                         date_from=min(date_from_min.replace(tzinfo=UTC), calendar_data['date_from']),
                         date_to=max(date_to_max.replace(tzinfo=UTC), calendar_data['date_to']),
-                        resources=resources | flexible_resources | calendar_data['resources'],
+                        resources=resources | calendar_data['resources'],
                         leaves=leaves | calendar_data['leaves'],
                     )
 
@@ -101,7 +95,7 @@ class ResourceCalendarLeaves(models.Model):
         #              and values: number of days
         results = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float))))
         for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
-            calendar = calendars_dict[calendar_id] if calendar_id else self.env['resource.calendar']
+            calendar = calendars_dict[calendar_id]
             resources_per_tz = cal_attendance_intervals_params_entry['resources']._get_resources_per_tz()
             work_hours_intervals = calendar._attendance_intervals_batch(
                 cal_attendance_intervals_params_entry['date_from'],
@@ -131,11 +125,7 @@ class ResourceCalendarLeaves(models.Model):
         employees_groups = self.env['hr.employee']._read_group(
             [
                 ('company_id', 'in', self.company_id.ids if self.company_id else self.env.companies.ids),
-                '|',
-                    ('resource_calendar_id', 'in', resource_calendars.ids),
-                    '&',
-                        ('is_flexible', '=', True),
-                        ('is_fully_flexible', '=', False),
+                ('resource_calendar_id', 'in', resource_calendars.ids),
             ],
             ['resource_calendar_id'],
             ['id:recordset'])
@@ -173,7 +163,7 @@ class ResourceCalendarLeaves(models.Model):
         def get_timesheets_data(employees, work_hours_list_by_resource, vals_list):
             for employee in employees:
                 holidays = holidays_by_employee.get(employee.id)
-                work_hours_list = work_hours_list_by_resource[employee.resource_id.id if not employee.resource_id.calendar_id else False]
+                work_hours_list = work_hours_list_by_resource[False]
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
                     if not holidays or all(not (date_from <= day_date and date_to >= day_date) for date_from, date_to in holidays):
                         vals_list.append(
@@ -237,7 +227,7 @@ class ResourceCalendarLeaves(models.Model):
                 if leave.calendar_id and employee.resource_calendar_id != leave.calendar_id:
                     continue
                 calendar = leave.calendar_id or employee.resource_calendar_id
-                work_hours_list = work_hours_data_by_calendar[calendar.id][leave.id][employee.resource_id.id if not calendar else False]
+                work_hours_list = work_hours_data_by_calendar[calendar.id][leave.id][False]
                 timesheet_dates = timesheet_dates_per_employee_id.get(employee.id, [])
                 for index, (day_date, work_hours_count) in enumerate(work_hours_list):
                     generate_timesheet = day_date not in timesheet_dates

@@ -214,10 +214,12 @@ class HrEmployeePublic(models.Model):
         return [('id', operator, new_hires.ids)]
 
     def _compute_hours_per_week(self):
-        self._compute_from_employee('hours_per_week')
+        for employee in self:
+            employee.hours_per_week = employee.sudo().resource_calendar_id.hours_per_week
 
     def _compute_hours_per_day(self):
-        self._compute_from_employee('hours_per_day')
+        for employee in self:
+            employee.hours_per_day = employee.sudo().resource_calendar_id.hours_per_day
 
     @api.model
     def _get_fields(self):

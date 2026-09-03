@@ -606,7 +606,7 @@ been taken for this time off type. Changing it now would affect existing employe
                     start_datetime = datetime.combine(target_date, time.min, tzinfo=UTC)
                     end_datetime = datetime.combine(closest_expiration_date, time.max, tzinfo=UTC)
                     closest_allocation_dict = {}
-                    if not calendar:
+                    if employee.sudo()._is_flexible():
                         closest_allocation_dict['hours'] = float_round((end_datetime - start_datetime).total_seconds() / 3600, precision_rounding=0.001)
                         closest_allocation_dict['days'] = (end_datetime - start_datetime).days + 1
                     else:

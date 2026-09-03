@@ -548,11 +548,16 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             ],
         })
 
-        logged_in_emp = self.env.user.employee_id
-        logged_in_emp.write({
-            'resource_calendar_id': False,
+        calendar_flexible = self.env['resource.calendar'].sudo().create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
             'hours_per_week': 40,
             'hours_per_day': 8.0,
+        })
+        logged_in_emp = self.env.user.employee_id
+        logged_in_emp.write({
+            'resource_calendar_id': calendar_flexible.id,
         })
 
         allocation = self.env['hr.leave.allocation'].sudo().create({
@@ -626,8 +631,13 @@ class TestExpiringLeaves(HttpCase, TestHrHolidaysCommon):
             ],
         })
 
+        calendar_fully_flexible = self.env['resource.calendar'].sudo().create({
+            'name': 'Fully Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
+        })
         logged_in_emp = self.env.user.employee_id
-        logged_in_emp.resource_calendar_id = None       # Set as Fully flexible resource
+        logged_in_emp.resource_calendar_id = calendar_fully_flexible       # Set as Fully flexible resource
 
         allocation = self.env['hr.leave.allocation'].sudo().create({
             'date_from': date(date.today().year, 1, 1),

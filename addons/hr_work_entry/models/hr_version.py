@@ -75,7 +75,7 @@ class HrVersion(models.Model):
         versions_with_calendar_work_entry_source = self.filtered(lambda version: version.has_static_work_entries())
         result = dict()
         for calendar, versions in versions_with_calendar_work_entry_source.grouped('resource_calendar_id').items():
-            fully_flex_versions = versions.filtered('is_fully_flexible')
+            fully_flex_versions = versions.filtered(lambda version: version._is_fully_flexible())
             for version in fully_flex_versions:
                 result.update({version.employee_id.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
             remaining_versions = (versions - fully_flex_versions).with_prefetch()
@@ -180,9 +180,9 @@ class HrVersion(models.Model):
             worked_leaves = worked_leaves_by_resource[resource.id]
 
             real_attendances = expected_attendances - leaves - worked_leaves
-            if version.is_fully_flexible:
+            if version._is_fully_flexible():
                 real_leaves = leaves
-            elif version.is_flexible:
+            elif version._is_flexible():
                 # Flexible hours case
                 # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
                 # For one day leaves, we want them to occupy exactly the time it was taken, for a time off in days
@@ -475,10 +475,6 @@ class HrVersion(models.Model):
                 continue
             version = vals['version_id']
             calendar = version.resource_calendar_id
-            if not calendar and not version.hours_per_week and not version.hours_per_day:
-                vals['date'] = date_start.astimezone(tz).date()
-                vals['duration'] = 0.0
-                continue
             employee = version.employee_id
             mapped_periods[date_start, date_stop][calendar] |= employee
 
@@ -495,12 +491,10 @@ class HrVersion(models.Model):
                 date_stop = vals['date_stop']
                 version = vals['version_id']
                 calendar = version.resource_calendar_id
-                hours_per_week = version.hours_per_week
-                hours_per_day = version.hours_per_day
                 employee = version.employee_id
                 tz = _get_tz(version)
                 vals['date'] = date_start.astimezone(tz).date()
-                vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours'] if calendar or hours_per_week or hours_per_day else 0.0
+                vals['duration'] = mapped_version_data[date_start, date_stop][calendar][employee.id]['hours']
             vals.pop('date_start', False)
             vals.pop('date_stop', False)
 

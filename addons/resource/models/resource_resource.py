@@ -10,7 +10,6 @@ from dateutil.relativedelta import relativedelta, weekdays
 
 from odoo import api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.exceptions import ValidationError
 from odoo.tools import get_lang, babel_locale_parse
 from odoo.tools.intervals import Intervals
 from odoo.tools.date_utils import localized, sum_intervals, to_timezone, weeknumber
@@ -51,27 +50,19 @@ class ResourceResource(models.Model):
         'Efficiency Factor', default=100, required=True,
         help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
     calendar_id = fields.Many2one(
-        "resource.calendar", string='Working Time',
+        "resource.calendar", string='Working Time', required=True,
         default=lambda self: self.env.company.resource_calendar_id,
         domain="[('company_id', '=', company_id)]",
-        help="Define the working schedule of the resource. If not set, the resource will have fully flexible working hours.")
-    hours_per_week = fields.Float(string="Hours per Week", compute='_compute_hours_per_week', store=True, readonly=False)
-    hours_per_day = fields.Float(string="Hours per Day", compute='_compute_hours_per_day', store=True, readonly=False)
+        help="Define the working schedule of the resource. Assign a flexible calendar for fully "
+             "flexible working hours.")
+    # readonly: several resources can share the same calendar, writing through would silently
+    # change everyone else's hours too; edit the Working Schedule itself instead
+    hours_per_week = fields.Float(string="Hours per Week", related='calendar_id.hours_per_week', readonly=True)
+    hours_per_day = fields.Float(string="Hours per Day", related='calendar_id.hours_per_day', readonly=True)
     tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
         default=lambda self: self.env.context.get('tz') or self.env.user.tz or 'UTC')
     color = fields.Integer(default=_default_color)
-
-    @api.constrains('calendar_id', 'hours_per_week', 'hours_per_day')
-    def _check_hours_per_week_day(self):
-        for resource in self:
-            hours_per_week = resource.hours_per_week
-            hours_per_day = resource.hours_per_day
-            if not resource.calendar_id and hours_per_week and hours_per_day:
-                if hours_per_day < (hours_per_week / 7):
-                    raise ValidationError(self.env._("The average hours per day is too low compared to the number of hours per week"))
-                if hours_per_day > hours_per_week:
-                    raise ValidationError(self.env._("The average hours per day is too high compared to the number of hours per week"))
 
     _check_time_efficiency = models.Constraint(
         'CHECK(time_efficiency>0)',
@@ -105,17 +96,6 @@ class ResourceResource(models.Model):
         if not vals:
             return True
         return super().write(vals)
-
-    @api.depends('hours_per_week')
-    def _compute_hours_per_day(self):
-        for resource in self:
-            resource.hours_per_day = resource.hours_per_week / 7
-
-    @api.depends('hours_per_day')
-    def _compute_hours_per_week(self):
-        for resource in self:
-            if not resource.hours_per_week:
-                resource.hours_per_week = resource.hours_per_day * 7
 
     @api.onchange('company_id')
     def _onchange_company_id(self):
@@ -155,7 +135,7 @@ class ResourceResource(models.Model):
                 start + relativedelta(hour=0, minute=0, second=0),
                 end + relativedelta(days=1, hour=0, minute=0, second=0),
             ]
-            calendar = resource.calendar_id or resource.company_id.resource_calendar_id or self.env.company.resource_calendar_id
+            calendar = resource.calendar_id
             calendar_start = calendar._get_closest_work_time(start, resource=resource, search_range=search_range,
                                                                          compute_leaves=compute_leaves)
             search_range[0] = start
@@ -178,14 +158,17 @@ class ResourceResource(models.Model):
         resource_mapping = {}
         calendar_mapping = defaultdict(lambda: self.env['resource.resource'])
         for resource in self:
-            calendar_mapping[resource.calendar_id or resource.company_id.resource_calendar_id] |= resource
+            calendar_mapping[resource.calendar_id] |= resource
 
         for calendar, resources in calendar_mapping.items():
-            if not calendar:
-                continue
             resources_per_tz = resources._get_resources_per_tz()
             resources_unavailable_intervals = calendar._unavailable_intervals_batch(start_datetime, end_datetime, resources_per_tz)
-            resource_mapping.update(resources_unavailable_intervals)
+            # _unavailable_intervals_batch also includes a `False`-keyed entry for the calendar's
+            # own generic (resource-less) unavailability; irrelevant here, this method only
+            # promises unavailability for the resources in self
+            resource_mapping.update({
+                resource_id: intervals for resource_id, intervals in resources_unavailable_intervals.items() if resource_id
+            })
         return resource_mapping
 
     def _get_calendars_validity_within_period(self, start, end, default_company=None):
@@ -202,7 +185,7 @@ class ResourceResource(models.Model):
             # if no resource, add the company resource calendar.
             resource_calendars_within_period[False][default_calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
         for resource in self:
-            calendar = resource.calendar_id or resource.company_id.resource_calendar_id or default_calendar
+            calendar = resource.calendar_id
             resource_calendars_within_period[resource.id][calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
         return resource_calendars_within_period
 
@@ -244,9 +227,10 @@ class ResourceResource(models.Model):
         return resource_work_intervals, calendar_work_intervals
 
     def _is_fully_flexible(self):
-        """ employee has a fully flexible schedule has no working calendar set """
+        """ return True if the resource has no predefined slots to derive working hours from,
+        and no hours target"""
         self.ensure_one()
-        return bool(not self.calendar_id and not self.hours_per_week and not self.hours_per_day)
+        return self.calendar_id._is_fully_flexible()
 
     def _get_calendar_data_at(self, date_target, tz=False):
         return {
@@ -257,11 +241,8 @@ class ResourceResource(models.Model):
             } for resource in self}
 
     def _is_flexible(self):
-        """ An employee is considered flexible if he's not assigned any calendar
-            If the employee is not assigned any calendar and no hours_per_week or hours_per_day are defined, he's considered as Fully flexible.
-        """
         self.ensure_one()
-        return self._is_fully_flexible() or not self.calendar_id
+        return self.calendar_id._is_flexible()
 
     def _get_flexible_resources_default_work_intervals(self, start, end):
         assert start.tzinfo and end.tzinfo
@@ -382,9 +363,8 @@ class ResourceResource(models.Model):
                     cap = resource.hours_per_week or full_time_required_hours
                     resource_hours_per_week[resource.id][year_week] = min(cap, day_working_hours + resource_hours_per_week[resource.id][year_week])
         for calendar, resources in calendar_resources.items():
-            domain = [('calendar_id', '=', False)] if not calendar else None
             resources_per_tz = resources._get_resources_per_tz()
-            leave_intervals = (calendar or self.env['resource.calendar'])._leave_intervals_batch(min_start_date, max_end_date, resources_per_tz, domain)
+            leave_intervals = (calendar or self.env['resource.calendar'])._leave_intervals_batch(min_start_date, max_end_date, resources_per_tz, [])
             for resource_id, leaves in leave_intervals.items():
                 if not resource_id:
                     continue

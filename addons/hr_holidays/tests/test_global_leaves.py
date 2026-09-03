@@ -385,11 +385,16 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         multi-day holidays in flexible schedules
         """
 
-        flex_resource = self.env['resource.resource'].create({
-            'name': 'Flexible',
-            'calendar_id': False,
+        flex_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible Calendar',
+            'calendar_type': 'flexible',
+            'attendance_ids': [],
             'hours_per_week': 40.0,
             'hours_per_day': 8,
+        })
+        flex_resource = self.env['resource.resource'].create({
+            'name': 'Flexible',
+            'calendar_id': flex_calendar.id,
             'tz': 'UTC',
         })
 
