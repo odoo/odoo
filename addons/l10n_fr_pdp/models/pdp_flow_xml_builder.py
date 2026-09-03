@@ -599,10 +599,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
 
     @api.model
     def _get_move_typecode(self, move):
+        is_credit_note = move.move_type in {'out_refund', 'in_refund'}
         if move.journal_id.is_self_billing:
-            return '389' if move.is_inbound() else '261'
-        else:
-            return '380' if move.is_inbound() else '381'
+            return '261' if is_credit_note else '389'
+        return '381' if is_credit_note else '380'
 
     @api.model
     def _get_payments(self, flow):
