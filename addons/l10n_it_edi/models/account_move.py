@@ -1911,8 +1911,11 @@ class AccountMove(models.Model):
                         move_line.product_id = product
                         break
 
+        # Extract description for prediction.
+        description = get_text(element, './/Descrizione')
+
         # If no product is found, try to find a product that may be fitting
-        predicted_values = self.env['account.move.line']._get_predicted_values(move_line.name, self) if predict_enabled else {}
+        predicted_values = self.env['account.move.line']._get_predicted_values(description, self) if predict_enabled else {}
         if predict_enabled and not move_line.product_id:
             fitting_product = predicted_values.get('product_id')
             if fitting_product:

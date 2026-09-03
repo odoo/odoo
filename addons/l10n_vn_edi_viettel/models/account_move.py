@@ -565,7 +565,7 @@ class AccountMove(models.Model):
         for line in self.invoice_line_ids.filtered(lambda ln: ln.display_type in code_map):
             # For credit notes amount, we send negative values (reduces the amount of the original invoice)
             sign = 1 if self.move_type == 'out_invoice' else -1
-            item_name = line.label.replace('\n', ' ')
+            item_name = line.with_context(display_default_code=False).label.replace('\n', ' ')
             item_information = {
                 'itemCode': line.product_id.code or '',
                 'itemName': textwrap.shorten(item_name, width=500, placeholder='...'),
