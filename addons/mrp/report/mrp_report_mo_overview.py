@@ -379,7 +379,7 @@ class ReportMoOverview(models.AbstractModel):
         total_bom_cost = False
         for index, workorder in enumerate(production.workorder_ids):
             hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
-            duration = workorder.get_duration() / 60
+            duration = workorder._get_actual_duration()
             operation_cost = duration * hourly_cost
             mo_cost = workorder._compute_expected_operation_cost(without_employee_cost=True) if workorder.duration_expected\
                         else workorder._get_current_theorical_operation_cost(without_employee_cost=True)
