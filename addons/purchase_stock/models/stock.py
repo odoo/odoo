@@ -217,13 +217,13 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('effective_route_id', 'supplier_id', 'rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_supplier_id_placeholder(self):
         for orderpoint in self:
-            default_supplier = orderpoint._get_default_supplier()
-            orderpoint.supplier_id_placeholder = default_supplier.display_name if default_supplier else ''
+            orderpoint.supplier_id_placeholder = self.env['product.supplierinfo']._get_seller_info_display_name(
+                orderpoint._get_default_supplier())
 
     @api.depends('effective_route_id', 'supplier_id', 'rule_ids', 'product_id.seller_ids', 'product_id.seller_ids.delay')
     def _compute_effective_vendor_id(self):
         for orderpoint in self:
-            orderpoint.effective_vendor_id = (orderpoint.supplier_id if orderpoint.supplier_id else orderpoint._get_default_supplier()).partner_id
+            orderpoint.effective_vendor_id = orderpoint.supplier_id.partner_id or orderpoint._get_default_supplier().get('partner_id')
 
     def _search_effective_vendor_id(self, operator, value):
         target_partners = self.env['res.partner'].search([('id', operator, value)])
@@ -295,7 +295,7 @@ class StockWarehouseOrderpoint(models.Model):
                 self.company_id, self.product_id, qty=self.qty_to_order, uom=self.uom_id
             )
         else:
-            return self.env['product.supplierinfo']
+            return {}
 
     def _get_lead_days_values(self):
         values = super()._get_lead_days_values()
@@ -342,12 +342,12 @@ class StockWarehouseOrderpoint(models.Model):
             planned_date -= relativedelta.relativedelta(days=int(global_horizon_days))
         date_deadline = planned_date or fields.Date.today()
         dates_info = self.product_id._get_dates_info(date_deadline, self.location_id, route_ids=self.route_id)
-        supplier = self.supplier_id or self.product_id.with_company(self.company_id)._select_seller(
+        seller_info = self.supplier_id._get_seller_info() or self.product_id.with_company(self.company_id)._select_seller(
             quantity=qty_to_order,
             date=max(dates_info['date_order'].date(), fields.Date.today()),
             uom_id=self.uom_id
         )
-        return supplier.uom_id
+        return seller_info.get('uom_id')
 
     def _quantity_in_progress(self):
         res = super()._quantity_in_progress()

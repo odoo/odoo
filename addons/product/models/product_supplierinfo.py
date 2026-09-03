@@ -100,6 +100,22 @@ class ProductSupplierinfo(models.Model):
                 "End date can't be earlier than the start date. Please check dates for vendor pricelist: %s", ', '.join(invalid_suppliers.mapped('partner_id.name'))
             ))
 
+    def _get_seller_info(self):
+        if not self:
+            return {}
+        self.ensure_one()
+        return {
+            'supplierinfo': self,
+            'partner_id': self.partner_id,
+            'price': self.price,
+            'discount': self.discount,
+            'price_discounted': self.price_discounted,
+            'currency_id': self.currency_id,
+            'uom_id': self.uom_id,
+            'min_qty': self.min_qty,
+            'delay': self.delay,
+        }
+
     @api.model
     def get_import_templates(self):
         return [{

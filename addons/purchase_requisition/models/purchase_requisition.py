@@ -261,10 +261,10 @@ class PurchaseRequisitionLine(models.Model):
         for line in self:
             if line.requisition_id.state != 'draft' or line.requisition_id.requisition_type != 'purchase_template' or not line.requisition_id.vendor_id or not line.product_id:
                 continue
-            seller = line.product_id._select_seller(
+            seller_info = line.product_id._select_seller(
                 partner_id=line.requisition_id.vendor_id, quantity=line.product_qty,
                 date=line.requisition_id.date_start, uom_id=line.uom_id)
-            line.price_unit = seller.price if seller else line.product_id.standard_price
+            line.price_unit = seller_info['price'] if seller_info else line.product_id.standard_price
 
     @api.model_create_multi
     def create(self, vals_list):

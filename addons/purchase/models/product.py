@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from collections.abc import Iterable
-
 from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.tools.float_utils import float_round
@@ -116,11 +114,7 @@ class ProductProduct(models.Model):
     def _search_sold_by_vendor(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        if isinstance(value, str):
-            partners = self.env['res.partner'].search([('name', operator, value)])
-        else:
-            ids = value if isinstance(value, Iterable) else [value]
-            partners = self.env['res.partner'].browse([id_ for id_ in ids if id_]).exists()
+        partners = self.env['res.partner'].search([('id', operator, value)])
         partners |= partners.parent_id
         if not partners:
             return Domain.FALSE
@@ -212,34 +206,45 @@ class ProductProduct(models.Model):
             ('product_id', '=', self.id),
         ], order='id desc', limit=1)
 
-    def _get_last_po_supplierinfo(self, partner_id=False, company_id=False):
+    def _get_last_po_seller_info(self, partner_id=False, company_id=False):
         last_line = self._get_last_po_line(partner_id=partner_id, company_id=company_id)
         if not last_line:
-            return self.env['product.supplierinfo']
+            return {}
         last_order = last_line.order_id
         vendor = last_order.partner_id if not last_order.partner_id.parent_id else last_order.partner_id.parent_id
         delay = 0
         if last_line.date_planned and last_order.date_approve:
             delay = max(0, (last_line.date_planned.date() - last_order.date_approve.date()).days)
 
-        return self.env['product.supplierinfo'].new({
-            'partner_id': vendor.id,
-            'product_tmpl_id': self.product_tmpl_id.id,
-            'product_id': self.id if self.product_variant_count > 1 else False,
+        return {
+            'supplierinfo': self.env['product.supplierinfo'],
+            'partner_id': vendor,
             'price': last_line.price_unit,
-            'currency_id': last_line.currency_id.id,
             'discount': last_line.discount,
-            'uom_id': last_line.uom_id.id,
+            'price_discounted': last_line.uom_id._compute_price(last_line.price_unit_discounted, self.uom_id),
+            'currency_id': last_line.currency_id,
+            'uom_id': last_line.uom_id,
             'min_qty': 0.0,
             'delay': delay,
-        })
+        }
+
+    def _is_last_po_fallback_applicable(self, params=False):
+        """ Whether the last confirmed po line may act as a vendor pricelist.
+            Overridden when the params restrict the sellers to partners that a
+            past purchase does not qualify as, e.g. subcontractors.
+        """
+        return True
 
     def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, ordered_by='price_discounted', params=False):
-        seller = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)
-        if not seller and not self._has_vendor_pricelist(partner_id, self.env.company):
-            # No pricelist defined for this vendor: the last confirmed po line acts as one
-            seller = self._get_last_po_supplierinfo(partner_id, self.env.company)
-        return seller
+        seller_info = super()._select_seller(partner_id=partner_id, quantity=quantity, date=date, uom_id=uom_id, ordered_by=ordered_by, params=params)
+        if not seller_info and self._is_last_po_fallback_applicable(params):
+            company = self.env.company
+            if params and params.get('order_id') and params['order_id'].company_id:
+                company = params['order_id'].company_id
+            if not self._has_vendor_pricelist(partner_id, company):
+                # No pricelist defined for this vendor: the last confirmed po line acts as one
+                seller_info = self._get_last_po_seller_info(partner_id, company)
+        return seller_info
 
 
 class ProductSupplierinfo(models.Model):

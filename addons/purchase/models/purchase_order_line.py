@@ -321,14 +321,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_selected_seller_id(self):
         for line in self:
             if line.product_id:
-                params = line._get_select_sellers_params()
-                seller = line.product_id._select_seller(
-                    partner_id=line.partner_id,
-                    quantity=abs(line.product_qty),
-                    date=fields.Date.context_today(line, timestamp=line.order_id.date_order),
-                    uom_id=line.uom_id,
-                    params=params)
-                line.selected_seller_id = seller._origin.id if seller else False
+                line.selected_seller_id = line._get_seller_info().get('supplierinfo')
             else:
                 line.selected_seller_id = False
 
@@ -414,23 +407,24 @@ class PurchaseOrderLine(models.Model):
                 raise UserError(_('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
 
     @api.model
-    def _get_date_planned(self, seller, po=False):
+    def _get_date_planned(self, seller_info, po=False):
         """Return the datetime value to use as Schedule Date (``date_planned``) for
            PO Lines that correspond to the given product.seller_ids,
            when ordered at `date_order_str`.
 
-           :param Model seller: used to fetch the delivery delay (if no seller
-                                is provided, the delay is 0)
+           :param dict seller_info: used to fetch the delivery delay
+                                    (if empty, the delay is 0)
            :param Model po: purchase.order, necessary only if the PO line is
                             not yet attached to a PO.
            :rtype: datetime
            :return: desired Schedule Date for the PO line
         """
         date_order = po.date_order if po else self.order_id.date_order
+        delay = seller_info.get('delay', 0)
         if date_order:
-            return date_order + relativedelta(days=seller.delay if seller else 0)
+            return date_order + relativedelta(days=delay)
         else:
-            return datetime.today() + relativedelta(days=seller.delay if seller else 0)
+            return datetime.today() + relativedelta(days=delay)
 
     @api.depends('product_id', 'order_id.partner_id')
     def _compute_analytic_distribution(self):
@@ -489,9 +483,9 @@ class PurchaseOrderLine(models.Model):
             if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion') or (line.technical_price_unit != line.price_unit):
                 continue
             params = line._get_select_sellers_params()
-
-            if line.selected_seller_id or not line.date_planned:
-                line.date_planned = line._get_date_planned(line.selected_seller_id).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            seller_info = line._get_seller_info()
+            if seller_info or not line.date_planned:
+                line.date_planned = line._get_date_planned(seller_info).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
             # record product names to avoid resetting custom descriptions
             default_names = []
@@ -517,19 +511,8 @@ class PurchaseOrderLine(models.Model):
                             line.name = display_names[vendors.ids.index(line.selected_seller_id.id)] + line.name[len(display_name):]
                         break
 
-            seller = line.selected_seller_id
-            if not seller:
-                seller = line.product_id._select_seller(
-                    partner_id=line.partner_id,
-                    quantity=abs(line.product_qty),
-                    date=fields.Date.context_today(line, timestamp=line.order_id.date_order),
-                    uom_id=line.uom_id,
-                    params=params)
-                if seller:
-                    line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
-            # If not seller, use the standard price. It needs a proper currency conversion.
-            if not seller:
+            # If no seller, use the standard price. It needs a proper currency conversion.
+            if not seller_info:
                 if line.price_unit and line.uom_id == line._origin.uom_id and line.partner_id == line._origin.partner_id \
                         and not line.product_id._has_vendor_pricelist(line.partner_id, line.company_id):
                     # Avoid to modify the price unit if there is no price list for this partner and
@@ -560,15 +543,15 @@ class PurchaseOrderLine(models.Model):
                 )
 
             else:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id, document_tax_mode=line.document_tax_mode)
-                price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller_info['price'], line.product_id.supplier_taxes_id, line.tax_ids, line.company_id, document_tax_mode=line.document_tax_mode)
+                price_unit = seller_info['currency_id']._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 line.price_unit = line.technical_price_unit = line.product_id._adapt_price_unit_to_document_tax_mode(
-                    seller.uom_id._compute_price(price_unit, line.uom_id),
+                    seller_info['uom_id']._compute_price(price_unit, line.uom_id),
                     line.product_id.supplier_taxes_id,
                     line.uom_id,
                     line.document_tax_mode,
                 )
-                line.discount = seller.discount or 0.0
+                line.discount = seller_info['discount'] or 0.0
 
     def _reset_price_unit(self, price_unit):
         self.ensure_one()
@@ -752,46 +735,47 @@ class PurchaseOrderLine(models.Model):
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.context_today(self)
-        seller = product_id.with_company(company_id)._select_seller(
+        seller_info = product_id.with_company(company_id)._select_seller(
             partner_id=partner_id,
             quantity=product_qty if values.get('force_uom') else uom_po_qty,
             date=max(fields.Date.context_today(self, timestamp=po.date_order), today),
             uom_id=product_uom if values.get('force_uom') else product_id.uom_id,
             params={'force_uom': values.get('force_uom')}
         )
-        if seller and (seller.uom_id or seller.product_tmpl_id.uom_id) != product_uom:
-            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.uom_id, rounding_method='HALF-UP')
+        seller_uom = seller_info.get('uom_id', product_uom)
+        if seller_info and seller_uom != product_uom:
+            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller_uom, rounding_method='HALF-UP')
 
         tax_domain = self.env['account.tax']._check_company_domain(company_id)
         product_taxes = product_id.supplier_taxes_id.filtered_domain(tax_domain)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
-        if seller:
-            price_unit = (seller.uom_id._compute_price(seller.price, product_uom) if product_uom else seller.price)
+        if seller_info:
+            price_unit = (seller_uom._compute_price(seller_info['price'], product_uom) if product_uom else seller_info['price'])
             price_unit = self.env['account.tax']._fix_tax_included_price_company(
             price_unit, product_taxes, taxes, company_id, self.document_tax_mode)
         else:
             price_unit = 0
-        if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
-            price_unit = seller.currency_id._convert(
+        if price_unit and seller_info and po.currency_id and seller_info['currency_id'] != po.currency_id:
+            price_unit = seller_info['currency_id']._convert(
                 price_unit, po.currency_id, po.company_id, po.date_order)
 
         product_lang = product_id.with_prefetch().with_context(
             lang=partner_id.lang,
             partner_id=partner_id.id,
         )
-        name = product_lang.with_context(seller_id=seller.id).display_name
+        name = product_lang.with_context(seller_id=seller_info['supplierinfo'].id if seller_info else False).display_name
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 
-        date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
-        discount = seller.discount or 0.0
+        date_planned = self.order_id.date_planned or self._get_date_planned(seller_info, po=po)
+        discount = seller_info.get('discount') or 0.0
 
         return {
             'name': name,
             'product_qty': product_qty if product_uom else uom_po_qty,
             'product_id': product_id.id,
-            'uom_id': product_uom.id or seller.uom_id.id,
+            'uom_id': product_uom.id or seller_uom.id,
             'price_unit': price_unit,
             'date_planned': date_planned,
             'tax_ids': [(6, 0, taxes.ids)],
@@ -858,6 +842,15 @@ class PurchaseOrderLine(models.Model):
             "order_id": self.order_id,
             "force_uom": True,
         }
+
+    def _get_seller_info(self):
+        self.ensure_one()
+        return self.product_id._select_seller(
+            partner_id=self.partner_id,
+            quantity=abs(self.product_qty),
+            date=fields.Date.context_today(self, timestamp=self.order_id.date_order),
+            uom_id=self.uom_id,
+            params=self._get_select_sellers_params())
 
     def _get_rounding(self):
         self.ensure_one()

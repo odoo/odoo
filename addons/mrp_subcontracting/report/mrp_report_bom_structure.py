@@ -7,12 +7,12 @@ from odoo import api, models, _
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
     _inherit = 'report.mrp.report_bom_structure'
 
-    def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
-        ratio_uom_seller = seller.uom_id.factor / bom.uom_id.factor
-        price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company))
+    def _get_subcontracting_line(self, bom, seller_info, level, bom_quantity):
+        ratio_uom_seller = seller_info['uom_id'].factor / bom.uom_id.factor
+        price = seller_info['currency_id']._convert(seller_info['price'], self.env.company.currency_id, (bom.company_id or self.env.company))
         return {
-            'name': seller.partner_id.display_name,
-            'partner_id': seller.partner_id.id,
+            'name': seller_info['partner_id'].display_name,
+            'partner_id': seller_info['partner_id'].id,
             'quantity': bom_quantity,
             'uom': bom.uom_id.name,
             'bom_cost': price / ratio_uom_seller * bom_quantity,
@@ -42,11 +42,11 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
         if bom.type == 'subcontract' and not self.env.context.get('minimized', False):
             if not res['product']:
-                seller = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]
+                seller_info = bom.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id in bom.subcontractor_ids)[:1]._get_seller_info()
             else:
-                seller = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
-            if seller:
-                res['subcontracting'] = self._get_subcontracting_line(bom, seller, level + 1, res['quantity'])
+                seller_info = res['product']._select_seller(quantity=res['quantity'], uom_id=bom.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+            if seller_info:
+                res['subcontracting'] = self._get_subcontracting_line(bom, seller_info, level + 1, res['quantity'])
                 if not self.env.context.get('minimized', False):
                     res['bom_cost'] += res['subcontracting']['bom_cost']
                     res['bom_unit_cost'] += bom.uom_id._compute_price(res['subcontracting']['bom_cost'], product.uom_id)
@@ -127,21 +127,21 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         res = super()._format_route_info(rules, rules_delay, warehouse, product, bom, quantity)
         subcontract_rules = [rule for rule in rules if rule.action == 'buy' and bom and bom.type == 'subcontract']
         if subcontract_rules:
-            supplier = product._select_seller(quantity=quantity, uom_id=product.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
-            if not supplier:
+            seller_info = product._select_seller(quantity=quantity, uom_id=product.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+            if not seller_info:
                 # If no vendor found for the right quantity, we still want to display a vendor for the lead times
-                supplier = product._select_seller(quantity=None, uom_id=product.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
+                seller_info = product._select_seller(quantity=None, uom_id=product.uom_id, params={'subcontractor_ids': bom.subcontractor_ids})
             # for subcontracting, we can't decide the lead time without component's resupply availability
             # we only return necessary info and calculate the lead time late when we have component's data
-            if supplier:
-                qty_supplier_uom = product.uom_id._compute_quantity(quantity, supplier.uom_id)
+            if seller_info:
+                qty_supplier_uom = product.uom_id._compute_quantity(quantity, seller_info['uom_id'])
                 return {
                     'route_type': 'subcontract',
                     'route_name': subcontract_rules[0].route_id.display_name,
-                    'route_detail': supplier.with_context(use_simplified_supplier_name=True).display_name,
+                    'route_detail': seller_info['partner_id'].display_name,
                     'lead_time': rules_delay,
-                    'supplier': supplier,
-                    'route_alert': product.uom_id.compare(qty_supplier_uom, supplier.min_qty) < 0,
+                    'supplier': seller_info['supplierinfo'],
+                    'route_alert': product.uom_id.compare(qty_supplier_uom, seller_info['min_qty']) < 0,
                     'qty_checked': quantity,
                     'bom': bom,
                 }

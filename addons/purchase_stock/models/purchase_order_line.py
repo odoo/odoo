@@ -364,10 +364,10 @@ class PurchaseOrderLine(models.Model):
         line_description = ''
         if values.get('product_description_variants'):
             line_description = values['product_description_variants']
-        supplier = values.get('supplier')
-        if not values.get('force_uom') and supplier and supplier.uom_id != product_uom:
-            product_qty = product_uom._compute_quantity(product_qty, supplier.uom_id)
-            product_uom = supplier.uom_id
+        seller_info = values.get('supplier')
+        if not values.get('force_uom') and seller_info and seller_info['uom_id'] != product_uom:
+            product_qty = product_uom._compute_quantity(product_qty, seller_info['uom_id'])
+            product_uom = seller_info['uom_id']
         partner = values.get('procurement_partner')
         res = self.with_context(procurement_values=values)._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, partner, po)
         # We need to keep the vendor name set in _prepare_purchase_order_line. To avoid redundancy

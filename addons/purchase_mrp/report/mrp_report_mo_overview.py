@@ -64,12 +64,12 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
     def _get_resupply_data(self, rules, rules_delay, quantity, uom_id, product, production):
         res = super()._get_resupply_data(rules, rules_delay, quantity, uom_id, product, production)
         if any(rule for rule in rules if rule.action == 'buy' and product.seller_ids):
-            supplier = product._select_seller(quantity=quantity, uom_id=product.uom_id)
-            if supplier:
+            seller_info = product._select_seller(quantity=quantity, uom_id=product.uom_id)
+            if seller_info:
                 return {
-                    'delay': supplier.delay + rules_delay,
-                    'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.uom_id),
-                    'currency': supplier.currency_id,
+                    'delay': seller_info['delay'] + rules_delay,
+                    'cost': seller_info['price'] * uom_id._compute_quantity(quantity, seller_info['uom_id']),
+                    'currency': seller_info['currency_id'],
                 }
         return res
 
