@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo.tests import tagged
 
 from .common import OauthServerCommon
@@ -5,6 +7,19 @@ from .common import OauthServerCommon
 
 @tagged('post_install', '-at_install')
 class TestDynamicClientRegistration(OauthServerCommon):
+
+    def test_authorization_server_metadata_advertises_the_registration_endpoint(self):
+        with patch(
+            'odoo.addons.auth_oauth_server.controllers.oauth_server_controller.oauth_base_url',
+            return_value='https://oauth.example.com'
+        ):
+            response = self.url_open('/.well-known/oauth-authorization-server/oauth/testrs')
+
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                response.json()['registration_endpoint'],
+                'https://oauth.example.com/oauth/register/testrs',
+            )
 
     def test_client_registration(self):
         response = self._register_client(auth_method='client_secret_post')

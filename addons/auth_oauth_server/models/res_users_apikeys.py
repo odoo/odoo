@@ -12,6 +12,10 @@ class ResUsersApikeys(models.Model):
     def init(self):
         # res.users.apikeys is _auto=False, so the column of the new field has to be added by hand.
         super().init()
+        # Other models like auth_totp.device inherit from the res.users.apikeys model, but should not have the oauth_token_id column.
+        if self._name != 'res.users.apikeys':
+            return
+
         self.env.cr.execute(SQL("""
         ALTER TABLE %(table)s
             ADD COLUMN IF NOT EXISTS oauth_token_id integer REFERENCES oauth_token(id) ON DELETE CASCADE

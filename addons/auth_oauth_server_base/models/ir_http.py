@@ -20,6 +20,8 @@ class IrHttp(models.AbstractModel):
             if not resource_name:
                 raise
 
-            raise Unauthorized(www_authenticate=WWWAuthenticate('Bearer', {
-                'resource_metadata': protected_resource_metadata_url(request.env, resource_name),
-            })) from error
+            params = {'resource_metadata': protected_resource_metadata_url(request.env, resource_name)}
+            if request.httprequest.headers.get('Authorization', '').lower().startswith('bearer '):
+                params['error'] = 'invalid_token'
+
+            raise Unauthorized(www_authenticate=WWWAuthenticate('Bearer', params)) from error

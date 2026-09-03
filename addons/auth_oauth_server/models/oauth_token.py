@@ -15,6 +15,8 @@ class OauthToken(models.Model):
     client_id = fields.Many2one('oauth.client', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', required=True, ondelete='cascade')
     scope = fields.Char(required=True)
+    # Related so that a user can see the application name in their preferences without read access on oauth.client.
+    client_name = fields.Char(related='client_id.client_name', string="Application")
     # The Many2one relation is defined on res.users.apikeys and oauth.refresh.token so that they are deleted when
     # oauth.token record is deleted (ondelete='cascade'). Otherwise, The oauth.token will be linked to a
     # single access_token and a single refresh token.

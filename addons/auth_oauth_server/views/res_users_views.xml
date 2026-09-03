@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.oauth.server</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='api_keys']//field[@name='api_key_ids']" position="replace">
+                <field name="manual_api_key_ids" string="API Keys" mode="kanban" invisible="not manual_api_key_ids" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_api_keys_kanban_view"/>
+            </xpath>
+            <xpath expr="//div[@name='api_keys']" position="after">
+                <div name="oauth_tokens" invisible="id != uid or not oauth_token_ids" class="d-md-flex mt-3">
+                    <div class="col-md-6 col-lg-3 d-flex flex-column">
+                        <label for="oauth_token_ids" class="o_form_label"/>
+                        <span class="text-muted">
+                            Revoke the ones you no longer use.
+                        </span>
+                    </div>
+                    <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
+                        <field name="oauth_token_ids" mode="kanban" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_oauth_tokens_kanban_view"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_form_simple_modif" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.inherit.oauth.server</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='api_keys']//field[@name='api_key_ids']" position="replace">
+                <field name="manual_api_key_ids" string="API Keys" mode="kanban" invisible="not manual_api_key_ids" class="w-lg-75 o_base_api_keys_kanban_view"/>
+            </xpath>
+            <xpath expr="//div[@name='api_keys']" position="after">
+                <div name="oauth_tokens" invisible="not oauth_token_ids" class="d-lg-flex mt-3">
+                    <div class="col-lg-3 d-flex flex-column">
+                        <label for="oauth_token_ids" class="o_form_label"/>
+                        <span class="text-muted">
+                            Revoke the ones you no longer use.
+                        </span>
+                    </div>
+                    <div class="w-lg-75 d-flex flex-column my-auto">
+                        <field name="oauth_token_ids" mode="kanban" class="w-lg-75 o_base_oauth_tokens_kanban_view"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

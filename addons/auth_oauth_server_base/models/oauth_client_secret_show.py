@@ -1,12 +1,9 @@
 from odoo import api, fields, models
-from odoo.tools import SQL
 
 
-class OauthClientSecretShow(models.Model):
+class OauthClientSecretShow(models.AbstractModel):
     _name = 'oauth.client.secret.show'
     _description = 'OAuth Client Secret, shown once right after being generated'
-    _auto = False
-    _table_sql = SQL('(0)')
 
     client_secret = fields.Char(readonly=True)
 

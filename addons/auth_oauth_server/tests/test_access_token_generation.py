@@ -1,7 +1,10 @@
 import base64
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import tagged
+
+from odoo.addons.auth_oauth_server.controllers.oauth_server_controller import OauthServerController
 
 from .common import REDIRECT_URI, OauthServerCommon
 
@@ -9,7 +12,7 @@ from .common import REDIRECT_URI, OauthServerCommon
 @tagged('post_install', '-at_install')
 class TestAccessTokenGeneration(OauthServerCommon):
 
-    def test_full_authorization_code_exchange_mints_apikey(self):
+    def test_full_authorization_code_exchange_generates_apikey(self):
         registration = self._register_client()
         client_id, client_secret = registration['client_id'], registration['client_secret']
         self.authenticate('internal_user', 'internal_user')
@@ -56,6 +59,30 @@ class TestAccessTokenGeneration(OauthServerCommon):
         response = self._generate_access_token(code, client_id=client_id, client_secret='wrong-secret')
         self.assertEqual(response.status_code, 401)
         self.assertEqual(response.json()['error'], 'invalid_client')
+
+    def test_token_endpoint_validates_client_credentials(self):
+        client = self._register_client()
+        token_result = {
+            'access_token': 'access_token', 'refresh_token': 'refresh_token',
+            'token_type': 'Bearer', 'expires_in': 600, 'scope': 'testrs',
+        }
+        with patch.object(
+            OauthServerController, '_redeem_authorization_code', return_value=token_result,
+        ) as redeem_authorization_code_mock:
+            response = self._generate_access_token(
+                'authorization_code', client_id=client['client_id'], client_secret='wrong-secret',
+            )
+            self.assertEqual(response.status_code, 401, response.text)
+            self.assertEqual(response.json()['error'], 'invalid_client')
+            self.assertEqual(response.json()['error_description'], "Invalid client credentials")
+            redeem_authorization_code_mock.assert_not_called()
+
+            response = self._generate_access_token(
+                'authorization_code', client_id=client['client_id'], client_secret=client['client_secret'],
+            )
+            self.assertEqual(response.status_code, 200, response.text)
+            self.assertEqual(response.json(), token_result)
+            redeem_authorization_code_mock.assert_called_once()
 
     def test_wrong_code_verifier_is_rejected(self):
         registration = self._register_client()
@@ -299,3 +326,37 @@ class TestAccessTokenGeneration(OauthServerCommon):
 
         uid = self.env['res.users.apikeys']._check_credentials(scope='testrs', key=tokens['access_token'])
         self.assertEqual(uid, self.internal_user.id)
+
+    def test_revoke_validates_client_credentials(self):
+        public_client = self._register_client(auth_method='none')
+        confidential_client = self._register_client()
+
+        with patch.object(OauthServerController, '_handle_revoke_request') as handle_revoke_mock:
+            response = self._revoke('some-token', client_id='unknown_client_id', client_secret=None)
+            self.assertEqual(response.status_code, 401, response.text)
+            self.assertEqual(response.json()['error'], 'invalid_client')
+            self.assertEqual(response.json()['error_description'], "Invalid client credentials")
+            handle_revoke_mock.assert_not_called()
+
+            response = self._revoke('some-token', client_id=public_client['client_id'], client_secret=None)
+            self.assertEqual(response.status_code, 200, response.text)
+            self.assertEqual(response.json(), {})
+            handle_revoke_mock.assert_called_once()
+            handle_revoke_mock.reset_mock()
+
+            response = self._revoke(
+                'some-token', client_id=confidential_client['client_id'], client_secret='wrong-secret',
+            )
+            self.assertEqual(response.status_code, 401, response.text)
+            self.assertEqual(response.json()['error'], 'invalid_client')
+            self.assertEqual(response.json()['error_description'], "Invalid client credentials")
+            handle_revoke_mock.assert_not_called()
+
+            response = self._revoke(
+                'some-token',
+                client_id=confidential_client['client_id'],
+                client_secret=confidential_client['client_secret'],
+            )
+            self.assertEqual(response.status_code, 200, response.text)
+            self.assertEqual(response.json(), {})
+            handle_revoke_mock.assert_called_once()
