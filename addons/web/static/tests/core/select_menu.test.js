@@ -1509,7 +1509,6 @@ test("Ensure the Dropdown uses the correct 'position' value", async () => {
     });
 
     class MyParent extends Component {
-        static props = ["*"];
         static components = { SelectMenu };
         static template = xml`
             <SelectMenu choices="this.choices" position="this.state.position"/>
