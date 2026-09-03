@@ -31,3 +31,4 @@ Carlos Lopez carlos.lopez@tecnativa.com https://github.com/carlos-lopez-tecnativ
 Eduardo Ezerouali eduardo.ezerouali@tecnativa.com https://github.com/eduezerouali-tecnativa
 Christian Ramos christian.ramos@tecnativa.com https://github.com/christian-ramos-tecnativa
 Juan Carlos Oñate juancarlos.onate@tecnativa.com https://github.com/juancarlosonate-tecnativa
+Adasat Torres adasat.torres@tecnativa.com https://github.com/adasatorres-tecnativa
