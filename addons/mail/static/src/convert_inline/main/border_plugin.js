@@ -15,6 +15,7 @@ export class BorderPlugin extends Plugin {
     ];
     resources = {
         style_rules_processors: [[this.provideStyleRules.bind(this), BorderPlugin.id]],
+        fix_raw_style_values_handlers: this.fixBorderInline.bind(this),
     };
 
     setup() {
@@ -22,6 +23,16 @@ export class BorderPlugin extends Plugin {
         this.provideNeutralizeBorderRules();
         this.borderRules = new Rules();
         this.provideBorderRules();
+    }
+
+    fixBorderInline({ element, propertyName, propertyInfo, styleInfo }) {
+        if (!propertyName.match(/^border-inline(-(start|end))/)) {
+            return false;
+        }
+        // border-inline => border-right + border-left
+        // border-inline-start => border-left
+        // border-inline-end => border-right
+        // always keep suffix
     }
 
     provideNeutralizeBorderRules() {

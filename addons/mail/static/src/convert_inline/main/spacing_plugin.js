@@ -76,6 +76,7 @@ export class SpacingPlugin extends Plugin {
     }
 
     fixSpacingInline({ element, propertyName, propertyInfo, styleInfo }) {
+        // TODO EGGMAIL: handle RTL
         if (!propertyName.match(/^(margin|padding)-inline(-(start|end))?$/)) {
             return false;
         }
