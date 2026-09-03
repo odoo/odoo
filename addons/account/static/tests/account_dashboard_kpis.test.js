@@ -7,33 +7,44 @@ import { AccountDashboardKpis } from "@account/components/account_dashboard_kpis
 
 defineMailModels();
 
+test.tags("desktop");
 test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
+    const revenueAction = {
+        type: "ir.actions.act_window",
+        res_model: "account.move.line",
+    };
     mockService("orm", {
         async call(model, method, args) {
-            expect.step("load kpis");
             expect(model).toBe("account.journal");
-            expect(method).toBe("get_account_dashboard_kpis");
             expect(args).toEqual([]);
 
+            if (method === "action_open_revenue_journal_items") {
+                expect.step("load revenue action");
+                return revenueAction;
+            }
+
+            expect.step("load kpis");
+            expect(method).toBe("get_account_dashboard_kpis");
             return [
                 {
-                    id: "gross_margin",
-                    name: "Gross Margin",
+                    id: "revenue",
+                    name: "Revenue",
                     has_total: true,
-                    value: "$ 60.00",
+                    value: "$ 100.00",
                     action_id: 42,
+                    action_method: "action_open_revenue_journal_items",
                 },
                 {
-                    id: "unpaid",
-                    name: "Unpaid",
+                    id: "cashflow",
                     has_total: false,
+                    is_cashflow_card: true,
                     values: [
                         {
-                            label: "Customers",
+                            label: "Cash In",
                             value: "$ 100.00",
                         },
                         {
-                            label: "Suppliers",
+                            label: "Cash Out",
                             value: "$ 40.00",
                         },
                     ],
@@ -44,8 +55,13 @@ test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
     });
 
     mockService("action", {
-        doAction(actionId) {
-            expect.step(`open action ${actionId}`);
+        doAction(action) {
+            if (typeof action === "object") {
+                expect(action).toBe(revenueAction);
+                expect.step("open revenue action");
+            } else {
+                expect.step(`open action ${action}`);
+            }
         },
     });
 
@@ -56,35 +72,27 @@ test("account dashboard KPIs are loaded, rendered, and clickable", async () => {
     await expect.waitForSteps(["load kpis"]);
 
     expect(".o_account_dashboard_kpi_card").toHaveCount(2);
-    expect(".o_account_dashboard_kpi_card:eq(0) .o_account_dashboard_kpi_name").toHaveText(
-        "Gross Margin"
-    );
-    expect(".o_account_dashboard_kpi_card:eq(0) .o_account_dashboard_kpi_value").toHaveText(
-        "$ 60.00"
-    );
+    expect('[data-kpi-id="revenue"] .o_account_dashboard_kpi_name').toHaveText("Revenue");
+    expect('[data-kpi-id="revenue"] .o_account_dashboard_kpi_value').toHaveText("$ 100.00");
 
-    expect(".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_name").toHaveText(
-        "Unpaid"
-    );
-    expect(".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_value").toHaveCount(0);
-    expect(".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_value_item").toHaveCount(
-        2
-    );
+    expect('[data-kpi-id="cashflow"] .o_account_dashboard_kpi_name').toHaveCount(0);
+    expect('[data-kpi-id="cashflow"] .o_account_dashboard_kpi_value').toHaveCount(0);
+    expect('[data-kpi-id="cashflow"] .o_account_dashboard_kpi_value_item').toHaveCount(2);
     expect(
-        ".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_value_label:eq(0)"
-    ).toHaveText("Customers");
+        '[data-kpi-id="cashflow"] .o_account_dashboard_kpi_value_label:eq(0)'
+    ).toHaveText("Cash In");
     expect(
-        ".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_value_amount:eq(0)"
+        '[data-kpi-id="cashflow"] .o_account_dashboard_kpi_value_amount:eq(0)'
     ).toHaveText("$ 100.00");
     expect(
-        ".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_value_label:eq(1)"
-    ).toHaveText("Suppliers");
+        '[data-kpi-id="cashflow"] .o_account_dashboard_kpi_value_label:eq(1)'
+    ).toHaveText("Cash Out");
     expect(
-        ".o_account_dashboard_kpi_card:eq(1) .o_account_dashboard_kpi_value_amount:eq(1)"
+        '[data-kpi-id="cashflow"] .o_account_dashboard_kpi_value_amount:eq(1)'
     ).toHaveText("$ 40.00");
 
-    await contains(".o_account_dashboard_kpi_card:eq(0)").click();
-    await contains(".o_account_dashboard_kpi_card:eq(1)").click();
+    await contains('[data-kpi-id="revenue"]').click();
+    await contains('[data-kpi-id="cashflow"]').click();
 
-    expect.verifySteps(["open action 42", "open action 43"]);
+    expect.verifySteps(["load revenue action", "open revenue action", "open action 43"]);
 });
