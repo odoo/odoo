@@ -39,20 +39,16 @@ class WebManifest(http.Controller):
                 })
         return shortcuts
 
-    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'])
-    def webmanifest(self):
-        """ Returns a WebManifest describing the metadata associated with a web application.
-        Using this metadata, user agents can provide developers with means to create user
-        experiences that are more comparable to that of a native application.
-        """
-        web_app_name = request.env['ir.config_parameter'].sudo().get_param('web.web_app_name', 'Odoo')
+    def _get_webmanifest_data(self):
+        icp = request.env['ir.config_parameter'].sudo()
         manifest = {
-            'name': web_app_name,
+            'name': icp.get_param('web.web_app_name', 'Odoo'),
+            'short_name': icp.get_param('web.web_app_short_name', 'Odoo'),
             'scope': '/web',
             'start_url': '/web',
             'display': 'standalone',
-            'background_color': '#714B67',
-            'theme_color': '#714B67',
+            'background_color': icp.get_param('web.web_app_background_color', '#714B67'),
+            'theme_color': icp.get_param('web.web_app_theme_color', '#714B67'),
             'prefer_related_applications': False,
         }
         icon_sizes = ['192x192', '512x512']
@@ -62,7 +58,15 @@ class WebManifest(http.Controller):
             'type': 'image/png',
         } for size in icon_sizes]
         manifest['shortcuts'] = self._get_shortcuts()
-        body = json.dumps(manifest, default=ustr)
+        return manifest
+
+    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'])
+    def webmanifest(self):
+        """ Returns a WebManifest describing the metadata associated with a web application.
+        Using this metadata, user agents can provide developers with means to create user
+        experiences that are more comparable to that of a native application.
+        """
+        body = json.dumps(self._get_webmanifest_data(), default=ustr)
         response = request.make_response(body, [
             ('Content-Type', 'application/manifest+json'),
         ])
