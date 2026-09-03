@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, JsonRpcException, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
@@ -123,4 +123,60 @@ class TestSaleSignature(HttpCaseWithUserPortal):
             "Do not automatically set customer as follower, will be suggested recipient",
         )
 
+<<<<<<< 3a20d313badf766b47d090f387c192cfbbf2ccf1
         self.start_tour("/my/quotes", "sale_signature", login="portal")
+||||||| 9b97b5cbda241a9e4c19d9174be0db51f88dca03
+        self.start_tour("/", 'sale_signature', login="portal")
+=======
+        self.start_tour("/", 'sale_signature', login="portal")
+
+    def test_portal_cannot_delete_signed_order_message(self):
+        sales_order = self.env["sale.order"].create({
+            "name": "Quotation requiring signature and payment",
+            "partner_id": self.partner_portal.id,
+            "state": "sent",
+            "require_signature": True,
+            "require_payment": True,
+        })
+        self.env["sale.order.line"].create({
+            "order_id": sales_order.id,
+            "product_id": self.env["product.product"].create({"name": "A product"}).id,
+            "price_unit": 100,
+        })
+
+        self.authenticate("portal", "portal")
+        self.make_jsonrpc_request(
+            f"/my/orders/{sales_order.id}/accept",
+            {
+                "name": self.partner_portal.name,
+                "signature": (
+                    "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAIAAAD91JpzAAAAF0lEQVR4nGJxKFrE"
+                    "wMDAxAAGgAAAAP//D+IBWx9K7TUAAAAASUVORK5CYII="
+                ),
+            },
+        )
+
+        self.assertEqual(sales_order.state, "sent")
+        signed_message = sales_order.message_ids.filtered(
+            lambda message: message.author_id == self.partner_portal and message.attachment_ids
+        )
+        self.assertEqual(len(signed_message), 1)
+        signed_attachment = signed_message.attachment_ids
+
+        with self.assertRaises(JsonRpcException), mute_logger("odoo.http"):
+            self.make_jsonrpc_request(
+                "/mail/message/update_content",
+                {
+                    "message_id": signed_message.id,
+                    "update_data": {
+                        "body": "",
+                        "attachment_ids": [],
+                        "attachment_tokens": [],
+                        "partner_ids": [],
+                        "subject": "",
+                    },
+                },
+            )
+        self.assertEqual(signed_message.attachment_ids, signed_attachment)
+        self.assertTrue(signed_attachment.exists())
+>>>>>>> 269939b45d931a5979221df60f62b5dff0fdf86b
