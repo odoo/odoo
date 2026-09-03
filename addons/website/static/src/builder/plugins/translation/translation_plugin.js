@@ -36,6 +36,7 @@ const TRANSLATED_ATTRS = [
     "placeholder",
     "title",
     "alt",
+    "aria-label",
     "value",
     "data-oe-translate-src",
     "data-oe-translate-srcset",
