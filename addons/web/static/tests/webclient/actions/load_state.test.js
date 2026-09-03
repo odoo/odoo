@@ -281,7 +281,6 @@ describe(`new urls`, () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
             static path = "test";
-            props = useProps();
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
         browser.sessionStorage.setItem("menu_id", 2);
@@ -456,7 +455,6 @@ describe(`new urls`, () => {
     test(`properly load client actions`, async () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
-            props = useProps();
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
 
@@ -481,7 +479,6 @@ describe(`new urls`, () => {
     test(`properly load client actions with path`, async () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
-            props = useProps();
             static path = "my-action";
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
@@ -657,7 +654,6 @@ describe(`new urls`, () => {
     test(`properly load client actions with LazyTranslatedString displayName`, async () => {
         class ClientAction extends Component {
             static template = xml`<ControlPanel/><div class="o_client_action_test">Hello World</div>`;
-            props = useProps();
             static displayName = _t("translatable displayname");
             static components = { ControlPanel };
             static path = "my_client";
@@ -2139,7 +2135,6 @@ describe(`legacy urls`, () => {
     test(`properly load client actions`, async () => {
         class ClientAction extends Component {
             static template = xml`<div class="o_client_action_test">Hello World</div>`;
-            props = useProps();
         }
         actionRegistry.add("HelloWorldTest", ClientAction);
 

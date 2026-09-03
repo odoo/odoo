@@ -202,7 +202,6 @@ test("soft_reload closes the dialogs", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Fiscal Year'">content</Dialog>`;
-        props = useProps();
     }
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
@@ -226,7 +225,6 @@ test("soft_reload when there is no controller", async () => {
 test("can execute client actions from tag name", async () => {
     class ClientAction extends Component {
         static template = xml`<div class="o_client_action_test">Hello World</div>`;
-        props = useProps();
     }
     actionRegistry.add("HelloWorldTest", ClientAction);
 
@@ -268,7 +266,6 @@ test("ClientAction receives breadcrumbs and exports title", async () => {
 
     class ClientAction extends Component {
         static template = xml`<div class="my_action" t-on-click="this.onClick">client action</div>`;
-        props = useProps();
         setup() {
             this.breadcrumbTitle = "myAction";
             const { breadcrumbs } = this.env.config;

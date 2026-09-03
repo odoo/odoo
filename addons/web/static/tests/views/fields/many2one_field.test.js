@@ -1504,7 +1504,6 @@ test("standalone many2one field", async () => {
                 <Field name="'partner_id'" record="scope.record" canOpen="false" />
             </Record>
         `;
-        props = useProps();
         setup() {
             this.fields = {
                 partner_id: {
@@ -4100,7 +4099,6 @@ test("skip name search optimization", async () => {
             preventMemoization="true"
         />`;
         static components = { Many2XAutocomplete };
-        props = useProps();
         getDomain() {
             return [];
         }

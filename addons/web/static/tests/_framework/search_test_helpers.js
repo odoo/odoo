@@ -1,5 +1,5 @@
 import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { assignTestEnv } from "./app_test_helpers";
@@ -44,7 +44,6 @@ export async function mountWithSearch(componentConstructor, searchProps = {}, co
             </WithSearch>
         `;
         static components = { WithSearch };
-        props = useProps();
 
         setup() {
             this.withSearchProps = searchProps;

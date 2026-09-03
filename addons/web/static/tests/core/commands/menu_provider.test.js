@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -176,7 +176,6 @@ test("open a menu item when a dialog is displayed", async () => {
     class CustomDialog extends Component {
         static template = xml`<Dialog contentClass="'test'">content</Dialog>`;
         static components = { Dialog };
-        props = useProps();
     }
 
     await mountWithCleanup(WebClient);

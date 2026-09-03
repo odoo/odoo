@@ -12,7 +12,7 @@ import {
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { mockDate, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, onWillStart, useProps, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,
@@ -4892,7 +4892,6 @@ test(`fields are added in the right order in popover`, async () => {
     const deferred = Promise.withResolvers();
     class DeferredWidget extends Component {
         static template = xml``;
-        props = useProps();
         setup() {
             onWillStart(() => deferred.promise);
         }
@@ -5036,7 +5035,7 @@ test(`calendar with option show_date_picker set to false and filters`, async () 
     });
     expect(`.o_datetime_picker`).toHaveCount(0);
     expect(`.o_calendar_sidepanel`).toHaveCount(1);
-    await contains(".o_calendar_sidebar_controller button[title=\"Toggle Side Panel\"]").click();
+    await contains('.o_calendar_sidebar_controller button[title="Toggle Side Panel"]').click();
     expect(`.o_calendar_sidepanel`).toHaveCount(0);
     expect(`.o_calendar_sidebar_controller`).toHaveCount(1);
     expect(`.o_calendar_sidebar_controller`).toHaveText("Partner");
@@ -5560,7 +5559,6 @@ test("save selected date during view switching", async () => {
 test(`check if active fields are fetched in addition to field names in record data(search_read rpc)`, async () => {
     class CustomWidget extends Component {
         static template = xml``;
-        props = useProps();
     }
     registry.category("fields").add("custom_widget", {
         component: CustomWidget,

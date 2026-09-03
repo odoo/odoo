@@ -129,12 +129,10 @@ test("handle normal RPC_ERROR of type='server' and associated custom dialog clas
     class CustomDialog extends Component {
         static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
         static components = { RPCErrorDialog };
-        props = useProps();
     }
     class NormalDialog extends Component {
         static template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
         static components = { RPCErrorDialog };
-        props = useProps();
     }
     const error = new RPCError();
     error.code = 701;

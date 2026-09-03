@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
@@ -10,7 +10,6 @@ test("basic ViewScaleSelector component usage", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
         static template = xml`<ViewScaleSelector t-props="this.compProps" />`;
-        props = useProps();
         setup() {
             this.state = proxy({
                 scale: "week",
@@ -73,7 +72,6 @@ test("ViewScaleSelector with only one scale available", async () => {
     class Parent extends Component {
         static components = { ViewScaleSelector };
         static template = xml`<ViewScaleSelector t-props="this.compProps" />`;
-        props = useProps();
         setup() {
             this.state = proxy({
                 scale: "day",
@@ -102,7 +100,6 @@ test("ViewScaleSelector show weekends button is disabled when scale is day", asy
     class Parent extends Component {
         static components = { ViewScaleSelector };
         static template = xml`<ViewScaleSelector t-props="this.compProps"/>`;
-        props = useProps();
         setup() {
             this.state = proxy({
                 scale: "day",

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -20,7 +20,6 @@ test("Ignore empty hrefs", async () => {
                     </a>
                 </button>
             </div>`;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -78,7 +77,6 @@ test("Simple rendering with a scroll", async () => {
                 </div>
             </div>
         `;
-        props = useProps();
     }
     await mountWithCleanup(MyComponent);
 
@@ -130,7 +128,6 @@ test("clicking to scroll on a web client shouldn't open the default app", async 
                 <div id="scrollToHere">sroll here!</div>
             </div>
         `;
-        props = useProps();
         static path = "my_component";
     }
     registry.category("actions").add("my_component", MyComponent);
@@ -194,7 +191,6 @@ test("Rendering with multiple anchors and scrolls", async () => {
                 </div>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -244,7 +240,6 @@ test("clicking anchor when no scrollable", async () => {
                 </div>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -320,7 +315,6 @@ test("clicking anchor when multi levels scrollables", async () => {
             </div>
         </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -421,7 +415,6 @@ test("Simple scroll to HTML elements", async () => {
                 </div>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(MyComponent);
@@ -530,7 +523,6 @@ test("scroll to anchor from load", async () => {
                 <div id="scrollToHere">sroll here!</div>
             </div>
         `;
-        props = useProps();
         static path = "my_component";
     }
     registry.category("actions").add("my_component", MyComponent);

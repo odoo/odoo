@@ -43,7 +43,6 @@ defineModels([Animal]);
 
 test("simple rendering", async () => {
     class TestComponent extends Component {
-        props = useProps();
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
@@ -56,7 +55,6 @@ test("simple rendering", async () => {
 
 test("search model in sub env", async () => {
     class TestComponent extends Component {
-        props = useProps();
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
@@ -99,7 +97,6 @@ test("search query props are passed as props to concrete component", async () =>
 
 test("do not load search view description by default", async () => {
     class TestComponent extends Component {
-        props = useProps();
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
@@ -115,7 +112,6 @@ test("do not load search view description by default", async () => {
 
 test("load search view description if not provided and loadSearchView=true", async () => {
     class TestComponent extends Component {
-        props = useProps();
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
@@ -142,7 +138,6 @@ test("load search view description if not provided and loadSearchView=true", asy
 
 test("do not load the search view description if provided even if loadSearchView=true", async () => {
     class TestComponent extends Component {
-        props = useProps();
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
@@ -161,7 +156,6 @@ test("do not load the search view description if provided even if loadSearchView
 
 test("load view description if it is not complete and loadSearchView=true", async () => {
     class TestComponent extends Component {
-        props = useProps();
         static template = xml`<div class="o_test_component">Test component content</div>`;
     }
 
@@ -188,7 +182,6 @@ test("load view description if it is not complete and loadSearchView=true", asyn
 
 test("load view description with given id if it is not provided and loadSearchView=true", async () => {
     class TestComponent extends Component {
-        props = useProps();
         static components = { SearchBarMenu };
         static template = xml`<div class="o_test_component"><SearchBarMenu/></div>`;
     }
@@ -256,7 +249,6 @@ test("react to prop 'domain' changes", async () => {
     }
 
     class Parent extends Component {
-        props = useProps();
         static template = xml`
             <WithSearch t-props="this.searchState" t-slot-scope="search">
                 <TestComponent domain="search.domain"/>
@@ -305,7 +297,6 @@ test("search defaults are removed from context at reload", async function () {
     }
 
     class Parent extends Component {
-        props = useProps();
         static template = xml`
             <WithSearch t-props="this.searchState" t-slot-scope="search">
                 <TestComponent

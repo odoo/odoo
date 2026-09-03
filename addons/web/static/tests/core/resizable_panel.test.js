@@ -17,7 +17,6 @@ test("Width cannot exceed viewport width", async () => {
                 <p>Paragraph</p>
             </ResizablePanel>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -43,7 +42,6 @@ test("handles right-to-left", async () => {
                 </ResizablePanel>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -73,7 +71,6 @@ test("handles resize handle at start in fixed position", async () => {
                 </ResizablePanel>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -107,7 +104,6 @@ test("resizing the window adapts the panel", async () => {
                 </ResizablePanel>
             </div>
         `;
-        props = useProps();
     }
 
     await mountWithCleanup(Parent);
@@ -167,7 +163,6 @@ test("minWidth props can be updated", async () => {
 test("default to minWidth if initialWidth is smaller than minWidth", async () => {
     class Parent extends Component {
         static components = { ResizablePanel };
-        props = useProps();
         static template = xml`
             <div class="d-flex">
                 <ResizablePanel minWidth="200" initialWidth="100">

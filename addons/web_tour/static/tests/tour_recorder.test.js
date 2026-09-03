@@ -367,7 +367,6 @@ test("Selecting item in autocomplete field through Enter", async () => {
     class Dummy extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="this.sources"/>`;
-        static props = ["*"];
 
         sources = [
             {
@@ -404,7 +403,6 @@ test("Edit input after autofocus", async () => {
                 </div>
             </t>
         `;
-        static props = ["*"];
 
         inputRef = signal.ref();
 

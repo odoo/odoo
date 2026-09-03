@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { click, queryAllAttributes, queryAllProperties, queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockMatchMedia } from "@odoo/hoot-mock";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     clearRegistry,
     contains,
@@ -173,7 +173,6 @@ test("click on odoo account item", async () => {
 test("can use component as registry item", async () => {
     class ExampleComponent extends Component {
         static template = xml`<span class='component-class'>Example Component</span>`;
-        props = useProps();
     }
     userMenuRegistry.add("component-item", () => ({
         type: "component",
