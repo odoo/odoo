@@ -7,6 +7,7 @@ import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import {
+    isContentEditable,
     isElement,
     isStylable,
     isPhrasingContent,
@@ -14,7 +15,6 @@ import {
     isProtecting,
     isVisible,
     isZwnbsp,
-    isContentEditable,
 } from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
@@ -347,9 +347,13 @@ export class LinkPlugin extends Plugin {
         this.addDomListener(this.editable, "click", (ev) => {
             const linkEl = ev.target.closest("a");
             if (linkEl) {
+                const selection = this.dependencies.selection.getEditableSelection();
+                const clickedInsideNonEditableLink =
+                    !linkEl.isContentEditable &&
+                    !isContentEditable(closestElement(selection.anchorNode));
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(linkEl.href, "_blank");
-                } else if (!linkEl.isContentEditable) {
+                } else if (clickedInsideNonEditableLink) {
                     this.dependencies.selection.setSelection({
                         anchorNode: linkEl,
                         anchorOffset: 0,
