@@ -97,6 +97,7 @@ class AccountMoveLine(models.Model):
     )
     sequence = fields.Integer(compute='_compute_sequence', store=True, readonly=False, precompute=True)
     move_type = fields.Selection(related='move_id.move_type')
+    fiscal_position_id = fields.Many2one(related='move_id.fiscal_position_id', store=True)
 
     # === Accountable fields === #
     account_id = fields.Many2one(
