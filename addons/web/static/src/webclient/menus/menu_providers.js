@@ -30,7 +30,7 @@ commandSetupRegistry.add("/", {
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("menu", {
     namespace: "/",
-    async provide(env, options) {
+    provide(options) {
         const offlinePlugin = usePlugin(OfflinePlugin);
         const result = [];
         const menuService = useService("menu");

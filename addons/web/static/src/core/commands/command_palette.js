@@ -206,7 +206,7 @@ export class CommandPalette extends Component {
         this.categoryNames = {};
         const proms = this.providersByNamespace[namespace].map((provider) => {
             const { provide } = provider;
-            const result = this.scope.run(() => provide(this.env, options));
+            const result = this.scope.run(() => provide(options));
             return result;
         });
         let commands = (await this.keepLast.add(Promise.all(proms))).flat();
