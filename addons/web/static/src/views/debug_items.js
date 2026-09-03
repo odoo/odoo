@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { CopyButton } from "@web/core/copy_button/copy_button";
 import { Dialog } from "@web/core/dialog/dialog";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { editModelDebug } from "@web/core/debug/debug_utils";
@@ -19,7 +20,7 @@ const debugRegistry = registry.category("debug");
 
 class GetViewDialog extends Component {
     static template = "web.DebugMenu.GetViewDialog";
-    static components = { Dialog };
+    static components = { Dialog, CopyButton };
     static props = {
         arch: { type: String },
         close: { type: Function },
