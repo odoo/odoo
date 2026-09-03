@@ -210,8 +210,8 @@ export function clickPartnerButton() {
         },
     ];
 }
-export function clickCustomer(name) {
-    return [...PartnerList.clickPartner(name), { ...back(), isActive: ["mobile"] }];
+export function clickCustomer(name, options = {}) {
+    return [...PartnerList.clickPartner(name, options), { ...back(), isActive: ["mobile"] }];
 }
 export function selectPreset(selectedPreset, presetToSelect) {
     return [
