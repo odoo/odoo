@@ -20,37 +20,27 @@
             </div>
             <button name="action_open_discount_wizard" position="before">
                 <button
-                    string="Coupon Code"
-                    name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
-                    type="action"
-                    class="btn btn-secondary"
-                    invisible="locked or state == 'cancel'"
-                />
+                    name="action_open_reward_wizard"
+                    type="object"
+                    class="btn btn-primary"
+                    help="Update current promotional lines and select new rewards if applicable."
+                    invisible="locked or state == 'cancel' or not claimable_reward_count"
+                >
+                    Codes and Rewards
+                    <field
+                        name="claimable_reward_count"
+                        class="badge rounded-pill bg-o-color-3 text-o-color-1 ms-1"
+                    />
+                </button>
                 <button
-                    string="Coupon Code"
-                    name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
-                    type="action"
-                    class="btn btn-secondary"
-                    disabled="1"
-                    invisible="not (locked or state == 'cancel')"
-                />
-                <button
-                    string="Reward"
                     name="action_open_reward_wizard"
                     type="object"
                     class="btn btn-secondary"
                     help="Update current promotional lines and select new rewards if applicable."
-                    invisible="locked or state == 'cancel'"
-                />
-                <button
-                    string="Reward"
-                    name="action_open_reward_wizard"
-                    type="object"
-                    class="btn btn-secondary"
-                    help="Update current promotional lines and select new rewards if applicable."
-                    disabled="1"
-                    invisible="not (locked or state == 'cancel')"
-                />
+                    invisible="locked or state == 'cancel' or claimable_reward_count"
+                >
+                    Codes and Rewards
+                </button>
             </button>
             <xpath expr="//list//column[@name='sol_qty']" position="before">
                 <field name="is_reward_line" column_invisible="True"/>

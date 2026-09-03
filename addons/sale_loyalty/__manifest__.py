@@ -9,7 +9,6 @@
     "auto_install": True,
     "data": [
         "data/sale_loyalty_data.xml",
-        "wizard/sale_loyalty_coupon_wizard_views.xml",
         "wizard/sale_loyalty_reward_wizard_views.xml",
         "views/loyalty_card_views.xml",
         "views/loyalty_program_views.xml",
@@ -17,7 +16,7 @@
         "views/sale_portal_templates.xml",
         "views/res_partner_views.xml",
         "views/sale_loyalty_menus.xml",
-        'security/ir.access.csv',
+        "security/ir.access.csv",
     ],
     "assets": {
         "web.assets_frontend": [

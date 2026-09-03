@@ -11,11 +11,27 @@
                         <field name="reward_ids" invisible="1"/>
                         <field name="multi_product_reward" invisible="1"/>
                         <field name="reward_product_ids" invisible="1"/>
-                        <a invisible="reward_ids">
-                            No rewards available for this customer!
-                        </a>
-                        <label for="selected_reward_id" string="Choose your reward:" colspan="2"
-                            invisible="not reward_ids"/>
+                        <field name="applied_reward_description" invisible="1"/>
+                        <group class="align-items-center" colspan="2" col="4">
+                            <group class="align-items-end" colspan="1">
+                                <field
+                                    name="coupon_code"
+                                    nolabel="1"
+                                    placeholder="Coupon or Gift Card"
+                                />
+                                <button
+                                    type="object"
+                                    name="action_apply_coupon"
+                                    string="Apply"
+                                />
+                            </group>
+                            <span class="text-success" invisible="not applied_reward_description" colspan="3">
+                                <field name="applied_reward_description" nolabel="1" class="oe_inline"/>
+                            </span>
+                        </group>
+                        <span class="o_form_label" colspan="2" invisible="not reward_ids">
+                            <field name="coupon_reward_label" class="oe_inline"/>
+                        </span>
                         <field name="selected_reward_id" widget="radio" colspan="2" nolabel="1"
                             invisible="not reward_ids"/>
                         <label for="selected_product_id" string="Choose a product:" colspan="2"
@@ -47,7 +63,7 @@
     </record>
 
     <record id="sale_loyalty_reward_wizard_action" model="ir.actions.act_window">
-        <field name="name">Available Rewards</field>
+        <field name="name">Codes &amp; Rewards</field>
         <field name="res_model">sale.loyalty.reward.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
