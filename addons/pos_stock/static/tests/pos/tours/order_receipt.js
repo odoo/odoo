@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("test_receipt_with_ship_later", {
             Dialog.confirm("Open Register"),
             ProductScreen.orderIsEmpty(),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Example Partner"),
+            ProductScreen.clickCustomer("Example Partner", true),
             ProductScreen.clickDisplayedProduct("Example Simple Product"),
             ProductScreen.clickPayButton(),
             StockPaymentScreen.clickShipLaterButton(),
