@@ -4,6 +4,7 @@ import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odo
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { Component, immediateEffect, markup, proxy, toRaw, xml } from "@odoo/owl";
 import {
+    destroyApp,
     getService,
     mockService,
     mountWithCleanup,
@@ -56,7 +57,6 @@ async function start() {
     await start2();
     /** @type {Store} */
     const store = getService("store");
-    after(() => store._runDisposeFns());
     return store;
 }
 
@@ -2136,4 +2136,20 @@ describe("RecordList read methods", () => {
         expect(messages.length).toBe(0);
         expect(ids).toEqual([1, 2, 3]);
     });
+});
+
+test("destroying the app disposes the records of the store", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert("General");
+    thread.onChange(
+        () => [],
+        () => () => expect.step("record disposed")
+    );
+    await expect.waitForSteps([]);
+    destroyApp();
+    await expect.waitForSteps(["record disposed"]);
 });
