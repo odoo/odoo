@@ -254,14 +254,14 @@ export class ComboPage extends Component {
         const choice = comboIndex !== null ? this.comboChoices[comboIndex] : this.selectedChoice;
         const choiceState =
             comboIndex !== null ? this.state.choices[comboIndex] : this.currentChoiceState;
-        if (choice.qty_free === 0) {
+        if (choice.included_qty === 0) {
             return showZero ? choiceState.selectedItems?.[item.id]?.qty || 0 : 0;
         }
         const selectedItemsOrder = choiceState.selectedItemsOrder;
         if (!selectedItemsOrder || !selectedItemsOrder.includes(item.id)) {
             return 0;
         }
-        const remainingFree = choice.qty_free;
+        const remainingFree = choice.included_qty;
         const extraPriceItems = selectedItemsOrder.slice(remainingFree);
         let extraPriceQty = 0;
         for (const selectedItem of extraPriceItems) {
@@ -300,7 +300,7 @@ export class ComboPage extends Component {
         const choiceState =
             comboIndex !== null ? this.state.choices[comboIndex] : this.currentChoiceState;
         const itemQty =
-            showZero || item.combo_id.qty_free > 0
+            showZero || item.combo_id.included_qty > 0
                 ? choiceState.selectedItems?.[item.id]?.qty || 0
                 : 0;
         const extraQty = this.getExtraQtyForItem(item, comboIndex, showZero);
@@ -427,8 +427,8 @@ export class ComboPage extends Component {
             }
         } else {
             if (
-                this.getSelectedItemCount() >= this.selectedChoice.qty_free ||
-                this.selectedChoice.qty_free === 0
+                this.getSelectedItemCount() >= this.selectedChoice.included_qty ||
+                this.selectedChoice.included_qty === 0
             ) {
                 return true;
             }

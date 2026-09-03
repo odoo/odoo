@@ -84,18 +84,18 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
 
     def test_combo_price_no_free_items(self):
         """
-        Regression test: when all combo sub-combos are upsell (qty_free=0), remaining_total
+        Regression test: when all combo sub-combos are upsell (included_qty=0), remaining_total
         (= parent list price) must be distributed proportionally to the extra lines,
         not silently dropped.
         """
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
 
-        # Upsell combo: qty_free=0 (no free items), all selections are charged as extras
+        # Upsell combo: included_qty=0 (no free items), all selections are charged as extras
         no_free_combo = self.env['product.combo'].create({
             'name': 'No Free Combo',
             'is_upsell': True,
-            'qty_free': 0,
+            'included_qty': 0,
             'qty_max': 1,
             'combo_item_ids': [
                 Command.create({'product_id': self.cola.id, 'extra_price': 0}),
@@ -150,13 +150,13 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         order.recompute_prices()
 
         # base_price of the combo = min lst_price among items = min(cola.lst_price, fanta.lst_price) = 2.2
-        # With is_upsell=True (qty_free=0), remaining_total = parent lst_price = 10.0 must flow into the child.
+        # With is_upsell=True (included_qty=0), remaining_total = parent lst_price = 10.0 must flow into the child.
         # price_unit = base_price + proportional_share_of_parent_price
         # = base_price + round(base_price * 10.0 / (base_price * 1)) = base_price + 10.0
         expected_price = no_free_combo.base_price + combo_product.lst_price
         self.assertAlmostEqual(
             child_line.price_unit, expected_price, places=2,
-            msg="When qty_free=0, remaining_total must be proportionally distributed to extra lines",
+            msg="When included_qty=0, remaining_total must be proportionally distributed to extra lines",
         )
 
     def test_combo_price_free_items_multi_qty(self):
@@ -171,7 +171,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
 
         free_combo = self.env['product.combo'].create({
             'name': 'Free Combo',
-            'qty_free': 1,
+            'included_qty': 1,
             'qty_max': 1,
             'combo_item_ids': [
                 Command.create({'product_id': self.cola.id, 'extra_price': 0}),
@@ -348,7 +348,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
 
         combo = self.env['product.combo'].create({
             'name': 'Combo',
-            'qty_free': 2,
+            'included_qty': 2,
             'qty_max': 4,
             'combo_item_ids': [
                 Command.create({'product_id': self.cola.id, 'extra_price': 0}),
@@ -515,7 +515,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
                 })
                 combo = self.env['product.combo'].create({
                     'name': 'Combo',
-                    'qty_free': 1,
+                    'included_qty': 1,
                     'qty_max': 1,
                     'combo_item_ids': [
                         Command.create({'product_id': child_product.id, 'extra_price': 0}),
@@ -590,7 +590,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
                 })
                 combo = self.env['product.combo'].create({
                     'name': 'Combo With Extra',
-                    'qty_free': 1,
+                    'included_qty': 1,
                     'qty_max': 1,
                     'combo_item_ids': [
                         Command.create({'product_id': child_product.id, 'extra_price': extra_price}),
@@ -685,7 +685,7 @@ class TestSelfOrderCombo(SelfOrderCommonTest):
         })
         combo = self.env['product.combo'].create({
             'name': 'Expensive Combo',
-            'qty_free': 1,
+            'included_qty': 1,
             'qty_max': 1,
             'combo_item_ids': [
                 Command.create({'product_id': expensive_product.id, 'extra_price': 0}),

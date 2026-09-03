@@ -156,7 +156,8 @@ export class ComboSuggestion {
         for (const item of itemLines) {
             const comboItem = item.combo_item;
             const comboId = comboItem.combo_id.id;
-            const remainingFree = remainingFreeByCombo.get(comboId) ?? comboItem.combo_id.qty_free;
+            const remainingFree =
+                remainingFreeByCombo.get(comboId) ?? comboItem.combo_id.included_qty;
             const freeQty = Math.min(item.qty, remainingFree);
             const extraQty = item.qty - freeQty;
             const baseItem = {
@@ -300,10 +301,10 @@ export class ComboSuggestion {
             }
 
             const availableQty = totalQtyAvailable[combo.id] || 0;
-            if (availableQty < combo.qty_free) {
+            if (availableQty < combo.included_qty) {
                 return { comboQty: 0, hasUpsell };
             }
-            const qtyToAdd = availableQty / combo.qty_free;
+            const qtyToAdd = availableQty / combo.included_qty;
             comboQty = comboQty ? Math.min(qtyToAdd, comboQty) : qtyToAdd;
         }
 

@@ -139,7 +139,7 @@ export function getOrderLineValues(
         }
 
         for (const [combo, items] of groupedByCombo) {
-            const maxFree = combo.qty_free;
+            const maxFree = combo.included_qty;
             // Split items between free items and extra items.
             let freeCount = 0;
             for (const item of items) {

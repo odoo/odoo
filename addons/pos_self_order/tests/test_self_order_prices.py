@@ -207,7 +207,7 @@ class TestSelfOrderPrice(SelfOrderCommonTest):
             'name': f'Test Combo {name}',
             'qty_max': max,
             'is_upsell': free == 0,
-            'qty_free': free,
+            'included_qty': free,
         })
         self.env['product.combo.item'].create({
             'product_id': product1.id,

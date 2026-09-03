@@ -497,7 +497,7 @@ class PosOrder(models.Model):
 
         for combo, child_lines in child_lines_by_combo.items():
             free_count = 0
-            max_free = combo.qty_free
+            max_free = combo.included_qty
 
             for line in child_lines:
                 qty_per_line = line.qty / line.combo_parent_id.qty if line.combo_parent_id.qty else line.qty
@@ -517,7 +517,7 @@ class PosOrder(models.Model):
                 line.qty / line.combo_parent_id.qty
                 if line.combo_parent_id.qty
                 else line.qty
-            ) for line in child_line_free if line.combo_item_id.combo_id.qty_free > 0
+            ) for line in child_line_free if line.combo_item_id.combo_id.included_qty > 0
         )
         remaining_total = parent_lst_price
 
