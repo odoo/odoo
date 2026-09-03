@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sale_loyalty.RewardSelectionField">
+        <div t-foreach="this.groups" t-as="group" t-key="group.coupon_id" class="mb-3" role="radiogroup">
+            <div class="mb-1">
+                <strong t-out="group.program_name"/>
+                <span class="ms-1 text-muted" t-out="group.points"/>
+            </div>
+            <t t-set="name" t-value="`${group.program_name}_${group.coupon_id}`"/>
+            <div class="form-check o_radio_item">
+                <input
+                    type="radio"
+                    class="form-check-input o_radio_input"
+                    t-att-checked="this.isSelected(group, false)"
+                    t-att-name="name"
+                    t-att-id="`${name}_none`"
+                    t-on-change="() => this.onSelect(group, false)"
+                />
+                <label class="form-check-label o_form_label" t-att-for="`${name}_none`">None</label>
+            </div>
+            <div
+                t-foreach="group.options"
+                t-as="option"
+                t-key="`${option.reward_id}_${option.product_id}`"
+                class="form-check o_radio_item"
+            >
+                <input
+                    type="radio"
+                    class="form-check-input o_radio_input"
+                    t-att-checked="this.isSelected(group, option)"
+                    t-att-name="name"
+                    t-att-id="`${name}_${option_index}`"
+                    t-on-change="() => this.onSelect(group, option)"
+                />
+                <label class="form-check-label o_form_label" t-att-for="`${name}_${option_index}`" t-out="option.label"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

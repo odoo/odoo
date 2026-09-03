@@ -148,6 +148,8 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         order = self.env["sale.order"].create({
             "partner_id": self.partner_a.id,
             "order_line": [Command.create({"product_id": self.product_A.id, "tax_ids": False})],
+            # Prevent the reward from being claimed automatically upon confirmation
+            "disabled_auto_rewards": [Command.set(self.immediate_promotion_program.reward_ids.ids)],
         })
         order.action_confirm()
         order._update_programs_and_rewards()
@@ -198,7 +200,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         )
         used_after_confirm = sum(history.mapped("used"))
         self.assertTrue(history, "A history line should exist after confirmation")
-        reward_line = order.order_line.filtered("reward_id")
+        reward_line = order.order_line.filtered(lambda line: line.reward_id == product_reward)
         reward_line.write({"points_cost": reward_line.points_cost + 1})
         history = self.loyalty_card.history_ids.filtered(
             lambda h: h.order_id == order.id and h.order_model == "sale.order"

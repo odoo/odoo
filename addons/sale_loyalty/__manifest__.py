@@ -9,7 +9,6 @@
     "auto_install": True,
     "data": [
         "data/sale_loyalty_data.xml",
-        "wizard/sale_loyalty_coupon_wizard_views.xml",
         "wizard/sale_loyalty_reward_wizard_views.xml",
         "views/loyalty_card_views.xml",
         "views/loyalty_program_views.xml",
@@ -27,6 +26,7 @@
         "web.assets_backend": [
             "sale_loyalty/static/src/xml/discount_menu_widget.xml",
             "sale_loyalty/static/src/sale_order_form_view/**/*",
+            "sale_loyalty/static/src/reward_selection_field/**/*",
         ],
     },
     "uninstall_hook": "uninstall_hook",
