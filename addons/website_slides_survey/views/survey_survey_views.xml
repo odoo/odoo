@@ -55,14 +55,14 @@
         <field name="model">survey.survey</field>
         <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='o_survey_kanban_card_section_success']" position="after">
-                <div class="col-lg-1 col-sm-4 col-6 py-0 my-2" groups="website_slides.group_website_slides_officer">
-                    <a t-if="record.slide_channel_count.raw_value"
+            <xpath expr="//a[@name='action_survey_user_input_certified']" position="after">
+                <div groups="website_slides.group_website_slides_officer" t-if="record.slide_channel_count.raw_value">
+                    <a
                        type="object"
                        name="action_survey_view_slide_channels"
-                       class="fw-bold">
-                        <field name="slide_channel_count"/><br />
-                        <span class="text-muted">Courses</span>
+                       class="d-flex flex-column">
+                        <field name="slide_channel_count" class="fw-bold fs-4"/>
+                        <span>Courses</span>
                     </a>
                 </div>
             </xpath>
