@@ -78,7 +78,12 @@ class SaleOrder(models.Model):
                 -pol.price_subtotal_incl if pol.order_id.is_refund else pol.price_subtotal_incl
                 for pol in pos_order_lines
             )
-            sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_paid - sale_order.amount_paid, 0.0)
+            total_transaction_paid = sum(
+                tx.amount
+                for tx in sale_order.transaction_ids
+                if tx.state in ('authorized', 'done') and tx.payment_method_id.code != 'pay_on_site'
+            )
+            sale_order.amount_unpaid = max(sale_order.amount_total - total_invoices_paid - total_pos_paid - total_transaction_paid, 0.0)
 
     @api.depends('order_line.pos_order_line_ids')
     def _compute_amount_to_invoice(self):

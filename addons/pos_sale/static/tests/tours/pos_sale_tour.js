@@ -662,6 +662,25 @@ registry.category("web_tour.tours").add("test_ecommerce_unpaid_order_is_shown_in
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_pay_on_site_order_is_shown_in_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.selectedOrderlineHas("Desk Pad", "2.00"),
+            // The order is paid on site: the whole amount is still due in the PoS.
+            ProductScreen.totalAmountIs("20.00"),
+            ProductScreen.checkOrderlinesNumber(1),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_settle_groupable_lot_total_amount", {
     steps: () =>
         [

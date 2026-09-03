@@ -1883,6 +1883,38 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         )
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_ecommerce_unpaid_order_is_shown_in_pos', login="accountman")
 
+    def test_pay_on_site_order_is_shown_in_pos(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_test_1.id,
+            'order_line': [Command.create({
+                'product_id': self.desk_pad.product_variant_id.id,
+                'product_uom_qty': 2,
+                'price_unit': 10.0,
+            })]
+        })
+        pay_on_site_method = self.env.ref('payment.payment_method_unknown').copy({
+            'name': 'Pay on site',
+            'code': 'pay_on_site',
+        })
+        provider = self.env['payment.provider'].create({'name': 'Test'})
+        transaction = self.env['payment.transaction'].create({
+            'provider_id': provider.id,
+            'payment_method_id': pay_on_site_method.id,
+            'amount': sale_order.amount_total,
+            'currency_id': sale_order.currency_id.id,
+            'partner_id': sale_order.partner_id.id,
+            'sale_order_ids': [Command.set([sale_order.id])],
+        })
+        transaction._set_done()
+
+        self.assertEqual(sale_order.amount_unpaid, sale_order.amount_total)
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_pay_on_site_order_is_shown_in_pos', login='accountman')
+
+        pos_order = self.main_pos_config.current_session_id.order_ids[0]
+        self.assertEqual(pos_order.amount_paid, sale_order.amount_total)
+        self.assertEqual(len(pos_order.lines), 1)
+
     def test_backend_settle_refund(self):
         """Make sure that sale orders settled in PoS and refunded in the backend get their invoiced quantity updated correctly."""
 
