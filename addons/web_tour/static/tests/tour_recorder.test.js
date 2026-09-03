@@ -16,7 +16,7 @@ import {
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
     tourRecorderState,
 } from "@web_tour/js/tour_recorder/tour_recorder_state";
-import { Component, signal, xml } from "@odoo/owl";
+import { Component, signal, useProps, xml } from "@odoo/owl";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { WebClient } from "@web/webclient/webclient";
 
@@ -367,7 +367,7 @@ test("Selecting item in autocomplete field through Enter", async () => {
     class Dummy extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete id="'autocomplete'" value="'World'" sources="this.sources"/>`;
-        static props = ["*"];
+        props = useProps();
 
         sources = [
             {
@@ -404,7 +404,7 @@ test("Edit input after autofocus", async () => {
                 </div>
             </t>
         `;
-        static props = ["*"];
+        props = useProps();
 
         inputRef = signal.ref();
 

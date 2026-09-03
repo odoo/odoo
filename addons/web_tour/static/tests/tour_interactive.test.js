@@ -3,7 +3,7 @@
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, useProps, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -48,7 +48,7 @@ class Product extends models.Model {
 defineModels([Partner, Product, Tour, TourStep]);
 
 class Counter extends Component {
-    static props = ["*"];
+    props = useProps();
     static template = xml/*html*/ `
         <div class="counter">
             <div class="interval">
@@ -103,7 +103,7 @@ test("registering test tour after service is started doesn't auto-start the tour
                     <Counter />
                 </t>
             `;
-        static props = ["*"];
+        props = useProps();
     }
 
     await mountWithCleanup(Root);
@@ -136,7 +136,7 @@ test("perform edit on next step", async () => {
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <t>
@@ -173,7 +173,7 @@ test("robot mode performs every step automatically, without any human interactio
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <t>
@@ -201,7 +201,7 @@ test("robot mode waits for its trigger to re-enable if it got disabled after bei
     });
     const state = proxy({ disabled: false, value: 0 });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static template = xml/*html*/ `
             <t>
                 <button class="inc" t-att-disabled="this.state.disabled" t-on-click="this.onClick">+</button>
@@ -271,7 +271,7 @@ test("manual tour with inactive steps", async () => {
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <t>
@@ -340,7 +340,7 @@ test("manual tour with alternative trigger", async () => {
                 </div>
             </t>
         `;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Root);
     await getService("tour_service").startTour("tour_des_flandres_2", { mode: "manual" });
@@ -361,7 +361,7 @@ test("Tour backward when the pointed element disappear", async () => {
     });
 
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         state = proxy({ bool: true });
         static components = {};
         static template = xml`
@@ -423,7 +423,7 @@ test("Tour backward when the pointed element disappear and ignore warn step", as
     });
 
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         state = proxy({ bool: true });
         static components = {};
         static template = xml`
@@ -472,7 +472,7 @@ test("Tour started by the URL", async () => {
     browser.location.href = `${browser.location.origin}?tour=tour1`;
 
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         state = proxy({ bool: true });
         static components = {};
         static template = xml`
@@ -513,7 +513,7 @@ test("Log a warning if step ignored", async () => {
     });
 
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         state = proxy({ bool: true });
         static components = {};
         static template = xml`
@@ -559,7 +559,7 @@ test("check alternative trigger that appear after the initial trigger", async ()
                 </div>
             </t>
         `;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Root);
     getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
@@ -760,7 +760,7 @@ test("Don't backward when action manager is busy", async () => {
     });
 
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         state = proxy({ bool: true });
         static components = {};
         static template = xml`
@@ -836,7 +836,7 @@ test("check rainbowManMessage", async () => {
                 </div>
             </t>
         `;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Root);
     await getService("tour_service").startTour("rainbow_tour", {
@@ -859,7 +859,7 @@ test("pointer hidden when trigger is behind overlay", async () => {
     });
 
     class DummyDialog extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Dialog };
         static template = xml`
             <Dialog>
@@ -869,7 +869,7 @@ test("pointer hidden when trigger is behind overlay", async () => {
     }
 
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = {};
         static template = xml`
             <button class="foo w-100">Foo</button>
@@ -901,7 +901,7 @@ test("start a tour that no longer exist should clear tourstate", async () => {
                     <Counter />
                 </t>
             `;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Root);
     await getService("tour_service").startTour("tour69", { mode: "manual" });
@@ -930,7 +930,7 @@ test("avoid rendering loop of pointer", async () => {
     });
     const state = proxy({ hasFoo: true });
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = {};
         static template = xml`
             <div class="o_home_menu">Dummy menu to allow pointer to disappear</div>

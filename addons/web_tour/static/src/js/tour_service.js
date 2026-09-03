@@ -1,4 +1,4 @@
-import { assertType, Component, t, whenReady } from "@odoo/owl";
+import { assertType, Component, t, useProps, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -16,10 +16,10 @@ import { useService } from "@web/core/utils/hooks";
 class OnboardingItem extends Component {
     static components = { DropdownItem };
     static template = "web_tour.OnboardingItem";
-    static props = {
-        toursEnabled: { type: Boolean },
-        toggleItem: { type: Function },
-    };
+    props = useProps({
+        toursEnabled: t.boolean(),
+        toggleItem: t.function(),
+    });
     setup() {}
 }
 
