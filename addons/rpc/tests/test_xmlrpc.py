@@ -5,7 +5,7 @@ import time
 
 import odoo
 import odoo.tools
-from odoo.exceptions import AccessDenied, AccessError
+from odoo.exceptions import AccessDenied, AccessError, ValidationError
 from odoo.http import _request_stack
 from odoo.service import common as auth
 from odoo.service import model
@@ -339,3 +339,11 @@ class TestAPIKeys(common.HttpCase):
         self.assertRecordValues(apikeys - apikey, [
             {'name': 'Third key', 'scope': 'api', 'expiration_date': in_twenty_minutes},
         ])
+
+    def test_create_expired_apikey(self):
+        self.env['ir.config_parameter'].set_param('base.enable_programmatic_api_keys', 1)
+        env = self.env(user=self._user)
+        with self.assertRaisesRegex(ValidationError, "You cannot set an expiration date in the past."):
+            env['res.users.apikeys']._generate(
+                'scope_test', 'Expired Key', datetime.datetime.now() - datetime.timedelta(minutes=10)
+            )
