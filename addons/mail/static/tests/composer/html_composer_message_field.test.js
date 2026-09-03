@@ -10,6 +10,7 @@ import {
     queryAll,
     queryAllTexts,
     queryOne,
+    setInputFiles,
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
@@ -28,6 +29,7 @@ import {
     click,
     defineMailModels,
     mailModels,
+    onRpcBefore,
     openFormView,
     openView,
     registerArchs,
@@ -298,4 +300,52 @@ describe("Remove attachments", () => {
         await waitForNone("[name='attachment_ids'] a:contains('test.jpg')");
         await waitForNone(".odoo-editor-editable img[data-attachment-id='1']");
     });
+});
+
+test("wait for attachments to be uploaded before sending message", async function () {
+    const uploadRelease = new Deferred();
+    const mailSent = new Deferred();
+    onRpcBefore("/mail/attachment/upload", async () => await uploadRelease);
+    onRpc("mail.compose.message", "web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].attachment_ids).toHaveLength(1);
+    });
+    onRpc("action_send_mail", () => {
+        expect.step("action_send_mail");
+        mailSent.resolve();
+        return { type: "ir.actions.act_window_close" };
+    });
+
+    const pyEnv = await startServer();
+    const resId = pyEnv["mail.compose.message"].create({
+        display_name: "Some Composer",
+        body: "Hello World!",
+        attachment_ids: [],
+        model: "res.partner",
+        res_ids: JSON.stringify([serverState.partnerId]),
+    });
+    const arch = `
+        <form>
+            <field name="model" invisible="1"/>
+            <field name="res_ids" invisible="1"/>
+            <field name="body" type="html"/>
+            <button string="Send" name="action_send_mail" type="object" class="o_mail_send"/>
+            <field name="attachment_ids" widget="mail_composer_attachment_selector"/>
+        </form>
+    `;
+    await start();
+    await openFormView("mail.compose.message", resId, { arch });
+
+    const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+    await click(".o_field_mail_composer_attachment_selector button");
+    await setInputFiles([file]);
+    await animationFrame();
+
+    await click(".o_mail_send");
+    await animationFrame();
+    expect.verifySteps([]);
+
+    uploadRelease.resolve();
+    await mailSent;
+    expect.verifySteps(["web_save", "action_send_mail"]);
 });
