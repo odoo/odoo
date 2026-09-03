@@ -4,7 +4,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { deepCopy, pick } from "@web/core/utils/objects";
+import { deepCopy } from "@web/core/utils/objects";
 import { nbsp } from "@web/core/utils/strings";
 import { parseXML } from "@web/core/utils/xml";
 import { extractLayoutComponents } from "@web/search/layout";
@@ -16,13 +16,13 @@ import { cookie } from "@web/core/browser/cookie";
 import {
     Component,
     markRaw,
-    onWillUpdateProps,
     onWillStart,
     proxy,
     useProps,
     toRaw,
     t,
     applyDefaults,
+    useOnChange,
 } from "@odoo/owl";
 import { session } from "@web/session";
 
@@ -192,6 +192,7 @@ const STANDARD_PROPS = [
 ];
 
 const ACTIONS = ["create", "delete", "edit", "group_create", "group_delete", "group_edit"];
+const VIEW_UPDATE_PROPS = ["arch", "type", "resModel", "context", "domain", "groupBy", "orderBy"];
 
 /** @extends {Component<ViewProps, import("@web/env").OdooEnv>} */
 export const viewProps = {
@@ -214,8 +215,10 @@ export class View extends Component {
     props = useProps();
 
     setup() {
-        this.props = this.applyViewDefaults(this.props);
-        const { arch, fields, resModel, searchViewArch, searchViewFields, type } = this.props;
+        const reactiveProps = this.props;
+        const getProps = () => this.applyViewDefaults({ ...reactiveProps });
+        const props = getProps();
+        const { arch, fields, resModel, searchViewArch, searchViewFields, type } = props;
         if (!resModel) {
             throw Error(`View props should have a "resModel" key`);
         }
@@ -239,14 +242,36 @@ export class View extends Component {
                 ...this.env.config,
             },
             ...Object.fromEntries(
-                CALLBACK_RECORDER_NAMES.map((name) => [name, this.props[name] || null])
+                CALLBACK_RECORDER_NAMES.map((name) => [name, props[name] || null])
             ),
         });
 
         this.handleActionLinks = useActionLinks(resModel, () => render(this));
 
-        onWillStart(() => this.loadView(this.props));
-        onWillUpdateProps((nextProps) => this.onWillUpdateProps(nextProps));
+        onWillStart(() => this.loadView(getProps()));
+
+        let { arch: currentArch, type: currentType, resModel: currentResModel } = props;
+        useOnChange(
+            () => VIEW_UPDATE_PROPS.map((key) => reactiveProps[key]),
+            async () => {
+                const nextProps = getProps();
+                if (
+                    currentArch !== nextProps.arch ||
+                    currentType !== nextProps.type ||
+                    currentResModel !== nextProps.resModel
+                ) {
+                    currentArch = nextProps.arch;
+                    currentType = nextProps.type;
+                    currentResModel = nextProps.resModel;
+                    await this.loadView(nextProps);
+                } else {
+                    const { context, domain, groupBy, orderBy } = nextProps;
+                    Object.assign(this.withSearchProps, { context, domain, groupBy, orderBy });
+                }
+                render(this);
+            },
+            { initialRun: false }
+        );
 
         useDebugCategory("view", { component: this });
     }
@@ -484,19 +509,4 @@ export class View extends Component {
         }
     }
 
-    /**
-     * @param {ViewProps} nextProps
-     */
-    onWillUpdateProps(nextProps) {
-        nextProps = this.applyViewDefaults(nextProps);
-        const oldProps = pick(this.props, "arch", "type", "resModel");
-        const newProps = pick(nextProps, "arch", "type", "resModel");
-        if (JSON.stringify(oldProps) !== JSON.stringify(newProps)) {
-            return this.loadView(nextProps);
-        }
-        // we assume that nextProps can only vary in the search keys:
-        // context, domain, groupBy, orderBy
-        const { context, domain, groupBy, orderBy } = nextProps;
-        Object.assign(this.withSearchProps, { context, domain, groupBy, orderBy });
-    }
 }
