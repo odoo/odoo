@@ -11,7 +11,7 @@ class MrpProduction(models.Model):
         "Count of Source SO",
         compute='_compute_sale_order_count',
         groups='sales_team.group_sale_salesman')
-    sale_line_id = fields.Many2one('sale.order.line', 'Origin sale order line', copy=False)
+    sale_line_id = fields.Many2one('sale.order.line', 'Origin sale order line', copy=False, domain="[('display_type', '=', False)]")
 
     @api.depends('reference_ids.sale_ids', 'sale_line_id.order_id')
     def _compute_sale_order_count(self):
@@ -41,7 +41,7 @@ class MrpProduction(models.Model):
     def action_confirm(self):
         res = super().action_confirm()
         for production in self:
-            if production.sale_line_id:
+            if production.sale_line_id.product_id:
                 production.move_finished_ids.filtered(
                     lambda m: m.product_id == production.product_id
                 ).sale_line_id = production.sale_line_id
