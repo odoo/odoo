@@ -237,3 +237,19 @@ class TestVatNumbers(TransactionCase):
         self.assertEqual(test_partner.vat, '12ABC34501DE35')
         test_partner.write({'vat': '51.494.569/0131-70'})
         self.assertEqual(test_partner.vat, '51494569013170')
+
+    def test_vat_np(self):
+        """Test valid VAT number is accepted for Nepal"""
+        test_partner = self.env["res.partner"].create({"name": "NP Partner", "country_id": self.env.ref("base.np").id})
+        # Valid Nepal VAT: length must be 9
+        test_partner.write({"vat": "123456789"})
+        self.assertEqual(test_partner.vat, "123456789")
+
+        # Invalid Nepal VAT
+        msg = "The VAT number.*does not seem to be valid"
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({"vat": "1234"})           # length is too short
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({"vat": "1234567891234"})  # length is too long
+        with self.assertRaisesRegex(ValidationError, msg):
+            test_partner.write({"vat": "123$!-567"})      # contains special character

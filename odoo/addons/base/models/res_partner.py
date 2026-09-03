@@ -96,6 +96,7 @@ _ref_vat = {
     'mx': _lt('GODE561231GR8'),
     'nl': 'NL123456782B90',
     'no': 'NO123456785',
+    'np': '123456789',
     'nz': _lt('49-098-576 or 49098576'),
     'pe': _lt('10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY'),
     'ph': '123-456-789-123',
@@ -2069,6 +2070,17 @@ class ResPartner(models.Model):
             # 10 is not a valid check digit for an organization number
             return False
         return check == int(vat[8])
+
+    # Nepal VAT validation
+    def check_vat_np(self, vat):
+        """
+        Check basic Nepal VAT number, must be numeric and of length 9
+        No official documentation yet, built according to partner req as
+        described in the task. See: https://www.odoo.com/odoo/project/967/tasks/6303256
+        """
+        if len(vat) == 9 and vat.isdecimal():
+            return vat
+        return False
 
     # Peruvian VAT validation, contributed by Vauxoo
     def check_vat_pe(self, vat):
