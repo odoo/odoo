@@ -615,23 +615,6 @@ class ProductPricelistItem(models.Model):
         uom = uom or product._get_main_uom()
         uom.ensure_one()
 
-        if self.compute_price == 'fixed':
-            price = product.uom_id._compute_price(self.fixed_price, uom)
-            if product._name == 'product.product':
-                attrs_extra_price = (
-                    sum(product.product_template_attribute_value_ids.mapped('price_extra'))
-                    + self.env.context.get('no_variant_attributes_price_extra', 0)
-                )
-            else:
-                attrs_extra_price = product._get_attributes_extra_price()
-            extra_price = product.uom_id._compute_price(attrs_extra_price, uom)
-            currency = kwargs.get('currency') or self.currency_id or self.env.company.currency_id
-            if product.currency_id != currency:
-                extra_price = product.currency_id._convert(
-                    extra_price, currency, date=kwargs.get('date', False), round=False,
-                )
-            return price + extra_price
-
         base_price = self._compute_base_price(product, quantity, uom, **kwargs)
         if self.compute_price == 'percentage':
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
@@ -654,7 +637,7 @@ class ProductPricelistItem(models.Model):
                 price = min(
                     price, base_price + product_uom._compute_price(self.price_max_margin, uom)
                 )
-        else:  # empty self, or extended pricelist price computation logic
+        else:  # fixed price, empty self, or extended pricelist price computation logic
             price = base_price
 
         return price
@@ -674,6 +657,25 @@ class ProductPricelistItem(models.Model):
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
+        if self.compute_price == 'fixed':
+            price = product.uom_id._compute_price(self.fixed_price, uom)
+            if product.is_product_variant and self.applied_on == '0_product_variant':
+                # If a fixed price was defined for a specific variant, only extra prices from
+                # no variant attributes have to be considered.
+                attrs_extra_price = self.env.context.get('no_variant_attributes_price_extra', 0)
+            else:
+                # Product is a variant -> add variant extra price + no_variant attributes extra price
+                # Product is a template -> add extra prices from selected combination (if any)
+                attrs_extra_price = product._get_attributes_extra_price()
+
+            extra_price = product.uom_id._compute_price(attrs_extra_price, uom)
+            currency = kwargs.get('currency') or self.currency_id or self.env.company.currency_id
+            if product.currency_id != currency:
+                extra_price = product.currency_id._convert(
+                    extra_price, currency, date=kwargs.get('date', False), round=False,
+                )
+            return price + extra_price
+
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
             if base_prices:
