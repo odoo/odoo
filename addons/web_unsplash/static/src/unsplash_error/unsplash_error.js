@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { UnsplashCredentials } from "../unsplash_credentials/unsplash_credentials";
 
 export class UnsplashError extends Component {
@@ -6,11 +6,11 @@ export class UnsplashError extends Component {
     static components = {
         UnsplashCredentials,
     };
-    static props = {
-        title: String,
-        subtitle: String,
-        showCredentials: Boolean,
-        submitCredentials: { type: Function, optional: true },
-        hasCredentialsError: { type: Boolean, optional: true },
-    };
+    props = useProps({
+        title: t.string(),
+        subtitle: t.string(),
+        showCredentials: t.boolean(),
+        submitCredentials: t.function().optional(),
+        hasCredentialsError: t.boolean().optional(),
+    });
 }
