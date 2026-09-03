@@ -431,6 +431,12 @@ class ProductProduct(models.Model):
         return self._search_product_quantity(operator, value, 'outgoing_qty')
 
     def _search_free_qty(self, operator, value):
+        if not ({'from_date', 'to_date'} & set(self.env.context.keys())):
+            product_ids = self._search_field_by_quants(
+                operator, value, self.env.context.get('lot_id'), self.env.context.get('owner_id'),
+                self.env.context.get('package_id'), field="free_qty"
+            )
+            return [('id', 'in', product_ids)]
         return self._search_product_quantity(operator, value, 'free_qty')
 
     def _search_product_quantity(self, operator, value, field):
@@ -440,6 +446,9 @@ class ProductProduct(models.Model):
         return [('id', 'in', ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
+        return self._search_field_by_quants(operator, value, lot_id, owner_id, package_id)
+
+    def _search_field_by_quants(self, operator, value, lot_id=False, owner_id=False, package_id=False, field="qty_available"):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
         op = PY_OPERATORS.get(operator)
         if not op:
@@ -457,17 +466,38 @@ class ProductProduct(models.Model):
             domain_quant.append(('owner_id', '=', owner_id))
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
-        quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum'])
+        quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])
 
         # check if we need include zero values in result
+<<<<<<< 9fd95937ddf9030e4623bbc82d09959579e4ae4c
         include_zero = op(0.0, value)
+||||||| 0e015cb79c4738c39e32c11e7ca11809394cb701
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=') or
+            value > 0.0 and operator in ('<', '<=') or
+            value == 0.0 and operator in ('>=', '<=', '=')
+        )
+=======
+        include_zero = (
+            value < 0.0 and operator in ('>', '>=') or
+            value > 0.0 and operator in ('<', '<=') or
+            float_is_zero(value, precision_digits=8) and operator in ('>=', '<=', '=')
+        )
+>>>>>>> 67b572695f358e02520cd5e82bf6dea00708aafd
 
         processed_product_ids = set()
-        for product, quantity_sum in quants_groupby:
+        for product, quantity_sum, reserved_sum in quants_groupby:
             product_id = product.id
+            field_sum = quantity_sum - reserved_sum if field == "free_qty" else quantity_sum
             if include_zero:
                 processed_product_ids.add(product_id)
+<<<<<<< 9fd95937ddf9030e4623bbc82d09959579e4ae4c
             if op(quantity_sum, value):
+||||||| 0e015cb79c4738c39e32c11e7ca11809394cb701
+            if OPERATORS[operator](quantity_sum, value):
+=======
+            if OPERATORS[operator](field_sum, value):
+>>>>>>> 67b572695f358e02520cd5e82bf6dea00708aafd
                 product_ids.add(product_id)
 
         if include_zero:
