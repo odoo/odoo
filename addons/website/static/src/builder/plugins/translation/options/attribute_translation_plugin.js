@@ -23,6 +23,10 @@ export const TRANSLATABLE_ATTRIBUTES = [
         name: _t("Placeholder"),
     },
     {
+        attribute: "aria-label",
+        name: _t("Aria Label"),
+    },
+    {
         attribute: "value",
         name: _t("Value"),
     },

@@ -139,7 +139,7 @@ export class TranslateToAction extends BuilderAction {
                 enqueueTranslation(el, uniqueId("ta_"), text, "textContent");
             }
             if (el.classList.contains("o_translatable_attribute")) {
-                for (const attr of ["alt", "title", "placeholder", "value"]) {
+                for (const attr of ["alt", "title", "placeholder", "aria-label", "value"]) {
                     if (el.hasAttribute(attr)) {
                         const attrValue = el.getAttribute(attr);
                         enqueueTranslation(el, uniqueId("ta_"), attrValue, attr);
