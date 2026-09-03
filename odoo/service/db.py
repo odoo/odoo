@@ -190,13 +190,16 @@ def exp_duplicate_database(db_original_name, db_name, neutralize_database=False)
             sql.Identifier(db_original_name)
         ))
 
+    if neutralize_database:
+        # Neutralize the database before it becomes visible to the cron workers
+        with odoo.sql_db.db_connect(db_name).cursor() as cr:
+            odoo.modules.neutralize.neutralize_database(cr)
+
     registry = odoo.modules.registry.Registry.new(db_name)
     with registry.cursor() as cr:
         # if it's a copy of a database, force generation of a new dbuuid
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         env['ir.config_parameter'].init(force=True)
-        if neutralize_database:
-            odoo.modules.neutralize.neutralize_database(cr)
 
     from_fs = odoo.tools.config.filestore(db_original_name)
     to_fs = odoo.tools.config.filestore(db_name)
@@ -359,14 +362,17 @@ def restore_db(db, dump_file, copy=False, neutralize_database=False):
         if r.returncode != 0:
             raise Exception("Couldn't restore database")
 
+        if neutralize_database:
+            # Neutralize the database before it becomes visible to the cron workers
+            with odoo.sql_db.db_connect(db).cursor() as cr:
+                odoo.modules.neutralize.neutralize_database(cr)
+
         registry = odoo.modules.registry.Registry.new(db)
         with registry.cursor() as cr:
             env = odoo.api.Environment(cr, SUPERUSER_ID, {})
             if copy:
                 # if it's a copy of a database, force generation of a new dbuuid
                 env['ir.config_parameter'].init(force=True)
-            if neutralize_database:
-                odoo.modules.neutralize.neutralize_database(cr)
 
             if filestore_path:
                 filestore_dest = env['ir.attachment']._filestore()
