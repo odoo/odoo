@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="stock.MoveProductLabelField">
+<<<<<<< 823aec303df1e8d77d715735d6a320754a1a54e7
         <div class="d-flex align-items-center gap-1">
             <Many2One t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
             <t t-if="this.showLabelVisibilityToggler">
@@ -12,7 +13,33 @@
                     t-on-click="() => this.switchLabelVisibility()"
                 />
             </t>
+||||||| cd67073589a8ce4c57ae68a7272c987d12e37d0e
+        <div class="d-flex align-items-center gap-1">
+            <Many2One t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
+            <t t-if="this.showLabelVisibilityToggler">
+                <button
+                    class="btn btn-link fa fa-bars text-start o_external_button px-1"
+                    id="labelVisibilityButtonId"
+                    data-tooltip="Add a description"
+                    t-on-click="() => this.switchLabelVisibility()"
+                />
+            </t>
+=======
+        <div>
+            <div class="d-flex align-items-center gap-1">
+                <Many2One t-props="this.m2oProps" t-on-keydown="this.onM2oInputKeydown"/>
+                <t t-if="this.showLabelVisibilityToggler">
+                    <button
+                        class="btn btn-link fa fa-bars text-start o_external_button px-1"
+                        id="labelVisibilityButtonId"
+                        data-tooltip="Add a description"
+                        t-on-click="() => this.switchLabelVisibility()"
+                    />
+                </t>
+            </div>
+>>>>>>> 873d773ecbf570faa8b52c72f2fa633d9693844d
         </div>
+<<<<<<< 823aec303df1e8d77d715735d6a320754a1a54e7
         <textarea
             class="o_input d-print-none border-0 fst-italic"
             placeholder="Enter a description"
@@ -23,6 +50,19 @@
             t-att-value="this.label"
             t-ref="this.labelNode"
         />
+||||||| cd67073589a8ce4c57ae68a7272c987d12e37d0e
+        <textarea
+            class="o_input d-print-none border-0 fst-italic"
+            placeholder="Enter a description"
+            rows="1"
+            type="text"
+            t-att-class="{ 'd-none': !(this.columnIsProductAndLabel.value and (this.label or this.labelVisibility.value)) }"
+            t-att-readonly="this.isDescriptionReadonly"
+            t-att-value="this.label"
+            t-custom-ref="labelNodeRef"
+        />
+=======
+>>>>>>> 873d773ecbf570faa8b52c72f2fa633d9693844d
     </t>
 
     <t t-name="stock.AddPackageListRendererRow" t-inherit="web.ListRenderer.CreateRow" t-inherit-mode="primary">
