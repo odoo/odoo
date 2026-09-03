@@ -472,6 +472,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 is_refund=line.is_refund,
             )
             tax_items = taxes_res['taxes']
+            if not tax_items:
+                base_amount = line.currency_id.round(taxes_res['total_excluded'])
+                summary['subtotals'][None]['taxable_amount'] += base_amount
+                summary['taxable_amount_total'] += base_amount
             for tax_item in tax_items:
                 base_amount = line.currency_id.round(tax_item['base'])
                 tax_amount = tax_item['amount']
@@ -486,9 +490,6 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                     values['tax_category_code'] = tax_code
                     values['exemption_code'] = exemption_code
                     values['exemption_reason'] = exemption_reason
-
-            if not tax_items:
-                summary['subtotals'][None]['tax_category_code'] = 'E'
 
         return summaries if agregation_function else summaries[None]
 
@@ -510,7 +511,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                     **({
                         'TaxExemptionReason': {'_text': tax_sub_total['exemption_reason']},
                         'TaxExemptionReasonCode': {'_text': tax_sub_total['exemption_code']},
-                    } if tax_sub_total.get('exemption_code') else {}),
+                    } if tax_sub_total.get('exemption_reason') or tax_sub_total.get('exemption_code') else {}),
                 }
             })
 
@@ -567,6 +568,8 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         res = self._get_tax_exemption_reason(buyer, seller, tax or self.env['account.tax'])
         exemption_reason_code = res.get('tax_exemption_reason_code')
         exemption_reason = res.get('tax_exemption_reason')
+        if tax_code == 'E' and not exemption_reason:
+            exemption_reason = self.env._("Exempt from tax")
         return tax_code, exemption_reason_code, exemption_reason
 
     @api.model
