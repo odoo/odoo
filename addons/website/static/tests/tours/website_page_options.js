@@ -251,7 +251,7 @@ registry.category("web_tour.tours").add("website_page_breadcrumb", {
         ...openBackgroundColorPicker("Background Color", "Gradient"),
         {
             content: "Apply the first gradient option to the breadcrumb background",
-            trigger: ".o_colorpicker_sections button.o_gradient_color_button",
+            trigger: ".o_colorpicker_gradient_section button.o_gradient_color_button",
             async run({ click }) {
                 selectedGradient = this.anchor.dataset.color;
                 await click();
