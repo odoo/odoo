@@ -231,7 +231,6 @@ class AccountChartTemplate(models.AbstractModel):
                         for records_for_companies in records_to_keep.grouped('company_ids').values():
                             records_for_companies.company_ids -= children_companies
                     records.with_context(force_delete=True).unlink()
-
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
         if company.parent_id:

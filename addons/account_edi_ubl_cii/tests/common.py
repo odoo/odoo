@@ -5,8 +5,10 @@ import uuid
 from odoo import Command, fields
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import config, file_open
+from odoo.tests import tagged
 
 
+@tagged('TestUblCiiCommon')
 class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
@@ -21,8 +23,16 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setup_independent_company(cls):
-        # todo remove should be handled correcly by account
-        return cls._create_company()
+        company = cls.env.ref('base.test_company_be')
+        company.currency_id = cls.env.ref('base.EUR')
+        company.tax_calculation_rounding_method = 'round_globally'
+        company.name = "Secondary Test Company"  # backward compatibility with existing assertions
+        company.terms_type = 'plain'
+        cls.env['account.tax.group'].sudo().create({
+            'name': 'Test tax group',
+            'company_id': company.id,
+        })
+        return company
 
     @classmethod
     def _create_company(cls, **create_values):
@@ -248,9 +258,8 @@ class TestUblCiiBECommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
-
+    def setup_independent_company(cls):
+        company = super().setup_independent_company()
         company.partner_id.write({
             'street': "Chaussée de Namur 40",
             'zip': "1367",
@@ -273,8 +282,8 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
+    def setup_independent_company(cls):
+        company = super().setup_independent_company()
 
         company.partner_id.write({
             'street': "Rue Grand Port 1",
@@ -297,8 +306,8 @@ class TestUblCiiNOCommon(TestUblCiiCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def _create_company(cls, **create_values):
-        company = super()._create_company(**create_values)
+    def setup_independent_company(cls):
+        company = super().setup_independent_company()
         company.partner_id.write({
             'street': "Drammensveien 1",
             'zip': "0271",
