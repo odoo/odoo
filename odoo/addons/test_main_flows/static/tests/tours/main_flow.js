@@ -2,6 +2,53 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 import { showProductColumn } from "@account/js/tours/tour_utils";
 
+function autoExpandMoreButtons(isActiveMobile = false) {
+    const isActive = ["auto"];
+    if (isActiveMobile) {
+        isActive.push("mobile");
+    }
+    return {
+        isActive,
+        content: `autoExpandMoreButtons`,
+        trigger: ".o-form-buttonbox",
+        async run({ queryFirst, click }) {
+            const more = queryFirst(".o-form-buttonbox .o_button_more");
+            if (more) {
+                await click(more);
+            }
+        },
+    };
+}
+
+function mobileKanbanSearchMany2X(modalTitle, valueSearched) {
+    return [
+        {
+            isActive: ["mobile"],
+            trigger: `.modal:not(.o_inactive_modal) .o_control_panel_navigation .btn [data-icon='search']`,
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            trigger: ".o_searchview_input",
+            run: `edit ${valueSearched}`,
+        },
+        {
+            isActive: ["mobile"],
+            trigger: ".dropdown-menu.o_searchview_autocomplete",
+        },
+        {
+            isActive: ["mobile"],
+            trigger: ".o_searchview_input",
+            run: "press Enter",
+        },
+        {
+            isActive: ["mobile"],
+            trigger: `.modal:not(.o_inactive_modal) .o_kanban_record:contains('${valueSearched}')`,
+            run: "click",
+        },
+    ];
+}
+
 
 registry.category("web_tour.tours").add('main_flow_tour', {
     steps: () => [
@@ -91,7 +138,7 @@ registry.category("web_tour.tours").add('main_flow_tour', {
 {
     trigger: ".o_form_saved",
 },
-stepUtils.autoExpandMoreButtons(),
+autoExpandMoreButtons(),
 {
     trigger: '.o_form_saved',
 },
@@ -357,7 +404,7 @@ stepUtils.autoExpandMoreButtons(),
     content: "Select a vendor, or create a new one on the fly.",
     run: "click",
 },
-...stepUtils.mobileKanbanSearchMany2X('Vendor', 'the_flow.vendor'),
+...mobileKanbanSearchMany2X('Vendor', 'the_flow.vendor'),
 {
     isActive: ["desktop"],
     trigger: ".o_field_widget[name=seller_ids] .o_field_x2many_list_row_add > button",
@@ -696,7 +743,7 @@ stepUtils.autoExpandMoreButtons(),
     content: "Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically.",
     run: "click",
 },
-...stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.product'),
+...mobileKanbanSearchMany2X('Product', 'the_flow.product'),
 {
     isActive: ["desktop"],
     trigger: ".o_field_widget[name=order_line] button:contains(Add Line)",
@@ -766,7 +813,7 @@ stepUtils.autoExpandMoreButtons(),
     content: "Select a product, or create a new one on the fly. The product will define the default sales price (that you can change), taxes and description automatically.",
     run: "click",
 },
-...stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.service'),
+...mobileKanbanSearchMany2X('Product', 'the_flow.service'),
 {
     isActive: ["mobile"],
     trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Order Lines')",
@@ -1008,7 +1055,7 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["desktop"],
     trigger: '.o_breadcrumb .active:contains("S0")',
 },
-stepUtils.autoExpandMoreButtons(true),
+autoExpandMoreButtons(true),
 {
     isActive: ["mobile"],
     trigger: '.o_navbar_breadcrumbs .o_breadcrumb:contains("S0")',
