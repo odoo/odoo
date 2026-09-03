@@ -46,7 +46,7 @@ export class CartPage extends Component {
             (selfOrder.config.self_ordering_pay_after === "meal" &&
             Object.keys(order.changes).length > 0
                 ? order.unsentLines
-                : this.selfOrder.currentOrder.lines) || [];
+                : this.selfOrder.currentOrder.getOrderlines()) || [];
 
         return lines.filter((line) => !line.combo_parent_id);
     }

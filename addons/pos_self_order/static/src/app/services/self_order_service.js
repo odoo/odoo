@@ -537,7 +537,7 @@ export class SelfOrder extends Reactive {
             }
             return product.parentPosCategIds.some((id) => prepCategoryIds.has(id));
         };
-        return order.lines.filter((line) => {
+        return order.getOrderlines().filter((line) => {
             if (line.combo_line_ids?.length) {
                 return line.combo_line_ids.some((line) => hasPreparationCategory(line.product_id));
             }
