@@ -7,6 +7,8 @@ import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 import { Component } from "@odoo/owl";
 import { FileUploader } from "@web/views/fields/file_handler";
 
+import { useMailComposerAttachmentsUploader } from "./mail_composer_attachment_hook";
+
 export class MailComposerAttachmentSelector extends Component {
     static template = "mail.MailComposerAttachmentSelector";
     static components = { FileUploader };
@@ -18,6 +20,7 @@ export class MailComposerAttachmentSelector extends Component {
         this.operations = useX2ManyCrud(() => {
             return this.props.record.data["attachment_ids"];
         }, true);
+        this.doUpload = useMailComposerAttachmentsUploader();
     }
 
     /** @param {Object} data */
@@ -31,20 +34,24 @@ export class MailComposerAttachmentSelector extends Component {
                 ? JSON.parse(this.props.record.data.res_ids)
                 : this.props.record.context.active_ids;
         }
-        const thread = await this.mailStore.Thread.insert({
-            model: this.props.record.data.model,
-            id: resIds[0],
-        });
-        const file = new File([dataUrlToBlob(data, type)], name, { type });
-        const isThreadComposer = this.props.record.context.is_thread_composer;
-        const attachment = await this.attachmentUploadService.upload(
-            thread,
-            isThreadComposer ? thread.composer : undefined,
-            file,
-        );
-        if (attachment) {
-            await this.operations.saveRecord([attachment.id]);
-        }
+
+        const uploadFile = async () => {
+            const thread = await this.mailStore.Thread.insert({
+                model: this.props.record.data.model,
+                id: resIds[0],
+            });
+            const file = new File([dataUrlToBlob(data, type)], name, { type });
+            const isThreadComposer = this.props.record.context.is_thread_composer;
+            const attachment = await this.attachmentUploadService.upload(
+                thread,
+                isThreadComposer ? thread.composer : undefined,
+                file
+            );
+            if (attachment) {
+                await this.operations.saveRecord([attachment.id]);
+            }
+        };
+        await this.doUpload(uploadFile());
     }
 }
 
