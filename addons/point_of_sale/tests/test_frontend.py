@@ -2272,14 +2272,24 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour('test_cross_exclusion_attribute_values')
 
     def test_weight_product(self):
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_weight_product')
+        self.pos_admin.write({
+            'group_ids': [
+                (4, self.env.ref('product.group_product_manager').id),
+            ]
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_weight_product', login='pos_admin')
         order = self.env['pos.order'].search([], limit=1)
         self.assertEqual(len(order.lines), 2, "There should be two order lines")
         self.assertEqual(order.lines[0].price_subtotal_incl, 40, "The price unit should be 40")
         self.assertEqual(order.lines[0].qty, 4, "The quantity should be 4")
         self.assertEqual(order.lines[1].price_subtotal_incl, 40, "The price unit should be 40")
         self.assertEqual(order.lines[1].qty, 1, "The quantity should be 1")
+        self.assertEqual(
+            order.account_move.line_ids[2].name,
+            'Configurable Chair (Red, Metal, Fabrics: Other: Test custom value)',
+            'Account move line name should contain the custom value of the product attribute'
+        )
 
     def test_sync_from_ui_one_by_one(self):
         """
