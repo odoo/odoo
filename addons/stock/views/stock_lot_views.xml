@@ -43,8 +43,12 @@
                         <field name="product_id" context="{'default_is_storable': True, 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <field name="ref" string="Reference"/>
                         <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                        <field name="partner_ids" string="Customer" invisible="not partner_ids or not location_id" groups="stock.group_stock_manager"
-                               widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
+                        <t groups="stock.group_stock_manager">
+                            <field name="partner_ids" string="Customers" groups="base.group_partner_manager"
+                                   widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
+                            <field name="partner_ids" string="Customers" groups="!base.group_partner_manager"
+                                   widget="many2many_tags" options="{'no_create': True, 'on_tag_click': 'open_form'}"/>
+                        </t>
                     </group>
                     <group string="Inventory" name="inventory_group">
                         <label for="product_qty" invisible="not display_complete"/>
@@ -125,6 +129,7 @@
                     <filter name="group_by_location" string="Location" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
                     <filter name="group_by_creation_date" string="Creation date" domain="[]" context="{'group_by': 'create_date'}"/>
                     <filter name="group_by_Company" string="Company" domain="[]" context="{'group_by': 'company_id'}"/>
+                    <filter name="group_by_Customers" string="Customers" domain="[]" context="{'group_by': 'partner_ids'}"/>
                     <filter name="group_by_lot_properties" string="Properties" context="{'group_by': 'lot_properties'}"/>
                 </group>
             </search>

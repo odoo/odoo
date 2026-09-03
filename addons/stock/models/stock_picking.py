@@ -977,6 +977,10 @@ class StockPicking(models.Model):
         new_picking.show_return = not new_picking.show_return
         return new_picking
 
+    def _get_lot_partner(self):
+        self.ensure_one()
+        return self.partner_id
+
     def _action_done(self):
         """Call `_action_done` on the `stock.move` of the `stock.picking` in `self`.
         This method makes sure every `stock.move.line` is linked to a `stock.move` by either
@@ -994,6 +998,10 @@ class StockPicking(models.Model):
             if picking.owner_id:
                 picking.move_ids.write({'restrict_partner_id': picking.owner_id.id})
                 picking.move_line_ids.write({'owner_id': picking.owner_id.id})
+            if picking.picking_type_id.code == 'outgoing':
+                if partner := picking._get_lot_partner():
+                    picking.move_ids.move_line_ids.lot_id.partner_ids |= partner
+
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now(), 'priority': '0'})
 
