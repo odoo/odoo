@@ -151,14 +151,17 @@
                                  invisible="id or not date_to or date_to &gt;= context_today().strftime('%Y-%m-%d')">
                                 <span>The allocated days cannot be used, because the allocation is set to finish in the past.</span>
                             </div>
-                            <field name="accrual_plan_id" placeholder="Regular allocation"
-                                readonly="not is_officer or state in ['refuse', 'validate']"/>
                             <field name="work_entry_type_id"
                                 context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
                                 domain="[
                                     ('id','in', allowed_work_entry_type_ids),
                                 ]"
                                 readonly="state in ['refuse', 'validate']"/>
+                            <field name="accrual_plan_id"
+                                placeholder="Regular allocation"
+                                readonly="not is_officer or state in ['refuse', 'validate']"
+                                domain="work_entry_type_id and [('work_entry_type_id', '=', work_entry_type_id)] or []"
+                                invisible="hide_accrual_plan_id"/>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"

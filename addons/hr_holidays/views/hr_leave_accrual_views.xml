@@ -170,8 +170,12 @@
                                 <div class="oe_title w-50">
                                     <label class="fw-bold" for="name" string="Title"/>
                                     <h1><field name="name" placeholder="e.g. Seniority Plan, PTO, RTT, ..." required="id"/></h1>
-                                    <group groups="base.group_multi_company">
-                                        <field name="company_id" options="{'no_create': True}"  groups="base.group_multi_company" placeholder="Visible to all"/>
+                                    <group>
+                                        <field name="work_entry_type_id" class="o_hr_medium_field"/>
+                                        <field name="company_id"
+                                            options="{'no_create': True}"
+                                            groups="base.group_multi_company"
+                                            placeholder="Visible to all"/>
                                     </group>
                                 </div>
                                 <group string="Configuration" class="mt-0 o_accrual">

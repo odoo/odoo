@@ -49,6 +49,25 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'hour',
         })
+        cls.work_entry_type_day = cls.env['hr.work.entry.type'].create({
+            'name': 'Test Leave Type Days',
+            'code': 'Test Leave Type Days',
+            'count_as': 'absence',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        cls.dummy_work_entry_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Dummy Entry Type',
+            'code': 'DUMMY',
+            'count_as': 'absence',
+            'requires_allocation': True,
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+
         accrual_plan1_levels_fields = {
             'added_value_type': 'day',
             'frequency': 'monthly',
@@ -73,6 +92,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         ]
         cls.accrual_plan_start1 = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan 1 start',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'start',
             'carryover_date': 'allocation',
@@ -81,23 +101,17 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         cls.accrual_plan_end1 = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan 1 end',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'carryover_date': 'allocation',
             'can_be_carryover': True,
             'level_ids': accrual_plan1_levels,
         })
-        cls.work_entry_type_day = cls.env['hr.work.entry.type'].create({
-            'name': 'Test Leave Type Days',
-            'code': 'Test Leave Type Days',
-            'count_as': 'absence',
-            'requires_allocation': 'yes',
-            'allocation_validation_type': 'no_validation',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
-        })
+
         cls.accrual_plan_monthly_end = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'carryover_date': 'allocation',
@@ -113,6 +127,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         cls.accrual_plan_monthly_end_max_leaves = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'carryover_date': 'allocation',
@@ -129,6 +144,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         cls.accrual_plan_yearly_max_postponed_days_start = cls.env['hr.leave.accrual.plan'].create({
             'name': '21 days per year, 5 carryover max',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'transition_mode': 'immediately',
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
@@ -148,6 +164,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         cls.accrual_plan_monthly_start_carryover_lost = cls.env['hr.leave.accrual.plan'].create({
             'name': '1 day per month start - carryover 1st of Mai',
+            'work_entry_type_id': cls.work_entry_type_hour_day.id,
             'carryover_date': 'other',
             'carryover_day': 1,
             'carryover_month': '5',
@@ -184,6 +201,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         cls.accrual_plan_monthly_end_carryover_year_start = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -193,6 +211,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         cls.accrual_plan_monthly_end_carryover_year_end = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -202,6 +221,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         cls.accrual_plan_monthly_end_carryover_year_start_2_lvls = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -212,6 +232,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         cls.accrual_plan_monthly_start_carryover_year_start_2_lvls = cls.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': cls.work_entry_type_day.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -245,6 +266,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_consistency_between_cap_accrued_time_and_maximum_leave(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.dummy_work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'milestone_date': 'after',
@@ -271,6 +293,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_unlink(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
         })
 
@@ -292,6 +315,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'milestone_date': 'after',
@@ -330,6 +354,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_frequency_hourly_worked_hours(self):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'work_entry_type_id': self.work_entry_type.id,
                 'is_based_on_worked_time': True,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -389,6 +414,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'milestone_date': 'after',
@@ -450,6 +476,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.user_hrmanager.tz = 'Australia/Brisbane'
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Daily Worked Time Accrual',
+            'work_entry_type_id': self.work_entry_type_hour.id,
             'is_based_on_worked_time': True,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -483,6 +510,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -529,6 +557,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -576,6 +605,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -609,6 +639,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -654,6 +685,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-09-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -717,6 +749,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
             accrual_plan_not_based_on_worked_time = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -731,6 +764,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 })],
             })
             accrual_plan_based_on_worked_time = self.env['hr.leave.accrual.plan'].create({
+                'work_entry_type_id': self.work_entry_type.id,
                 'is_based_on_worked_time': True,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -809,6 +843,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @freeze_time('2025-09-01')  # Monday
     def test_non_elligible_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.work_entry_type.id,
             'is_based_on_worked_time': True,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -859,6 +894,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @freeze_time('2025-09-01')  # Monday
     def test_elligible_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.work_entry_type.id,
             'is_based_on_worked_time': True,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -909,6 +945,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @freeze_time('2025-09-01')  # Monday
     def test_worked_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.work_entry_type.id,
             'is_based_on_worked_time': True,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -959,6 +996,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -1001,6 +1039,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'hour',
@@ -1043,6 +1082,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2024-10-10"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual plan - hours and max postpone',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'hour',
@@ -1080,6 +1120,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             # 1 accrual with 2 levels and level transition immediately
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'work_entry_type_id': self.work_entry_type.id,
                 'transition_mode': 'immediately',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1118,6 +1159,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             # 1 accrual with 2 levels and level transition after
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'work_entry_type_id': self.work_entry_type.id,
                 'transition_mode': 'end_of_accrual',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1178,6 +1220,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-12-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -1214,6 +1257,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-12-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -1247,6 +1291,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-01-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -1306,6 +1351,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # This also tests retroactivity
         with freeze_time('2021-12-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
+                'work_entry_type_id': self.work_entry_type.id,
                 'accrued_gain_time': 'start',
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
@@ -1363,6 +1409,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2021-01-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'added_value_type': 'day',
@@ -1399,6 +1446,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         #  that the first level is not skipped completely.
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
@@ -1449,6 +1497,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_three_levels_accrual(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
@@ -1531,6 +1580,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [
                 (0, 0, {
@@ -1592,6 +1642,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         The total number of days should be 3.
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'level_ids': [
@@ -1625,6 +1676,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_maximum_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
@@ -1657,6 +1709,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_maximum_leaves_no_limit(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
@@ -1688,6 +1741,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_leaves_taken_maximum(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
@@ -1733,6 +1787,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_leaves_taken_maximum_hours(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type_hour.id,
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
                 'added_value_type': 'hour',
@@ -1778,6 +1833,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     @mute_logger('odoo.sql_db')
     def test_yearly_cap_constraint(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.dummy_work_entry_type.id,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1820,6 +1876,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'unit_of_measure': 'hour',
         })
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': work_entry_type.id,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1900,6 +1957,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_accrual_period_start(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1937,6 +1995,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_accrual_period_start_multiple_runs(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'level_ids': [(0, 0, {
@@ -1963,6 +2022,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_accrual_period_start_level_transfer(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'level_ids': [
@@ -2005,6 +2065,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_carryover_at_allocation(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'allocation',
@@ -2047,6 +2108,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_carryover_at_other(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -2140,6 +2202,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -2217,6 +2280,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_creation_on_anterior_date(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Weekly accrual',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
@@ -2262,6 +2326,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2023-12-31"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': work_entry_type.id,
                 'is_based_on_worked_time': False,
                 'accrued_gain_time': 'end',
                 'can_be_carryover': True,
@@ -2301,6 +2366,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_scheme = self.env['hr.leave.accrual.plan'].create({
             'name': 'Test Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2351,6 +2417,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'can_be_carryover': True,
@@ -2376,6 +2443,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_immediate_cron_run(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Weekly accrual',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
@@ -2409,6 +2477,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_creation_for_history(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
@@ -2448,6 +2517,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_with_report_creation_for_history(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
@@ -2489,6 +2559,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_period_start_past_start_date(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
@@ -2522,6 +2593,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_cancel_invalid_leaves_with_regular_and_accrual_allocations(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'start',
@@ -2590,8 +2662,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_unit': 'day',
             'unit_of_measure': 'day',
         })
-        accrual_plan = self.env['hr.leave.accrual.plan'].create({
-            'name': 'Monthly accrual',
+        accrual_plan = self.env['hr.leave.accrual.plan'].create([{
+            'name': 'Monthly accrual 1',
+            'work_entry_type_id': work_entry_type_no_negative.id,
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
@@ -2607,18 +2680,36 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'carryover_options': 'limited',
                 'postpone_max_days': 5
             })],
-        })
+        },{
+            'name': 'Monthly accrual 2',
+            'work_entry_type_id': work_entry_type_negative.id,
+            'can_be_carryover': True,
+            'carryover_date': 'year_start',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value_type': 'day',
+                'milestone_date': 'creation',
+                'start_type': 'day',
+                'added_value': 1,
+                'frequency': 'monthly',
+                'first_day': '31',
+                'cap_accrued_time': False,
+                'action_with_unused_accruals': 'all',
+                'carryover_options': 'limited',
+                'postpone_max_days': 5
+            })],
+        }])
 
         with freeze_time("2024-01-01"):
             self.env['hr.leave.allocation'].create([{
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': work_entry_type_no_negative.id,
-                'accrual_plan_id': accrual_plan.id,
+                'accrual_plan_id': accrual_plan[0].id,
                 'number_of_days': 1,
             }, {
                 'employee_id': self.employee_emp.id,
                 'work_entry_type_id': work_entry_type_negative.id,
-                'accrual_plan_id': accrual_plan.id,
+                'accrual_plan_id': accrual_plan[1].id,
                 'number_of_days': 1,
             }])
 
@@ -2676,6 +2767,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'level_ids': [
                     Command.create({
                     'added_value_type': 'day',
@@ -2714,6 +2806,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2760,6 +2853,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -2857,6 +2951,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Monthly accrual',
+            'work_entry_type_id': self.work_entry_type.id,
             'is_based_on_worked_time': True,
             'transition_mode': 'immediately',
             'can_be_carryover': True,
@@ -2941,6 +3036,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3004,6 +3100,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'year_start',
             'level_ids': [(0, 0, {
@@ -3065,6 +3162,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3145,6 +3243,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3238,6 +3337,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'other',
@@ -3320,6 +3420,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3397,6 +3498,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3471,6 +3573,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3543,6 +3646,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3604,6 +3708,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3665,6 +3770,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 20,
@@ -3728,6 +3834,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3811,6 +3918,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'other',
             'carryover_day': 1,
@@ -3927,6 +4035,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
             'can_be_carryover': True,
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
@@ -3967,6 +4076,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_start_accrual_gain_time_immediately(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '1.25 days each 1st of the month',
+            'work_entry_type_id': self.work_entry_type.id,
             'transition_mode': 'immediately',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -4006,6 +4116,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2024-06-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': '2 days on the 1st of each month',
+                'work_entry_type_id': self.work_entry_type.id,
                 'accrued_gain_time': 'start',
                 'can_be_carryover': True,
                 'carryover_date': 'year_start',
@@ -4037,6 +4148,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_cache_invalidation_with_future_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '1 days every last day of the month',
+            'work_entry_type_id': self.work_entry_type.id,
             'transition_mode': 'immediately',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -4081,6 +4193,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_days_left_under_carryover_maximum(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '21 days per year, 28 days cap, 7 carryover max',
+            'work_entry_type_id': self.work_entry_type.id,
             'transition_mode': 'immediately',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -4132,6 +4245,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_unused_accrual_reset_to_lost(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '21 days per year, 28 days cap, 7 carryover max',
+            'work_entry_type_id': self.work_entry_type.id,
             'transition_mode': 'immediately',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -4190,6 +4304,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'is_based_on_worked_time': True,
+                'work_entry_type_id': self.work_entry_type.id,
                 'can_be_carryover': True,
                 'level_ids': [(0, 0, {
                     'milestone_date': 'after',
@@ -4239,6 +4354,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan with no carryover',
+            'work_entry_type_id': work_entry_type.id,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
             'carryover_date': 'year_start',
@@ -4285,6 +4401,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with self.assertRaises(ValidationError):
             self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan with no carryover',
+                'work_entry_type_id': self.work_entry_type.id,
                 'accrued_gain_time': 'start',
                 'carryover_date': 'year_start',
                 'level_ids': [Command.create({
@@ -4303,8 +4420,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         is different from that of the accrual plan added value unit
         '''
         with freeze_time('2024-01-01'):
+            work_entry_type_day = self.env['hr.work.entry.type'].create({
+                'name': 'Test Leave Type 2',
+                'code': 'Test Leave Type 2',
+                'count_as': 'absence',
+                'requires_allocation': True,
+                'allocation_validation_type': 'no_validation',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            })
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': work_entry_type_day.id,
                 'is_based_on_worked_time': False,
                 'accrued_gain_time': 'end',
                 'level_ids': [(0, 0, {
@@ -4314,15 +4441,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'added_value': 1,
                     'frequency': 'daily',
                 })],
-            })
-            work_entry_type_day = self.env['hr.work.entry.type'].create({
-                'name': 'Test Leave Type 2',
-                'code': 'Test Leave Type 2',
-                'count_as': 'absence',
-                'requires_allocation': True,
-                'allocation_validation_type': 'no_validation',
-                'request_unit': 'day',
-                'unit_of_measure': 'day',
             })
 
             allocation = self.env['hr.leave.allocation'].create({
@@ -4346,8 +4464,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         and the request unit is half_day, so that it should be displayed as days
         '''
         with freeze_time('2024-01-01'):
+            work_entry_type_day = self.env['hr.work.entry.type'].create({
+                'name': 'Test Leave Type 2',
+                'code': 'Test Leave Type 2',
+                'count_as': 'absence',
+                'requires_allocation': True,
+                'allocation_validation_type': 'no_validation',
+                'request_unit': 'half_day',
+                'unit_of_measure': 'day',
+            })
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': work_entry_type_day.id,
                 'is_based_on_worked_time': False,
                 'accrued_gain_time': 'end',
                 'level_ids': [(0, 0, {
@@ -4357,15 +4485,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'added_value': 1,
                     'frequency': 'daily',
                 })],
-            })
-            work_entry_type_day = self.env['hr.work.entry.type'].create({
-                'name': 'Test Leave Type 2',
-                'code': 'Test Leave Type 2',
-                'count_as': 'absence',
-                'requires_allocation': True,
-                'allocation_validation_type': 'no_validation',
-                'request_unit': 'half_day',
-                'unit_of_measure': 'day',
             })
 
             allocation = self.env['hr.leave.allocation'].create({
@@ -4389,8 +4508,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         and some of the time off days are used
         '''
         with freeze_time('2024-01-01'):
+            work_entry_type_day = self.env['hr.work.entry.type'].create({
+                'name': 'Test Leave Type 2',
+                'code': 'Test Leave Type 2',
+                'count_as': 'absence',
+                'requires_allocation': True,
+                'allocation_validation_type': 'no_validation',
+                'request_unit': 'day',
+                'unit_of_measure': 'day',
+            })
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': work_entry_type_day.id,
                 'is_based_on_worked_time': False,
                 'accrued_gain_time': 'end',
                 'level_ids': [(0, 0, {
@@ -4400,15 +4529,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     'added_value': 1,
                     'frequency': 'daily',
                 })],
-            })
-            work_entry_type_day = self.env['hr.work.entry.type'].create({
-                'name': 'Test Leave Type 2',
-                'code': 'Test Leave Type 2',
-                'count_as': 'absence',
-                'requires_allocation': True,
-                'allocation_validation_type': 'no_validation',
-                'request_unit': 'day',
-                'unit_of_measure': 'day',
             })
 
             allocation = self.env['hr.leave.allocation'].create({
@@ -4442,6 +4562,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         '''
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '31st Monthly Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'accrued_gain_time': 'end',
             'carryover_date': 'allocation',
             'level_ids': [(0, 0, {
@@ -4482,8 +4603,18 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'postpone_max_days': 5,
             'week_day': '0',
         }
+        work_entry_type = self.env['hr.work.entry.type'].create({
+            'name': 'Test Leave Type 2',
+            'code': 'Test Leave Type 2',
+            'count_as': 'absence',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'no_validation',
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Test accrual plan',
+            'work_entry_type_id': work_entry_type.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'start',
             'can_be_carryover': True,
@@ -4515,16 +4646,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'start_type': 'year',
                 'maximum_leave': 28,
             })]
-        })
-
-        work_entry_type = self.env['hr.work.entry.type'].create({
-            'name': 'Test Leave Type 2',
-            'code': 'Test Leave Type 2',
-            'count_as': 'absence',
-            'requires_allocation': 'yes',
-            'allocation_validation_type': 'no_validation',
-            'request_unit': 'day',
-            'unit_of_measure': 'day',
         })
 
         allocation = self.env['hr.leave.allocation'].create({
@@ -4572,6 +4693,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_plan_cleared_when_switch_to_regular(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan For Test',
+            'work_entry_type_id': self.work_entry_type.id,
         })
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Accrual allocation for employee',
@@ -4683,9 +4805,20 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         res_day = allocation_day._get_future_leaves_on(future_date)
         self.assertEqual(res_day, 1.0, f"Expected 1.0 day increase, got {res_day}")
 
+        work_entry_type_hour = self.env['hr.work.entry.type'].create({
+            'name': 'Hourly Leave Type',
+            'code': 'Hourly Leave Type',
+            'count_as': 'absence',
+            'requires_allocation': True,
+            'allocation_validation_type': 'hr',
+            'request_unit': 'day',
+            'unit_of_measure': 'hour',
+        })
+
         # Assuming an 8-hour workday, 2 days = 16.0 hours
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': '2 Days Every 1st of Month',
+            'work_entry_type_id': work_entry_type_hour.id,
             'accrued_gain_time': 'start',
             'level_ids': [Command.create({
                 'added_value': 2,
@@ -4705,16 +4838,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'hours_per_day': 8.0,
         })
         self.employee_emp.resource_calendar_id = calendar
-
-        work_entry_type_hour = self.env['hr.work.entry.type'].create({
-            'name': 'Hourly Leave Type',
-            'code': 'Hourly Leave Type',
-            'count_as': 'absence',
-            'requires_allocation': True,
-            'allocation_validation_type': 'hr',
-            'request_unit': 'day',
-            'unit_of_measure': 'hour',
-        })
 
         allocation_hour = self.env['hr.leave.allocation'].create({
             'name': 'Hourly Allocation with daily accrual',
@@ -4736,6 +4859,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2024-11-15'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'accrued_gain_time': 'start',
                 'carryover_date': 'other',
                 'carryover_day': 1,
@@ -5027,6 +5151,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
             'name': 'Accrual Plan',
+            'work_entry_type_id': work_entry_type.id,
             'carryover_date': 'year_start',
             'accrued_gain_time': 'end',
         })
@@ -5068,6 +5193,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2025-01-01'):
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
                 'name': 'Accrual Plan For Test',
+                'work_entry_type_id': self.work_entry_type.id,
                 'accrued_gain_time': 'start',
                 'level_ids': [Command.create({
                     'start_count': 0,
@@ -5132,6 +5258,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_multi_allocation_wizard_initializes_accrual(self):
         accrual_plan_daily_end = self.env['hr.leave.accrual.plan'].create({
             'name': 'Daily Accrual Plan',
+            'work_entry_type_id': self.work_entry_type.id,
             'is_based_on_worked_time': False,
             'accrued_gain_time': 'end',
             'carryover_date': 'allocation',
@@ -5169,7 +5296,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             wizard = self.env['hr.leave.allocation.generate.multi.wizard'].create({
                 'name': 'Keep Manual Setting',
                 'employee_ids': [(4, self.employee_emp.id)],
-                'work_entry_type_id': self.work_entry_type.id,
+                'work_entry_type_id': self.work_entry_type_day.id,
                 'accrual_plan_id': self.accrual_plan_monthly_end.id,
                 'date_from': '2026-03-01',
                 'duration': 3.0,
