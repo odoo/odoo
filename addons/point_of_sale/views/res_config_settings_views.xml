@@ -303,9 +303,13 @@
                                 </setting>
                                 <setting string="Default Journals" id="pos_default_journals" help="Default journals for orders and invoices">
                                     <div class="content-group mt16">
-                                        <div class="row" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
+                                        <div class="row" title="Journal used for the customer invoices, and for the session closing entries when no Closing Journal is set.">
                                             <label string="Orders" for="pos_journal_id" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
-                                            <field name="pos_journal_id" domain="[('company_id', '=', company_id), ('type', 'in', ('general', 'sale'))]" context="{'default_company_id': company_id, 'default_type': 'general'}" required="pos_company_has_template"/>
+                                            <field name="pos_journal_id" domain="[('company_id', '=', company_id), ('type', '=', 'sale')]" context="{'default_company_id': company_id, 'default_type': 'sale'}" required="pos_company_has_template"/>
+                                        </div>
+                                        <div class="row" title="Optional journal for the session closing entries, to keep their sequence and their options apart from the customer invoices.">
+                                            <label string="Closing" for="pos_closing_journal_id" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
+                                            <field name="pos_closing_journal_id" domain="[('company_id', '=', company_id), ('type', '=', 'sale')]" context="{'default_company_id': company_id, 'default_type': 'sale'}" placeholder="Orders journal" required="pos_company_has_template"/>
                                         </div>
                                     </div>
                                 </setting>
