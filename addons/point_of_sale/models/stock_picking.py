@@ -373,12 +373,15 @@ class StockMove(models.Model):
     def _get_lot_line_qty(self, line, move, lines_data):
         return 1 if line.product_id.tracking == 'serial' else abs(line.qty)
 
-    @api.depends("product_id")
+    @api.depends("product_id", "picking_id")
     def _compute_description_picking(self):
         super()._compute_description_picking()
         seen = set()
         for move in self:
-            if not (pos_order := move.reference_ids.pos_order_ids) or move.description_picking_manual:
+            pos_order = move.reference_ids.pos_order_ids
+            if not pos_order and move.picking_id:
+                pos_order = self.env['pos.order'].search([('picking_ids', 'in', move.picking_id.ids)], limit=1)
+            if not pos_order or move.description_picking_manual:
                 continue
 
             product = move.product_id
