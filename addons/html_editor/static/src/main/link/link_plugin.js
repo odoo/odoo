@@ -364,9 +364,13 @@ export class LinkPlugin extends Plugin {
         this.addDomListener(this.editable, "click", (ev) => {
             const linkEl = ev.target.closest("a");
             if (linkEl) {
+                const selection = this.dependencies.selection.getEditableSelection();
+                const clickedInsideNonEditableLink =
+                    !linkEl.isContentEditable &&
+                    !isContentEditable(closestElement(selection.anchorNode));
                 if (ev.ctrlKey || ev.metaKey) {
                     window.open(linkEl.href, "_blank");
-                } else if (!linkEl.isContentEditable) {
+                } else if (clickedInsideNonEditableLink) {
                     this.dependencies.selection.setSelection({
                         anchorNode: linkEl,
                         anchorOffset: 0,
