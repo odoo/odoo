@@ -75,7 +75,7 @@ test("isNextEnabled", async () => {
     const store = await setupSelfPosEnv();
     const models = store.models;
     const comboProduct = models["product.template"].get(7);
-    models["product.combo"].get(1).qty_free = 1;
+    models["product.combo"].get(1).included_qty = 1;
     const comp = await mountWithCleanup(ComboPage, {
         props: { productTemplate: comboProduct },
     });
@@ -159,8 +159,8 @@ test("getComboPrice takes quantity into account without any combo choice", async
     const store = await setupSelfPosEnv();
     const models = store.models;
     const comboProduct = models["product.template"].get(7);
-    models["product.combo"].get(1).qty_free = 0;
-    models["product.combo"].get(2).qty_free = 0;
+    models["product.combo"].get(1).included_qty = 0;
+    models["product.combo"].get(2).included_qty = 0;
     const comp = await mountWithCleanup(ComboPage, {
         props: { productTemplate: comboProduct },
     });
