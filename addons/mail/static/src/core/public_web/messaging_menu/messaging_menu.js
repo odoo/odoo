@@ -112,7 +112,11 @@ export class MessagingMenu extends Component {
      */
     get showNotificationHubExtras() {
         const menu = this.store.messagingMenu;
-        return !this.searchTerm() && this.state().activeTab.eq(menu.odooBotNotificationsTab);
+        return (
+            !this.searchTerm() &&
+            !this.state().selectedFilter &&
+            this.state().activeTab.eq(menu.odooBotNotificationsTab)
+        );
     }
 
     get showPushPermissionRequest() {

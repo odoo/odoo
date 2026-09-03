@@ -215,6 +215,39 @@ test("grouped notifications by document", async () => {
     await contains(".o-mail-Chatter");
 });
 
+test("failure notification only shown when no filter is selected", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        message_type: "email",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "exception",
+        notification_type: "email",
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
+    await contains(".o-mail-NotificationItem:has(:text('Email Failure: Contact'))");
+    await click(".o-mail-MessagingMenu-filter:text('Unread')");
+    await contains(".o-mail-NotificationItem:has(:text('Email Failure: Contact'))", { count: 0 });
+    await click(".o-mail-MessagingMenu-filter:text('All')");
+    await contains(".o-mail-NotificationItem:has(:text('Email Failure: Contact'))");
+});
+
+test("'Turn on notifications' suggestion only shown when no filter is selected", async () => {
+    mockPermission("notifications", "prompt");
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHAT);
+    await contains(".o-mail-NotificationItem:has(:text('Turn on notifications'))");
+    await click(".o-mail-MessagingMenu-filter:text('Unread')");
+    await contains(".o-mail-NotificationItem:has(:text('Turn on notifications'))", { count: 0 });
+    await click(".o-mail-MessagingMenu-filter:text('All')");
+    await contains(".o-mail-NotificationItem:has(:text('Turn on notifications'))");
+});
+
 test("grouped notifications by document model", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
