@@ -61,11 +61,10 @@ class MrpProduction(models.Model):
         super()._cal_price(consumed_moves)
 
         work_center_cost = 0
-        finished_move = self.move_finished_ids.filtered(
+        finished_moves = self.move_finished_ids.filtered(
             lambda m: m.product_id == self.product_id and m.state not in ('done', 'cancel')
             and m.uom_id.compare(m.quantity, 0) > 0)
-        if finished_move:
-            finished_move.ensure_one()
+        for finished_move in finished_moves:
             for work_order in self.workorder_ids:
                 work_center_cost += work_order._cal_cost()
             quantity = finished_move.uom_id._compute_quantity(

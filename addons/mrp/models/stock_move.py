@@ -709,3 +709,9 @@ class StockMove(models.Model):
         else:
             res['raw_material_production_id'] = self.production_id.id
         return res
+
+    def _get_production_move_qty_data(self, initial_qty):
+        return self.product_uom_qty / initial_qty, 0
+
+    def has_source_move(self):
+        pass
