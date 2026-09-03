@@ -391,7 +391,7 @@ class StockMove(models.Model):
                 factor = move.product_uom._compute_quantity(move.quantity, bom.product_uom_id) / bom.product_qty
             else:
                 factor = move.product_uom._compute_quantity(move.product_uom_qty, bom.product_uom_id) / bom.product_qty
-            _dummy, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id, never_attribute_values=move.never_product_template_attribute_value_ids)
+            _dummy, lines = bom.sudo().with_context(compute_cost_share=True).explode(move.product_id, factor, picking_type=bom.picking_type_id, never_attribute_values=move.never_product_template_attribute_value_ids)
             phantom_moves_vals_list += move._generate_all_phantom_moves(lines)
             # delete the move with original product which is not relevant anymore
             moves_ids_to_unlink.add(move.id)
