@@ -4,11 +4,11 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { loadBundle } from "@web/core/assets";
-import { tourState } from "@web_tour/js/tour_state";
+import { tourState } from "@web_tour/tour_state";
 import {
     tourRecorderState,
     TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
-} from "@web_tour/js/tour_recorder/tour_recorder_state";
+} from "@web_tour/tour_recorder/tour_recorder_state";
 import { redirect } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -138,12 +138,10 @@ export class TourService {
      * Add tour recorder component in overlay container.
      */
     async addTourRecorderToOverlay() {
-        if (!odoo.loader.modules.get("@web_tour/js/tour_recorder/tour_recorder")) {
+        if (!odoo.loader.modules.get("@web_tour/tour_recorder/tour_recorder")) {
             await loadBundle("web_tour.recorder");
         }
-        const { TourRecorder } = odoo.loader.modules.get(
-            "@web_tour/js/tour_recorder/tour_recorder"
-        );
+        const { TourRecorder } = odoo.loader.modules.get("@web_tour/tour_recorder/tour_recorder");
         const remove = this.overlay.add(
             TourRecorder,
             {
@@ -243,17 +241,17 @@ export class TourService {
         tour.steps.forEach((step) => this.validateStep(step));
 
         if (tourConfig.mode === "auto") {
-            if (!odoo.loader.modules.get("@web_tour/js/tour_automatic/tour_automatic")) {
+            if (!odoo.loader.modules.get("@web_tour/tour_automatic/tour_automatic")) {
                 await loadBundle("web_tour.automatic", { css: false });
             }
             const { TourAutomatic } = odoo.loader.modules.get(
-                "@web_tour/js/tour_automatic/tour_automatic"
+                "@web_tour/tour_automatic/tour_automatic"
             );
             new TourAutomatic(tour).start();
         } else {
             await loadBundle("web_tour.interactive");
             const { TourInteractive } = odoo.loader.modules.get(
-                "@web_tour/js/tour_interactive/tour_interactive"
+                "@web_tour/tour_interactive/tour_interactive"
             );
             new TourInteractive(tour, {
                 orm: this.orm,

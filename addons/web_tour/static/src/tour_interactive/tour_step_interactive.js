@@ -1,6 +1,6 @@
 import * as hoot from "@odoo/hoot-dom";
-import { TourStep } from "@web_tour/js/tour_step";
-import { pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
+import { TourStep } from "@web_tour/tour_step";
+import { pointerState } from "@web_tour/tour_pointer/tour_pointer";
 
 export class TourStepInteractive extends TourStep {
     /**

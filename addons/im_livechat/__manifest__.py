@@ -123,9 +123,7 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/tests/mock_server/**/*',
         ],
         "im_livechat.assets_livechat_support_tours": [
-            "web_tour/static/src/js/**/*",
-            "web/static/lib/hoot-dom/**/*",
-            'web_tour/static/src/tour_utils.js',
+            ('include', 'web_tour.assets'),
             "im_livechat/static/tests/tours/livechat_tour_utils.js",
             "im_livechat/static/tests/tours/support/*",
         ],

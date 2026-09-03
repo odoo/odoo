@@ -1,10 +1,10 @@
 import { markup } from "@odoo/owl";
-import { tourState } from "@web_tour/js/tour_state";
+import { tourState } from "@web_tour/tour_state";
 import * as hoot from "@odoo/hoot-dom";
 import { utils } from "@web/core/ui/ui_utils";
-import { TourStepInteractive } from "@web_tour/js/tour_interactive/tour_step_interactive";
-import { TourInteractiveObserver } from "@web_tour/js/tour_interactive/tour_interactive_observer";
-import { TourPointer, pointerState } from "@web_tour/js/tour_pointer/tour_pointer";
+import { TourStepInteractive } from "@web_tour/tour_interactive/tour_step_interactive";
+import { TourInteractiveObserver } from "@web_tour/tour_interactive/tour_interactive_observer";
+import { TourPointer, pointerState } from "@web_tour/tour_pointer/tour_pointer";
 
 /**
  * @typedef ConsumeEvent
