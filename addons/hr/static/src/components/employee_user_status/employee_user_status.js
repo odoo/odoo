@@ -6,6 +6,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { UserDeactivationDialog } from "./user_deactivation_dialog";
 
 // Visual representation of res.users.state, mirrored on the employee.
 const STATUS = {
@@ -29,6 +30,7 @@ export class EmployeeUserStatus extends Component {
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.action = useService("action");
+        this.dialog = useService("dialog");
     }
 
     get state() {
@@ -77,6 +79,9 @@ export class EmployeeUserStatus extends Component {
         if (!resId) {
             return;
         }
+        if (item.key === 'deactivate') {
+            return this.confirmDeactivation(resId, item.method);
+        }
         const result = await this.orm.call("hr.employee", item.method, [resId]);
         if (item.key === 'create_user') {
             await this.action.doAction(result); // will soft reload.
@@ -87,6 +92,26 @@ export class EmployeeUserStatus extends Component {
             await this.action.doAction(result, { onClose: () => this.props.record.load() });
         } else {
             await this.props.record.load();
+        }
+    }
+
+    async confirmDeactivation(resId, method) {
+        const [employee] = await this.orm.read("hr.employee", [resId], ["is_in_contract"]);
+        this.dialog.add(UserDeactivationDialog, {
+            canEndCollaboration: Boolean(employee.is_in_contract),
+        }, {
+            onClose: (choice) => this.applyDeactivation(resId, method, choice),
+        });
+    }
+
+    async applyDeactivation(resId, method, choice) {
+        if (choice === "deactivate") {
+            await this.orm.call("hr.employee", method, [resId]);
+            await this.props.record.load();
+        }
+        else if (choice === "end_collaboration") {
+            const action = await this.orm.call("hr.employee", "action_deactivate_user_and_depart", [resId]);
+            await this.action.doAction(action, { onClose: () => this.props.record.load() });
         }
     }
 }
