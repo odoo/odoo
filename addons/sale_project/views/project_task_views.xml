@@ -49,6 +49,9 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="js_class">sale_project_project_form</attribute>
+            </form>
             <div name="button_box" position="inside">
                 <field name="display_sales_stat_buttons" invisible="1"/>
                 <field name="allow_billable" invisible="1" />
