@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import {
     clickPrev,
     followRelation,
@@ -79,7 +79,6 @@ test("creating a field chain from scratch", async () => {
                 update="(path) => this.onUpdate(path)"
             />
         `;
-        props = useProps();
         setup() {
             this.path = "";
         }
@@ -321,7 +320,6 @@ test("Using back button in popover", async () => {
                 update="(path) => this.onUpdate(path)"
             />
         `;
-        props = useProps();
         setup() {
             this.path = "partner_id.foo";
         }
@@ -476,7 +474,6 @@ test("Edit path in popover debug input", async () => {
                 update="(pathInfo) => this.onUpdate(pathInfo)"
             />
         `;
-        props = useProps();
         setup() {
             this.path = "foo";
         }
@@ -584,7 +581,6 @@ test("support of invalid paths (allowEmpty=false)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" />`;
-        props = useProps();
         setup() {
             this.state = proxy({ path: `` });
         }
@@ -629,7 +625,6 @@ test("support of invalid paths (allowEmpty=true)", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" allowEmpty="true" />`;
-        props = useProps();
         setup() {
             this.state = proxy({ path: `` });
         }
@@ -676,7 +671,6 @@ test("debug input", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" isDebugMode="true" path="this.state.path" update.bind="this.update"/>`;
-        props = useProps();
         setup() {
             this.state = proxy({ path: `` });
         }
@@ -732,7 +726,6 @@ test("focus on search input", async () => {
     class Parent extends Component {
         static components = { ModelFieldSelector };
         static template = xml`<ModelFieldSelector resModel="'partner'" readonly="false" path="this.state.path" update.bind="this.update"/>`;
-        props = useProps();
         setup() {
             this.state = proxy({ path: `foo` });
         }
@@ -761,7 +754,6 @@ test("support properties", async () => {
                 update="(path, fieldInfo) => this.onUpdate(path)"
             />
         `;
-        props = useProps();
         setup() {
             this.path = "foo";
         }
@@ -829,7 +821,6 @@ test("search on field string and name in debug mode", async () => {
                 isDebugMode="true"
             />
         `;
-        props = useProps();
     }
     await mountWithCleanup(Parent);
     await openModelFieldSelectorPopover();
@@ -856,7 +847,6 @@ test("clear button (allowEmpty=true)", async () => {
                 update="(path, fieldInfo) => this.onUpdate(path)"
             />
         `;
-        props = useProps();
         setup() {
             this.path = "baaarrr";
         }
@@ -908,7 +898,6 @@ test("Modify path in popover debug input and click away", async () => {
                 update.bind="this.update"
             />
         `;
-        props = useProps();
         setup() {
             this.path = "foo";
         }

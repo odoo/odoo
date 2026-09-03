@@ -1,5 +1,5 @@
 import { after, expect, test } from "@odoo/hoot";
-import { Component, signal, useProps, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 import { mountWithCleanup, patchTranslations } from "@web/../tests/web_test_helpers";
 import { registerTemplate, registerTemplateExtension, setUrlFilters } from "@web/core/templates";
 
@@ -57,7 +57,6 @@ function registerTemplates(...templates) {
 
 async function mountTestComponentWithTemplate(name) {
     class TestComponent extends Component {
-        props = useProps();
         static template = xml`<div t-ref="this.rootRef"><t t-call="${name}"/></div>`;
         rootRef = signal.ref();
     }

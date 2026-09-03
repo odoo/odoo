@@ -32,7 +32,6 @@ test("simple rendering", async () => {
                 Hello!
             </Dialog>
         `;
-        props = useProps();
     }
     assignDialogTestEnv();
     await mountWithCleanup(Parent);
@@ -56,7 +55,6 @@ test("simple rendering - touch display with trap focus", async () => {
             <input type="text" placeholder="withFocus"/>
           </Dialog>
       `;
-        props = useProps();
     }
     assignDialogTestEnv();
     await mountWithCleanup(Parent);
@@ -110,7 +108,6 @@ test("hotkeys work on dialogs", async () => {
                 </t>
             </Dialog>
         `;
-        props = useProps();
         onClickOk() {
             expect.step("clickOk");
         }
@@ -144,7 +141,6 @@ test("hotkey control+enter on input triggers blur event before clicking dialog b
                 </t>
             </Dialog>
         `;
-        props = useProps();
 
         setup() {
             this.state = proxy({ value: "" });
@@ -185,7 +181,6 @@ test("simple rendering with two dialogs", async () => {
                 </Dialog>
             </div>
         `;
-        props = useProps();
         static components = { Dialog };
     }
     assignDialogTestEnv();
@@ -203,7 +198,6 @@ test("click on the button x triggers the service close", async () => {
                 Hello!
             </Dialog>
         `;
-        props = useProps();
         static components = { Dialog };
     }
     assignDialogTestEnv({
@@ -220,7 +214,6 @@ test("click on the button x triggers the close and dismiss defined by a Child co
     expect.assertions(2);
     class Child extends Component {
         static template = xml`<div>Hello</div>`;
-        props = useProps();
 
         setup() {
             this.env.dialogData.close = () => expect.step("close");
@@ -234,7 +227,6 @@ test("click on the button x triggers the close and dismiss defined by a Child co
                 <Child/>
             </Dialog>
         `;
-        props = useProps();
         static components = { Child, Dialog };
     }
     assignDialogTestEnv();
@@ -260,7 +252,6 @@ test("render custom footer buttons is possible", async () => {
                 </t>
             </Dialog>
         `;
-        props = useProps();
     }
     class Parent extends Component {
         static template = xml`
@@ -268,7 +259,6 @@ test("render custom footer buttons is possible", async () => {
                   <SimpleButtonsDialog/>
               </div>
           `;
-        props = useProps();
         static components = { SimpleButtonsDialog };
         setup() {
             super.setup();
@@ -302,7 +292,6 @@ test("embed an arbitrary component in a dialog is possible", async () => {
                 <SubComponent text="'Wow(l) Effect'" onClicked="this._onSubcomponentClicked"/>
             </Dialog>
         `;
-        props = useProps();
         _onSubcomponentClicked() {
             expect.step("message received by parent");
         }
@@ -323,7 +312,6 @@ test("dialog without header/footer", async () => {
         static template = xml`
             <Dialog header="false" footer="false">content</Dialog>
         `;
-        props = useProps();
     }
     assignDialogTestEnv();
     await mountWithCleanup(Parent);
@@ -344,7 +332,6 @@ test("dialog size can be chosen", async () => {
                 <Dialog contentClass="'sm'" size="'sm'">content</Dialog>
             </div>
         `;
-        props = useProps();
         static components = { Dialog };
     }
     assignDialogTestEnv();
@@ -362,7 +349,6 @@ test("dialog can be rendered on fullscreen", async () => {
         static template = xml`
             <Dialog fullscreen="true">content</Dialog>
         `;
-        props = useProps();
         static components = { Dialog };
     }
     assignDialogTestEnv();
@@ -375,7 +361,6 @@ test("can be the UI active element", async () => {
     expect.assertions(4);
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
-        props = useProps();
         static components = { Dialog };
         setup() {
             this.ui = useService("ui");
@@ -406,7 +391,6 @@ test("dialog can't be moved on small screen", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
         static components = { Dialog };
-        props = useProps();
     }
 
     assignDialogTestEnv();
@@ -440,7 +424,6 @@ test.tags("desktop");
 test("dialog can be moved", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
-        props = useProps();
         static components = { Dialog };
     }
     assignDialogTestEnv();
@@ -471,7 +454,6 @@ test.tags("desktop");
 test("dialog's position is reset on resize", async () => {
     class Parent extends Component {
         static template = xml`<Dialog>content</Dialog>`;
-        props = useProps();
         static components = { Dialog };
     }
     assignDialogTestEnv();
@@ -515,7 +497,6 @@ test("back button closes dialog in mobile", async () => {
                 Hello!
             </Dialog>
         `;
-        props = useProps();
     }
     assignDialogTestEnv({
         dismiss: () => expect.step("dismiss"),

@@ -4,7 +4,7 @@ import { clearRegistry, mountWithCleanup, patchWithCleanup } from "@web/../tests
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
 
-import { Component, onWillStart, proxy, useProps, xml } from "@odoo/owl";
+import { Component, onWillStart, proxy, xml } from "@odoo/owl";
 
 const mainComponentsRegistry = registry.category("main_components");
 
@@ -15,12 +15,10 @@ beforeEach(async () => {
 test("simple rendering", async () => {
     class MainComponentA extends Component {
         static template = xml`<span>MainComponentA</span>`;
-        props = useProps();
     }
 
     class MainComponentB extends Component {
         static template = xml`<span>MainComponentB</span>`;
-        props = useProps();
     }
 
     mainComponentsRegistry.add("MainComponentA", { Component: MainComponentA, props: {} });
@@ -45,7 +43,6 @@ test("unmounts erroring main component", async () => {
     let compA;
     class MainComponentA extends Component {
         static template = xml`<span><t t-if="this.state.shouldThrow" t-out="this.error"/>MainComponentA</span>`;
-        props = useProps();
         setup() {
             compA = this;
             this.state = proxy({ shouldThrow: false });
@@ -57,7 +54,6 @@ test("unmounts erroring main component", async () => {
 
     class MainComponentB extends Component {
         static template = xml`<span>MainComponentB</span>`;
-        props = useProps();
     }
 
     mainComponentsRegistry.add("MainComponentA", { Component: MainComponentA, props: {} });
@@ -87,13 +83,11 @@ test("unmounts erroring main component: variation", async () => {
     });
     class MainComponentA extends Component {
         static template = xml`<span>MainComponentA</span>`;
-        props = useProps();
     }
 
     let compB;
     class MainComponentB extends Component {
         static template = xml`<span><t t-if="this.state.shouldThrow" t-out="this.error"/>MainComponentB</span>`;
-        props = useProps();
         setup() {
             compB = this;
             this.state = proxy({ shouldThrow: false });
@@ -127,7 +121,6 @@ test("MainComponentsContainer re-renders when the registry changes", async () =>
     expect(".myMainComponent").toHaveCount(0);
     class MyMainComponent extends Component {
         static template = xml`<div class="myMainComponent" />`;
-        props = useProps();
     }
     mainComponentsRegistry.add("myMainComponent", { Component: MyMainComponent });
     await animationFrame();
@@ -147,7 +140,6 @@ test("Should be possible to add a new component when MainComponentContainer is n
     mountWithCleanup(MainComponentsContainer);
     class MyMainComponent extends Component {
         static template = xml`<div class="myMainComponent" />`;
-        props = useProps();
     }
     // Wait for the setup of MainComponentsContainer to be completed
     await animationFrame();

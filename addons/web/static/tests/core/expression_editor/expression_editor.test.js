@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     addNewRule,
     clearNotSupported,
@@ -67,7 +67,6 @@ async function makeExpressionEditor(params = {}) {
     class Parent extends Component {
         static components = { ExpressionEditor };
         static template = xml`<ExpressionEditor t-props="this.expressionEditorProps"/>`;
-        props = useProps();
         setup() {
             this.expressionEditorProps = {
                 expression: "1",

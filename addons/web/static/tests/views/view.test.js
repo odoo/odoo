@@ -1091,7 +1091,6 @@ test("multiple ways to pass classes for styling", async () => {
 test("callback recorders are moved from props to subenv", async () => {
     expect.assertions(5);
     class ToyController extends Component {
-        props = useProps();
         static template = xml`<div/>`;
         setup() {
             expect(this.env.__getGlobalState__).toBeInstanceOf(CallbackRecorder); // put in env by View
@@ -1130,7 +1129,6 @@ test("react to prop 'domain' changes", async function () {
     }
     viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
     class Parent extends Component {
-        props = useProps();
         static template = xml`<View t-props="this.state"/>`;
         static components = { View };
         setup() {

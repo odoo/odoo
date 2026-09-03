@@ -1,7 +1,7 @@
 /** @odoo-module alias=@web/../tests/mobile/core/action_swiper_tests default=false */
 
 import { beforeEach, expect, hover, mockTouch, queryFirst, test } from "@odoo/hoot";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineParams,
@@ -24,7 +24,6 @@ beforeEach(() => {
 
 test("render only its target if no props is given", async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
                 <div class="d-flex">
@@ -42,7 +41,6 @@ test("render only its target if no props is given", async () => {
 test("render only its target on non-touch devices", async () => {
     mockTouch(false);
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
                 <div class="d-flex">
@@ -88,7 +86,6 @@ test("only render the necessary divs", async () => {
 
 test("render with the height of its content", async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
                 <div class="o-container d-flex" style="width: 200px; height: 200px; overflow: auto">
@@ -120,7 +117,6 @@ test("render with the height of its content", async () => {
 
 test("can perform actions by swiping to the right", async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
             <div class="d-flex">
@@ -182,7 +178,6 @@ test("can perform actions by swiping to the right", async () => {
 test("can perform actions by swiping in both directions", async () => {
     expect.assertions(5);
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
                     <div class="d-flex">
@@ -260,7 +255,6 @@ test("invert the direction of swipes when language is rtl", async () => {
         },
     });
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
                     <div class="d-flex">
@@ -301,7 +295,6 @@ test("swiping when the swiper contains scrollable areas", async () => {
     expect.assertions(7);
 
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
             <div class="d-flex">
@@ -469,7 +462,6 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
     });
 
     class Parent extends Component {
-        props = useProps();
         static components = { ActionSwiper };
         static template = xml`
             <div class="d-flex">

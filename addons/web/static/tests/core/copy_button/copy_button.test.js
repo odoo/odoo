@@ -3,7 +3,7 @@ import { browser } from "@web/core/browser/browser";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 beforeEach(() => {
     patchWithCleanup(browser.navigator.clipboard, {
@@ -34,7 +34,6 @@ test("copies an object to the clipboard", async () => {
 
 test("does not submit forms", async () => {
     class Parent extends Component {
-        props = useProps();
         static components = { CopyButton };
         static template = xml`
                 <form t-on-submit="this.onSubmit">

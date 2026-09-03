@@ -10,7 +10,7 @@ import {
     test,
     tick,
 } from "@odoo/hoot";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import {
@@ -429,7 +429,6 @@ describe("useDebounced", () => {
     test("cancels on component destroy", async () => {
         class TestComponent extends Component {
             static template = xml`<button class="c" t-on-click="this.debounced">C</button>`;
-            props = useProps();
             setup() {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000);
             }
@@ -457,7 +456,6 @@ describe("useDebounced", () => {
     test("execBeforeUnmount option (callback not resolved before component destroy)", async () => {
         class TestComponent extends Component {
             static template = xml`<button class="c" t-on-click="() => this.debounced('hello')">C</button>`;
-            props = useProps();
             setup() {
                 this.debounced = useDebounced((p) => expect.step(`debounced: ${p}`), 1000, {
                     execBeforeUnmount: true,
@@ -486,7 +484,6 @@ describe("useDebounced", () => {
     test("execBeforeUnmount option (callback resolved before component destroy)", async () => {
         class TestComponent extends Component {
             static template = xml`<button class="c" t-on-click="this.debounced">C</button>`;
-            props = useProps();
             setup() {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000, {
                     execBeforeUnmount: true,
@@ -514,7 +511,6 @@ describe("useThrottleForAnimation", () => {
     test("cancels on component destroy", async () => {
         class TestComponent extends Component {
             static template = xml`<button class="c" t-on-click="this.throttled">C</button>`;
-            props = useProps();
             setup() {
                 this.throttled = useThrottleForAnimation(() => expect.step("throttled"), 1000);
             }
@@ -598,7 +594,9 @@ describe("useTimer", () => {
         const progressBeforeReset = component.timer.progress();
         component.timer.reset();
         await animationFrame();
-        expect(component.timer.progress() >= 0 && component.timer.progress() < progressBeforeReset).toBe(true);
+        expect(
+            component.timer.progress() >= 0 && component.timer.progress() < progressBeforeReset
+        ).toBe(true);
         await advanceTime(1000);
         await animationFrame();
         expect(component.timer.progress()).toBe(1);
