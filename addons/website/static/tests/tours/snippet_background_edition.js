@@ -403,7 +403,7 @@ registerWebsitePreviewTour(
         }),
         // Revert to predefined gradient
         {
-            trigger: `.o_colorpicker_sections button[data-color="${gradients[0]}"]`,
+            trigger: `.o_colorpicker_gradient_section:nth-child(2) button[data-color="${gradients[0]}"]`,
             content: `Revert to predefiend gradient ${gradients[0]}`,
             run: "click",
         },
