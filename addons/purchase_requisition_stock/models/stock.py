@@ -10,19 +10,26 @@ class StockRule(models.Model):
     def _prepare_purchase_order(self, company_id, origins, values):
         res = super(StockRule, self)._prepare_purchase_order(company_id, origins, values)
         values = values[0]
-        res['partner_ref'] = values['supplier'].purchase_requisition_id.name
-        res['requisition_id'] = values['supplier'].purchase_requisition_id.id
-        if values['supplier'].purchase_requisition_id.currency_id:
-            res['currency_id'] = values['supplier'].purchase_requisition_id.currency_id.id
+        requisition = self._get_supplier_requisition(values)
+        res['partner_ref'] = requisition.name
+        res['requisition_id'] = requisition.id
+        if requisition.currency_id:
+            res['currency_id'] = requisition.currency_id.id
         return res
 
     def _make_po_get_domain(self, company_id, values, partner):
         domain = super(StockRule, self)._make_po_get_domain(company_id, values, partner)
-        if 'supplier' in values and values['supplier'].purchase_requisition_id:
+        requisition = self._get_supplier_requisition(values)
+        if requisition:
             domain += (
-                ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
+                ('requisition_id', '=', requisition.id),
             )
         return domain
+
+    def _get_supplier_requisition(self, values):
+        # the seller information only holds a pricelist when it does not come from the purchase history
+        seller_info = values.get('supplier') or {}
+        return seller_info.get('supplierinfo', self.env['product.supplierinfo']).purchase_requisition_id
 
 
 class StockMove(models.Model):

@@ -62,14 +62,14 @@ class StockRule(models.Model):
         for procurement, rule in procurements:
             company_id = rule.company_id or procurement.company_id
 
-            supplier = self._find_procurement_supplier(company_id, procurement)
+            seller_info = self._find_procurement_supplier(company_id, procurement)
             # procurement_partner context key used to set a partner without a pricelist as supplier
-            procurement_partner = procurement.values.get('procurement_partner') or supplier.partner_id
+            procurement_partner = procurement.values.get('procurement_partner') or seller_info.get('partner_id') or self.env['res.partner']
 
-            if not supplier and self.env.context.get('from_orderpoint'):
+            if not seller_info and self.env.context.get('from_orderpoint'):
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.', procurement.product_id.display_name)
                 errors.append((procurement, msg))
-            elif not (supplier or procurement_partner):
+            elif not (seller_info or procurement_partner):
                 # If no supplier or procurement_partner, we cannot create a PO, but don't want to block SO
                 moves = procurement.values.get('move_dest_ids') or self.env['stock.move']
                 if moves.propagate_cancel:
@@ -78,7 +78,7 @@ class StockRule(models.Model):
                 self._notify_responsible(procurement)
                 continue
 
-            procurement.values['supplier'] = supplier  # Can be None (in which case we use fallbacks for currency, delays ...)
+            procurement.values['supplier'] = seller_info  # Can be empty (in which case we use fallbacks for currency, delays ...)
             procurement.values['procurement_partner'] = procurement_partner  # Cannot be None
             procurement.values['propagate_cancel'] = rule.propagate_cancel
 
@@ -154,7 +154,7 @@ class StockRule(models.Model):
                     po_line_values.append(self.env['purchase.order.line']._prepare_purchase_order_line_from_procurement(
                         *procurement, po))
                     # Check if we need to advance the order date for the new line
-                    delay = (supplier and supplier.delay) or 0
+                    delay = procurement.values['supplier'].get('delay') or 0
                     date_planned = po.date_planned or min(v['date_planned'] for v in po_line_values)
                     order_date_planned = date_planned - relativedelta(days=delay)
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
@@ -182,10 +182,10 @@ class StockRule(models.Model):
         """
         delays, delay_description = super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
+        seller_info = 'supplierinfo' in values and values['supplierinfo']._get_seller_info() or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
         if not buy_rule:
             return delays, delay_description
-        if not seller:
+        if not seller_info:
             delays['total_delay'] += 365
             delays['no_vendor_found_delay'] += 365
             if not bypass_delay_description:
@@ -193,7 +193,7 @@ class StockRule(models.Model):
             return delays, delay_description
         buy_rule.ensure_one()
         if not self.env.context.get('ignore_vendor_lead_time'):
-            supplier_delay = seller[:1].delay
+            supplier_delay = seller_info['delay']
             delays['total_delay'] += supplier_delay
             delays['purchase_delay'] += supplier_delay
             if not bypass_delay_description:
@@ -265,16 +265,16 @@ class StockRule(models.Model):
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, line.uom_id, rounding_method='HALF-UP')
-        seller = product_id.with_company(company_id)._select_seller(
+        seller_info = product_id.with_company(company_id)._select_seller(
             partner_id=line.selected_seller_id.partner_id or line.partner_id,
             quantity=line.product_qty + procurement_uom_po_qty,
             date=line.order_id.date_order and line.order_id.date_order.date(),
             uom_id=line.uom_id,
             params={'force_uom': values.get('force_uom')})
 
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id) if seller else line.price_unit
-        if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
-            price_unit = seller.currency_id._convert(
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller_info['price'], line.product_id.supplier_taxes_id, line.sudo().tax_ids, company_id) if seller_info else line.price_unit
+        if price_unit and seller_info and line.order_id.currency_id and seller_info['currency_id'] != line.order_id.currency_id:
+            price_unit = seller_info['currency_id']._convert(
                 price_unit, line.order_id.currency_id, line.order_id.company_id)
 
         res = {
@@ -282,9 +282,9 @@ class StockRule(models.Model):
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
-        if seller and seller.uom_id != line.uom_id and not values.get('force_uom'):
-            res['product_qty'] = line.uom_id._compute_quantity(res['product_qty'], seller.uom_id, rounding_method='HALF-UP')
-            res['uom_id'] = seller.uom_id
+        if seller_info and seller_info['uom_id'] != line.uom_id and not values.get('force_uom'):
+            res['product_qty'] = line.uom_id._compute_quantity(res['product_qty'], seller_info['uom_id'], rounding_method='HALF-UP')
+            res['uom_id'] = seller_info['uom_id']
         orderpoint_id = values.get('orderpoint_id')
         if orderpoint_id:
             res['orderpoint_id'] = orderpoint_id.id
@@ -296,7 +296,7 @@ class StockRule(models.Model):
         params values: values of procurements
         params origins: procuremets origins to write on the PO
         """
-        purchase_date = min([value.get('date_order') or fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
+        purchase_date = min(value.get('date_order') or fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].get('delay', 0))) for value in values)
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from
@@ -304,7 +304,7 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['procurement_partner']
-        currency_id = values['supplier'].currency_id.id if values['supplier'] else None
+        currency_id = values['supplier']['currency_id'].id if values['supplier'] else None
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
@@ -323,7 +323,7 @@ class StockRule(models.Model):
         }
 
     def _make_po_get_domain(self, company_id, values, partner):
-        currency = ('supplier' in values and values['supplier'].currency_id) or \
+        currency = ('supplier' in values and values['supplier'].get('currency_id')) or \
                    partner.with_company(company_id).property_purchase_currency_id or \
                    company_id.currency_id
         domain = (
@@ -367,18 +367,18 @@ class StockRule(models.Model):
 
     def _find_procurement_supplier(self, company, procurement):
         """ Finds the partner to attach the PO to (ie. at PO level not line level)
-            :return: Supplier of best matching pricelist for procurement values,
-            dropping constraints progressively, None if no supplier found (eg. no pricelist at all).
-            :rtype: product.supplierinfo | None
+            :return: Seller information of best matching pricelist for procurement
+            values, dropping constraints progressively, empty if no supplier found
+            (eg. no pricelist at all).
+            :rtype: dict
         """
-        supplier = False
         if procurement.values.get('supplierinfo_id'):
-            supplier = procurement.values['supplierinfo_id']
+            seller_info = procurement.values['supplierinfo_id']._get_seller_info()
         elif procurement.values.get('orderpoint_id') and procurement.values['orderpoint_id'].supplier_id:
-            supplier = procurement.values['orderpoint_id'].supplier_id
+            seller_info = procurement.values['orderpoint_id'].supplier_id._get_seller_info()
         else:
             procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
-            supplier = self._pick_supplier(
+            seller_info = self._pick_supplier(
                 company,
                 procurement.product_id,
                 partner=procurement.values.get('procurement_partner'),
@@ -388,26 +388,26 @@ class StockRule(models.Model):
                 params={"force_uom": procurement.values.get('force_uom')},
             )
 
-        return supplier
+        return seller_info
 
     def _pick_supplier(self, company, product, partner=False, qty=None, uom=False, date=None, params=False):
         """ Flex find best pricelist for a defined product and company
             dropping constraints (eg. min_qty, uom...) progressively.
 
             :param partner: False to select the best pricelist regardless of partner.
-            :return: best matching pricelist.
-            :rtype: product.supplierinfo
+            :return: seller information of the best matching pricelist.
+            :rtype: dict
         """
         p = product.with_company(company)
-        supplier = p._select_seller(partner_id=partner, quantity=qty, date=date, uom_id=uom, params=params) or \
-                   p._select_seller(partner_id=partner, quantity=None, date=date, uom_id=uom, params=params) or \
-                   p._select_seller(partner_id=partner, quantity=None, uom_id=uom, params=params) or \
-                   p._select_seller(partner_id=partner, quantity=None, params=params) or \
-                   p._select_seller(partner_id=partner, quantity=None)
+        seller_info = p._select_seller(partner_id=partner, quantity=qty, date=date, uom_id=uom, params=params) or \
+                      p._select_seller(partner_id=partner, quantity=None, date=date, uom_id=uom, params=params) or \
+                      p._select_seller(partner_id=partner, quantity=None, uom_id=uom, params=params) or \
+                      p._select_seller(partner_id=partner, quantity=None, params=params) or \
+                      p._select_seller(partner_id=partner, quantity=None)
 
-        if not supplier and not partner:  # Last fallback, also matching expired pricelists
-            supplier = p._select_seller(quantity=None) or p._prepare_sellers()[:1]
-        return supplier
+        if not seller_info and not partner:  # Last fallback, also matching expired pricelists
+            seller_info = p._select_seller(quantity=None) or p._prepare_sellers()[:1]._get_seller_info()
+        return seller_info
 
 
 class StockRoute(models.Model):

@@ -14,26 +14,25 @@ class StockRule(models.Model):
             return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
 
         buy_rule = self.filtered(lambda r: r.action == 'buy')
-        seller = 'supplierinfo' in values and values['supplierinfo'] or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
-        if not buy_rule or not seller:
+        seller_info = 'supplierinfo' in values and values['supplierinfo']._get_seller_info() or product.with_company(buy_rule.company_id)._select_seller(quantity=None)
+        if not buy_rule or not seller_info:
             return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
-        seller = seller[0]
         bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
             product,
             company_id=buy_rule.picking_type_id.company_id.id,
             bom_type='subcontract',
-            subcontractor=seller.partner_id)
+            subcontractor=seller_info['partner_id'])
         if not bom:
             return super()._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
 
         delays, delay_description = super(StockRule, self - buy_rule)._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
         extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True, global_horizon_days=0))._get_lead_days(product, bypass_delay_description=bypass_delay_description, **values)
-        if seller.delay >= bom.produce_delay + bom.days_to_prepare_mo:
-            delays['total_delay'] += seller.delay
-            delays['purchase_delay'] += seller.delay
+        if seller_info['delay'] >= bom.produce_delay + bom.days_to_prepare_mo:
+            delays['total_delay'] += seller_info['delay']
+            delays['purchase_delay'] += seller_info['delay']
             if not bypass_delay_description:
-                delay_description.append((_('Receipt Date'), int(seller.delay)))
-                delay_description.append((_('Vendor Lead Time'), _('+ %d days', seller.delay)))
+                delay_description.append((_('Receipt Date'), int(seller_info['delay'])))
+                delay_description.append((_('Vendor Lead Time'), _('+ %d days', seller_info['delay'])))
         else:
             manufacture_delay = bom.produce_delay
             delays['total_delay'] += manufacture_delay

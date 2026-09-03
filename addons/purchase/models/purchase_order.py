@@ -479,7 +479,7 @@ class PurchaseOrder(models.Model):
         new_pos = super().copy(default=default)
         for line in new_pos.order_line:
             if line.product_id:
-                line.date_planned = line._get_date_planned(line.selected_seller_id)
+                line.date_planned = line._get_date_planned(line._get_seller_info())
         return new_pos
 
     def _must_delete_date_planned(self, field_name):
@@ -746,7 +746,7 @@ class PurchaseOrder(models.Model):
                 diff = line.date_planned - previous_date_order
                 line.date_planned = self.date_order + diff if diff.days >= 0 else self.date_order
             else:
-                line.date_planned = line._get_date_planned(line.selected_seller_id)
+                line.date_planned = line._get_date_planned(line.selected_seller_id._get_seller_info())
 
     def _confirmation_error_message(self):
         """ Return whether order can be confirmed or not if not then return error message. """
@@ -1272,7 +1272,7 @@ class PurchaseOrder(models.Model):
         product_infos = {}
         # Check if there is a price and a minimum quantity for the order's vendor.
         if self.partner_id:
-            seller = product._select_seller(
+            seller_info = product._select_seller(
                 partner_id=self.partner_id,
                 quantity=None,
                 uom_id=uom,
@@ -1280,18 +1280,18 @@ class PurchaseOrder(models.Model):
                 ordered_by='min_qty',
                 params={'order_id': self, 'force_uom': kwargs.get('force_uom', False)}
             )
-            if seller:
-                seller_price = seller.currency_id._convert(
-                    from_amount=seller.price_discounted,
+            if seller_info:
+                seller_price = seller_info['currency_id']._convert(
+                    from_amount=seller_info['price_discounted'],
                     to_currency=self.currency_id,
                     round=False
                 )
-                target_uom = uom or seller.uom_id
+                target_uom = uom or seller_info['uom_id']
                 product_infos.update(
                     self._get_product_catalog_uom_data(product, target_uom, **kwargs),
                     price=product.uom_id._compute_price(seller_price, target_uom),
-                    min_qty=seller.min_qty,
-                    sellerUomFactor=seller.uom_id.factor / product.uom_id.factor,
+                    min_qty=seller_info['min_qty'],
+                    sellerUomFactor=seller_info['uom_id'].factor / product.uom_id.factor,
                 )
         return product_infos
 

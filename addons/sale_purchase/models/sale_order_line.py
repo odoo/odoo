@@ -111,23 +111,23 @@ class SaleOrderLine(models.Model):
                 quantity = new_qty - origin_values.get(line.id, 0.0)
                 line._purchase_service_create(quantity=quantity)
 
-    def _purchase_get_date_order(self, supplierinfo):
+    def _purchase_get_date_order(self, seller_info):
         """ return the ordered date for the purchase order, computed as : SO commitment date - supplier delay """
         commitment_date = fields.Datetime.from_string(self.order_id.commitment_date or fields.Datetime.now())
-        return commitment_date - relativedelta(days=int(supplierinfo.delay))
+        return commitment_date - relativedelta(days=int(seller_info.get('delay', 0)))
 
     def _purchase_service_get_company(self):
         return self.company_id
 
-    def _purchase_service_prepare_order_values(self, supplierinfo):
+    def _purchase_service_prepare_order_values(self, seller_info):
         """ Returns the values to create the purchase order from the current SO line.
-            :param supplierinfo: record of product.supplierinfo
+            :param seller_info: seller information, as returned by `product.product._select_seller`
             :rtype: dict
         """
         self.ensure_one()
-        partner_supplier = supplierinfo.partner_id
+        partner_supplier = seller_info['partner_id']
         fpos = self.env['account.fiscal.position'].sudo()._get_fiscal_position(partner_supplier)
-        date_order = self._purchase_get_date_order(supplierinfo)
+        date_order = self._purchase_get_date_order(seller_info)
         return {
             'partner_id': partner_supplier.id,
             'partner_ref': partner_supplier.ref,
@@ -140,13 +140,13 @@ class SaleOrderLine(models.Model):
             'fiscal_position_id': fpos.id,
         }
 
-    def _purchase_service_get_price_unit_and_taxes(self, supplierinfo, purchase_order):
+    def _purchase_service_get_price_unit_and_taxes(self, seller_info, purchase_order):
         supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id in purchase_order.company_id.parent_ids)
         taxes = purchase_order.fiscal_position_id.map_tax(supplier_taxes)
-        if supplierinfo:
-            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, purchase_order.company_id, purchase_order.document_tax_mode)
-            if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
-                price_unit = supplierinfo.currency_id._convert(
+        if seller_info:
+            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(seller_info['price'], supplier_taxes, taxes, purchase_order.company_id, purchase_order.document_tax_mode)
+            if purchase_order.currency_id and seller_info['currency_id'] != purchase_order.currency_id:
+                price_unit = seller_info['currency_id']._convert(
                     price_unit,
                     purchase_order.currency_id,
                     purchase_order.company_id,
@@ -155,13 +155,13 @@ class SaleOrderLine(models.Model):
             price_unit = 0.0
         return price_unit, taxes
 
-    def _purchase_service_get_product_name(self, supplierinfo, purchase_order, quantity):
+    def _purchase_service_get_product_name(self, seller_info, purchase_order, quantity):
         product_ctx = {
             'lang': get_lang(self.env, purchase_order.partner_id.lang).code,
             'company_id': purchase_order.company_id.id,
         }
-        if supplierinfo:
-            product_ctx.update({'seller_id': supplierinfo.id})
+        if seller_info and seller_info['supplierinfo']:
+            product_ctx.update({'seller_id': seller_info['supplierinfo'].id})
         else:
             product_ctx.update({'partner_id': purchase_order.partner_id.id})
         product = self.product_id.with_context(**product_ctx)
@@ -186,17 +186,17 @@ class SaleOrderLine(models.Model):
 
         # determine vendor (real supplier, sharing the same partner as the one from the PO, but with more accurate informations like validity, quantity, ...)
         # Note: one partner can have multiple supplier info for the same product
-        supplierinfo = self.product_id._select_seller(
+        seller_info = self.product_id._select_seller(
             partner_id=purchase_order.partner_id,
             quantity=purchase_qty_uom,
             date=purchase_order.date_order and purchase_order.date_order.date(),  # and purchase_order.date_order[:10],
             uom_id=self.product_id.uom_id
         )
-        if supplierinfo and supplierinfo.uom_id != self.product_id.uom_id:
-            purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, supplierinfo.uom_id)
+        if seller_info and seller_info['uom_id'] != self.product_id.uom_id:
+            purchase_qty_uom = self.product_id.uom_id._compute_quantity(purchase_qty_uom, seller_info['uom_id'])
 
-        price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(supplierinfo, purchase_order)
-        name = self._purchase_service_get_product_name(supplierinfo, purchase_order, quantity)
+        price_unit, taxes = self._purchase_service_get_price_unit_and_taxes(seller_info, purchase_order)
+        name = self._purchase_service_get_product_name(seller_info, purchase_order, quantity)
 
         line_description = self.with_context(lang=self.order_id.partner_id.lang)._get_sale_order_line_multiline_description_variants()
         if line_description:
@@ -206,13 +206,13 @@ class SaleOrderLine(models.Model):
             'name': name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
-            'uom_id': supplierinfo.uom_id.id or self.product_id.uom_id.id,
+            'uom_id': seller_info.get('uom_id', self.product_id.uom_id).id,
             'price_unit': price_unit,
-            'date_planned': purchase_order.date_order + relativedelta(days=int(supplierinfo.delay)),
+            'date_planned': purchase_order.date_order + relativedelta(days=int(seller_info.get('delay', 0))),
             'tax_ids': [(6, 0, taxes.ids)],
             'order_id': purchase_order.id,
             'sale_line_id': self.id,
-            'discount': supplierinfo.discount,
+            'discount': seller_info.get('discount', 0.0),
         }
         if self.analytic_distribution:
             purchase_line_vals['analytic_distribution'] = self.analytic_distribution
@@ -220,10 +220,10 @@ class SaleOrderLine(models.Model):
 
     def _purchase_service_match_supplier(self, warning=True):
         # determine vendor of the order (take the first matching company and product)
-        suppliers = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom_id)
-        if warning and not suppliers:
+        seller_info = self.product_id._select_seller(partner_id=self._retrieve_purchase_partner(), quantity=self.product_uom_qty, uom_id=self.product_uom_id)
+        if warning and not seller_info:
             raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.", self.product_id.display_name))
-        return suppliers[0]
+        return seller_info
 
     def _get_additional_domain_for_purchase_order_line(self):
         return  [('sale_order_id', '=', self.order_id.id)]
@@ -246,10 +246,10 @@ class SaleOrderLine(models.Model):
         values = self._purchase_service_prepare_order_values(supplierinfo)
         return self.env['purchase.order'].with_context(mail_create_nosubscribe=True).create(values)
 
-    def _match_or_create_purchase_order(self, supplierinfo):
-        purchase_order = self._purchase_service_match_purchase_order(supplierinfo.partner_id)[:1]
+    def _match_or_create_purchase_order(self, seller_info):
+        purchase_order = self._purchase_service_match_purchase_order(seller_info['partner_id'])[:1]
         if not purchase_order:
-            purchase_order = self._create_purchase_order(supplierinfo)
+            purchase_order = self._create_purchase_order(seller_info)
         return purchase_order
 
     def _retrieve_purchase_partner(self):
@@ -269,13 +269,13 @@ class SaleOrderLine(models.Model):
 
         for line in self:
             line = line.with_company(line._purchase_service_get_company())
-            supplierinfo = line._purchase_service_match_supplier()
-            partner_supplier = supplierinfo.partner_id
+            seller_info = line._purchase_service_match_supplier()
+            partner_supplier = seller_info['partner_id']
 
             # determine (or create) PO
             purchase_order = supplier_po_map.get(partner_supplier.id)
             if not purchase_order:
-                purchase_order = line._match_or_create_purchase_order(supplierinfo)
+                purchase_order = line._match_or_create_purchase_order(seller_info)
             so_name = line.order_id.name
             origins = (purchase_order.origin or '').split(', ')
             if so_name not in origins:

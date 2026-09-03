@@ -30,7 +30,7 @@ class ProductReplenish(models.TransientModel):
     @api.onchange('route_id')
     def _onchange_route_id(self):
         if self.show_vendor:
-            self.partner_id = self._resolve_supplier_id().partner_id
+            self.partner_id = self._resolve_supplier_id().get('partner_id')
         elif not self.show_vendor:
             self.partner_id = False
 
@@ -80,12 +80,12 @@ class ProductReplenish(models.TransientModel):
         if 'buy' not in route_id.rule_ids.mapped('action'):
             return date
 
-        supplier = kwargs.get('supplier')
+        seller_info = kwargs.get('supplier')
         show_vendor = kwargs.get('show_vendor')
-        if not show_vendor or not supplier:
+        if not show_vendor or not seller_info:
             return date
 
-        delay = supplier.delay + self.env.company.days_to_purchase
+        delay = seller_info['delay'] + self.env.company.days_to_purchase
 
         return fields.Datetime.add(date, days=delay)
 
@@ -102,8 +102,8 @@ class ProductReplenish(models.TransientModel):
         return domain
 
     def _resolve_supplier_id(self):
-        """ Return the seller, forcing the partner if it is set manually. Uses same function
-            as the buy rule ensuring wizard and procurement logic is consistent. """
+        """ Return the seller information, forcing the partner if it is set manually. Uses
+            same function as the buy rule ensuring wizard and procurement logic is consistent. """
         return self.env['stock.rule']._pick_supplier(
             self.env.company,
             self.product_id,

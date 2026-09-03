@@ -564,11 +564,11 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         self.assertFalse(product.seller_ids, "Confirming an order should not create a vendor pricelist")
 
-        seller_a = product._get_last_po_supplierinfo(self.partner_a, company_a)
-        self.assertEqual(seller_a.price, 1)
+        seller_a = product._get_last_po_seller_info(self.partner_a, company_a)
+        self.assertEqual(seller_a['price'], 1)
 
-        seller_b = product._get_last_po_supplierinfo(self.partner_a, company_b)
-        self.assertEqual(seller_b.price, 2)
+        seller_b = product._get_last_po_seller_info(self.partner_a, company_b)
+        self.assertEqual(seller_b['price'], 2)
 
     def test_discount_po_line_vendorpricelist(self):
         """ Set a discount in VendorPriceList and check if that discount comes in po line.
@@ -1485,10 +1485,9 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         # each variant falls back on its own last confirmed po line
         for i, variant in enumerate(variants):
-            seller = variant._get_last_po_supplierinfo(self.partner_b, po.company_id)
-            self.assertEqual(seller.product_id, variant)
-            self.assertEqual(seller.price, 100 + i * 10)
-            self.assertEqual(seller.delay, i + 1)
+            seller_info = variant._get_last_po_seller_info(self.partner_b, po.company_id)
+            self.assertEqual(seller_info['price'], 100 + i * 10)
+            self.assertEqual(seller_info['delay'], i + 1)
 
     @freeze_time('2026-05-12 20:00:00')
     def test_supplierinfo_date_timezone_aware(self):

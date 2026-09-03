@@ -121,7 +121,7 @@ class PurchaseOrderLine(models.Model):
             pol.price_unit = line.uom_id._compute_price(line.price_unit, pol.uom_id)
             partner = pol.order_id.partner_id or pol.order_id.requisition_id.vendor_id
             if pol.selected_seller_id or not pol.date_planned:
-                pol.date_planned = pol._get_date_planned(pol.selected_seller_id)
+                pol.date_planned = pol._get_date_planned(pol.selected_seller_id._get_seller_info())
             product_ctx = {'seller_id': pol.selected_seller_id.id, 'lang': get_lang(pol.env, partner.lang).code}
             name = pol._get_product_purchase_description(pol.product_id.with_context(product_ctx))
             if line.product_description_variants:
