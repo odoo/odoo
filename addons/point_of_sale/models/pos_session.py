@@ -1046,6 +1046,33 @@ class PosSession(models.Model):
                     else:
                         stock_valuation[stock_key] = self._update_amounts(stock_valuation[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
 
+        # Ship Later POS Orders: We don't expect any 'done' StockMove to help us compute the cogs
+        ship_later_pos_orders = self.order_ids.filtered(lambda po: not po.is_invoiced and po.shipping_date)
+        for pos_order in ship_later_pos_orders:
+            for order_line in pos_order.lines:
+                product = order_line.product_id
+                if not product.is_storable or product.valuation != 'real_time':
+                    continue
+                product_accounts = product._get_product_accounts()
+                exp_key = product_accounts['expense']
+                stock_key = product_accounts['stock_valuation']
+
+                price_unit = pos_order._get_pos_anglo_saxon_price_unit(product, pos_order.partner_id, order_line.qty)
+                amount = price_unit * order_line.qty
+
+                stock_expense[exp_key] = self._update_amounts(
+                    stock_expense[exp_key],
+                    {'amount': amount},
+                    pos_order.shipping_date,
+                    force_company_currency=True,
+                )
+                stock_valuation[stock_key] = self._update_amounts(
+                    stock_valuation[stock_key],
+                    {'amount': amount},
+                    pos_order.shipping_date,
+                    force_company_currency=True,
+                )
+
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False, skip_invoice_sync=True)
 
         data.update({
