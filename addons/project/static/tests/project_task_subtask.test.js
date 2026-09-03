@@ -206,7 +206,7 @@ test("project.task (kanban): check closed subtask count update", async () => {
     const inProgressStatesSelector = `
         .subtask_list
         .o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col
-        .o_status:not(.o_status_green,.o_status_bubble)
+        [title="In Progress"] .o_status:not(.o_status_green,.o_status_bubble)
     `;
     expect(inProgressStatesSelector).toHaveCount(1, {
         message: "The state of the subtask should be in progress",

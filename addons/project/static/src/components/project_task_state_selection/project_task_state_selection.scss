@@ -7,6 +7,11 @@
 
     .oi {
         font-size: $o-bubble-color-size-xl;
+        max-height: $o-bubble-color-size-xl;
+    }
+
+    [data-icon="hourglass_empty"] {
+        transform: scale(0.8);
     }
 
     .o_task_state_list_view {
@@ -19,15 +24,5 @@
             width: $o-bubble-color-size;
             height: $o-bubble-color-size;
         }
-    }
-
-    .o_status_changes_requested {
-        color: $warning;
-    }
-}
-
-.project_task_state_selection_menu {
-    .o_status_changes_requested {
-        color: $warning;
     }
 }
