@@ -42,6 +42,9 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             partner=po.partner_id,
             rounding_method="round_globally",
         )['total_void']
+
+        price = self._add_subcontracted_component_cost(price, quantity, po_line, po)
+
         return {
             '_name': 'purchase.order',
             'id': po.id,
@@ -95,6 +98,19 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 partner=po.partner_id,
                 rounding_method='round_globally',
             )['total_void']
+            price = self._add_subcontracted_component_cost(price, quantity, po_line, po)
             price = po_line.currency_id._convert(price, currency, (move_in.company_id or self.env.company))
             return currency.round(price)
         return super()._get_replenishment_mo_cost(product, quantity, uom_id, currency, move_in)
+
+    def _add_subcontracted_component_cost(self, price, quantity, po_line, po):
+        # for subcontracted products, add the BoM component cost
+        bom = self.env['mrp.bom'].sudo()._bom_subcontract_find(
+            po_line.product_id,
+            company_id=po_line.company_id.id,
+            subcontractor=po.partner_id,
+        )
+        if bom:
+            return price + self._get_replenishment_mo_cost(po_line.product_id, quantity, po_line.uom_id, po.currency_id)
+
+        return price
