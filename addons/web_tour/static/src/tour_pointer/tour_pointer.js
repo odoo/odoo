@@ -69,15 +69,15 @@ export const pointerState = proxy({
 });
 
 class TourPointerPopover extends Component {
-    static props = {
-        content: { type: String },
-        close: { type: Function },
-        onClick: { type: Function, optional: true },
-        closeContent: { type: Function, optional: true },
-        openContent: { type: Function, optional: true },
-    };
-
     static template = "web_tour.TourPointer.Content";
+
+    props = useProps({
+        content: t.string(),
+        close: t.function(),
+        onClick: t.function().optional(),
+        closeContent: t.function().optional(),
+        openContent: t.function().optional(),
+    });
 
     setup() {
         this.orm = useService("orm");

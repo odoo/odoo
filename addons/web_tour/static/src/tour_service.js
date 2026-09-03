@@ -1,25 +1,25 @@
-import { assertType, Component, t, whenReady } from "@odoo/owl";
+import { assertType, Component, t, useProps, whenReady } from "@odoo/owl";
+import { loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { loadBundle } from "@web/core/assets";
-import { tourState } from "@web_tour/tour_state";
-import {
-    tourRecorderState,
-    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
-} from "@web_tour/tour_recorder/tour_recorder_state";
-import { redirect } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { redirect } from "@web/core/utils/urls";
+import { session } from "@web/session";
+import {
+    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
+    tourRecorderState,
+} from "@web_tour/tour_recorder/tour_recorder_state";
+import { tourState } from "@web_tour/tour_state";
 
 class OnboardingItem extends Component {
     static components = { DropdownItem };
     static template = "web_tour.OnboardingItem";
-    static props = {
-        toursEnabled: { type: Boolean },
-        toggleItem: { type: Function },
-    };
+    props = useProps({
+        toursEnabled: t.boolean(),
+        toggleItem: t.function(),
+    });
     setup() {}
 }
 
