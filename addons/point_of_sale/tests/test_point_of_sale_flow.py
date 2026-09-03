@@ -3108,3 +3108,56 @@ class TestPointOfSaleFlow(CommonPosTest):
             10.0,
             "The return move should be valued at the historical cost of the original sale ($10), not the current standard price ($20)."
         )
+
+    def test_close_session_cash_out_without_accounting_rights(self):
+        """A PoS manager without any accounting group cashes out, then closes
+        the session with the counted cash matching the expected cash: the
+        closed session must not record a cash difference.
+
+        Each RPC of the closing flow runs in its own transaction, so the cache
+        is cleared between the calls to reproduce the real flow.
+        """
+        pos_manager = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'PoS manager without accounting rights',
+            'login': 'pos_manager_no_accounting',
+            'group_ids': [Command.set([
+                self.env.ref('base.group_user').id,
+                self.env.ref('point_of_sale.group_pos_manager').id,
+            ])],
+        })
+        self.assertFalse(pos_manager.has_group('account.group_account_invoice'))
+        self.pos_config_usd.cash_control = True
+        self.pos_config_usd.with_user(pos_manager).open_ui()
+        session = self.pos_config_usd.current_session_id.with_user(pos_manager)
+        session.set_opening_control(0, False)
+
+        self.create_backend_pos_order({
+            'line_data': [{'product_id': self.ten_dollars_no_tax.product_variant_id.id}],
+            'payment_data': [{'payment_method_id': self.cash_payment_method.id, 'amount': 10}],
+        })
+        session.try_cash_in_out('out', 4, 'Bank deposit', False, {'translatedType': 'Cash out'})
+        self.env.invalidate_all()
+
+        expected_cash = session.get_closing_control_data()['default_cash_details']['amount']
+        self.assertEqual(expected_cash, 6)
+        self.env.invalidate_all()
+        self.assertEqual(session.post_closing_cash_details(expected_cash), {'successful': True})
+        self.env.invalidate_all()
+        session.update_closing_control_state_session(False)
+        self.assertEqual(session.cash_register_balance_end, 6)
+        self.assertEqual(session.cash_register_difference, 0)
+        closing_message = session.message_ids.filtered(lambda m: 'Closing difference' in (m.body or ''))
+        self.assertIn('Closing difference: $\xa00.00', closing_message.body.unescape())
+        self.env.invalidate_all()
+        self.assertEqual(session.close_session_from_ui(), {'successful': True})
+        self.env.invalidate_all()
+
+        self.assertEqual(session.state, 'closed')
+        self.assertEqual(session.cash_real_transaction, -4)
+        self.assertEqual(session.cash_register_balance_end, 6)
+        self.assertEqual(session.cash_register_difference, 0)
+        # cash out + cash payments of the session, no loss/profit line
+        self.assertRecordValues(session.sudo().statement_line_ids.sorted('id'), [
+            {'amount': -4},
+            {'amount': 10},
+        ])
