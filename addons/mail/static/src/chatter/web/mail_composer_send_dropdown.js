@@ -1,4 +1,5 @@
 import { MailComposerScheduleDialog } from "@mail/chatter/web/mail_composer_schedule_dialog";
+import { useMailComposerAttachmentsListener } from "@mail/core/web/mail_composer_attachment_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -21,6 +22,7 @@ class MailComposerSendDropdown extends Component {
         this.dialogService = useService("dialog");
         this.orm = useService("orm");
         this.buttonState = useState({ disabled: false });
+        this.isUploading = useMailComposerAttachmentsListener();
     }
 
     async onClickSend() {
