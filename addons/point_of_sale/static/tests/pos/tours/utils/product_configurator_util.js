@@ -199,6 +199,24 @@ export function checkImagePriceExtraVisible(price) {
     ];
 }
 
+export function priceExtraIs(valueName, price) {
+    return [
+        {
+            content: `checking that value ${valueName} shows an extra price of ${price}`,
+            trigger: `.modal .attribute-name-cell:contains('${valueName}') .price_extra:contains("${price}")`,
+        },
+    ];
+}
+
+export function noPriceExtra(valueName) {
+    return [
+        {
+            content: `checking that value ${valueName} shows no extra price`,
+            trigger: `.modal .attribute-name-cell:contains('${valueName}'):not(:has(.price_extra))`,
+        },
+    ];
+}
+
 export function isRadioDisabled(name) {
     return [
         {

@@ -278,3 +278,31 @@ registry.category("web_tour.tours").add("test_product_configurator_price", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_attribute_price_extra_with_fixed_pricelist", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // No rule applies: the extra price is advertised and charged.
+            ProductScreen.clickDisplayedProduct("Takeaway Product"),
+            ProductConfigurator.priceExtraIs("Cheese", "1.00"),
+            ProductConfigurator.pickRadio("Cheese"),
+            ProductConfigurator.priceIs("21.00"), // 20 (list price) + 1 (Cheese)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("21.00"),
+            // The TAKEOUT preset prices the product with a fixed rule, which replaces
+            // the whole price of the product, extra prices included.
+            ProductScreen.selectPreset("EAT IN", "TAKEOUT"),
+            // selectPreset leaves the review pane open on mobile.
+            { ...ProductScreen.back(), isActive: ["mobile"] },
+            ProductScreen.totalAmountIs("10.00"),
+            ProductScreen.clickDisplayedProduct("Takeaway Product"),
+            ProductConfigurator.noPriceExtra("Cheese"),
+            ProductConfigurator.pickRadio("Cheese"),
+            ProductConfigurator.priceIs("10.00"), // 10 (TAKEAWAY fixed price)
+            Dialog.confirm(),
+            ProductScreen.totalAmountIs("20.00"),
+            Chrome.endTour(),
+        ].flat(),
+});
