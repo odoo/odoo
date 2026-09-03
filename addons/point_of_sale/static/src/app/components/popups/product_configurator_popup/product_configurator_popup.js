@@ -237,6 +237,22 @@ export class ProductConfiguratorPopup extends Component {
         );
     }
 
+    isDeletedCombination() {
+        const hasVariants = this.attributes.some(
+            (line) => line.attribute_id.create_variant !== "no_variant"
+        );
+        if (!hasVariants) {
+            return false;
+        }
+        const isDynamic = this.attributes.some(
+            (line) => line.attribute_id.create_variant === "dynamic"
+        );
+        if (isDynamic) {
+            return false;
+        }
+        return !this.product;
+    }
+
     isValidCombination() {
         return !this.selectedValues.some((value) =>
             this.pos.doHaveConflictWith(value, this.selectedValues)
