@@ -4,6 +4,12 @@ import { CONTOUR_VARIANTS, DIRECTION_VARIANTS, INDIRECT_CSS_PROPERTY_VALUES } fr
 import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
 
+// TODO EGGMAIL: RTL + language check (vertical)
+const BORDER_INLINE = {
+    start: "left",
+    end: "right",
+};
+
 export class BorderPlugin extends Plugin {
     static id = "border";
     static dependencies = ["measurementSnapshot", "rules", "style"];
@@ -26,13 +32,33 @@ export class BorderPlugin extends Plugin {
     }
 
     fixBorderInline({ element, propertyName, propertyInfo, styleInfo }) {
-        if (!propertyName.match(/^border-inline(-(start|end))/)) {
+        const capture = propertyName.match(/^border-inline(-(start|end))?(-.*)?$/);
+        if (!capture) {
             return false;
         }
-        // border-inline => border-right + border-left
-        // border-inline-start => border-left
-        // border-inline-end => border-right
-        // always keep suffix
+        const sides = [];
+        if (!capture.at(2)) {
+            sides.push("right", "left");
+        } else {
+            sides.push(BORDER_INLINE[capture.at(2)]);
+        }
+        const suffix = capture.at(3) || "";
+        const sequence = propertyInfo.sequence;
+        const priority = propertyInfo.priority;
+        const indexByPropertyName = styleInfo.getIndexByPropertyName();
+        const index = indexByPropertyName.get(propertyName);
+        styleInfo.delete(propertyName);
+        const fixedStyleInfo = new StyleInfo();
+        for (const side of sides) {
+            fixedStyleInfo.setProperty(
+                `border-${side}${suffix}`,
+                propertyInfo.value,
+                priority,
+                sequence
+            );
+        }
+        styleInfo.merge(fixedStyleInfo, { index });
+        return true;
     }
 
     provideNeutralizeBorderRules() {
@@ -63,12 +89,7 @@ export class BorderPlugin extends Plugin {
         rules.allow("border-collapse", { when: isTable });
         rules.allow("border-spacing", { when: isTable });
         rules.require("border-color", {
-            when: ({ referenceNode }) => {
-                if (this.hasVisibleBorder(referenceNode)) {
-                    return true;
-                }
-                return false;
-            },
+            when: ({ referenceNode }) => this.hasVisibleBorder(referenceNode),
             how: ({ referenceNode }) => ({
                 propertyValue: this.getStylePropertyValue(referenceNode, "border-color"),
             }),
