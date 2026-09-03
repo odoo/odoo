@@ -46,7 +46,12 @@ class LoyaltyReward(models.Model):
     @api.depends("program_id", "description")
     def _compute_display_name(self):
         for reward in self:
-            reward.display_name = f"{reward.program_id.name} - {reward.description}"
+            if reward.program_type == "loyalty":
+                reward.display_name = (
+                    f"{reward.description} ({reward.required_points} {reward.point_name})"
+                )
+            else:
+                reward.display_name = f"{reward.description}"
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one(
@@ -275,14 +280,14 @@ class LoyaltyReward(models.Model):
                     reward_string = reward.env._("Free Product")
                 elif len(products) == 1:
                     reward_string = reward.env._(
-                        "Free Product - %s",
+                        "%s",
                         reward.reward_product_id.with_context(
                             display_default_code=False
                         ).display_name,
                     )
                 else:
                     reward_string = reward.env._(
-                        "Free Product - [%s]",
+                        "[%s]",
                         ", ".join(
                             products.with_context(display_default_code=False).mapped("display_name")
                         ),
@@ -372,10 +377,12 @@ class LoyaltyReward(models.Model):
                 self.discount_line_product_id.action_archive()
         return res
 
-    def update_field_translations(self, field_name, translations, source_lang=''):
+    def update_field_translations(self, field_name, translations, source_lang=""):
         res = super().update_field_translations(field_name, translations, source_lang=source_lang)
-        if field_name == 'description' and self.discount_line_product_id:
-            self.discount_line_product_id.update_field_translations('name', translations, source_lang=source_lang)
+        if field_name == "description" and self.discount_line_product_id:
+            self.discount_line_product_id.update_field_translations(
+                "name", translations, source_lang=source_lang
+            )
         return res
 
     def unlink(self):
