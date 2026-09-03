@@ -126,4 +126,16 @@
             </field>
         </field>
     </record>
+
+    <record id="resource_calendar_view_form_holidays" model="ir.ui.view">
+        <field name="name">resource.calendar.view.form</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='days_per_week']" position="after">
+                <field name="leave_accrual_plan_id" invisible="work_time_rate &lt;= 1.0"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
