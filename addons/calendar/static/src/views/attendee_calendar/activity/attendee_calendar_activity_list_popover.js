@@ -2,7 +2,7 @@ import { AttendeeCalendarActivityListPopoverItem } from "@calendar/views/attende
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 import { useSubEnv } from "@web/owl2/utils";
 
 /**
@@ -19,8 +19,15 @@ import { useSubEnv } from "@web/owl2/utils";
  */
 export class AttendeeCalendarActivityListPopover extends Component {
     static components = { Dialog, AttendeeCalendarActivityListPopoverItem };
-    static props = ["activityIds", "model", "close", "onActivityChanged", "onViewMeeting"];
     static template = "calendar.AttendeeCalendarActivityListPopover";
+
+    props = useProps({
+        activityIds: t.any(),
+        model: t.any(),
+        close: t.any(),
+        onActivityChanged: t.any(),
+        onViewMeeting: t.any(),
+    });
 
     setup() {
         super.setup();
