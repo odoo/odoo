@@ -80,7 +80,6 @@ async function getActionData(searchModel) {
 
 export class FetchEInvoices extends Component {
     static template = "account.FetchEInvoices";
-    static props = {};
     static components = { DropdownItem };
 
     setup() {

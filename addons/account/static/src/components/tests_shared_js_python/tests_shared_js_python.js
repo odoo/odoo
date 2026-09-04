@@ -3,13 +3,14 @@ import { registry } from "@web/core/registry";
 
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 
 export class TestsSharedJsPython extends Component {
     static template = "account.TestsSharedJsPython";
-    static props = {
-        tests: { type: Array, optional: true },
-    };
+
+    props = useProps({
+        tests: t.array().optional(),
+    });
 
     setup() {
         super.setup();

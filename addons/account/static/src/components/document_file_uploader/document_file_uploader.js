@@ -2,7 +2,7 @@ import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component, markup } from "@odoo/owl";
+import { Component, markup, t, useProps } from "@odoo/owl";
 
 export const AbstractDocumentFileUploader = (T = Component)  => class AbstractDocumentFileUploader extends T {
 
@@ -79,12 +79,12 @@ export class DocumentFileUploader extends AbstractDocumentFileUploader() {
     static components = {
         FileUploader,
     };
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-        record: {type: Object, optional: true},
-        slots: {type: Object, optional: true},
-        resModel: {type: String, optional: true},
-    };
+        record: t.object().optional(),
+        slots: t.object().optional(),
+        resModel: t.string().optional(),
+    });
 
     // To define specific resModal from another model
     getResModel() {

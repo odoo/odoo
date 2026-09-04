@@ -6,10 +6,11 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class AccountPickCurrencyDate extends Component {
     static template = "account.AccountPickCurrencyDate";
-    static props = {
+
+    props = useProps({
         ...standardWidgetProps,
-        record: { type: Object, optional: true },
-    };
+        record: t.object().optional(),
+    });
 
     datetimePickerTargetRef = signal.ref();
 

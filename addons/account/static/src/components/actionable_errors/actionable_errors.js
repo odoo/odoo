@@ -1,13 +1,16 @@
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 
 const WARNING_TYPE_ORDER = ["danger", "warning", "info"];
 
 export class ActionableErrors extends Component {
-    static props = { errorData: {type: Object} };
     static template = "account.ActionableErrors";
+
+    props = useProps({
+        errorData: t.object().optional(),
+    });
 
     setup() {
         super.setup();
@@ -46,7 +49,7 @@ export class ActionableErrors extends Component {
 }
 
 export class ActionableErrorsField extends ActionableErrors {
-    static props = { ...standardFieldProps };
+    props = useProps(standardFieldProps);
 
     get errorData() {
         return this.props.record.data[this.props.name];

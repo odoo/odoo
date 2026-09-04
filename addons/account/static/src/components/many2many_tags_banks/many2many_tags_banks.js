@@ -6,21 +6,21 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { _t } from "@web/core/l10n/translation";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, t, useProps } from "@odoo/owl";
 
 class BankTag extends Component {
     static template = "account.BankTag";
     static components = { BadgeTag };
-    static props = [
-        "allowOutPayment?",
-        "color",
-        "onClick",
-        "onDelete?",
-        "crossTooltip",
-        "onClick",
-        "text",
-        "tooltip",
-    ];
+
+    props = useProps({
+        allowOutPayment: t.boolean().optional(),
+        color: t.number().optional(),
+        crossTooltip: t.string().optional(),
+        onClick: t.function(),
+        onDelete: t.function().optional(),
+        text: t.string().optional(),
+        tooltip: t.string().optional(),
+    });
 }
 
 export class FieldMany2ManyTagsBanks extends Many2ManyTagsField {

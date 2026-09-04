@@ -1,22 +1,24 @@
-import { _t } from "@web/core/l10n/translation";
-import { registry } from "@web/core/registry";
-import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
+import { Component, useProps } from "@odoo/owl";
+import { deserializeDate, formatDate } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { formatDate, deserializeDate } from "@web/core/l10n/dates";
-
+import { _t } from "@web/core/l10n/translation";
+import { popoverProps } from "@web/core/popover/popover";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component } from "@odoo/owl";
 
 class AccountPaymentPopOver extends Component {
-    static props = { "*": { optional: true } };
     static template = "account.AccountPaymentPopOver";
+
+    props = useProps(popoverProps);
 }
 
 export class AccountPaymentField extends Component {
-    static props = { ...standardFieldProps };
     static template = "account.AccountPaymentField";
+
+    props = useProps(standardFieldProps);
 
     setup() {
         const position = localization.direction === "rtl" ? "bottom" : "left";
