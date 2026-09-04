@@ -7,7 +7,9 @@ import {
     usePlugin,
     proxy,
     signal,
+    t,
     useListener,
+    useProps,
 } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
@@ -41,18 +43,18 @@ export class AnalyticDistribution extends Component {
     mainRef = signal.ref();
     addLineButton = signal.ref();
 
-    static props = {
+    props = useProps({
         ...standardFieldProps,
-        business_domain: { type: String, optional: true },
-        account_field: { type: String, optional: true },
-        product_field: { type: String, optional: true },
-        amount_field: { type: String, optional: true },
-        business_domain_compute: { type: String, optional: true },
-        force_applicability: { type: String, optional: true },
-        allow_save: { type: Boolean, optional: true },
-        multi_edit: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
-    }
+        business_domain: t.string().optional(),
+        account_field: t.string().optional(),
+        product_field: t.string().optional(),
+        amount_field: t.string().optional(),
+        business_domain_compute: t.string().optional(),
+        force_applicability: t.string().optional(),
+        allow_save: t.boolean().optional(),
+        multi_edit: t.boolean().optional(),
+        placeholder: t.string().optional(),
+    });
 
     setup(){
         this.orm = useService("orm");
