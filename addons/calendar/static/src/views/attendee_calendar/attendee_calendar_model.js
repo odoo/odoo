@@ -20,12 +20,21 @@ export class AttendeeCalendarModel extends CalendarModel {
         super.setup(...arguments);
         this.dialog = services.dialog;
         this.rpc = rpc;
+        this.needsPartnerFiltersInit = true;
     }
 
     /**
      * @override
      */
     async load() {
+        if (this.needsPartnerFiltersInit) {
+            this.needsPartnerFiltersInit = false;
+            if (this.meta.filtersInfo.partner_ids?.writeResModel === "calendar.filters") {
+                await this.orm.call("calendar.filters", "init_partner_filters", [], {
+                    context: this.meta.context,
+                });
+            }
+        }
         const res = await super.load(...arguments);
         if (!this._loaded) {
             const { credential_status, sync_status, sync_email, default_duration } =
@@ -43,6 +52,10 @@ export class AttendeeCalendarModel extends CalendarModel {
         return this.data.attendees;
     }
 
+    get showMyCalendar() {
+        return user.settings.calendar_show_my;
+    }
+
     /**
      * @override
      */
@@ -52,6 +65,12 @@ export class AttendeeCalendarModel extends CalendarModel {
             return baseDomain;
         }
         return Domain.or([baseDomain, [["partner_ids", "in", [user.partnerId]]]]).toList();
+    }
+
+    async updatePartnerFilters(fieldName, partnerIds) {
+        const { writeResModel } = this.meta.filtersInfo[fieldName];
+        await this.orm.call(writeResModel, "update_partner_filters", [partnerIds]);
+        await this.load();
     }
 
     /**
@@ -83,6 +102,56 @@ export class AttendeeCalendarModel extends CalendarModel {
             result.recurrence_update = partialRecord.recurrenceUpdate;
         }
         return result;
+    }
+
+    /**
+     * @override
+     * "My calendar" isn't a regular filter, just a checkbox changing the user setting.
+     * Making sure to add/remove the current user from the domain accurately.
+     */
+    computeFiltersDomain(data) {
+        const domain = super.computeFiltersDomain(data);
+        for (const fieldName of Object.keys(data.filterSections)) {
+            const field = this.meta.fields[fieldName];
+            const isUserOrPartner = ["res.users", "res.partner"].includes(field.relation);
+            if (!isUserOrPartner) {
+                continue;
+            }
+            const userFieldName = field.relation === "res.partner" ? "partnerId" : "userId";
+            const userOrPartnerId = user[userFieldName];
+            const leaf = domain.find((d) => d[0] === fieldName && d[1] === "in");
+            if (!leaf) {
+                continue;
+            }
+            leaf[2] = leaf[2].filter((id) => id !== userOrPartnerId);
+            if (this.showMyCalendar) {
+                leaf[2].push(userOrPartnerId);
+            }
+        }
+        return domain;
+    }
+
+    /**
+     * @override
+     * On calendar event creation, add the "My Calendar" filter and the
+     * currently checked partner filters to the default attendees.
+     */
+    makeContextDefaults(rawRecord) {
+        const context = super.makeContextDefaults(rawRecord);
+        const partnerSection = Object.values(this.data.filterSections).find(
+            (section) => section.fieldName === "partner_ids"
+        );
+        const partnerIds = (partnerSection?.filters || [])
+            .filter((filter) => filter.active && filter.type === "record")
+            .map((filter) => filter.value);
+        if (this.showMyCalendar) {
+            partnerIds.push(user.partnerId);
+        }
+        context.default_partner_ids = [...new Set([
+            ...(context.default_partner_ids || []),
+            ...partnerIds,
+        ])];
+        return context;
     }
 
     /**
@@ -135,9 +204,19 @@ export class AttendeeCalendarModel extends CalendarModel {
         if (!isEveryoneFilterActive && attendeeFilters) {
             const activeAttendeeIds = new Set(
                 attendeeFilters.filters
-                    .filter((filter) => filter.type !== "all" && filter.value && filter.active)
+                    .filter(
+                        (filter) =>
+                            filter.type !== "all" &&
+                            filter.value &&
+                            filter.active &&
+                            filter.value !== currentPartnerId
+                    )
                     .map((filter) => filter.value)
             );
+            // Only duplicate records for the current user if the "My Calendar" filter is on.
+            if (this.showMyCalendar) {
+                activeAttendeeIds.add(currentPartnerId);
+            }
             // Duplicate records per attendee
             const newRecords = {};
             let duplicatedRecordIdx = -1;
