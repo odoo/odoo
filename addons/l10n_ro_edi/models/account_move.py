@@ -500,7 +500,7 @@ class AccountMove(models.Model):
                 'key_certificate': message['answer']['signature']['key_certificate'],
                 'attachment': BinaryBytes(base64.b64decode(message['answer']['signature']['attachment_raw'])),
             })
-            xml_attachment_raw = message['answer']['invoice']['attachment_raw'].encode()
+            xml_attachment_raw = message['answer']['invoice']['attachment_raw']
             xml_attachment_id = self.env['ir.attachment'].sudo().create({
                 'name': f"ciusro_{message['answer']['invoice']['name'].replace('/', '_')}.xml",
                 'raw': xml_attachment_raw,
