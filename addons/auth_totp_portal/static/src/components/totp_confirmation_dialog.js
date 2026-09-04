@@ -8,7 +8,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 
 /**
- * This is a quick-and-dirty fix to enable the copy of the TOTP secret in the 
+ * This is a quick-and-dirty fix to enable the copy of the TOTP secret in the
  * portal.
  */
 export class TotpConfirmationDialog extends InputConfirmationDialog {
@@ -26,13 +26,11 @@ export class TotpConfirmationDialog extends InputConfirmationDialog {
             });
         };
         useEffect(
-            (clipboardButtonEl) => {
-                if (clipboardButtonEl) {
-                    clipboardButtonEl.addEventListener("click", onClickClipboardButton);
-                    return () => clipboardButtonEl.removeEventListener("click", onClickClipboardButton);
-                }
+            (...clipboardButtonEls) => {
+                clipboardButtonEls.forEach((btn) => btn.addEventListener("click", onClickClipboardButton));
+                return () => clipboardButtonEls.forEach((btn) => btn.removeEventListener("click", onClickClipboardButton));
             },
-            () => [this.modalRef.el?.querySelector("#collapseTotpSecret .o_clipboard_button")]
+            () => [...(this.modalRef.el?.querySelectorAll(".o_clipboard_button") ?? [])]
         );
     }
 }
