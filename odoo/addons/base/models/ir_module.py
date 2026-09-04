@@ -796,7 +796,7 @@ class IrModuleModule(models.Model):
         res = [0, 0]    # [update, add]
 
         default_version = modules.adapt_version('1.0')
-        known_mods = self.with_context(lang=None).search([])
+        known_mods = self.with_context(lang=None, module_memo_category={}, module_memo_country={}).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
 
         # iterate through detected modules and update/create them in db
@@ -835,39 +835,45 @@ class IrModuleModule(models.Model):
         self._update_category(terp.get('category', 'Uncategorized'))
 
     def _update_dependencies(self, depends=None, auto_install_requirements=()):
-        self.env['ir.module.module.dependency'].flush_model()
-        existing = {dep.name for dep in self.dependencies_id}
+        self.ensure_one()
+        deps = self.dependencies_id
+        existing = {dep.name for dep in deps}
         needed = set(depends or [])
-        for dep in (needed - existing):
-            self.env.cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (self.id, dep))
-        for dep in (existing - needed):
-            self.env.cr.execute('DELETE FROM ir_module_module_dependency WHERE module_id = %s and name = %s', (self.id, dep))
-        self.env.cr.execute('UPDATE ir_module_module_dependency SET auto_install_required = (name = any(%s)) WHERE module_id = %s',
-                         (list(auto_install_requirements or ()), self.id))
-        self.env['ir.module.module.dependency'].invalidate_model(['auto_install_required'])
-        self.invalidate_recordset(['dependencies_id'])
+        to_delete = []
+        auto_install_requirements = set(auto_install_requirements or ())
+        for dep in deps:
+            if dep.name not in needed:
+                to_delete.append(dep.id)
+            else:
+                dep.auto_install_required = dep.name in auto_install_requirements
+        if to_create := needed - existing:
+            deps.create({'module_id': self.id, 'name': name, 'auto_install_required': name in auto_install_requirements} for name in to_create)
+        if to_delete:
+            deps.browse(to_delete).unlink()
 
     def _update_countries(self, countries=()):
-        existing = set(self.country_ids.ids)
-        needed = set(self.env['res.country'].search([('code', 'in', [c.upper() for c in countries])]).ids)
-        for dep in (needed - existing):
-            self.env.cr.execute('INSERT INTO module_country (module_id, country_id) values (%s, %s)', (self.id, dep))
-        for dep in (existing - needed):
-            self.env.cr.execute('DELETE FROM module_country WHERE module_id = %s and country_id = %s', (self.id, dep))
-        self.invalidate_recordset(['country_ids'])
+        self.ensure_one()
+        self.country_ids  # put countries in cache (otherwise they are read one by one when writing)
+        if (cache := self.env.context.get('module_memo_country')) is not None:
+            if not cache:
+                cache.update({c.code: c.id for c in self.env['res.country'].search([])})
+            country_recs = self.env['res.country'].browse(c_id for c in countries if (c_id := cache.get(c.upper())))
+        else:
+            country_recs = self.env['res.country'].search([('code', 'in', [c.upper() for c in countries])])
+        self.country_ids = country_recs
         self.env['res.company'].invalidate_model(['uninstalled_l10n_module_ids'])
 
     def _update_exclusions(self, excludes=None):
-        self.env['ir.module.module.exclusion'].flush_model()
-        existing = {excl.name for excl in self.exclusion_ids}
+        self.ensure_one()
+        exclusions = self.exclusion_ids
+        existing = {excl.name for excl in exclusions}
         needed = set(excludes or [])
-        for name in (needed - existing):
-            self.env.cr.execute('INSERT INTO ir_module_module_exclusion (module_id, name) VALUES (%s, %s)', (self.id, name))
-        for name in (existing - needed):
-            self.env.cr.execute('DELETE FROM ir_module_module_exclusion WHERE module_id=%s AND name=%s', (self.id, name))
-        self.invalidate_recordset(['exclusion_ids'])
+        if to_create := needed - existing:
+            exclusions.create({'module_id': self.id, 'name': name} for name in to_create)
+        exclusions.filtered(lambda e: e.name not in needed).unlink()
 
     def _update_category(self, category='Uncategorized'):
+        self.ensure_one()
         current_category = self.category_id
         seen = set()
         current_category_path = []
@@ -881,7 +887,7 @@ class IrModuleModule(models.Model):
 
         categs = category.split('/')
         if categs != current_category_path:
-            cat_id = modules.db.create_categories(self.env.cr, categs)
+            cat_id = modules.db.create_categories(self.env.cr, categs, self.env.context.get('module_memo_category'))
             self.write({'category_id': cat_id})
 
     def _update_translations(self, filter_lang=None, overwrite=False):
