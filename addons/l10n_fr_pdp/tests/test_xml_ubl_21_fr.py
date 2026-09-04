@@ -69,3 +69,28 @@ class TestL10nFrPdpXml(TestPdpMessagesCommon):
         invoice.action_post()
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_b2g")
+
+    def test_export_due_date_credit_note(self):
+        """
+        [BR-FR-CO-09/BT-23] : Si le cadre de facturation (BT-23) est B2, S2 ou M2,
+        Alors la date d'échéance (BT-9) doit être renseignée et correspondre à la date de paiement.
+        """
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+        self.env['account.move.reversal'].with_company(self.company).create(
+            {
+                'move_ids': [Command.set((invoice.id,))],
+                'date': self.fakenow.date(),
+                'journal_id': invoice.journal_id.id,
+            },
+        ).reverse_moves()
+        credit_note = invoice.reversal_move_id
+        credit_note.action_post()
+
+        # The credit note is fully reconciled with the invoice it reverses at the moment.
+        # But here we want to test that the date of actual date will be set in the XML.
+        credit_note.line_ids.remove_move_reconcile()
+        self._pay(credit_note)
+
+        self._send_patched(credit_note)
+        self._assert_invoice_ubl_file(credit_note, "ubl_21_export_due_date_credit_note")
