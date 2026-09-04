@@ -7,6 +7,7 @@ import { getSectionRecords } from "@account/components/section_and_note_fields_b
 import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_plugin';
 import { registry } from '@web/core/registry';
+import { useBus } from "@web/core/utils/hooks";
 import { useSubEnv } from '@web/owl2/utils';
 
 export class SaleOrderTemplateLineListRenderer extends ProductLabelSectionAndNoteListRender {
@@ -15,6 +16,11 @@ export class SaleOrderTemplateLineListRenderer extends ProductLabelSectionAndNot
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
+        this.sortDropProm = Promise.resolve();
+        // Ensure save waits for any pending sortDrop operation to complete.
+        useBus(this.props.list.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => {
+            detail.proms.push(this.sortDropProm);
+        });
         useSubEnv({
             adjustSectionQuantities: this.adjustSectionQuantities.bind(this),
             shouldCollapse: this.shouldCollapse.bind(this),
@@ -286,15 +292,23 @@ export class SaleOrderTemplateLineListRenderer extends ProductLabelSectionAndNot
      *
      */
     async sortDrop(dataRowId, { element, previous }) {
-        const record = this.props.list.records.find(r => r.id === dataRowId);
-        // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
-        record.dirty = true;
-        await this.props.list.leaveEditMode();
-        const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
+        // Keep the promise on the component so save() can wait for it to resolve.
+        // Otherwise, the record could be saved before the quantity adjustment is applied,
+        // resulting in inconsistent record values.
+        this.sortDropProm = (async () => {
+            const record = this.props.list.records.find(r => r.id === dataRowId);
 
-        await super.sortDrop(dataRowId, { element, previous });
-
-        await this._handleQuantityAdjustment(recordMap);
+            // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
+            record.dirty = true;
+            await this.props.list.leaveEditMode();
+            const recordMap = this._getRecordsToRecompute(
+                record,
+                previous ? previous.dataset.id : null
+            );
+            await super.sortDrop(dataRowId, { element, previous });
+            await this._handleQuantityAdjustment(recordMap);
+        })();
+        await this.sortDropProm;
     }
 
     /**
