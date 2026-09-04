@@ -11,26 +11,26 @@
                     <i class="oi" data-icon="keyboard_double_arrow_right" role="img" aria-label="Add column" title="Add column" />
                 </button>
             </div>
-            <div t-else="" class="pt-3 pb-2">
+            <div t-else="" class="py-2">
                 <div class="o_kanban_header top-0 pb-3">
                     <div class="input-group mb-1">
                         <input type="text"
-                            class="form-control bg-view"
+                            class="form-control rounded-start bg-view"
                             t-attf-placeholder="{{ this.relatedFieldName }}..."
                             t-ref="this.inputRef"
                             t-on-focus="() => this.state.hasInputFocused = true"
                             t-on-blur="() => this.state.hasInputFocused = false"
                             t-on-keydown="this.onInputKeydown"
                         />
-                        <button class="btn btn-primary o_kanban_add" type="button" t-on-click="this.validate">
+                        <button class="btn btn-secondary text-success o_kanban_add" type="button" t-on-click="this.validate">
                             <i class="oi" data-icon="check"/>
                         </button>
-                        <button class="btn btn-danger o_kanban_remove" type="button" t-on-click="this.fold">
+                        <button class="btn btn-secondary text-danger o_kanban_remove" type="button" t-on-click="this.fold">
                             <i class="oi" data-icon="close"/>
                         </button>
                     </div>
                 </div>
-                <div t-foreach="[,,,]" t-as="i" t-key="i_index" class="o_kanban_muted_record mb-2 py-5 bg-300 opacity-50" />
+                <div t-foreach="['75','50','25']" t-as="i" t-key="i_index" class="o_kanban_muted_record rounded-3 mb-2 py-5 bg-300" t-att-class="'opacity-' + i" />
             </div>
         </div>
     </t>
