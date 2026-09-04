@@ -317,6 +317,10 @@
                    <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
                    <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>
+                    <filter string="Overdue Invoices"
+                        name="overdue"
+                        domain="[('invoice_ids.invoice_date_due', '&lt;', context_today().strftime('%Y-%m-%d'))]" />
+                   <separator/>
                 </xpath>
             </field>
         </record>
