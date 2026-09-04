@@ -79,14 +79,7 @@ class StockTraceabilityReport(models.TransientModel):
         record_id = kw.get('record_id') or context.get('active_id')
         level = kw.get('level') or 1
         if record_id and model == 'stock.lot':
-            main_location_ids = self.env['stock.warehouse'].search([]).lot_stock_id.ids
-            domain = Domain.AND([
-                Domain('lot_id', '=', record_id),
-                Domain('state', '=', 'done'),
-                self._get_location_domain(main_loc_ids=main_location_ids),
-            ])
-            lines = self.env['stock.move.line'].search(domain)
-            return self._get_lot_lines(move_lines=lines, level=level, main_loc_ids=main_location_ids)
+            return self._get_lot_lines(record_id=record_id, level=level)
         elif record_id and model == 'stock.move.line' and line_type:
             return self._get_move_lines(record_id=record_id, level=level, line_type=line_type)
         elif record_id and model == 'stock.picking':
@@ -119,13 +112,6 @@ class StockTraceabilityReport(models.TransientModel):
         """ workaround to apply the float rounding logic of t-out on data prepared server side """
         qty = from_uom._compute_quantity(qty, to_uom, rounding_method='HALF-UP')
         return self.env['ir.qweb.field.float'].value_to_html(qty, {'decimal_precision': 'Product Unit'})
-
-    @api.model
-    def _get_location_domain(self, main_loc_ids=None):
-        return Domain.OR([
-            Domain('location_id', 'child_of', main_loc_ids),
-            Domain('location_dest_id', 'child_of', main_loc_ids),
-        ])
 
     @api.model
     def _get_location_names(self, move_line):
@@ -196,31 +182,23 @@ class StockTraceabilityReport(models.TransientModel):
         - go from one location to another different location
         - have linked move lines based on line_type """
         return bool(
-            move_line.lot_id and move_line.location_id != move_line.location_dest_id
-            and (
-                (line_type == 'parent' and (
-                        move_line.consume_line_ids
-                        or self._get_related_move_lines(move_line, line_type)
-                ))
-                or (line_type == 'child' and (
-                    move_line.produce_line_ids
-                    or self._get_related_move_lines(move_line, line_type)
-                ))
-            )
+            move_line.lot_id
+            and move_line.location_id != move_line.location_dest_id
+            and self._get_related_move_lines(move_line, line_type)
         )
 
     @api.model
-    def _get_lot_lines(self, move_lines=None, level=0, main_loc_ids=None):
+    def _get_lot_lines(self, record_id=0, level=0):
         final_vals = []
-        lines = move_lines or []
-        main_location_ids = main_loc_ids or []
+        domain = Domain.AND([
+            Domain('lot_id', '=', record_id),
+            Domain('state', '=', 'done'),
+        ])
+        lines = self.env['stock.move.line'].search(domain)
         for line in lines:
-            if line.location_id == line.location_dest_id and line.location_id.id in main_loc_ids:
-                # if the product moved from stock to stock, we don't unfold it
-                final_vals.append(self._make_dict_move(move_line=line, line_type=False, level=level, unfoldable=False))
-                continue
-            line_type = 'parent' if line.location_dest_id.id in main_location_ids else 'child'
-            unfoldable = self._is_unfoldable(line, line_type)
+            parent_lines, child_lines = self._get_linked_move_lines(line)
+            unfoldable = bool(parent_lines or child_lines)
+            line_type = 'parent' if parent_lines else 'child'
             final_vals.append(self._make_dict_move(move_line=line, line_type=line_type, level=level, unfoldable=unfoldable))
         return sorted(final_vals, key=lambda l: (l['date'], l['id']), reverse=True)
 
