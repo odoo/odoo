@@ -32,3 +32,10 @@ class AccountMove(models.Model):
 
     def _get_invoice_currency_rate_date(self):
         return (self.country_code == 'DE' and self.taxable_supply_date) or super()._get_invoice_currency_rate_date()
+
+    def _get_name_invoice_report(self):
+        # EXTENDS 'account'
+        self.ensure_one()
+        if self.company_id.account_fiscal_country_id.code == 'DE':
+            return 'l10n_de.report_invoice_document'
+        return super()._get_name_invoice_report()
