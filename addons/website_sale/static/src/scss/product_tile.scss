@@ -629,7 +629,7 @@
     }
 }
 .o_wsale_products_opt_design_chips {
-    --_padding-base: calc(#{map-get($spacers, 2)} + calc(var(--o-wsale-products-grid-gap) * 0.25));
+    --_padding-base: calc(#{map-get($spacers, 2)} + calc(var(--o-wsale-products-grid-gap, 16px) * 0.25));
 
     --o-wsale-card-info-position: none;
     --o-wsale-card-border-width: #{$border-width};
