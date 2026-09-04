@@ -3,7 +3,7 @@ import { CreatePollDialog } from "@mail/core/common/create_poll_dialog";
 
 import { EmojiPicker, useEmojiPickerStoreScroll } from "@web/core/emoji_picker/emoji_picker";
 
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { Action, useAction, UseActions } from "@mail/core/common/action";
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -12,6 +12,11 @@ import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 
 export const composerActionsRegistry = registry.category("mail.composer/actions");
+
+export const composerButtonPropsInline = {
+    rounded: true,
+    variant: () => "btn-clear",
+};
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("models").Composer} Composer */
@@ -58,8 +63,8 @@ registerComposerAction("send-message", {
             ? _t("Log")
             : _t("Send"),
     onSelected: ({ owner }) => owner.sendMessage(),
+    propsInline: composerButtonPropsInline,
     sequenceQuick: 30,
-    tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
 });
 registerComposerAction("add-emoji", {
     actionPanelComponent: EmojiPicker,
@@ -79,6 +84,7 @@ registerComposerAction("add-emoji", {
     onSelected(params, ev) {
         markEventHandled(ev, "Composer.onClickAddEmoji");
     },
+    propsInline: composerButtonPropsInline,
     setup({ store }) {
         if (store.env.services.ui.isSmall) {
             return;
@@ -101,6 +107,7 @@ registerComposerAction("upload-files", {
         markEventHandled(ev, "composer.clickOnAddAttachment");
         composer.autofocus++;
     },
+    propsInline: composerButtonPropsInline,
     setup: ({ owner }) => (owner.fileUploaderRef = signal.ref()),
     sequence: 20,
 });
@@ -111,19 +118,14 @@ registerComposerAction("open-full-composer", {
         composer.targetThread &&
         composer.targetThread.model !== "discuss.channel" &&
         !owner.env.inFrontendPortalChatter,
-    hasBtnBg: ({ composer, owner }) =>
-        (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     hotkey: "shift+c",
     icon: "expand_content",
     isActive: ({ composer, owner }) =>
         (composer.restoredFromFullComposer && !owner.state.isFullComposerOpen) || undefined,
     name: _t("Open Full Composer"),
     onSelected: ({ owner }) => owner.onClickFullComposer(),
+    propsInline: composerButtonPropsInline,
     sequence: 30,
-    tags: ({ composer, owner }) =>
-        composer.restoredFromFullComposer && !owner.state.isFullComposerOpen
-            ? [ACTION_TAGS.PRIMARY]
-            : undefined,
 });
 registerComposerAction("add-canned-response", {
     condition: ({ composer, store }) =>
@@ -135,6 +137,7 @@ registerComposerAction("add-canned-response", {
     icon: "article",
     name: _t("Insert Canned Response"),
     onSelected: ({ owner }, ev) => owner.onClickInsertCannedResponse(ev),
+    propsInline: composerButtonPropsInline,
     sequence: 5,
 });
 registerComposerAction("create-poll", {
@@ -153,6 +156,7 @@ registerComposerAction("create-poll", {
             { rootRef: action.actionRef }
         );
     },
+    propsInline: composerButtonPropsInline,
     setup: ({ owner }) => {
         owner.dialogService = useService("dialog");
     },

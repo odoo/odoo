@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Action, ACTION_TAGS } from "@mail/core/common/action";
+import { Action } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
 import {
     acceptWithCamera,
@@ -115,7 +115,6 @@ export class CallInvitation extends Component {
                         this.props.channel.self_member_id?.startInvitationTimeout();
                     }
                 },
-                tags: () => [ACTION_TAGS.CALL_LAYOUT],
             },
             store: this.store,
         }),

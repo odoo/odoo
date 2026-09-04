@@ -1,4 +1,3 @@
-import { ACTION_TAGS } from "@mail/core/common/action";
 import { registerThreadAction } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
@@ -18,7 +17,6 @@ export const joinChannelAction = {
     name: _t("Join Channel"),
     sequence: 20,
     sequenceGroup: ({ owner }) => (owner.isDiscussContent ? undefined : 5),
-    tags: [ACTION_TAGS.PRIMARY],
 };
 registerThreadAction("join-channel", joinChannelAction);
 registerThreadAction("expand-discuss", {

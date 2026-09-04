@@ -2,16 +2,17 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ActionList">
-    <div class="o-mail-ActionList flex-shrink-0 d-flex" t-att-class="{ 'align-items-center': this.props.inline,'flex-column': !this.props.inline }">
+    <div class="o-mail-ActionList" t-att-class="{ 'align-items-center': this.props.inline }">
         <t t-set="groupAttClass" t-value="{
             [this.props.groupClass]: true,
-            'flex-column w-100 bg-transparent': !this.props.inline,
+            'btn-group': !this.props.dropdown,
+            'btn-group-vertical': this.props.dropdown,
             'o-inline rounded-3': this.props.inline,
-            'o-rounded-bubble': this.props.inline and !this.hasBtnBg,
+            'o-rounded-bubble': this.props.inline,
         }"/>
         <t t-foreach="this.groups()" t-as="group" t-key="group_index">
-            <span t-if="group.length" class="o-mail-ActionList-group btn-group" t-att-class="groupAttClass">
-                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { isFirstInGroup: action_first, index: action_index, isLastInGroup: action_last })"/>
+            <span t-if="group.length" class="o-mail-ActionList-group" t-att-class="groupAttClass">
+                <Action t-foreach="group" t-as="action" t-key="action.id" t-props="this.getActionProps(action, group, { index: action_index })"/>
             </span>
             <t t-if="!group_last" t-call="mail.ActionList.groupSeparator"/>
         </t>
@@ -26,7 +27,7 @@
 <t t-name="mail.Action">
     <t t-if="this.action.dropdownTrigger">
         <t t-component="this.Dropdown" menuClass="(this.action.dropdownMenuClass ?? '') + ' ' + this.store.discussDropdownMenuClass(this)" position="this.action.dropdownPosition" state="this.action.dropdownState">
-            <t t-call="mail.Action.main"/>
+            <t t-call="mail.Action.toggler"/>
             <t t-set-slot="content">
                 <t t-if="this.action.dropdownComponent" t-component="this.action.dropdownComponent" t-props="this.action.dropdownComponentProps"/>
                 <t t-elif="this.action.dropdownTemplate" t-call="{{ this.action.dropdownTemplate }}"
@@ -38,103 +39,12 @@
             </t>
         </t>
     </t>
-    <t t-else="" t-call="mail.Action.main"/>
+    <t t-else="" t-call="mail.Action.toggler"/>
 </t>
 
-<t t-name="mail.Action.main">
-    <t t-set="isInlineCircleButton" t-value="this.isInlineCircleButtonValue"/>
-    <!-- core-->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        'o-mail-ActionList-button btn btn-group-item position-relative': true,
-        'o-first': this.props.isFirstInGroup,
-        'o-last': this.props.isLastInGroup,
-        'active': this.action.isActive,
-        'o-odooControlPanelSwitchStyle': this.props.odooControlPanelSwitchStyle,
-        'o-hasBtnBg': this.hasBtnBg,
-        'o-inline': this.props.inline,
-        'bg-secondary': this.action.isActive and !this.action.tags.includes('PRIMARY') and !this.action.tags.includes('DANGER') and !this.action.tags.includes('SUCCESS'),
-        'btn-secondary': !this.action.tags.includes('PRIMARY') and !this.action.tags.includes('DANGER') and !this.action.tags.includes('SUCCESS'),
-        'btn-primary': this.action.tags.includes('PRIMARY'),
-        'btn-danger': this.action.tags.includes('DANGER'),
-        'btn-success': this.action.tags.includes('SUCCESS'),
-    })"/>
-    <!-- alignment -->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        [btnClass]: true,
-        'd-flex align-items-center': this.props.inline and isInlineCircleButton,
-        'text-start': this.props.dropdown and !this.ui.isSmall,
-    })"/>
-    <!-- border-->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        [btnClass]: true,
-        'border-0': this.props.inline and !this.hasBtnBg and this.action.icon,
-        'border-2': this.props.inline and !this.hasBtnBg and !this.action.icon,
-    })"/>
-    <!-- roundness -->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        [btnClass]: true,
-        'rounded-circle':  this.props.inline and  isInlineCircleButton,
-        'rounded-start-3': this.props.inline and !isInlineCircleButton and this.props.isFirstInGroup,
-        'rounded-end-3':   this.props.inline and !isInlineCircleButton and this.props.isLastInGroup,
-    })"/>
-    <!-- margin -->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        [btnClass]: true,
-        'o-mx-0_5': this.props.inline and !this.hasBtnBg and !this.action.icon,
-    })"/>
-    <!-- padding -->
-    <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inline and this.env.inMeetingView and !this.env.inComposer and !this.env.inDiscussActionPanel and this.store.rtc.isFullscreen"/>
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        [btnClass]: true,
-        'px-1 py-2': inMeetingViewCallButtonsFullscreen,
-        'o-px-1_5 py-1': this.props.inline   and  ((this.hasBtnBg and !isInlineCircleButton and !this.env.inMeetingView) or (!this.hasBtnBg and this.env.inComposer)),
-        'o-p-1_5':       this.props.inline   and  !this.env.inMeetingView and this.hasBtnBg and isInlineCircleButton and !this.env.inChatWindow,
-        'o-px-0_5':      this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.action.icon,
-        'p-1':           this.props.inline   and  this.hasBtnBg and isInlineCircleButton and this.env.inChatWindow,
-        'o-p-0_5':       this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.env.inComposer,
-        'o-px-0_5 py-0': this.props.inline   and  this.env.inMessage,
-        'px-3 py-2':     this.props.dropdown and   this.ui.isSmall,
-        'px-2 py-1':     this.props.dropdown and  !this.ui.isSmall,
-    })"/>
-    <!-- simulated dark theme -->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-       [btnClass]: true,
-        'o-text-white o-simulateDarkTheme': this.store.shouldSimulateDarkTheme(this),
-        'bg-transparent': this.store.shouldSimulateDarkTheme(this) and !this.hasBtnBg,
-        'o-inDiscussCall': this.env?.inDiscussCallView or this.env?.inCallInvitation or this.env.isDiscussPipBanner or this.env?.inWelcomePage,
-    })"/>
-    <!-- dynamic classes-->
-    <t t-set="btnClass" t-value="this.attClassObjectToString({
-        [btnClass]: true,
-        [this.action.btnClass ?? '']: true,
-        [this.action.tagClassNames]: true,
-    })"/>
-    <t t-set="attrs" t-value="{ 'aria-label': this.action.name, 'disabled': this.action.disabledCondition, 'name': this.action.id, 'data-sequence': this.action.sequence, 'data-sequence-group': this.action.sequenceGroup, 'data-sequence-quick': this.action.sequenceQuick, ...this.action.btnAttrs }"/>
-    <t t-if="this.action.component and this.action.componentCondition" t-component="this.action.component" t-props="this.action.componentProps"/>
-    <DropdownItem t-elif="this.props.dropdown" class="btnClass + ' d-flex align-items-center dropdown-item_active_noarrow ' + (this.ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.onSelected(this.action, ev)" attrs="attrs">
-        <t t-call="mail.Action.content"/>
-    </DropdownItem>
-    <button t-else="" t-ref="this.props.action.actionRef" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': this.action.name })" t-on-click="(ev) => this.onSelected(this.action, ev)" t-att-data-hotkey="this.action.hotkey" t-att-style="this.props.style">
-        <t t-call="mail.Action.content"/>
-        <t t-if="this.action.badge" t-call="mail.Action.badge"
-            extraBadgeClass="'position-absolute me-n1 mt-n1 end-0'"/>
-    </button>
-</t>
-
-<t t-name="mail.Action.content">
-    <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
-        templateParams="this.action.icon.params"/>
-    <i t-elif="this.action.icon" class="oi" t-att-class="{ 'o-fs-small': this.props.dropdown, 'oi-fw': this.props.fw, 'oi-lg': inMeetingViewCallButtonsFullscreen, 'py-1': inMeetingViewCallButtonsFullscreen and !isInlineCircleButton }" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
-    <i t-elif="this.props.dropdown" class="oi oi-fw opacity-0" data-icon="question_mark" t-att-class="this.props.fw ? 'oi-fw' : ''"/>
-    <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
-    <t t-if="this.props.dropdown and this.action.badge" t-call="mail.Action.badge"/>
-    <t t-if="this.action.extraContentComponent" t-component="this.action.extraContentComponent" t-props="this.action.extraContentComponentProps"/>
-</t>
-
-<t t-name="mail.Action.badge">
-    <span class="o-fw-600 badge p-0 rounded-circle d-flex justify-content-center align-items-center" t-attf-class="{{ extraBadgeClass }}" t-att-class="{ 'bg-warning o-discuss-warningBadge': this.action.tags.includes('WARNING_BADGE'), 'o-discuss-badge': this.action.tags.includes('IMPORTANT_BADGE') }" style="aspect-ratio: 1; font-size: 0.6rem;">
-        <i t-if="this.action.badgeIcon" class="oi" t-att-class="this.action.badgeIconClass" t-att-data-icon="this.action.badgeIcon"/><span t-elif="this.action.badgeText" t-out="this.action.badgeText"/>
-    </span>
+<t t-name="mail.Action.toggler">
+    <ActionDropdown t-if="this.props.dropdown" action="this.props.action" style="this.props.style" dropdown="this.props.dropdown" inline="this.props.inline"/>
+    <ActionButton t-else="" action="this.props.action" style="this.props.style" dropdown="this.props.dropdown" inline="this.props.inline" rounded="this.action.definition.propsInline?.rounded" variant="this.action.definition.propsInline?.variant"/>
 </t>
 
 </templates>

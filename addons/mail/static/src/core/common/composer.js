@@ -55,7 +55,7 @@ import {
 } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useComposerActions } from "@mail/core/common/composer_actions";
+import { composerButtonPropsInline, useComposerActions } from "@mail/core/common/composer_actions";
 import { ActionList } from "@mail/core/common/action_list";
 import { closestElement, lastLeaf } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
@@ -169,7 +169,8 @@ export class Composer extends Component {
             closeOnClickAway: false,
             closeOnEscape: false,
             position: "top-end",
-            popoverClass: "dropdown-menu o-dropdown--menu bg-view overflow-visible o-rounded-bubble mx-1",
+            popoverClass:
+                "dropdown-menu o-dropdown--menu bg-view overflow-visible o-rounded-bubble mx-1",
         });
         this.fullComposerBus = new EventBus();
         this.selection = useSelection({
@@ -421,6 +422,7 @@ export class Composer extends Component {
             dropdownPosition: "top-start",
             icon: "add_circle",
             name: _t("More Actions"),
+            propsInline: composerButtonPropsInline,
         });
     });
 

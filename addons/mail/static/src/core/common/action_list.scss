@@ -1,166 +1,20 @@
-.o-mail-ActionList {
-    --o-mail-ActionList-icon-opacity: 65%;
-
-    .o-mail-ActionList-group:has(.rounded-circle.o-hasBtnBg) {
-        gap: map-get($spacers, 1);
+.o-inline .o-mail-ActionList-button {
+    aspect-ratio: 1;
+    padding: 6px !important;
+}
+.o-mail-ActionList-group.btn-group-vertical {
+    @extend .w-100;
+}
+.o-mail-ActionList-group.btn-group {
+    > :first-child:not(.rounded-circle) {
+        @extend .rounded-start-3;
     }
 
-    button {
-        z-index: 1;
-        --btn-disabled-opacity: 0.25;
-
-        &:not(.o-hasBtnBg) {
-            background-color: inherit;
-        }
-
-        &.o-simulateDarkTheme {
-            &.o-hasBtnBg:hover {
-                filter: brightness(1.3);
-            }
-            &.o-dropdown-item:hover {
-                backdrop-filter: brightness(1.3);
-            }
-        }
-
-        &.o-inline {
-            &:where(:has(i:first-child:last-child)) {
-                opacity: var(--o-mail-ActionList-Button-opacity);
-
-                &:where(.rounded-circle) {
-                    aspect-ratio: 1;
-                }
-
-                &:hover,
-                &:focus,
-                &:active,
-                &.active,
-                &:focus-visible {
-                    color: var(--o-mail-ActionList-Button-color--hover);
-                    opacity: var(--o-mail-ActionList-Button-opacity--hover);
-                }
-            }
-
-            &.o-odooControlPanelSwitchStyle i {
-                opacity: var(--mail-ActionList-buttonInlineIconOpacity);
-            }
-
-            i.o-xsmaller {
-                transform: translateY(-2px);
-            }
-        }
-
-        &:not(.o-inline)>i {
-            opacity: var(--o-mail-ActionList-icon-opacity);
-
-            .o_bottom_sheet_sheet:has(&) {
-                opacity: 100%;
-            }
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL i {
-            color: white !important;
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item,
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL {
-            i {
-                opacity: 100%;
-                background: var(--btn-bg);
-                aspect-ratio: 1;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 100%;
-                padding: 0.4em;
-                box-sizing: content-box;
-            }
-
-            &:hover,
-            &:focus-visible {
-                i {
-                    background: var(--btn-hover-bg);
-                    color: var(--btn-hover-color);
-                }
-            }
-        }
-
-        &.o-tag-JOIN_LEAVE_CALL.o-dropdown-item i {
-            font-size: 0.7em !important;
-            &:is([data-icon="phone"], [data-icon="videocam"])::before {
-                transform: translateY(1px);
-            }
-        }
-
-        .o-mail-ChatWindow &.o-tag-JOIN_LEAVE_CALL i {
-            font-size: 0.9em !important;
-
-            &[data-icon="phone"]::before {
-                transform: translateY(.5px);
-            }
-        }
-
-        @each $status, $color in (danger: $danger, success: $success, primary: $primary) {
-            &.o-dropdown-item.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
-                &.focus {
-                    background-color: rgba($color, 0.75);
-                    color: white;
-                    &.o-tag-PRIMARY {
-                        background-color: rgba($color, .9);
-                    }
-                }
-                &.o-tag-PRIMARY {
-                    background-color: rgba($color, .9);
-                }
-                &:not(.focus) {
-                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-                    &.o-tag-PRIMARY {
-                        background-color: rgba($color, .35);
-                    }
-                }
-            }
-
-            &.o-inline.btn-#{$status}:not(.o-tag-JOIN_LEAVE_CALL) {
-                &.o-hasBtnBg {
-                    --btn-active-bg: var(--btn-bg);
-                }
-                &:not(.o-hasBtnBg) {
-                    color: var(--o-mail-ActionList-#{$status}NoBgColor, #{$color});
-                    &:active {
-                        background-color: inherit;
-                    }
-                }
-            }
-        }
+    > :last-child:not(.rounded-circle) {
+        @extend .rounded-end-3;
     }
 
-    .o_popover>& {
-        .o-mail-ActionList-button {
-            --btn-group-gap: 0px;
-        }
-    }
-
-    .o_bottom_sheet & {
-        .o-mail-ActionList-button {
-            padding: var(--dropdown-item-padding-y) var(--dropdown-item-padding-x) !important;
-            font-size: $h5-font-size !important;
-            font-weight: $o-font-weight-medium !important;
-        }
-    }
-
-    & button.o-simulateDarkTheme.o-hasBtnBg:not(.o-tag-DANGER):not(.o-tag-SUCCESS):not(.o-tag-PRIMARY) {
-        background-color: #{$gray-800};
-        border: 1px solid rgba(white, 0.1);
-
-        &.active {
-            // Same colors than dark theme since dark theme is simulated for call view.
-            background-color: #17373b !important;
-            border-color: #03f9e3 !important;
-        }
-    }
-
-    // Neutralize colorful SVG app icons in dropdown menus to match the monochrome style of other icons.
-    button.o-dropdown-item .o_ui_app_icon {
-        --oi-color: currentColor !important;
-        opacity: var(--o-mail-ActionList-icon-opacity) !important;
+    &:has(.rounded-circle) {
+        gap: 4px;
     }
 }

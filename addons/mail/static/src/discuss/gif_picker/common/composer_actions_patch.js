@@ -1,4 +1,8 @@
-import { pickerGetAnchor, registerComposerAction } from "@mail/core/common/composer_actions";
+import {
+    composerButtonPropsInline,
+    pickerGetAnchor,
+    registerComposerAction,
+} from "@mail/core/common/composer_actions";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -32,6 +36,7 @@ registerComposerAction("add-gif", {
     onSelected(params, ev) {
         markEventHandled(ev, "Composer.onClickAddGif");
     },
+    propsInline: composerButtonPropsInline,
     setup({ store }) {
         if (store.env.services.ui.isSmall) {
             return;

@@ -1,29 +1,17 @@
-import { attClassObjectToString } from "@mail/utils/common/format";
+import { Action as ActionModel } from "@mail/core/common/action";
+import { ActionButton } from "@mail/core/common/action_button";
+import { ActionDropdown } from "@mail/core/common/action_dropdown";
 import { propSignal } from "@mail/utils/common/hooks";
 import { Component, computed, onWillUnmount, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Action as ActionModel } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
-const actionListProps = [
-    "inline?",
-    "dropdown?",
-    "fw?",
-    "hasBtnBg?",
-    "odooControlPanelSwitchStyle?",
-];
-
-const actionListPropsSchema = {
-    dropdown: t.boolean().optional(),
-    fw: t.boolean().optional(true),
-    hasBtnBg: t.boolean().optional(),
-    inline: t.boolean().optional(),
-    odooControlPanelSwitchStyle: t.boolean().optional(),
-};
-
+/**
+ * Wraps an action's chrome (rendered generically by {@link ActionButton}) with
+ * its optional own dropdown, e.g. a "more actions" overflow menu.
+ */
 class Action extends Component {
-    static components = { Action, DropdownItem };
+    static components = { ActionButton, ActionDropdown };
     static template = "mail.Action";
 
     get ActionList() {
@@ -38,14 +26,11 @@ class Action extends Component {
         super.setup();
         this.props = useProps({
             action: t.instanceOf(ActionModel),
-            isFirstInGroup: t.boolean().optional(),
-            isLastInGroup: t.boolean().optional(),
             style: t.string().optional(),
-            ...actionListPropsSchema,
+            dropdown: t.boolean().optional(),
+            inline: t.boolean().optional(),
         });
         this.store = useService("mail.store");
-        this.ui = useService("ui");
-        this.attClassObjectToString = attClassObjectToString;
         if (this.props.action.definition?.isMoreAction) {
             onWillUnmount(() => {
                 this.props.action.dropdownState.close();
@@ -56,53 +41,18 @@ class Action extends Component {
     get action() {
         return this.props.action;
     }
-
-    get hasBtnBg() {
-        return (
-            this.props.odooControlPanelSwitchStyle ||
-            this.props.hasBtnBg ||
-            this.props.action.hasBtnBg
-        );
-    }
-
-    get isInlineCircleButtonValue() {
-        if (!this.props.inline || !this.action.icon) {
-            return false;
-        }
-        if (this.env.inComposer || this.env.inMessage) {
-            return true;
-        }
-        return (
-            this.action.tags.includes("JOIN_LEAVE_CALL") &&
-            this.action.icon &&
-            !this.action.inlineName
-        );
-    }
-
-    onSelected(action, ev) {
-        action.onSelected?.(ev);
-        this.env.inCallDropdown?.close();
-    }
 }
 
 export class ActionList extends Component {
     static components = { Action };
     static template = "mail.ActionList";
 
-    getActionProps(action, group, { index, isFirstInGroup, isLastInGroup } = {}) {
+    getActionProps(action, group, { index } = {}) {
         return {
             action,
             group,
-            isFirstInGroup,
-            isLastInGroup,
-            ...Object.fromEntries(
-                actionListProps.map((propName) => {
-                    const actualPropName = propName.endsWith("?")
-                        ? propName.substring(0, propName.length - 1)
-                        : propName;
-                    return [actualPropName, this.props[actualPropName]];
-                })
-            ),
+            dropdown: this.props.dropdown,
+            inline: this.props.inline,
             style: `z-index: ${group.length - index + (action.hotkey ? 1 : 0)}`,
         };
     }
@@ -115,11 +65,11 @@ export class ActionList extends Component {
         );
         this.props = useProps({
             groupClass: t.string().optional(),
-            ...actionListPropsSchema,
+            dropdown: t.boolean().optional(),
+            inline: t.boolean().optional(),
         });
         this.store = useService("mail.store");
         this.ui = useService("ui");
-        this.actionListProps = actionListProps;
     }
 
     groups = computed(() => {
@@ -132,8 +82,4 @@ export class ActionList extends Component {
         }
         return groups.filter((group) => group.length); // don't show empty groups
     });
-
-    get hasBtnBg() {
-        return this.props.odooControlPanelSwitchStyle || this.props.hasBtnBg;
-    }
 }

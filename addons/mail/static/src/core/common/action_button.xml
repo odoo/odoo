@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActionButton">
+    <t t-set="attrs" t-value="{ 'aria-label': this.action.name, 'disabled': this.action.disabledCondition, 'name': this.action.id, 'data-sequence': this.action.sequence, 'data-sequence-group': this.action.sequenceGroup, 'data-sequence-quick': this.action.sequenceQuick, ...this.action.btnAttrs }"/>
+    <t t-if="this.action.component and this.action.componentCondition" t-component="this.action.component" t-props="this.action.componentProps"/>
+    <button t-else="" t-ref="this.props.action.actionRef" t-att-class="this.btnClass" t-att="Object.assign(attrs, { 'title': this.action.name })" t-on-click="(ev) => this.onSelected(this.action, ev)" t-att-data-hotkey="this.action.hotkey" t-att-style="this.props.style">
+        <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
+            templateParams="this.action.icon.params"/>
+        <i t-elif="this.action.icon" class="oi oi-fw" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
+        <span t-if="this.action.name and this.props.inline and (!this.action.icon or this.action.inlineName)" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
+        <t t-if="this.action.extraContentComponent" t-component="this.action.extraContentComponent" t-props="this.action.extraContentComponentProps"/>
+        <span t-if="this.action.badge" class="o-fw-600 badge p-0 rounded-circle d-flex justify-content-center align-items-center position-absolute me-n1 mt-n1 end-0" style="aspect-ratio: 1; font-size: 0.6rem;">
+            <i t-if="this.action.badgeIcon" class="oi" t-att-class="this.action.badgeIconClass" t-att-data-icon="this.action.badgeIcon"/><span t-elif="this.action.badgeText" t-out="this.action.badgeText"/>
+        </span>
+    </button>
+</t>
+
+</templates>

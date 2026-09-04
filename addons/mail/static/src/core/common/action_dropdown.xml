@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActionDropdown">
+    <t t-set="attrs" t-value="{ 'aria-label': this.action.name, 'disabled': this.action.disabledCondition, 'name': this.action.id, 'data-sequence': this.action.sequence, 'data-sequence-group': this.action.sequenceGroup, 'data-sequence-quick': this.action.sequenceQuick, ...this.action.btnAttrs }"/>
+    <t t-if="this.action.component and this.action.componentCondition" t-component="this.action.component" t-props="this.action.componentProps"/>
+    <DropdownItem t-else="" class="this.btnClass + ' dropdown-item_active_noarrow ' + (this.ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.onSelected(this.action, ev)" attrs="attrs">
+        <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
+            templateParams="this.action.icon.params"/>
+        <i t-elif="this.action.icon" class="oi o-fs-small oi-fw" t-attf-class="{{ this.action.iconClass }}" t-att-data-icon="this.action.icon"/>
+        <i t-else="" class="oi oi-fw opacity-0" data-icon="question_mark"/>
+        <span t-if="this.action.name" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel mx-1" t-attf-class="{{ this.action.nameClass }}" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
+        <span t-if="this.action.badge" class="o-fw-600 badge p-0 rounded-circle d-flex justify-content-center align-items-center" style="aspect-ratio: 1; font-size: 0.6rem;">
+            <i t-if="this.action.badgeIcon" class="oi" t-att-class="this.action.badgeIconClass" t-att-data-icon="this.action.badgeIcon"/><span t-elif="this.action.badgeText" t-out="this.action.badgeText"/>
+        </span>
+        <t t-if="this.action.extraContentComponent" t-component="this.action.extraContentComponent" t-props="this.action.extraContentComponentProps"/>
+    </DropdownItem>
+</t>
+
+</templates>

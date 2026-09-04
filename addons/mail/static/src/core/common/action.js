@@ -5,17 +5,6 @@ import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
 import { Reactive } from "@web/core/utils/reactive";
 
-export const ACTION_TAGS = Object.freeze({
-    DANGER: "DANGER",
-    SUCCESS: "SUCCESS",
-    PRIMARY: "PRIMARY",
-    IMPORTANT_BADGE: "IMPORTANT_BADGE",
-    WARNING_BADGE: "WARNING_BADGE",
-    CALL_ACTION_TRACKED: "CALL_ACTION_TRACKED",
-    CALL_LAYOUT: "CALL_LAYOUT",
-    JOIN_LEAVE_CALL: "JOIN_LEAVE_CALL",
-});
-
 /** @typedef {import("@odoo/owl").Component} Component */
 /** @typedef {import("@mail/model/record").Record} Record */
 /** @typedef {Component|Record} ActionOwner */
@@ -75,7 +64,6 @@ export const ACTION_TAGS = Object.freeze({
  * @property {Object|(params: ActionParams_T) => Object} [dropdownTemplateParams]
  * @property {Component} [extraContentComponent]
  * @property {(params: ActionParams_T) => Object} [extraContentComponentProps]
- * @property {boolean|(params: ActionParams_T) => boolean} [hasBtnBg]
  * @property {string|(params: ActionParams_T) => string} [hotkey]
  * @property {string|(params: ActionParams_T) => string} [icon]
  * @property {string|(params: ActionParams_T) => string} [iconClass]
@@ -84,11 +72,14 @@ export const ACTION_TAGS = Object.freeze({
  * @property {string|(params: ActionParams_T) => string} [name]
  * @property {string|(params: ActionParams_T) => string} [nameClass]
  * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
+ * @property {{}} [propsDropdown] Extra fixed-shape props merged into the
+ *   ones given to {@link ActionDropdown} when this action is rendered inside a dropdown's menu.
+ * @property {{rounded?: boolean, variant?: () => string}} [propsInline] Extra fixed-shape props merged into the
+ *   ones given to {@link ActionButton} when this action is rendered as a plain inline button.
  * @property {number|(params: ActionParams_T) => number} [sequence]
  * @property {boolean|(params: ActionParams_T) => boolean} [sequenceGroup]
  * @property {boolean|(params: ActionParams_T) => boolean} [sequenceQuick]
  * @property {(params: ActionParams_T) => void} [setup]
- * @property {string|string[]|(params: ActionParams_T) => string|string[]} [tags]
  */
 
 /** @template ActionParams_T */
@@ -484,17 +475,6 @@ export class Action {
         );
     }
 
-    /** @param {Action} action @returns {boolean|undefined} */
-    _hasBtnBg(action) {}
-    get hasBtnBg() {
-        return (
-            this._hasBtnBg(this.params) ??
-            (typeof this.definition.hasBtnBg === "function"
-                ? this.definition.hasBtnBg.call(this, this.params)
-                : this.definition.hasBtnBg)
-        );
-    }
-
     /** @param {Action} action @returns {string|undefined} */
     _hotkey(action) {}
     /** Determines whether this action has a keyboard hotkey to trigger the onSelected */
@@ -653,22 +633,6 @@ export class Action {
     /** setup is executed when the owner is being setup. */
     setup() {
         return this._setup(this.params) ?? this.definition.setup?.call(this, this.params);
-    }
-
-    /** @param {Action} action @returns {string|string[]|undefined} */
-    _tags(action) {}
-    /** If set, list of tags of this action. */
-    get tags() {
-        const res =
-            this._tags(this.params) ??
-            (typeof this.definition.tags === "function"
-                ? this.definition.tags.call(this, this.params)
-                : this.definition.tags);
-        return Array.isArray(res) ? res : [res];
-    }
-
-    get tagClassNames() {
-        return this.tags.map((tag) => `o-tag-${tag}`).join(" ");
     }
 }
 

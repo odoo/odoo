@@ -1,4 +1,4 @@
-import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/action";
+import { Action, useAction, UseActions } from "@mail/core/common/action";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -30,6 +30,14 @@ export const CALL_ICON_MUTED = "mic_off";
 export function registerCallAction(id, definition) {
     callActionsRegistry.add(id, definition);
 }
+
+/**
+ * Shared `propsInline` for every call action: renders the action as a
+ * `btn-inCall` button when shown inline in {@link CallActionList}. Ignored
+ * when the same action is rendered inside a dropdown (e.g. the call menu),
+ * since `ActionDropdown` does not take a variant.
+ */
+export const callButtonPropsInline = { variant: () => "btn-inCall" };
 
 /** @type {CallActionDefinition} */
 export const muteAction = {
@@ -70,18 +78,8 @@ export const muteAction = {
             });
         }
     },
-    tags: ({ action, store }) => {
-        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.DANGER);
-        }
-        if (store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
-        }
-        return tags;
-    },
 };
-registerCallAction("mute", muteAction);
+registerCallAction("mute", { ...muteAction, propsInline: callButtonPropsInline });
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
@@ -97,8 +95,12 @@ export const quickActionSettings = {
     sequence: 15,
     sequenceGroup: 100,
 };
-registerCallAction("quick-voice-settings", quickActionSettings);
+registerCallAction("quick-voice-settings", {
+    ...quickActionSettings,
+    propsInline: callButtonPropsInline,
+});
 registerCallAction("deafen", {
+    propsInline: callButtonPropsInline,
     condition: ({ owner, store, channel }) =>
         channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
@@ -108,10 +110,6 @@ registerCallAction("deafen", {
     onSelected: ({ store }) => store.rtc.toggleDeafen(),
     sequence: 10,
     sequenceGroup: 100,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.DANGER : undefined,
-    ],
 });
 /** @type {CallActionDefinition} */
 export const cameraOnAction = {
@@ -134,21 +132,8 @@ export const cameraOnAction = {
         store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 120,
-    tags: ({ action, store, channel }) => {
-        const tags = [ACTION_TAGS.CALL_ACTION_TRACKED];
-        if (action.isActive) {
-            tags.push(ACTION_TAGS.SUCCESS);
-        }
-        if (
-            channel?.default_display_mode === "video_full_screen" &&
-            store.rtc.cameraPermission !== "granted"
-        ) {
-            tags.push(ACTION_TAGS.DANGER, ACTION_TAGS.WARNING_BADGE);
-        }
-        return tags;
-    },
 };
-registerCallAction("camera-on", cameraOnAction);
+registerCallAction("camera-on", { ...cameraOnAction, propsInline: callButtonPropsInline });
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
     condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
@@ -164,7 +149,10 @@ export const quickVideoSettings = {
     sequence: 15,
     sequenceGroup: 120,
 };
-registerCallAction("quick-video-settings", quickVideoSettings);
+registerCallAction("quick-video-settings", {
+    ...quickVideoSettings,
+    propsInline: callButtonPropsInline,
+});
 /** @type {CallActionDefinition} */
 export const switchCameraAction = {
     condition: ({ channel, store }) =>
@@ -176,8 +164,9 @@ export const switchCameraAction = {
     sequence: 40,
     sequenceGroup: 100,
 };
-registerCallAction("switch-camera", switchCameraAction);
+registerCallAction("switch-camera", { ...switchCameraAction, propsInline: callButtonPropsInline });
 registerCallAction("raise-hand", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel }) => channel?.isSelfInCall,
     name: ({ store }) => (store.rtc.selfSession?.raisingHand ? _t("Lower Hand") : _t("Raise Hand")),
     isActive: ({ store }) => store.rtc.selfSession?.raisingHand,
@@ -186,12 +175,9 @@ registerCallAction("raise-hand", {
     onSelected: ({ store }) => store.rtc.raiseHand(!store.rtc.selfSession.raisingHand),
     sequence: 50,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
 });
 registerCallAction("share-screen", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel }) => channel?.isSelfInCall && !isMobileOS(),
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
@@ -205,12 +191,9 @@ registerCallAction("share-screen", {
     onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
     sequence: 40,
     sequenceGroup: 200,
-    tags: ({ action }) => [
-        ACTION_TAGS.CALL_ACTION_TRACKED,
-        action.isActive ? ACTION_TAGS.SUCCESS : undefined,
-    ],
 });
 registerCallAction("fullscreen", {
+    propsInline: callButtonPropsInline,
     btnAttrs: { "data-available-offline": true },
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall && !owner.env.pipWindow && !store.rtc.isBrowserFullscreen,
@@ -222,9 +205,9 @@ registerCallAction("fullscreen", {
         store.rtc.enterFullscreen(undefined, { browserFullscreen: true });
     },
     sequence: 70,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("wide-view", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall &&
         !owner.env.pipWindow &&
@@ -237,18 +220,18 @@ registerCallAction("wide-view", {
         store.rtc.enterFullscreen();
     },
     sequence: 72,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("minimize", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel, owner, store }) =>
         channel?.isSelfInCall && store.rtc.isFullscreen && !owner.env.pipWindow,
     name: _t("Minimize"),
     icon: "minimize",
     onSelected: ({ store }) => store.rtc.minimize(),
     sequence: 80,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("picture-in-picture", {
+    propsInline: callButtonPropsInline,
     condition: ({ owner, channel, store }) =>
         channel?.isSelfInCall && !store.env?.isSmall && !owner.env.pipWindow,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
@@ -266,9 +249,9 @@ registerCallAction("picture-in-picture", {
         }
     },
     sequence: 90,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("change-layout", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel, owner }) =>
         channel?.isSelfInCall && !owner.env.inCallMenu && !owner.env.pipWindow,
     name: _t("Change Layout"),
@@ -276,7 +259,6 @@ registerCallAction("change-layout", {
     onSelected: ({ channel, store }) =>
         store.env.services.dialog.add(ChangeLayoutDialog, { channel }),
     sequence: 60,
-    tags: ACTION_TAGS.CALL_LAYOUT,
 });
 /** @type {CallActionDefinition} */
 export const acceptWithCamera = {
@@ -289,10 +271,13 @@ export const acceptWithCamera = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel, { camera: true }),
     sequence: 100,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 };
-registerCallAction("accept-with-camera", acceptWithCamera);
+registerCallAction("accept-with-camera", {
+    ...acceptWithCamera,
+    propsInline: callButtonPropsInline,
+});
 registerCallAction("join-back", {
+    propsInline: callButtonPropsInline,
     btnClass: ({ owner }) =>
         attClassObjectToString({
             "text-nowrap pe-2 rounded-pill": true,
@@ -308,9 +293,9 @@ registerCallAction("join-back", {
         store.rtc.requestToggleCall(channel, { camera: channel.useCameraByDefault }),
     sequence: 110,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
 registerCallAction("join-with-camera", {
+    propsInline: callButtonPropsInline,
     btnClass: "text-nowrap",
     condition: ({ channel }) =>
         !channel?.isSelfInCall &&
@@ -329,7 +314,6 @@ registerCallAction("join-with-camera", {
     },
     sequence: 120,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
 /** @type {CallActionDefinition} */
 export const joinAction = {
@@ -341,9 +325,8 @@ export const joinAction = {
     onSelected: ({ channel, store }) => store.rtc.requestToggleCall(channel),
     sequence: 130,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 };
-registerCallAction("join", joinAction);
+registerCallAction("join", { ...joinAction, propsInline: callButtonPropsInline });
 /** @type {CallActionDefinition} */
 export const rejectAction = {
     btnClass: ({ owner, channel }) =>
@@ -367,10 +350,10 @@ export const rejectAction = {
     },
     sequence: 140,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
 };
-registerCallAction("reject", rejectAction);
+registerCallAction("reject", { ...rejectAction, propsInline: callButtonPropsInline });
 registerCallAction("disconnect", {
+    propsInline: callButtonPropsInline,
     condition: ({ channel }) =>
         channel?.isSelfInCall && !channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
@@ -379,7 +362,6 @@ registerCallAction("disconnect", {
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     sequence: 150,
     sequenceGroup: 300,
-    tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.DANGER],
 });
 
 export class CallAction extends Action {

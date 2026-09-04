@@ -2,13 +2,11 @@ import { Component, computed, signal, toRaw, types, useProps } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useCallActions } from "@mail/discuss/call/common/call_actions";
+import { callButtonPropsInline, useCallActions } from "@mail/discuss/call/common/call_actions";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { ActionList } from "@mail/core/common/action_list";
-import { ACTION_TAGS } from "@mail/core/common/action";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 
 export class CallActionList extends Component {
     static components = { ActionList };
@@ -34,19 +32,15 @@ export class CallActionList extends Component {
         });
         this.actions = computed(() => {
             const partition = toRaw(this.callActions).partition;
-            const other = partition.other.filter((a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT));
+            const other = partition.other;
             const group2 = [];
-            let disconnectGroupIndex = -1;
             for (const groupActions of partition.group) {
-                const filtered = groupActions.filter(
-                    (a) => !a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
-                );
-                const sequenceGroup = filtered[0].sequenceGroup;
+                const sequenceGroup = groupActions[0].sequenceGroup;
                 const hasPipActions = sequenceGroup === 200 && this.props.pipExtraActions;
                 const pipActions = hasPipActions ? this.props.pipExtraActions : [];
                 const maxQuickActions = pipActions.length > 0 ? 1 : 4;
-                const quickActions = filtered.slice(0, maxQuickActions);
-                const moreActions = [...pipActions, ...filtered.slice(maxQuickActions)];
+                const quickActions = groupActions.slice(0, maxQuickActions);
+                const moreActions = [...pipActions, ...groupActions.slice(maxQuickActions)];
                 const newGroup = moreActions?.length
                     ? [
                           ...quickActions,
@@ -62,54 +56,13 @@ export class CallActionList extends Component {
                                   }),
                                   dropdownPosition: "top-end",
                                   name: this.MORE,
+                                  propsInline: callButtonPropsInline,
                               },
                               sequenceGroup
                           ),
                       ]
                     : quickActions;
-                if (sequenceGroup >= 300 && disconnectGroupIndex === -1) {
-                    disconnectGroupIndex = group2.length;
-                }
                 group2.push(newGroup);
-            }
-            // Gather the layout actions (Fullscreen, Adjust view, Picture in Picture) into a "More"
-            // menu placed between Raise Hand and the end-call button.
-            const layoutActions = toRaw(this.callActions).actions.filter((a) =>
-                a.tags.includes(ACTION_TAGS.CALL_LAYOUT)
-            );
-            if (layoutActions.length) {
-                const layoutGroup = [
-                    this.callActions.more(
-                        this.callActionsParams,
-                        {
-                            actions: [layoutActions],
-                            // Pulse the toggle to nudge fullscreen, as the Fullscreen action that
-                            // used to carry the pulse now lives inside this menu.
-                            btnClass: ({ channel }) =>
-                                attClassObjectToString({
-                                    "o-discuss-CallActionList-pulse": Boolean(
-                                        channel?.promoteFullscreen ===
-                                            CALL_PROMOTE_FULLSCREEN.ACTIVE
-                                    ),
-                                }),
-                            dropdownMenuClass: attClassObjectToString({
-                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden": true,
-                                "o-discuss-CallActionList-menu o-inMeetingView": Boolean(
-                                    this.env.inMeetingView
-                                ),
-                            }),
-                            dropdownPosition: "top-end",
-                            id: "call-layout",
-                            name: this.MORE,
-                        },
-                        "call-layout"
-                    ),
-                ];
-                group2.splice(
-                    disconnectGroupIndex === -1 ? group2.length : disconnectGroupIndex,
-                    0,
-                    layoutGroup
-                );
             }
             return [...group2, other];
         });

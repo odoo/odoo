@@ -1,0 +1,25 @@
+.btn-call {
+    @include button-variant(
+        darken($success, 10%),
+        darken($success, 10%),
+        $color: white,
+        $hover-color: white,
+        $active-color: white
+    );
+
+    i {
+        text-shadow: 0px 0px 1px darken($success, 10%);
+    }
+}
+
+// Ported from the pre-refactor `.o-inDiscussCall .o-hasBtnBg` rule in
+// action_list.dark.scss (the real dark theme, not the simulated one).
+.btn-inCall {
+    background-color: $gray-200;
+    border-color: rgba(white, 0.1);
+
+    &:hover {
+        background-color: mix($gray-200, white, 90%);
+        filter: none;
+    }
+}
