@@ -1,5 +1,5 @@
 import {
-    clickOnEditAndWaitEditModeInTranslatedPage,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
@@ -268,18 +268,11 @@ registerWebsitePreviewTour(
                 ":iframe body:not(:has(#wrap p font:first:text(paragraphs <b>describing</b>)))",
         },
         {
-            content: "return to Parseltongue version",
-            trigger: ':iframe .js_language_selector a[data-url_code="pa_GB"]',
-            run: "click",
+            content: "check edit button is not in translate mode",
+            trigger:
+                "body .o_menu_systray .o_menu_systray_item.o_edit_website_container button:not(.o-dropdown)",
         },
-        {
-            content: "check: placeholder translation",
-            trigger: ':iframe input[placeholder="test Parseltongue placeholder"]',
-        },
-        {
-            trigger: ":iframe .js_language_selector > button:contains(Parseltongue)",
-        },
-        ...clickOnEditAndWaitEditModeInTranslatedPage(),
+        ...clickOnEditAndWaitEditMode(),
         {
             content: "select text",
             trigger: ":iframe #wrap p",
