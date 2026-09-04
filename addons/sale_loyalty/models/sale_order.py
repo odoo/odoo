@@ -313,20 +313,13 @@ class SaleOrder(models.Model):
             product.taxes_id._filter_taxes_by_company(self.company_id)
         )
         points = self._get_real_points_for_coupon(coupon)
-        claimable_count = (
-            float_round(
-                points / reward.required_points, precision_rounding=1, rounding_method="DOWN"
-            )
-            if not reward.clear_wallet
-            else 1
-        )
-        cost = points if reward.clear_wallet else claimable_count * reward.required_points
+        cost = points if reward.clear_wallet else reward.required_points
         return [
             {
                 "name": reward.description,
                 "product_id": product.id,
                 "discount": 100,
-                "product_uom_qty": reward.reward_product_qty * claimable_count,
+                "product_uom_qty": reward.reward_product_qty,
                 "reward_id": reward.id,
                 "coupon_id": coupon.id,
                 "points_cost": cost,
@@ -1821,17 +1814,18 @@ class SaleOrder(models.Model):
 
             if invoice._is_ready_to_be_sent():
                 invoice.is_move_sent = True  # Mark invoice as sent
-                send_context = {'allow_raising': False, 'allow_fallback_pdf': True}
+                send_context = {"allow_raising": False, "allow_fallback_pdf": True}
 
                 default_template_param = (
-                    self.env['ir.config_parameter']
+                    self
+                    .env["ir.config_parameter"]
                     .sudo()
-                    .get_int('sale.default_invoice_email_template')
+                    .get_int("sale.default_invoice_email_template")
                 )
 
                 if default_template_param:
-                    mail_template = self.env['mail.template'].sudo().browse(default_template_param)
+                    mail_template = self.env["mail.template"].sudo().browse(default_template_param)
                     if mail_template.exists():
-                        send_context['mail_template'] = mail_template
+                        send_context["mail_template"] = mail_template
 
-                self.env['account.move.send']._generate_and_send_invoices(invoice, **send_context)
+                self.env["account.move.send"]._generate_and_send_invoices(invoice, **send_context)
