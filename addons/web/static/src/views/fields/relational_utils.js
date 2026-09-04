@@ -159,7 +159,8 @@ export function useSpecialData(loadFn) {
     ormWithCache.call = async (...args) => {
         const key = JSON.stringify(args);
         if (!specialDataCaches[key]) {
-            return await orm
+            // Store synchronously so concurrent cells share a single request.
+            specialDataCaches[key] = orm
                 .cache({
                     type: "disk",
                     update: "always",
