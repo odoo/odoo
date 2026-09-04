@@ -32,9 +32,6 @@
                 <button class="btn btn-link px-1" aria-label="Search Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.SEARCH }" title="Search Messages" t-on-click="this.onClickSearch">
                     <i class="oi oi-fw" data-icon="search" role="img"/>
                 </button>
-                <button t-if="this.hasPinnedMessages" class="btn btn-link p-1" aria-label="Pinned Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.PINNED_MESSAGES }" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
-                    <i class="oi oi-fw" data-icon="push_pin" role="img"/>
-                </button>
                 <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
                     <i class="oi oi-fw" data-icon="fullscreen_exit" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
@@ -112,16 +109,9 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="this.state.activePanel === this.CHATTER_PANEL.PINNED_MESSAGES and this.hasPinnedMessages" class="o-mail-pinnedMessages bg-inherit">
-                    <div class="d-flex align-items-center">
-                        <hr class="flex-grow-1"/>
-                        <span class="p-3 fw-bold">Pinned Messages</span>
-                        <hr class="flex-grow-1"/>
-                    </div>
-                    <div class="d-flex flex-column">
-                        <MessageCardList messages="this.state.thread.sortedPinnedMessages" thread="this.state.thread" mode="'pin'"/>
-                    </div>
-                </div>
+                <t t-if="this.hasPinnedMessages and !this.messageSearch.searching and !this.messageSearch.searched">
+                    <t t-call="mail.PinnedMessagesList"/>
+                </t>
                 <t t-if="this.webChatterProps.has_activities and this.activities.length and !this.messageSearch.searching and !this.messageSearch.searched">
                     <t t-call="mail.ActivityList"/>
                 </t>
@@ -131,6 +121,23 @@
                 <SearchMessageResult t-if="this.messageSearch.searching or this.messageSearch.searched" thread="this.state.thread"  messageSearch="this.messageSearch" onClickJump.bind="this.closeSearch"/>
                 <Thread t-else="" thread="this.state.thread" t-key="this.state.thread.localId" order="'desc'" scrollRef="this.rootRef" jumpPresent="this.state.jumpThreadPresent"/>
             </t>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.PinnedMessagesList">
+    <div class="o-mail-pinnedMessages bg-inherit">
+        <div class="d-flex pt-2 px-2 cursor-pointer fw-bold" t-on-click="this.togglePinnedMessages">
+            <hr class="flex-grow-1 fs-3"/>
+            <div class="d-flex align-items-center px-3">
+                <i class="oi oi-fw" t-att-data-icon="this.state.showPinnedMessages ? 'arrow_drop_down' : 'arrow_right'"/>
+                Pinned Messages
+                <span t-if="!this.state.showPinnedMessages" class="badge rounded-pill ms-2 text-bg-success" t-out="this.state.thread.pinnedMessagesCount"/>
+            </div>
+            <hr class="flex-grow-1 fs-3"/>
+        </div>
+        <div t-if="this.state.showPinnedMessages" class="d-flex flex-column">
+            <MessageCardList messages="this.state.thread.sortedPinnedMessages" thread="this.state.thread" mode="'pin'"/>
         </div>
     </div>
 </t>

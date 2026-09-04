@@ -3046,6 +3046,21 @@ class MailThread(models.AbstractModel):
                 values['body'] = self._message_compute_body_with_trackings(values['body'], record_tracking_values)
         return self.sudo()._message_create(values_list)
 
+    def _get_pinned_messages_domain(self):
+        return (
+            Domain("model", "=", self._name)
+            & Domain("res_id", "in", self.ids)
+            & Domain("pinned_at", "!=", False)
+        )
+
+    def _get_pinned_messages_count_by_tid(self):
+        return defaultdict(
+            int,
+            self.env["mail.message"]._read_group(
+                self._get_pinned_messages_domain(), ["res_id"], ["__count"],
+            ),
+        )
+
     def set_message_pin(self, message_id, pinned):
         """(Un)pin a message on the thread.
         The message must belong to the thread on which it is called.
@@ -3071,7 +3086,11 @@ class MailThread(models.AbstractModel):
             "UPDATE mail_message SET pinned_at=%(pinned_at)s WHERE id=%(id)s",
             {"pinned_at": fields.Datetime.now() if pinned else None, "id": message.id},
         )
-        Store(bus_channel=message).add(message, ["pinned_at"])
+        Store(bus_channel=message).add(message, ["pinned_at"]).add(
+            self,
+            {"pinned_message_count": self._get_pinned_messages_count_by_tid()[self.id]},
+            as_thread=True,
+        )
         return True
 
     # ------------------------------------------------------------
@@ -5197,6 +5216,22 @@ class MailThread(models.AbstractModel):
     # STORE
     # ------------------------------------------------------
 
+    def _store_pinned_messages_fields(self, res: Store.FieldList, *, request_list):
+        if "pinned_message_count" in request_list:
+            pinned_count_by_tid = self._get_pinned_messages_count_by_tid()
+            res.attr("pinned_message_count", lambda t: pinned_count_by_tid[t.id])
+        if "pinnedMessages" in request_list:
+            pinned_domain = self._get_pinned_messages_domain()
+            messages_by_tid = defaultdict(
+                self.env["mail.message"].browse,
+                self.env["mail.message"].search_fetch(pinned_domain).grouped("res_id"),
+            )
+            res.many(
+                "pinnedMessages",
+                "_store_message_fields",
+                value=lambda t: messages_by_tid[t.id],
+            )
+
     def _store_thread_fields(self, res: Store.FieldList, *, request_list, **kwargs):
         if res.is_for_current_user():
             res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
@@ -5267,28 +5302,7 @@ class MailThread(models.AbstractModel):
             self._store_message_followers_fields(res, filter_recipients=True, reset=True)
         if "display_name" in request_list:
             res.attr("display_name")
-        pinned_domain = (
-            Domain("res_id", "in", self.ids)
-            & Domain("model", "=", self._name)
-            & Domain("pinned_at", "!=", False)
-        )
-        if res.is_for_internal_users() and "has_pinned_messages" in request_list:
-            pinned_count_by_tid = defaultdict(
-                int,
-                self.env["mail.message"]._read_group(pinned_domain, ["res_id"], ["__count"]),
-            )
-            res.attr("has_pinned_messages", lambda t: pinned_count_by_tid[t.id] > 0)
-        if res.is_for_internal_users() and "pinned_messages" in request_list:
-            messages_by_tid = defaultdict(
-                self.env["mail.message"].browse,
-                self.env["mail.message"].search_fetch(pinned_domain).grouped("res_id"),
-            )
-            res.many(
-                "pinned_messages",
-                "_store_message_fields",
-                only_data=True,
-                value=lambda t: messages_by_tid[t.id],
-            )
+        self._store_pinned_messages_fields(res, request_list=request_list)
         if "scheduledMessages" in request_list:
             domain = Domain("model", "=", self._name) & Domain("res_id", "in", self.ids)
             scheduled_messages = self.env["mail.scheduled.message"].search_fetch(domain)
