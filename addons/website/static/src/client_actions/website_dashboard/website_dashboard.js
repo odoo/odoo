@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Layout } from "@web/search/layout";
@@ -21,12 +20,12 @@ class WebsiteDashboard extends Component {
             dashboards: {},
         });
 
-        useLayoutEffect(
-            () => {
-                this.fetchData();
-            },
-            () => [this.state.website]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.fetchData();
+        //     },
+        //     () => [this.state.website]
+        // );
     }
 
     get display() {
