@@ -256,9 +256,17 @@ class SaleOrder(models.Model):
         return super()._cart_find_product_line(*args, **kwargs).filtered(
             lambda sol: not sol.is_reward_line
         )
+<<<<<<< 710f380fba9b4d6f6ab529d0f4accf6847589f17
 
     def _recompute_cart(self):
         """Recompute cart with loyalty programs and rewards applied."""
         self._update_programs_and_rewards()
         self._auto_apply_rewards()
         super()._recompute_cart()
+||||||| dc6ce8a055ac495c4d4bc75d57da38437ceaf06a
+=======
+
+    def _get_zero_priced_lines(self):
+        """Exclude reward lines from the prevented zero-priced rule."""
+        return super()._get_zero_priced_lines().filtered(lambda line: not line.is_reward_line)
+>>>>>>> cdafb3ed18aa32429070cebabd863244785f086c
