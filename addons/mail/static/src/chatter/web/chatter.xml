@@ -5,10 +5,7 @@
     <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.webChatterProps.isChatterAside, 'o-chatter-disabled': this.thread().id === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
         <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
-                <div t-if="this.state.activePanel === this.CHATTER_PANEL.SEARCH" class="flex-grow-1">
-                    <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>
-                </div>
-                <div t-else="" class="d-flex gap-1">
+                <div t-if="this.state.activePanel !== this.CHATTER_PANEL.SEARCH" class="d-flex gap-1">
                     <button class="o-mail-Chatter-sendMessage btn text-nowrap my-2" t-att-class="{
                         'btn-primary': this.state.composerType !== 'note',
                         'btn-secondary': this.state.composerType === 'note',
@@ -28,11 +25,14 @@
                         <span>Activity</span>
                     </button>
                 </div>
-                <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
-                <button class="btn btn-link px-1" aria-label="Search Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.SEARCH }" title="Search Messages" t-on-click="this.onClickSearch">
-                    <i class="oi oi-fw" data-icon="search" role="img"/>
-                </button>
-                <button t-if="this.hasPinnedMessages" class="btn btn-link p-1" aria-label="Pinned Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.PINNED_MESSAGES }" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
+                <span class="o-mail-Chatter-topbarGrow" t-att-class="{ 'o-isCollapsed': this.state.activePanel === this.CHATTER_PANEL.SEARCH }"/>
+                <div class="o-mail-Chatter-search d-flex align-items-center align-self-center mw-100 overflow-hidden" t-att-class="{ 'my-2 o-isOpen': this.state.activePanel === this.CHATTER_PANEL.SEARCH }">
+                    <button t-if="this.state.activePanel !== this.CHATTER_PANEL.SEARCH" class="o-mail-Chatter-searchIcon btn btn-link d-flex align-items-center px-1 text-muted flex-grow-0 flex-shrink-0 h-100" aria-label="Search Messages" title="Search Messages" aria-expanded="false" t-on-click="this.onClickSearch">
+                        <i class="oi oi-fw" data-icon="search" role="img"/>
+                    </button>
+                    <SearchMessageInput t-else="" closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>
+                </div>
+                <button t-if="this.hasPinnedMessages" class="o-mail-Chatter-pin btn btn-link p-1" aria-label="Pinned Messages" t-att-class="{ 'text-muted': this.state.activePanel !== this.CHATTER_PANEL.PINNED_MESSAGES, 'o-isActive': this.state.activePanel === this.CHATTER_PANEL.PINNED_MESSAGES, 'o-isJustPinned': this.justPinned.value }" title="Pinned Messages" t-on-click="this.onClickPinnedMessages">
                     <i class="oi oi-fw" data-icon="push_pin" role="img"/>
                 </button>
                 <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">

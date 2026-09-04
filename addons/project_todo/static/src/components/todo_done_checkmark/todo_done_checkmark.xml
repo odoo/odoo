@@ -8,14 +8,14 @@
                t-on-mouseleave="this.actualizeDoneState"
                t-on-mouseover="this.freezeDoneState"
                class="o_todo_done_button oi oi-lg"
-               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone}"
+               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone, 'o-isJustDone': this.justDone.value}"
                data-icon="check_circle"/>
         </t>
         <t t-else="">
             <a t-att-title="this.stateDone.isDone ? 'Mark as to-do' : 'Mark as done'"
                t-on-click.stop="this.onDoneToggled"
                class="o_todo_done_button_mobile oi oi-lg"
-               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone}"
+               t-att-class="{'oi-filled done_button_enabled': this.stateDone.isDone, 'o-isJustDone': this.justDone.value}"
                data-icon="check_circle"/>
         </t>
     </t>

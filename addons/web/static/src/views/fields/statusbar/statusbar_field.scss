@@ -10,6 +10,7 @@
         }
 
         // TODO: replace the following properties with utility classes ?
+        position: relative;
         display: flex;
         align-content: space-around;
         margin-left: auto;
@@ -26,9 +27,44 @@
         --o-statusbar-button-padding-x: calc(#{$btn-padding-x} - var(--o-statusbar-padding));
         --o-statusbar-button-padding-y: calc(#{$btn-padding-y} - var(--o-statusbar-padding));
 
+        // Travelling background of the selected item, laid out by the component
+        // from the measured geometry of that item.
+        > .o_statusbar_highlighter {
+            position: absolute;
+            top: var(--o-statusbar-highlight-y, 0);
+            left: 0;
+            z-index: 0;
+            width: var(--o-statusbar-highlight-width, 0);
+            height: var(--o-statusbar-highlight-height, 100%);
+            transform: translateX(var(--o-statusbar-highlight-x, 0));
+            background-color: var(--o-statusbar-background-current, #{map-get($-btn-secondary-design, active-background)});
+            border-radius: $btn-border-radius;
+            pointer-events: none;
+
+            &.o_last {
+                border-top-left-radius: var(--o-statusbar-radius);
+                border-bottom-left-radius: var(--o-statusbar-radius);
+            }
+
+            &.o_first {
+                border-top-right-radius: var(--o-statusbar-radius);
+                border-bottom-right-radius: var(--o-statusbar-radius);
+            }
+        }
+
+        &.o-statusbar-animated > .o_statusbar_highlighter {
+            transition:
+                transform .2s ease-out,
+                width .2s ease-out;
+        }
 
         .o_arrow_button:not(.d-none) {
+            // Above the highlighter, which the buttons let show through.
+            position: relative;
+
             --#{$prefix}btn-disabled-color: var(--#{$prefix}btn-active-color);
+            --#{$prefix}btn-disabled-bg: transparent;
+            --#{$prefix}btn-disabled-border-color: transparent;
 
             @include media-breakpoint-up(md) {
                 padding: var(--o-statusbar-button-padding-y) var(--o-statusbar-button-padding-x);

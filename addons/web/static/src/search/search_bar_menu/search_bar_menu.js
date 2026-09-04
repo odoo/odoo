@@ -20,6 +20,10 @@ import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
+const MENU_UNFOLD_DURATION = 200;
+/** Same hue as the shadow it grows into, so only its alpha and spread move. */
+const MENU_UNFOLD_SHADOW_FROM = "0 0 0 rgba(0, 0, 0, 0)";
+
 export class SearchBarMenu extends Component {
     static template = "web.SearchBarMenu";
     static components = {
@@ -37,6 +41,7 @@ export class SearchBarMenu extends Component {
 
     setup() {
         this.facet_icons = FACET_ICONS;
+        this.unfoldedMenus = new WeakSet();
         // Filter
         this.actionService = useService("action");
         // GroupBy
@@ -97,6 +102,36 @@ export class SearchBarMenu extends Component {
     onAddCustomDateFilterClick({ fieldName, fieldType }) {
         const domain = domainFromTree(condition(fieldName, "in range", [fieldType, "today"]));
         this.env.searchModel.spawnCustomFilterDialog({ domain });
+    }
+
+    /**
+     * Unfolds the menu downwards, its shadow settling in with it. Driven from
+     * here rather than from a stylesheet because the arrival height has to be
+     * measured: `auto` is not an interpolable value.
+     *
+     * @param {HTMLElement} el the menu, already placed by the popover
+     */
+    onMenuPositioned(el) {
+        // Growing the height resizes the popover, which has it repositioned,
+        // which calls back here. Each menu unfolds once.
+        if (this.unfoldedMenus.has(el)) {
+            return;
+        }
+        this.unfoldedMenus.add(el);
+
+        const { height, boxShadow } = getComputedStyle(el);
+        // The utility, not an inline style: `reposition` re-applies its own
+        // inline `overflow-y: auto` on every frame of the growth, and only the
+        // utility's `!important` outranks that. Left alone, the box would paint
+        // its content outside the height being animated, and flash a scrollbar.
+        el.classList.add("overflow-hidden");
+        el.animate(
+            {
+                height: ["0px", height],
+                boxShadow: [MENU_UNFOLD_SHADOW_FROM, boxShadow],
+            },
+            { duration: MENU_UNFOLD_DURATION, easing: "ease-out" }
+        ).finished.then(() => el.classList.remove("overflow-hidden"));
     }
 
     /**

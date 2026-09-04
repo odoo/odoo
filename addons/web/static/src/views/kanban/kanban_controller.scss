@@ -151,9 +151,26 @@
         border-radius: $border-radius-lg;
         background-color: $o-view-background-color;
         margin-bottom: map-get($spacers, 3);
-        // TODO: Use variables from card.scss.
-        // We may need to define the card variables on o_kanban_renderer parent so it's accessible from this element.
-        padding: 14px;
+
+        // `clip` and not `hidden`: the latter would make the card a scroll
+        // container, and the browser would scroll the autofocused input into
+        // view, dragging the whole content up until the card is tall enough to
+        // hold it.
+        &.o-isUnfolding {
+            overflow: clip;
+        }
+
+        // The padding belongs to the content, not to the card, because the card
+        // grows from `height: 0` as it appears. Padding of its own would leave a
+        // band of content showing through at the very first frame, and would
+        // give the form inside a definite containing block, resolving its
+        // `min-height: 100%` and stretching it — which pushed the buttons down
+        // as the card grew. An `auto` height here keeps both from happening.
+        > .o_kanban_quick_create_content {
+            // TODO: Use variables from card.scss.
+            // We may need to define the card variables on o_kanban_renderer parent so it's accessible from this element.
+            padding: 14px;
+        }
 
         .o_form_view .o_inner_group {
             margin: 0;
@@ -389,4 +406,14 @@
     .o_kanban_counter {
         @include o-sample-data-disabled;
     }
+}
+
+// Kanban Grouped Layout - Column Unfolding
+// ============================================================================
+
+// The growth itself is timed in `kanban_renderer.js`, which has to measure the
+// width it grows into. `clip` and not `hidden`, so that the column does not
+// briefly become a scroll container.
+.o_kanban_group.o-isUnfolding {
+    overflow: clip;
 }

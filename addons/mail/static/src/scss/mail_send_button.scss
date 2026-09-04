@@ -1,0 +1,95 @@
+// ------------------------------------------------------------------
+// Send animation
+// ------------------------------------------------------------------
+
+// Adapted from the button/loader prototype. Two departures from it, both forced
+// by the target being a server-rendered view button:
+//
+//  * No markup to lean on — no spinner or check element can be added — so the
+//    shape rides `::before` and the arc rides `::after`, while the label element
+//    the view button already emits is faded out.
+//
+//  * The collapse is an `inset` animation on that pseudo-element rather than a
+//    `width` one on the button: a `width` cannot be interpolated away from
+//    `auto`, and this label is translated. Shrinking an overlay instead leaves
+//    the button's own box, hence the dialog's footer layout, untouched.
+//
+// `:disabled` is the trigger: `executeButtonCallback` disables every button for
+// exactly as long as the action runs, so the spinner lasts the real send and
+// needs no script. The marker class is what tells the clickable Send apart from
+// the permanently disabled one the arch declares beside it.
+
+$o-mail-SendButton-collapse: .3s;
+$o-mail-SendButton-spin: 1s;
+$o-mail-SendButton-ring: 2px;
+
+@keyframes o-mail-SendButton-collapse {
+    from {
+        inset: 0;
+        border-radius: $btn-border-radius;
+        border-width: 0;
+        background-color: var(--bs-btn-bg);
+    }
+    to {
+        // Left and right pulled in to whatever makes the remaining box square.
+        inset: 0 calc(50% - .5lh - #{$btn-padding-y});
+        border-radius: 50%;
+        border-width: $o-mail-SendButton-ring;
+        background-color: transparent;
+    }
+}
+
+@keyframes o-mail-SendButton-spin {
+    from { transform: rotate(-90deg); }
+    to { transform: rotate(270deg); }
+}
+
+@keyframes o-mail-SendButton-fade {
+    to { opacity: 1; }
+}
+
+.o_mail_send.o-hasSendAnimation:disabled {
+    // The button keeps its box and loses only its skin: the shape below is what
+    // is seen from here on.
+    background-color: transparent;
+    border-color: transparent;
+    opacity: 1;
+
+    // Collapsing shape, ending as the ring the arc runs on.
+    &::before {
+        content: "";
+        position: absolute;
+        border: 0 solid var(--bs-btn-bg);
+        animation: o-mail-SendButton-collapse $o-mail-SendButton-collapse ease-in-out both;
+    }
+
+    // Rotating arc, held back until the shape has finished closing in.
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: calc(1lh + #{$btn-padding-y * 2});
+        height: calc(1lh + #{$btn-padding-y * 2});
+        margin: calc(-.5lh - #{$btn-padding-y}) 0 0 calc(-.5lh - #{$btn-padding-y});
+        border: $o-mail-SendButton-ring solid transparent;
+        border-top-color: var(--bs-btn-bg);
+        border-radius: 50%;
+        opacity: 0;
+        animation:
+            o-mail-SendButton-fade $o-mail-SendButton-collapse linear $o-mail-SendButton-collapse both,
+            o-mail-SendButton-spin $o-mail-SendButton-spin linear $o-mail-SendButton-collapse infinite;
+    }
+
+    // The label goes, but keeps holding the width so the footer does not reflow.
+    > span {
+        opacity: 0;
+        transition: opacity $o-mail-SendButton-collapse ease-in-out;
+    }
+}
+
+// `position: relative` is needed at rest too: setting it only while disabled
+// would reposition the pseudo-elements a frame late.
+.o_mail_send.o-hasSendAnimation {
+    position: relative;
+}

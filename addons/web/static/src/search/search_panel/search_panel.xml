@@ -12,7 +12,9 @@
 </t>
 
 <t t-name="web.SearchPanel.Sidebar">
-    <div class="h-100 o_search_panel_sidebar cursor-pointer d-print-none mx-3" t-on-click="this.toggleSidebar">
+    <div class="h-100 o_search_panel_sidebar cursor-pointer d-print-none mx-3"
+         t-attf-class="{{ this.justToggledSidebar.value ? 'o-isToggling' : '' }}"
+         t-on-click="this.toggleSidebar">
         <t t-set="categories" t-value="this.getCategorySelection()" />
         <t t-set="filters" t-value="this.getFilterSelection()" />
         <div class="d-flex">
@@ -55,10 +57,11 @@
 <t t-name="web.SearchPanelContent">
     <div class="o_search_panel flex-grow-0 flex-shrink-0 pb-5 ps-3 overflow-auto position-relative"
          t-att-class="this.env.searchModel.searchPanelInfo.className"
+         t-attf-class="{{ this.justToggledSidebar.value ? 'o-isToggling' : '' }}"
          t-ref="this.root">
         <div t-if="!this.uiService.isSmall" class="d-flex align-items-center pt-2">
 
-            <button class="btn btn-light btn-sm ms-auto p-2 lh-1" t-on-click="this.toggleSidebar">
+            <button class="o_search_panel_sidebar_button btn btn-light btn-sm ms-auto p-2 lh-1" t-on-click="this.toggleSidebar">
                 <i class="oi" data-icon="left_panel_close"/>
             </button>
         </div>
@@ -71,7 +74,7 @@
             t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
             >
             <header
-                class="o_search_panel_section_header ps-1 pb-2 text-uppercase cursor-default"
+                class="o_search_panel_section_header ps-1 pb-2 text-uppercase cursor-default text-nowrap"
                 t-attf-class="{{section_first ? 'pt-2' : 'pt-3'}}">
                 <i t-attf-class="oi o_search_panel_section_icon {{!section.color &amp;&amp; section.type == 'filter' ? 'text-warning' : !section.color ? 'text-primary': ''}} me-2" t-att-class="section.iconClass" t-att-data-icon="section.icon"
                     t-att-style="section.color and ('color: ' + section.color)"

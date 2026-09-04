@@ -65,6 +65,22 @@
 }
 
 // Invalid
+@keyframes o-field-shake {
+    20%, 60% { transform: translateX(-.25em); }
+    40%, 80% { transform: translateX(.25em); }
+}
+
+.o_field_invalid {
+    // Runs as the class lands, which is what a failed validation does. It will
+    // not replay on a second failed save while the field is already invalid:
+    // nothing changed for the element, so the animation has nothing to restart.
+    &.o_input, > .o_input {
+        @media (prefers-reduced-motion: no-preference) {
+            animation: o-field-shake .3s ease-in-out;
+        }
+    }
+}
+
 .o_field_invalid:not(:focus-within) {
     &.o_input, > .o_input, &.o_form_label {
         color: o-text-color('danger');

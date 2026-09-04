@@ -171,14 +171,17 @@
                         />
                     </t>
                     <t t-else="">
-                        <Dropdown>
+                        <Dropdown
+                            onPositioned="(el, solution) => this.onSectionMenuPositioned(el, section.id, solution)"
+                            onStateChanged="(isOpen) => this.onSectionMenuStateChanged(isOpen, section.id)">
                             <button t-att-data-hotkey="hotkey" t-att-data-menu-xmlid="section.xmlid" data-available-offline="">
                                 <span t-out="section.name" t-att-data-section="section.id" />
                             </button>
                             <t t-set-slot="content">
                                 <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
                                     items="section.childrenTree"
-                                    decalage="20"/>
+                                    decalage="20"
+                                    isNested="false"/>
                             </t>
                         </Dropdown>
                     </t>
@@ -208,7 +211,7 @@
         class="{
           'dropdown-item': true,
           o_disabled_offline: !this._isAvailable(item),
-          o_dropdown_menu_group_entry: decalage gt 20
+          o_dropdown_menu_group_entry: isNested
         }"
         t-out="item.name"
         onSelected="() => this.onNavBarDropdownItemSelection(item)"
@@ -219,7 +222,8 @@
         <div class="dropdown-menu_group dropdown-header" t-att-style="style" t-out="item.name" />
         <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
             items="item.childrenTree"
-            decalage="decalage + 12"/>
+            decalage="decalage + 12"
+            isNested="true"/>
       </t>
     </t>
   </t>
@@ -251,7 +255,8 @@
               />
               <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot"
                   items="section.childrenTree"
-                  decalage="20"/>
+                  decalage="20"
+                  isNested="false"/>
             </t>
           </t>
         </t>

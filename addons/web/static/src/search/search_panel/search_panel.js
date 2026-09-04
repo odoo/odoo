@@ -1,6 +1,7 @@
 import { Component, onWillStart, onWillUpdateProps, proxy, signal, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { ANIMATION_DURATION, useAnimationMark } from "@web/core/utils/animation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { render } from "@web/owl2/utils";
@@ -57,6 +58,10 @@ export class SearchPanel extends Component {
             sidebarExpanded: true,
         });
         this.hasImportedState = false;
+        // Both sides of the sidebar animate in as they are mounted, and mounting
+        // alone is not the cue: on page load the panel is simply there, and it
+        // has not been toggled.
+        this.justToggledSidebar = useAnimationMark(ANIMATION_DURATION.mount);
         this.scrollTop = 0;
         this.dropdownStates = {};
         this.width = "10px";
@@ -313,6 +318,7 @@ export class SearchPanel extends Component {
 
     toggleSidebar() {
         this.state.sidebarExpanded = !this.state.sidebarExpanded;
+        this.justToggledSidebar.mark();
         browser.localStorage.setItem(this.keyExpandSidebar, this.state.sidebarExpanded);
     }
 

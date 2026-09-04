@@ -60,6 +60,16 @@
         --list-group-item-padding-y: var(--SearchPanelHeader-padding-y, calc(#{map-get($spacers, 2)} - var(--SearchPanelHeader-margin-y)));
         --list-group-item-padding-x: 0;
 
+        position: relative;
+
+        &.list-group-item-action {
+            @include o-activeHighlight(var(--list-group-active-bg));
+
+            &.active {
+                @include o-activeHighlight-shown;
+            }
+        }
+
         &:where(:not(.list-group-item-action, .o_search_panel_filter_value)) {
             // This acts as a margin, we use padding to avoid space between
             // pseudo elements used to display the tree.
@@ -165,6 +175,32 @@
     .o_search_panel_category_value_header.active:hover {
         .o_toggle_fold {
             color: var(--SearchPanelHeader-hover-fold-color, #{$black});
+        }
+    }
+}
+
+// ------- SearchPanel expansion -------
+
+@keyframes o-searchPanel-flipToggle {
+    from { transform: perspective(200px) rotateY(-180deg); }
+}
+
+// Hung on `o-isToggling`, which only a toggle sets (@see o-mountAnimation).
+@include media-breakpoint-up(md) {
+    .o-isToggling {
+        &.o_search_panel {
+            // Unfolding mounts this panel in place of the sidebar strip, so it
+            // grows from the strip's width rather than from nothing.
+            --sidePanel-expand-minWidth: 3rem;
+
+            @include o-mountAnimation(o-sidePanel-expand);
+        }
+
+        // Carried by both sides of the toggle, so the icon turns over as the
+        // panel it belongs to appears: the strip and the panel each mount the
+        // other's.
+        .o_search_panel_sidebar_button {
+            @include o-mountAnimation(o-searchPanel-flipToggle);
         }
     }
 }

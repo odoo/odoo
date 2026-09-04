@@ -168,3 +168,24 @@
         transform: translateX(100%);
     }
 }
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: scale(.8);
+    }
+}
+
+@keyframes modal-backdrop-in {
+    from { background-color: rgba($modal-backdrop-bg, 0); }
+}
+
+.o_dialog > .modal {
+    @media (prefers-reduced-motion: no-preference) {
+        animation: modal-backdrop-in $o-modal-animation-duration $o-easing-enter;
+
+        .modal-content {
+            animation: modal-in $o-modal-animation-duration $o-easing-enter;
+        }
+    }
+}
