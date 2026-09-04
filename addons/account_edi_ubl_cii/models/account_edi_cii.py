@@ -499,7 +499,7 @@ class AccountEdiCii(models.AbstractModel):
         if invoice.company_id._has_l10n_de_stnr():
             seller_extra_tax_registrations.append({'scheme': 'FC', 'value': invoice.company_id.l10n_de_stnr})
         return self._cii_get_partner_trade_party_node(vals, {
-            'gln': False,
+            'gln': supplier.peppol_endpoint if supplier.peppol_eas == '0088' else None,
             'name': supplier.name,
             'partner_specified_legal_organization': siret,
             'partner_specified_legal_organization_scheme': scheme_id,
@@ -526,7 +526,7 @@ class AccountEdiCii(models.AbstractModel):
         if (vat := partner_values.get('partner_tax_registration', '')) and not self._cii_is_vat_void(vat):
             tax_registrations.insert(0, {'scheme': 'VA', 'value': vat})
         return {
-            'ram:ID': {
+            'ram:GlobalID': {
                 'schemeID': '0088',
                 '_text': partner_values['gln'],
             } if partner_values['gln'] else None,
@@ -588,7 +588,7 @@ class AccountEdiCii(models.AbstractModel):
             scheme_id = "0002"
         buyer_vat = customer.vat if not self._cii_is_vat_void(customer.vat) else None
         return self._cii_get_partner_trade_party_node(vals, {
-            'gln': False,
+            'gln': customer.peppol_endpoint if customer.peppol_eas == '0088' else None,
             'name': name,
             'partner_specified_legal_organization': siret,
             'partner_specified_legal_organization_scheme': scheme_id,
@@ -618,10 +618,9 @@ class AccountEdiCii(models.AbstractModel):
         }
 
     def _cii_get_ship_to_trade_party_node(self, vals):
-        invoice = vals['invoice']
         partner_shipping = vals['partner_shipping']
         return self._cii_get_partner_trade_party_node(vals, {
-            'gln': 'global_location_number' in invoice.partner_shipping_id._fields and invoice.partner_shipping_id.global_location_number,
+            'gln': 'global_location_number' in partner_shipping._fields and partner_shipping.global_location_number,
             'name': partner_shipping.name,
             'partner_specified_legal_organization': False,
             'partner_specified_legal_organization_scheme': None,
