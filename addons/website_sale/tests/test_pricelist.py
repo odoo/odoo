@@ -865,7 +865,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
 
         # Create and add demo user to 2 companies
         self.company1 = self.demo_user.company_id
-        self.company2 = self.add_company('base.test_company_be')
+        self.company2 = self.add_company('base.test_company_with_branch')
         self.demo_user.company_ids += self.company2
         # Set company2 as current company for demo user
         Website = self.env["website"]

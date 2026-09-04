@@ -152,7 +152,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def test_fiscal_position_multicompany(self):
         """A move is assigned a fiscal position that matches its own company."""
         company1 = self.company_data["company"]
-        company2 = self.add_company('base.test_company_be')
+        company2 = self.add_company('base.test_company_with_branch')
         partner = self.env['res.partner'].create({'name': 'Belouga'})
         fpos1 = self.env["account.fiscal.position"].create(
             {

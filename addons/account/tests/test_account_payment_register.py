@@ -1995,7 +1995,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         self.cr.precommit.run()
         branches = self.branch + (self.env.company.child_ids - self.branch)
         self.user_branch.company_ids = branches
-        company_2 = self.add_company('base.test_company_be')
+        company_2 = self.add_company('base.test_company')
         self.env.user.company_ids = self.env.company + branches + company_2
         # PART 1: Basic cases
         # create invoices on branches

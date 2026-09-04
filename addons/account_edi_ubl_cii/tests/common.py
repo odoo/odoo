@@ -24,6 +24,8 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
     @classmethod
     def setup_independent_company(cls):
         company = cls.env.ref('base.test_company_be')
+
+        company.account_fiscal_country_id = cls.env.ref('base.be')
         company.currency_id = cls.env.ref('base.EUR')
         company.tax_calculation_rounding_method = 'round_globally'
         company.name = "Secondary Test Company"  # backward compatibility with existing assertions

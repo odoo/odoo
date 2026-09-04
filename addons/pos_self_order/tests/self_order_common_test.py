@@ -11,7 +11,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.point_of_sale.tests.common import archive_products
 
 
-@odoo.tests.tagged("post_install", "-at_install")
+@odoo.tests.tagged("post_install", "-at_install", "SelfOrderCommonTest")
 class SelfOrderCommonTest(odoo.tests.HttpCase):
     browser_size = "375x667"
     touch_enabled = True
@@ -125,7 +125,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
         })
 
     def _add_tax_to_product_from_different_company(self):
-        new_company = self.add_company('base.test_company_be')
+        new_company = self.add_company('base.test_company_with_branch')
         self.other_company_tax = (
             self.env["account.tax"]
             .with_company(new_company)
