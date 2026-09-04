@@ -8,6 +8,7 @@ from odoo.fields import Command, Domain
 class SaleOrderTemplate(models.Model):
     _name = "sale.order.template"
     _description = "Order Templates"
+    _inherit = ["product.catalog.mixin"]
     _order = "sequence, id"
 
     active = fields.Boolean(
@@ -78,6 +79,7 @@ class SaleOrderTemplate(models.Model):
         search="_search_user_has_access",
     )
     has_productless_lines = fields.Boolean(compute="_compute_has_productless_lines")
+    amount_untaxed = fields.Float(compute="_compute_amount_untaxed", digits="Product Price")
 
     # === COMPUTE METHODS ===#
 
@@ -135,6 +137,17 @@ class SaleOrderTemplate(models.Model):
             template.has_productless_lines = any(
                 not (line.product_id or line.display_type)
                 for line in self.sale_order_template_line_ids
+            )
+
+    @api.depends(
+        "sale_order_template_line_ids.price_subtotal", "sale_order_template_line_ids.display_type"
+    )
+    def _compute_amount_untaxed(self):
+        for template in self:
+            template.amount_untaxed = sum(
+                template.sale_order_template_line_ids.filtered(
+                    lambda line: not line.display_type
+                ).mapped("price_subtotal")
             )
 
     # === CONSTRAINT METHODS ===#
@@ -347,3 +360,15 @@ class SaleOrderTemplate(models.Model):
             return self.sudo().unlink()
 
         return False
+
+    # === CATALOG ===#
+
+    def _get_catalog_currency(self):
+        self.ensure_one()
+        return self.currency_id or self.company_id.currency_id or self.env.company.currency_id
+
+    def _get_product_catalog_domain(self):
+        return super()._get_product_catalog_domain() & Domain("sale_ok", "=", True)
+
+    def _has_sections(self) -> bool:
+        return True

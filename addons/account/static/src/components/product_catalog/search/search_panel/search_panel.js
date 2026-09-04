@@ -37,6 +37,7 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
         useSubEnv({
             formatAmount: this.formatAmount.bind(this),
+            showSectionAmounts: this.showSectionAmounts,
             setSelectedSection: this.setSelectedSection.bind(this),
             toggleSection: this.toggleSection.bind(this),
             toggleSectionFilter: this.toggleSectionFilter.bind(this),
@@ -114,6 +115,10 @@ export class AccountProductCatalogSearchPanel extends SearchPanel {
 
     formatAmount(amount) {
         return formatCurrency(amount, this.currencyId);
+    }
+
+    get showSectionAmounts() {
+        return true;
     }
 
     setSelectedSection(sectionId) {

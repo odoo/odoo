@@ -8,6 +8,7 @@ from odoo.fields import Command
 class SaleOrderTemplateLine(models.Model):
     _name = "sale.order.template.line"
     _description = "Quotation Template Line"
+    _inherit = ["product.catalog.line.mixin"]
     _order = "sale_order_template_id, sequence, id"
 
     _accountable_product_id_required = models.Constraint(
@@ -142,6 +143,9 @@ class SaleOrderTemplateLine(models.Model):
     discount = fields.Float(string="Discount (%)", digits="Discount")
     price_unit = fields.Float(
         string="Unit Price", digits="Product Price", min_display_digits="Product Price"
+    )
+    price_subtotal = fields.Float(
+        string="Subtotal", compute="_compute_price_subtotal", digits="Product Price"
     )
     tax_ids = fields.Many2many(string="Taxes", comodel_name="account.tax", check_company=True)
 
@@ -297,6 +301,11 @@ class SaleOrderTemplateLine(models.Model):
             else:
                 line.section_uom_id = False
 
+    @api.depends("price_unit", "product_uom_qty")
+    def _compute_price_subtotal(self):
+        for line in self:
+            line.price_subtotal = line.price_unit * line.product_uom_qty
+
     # === CRUD METHODS ===#
 
     @api.model_create_multi
@@ -382,3 +391,25 @@ class SaleOrderTemplateLine(models.Model):
             })
 
         return vals
+
+    # === CATALOG ===#
+
+    def action_add_from_catalog(self):
+        sale_order_template = self.env["sale.order.template"].browse(
+            self.env.context.get("order_id")
+        )
+        return sale_order_template.with_context(
+            child_field="sale_order_template_line_ids"
+        ).action_add_from_catalog()
+
+    def _get_quantity_field(self) -> str:
+        return "product_uom_qty"
+
+    def _get_product_uom_field(self) -> str:
+        return "product_uom_id"
+
+    def _get_section_lines(self):
+        self.ensure_one()
+        return self.sale_order_template_id.sale_order_template_line_ids.filtered(
+            self._is_line_in_section
+        )
