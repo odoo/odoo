@@ -237,9 +237,13 @@ patch(PosOrder.prototype, {
         const otherRewards = [];
         const paymentRewards = []; // Gift card and ewallet rewards are considered payments and must stay at the end
         for (const line of rewardLines) {
+            const reward = line.reward_id || this.models["loyalty.reward"].get(line.rewardId);
+            if (!reward) {
+                continue;
+            }
             const claimedReward = {
-                reward: line.reward_id,
-                coupon_id: line.coupon_id?.id,
+                reward: reward,
+                coupon_id: line.couponId,
                 args: {
                     product: line._reward_product_id,
                     price: line.price_unit,
@@ -295,7 +299,20 @@ patch(PosOrder.prototype, {
                 ) &&
                 !this.uiState.couponPointChanges[claimedReward.coupon_id]
             ) {
-                continue;
+                // The coupon_id from the server may not match local couponPointChanges
+                // (e.g. after cross-session sync). Try to find a matching coupon for the same
+                // program, but only if that match is unambiguous: with more than one active
+                // coupon on the same program we cannot tell which one the reward belongs to.
+                const programId =
+                    claimedReward.reward.program_id?.id ?? claimedReward.reward.program_id;
+                const matchingChanges = Object.values(this.uiState.couponPointChanges).filter(
+                    (pe) => pe.program_id === programId
+                );
+                if (matchingChanges.length === 1) {
+                    claimedReward.coupon_id = matchingChanges[0].coupon_id;
+                } else {
+                    continue;
+                }
             }
             if (
                 claimedReward.reward.program_id.program_type === "coupons" &&
@@ -354,7 +371,7 @@ patch(PosOrder.prototype, {
             won += points - this._getPointsCorrection(program);
             if (coupon_id !== 0) {
                 for (const line of this._get_reward_lines()) {
-                    if (line.coupon_id.id === coupon_id) {
+                    if (line.couponId === coupon_id) {
                         spent += line.points_cost;
                     }
                 }
@@ -460,7 +477,7 @@ patch(PosOrder.prototype, {
             return false;
         });
         for (const line of this.getOrderlines()) {
-            if (line.is_reward_line && line.coupon_id?.id === coupon_id) {
+            if (line.is_reward_line && line.couponId === coupon_id) {
                 points -= line.points_cost;
             }
         }
@@ -1303,29 +1320,33 @@ patch(PosOrder.prototype, {
         let claimed = 0;
         let available = 0;
         let shouldCorrectRemainingPoints = false;
+        const rewardProductIds = reward.reward_product_ids.map((r) => r.id);
+        const hasRewardLines = this._get_reward_lines().length > 0;
         for (const line of this.getOrderlines()) {
-            if (
-                reward.reward_product_ids.map((reward) => reward.id).includes(product.id) &&
-                reward.reward_product_ids.map((reward) => reward.id).includes(line.getProduct().id)
-            ) {
-                if (this._get_reward_lines() == 0) {
-                    if (line.getProduct() === product) {
-                        available += line.getQuantity();
-                    }
-                } else {
-                    available += line.getQuantity();
-                }
-            } else if (
-                reward.reward_product_ids
-                    .map((reward) => reward.id)
-                    .includes(line._reward_product_id?.id)
-            ) {
-                if (line.reward_id.id == reward.id) {
+            // Handle reward lines first: use is_reward_line which is always
+            // available, even for lines loaded from the server (unlike
+            // _reward_product_id which is a local-only field).
+            if (line.is_reward_line) {
+                const lineRewardId = line.rewardId;
+                if (lineRewardId == reward.id && rewardProductIds.includes(line.getProduct().id)) {
                     remainingPoints += line.points_cost;
                     claimed += line.getQuantity();
-                } else {
+                } else if (
+                    rewardProductIds.includes(line._reward_product_id?.id ?? line.getProduct().id)
+                ) {
                     shouldCorrectRemainingPoints = true;
                 }
+                continue;
+            }
+            // Regular (non-reward) lines count as available
+            if (
+                rewardProductIds.includes(product.id) &&
+                rewardProductIds.includes(line.getProduct().id)
+            ) {
+                if (!hasRewardLines && line.getProduct() !== product) {
+                    continue;
+                }
+                available += line.getQuantity();
             }
         }
         let freeQty;
@@ -1480,8 +1501,8 @@ patch(PosOrder.prototype, {
             // Remove any line that is part of that same reward aswell.
             const linesToRemove = this.getOrderlines().filter(
                 (line) =>
-                    line.reward_id === lineToRemove.reward_id &&
-                    line.coupon_id === lineToRemove.coupon_id &&
+                    line.rewardId === lineToRemove.rewardId &&
+                    line.couponId === lineToRemove.couponId &&
                     line.reward_identifier_code === lineToRemove.reward_identifier_code
             );
             for (const line of linesToRemove) {
