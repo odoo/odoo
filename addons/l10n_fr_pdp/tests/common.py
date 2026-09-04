@@ -30,6 +30,12 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     TEST_PAYMENT_DATE = fields.Date.from_string('2025-02-15')
 
     @classmethod
+    def get_default_groups(cls):
+        # needed to create sale orders in test_export_downpayments_partner_fr
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
+    @classmethod
     @TestUblCiiCommon.setup_country('fr')
     def setUpClass(cls):
         super().setUpClass()
