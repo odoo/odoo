@@ -3790,6 +3790,55 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_orderline_merge_with_higher_price_precision', login="pos_user")
 
+    def test_attribute_price_extra_with_fixed_pricelist(self):
+        """A fixed pricelist rule replaces the whole price of the product, attribute
+        extra prices included, so the configurator must not advertise those extras."""
+        self.env['product.template'].search([('available_in_pos', '=', True)]).active = False
+        product = self.env['product.template'].create({
+            'name': 'Takeaway Product',
+            'available_in_pos': True,
+            'list_price': 20.0,
+            'taxes_id': False,
+        })
+        topping_attribute = self.env['product.attribute'].create({
+            'name': 'Topping',
+            'create_variant': 'no_variant',
+        })
+        no_topping, cheese = self.env['product.attribute.value'].create([{
+            'name': 'No Topping',
+            'attribute_id': topping_attribute.id,
+        }, {
+            'name': 'Cheese',
+            'attribute_id': topping_attribute.id,
+        }])
+        topping_line = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product.id,
+            'attribute_id': topping_attribute.id,
+            'value_ids': [(6, 0, [no_topping.id, cheese.id])],
+        })
+        topping_line.product_template_value_ids[1].price_extra = 1.0
+
+        takeaway_pricelist = self.env['product.pricelist'].create({
+            'name': 'TAKEAWAY',
+            'item_ids': [(0, 0, {
+                'applied_on': '1_product',
+                'product_tmpl_id': product.id,
+                'compute_price': 'fixed',
+                'fixed_price': 10.0,
+            })],
+        })
+        eat_in_preset = self.env['pos.preset'].create({'name': 'EAT IN'})
+        takeout_preset = self.env['pos.preset'].create({
+            'name': 'TAKEOUT',
+            'pricelist_id': takeaway_pricelist.id,
+        })
+        self.main_pos_config.write({
+            'use_presets': True,
+            'default_preset_id': eat_in_preset.id,
+            'available_preset_ids': [(6, 0, [takeout_preset.id])],
+        })
+        self.start_pos_tour('test_attribute_price_extra_with_fixed_pricelist')
+
     def test_product_configurator_price(self):
         """ Test that the product configurator displays the correct price when selecting attributes that impact the price. """
         self.env['product.template'].search([('available_in_pos', '=', True)]).active = False
