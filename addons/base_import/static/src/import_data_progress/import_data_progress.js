@@ -1,12 +1,13 @@
-import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 
 export class ImportDataProgress extends Component {
     static template = "ImportDataProgress";
-    static props = {
-        importProgress: { type: Object },
-        stopImport: { type: Function },
-        totalSteps: { type: Number },
-    };
+
+    props = useProps({
+        importProgress: t.object(),
+        stopImport: t.function(),
+        totalSteps: t.number(),
+    });
 
     isInterrupted = signal(false);
     timeLeft = signal(null);

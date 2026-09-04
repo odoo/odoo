@@ -16,7 +16,6 @@ const cogMenuRegistry = registry.category("cogMenu");
 export class ImportRecords extends Component {
     static template = "base_import.ImportRecords";
     static components = { DropdownItem };
-    static props = {};
 
     setup() {
         this.action = useService("action");
