@@ -953,7 +953,8 @@ class ResPartner(models.Model):
                 country_id = values.get('country_id')
                 values['vat'] = self._fix_vat_number(values['vat'], country_id)
         res = super().create(vals_list)
-        res.env.remove_to_compute(self._fields['vies_valid'], res)
+        if self.env.context.get('import_file'):
+            self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
 
     def write(self, values):

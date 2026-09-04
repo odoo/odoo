@@ -836,6 +836,7 @@ class HrExpense(models.Model):
             'domain': [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)],
             'context': {'default_res_model': 'hr.expense', 'default_res_id': self.id},
         })
+        res.pop('id', None)  # remove action ID to allow page refresh and keep domain/context
         return res
 
     def action_approve_duplicates(self):

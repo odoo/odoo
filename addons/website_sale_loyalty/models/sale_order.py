@@ -253,3 +253,7 @@ class SaleOrder(models.Model):
         lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
         lines = lines.filtered(lambda l: not l.is_reward_line) if not line_id else lines
         return lines
+
+    def _get_zero_priced_lines(self):
+        """Exclude reward lines from the prevented zero-priced rule."""
+        return super()._get_zero_priced_lines().filtered(lambda line: not line.is_reward_line)

@@ -484,7 +484,65 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_flow_10_operation_type': 'sale',
             'l10n_fr_pdp_status': 'pending',
         }])
-        self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        transaction = xml.find('./TransactionsReport/Transactions')
+
+        self.assertEqual(float(transaction.findtext('TaxExclusiveAmount')), invoice.amount_untaxed)
+        self.assertEqual(float(transaction.findtext('TaxSubtotal/TaxableAmount')), invoice.amount_untaxed)
+
+    def test_b2bi_invoice_without_taxes_reports_taxable_amount(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            tax_ids=self.env['account.tax'],
+        )
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_node = xml.find('./TransactionsReport/Invoice')
+
+        self.assertEqual(
+            float(invoice_node.findtext('MonetaryTotal/TaxExclusiveAmount')),
+            invoice.amount_untaxed,
+        )
+        self.assertEqual(
+            float(invoice_node.findtext('TaxSubTotal/TaxableAmount')),
+            invoice.amount_untaxed,
+        )
+
+    def test_exempt_tax_without_reason_reports_default_reason(self):
+        builder = self.env['pdp.flow.10.xml.builder']
+        exempt_tax = self._get_tax_on_payment().copy({
+            'ubl_cii_tax_category_code': 'E',
+            'ubl_cii_tax_exemption_reason_code': False,
+        })
+
+        tax_code, exemption_code, exemption_reason = builder._get_tax_codes_and_exemption(
+            self.domestic_b2b_partner,
+            self.company.partner_id,
+            exempt_tax,
+        )
+
+        self.assertEqual(tax_code, 'E')
+        self.assertFalse(exemption_code)
+        self.assertEqual(exemption_reason, 'Exempt from tax')
+
+    def test_unsupported_tax_rate_is_rejected_for_flow_reporting(self):
+        unsupported_tax = self._get_tax_on_payment().copy({
+            'name': 'Unsupported 21% tax',
+            'amount': 21,
+        })
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            tax_ids=unsupported_tax,
+        )
+
+        self.assertRecordValues(invoice, [{
+            'l10n_fr_pdp_has_error': True,
+            'l10n_fr_pdp_status': 'error',
+        }])
+        self.assertIn(
+            'Tax Unsupported 21% tax is not supported by French e-reporting.',
+            invoice._get_l10n_fr_pdp_errors(),
+        )
 
     def test_b2bi_invoice_creates_transaction_flow_payload(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
@@ -510,6 +568,51 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertEqual(len(transactions), 0)
         self.assertEqual(invoices[0].findtext('ID'), invoice.name)
         self.assertEqual(invoices[0].findtext('CurrencyCode'), invoice.currency_id.name)
+
+    def test_b2bi_invoice_limits_free_text_values(self):
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        invoice.invoice_line_ids.name = 'P' * 300
+        invoice.narration = 'N' * 1100
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_node = xml.find('./TransactionsReport/Invoice')
+
+        self.assertEqual(
+            invoice_node.findtext('Line/Product/Name'),
+            invoice.invoice_line_ids.display_name[:255],
+        )
+        self.assertEqual(invoice_node.findtext('IncludedNote/Content'), 'N' * 1024)
+
+    def test_b2bi_invoice_normalizes_country_codes(self):
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        self.b2bi_customer.country_id.code = 'be'
+
+        xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
+        invoice_node = xml.find('./TransactionsReport/Invoice')
+
+        self.assertEqual(invoice_node.findtext('Buyer/PostalAddress/CountryId'), 'BE')
+        self.assertEqual(invoice_node.findtext('Delivery/Location/CountryId'), 'BE')
+
+    def test_b2bi_invoice_rejects_invalid_report_values(self):
+        invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
+        self.company.partner_id.siret = 'invalid'
+        self.company.partner_id.company_registry = False
+        self.b2bi_customer.with_context(no_vat_validation=True).write({
+            'vat': 'BE12345678901234567',
+            'country_id': False,
+            'zip': '12345678901',
+        })
+
+        errors = invoice._get_l10n_fr_pdp_errors()
+
+        self.assertIn('The company SIREN is missing or invalid.', errors)
+        self.assertIn(
+            'VAT number for PDP B2BI Customer must not exceed 18 characters.',
+            errors,
+        )
+        self.assertIn('Partner country code must contain two letters.', errors)
+        self.assertIn('Address zip code must not exceed 10 characters.', errors)
+        self.assertIn('Missing address country.', errors)
 
     def test_b2bi_service_on_debits_reports_tax_due_date_type_code(self):
         service_tax_on_debits = self._get_tax_on_payment_20_tax_included().copy({
@@ -564,6 +667,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'operation_type': 'purchase',
             'state': 'ready',
         }])
+
         self.assertIn(bill, flow._get_moves())
 
         xml = self._build_flow_xml(flow)
@@ -571,6 +675,38 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         invoices = xml.findall('./TransactionsReport/Invoice')
         self.assertEqual(len(invoices), 1)
         self.assertEqual(invoices[0].findtext('ID'), bill.name)
+        self.assertEqual(invoices[0].findtext('TypeCode'), '380')
+
+    def test_invoice_type_codes(self):
+        builder = self.env['pdp.flow.10.xml.builder']
+        purchase_journal = self.company_data['default_journal_purchase']
+        sale_journal = self.company_data['default_journal_sale']
+
+        customer_invoice = self.env['account.move'].new({
+            'move_type': 'out_invoice',
+            'journal_id': sale_journal.id,
+        })
+        customer_credit_note = self.env['account.move'].new({
+            'move_type': 'out_refund',
+            'journal_id': sale_journal.id,
+        })
+        vendor_bill = self.env['account.move'].new({
+            'move_type': 'in_invoice',
+            'journal_id': purchase_journal.id,
+        })
+        vendor_credit_note = self.env['account.move'].new({
+            'move_type': 'in_refund',
+            'journal_id': purchase_journal.id,
+        })
+
+        self.assertEqual(builder._get_move_typecode(customer_invoice), '380')
+        self.assertEqual(builder._get_move_typecode(customer_credit_note), '381')
+        self.assertEqual(builder._get_move_typecode(vendor_bill), '380')
+        self.assertEqual(builder._get_move_typecode(vendor_credit_note), '381')
+
+        purchase_journal.is_self_billing = True
+        self.assertEqual(builder._get_move_typecode(vendor_bill), '389')
+        self.assertEqual(builder._get_move_typecode(vendor_credit_note), '261')
 
     def test_mixed_b2c_b2bi_invoices_create_transaction_flow_payload(self):
         b2c_invoice = self._create_reporting_invoice(partner=self.b2c_customer)
