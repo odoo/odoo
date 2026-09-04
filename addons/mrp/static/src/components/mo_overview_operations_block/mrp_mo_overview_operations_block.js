@@ -1,4 +1,4 @@
-import { Component, useProps, proxy, t } from "@odoo/owl";
+import { Component, onWillUnmount, useProps, proxy, t } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
@@ -43,7 +43,16 @@ export class MoOverviewOperationsBlock extends Component {
             this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
         }
 
-        useBus(this.env.overviewBus, "unfold-all", () => this.unfold());
+        useBus(this.env.overviewBus, "toggle-fold-all", (ev) =>
+            this._onToggleFoldAll(ev.detail.isFolded)
+        );
+
+        onWillUnmount(() => {
+            this.env.overviewBus.trigger("update-folded", {
+                indexes: [this.index],
+                isFolded: true,
+            });
+        });
     }
 
     //---- Handlers ----
@@ -53,9 +62,9 @@ export class MoOverviewOperationsBlock extends Component {
         this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: this.state.isFolded });
     }
 
-    unfold() {
-        this.state.isFolded = false;
-        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded: false });
+    _onToggleFoldAll(isFolded) {
+        this.state.isFolded = isFolded;
+        this.env.overviewBus.trigger("update-folded", { indexes: [this.index], isFolded });
     }
 
     //---- Helpers ----

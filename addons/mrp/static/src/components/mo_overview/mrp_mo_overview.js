@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { useSubEnv } from "@web/owl2/utils";
 import { Component, EventBus, onWillStart, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -23,24 +24,27 @@ export class MoOverview extends Component {
     setup() {
         this.actionService = useService("action");
         this.ormService = useService("orm");
+        this.foldableIds = new Set();
         this.unfoldedIds = new Set();
         this.context = {};
 
         this.state = proxy({
             data: {},
             showOptions: this.getDefaultConfig(),
+            foldable: true,
+            allFolded: true,
         });
 
         useSubEnv({ overviewBus: new EventBus() });
 
         onWillStart(async () => {
-            await this.getManufacturingData();
+            await this.getManufacturingData(true);
         });
         useBus(this.env.overviewBus, "update-folded", (ev) => this.onChangeFolded(ev.detail));
         useBus(this.env.overviewBus, "reload", () => this.getManufacturingData());
     }
 
-    async getManufacturingData() {
+    async getManufacturingData(shouldInitializeFoldState = false) {
         const reportValues = await this.ormService.call(
             "report.mrp.report_mo_overview",
             "get_report_values",
@@ -63,12 +67,18 @@ export class MoOverview extends Component {
         this.state.showOptions.uom = reportValues.context.show_uom;
         this.context = reportValues.context;
         // Main MO's operations & byproducts are always unfolded by default.
-        if (reportValues.data?.operations?.summary?.index) {
-            this.unfoldedIds.add(reportValues.data.operations.summary.index);
+        if (shouldInitializeFoldState) {
+            if (this.hasOperations) {
+                this.unfoldedIds.add(reportValues.data.operations.summary.index);
+            }
+            if (reportValues.data.byproducts.details.length) {
+                this.unfoldedIds.add(reportValues.data.byproducts.summary.index);
+            }
         }
-        if (reportValues.data?.byproducts?.summary?.index) {
-            this.unfoldedIds.add(reportValues.data.byproducts.summary.index);
-        }
+        this.getFoldableIds(reportValues.data);
+        this.foldableIds["delete"](undefined);
+        this.state.allFolded = this.unfoldedIds.size !== this.foldableIds.size;
+        this.state.foldable = this.foldableIds.size > 0;
     }
 
     //---- Handlers ----
@@ -80,7 +90,16 @@ export class MoOverview extends Component {
     onChangeFolded(foldInfo) {
         const { indexes, isFolded } = foldInfo;
         const operation = isFolded ? "delete" : "add";
-        indexes.forEach(index => this.unfoldedIds[operation](index));
+        indexes.forEach((index) => {
+            if (this.foldableIds.has(index)) {
+                this.unfoldedIds[operation](index);
+            }
+        });
+        if (this.unfoldedIds.size === 0) {
+            this.state.allFolded = true;
+        } else if (this.unfoldedIds.size === this.foldableIds.size) {
+            this.state.allFolded = false;
+        }
     }
 
     async onPrint() {
@@ -91,8 +110,8 @@ export class MoOverview extends Component {
         });
     }
 
-    onUnfold() {
-        this.env.overviewBus.trigger("unfold-all")
+    clickToggleFold() {
+        this.env.overviewBus.trigger("toggle-fold-all", { isFolded: !this.state.allFolded });
     }
 
     //---- Helpers ----
@@ -116,6 +135,27 @@ export class MoOverview extends Component {
 
     formatCost(cost) {
         return formatMonetary(cost, { currencyId: this.state.data.summary.currency_id });
+    }
+
+    getFoldableIds(data) {
+        if (data.components?.length) {
+            this.foldableIds.add(data.summary.index);
+            for (const component of data.components) {
+                this.getFoldableIds(component);
+            }
+        }
+        if (data.replenishments?.length) {
+            this.foldableIds.add(data.summary.index);
+            for (const replenishment of data.replenishments) {
+                this.getFoldableIds(replenishment);
+            }
+        }
+        if (data.operations?.details.length) {
+            this.foldableIds.add(data.operations.summary.index);
+        }
+        if (data.byproducts?.details.length) {
+            this.foldableIds.add(data.byproducts.summary.index);
+        }
     }
 
     //---- Getters ----
@@ -170,6 +210,10 @@ export class MoOverview extends Component {
 
     get isProductionDone() {
         return this.state.data?.summary?.state === "done";
+    }
+
+    get foldButtonText() {
+        return this.state.allFolded ? _t("Unfold") : _t("Fold");
     }
 
     get hasOperations() {
