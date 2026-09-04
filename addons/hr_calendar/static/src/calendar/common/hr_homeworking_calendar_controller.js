@@ -1,16 +1,21 @@
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { AttendeeCalendarController } from "@calendar/views/attendee_calendar/attendee_calendar_controller"
 import { serializeDate} from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
+import { onWillStart } from "@odoo/owl";
 
 patch(AttendeeCalendarController.prototype, {
     setup() {
         super.setup();
         this.action = useService("action");
         this._baseRendererProps.openWorkLocationWizard = this.openWorkLocationWizard.bind(this);
+        this.canLinkEmployee = false;
+        onWillStart(async () => {
+            this.canLinkEmployee = await user.hasGroup("hr.group_hr_user");
+        });
     },
     async editRecord(record) {
         if (record.homeworking && 'start' in record) {
@@ -61,9 +66,17 @@ patch(AttendeeCalendarController.prototype, {
     async openWorkLocationWizard(startDate, locationId = undefined, ghostRecord= undefined) {
         const [employeeRecord] = await this.orm.read("res.users", [user.userId], ["employee_id"]);
         if (!employeeRecord.employee_id) {
-            this.displayDialog(AlertDialog, {
+            this.displayDialog(ConfirmationDialog, {
                 title: _t("Missing Employee"),
                 body: _t("An administrator first needs to link your user to an employee in order to set work locations."),
+                confirm: this.canLinkEmployee ? () => this.action.doAction({
+                        type: "ir.actions.act_window",
+                        res_model: "hr.employee",
+                        views: [[false, "kanban"]],
+                    }) : () => {},
+                confirmLabel: this.canLinkEmployee ? _t("Link Employee") : _t("Ok"),
+                cancel: this.canLinkEmployee ? () => {} : undefined,  // Provide explicit cancel button
+                cancelLabel: this.canLinkEmployee ? _t("Close") : undefined
             });
             return;
         }

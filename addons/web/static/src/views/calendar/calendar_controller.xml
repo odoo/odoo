@@ -17,7 +17,7 @@
                     <t t-component="this.searchBarToggler.component" t-props="this.searchBarToggler.props"/>
                 </t>
                 <div class="o_calendar_container d-grid h-100 bg-view">
-                    <div class="o_calendar_header d-flex align-items-center gap-1 px-3 py-2 px-print-0 pt-print-0 border-bottom">
+                    <div class="o_calendar_header d-flex flex-row-reverse flex-sm-row align-items-center gap-1 px-3 py-2 px-print-0 pt-print-0 border-bottom">
                         <div t-if="!this.uiService.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
                             <button
                                 class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
@@ -34,7 +34,7 @@
                         </div>
                         <ViewScaleSelector scales="this.scales" currentScale="this.model.scale" isWeekendVisible="this.state.isWeekendVisible" setScale.bind="this.setScale" toggleWeekendVisibility.bind="this.toggleWeekendVisibility" dropdownClass="'d-print-none order-3 order-lg-0'"/>
                         <button
-                            class="btn btn-secondary o_calendar_button_today d-print-none order-2 order-lg-0 ms-auto ms-md-0"
+                            class="btn btn-secondary o_calendar_button_today d-print-none order-2 order-lg-0 ms-md-0"
                             t-on-click.stop="() => this.setDate('today')">
                             Today
                         </button>
