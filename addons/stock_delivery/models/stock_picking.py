@@ -72,27 +72,23 @@ class StockPicking(models.Model):
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
     def _pre_action_done_hook(self):
-        # Override to collect payment, if needed, on the final pickings (dest = customer).
         res = super()._pre_action_done_hook()
-        if res is not True or self.env.context.get('order_ids_to_confirm'):
-            # Super as an action to make first, or we already executed this hook.
-            return res
-
-        # Treat picked moves as validated during confirmation to ensure the amount on delivery is
-        # computed against the quantities about to be validated.
-        prevalidated_self = self.with_context(
-            prevalidated_move_ids=self.move_ids.filtered('picked').ids
-        )
-        orders_ids_to_confirm = (
-            prevalidated_self
-            .filtered(lambda picking: picking.location_dest_id.usage == 'customer')
-            .sale_id.filtered('amount_on_delivery')
-            .ids
-        )
-        if orders_ids_to_confirm:
-            return prevalidated_self.env['pay.on.delivery']._open_wizard(orders_ids_to_confirm)
-
+        if (
+            res is True
+            and not self.env.context.get('amount_on_delivery_collected')
+            and self._filtered_pending_delivery_payment()
+        ):
+            return self.env['pay.on.delivery']._get_records_action(target='new')
         return res
+
+    def _filtered_pending_delivery_payment(self):
+        return self.filtered(
+            lambda picking: (
+                picking.location_dest_id.usage == 'customer'
+                and picking.sale_id.sudo().transaction_ids._filtered_pending_delivery_payment()
+                and picking.sale_id.amount_unpaid
+            )
+        )
 
     def button_validate(self):
         res = super().button_validate()

@@ -34,5 +34,6 @@ class CashOnDeliveryCommon(PaymentCustomCommon, DeliveryCommon):
             "provider_id": cls.cod_provider.id,
             "payment_method_id": cls.cod_provider.payment_method_ids.id,
             "reference": False,  # Force the computation of an unique reference
+            **values,
         }
-        return cls._create_transaction(cls, flow="direct", **{**default_values, **values})
+        return cls._create_transaction(cls, flow="direct", **default_values)

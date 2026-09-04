@@ -1,49 +1,39 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class PayOnDelivery(models.TransientModel):
     _name = 'pay.on.delivery'
-    _description = 'Pay on Delivery'
+    _description = "Pay on Delivery"
 
-    order_id = fields.Many2one(comodel_name='sale.order', compute='_compute_order_id')
-    amount_on_delivery = fields.Monetary(related='order_id.amount_on_delivery')
-    currency_id = fields.Many2one(related='order_id.currency_id')
+    order_ids = fields.Many2many(comodel_name='sale.order', compute='_compute_order_ids')
+    amount_on_delivery = fields.Monetary(compute='_compute_amount_on_delivery')
+    currency_id = fields.Many2one(related='order_ids.currency_id')
 
-    @api.depends_context('order_ids_to_confirm', 'order_ids_confirmed')
-    def _compute_order_id(self):
-        order_ids_confirmed = set(self.env.context.get('order_ids_confirmed', {}))
-        self.order_id = next(
-            (
-                id_
-                for id_ in self.env.context.get('order_ids_to_confirm', [])
-                if id_ not in order_ids_confirmed
-            ),
-            False,
+    @api.depends_context('button_validate_picking_ids')
+    def _compute_order_ids(self):
+        self.order_ids = (
+            self._get_pickings_to_validate()._filtered_pending_delivery_payment().sale_id
         )
+        if len(self.order_ids.currency_id) > 1:
+            raise UserError(
+                self.env._(
+                    "These transfers are for orders that are paid on delivery,"
+                    " and the amounts still due are in different currencies."
+                    " Validate the transfers one currency at a time to collect them."
+                )
+            )
 
-    def _open_wizard(self, order_ids_to_confirm=()):
-        assert bool(order_ids_to_confirm) ^ bool(self)
-        if order_ids_to_confirm:
-            wizard = self.with_context(order_ids_to_confirm=order_ids_to_confirm)
-        else:
-            wizard = self.ensure_one()
-        return wizard._get_records_action(target='new')
+    @api.depends("order_ids")
+    def _compute_amount_on_delivery(self):
+        self.amount_on_delivery = sum(order.amount_unpaid for order in self.order_ids)
 
     def action_confirm_payment(self):
-        """Walk through the queue of orders whose payment must be collected before resuming the
-        validation of the pickings that opened the wizard."""
-        self.ensure_one()
-
-        order_ids_confirmed = {*self.env.context.get('order_ids_confirmed', []), self.order_id.id}
-        confirmed_self = self.with_context(order_ids_confirmed=list(order_ids_confirmed))
-        if confirmed_self.order_id:
-            # While the orders are not all confirmed, keep popping the wizard.
-            return confirmed_self._open_wizard()
-
-        if picking_ids := self.env.context.get('button_validate_picking_ids'):
-            # All the orders are now confirmed; resume the validation process.
-            return confirmed_self.env['stock.picking'].browse(picking_ids).button_validate()
-
+        if pickings := self._get_pickings_to_validate():
+            return pickings.with_context(amount_on_delivery_collected=True).button_validate()
         return True
+
+    def _get_pickings_to_validate(self):
+        return self.env['stock.picking'].browse(self.env.context.get('button_validate_picking_ids'))

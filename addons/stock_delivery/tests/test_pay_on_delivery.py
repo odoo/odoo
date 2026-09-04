@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
@@ -52,11 +53,7 @@ class TestPayOnDelivery(CashOnDeliveryCommon):
         )
         pay_on_delivery_wizard = self.open_wizard(backorder_wizard.env, backorder_wizard.process())
 
-        self.assertEqual(
-            pay_on_delivery_wizard.amount_on_delivery,
-            self.sale_order.amount_total - 2 / 5 * self.product_line.price_total,
-            msg="Expected to pay the total (service included) minus undelivered quantities",
-        )
+        self.assertEqual(pay_on_delivery_wizard.amount_on_delivery, self.sale_order.amount_total)
 
     def test_full_delivery(self):
         pay_on_delivery_wizard = self.open_wizard(self.env, self.picking.button_validate())
@@ -121,11 +118,11 @@ class TestPayOnDelivery(CashOnDeliveryCommon):
 
         self.assertIs(action, True)
 
-    def test_confirm_orders_sequentially(self):
+    def test_confirm_orders_at_once(self):
         """
-        In the case where multiple pickings are validated at once, a confirmation wizard should open
-        for each order, each one collecting the payment of its own order, before the validation of
-        the pickings is resumed.
+        In the case where multiple pickings are validated at once, a single confirmation wizard
+        should open, summing the amounts to collect for all the orders, before the validation of the
+        pickings is resumed.
         """
         orders = order1, order2, _ = (
             self._create_so(state='sale')
@@ -138,14 +135,36 @@ class TestPayOnDelivery(CashOnDeliveryCommon):
         for move in orders.picking_ids.move_ids:
             move._set_quantity_done(1)  # All fully delivered
 
-        # 1. Click "Validate" which should open the first "Pay on Delivery" wizard
+        # 1. Click "Validate" which should open a single "Pay on Delivery" wizard
         wizard = self.open_wizard(self.env, orders.picking_ids.button_validate())
-        self.assertEqual(wizard.order_id, order1)
 
-        # 2. Click "Confirm Payment" which should open the second "Pay on Delivery" wizard
-        wizard = self.open_wizard(wizard.env, wizard.action_confirm_payment())
-        self.assertEqual(wizard.order_id, order2)
+        self.assertEqual(
+            wizard.order_ids, order1 + order2, msg="Orders without COD should not be included"
+        )
+        self.assertEqual(wizard.amount_on_delivery, order1.amount_total + order2.amount_total)
 
-        # 3. Click "Confirm Payment" for the final time
+        # 2. Click "Confirm Payment" which should resume the validation of all the pickings
         action = wizard.action_confirm_payment()
-        self.assertIs(action, True, msg="Last order without COD doesn't need payment confirmation")
+
+        self.assertIs(action, True)
+        self.assertTrue(
+            all(state == 'done' for state in orders.picking_ids.mapped('state')),
+            msg="All the pickings should be validated at once",
+        )
+
+    def test_confirm_orders_in_different_currencies(self):
+        """Pickings of orders in different currencies cannot be validated at once, as a single
+        amount to collect cannot be displayed."""
+        pricelist = self._create_pricelist(
+            name="Other Currency Pricelist", currency_id=self.currency_euro.id
+        )
+        orders = self._create_so(state='sale') + self._create_so(
+            state='sale', pricelist_id=pricelist.id
+        )
+        for order in orders:
+            self._create_cod_transaction(sale_order=order)
+        for move in orders.picking_ids.move_ids:
+            move._set_quantity_done(1)  # All fully delivered
+
+        with self.assertRaises(UserError):
+            self.open_wizard(self.env, orders.picking_ids.button_validate())

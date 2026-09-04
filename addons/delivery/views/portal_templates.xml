@@ -3,7 +3,7 @@
 
     <template id="delivery.state_header" inherit_id="payment.state_header">
         <t t-elif="tx.state == 'pending'" position="before">
-            <t t-elif="tx.filtered_pending_delivery_payment()">
+            <t t-elif="tx._filtered_pending_delivery_payment()">
                 <t t-set="alert_style" t-value="'success'"/>
             </t>
         </t>

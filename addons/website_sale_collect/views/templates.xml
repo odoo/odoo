@@ -7,7 +7,7 @@
     >
         <t t-set="alert_class" position="after">
             <t
-                t-if="tx_sudo.filtered_pending_delivery_payment()"
+                t-if="tx_sudo._filtered_pending_delivery_payment()"
                 t-set="alert_class"
                 t-value="'alert-success'"
             />

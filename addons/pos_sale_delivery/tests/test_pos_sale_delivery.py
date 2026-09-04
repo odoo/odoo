@@ -34,4 +34,3 @@ class TestPosSaleDelivery(CashOnDeliveryCommon, TestPoSCommon, PoSSaleSyncCommon
         )
         self.assertTrue(cod_tx.is_post_processed)
         self.assertEqual(sale_order.amount_unpaid, 0)
-        self.assertEqual(sale_order.amount_on_delivery, 0)

@@ -6,8 +6,9 @@
         <field name="model">pay.on.delivery</field>
         <field name="arch" type="xml">
             <form string="Pay on Delivery">
-                A payment of <field name="amount_on_delivery"/> must be collected for
-                the delivery of <field name="order_id"/>.
+                A payment totaling <field name="amount_on_delivery"/> must be collected for
+                the delivery of the following orders:
+                <field name="order_ids" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>.
                 <footer>
                     <button
                         name="action_confirm_payment"
