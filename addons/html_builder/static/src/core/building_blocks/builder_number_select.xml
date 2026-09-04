@@ -9,13 +9,13 @@
         <BuilderNumberInput t-if="this.showNumberInput" action="this.props.action" unit="this.props.unit" min="this.props.min" composable="this.props.composable"/>
         <button
             t-else=""
-            class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret"
+            class="o-hb-number-select o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret"
             t-ref="this.buttonRef"
             t-att-id="this.props.id"
             t-att-disabled="this.props.disabled ? 'disabled' : undefined"
             t-att-aria-disabled="this.props.disabled ? 'true' : undefined"
             data-text-truncate-tooltip=""
-            >
+        >
             <t t-call-slot="fixedButton"/>
         </button>
     </xpath>

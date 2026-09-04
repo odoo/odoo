@@ -27,6 +27,6 @@ export class BuilderNumberSelect extends Component {
 
     setup() {
         Object.assign(this, useBuilderSelect(this.props));
-        this.showNumberInput = true;
+        this.showNumberInput = false;
     }
 }
