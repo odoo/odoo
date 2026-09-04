@@ -110,7 +110,7 @@ patch(PosStore.prototype, {
         }
         const result = await super.sendOrderInPreparation(order, opts);
 
-        if (this.config.module_pos_restaurant && categoryCount.length) {
+        if (result && this.config.module_pos_restaurant && categoryCount.length) {
             const categorySummary = formatList(
                 categoryCount.map((cat) => `${cat.count} ${cat.name}`)
             );
@@ -619,7 +619,9 @@ patch(PosStore.prototype, {
     async submitOrder() {
         const order = this.getOrder();
         await this.ensureGuestCustomerCount(order);
+        this.sendOrderInPreparationUpdateLastChange(order);
         this.showDefault();
+<<<<<<< 3353cc8668b18e2903aed033269a982f1723706d
         await this.sendOrderInPreparationUpdateLastChange(order);
         this.addPendingOrder([order.id]);
         if (order.isDirty()) {
@@ -629,6 +631,11 @@ patch(PosStore.prototype, {
             // is released.
             await this.syncAllOrders({ orders: [order] });
         }
+||||||| 5096955c06305941c5963447434193f84409231d
+        await this.sendOrderInPreparationUpdateLastChange(order);
+        this.addPendingOrder([order.id]);
+=======
+>>>>>>> d07370b4c04f28f71bfc245209440db708c53f9f
     },
     async reprintOrder() {
         const order = this.getOrder();
@@ -1038,10 +1045,17 @@ patch(PosStore.prototype, {
                 noteUpdateTitle: `${course.name} ${_t("fired")}`,
                 printNoteUpdateData: false,
             };
+<<<<<<< 3353cc8668b18e2903aed033269a982f1723706d
             await this.ticketPrinter.printOrderChanges({
                 order: this.getOrder(),
                 opts: { orderChange: changes },
             });
+||||||| 5096955c06305941c5963447434193f84409231d
+            order.pushLastPrints(changes);
+            await this.printChanges(order, [changes], false);
+=======
+            await this.printChanges(order, [changes], false);
+>>>>>>> d07370b4c04f28f71bfc245209440db708c53f9f
         } catch (e) {
             logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
                 e,
