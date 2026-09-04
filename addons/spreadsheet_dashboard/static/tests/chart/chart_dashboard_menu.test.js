@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, queryOne, test } from "@odoo/hoot";
 import { Model } from "@odoo/o-spreadsheet";
 import { insertChartInSpreadsheet } from "@spreadsheet/../tests/helpers/chart";
 import { makeSpreadsheetMockEnv } from "@spreadsheet/../tests/helpers/model";
@@ -6,6 +6,7 @@ import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDashboardActionWithData } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { contains } from "@web/../tests/web_test_helpers";
+import { click } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
@@ -25,8 +26,9 @@ test("can change granularity", async () => {
     });
     const { model } = await createDashboardActionWithData(setupModel.exportData());
 
-    expect("select.o-chart-dashboard-item").toHaveValue("month");
-    await contains("select.o-chart-dashboard-item", { visible: false }).select("quarter");
+    expect(queryOne(".o-select").textContent).toBe("Months");
+    await click(queryOne(".o-select"));
+    await contains(`.o-popover .o-select-option[data-id="quarter"]`).click("quarter");
     expect(model.getters.getChartGranularity(chartId)).toEqual({
         fieldName: "date",
         granularity: "quarter",
