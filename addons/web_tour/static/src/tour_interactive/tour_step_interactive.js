@@ -50,7 +50,11 @@ export class TourStepInteractive extends TourStep {
                 action = "drop";
             }
 
-            addAction(action, action === "edit" ? this.trigger : anchor, pointerInfo);
+            addAction(
+                action,
+                ["edit", "editor"].includes(action) ? this.trigger : anchor,
+                pointerInfo
+            );
         }
 
         return actions;

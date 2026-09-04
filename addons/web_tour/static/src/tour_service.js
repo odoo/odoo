@@ -330,9 +330,15 @@ export class TourService {
      */
     validateStep(step) {
         const tourConfig = tourState.getCurrentConfig();
+        const isActiveArray = Array.isArray(step.isActive) ? step.isActive : [];
+        const mode = isActiveArray.includes("auto")
+            ? "auto"
+            : isActiveArray.includes("manual")
+            ? "manual"
+            : tourConfig.mode;
         const schema = tourConfig.debug
             ? t.strictObject(stepSchemaDebug)
-            : tourConfig.mode === "auto"
+            : mode === "auto"
             ? t.strictObject(stepSchemaAuto)
             : t.strictObject(stepSchemaOnboarding);
         try {
