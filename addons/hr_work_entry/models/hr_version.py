@@ -215,7 +215,18 @@ class HrVersion(models.Model):
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
             elif version.has_static_work_entries() or not leaves:
-                real_leaves = expected_attendances & leaves
+                if calendar.attendance_ids and any(calendar.attendance_ids.mapped('duration_based')):
+                    duration_based_days = []
+                    current_day = datetime.combine(start_dt.astimezone(tz).date(), time.min, tzinfo=tz)
+                    last_day = end_dt.astimezone(tz)
+                    while current_day < last_day:
+                        if calendar._is_duration_based_on_date(current_day.date()):
+                            duration_based_days.append((current_day, current_day + timedelta(days=1), leaves))
+                        current_day += timedelta(days=1)
+                    duration_based_days = Intervals(duration_based_days, keep_distinct=True)
+                    real_leaves = (leaves & duration_based_days) | (expected_attendances & (leaves - duration_based_days))
+                else:
+                    real_leaves = expected_attendances & leaves
             else:
                 resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
@@ -394,6 +405,10 @@ class HrVersion(models.Model):
         return work_entry_type.count_as == 'absence'
 
     @api.model
+    def _get_work_entries_postprocess_duration_vals(self, vals, date_start, tz, adapt_to_calendar):
+        return ()
+
+    @api.model
     def _generate_work_entries_postprocess(self, vals_list):
         # Convert date_start/date_stop to date/duration
         # Split work entries over 2 days due to timezone conversion
@@ -454,7 +469,12 @@ class HrVersion(models.Model):
             date_start = vals['date_start']
             date_stop = vals['date_stop']
             tz = _get_tz(vals['version_id'])
-            if not self._generate_work_entries_postprocess_adapt_to_calendar(vals):
+            adapt_to_calendar = self._generate_work_entries_postprocess_adapt_to_calendar(vals)
+            duration_vals = self._get_work_entries_postprocess_duration_vals(vals, date_start, tz, adapt_to_calendar)
+            if duration_vals:
+                vals['date'], vals['duration'] = duration_vals
+                continue
+            if not adapt_to_calendar:
                 vals['date'] = date_start.astimezone(tz).date()
                 if 'duration' in vals:
                     continue
