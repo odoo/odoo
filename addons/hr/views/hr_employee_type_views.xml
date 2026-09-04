@@ -7,7 +7,7 @@
                 <list string="Employee Types">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
-                    <field name="country_id"/>
+                    <field name="country_id" groups="base.group_multi_company"/>
                     <field name="employees_count" string="Employees"/>
                     <button name="action_open_employees" 
                         type="object" 
@@ -29,7 +29,7 @@
                             <group>
                                 <field name="name"/>
                                 <field name="code" invisible="1"/>
-                                <field name="country_id"/>
+                                <field name="country_id" groups="base.group_multi_company"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
