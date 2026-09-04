@@ -3,6 +3,8 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from datetime import datetime
+
 from odoo.fields import Command
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
@@ -451,6 +453,48 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
             {'product_id': byproduct.id, 'value': -20},
             {'product_id': self.component.id, 'value': 100}
         ])
+
+    def test_operation_cost_matches_labour_je_overlapping_loss_types(self):
+        """Test that the MO Overview operation cost equals the posted labour
+        journal entry when time logs with different loss types overlap on the
+        same work order.
+        """
+        self.env.user.write({'groups_id': [Command.link(self.ref('mrp.group_mrp_routings'))]})
+        self.product1.categ_id.property_cost_method = 'average'
+        self.product1.categ_id.property_valuation = 'real_time'
+        workcenter = self.env['mrp.workcenter'].create({'name': 'Assembly', 'costs_hour': 60})
+        self.bom.operation_ids = [Command.create({
+            'name': 'Assemble',
+            'workcenter_id': workcenter.id,
+            'time_mode': 'manual',
+            'time_cycle_manual': 60,
+        })]
+        mo = self._make_mo(self.bom, 1)
+        mo.qty_producing = 1
+        mo.set_qty_producing()
+        workorder = mo.workorder_ids
+        # overlapping time, productive 10:00 -> 11:00 and reduced speed 10:30 -> 11:30
+        self.env['mrp.workcenter.productivity'].create([{
+            'workorder_id': workorder.id,
+            'workcenter_id': workcenter.id,
+            'loss_id': self.env.ref('mrp.block_reason7').id,
+            'date_start': datetime(2020, 1, 1, 10, 0),
+            'date_end': datetime(2020, 1, 1, 11, 0),
+        }, {
+            'workorder_id': workorder.id,
+            'workcenter_id': workcenter.id,
+            'loss_id': self.env.ref('mrp.block_reason4').id,
+            'date_start': datetime(2020, 1, 1, 10, 30),
+            'date_end': datetime(2020, 1, 1, 11, 30),
+        }])
+        workorder.button_done()
+        mo.button_mark_done()
+
+        # workcenter occupied 10:00 -> 11:30 = 1.5h * 60 = 90 (not 2 * 1h * 60 = 120)
+        report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(report['data']['operations']['summary']['real_cost'], 90)
+        labour_je = self.env['account.move'].search([('ref', '=', '%s - Labour' % mo.name)])
+        self.assertEqual(sum(labour_je.line_ids.filtered('debit').mapped('debit')), 90)
 
 
 @tagged("post_install", "-at_install")
