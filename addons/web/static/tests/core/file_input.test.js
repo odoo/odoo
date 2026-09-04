@@ -9,6 +9,7 @@ import {
 import { setInputFiles } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { FileInput } from "@web/core/file_input/file_input";
+import { Component, useState, xml } from "@odoo/owl";
 import { session } from "@web/session";
 
 // -----------------------------------------------------------------------------
@@ -212,4 +213,46 @@ test("support preprocessing of files via props", async () => {
     await animationFrame();
 
     expect.verifySteps(["fake_file.txt"]);
+});
+
+test("an upload that ends after the component is destroyed does not call onUpload", async () => {
+    // The FileInput posts through the http service, which is not protected
+    // against a destroyed component. A dialog that closes while the upload is
+    // in flight must not have its onUpload callback fired afterwards: the
+    // owner of that callback (e.g. a many2many_binary field) is gone, and its
+    // record can no longer be updated.
+    const uploadedPromise = new Deferred();
+    class Parent extends Component {
+        static components = { FileInput };
+        static props = {};
+        static template = xml`<FileInput t-if="state.mounted" onUpload.bind="onUpload"/>`;
+        setup() {
+            this.state = useState({ mounted: true });
+        }
+        onUpload() {
+            expect.step("onUpload");
+        }
+    }
+    mockService("notification", { add: () => {} });
+    mockService("http", {
+        post: async () => {
+            await uploadedPromise;
+            return "[]";
+        },
+    });
+    const parent = await mountWithCleanup(Parent);
+
+    const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+    await contains(".o_file_input input", { visible: false }).click();
+    await setInputFiles([file]);
+    await animationFrame();
+
+    // The dialog holding the input closes while the upload is in flight.
+    parent.state.mounted = false;
+    await animationFrame();
+    expect(".o_file_input").toHaveCount(0);
+
+    uploadedPromise.resolve();
+    await animationFrame();
+    expect.verifySteps([]);
 });
