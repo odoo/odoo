@@ -1255,6 +1255,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 self.assertEqual(tracking_field_info[key], val)
 
     def assertTrackingValueInBody(self, tracking, value_type, old_value, new_value, additional_info=None, message_context=None):
+        self.assertIsNotNone(
+            self.env.lang,
+            "Can't check tracking value without a lang configured in the context"
+            "\n\nSeveral field types are localised for tracking, tracking"
+            " assertions need to know the original locale to format correctly"
+            " before checking",
+        )
         input_old_value, input_new_value = tracking[1], tracking[2]
         msg_base = f'Tracking: {tracking[0]} ({value_type})'
         TrackingMixin = self.env['mail.track.mixin']
