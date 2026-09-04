@@ -16,6 +16,22 @@ patch(PaymentForm.prototype, {
     // #=== DOM MANIPULATION ===#
 
     /**
+     * Load the Xendit SDK if a Xendit card payment option is listed in the form.
+     *
+     * @override method from @payment/js/payment_form
+     * @return {void}
+     */
+    async willStart() {
+        if (this.el.querySelector(
+            'input[name="o_payment_radio"][data-provider-code="xendit"]'
+            + '[data-payment-method-code="card"]'
+        )) {
+            await this.waitFor(loadJS('https://js.xendit.co/v1/xendit.min.js'));
+        }
+        await super.willStart(...arguments);
+    },
+
+    /**
      * Prepare the inline form of Xendit for direct payment.
      *
      * @override method from @payment/js/payment_form
@@ -53,8 +69,6 @@ patch(PaymentForm.prototype, {
             inlineForm: xenditInlineForm,
         };
 
-        // Load the SDK.
-        await this.waitFor(loadJS('https://js.xendit.co/v1/xendit.min.js'));
         Xendit.setPublishableKey(this.xenditData[paymentOptionId].publicKey);
     },
 

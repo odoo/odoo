@@ -6,6 +6,12 @@ import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
 
+const ADYEN_SDK_BASE_URL = 'https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0';
+const ADYEN_JS_CHECKSUM =
+    'sha384-VB3SxkD+sTFJL36cbTToRDKrdvAJWmdf7t42zY4Z7wU9BdqvRjNtAof2qTQjPa/n';
+const ADYEN_CSS_CHECKSUM =
+    'sha384-Qy8fmdXhmf9H2Pgbmr7b0UkpeSvi7n3RFhpoZXYQPGpKIn9SH+0fT4905fsSA8Am';
+
 patch(PaymentForm.prototype, {
 
     setup() {
@@ -15,6 +21,22 @@ patch(PaymentForm.prototype, {
     },
 
     // #=== DOM MANIPULATION ===#
+
+    /**
+     * Load the Adyen SDK if an Adyen payment option is listed in the form.
+     *
+     * @override method from payment.payment_form
+     * @return {void}
+     */
+    async willStart() {
+        if (this.el.querySelector('input[name="o_payment_radio"][data-provider-code="adyen"]')) {
+            await this.waitFor(Promise.all([
+                loadJS(`${ADYEN_SDK_BASE_URL}/adyen.js`, { checksum: ADYEN_JS_CHECKSUM }),
+                loadCSS(`${ADYEN_SDK_BASE_URL}/adyen.css`, { checksum: ADYEN_CSS_CHECKSUM }),
+            ]));
+        }
+        await super.willStart(...arguments);
+    },
 
     /**
      * Prepare the inline form of Adyen for direct payment.
@@ -53,18 +75,6 @@ patch(PaymentForm.prototype, {
         const inlineFormValues = JSON.parse(radio.dataset['adyenInlineFormValues']);
         const formattedAmount = inlineFormValues['formatted_amount'];
 
-        this.el.parentElement.querySelector(
-            'script[src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.js"]'
-        )?.remove();
-        this.el.parentElement.querySelector(
-            'link[href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/5.39.0/adyen.css"]'
-        )?.remove();
-        await this.waitFor(
-            loadJS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.js')
-        );
-        await this.waitFor(
-            loadCSS('https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/6.9.0/adyen.css')
-        );
         const { AdyenCheckout, createComponent } = window.AdyenWeb;
 
         // Create the checkout object if not already done for another payment method.

@@ -11,6 +11,21 @@ patch(PaymentForm.prototype, {
     // === DOM MANIPULATION ===
 
     /**
+     * Load the Toss Payments SDK if a Toss Payments option is listed in the form.
+     *
+     * @override method from payment.payment_form
+     * @return {void}
+     */
+    async willStart() {
+        if (this.el.querySelector(
+            'input[name="o_payment_radio"][data-provider-code="toss_payments"]'
+        )) {
+            await this.waitFor(loadJS('https://js.tosspayments.com/v2/standard'));
+        }
+        await super.willStart(...arguments);
+    },
+
+    /**
      * Prepare the inline form of Toss Payments for direct payment.
      *
      * @override method from payment.payment_form
@@ -50,8 +65,6 @@ patch(PaymentForm.prototype, {
             await super._processDirectFlow(...arguments);
             return;
         }
-
-        await this.waitFor(loadJS('https://js.tosspayments.com/v2/standard'));
 
         // Extract and deserialize the inline form values.
         const radio = document.querySelector('input[name="o_payment_radio"]:checked');
