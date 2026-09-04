@@ -31,6 +31,22 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
             rendering_values = tx._get_specific_rendering_values(None)
         self.assertDictEqual(rendering_values, {'api_url': url})
 
+    def test_rendering_values_save_session_id_as_provider_reference(self):
+        """ Test that the session id from the session creation response - returned as
+        `payment_session_id`, not `id` - is saved as the provider reference immediately, so that
+        a return before the webhook arrives can still be checked against it. """
+        tx = self._create_transaction('redirect')
+        with (
+            patch.object(
+                PaymentProvider,
+                '_xendit_make_request',
+                return_value=dict(self.webhook_notification_data, status='ACTIVE'),
+            ),
+            patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token),
+        ):
+            tx._get_specific_rendering_values(None)
+        self.assertEqual(tx.provider_reference, self.webhook_notification_data['payment_session_id'])
+
     @mute_logger('odoo.addons.payment.models.payment_transaction')
     def test_no_input_missing_from_redirect_form(self):
         """ Test that the `api_url` key is not omitted from the rendering values. """
@@ -234,6 +250,56 @@ class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
                 'failure_return_url': return_url,
             },
         })
+
+    def test_token_charge_return_url_carries_return_params_in_request_context(self):
+        """ Test that, when initiated from a customer-facing request, the success return URL of
+        a token charge carries the tx ref and access token, so that the customer can be checked
+        against Xendit if the webhook doesn't arrive in time. The failure return URL is left as
+        is, since a failed/cancelled return isn't acted upon. """
+        tx = self._create_transaction('token')
+        return_url = self._build_url(XenditController._return_url)
+        with patch(
+            'odoo.addons.payment_xendit.models.payment_transaction.request', new=object()
+        ), patch(
+            'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+            '._xendit_make_request', return_value=self.payment_request_notification_data
+        ) as mock_req, patch.object(
+            payment_utils, 'generate_access_token', self._generate_test_access_token
+        ):
+            tx._xendit_create_token_charge('pt-token123', 'card')
+        channel_properties = mock_req.call_args.kwargs['payload']['channel_properties']
+        self.assertEqual(channel_properties['failure_return_url'], return_url)
+        token = self._generate_test_access_token(tx.reference, tx.amount)
+        self.assertEqual(
+            channel_properties['success_return_url'],
+            f'{return_url}?{url_encode({"tx_ref": tx.reference, "access_token": token, "success": "true"})}',
+        )
+
+    def test_sync_from_provider_checks_payment_request_for_token_operation(self):
+        """ Test that syncing a token payment queries the payment request endpoint (with the API
+        version it requires), not the session endpoint used for checkout redirects. """
+        tx = self._create_transaction(
+            'token', provider_reference='pr-64a8d9c614802d6c402cd82d', state='pending'
+        )
+        with patch.object(
+            PaymentProvider,
+            '_xendit_make_request',
+            return_value=self.payment_request_notification_data,
+        ) as mock_req:
+            tx._xendit_sync_from_provider()
+        mock_req.assert_called_once_with(
+            'v3/payment_requests/pr-64a8d9c614802d6c402cd82d', api_version='2024-11-11',
+            method='GET',
+        )
+
+    def test_sync_from_provider_checks_session_for_redirect_operation(self):
+        """ Test that syncing a checkout redirect or validation queries the session endpoint. """
+        tx = self._create_transaction('redirect', provider_reference='ps-64a8f9c614802d6c402cd82d')
+        with patch.object(
+            PaymentProvider, '_xendit_make_request', return_value=self.webhook_notification_data
+        ) as mock_req:
+            tx._xendit_sync_from_provider()
+        mock_req.assert_called_once_with('sessions/ps-64a8f9c614802d6c402cd82d', method='GET')
 
     def test_token_charge_card_on_file_type_for_offline_operation(self):
         """ Test that offline (unattended) token charges are flagged as merchant-initiated

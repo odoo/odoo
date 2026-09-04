@@ -59,15 +59,21 @@ class XenditController(http.Controller):
 
     @http.route(_return_url, type='http', methods=['GET'], auth='public')
     def xendit_return(self, tx_ref=None, success=False, access_token=None, **data):
-        """Set draft transaction to pending after successfully returning from Xendit."""
+        """Check the transaction status with Xendit after returning from checkout, falling back
+        to pending if the webhook notification hasn't come in yet."""
         if access_token and str2bool(success, default=False):
+            # A checkout redirect leaves the transaction in `draft` until this return or the
+            # webhook processes it, but a token charge requiring 3DS authentication is already
+            # `pending` by the time the customer comes back from the challenge.
             tx_sudo = request.env['payment.transaction'].sudo().search([
                 ('provider_code', '=', 'xendit'),
                 ('reference', '=', tx_ref),
-                ('state', '=', 'draft'),
+                ('state', 'in', ('draft', 'pending')),
             ], limit=1)
             if tx_sudo and payment_utils.check_access_token(access_token, tx_ref, tx_sudo.amount):
-                tx_sudo._set_pending()
+                tx_sudo._xendit_sync_from_provider()
+                if tx_sudo.state == 'draft':
+                    tx_sudo._set_pending()
         return request.redirect('/payment/status')
 
     def _verify_notification_token(self, received_token, tx_sudo):

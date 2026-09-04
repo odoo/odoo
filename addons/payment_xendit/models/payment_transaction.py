@@ -9,6 +9,7 @@ from werkzeug import urls
 
 from odoo import _, models
 from odoo.exceptions import ValidationError
+from odoo.http import request
 from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
@@ -97,10 +98,46 @@ class PaymentTransaction(models.Model):
         session_data = self.provider_id._xendit_make_request('sessions', payload=payload)
         _logger.info("Received session request response:\n%s", pprint.pformat(session_data))
 
+        # Save the session id now rather than waiting for the webhook, so that a customer
+        # returning from checkout before the webhook arrives can still be checked against it.
+        self.provider_reference = session_data.get('payment_session_id') or session_data.get('id')
+
         rendering_values = {
             'api_url': session_data.get('payment_link_url')
         }
         return rendering_values
+
+    def _xendit_sync_from_provider(self):
+        """ Fetch the current status of the transaction from Xendit and process it.
+
+        Used as a fallback to the webhook when the customer returns from Xendit (either the
+        hosted checkout page, or a 3DS authentication challenge for a token payment), in case the
+        notification hasn't been received yet (e.g. delayed or dropped).
+
+        Note: self.ensure_one()
+
+        :return: None
+        """
+        self.ensure_one()
+        if not self.provider_reference:
+            return
+
+        if self.operation == 'online_token':
+            endpoint = f'v3/payment_requests/{self.provider_reference}'
+            request_kwargs = {'api_version': '2024-11-11', 'method': 'GET'}
+        else:
+            endpoint = f'sessions/{self.provider_reference}'
+            request_kwargs = {'method': 'GET'}
+
+        try:
+            data = self.provider_id._xendit_make_request(endpoint, **request_kwargs)
+        except ValidationError:
+            _logger.exception(
+                "Unable to fetch the status of %s upon return; relying on the webhook.", endpoint
+            )
+            return
+        _logger.info("Received status sync response:\n%s", pprint.pformat(data))
+        self._handle_notification_data('xendit', data)
 
     def _xendit_get_return_url(self):
         """ Return the URL Xendit should redirect the customer to after a payment attempt.
@@ -216,9 +253,20 @@ class PaymentTransaction(models.Model):
         if payment_method_code == 'card':
             # Only used if the card unexpectedly requires a 3DS challenge; the transaction state
             # is otherwise updated by the webhook regardless of whether this URL is ever visited.
-            # Not secured with an access token, unlike the session flow's, as this charge may run
-            # outside of a request context (e.g. from a cron for recurring/off-session charges).
             return_url = self._xendit_get_return_url()
+            success_return_url = return_url
+            if request:
+                # Let the customer be checked against Xendit on return, as a fallback in case the
+                # webhook is delayed or dropped. Not available from a cron context (e.g. an
+                # off-session subscription renewal), which never reaches this redirect anyway
+                # since there is no cardholder to send through it.
+                access_token = payment_utils.generate_access_token(self.reference, self.amount)
+                success_url_params = urls.url_encode({
+                    'tx_ref': self.reference,
+                    'access_token': access_token,
+                    'success': 'true',
+                })
+                success_return_url = f'{return_url}?{success_url_params}'
             # Offline charges (e.g. subscription renewals, backend payments by token) have no
             # cardholder present; flag them as merchant- rather than customer-initiated to reduce
             # the odds of a 3DS challenge.
@@ -228,7 +276,7 @@ class PaymentTransaction(models.Model):
                 card_on_file_type = 'CUSTOMER_UNSCHEDULED'
             payload['channel_properties'] = {
                 'card_on_file_type': card_on_file_type,
-                'success_return_url': return_url,
+                'success_return_url': success_return_url,
                 'failure_return_url': return_url,
             }
 

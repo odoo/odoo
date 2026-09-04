@@ -5,6 +5,7 @@ from unittest.mock import patch
 from werkzeug.exceptions import Forbidden
 from werkzeug.urls import url_encode
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -157,3 +158,78 @@ class TestProcessingFlow(XenditCommon, PaymentHttpCommon):
 
             self._make_http_get_request(build_return_url(success='true', access_token=token))
             self.assertEqual(tx.state, 'pending', "Successful returns should set state to pending")
+
+    def test_return_syncs_status_from_provider_when_reference_known(self):
+        """ Test that a successful return checks the session status with Xendit rather than
+        blindly setting the transaction to pending, when the session id is already known. """
+        self.reference = "xendit_tx2"
+        tx = self._create_transaction('redirect', provider_reference='ps-64a8f9c614802d6c402cd82d')
+
+        with patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token):
+            token = payment_utils.generate_access_token(tx.reference, tx.amount)
+            url_params = url_encode({
+                'tx_ref': tx.reference, 'success': 'true', 'access_token': token,
+            })
+            url = self._build_url(f'{XenditController._return_url}?{url_params}')
+
+            with patch(
+                'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+                '._xendit_make_request', return_value=self.webhook_notification_data
+            ) as make_request_mock:
+                self._make_http_get_request(url)
+
+        make_request_mock.assert_called_once_with(
+            f'sessions/{tx.provider_reference}', method='GET'
+        )
+        self.assertEqual(
+            tx.state, 'done', "A completed session status should confirm the transaction directly"
+        )
+
+    @mute_logger('odoo.addons.payment_xendit.models.payment_transaction')
+    def test_return_falls_back_to_pending_when_sync_fails(self):
+        """ Test that a successful return still sets the transaction to pending if the status
+        check with Xendit fails, instead of leaving it stuck in draft. """
+        self.reference = "xendit_tx3"
+        tx = self._create_transaction('redirect', provider_reference='ps-64a8f9c614802d6c402cd82d')
+
+        with patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token):
+            token = payment_utils.generate_access_token(tx.reference, tx.amount)
+            url_params = url_encode({
+                'tx_ref': tx.reference, 'success': 'true', 'access_token': token,
+            })
+            url = self._build_url(f'{XenditController._return_url}?{url_params}')
+
+            with patch(
+                'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+                '._xendit_make_request', side_effect=ValidationError("Xendit: nope")
+            ):
+                self._make_http_get_request(url)
+
+        self.assertEqual(tx.state, 'pending')
+
+    def test_return_confirms_pending_token_payment_after_3ds_challenge(self):
+        """ Test that returning from a 3DS authentication challenge for a token payment - already
+        `pending` by charge time, unlike a checkout redirect which stays `draft` - is checked
+        against Xendit and confirmed directly. """
+        self.reference = "xendit_tx5"
+        tx = self._create_transaction(
+            'token', provider_reference='pr-64a8d9c614802d6c402cd82d', state='pending'
+        )
+
+        with patch.object(payment_utils, 'generate_access_token', self._generate_test_access_token):
+            token = payment_utils.generate_access_token(tx.reference, tx.amount)
+            url_params = url_encode({
+                'tx_ref': tx.reference, 'success': 'true', 'access_token': token,
+            })
+            url = self._build_url(f'{XenditController._return_url}?{url_params}')
+
+            with patch(
+                'odoo.addons.payment_xendit.models.payment_provider.PaymentProvider'
+                '._xendit_make_request', return_value=self.payment_request_notification_data
+            ) as make_request_mock:
+                self._make_http_get_request(url)
+
+        make_request_mock.assert_called_once_with(
+            f'v3/payment_requests/{tx.provider_reference}', api_version='2024-11-11', method='GET'
+        )
+        self.assertEqual(tx.state, 'done')
