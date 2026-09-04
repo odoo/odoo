@@ -382,3 +382,53 @@ class TestSaleMrpProcurement(TransactionCase):
         so.action_confirm()
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(so.picking_ids.picking_type_id, warehouse.out_type_id)
+
+    def test_mo_confirm_does_not_copy_section_sale_line(self):
+        """Section sale lines must not be copied onto the finished move."""
+        product, component = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+        } for name in ('Finished', 'Component')])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1.0,
+            })],
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Section Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': 'Equipment',
+                }),
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+        section_line, product_line = sale_order.order_line
+
+        mo = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty': 1.0,
+            'sale_line_id': section_line.id,
+        })
+        mo.action_confirm()
+        self.assertFalse(mo.move_finished_ids.filtered(lambda m: m.product_id == product).sale_line_id)
+
+        mo_ok = self.env['mrp.production'].create({
+            'product_id': product.id,
+            'product_uom_id': product.uom_id.id,
+            'product_qty': 1.0,
+            'sale_line_id': product_line.id,
+        })
+        mo_ok.action_confirm()
+        self.assertEqual(
+            mo_ok.move_finished_ids.filtered(lambda m: m.product_id == product).sale_line_id,
+            product_line,
+        )
