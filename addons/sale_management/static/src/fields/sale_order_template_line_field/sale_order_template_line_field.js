@@ -7,6 +7,7 @@ import {
 import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_service';
 import { registry } from '@web/core/registry';
+import { useBus } from "@web/core/utils/hooks";
 
 export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRenderer {
     static recordRowTemplate = 'sale_management.ListRenderer.RecordRow';
@@ -14,6 +15,10 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
+        this.sortDropProm = Promise.resolve();
+        useBus(this.props.list.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => {
+            detail.proms.push(this.sortDropProm);
+        });
     }
 
     get disableOptionalButton() {
@@ -115,11 +120,20 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
         record.dirty = true;
         await this.props.list.leaveEditMode();
-        const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
 
-        await super.sortDrop(dataRowId, dataGroupId, { element, previous });
+        let resolveSortDrop;
+        this.sortDropProm = new Promise((resolve) => {
+            resolveSortDrop = resolve;
+        });
+        try {
+            const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
 
-        await this._handleQuantityAdjustment(recordMap);
+            await super.sortDrop(dataRowId, dataGroupId, { element, previous });
+
+            await this._handleQuantityAdjustment(recordMap);
+        } finally {
+            resolveSortDrop();
+        }
     }
 
     /**
