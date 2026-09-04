@@ -167,7 +167,8 @@ class SaleOrder(models.Model):
 
     validity_date = fields.Date(
         string="Expiration",
-        help="Validity of the quotation. After this date, you will no longer be able to sign and pay it.",
+        help="Validity of the quotation."
+        " After this date, you will no longer be able to sign and pay it.",
         compute="_compute_validity_date",
         store=True,
         readonly=False,
@@ -2284,10 +2285,6 @@ class SaleOrder(models.Model):
         # In sudo mode to bypass the checks on the rights on the transactions.
         self.sudo().authorized_transaction_ids.action_void()
 
-    def get_portal_last_transaction(self):
-        self.ensure_one()
-        return self.sudo().transaction_ids._get_last()
-
     def _get_order_lines_to_report(self):
         down_payment_lines = self.order_line.filtered(
             lambda line: (
@@ -2714,6 +2711,94 @@ class SaleOrder(models.Model):
         )
 
     # === TOOLING ===#
+
+    def _is_payment_started(self):
+        """Return whether the customer has started paying this order.
+
+        A payment is considered started as soon as one transaction has been submitted and hasn't
+        failed, whatever transactions were made before or after it. Unlike the last transaction's
+        state, a failed retry doesn't hide the payment that went through before it.
+
+        :return: Whether the customer has started paying this order.
+        :rtype: bool
+        """
+        self.ensure_one()
+        return any(
+            tx.state in ("pending", "authorized", "done") for tx in self.sudo().transaction_ids
+        )
+
+    def _get_payment_status(self):
+        """Return the payment status of the order, considering all of its transactions.
+
+        This answers only "how much of this order's amount is secured, and in what condition". It
+        carries nothing about the order's own lifecycle: callers keep checking `state` themselves.
+
+        Unlike the last transaction's state, this considers every transaction and their amounts, so
+        a failed retry can't hide a payment that went through before it. Settled amounts are
+        resolved first (`paid` then `partial`), then the amounts still in flight (`authorized` then
+        `pending`).
+
+        The vocabulary matches `account.move._get_payment_status()` so that both documents can be
+        displayed the same way.
+
+        Note: self.ensure_one()
+
+        :return: The payment status of the order, one of `not_paid`, `pending`, `authorized`,
+                 `partial` or `paid`.
+        :rtype: str
+        """
+        self.ensure_one()
+        transactions = self.sudo().transaction_ids
+        done_amount = sum(tx.amount for tx in transactions if tx.state == "done")
+        if self.currency_id.compare_amounts(done_amount, self.amount_total) >= 0:
+            return "paid"  # An order with nothing to pay is paid.
+        if not self.currency_id.is_zero(done_amount):
+            return "partial"
+        if any(tx.state == "authorized" for tx in transactions):
+            return "authorized"
+        if any(tx.state == "pending" for tx in transactions):
+            return "pending"
+        return "not_paid"
+
+    def _get_payment_providers(self):
+        """Return the providers of the transactions securing the order's amount.
+
+        Only the transactions that actually secured money are considered, so a failed retry
+        can't be mistaken for the payment method the customer used.
+
+        Note: self.ensure_one()
+
+        :return: The providers that secured part of the order's amount.
+        :rtype: recordset of `payment.provider`
+        """
+        self.ensure_one()
+        return (
+            self
+            .sudo()
+            .transaction_ids.filtered(lambda tx: tx.state in ("authorized", "done"))
+            .provider_id
+        )
+
+    def _get_payment_notification_transaction(self):
+        """Return the transaction that the payment notification mail is about.
+
+        That mail describes a payment that went through, so the attempts that didn't (`error`,
+        `cancel`) are skipped: a retry that failed after a successful payment must not overwrite
+        the description of that payment. When the mail is deferred to the async cron, this also
+        keeps it describing the most recent payment rather than whatever attempt came last.
+
+        Note: self.ensure_one()
+
+        :return: The last transaction securing part of the order's amount, if any.
+        :rtype: recordset of `payment.transaction`
+        """
+        self.ensure_one()
+        return (
+            self
+            .sudo()
+            .transaction_ids.filtered(lambda tx: tx.state in ("pending", "authorized", "done"))
+            ._get_last()
+        )
 
     def _is_paid(self):
         """Return whether the sale order is paid or not based on the linked transactions.

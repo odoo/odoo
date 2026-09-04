@@ -17,6 +17,7 @@ from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2b
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.payment.controllers.payment_status import PaymentStatus
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
@@ -243,9 +244,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order=self._get_search_order(post),
             options=options,
         )
-        search_result = (
-            details[0].get("results", self.env["product.template"])
-        )
+        search_result = details[0].get("results", self.env["product.template"])
 
         return fuzzy_search_term, product_count, search_result
 
@@ -1812,7 +1811,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo:
             return request.redirect(SHOP_PATH)
 
-        tx_sudo = order_sudo.get_portal_last_transaction()
+        # The payment the customer is returning from, as opposed to any older one of this order.
+        tx_sudo = PaymentStatus._get_monitored_transaction(self.env).filtered(
+            lambda tx: order_sudo in tx.sale_order_ids
+        )
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(SHOP_PATH)
 
@@ -1864,6 +1866,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "website_sale_order": order,
             "order_tracking_info": (
                 order._get_purchase_tracking_info() if self.env.website.google_analytics_key else {}
+            ),
+            # The payment the visitor has just made, if any, to give them direct feedback on it.
+            "feedback_tx_sudo": PaymentStatus._get_monitored_transaction(self.env).filtered(
+                lambda tx: order in tx.sale_order_ids
             ),
         }
         if (

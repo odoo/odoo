@@ -7,13 +7,14 @@
     >
         <t t-set="alert_class" position="after">
             <t
-                t-if="tx_sudo.state == 'pending' and tx_sudo.provider_id.custom_mode == 'on_site'"
+                t-if="feedback_tx_sudo.state == 'pending'
+                      and feedback_tx_sudo.provider_id.custom_mode == 'on_site'"
                 t-set="alert_class"
                 t-value="'alert-success'"
             />
         </t>
         <div id="o_custom_payment_details" position="replace">
-            <t t-if="tx_sudo.provider_id.custom_mode == 'on_site'">
+            <t t-if="feedback_tx_sudo.provider_id.custom_mode == 'on_site'">
                 <div class="mt-2 mb-3">
                     <div class="o_body_carrier_message">
                         <t t-out="order.carrier_id.website_description"/>

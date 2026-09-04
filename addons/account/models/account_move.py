@@ -7957,6 +7957,32 @@ class AccountMove(models.Model):
         accountant module to enable the 'in_payment' state. '''
         return 'paid'
 
+    def _get_payment_status(self):
+        ''' Return the payment status of the invoice, considering everything securing its amount.
+
+        This answers only "how much of this invoice's amount is secured, and in what condition". It
+        carries nothing about the invoice's own lifecycle: callers keep checking `state` themselves.
+
+        The accounting entries are the source of truth here. `account_payment` extends this to also
+        consider the payment transactions, which the accounting entries don't know about yet.
+
+        Note: self.ensure_one()
+
+        :return: The payment status of the invoice, a value of `payment_state` (except the
+                 `invoicing_legacy` legacy value, which is reported as `not_paid`).
+        :rtype: str
+        '''
+        self.ensure_one()
+        if self.payment_state == 'in_payment' and self.currency_id.is_zero(self.amount_residual):
+            # The invoice is fully reconciled and only the bank statement is missing. There is
+            # nothing left for the customer to do, so the invoice is reported as paid rather than
+            # as being processed. Don't simplify this into `return self.payment_state`: the two
+            # situations leading to 'in_payment' are deliberately displayed differently.
+            return 'paid'
+        if self.payment_state in (False, 'invoicing_legacy'):
+            return 'not_paid'
+        return self.payment_state
+
     def _get_name_invoice_report(self):
         """ This method need to be inherit by the localizations if they want to print a custom invoice report instead of
         the default one. For example please review the l10n_ar module """

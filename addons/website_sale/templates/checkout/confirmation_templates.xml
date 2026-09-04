@@ -11,18 +11,21 @@
                  t-att-id) and each template needs to define a div element. -->
             <div class="oe_structure" id="oe_structure_website_sale_confirmation_3"/>
         </t>
-        <t t-call="website_sale.checkout_layout"
+        <t
+            t-call="website_sale.checkout_layout"
             show_wizard_checkout="False"
             show_mobile_cart_summary="False"
             show_navigation_button="False"
             show_footer="True"
             additional_title.translate="Shop - Confirmed"
             hide_promotions="True"
-            oe_structure="oe_structure">
-
-            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
+            oe_structure="oe_structure"
+        >
+            <!-- The order's payment status, as opposed to the feedback on the payment that was
+                 just made: the customer may have paid this order in several times. An order with
+                 nothing to pay is reported as paid. -->
             <div
-                t-if="tx_sudo.state in ['pending', 'done'] or not order.amount_total"
+                t-if="order._get_payment_status() != 'not_paid'"
                 class="d-flex justify-content-between align-items-center"
             >
                 <h3>Thank you for your order.</h3>
@@ -95,7 +98,19 @@
                 <t t-call="website_sale.address_on_checkout"/>
             </div>
             <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
-            <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Shop' t-attf-data-event-params='{"CTA": "Order Confirmed", "amount": "#{"%3s-%3s" % (max(0, round(website_sale_order.amount_total/100)*100 - 50), round(website_sale_order.amount_total/100)*100 + 50)}"}' />
+            <input
+                t-if='website.plausible_shared_key'
+                type='hidden'
+                class='js_plausible_push'
+                data-event-name='Shop'
+                t-attf-data-event-params='{
+                    "CTA": "Order Confirmed",
+                    "amount": "#{"%3s-%3s" % (
+                        max(0, round(website_sale_order.amount_total/100)*100 - 50),
+                        round(website_sale_order.amount_total/100)*100 + 50)
+                    }"
+                }'
+            />
             <div class="d-lg-none">
                 <t t-call="website_sale.cart_summary_content"/>
                 <t t-call="website_sale.total" _cart_total_classes.f="border-top pt-2"/>
@@ -111,26 +126,36 @@
             t-att-data-order-id="order.id"
             t-att-data-order-tracking-info="json.dumps(order_tracking_info)"
         >
-            <t t-set="tx_sudo" t-value="order.get_portal_last_transaction()"/>
+            <!-- Direct feedback on the payment the visitor has just made, if any. -->
             <t
                 t-set="alert_class"
                 t-value="
-                    (tx_sudo.state == 'pending' and 'alert-info') or
-                    (tx_sudo.state == 'done' and order.amount_total == tx_sudo.amount and 'alert-success') or
-                    (tx_sudo.state == 'done' and order.amount_total != tx_sudo.amount and 'alert-warning') or
-                    (tx_sudo.state == 'authorized' and 'alert-success') or
+                    (feedback_tx_sudo.state == 'pending' and 'alert-info') or
+                    (feedback_tx_sudo.state == 'done'
+                        and order.amount_total == feedback_tx_sudo.amount
+                        and 'alert-success') or
+                    (feedback_tx_sudo.state == 'done'
+                        and order.amount_total != feedback_tx_sudo.amount
+                        and 'alert-warning') or
+                    (feedback_tx_sudo.state == 'authorized' and 'alert-success') or
                     'alert-danger'"
             />
             <div
                 id="order_confirmation_banner"
-                t-if="tx_sudo"
-                t-attf-class="#{'' if tx_sudo._requires_payment_instructions() else 'alert ' + alert_class}"
+                t-if="feedback_tx_sudo"
+                t-attf-class="#{'' if feedback_tx_sudo._requires_payment_instructions() else 'alert ' + alert_class}"
                 role="alert"
             >
-                <t t-set="status_message" t-value="tx_sudo._get_status_message(order=order)"/>
-                <t t-if="tx_sudo._requires_payment_instructions()">
+                <t
+                    t-set="status_message"
+                    t-value="feedback_tx_sudo._get_status_message(order=order)"
+                />
+                <t t-if="feedback_tx_sudo._requires_payment_instructions()">
                     <div id="o_custom_payment_details">
-                        <t t-call="payment_custom.custom_payment_transfer_details"/>
+                        <t
+                            t-call="payment_custom.custom_payment_transfer_details"
+                            tx_sudo="feedback_tx_sudo"
+                        />
                     </div>
                 </t>
                 <t t-else="">
