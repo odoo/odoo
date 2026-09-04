@@ -1,6 +1,5 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { isValidEmail } from "@im_livechat/core/common/misc";
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, proxy, useEffect } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 
@@ -33,12 +32,10 @@ export class TranscriptSender extends Component {
                 this.state.status = this.STATUS.IDLE;
             }
         });
-        useLayoutEffect(
-            () => {
-                this.state.status = this.STATUS.IDLE;
-            },
-            () => [this.state.email]
-        );
+        useEffect(() => {
+            void this.state.email;
+            this.state.status = this.STATUS.IDLE;
+        });
     }
 
     get isButtonDisabled() {
