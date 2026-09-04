@@ -17,6 +17,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
 
     @classmethod
     def setup_independent_company(cls):
+        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
         return cls.env.ref('base.test_company_with_branch')
 
     @classmethod

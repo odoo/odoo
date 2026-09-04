@@ -595,7 +595,7 @@ class BaseCase(case.TestCase):
 
     _registry_patched = False
     _registry_readonly_enabled = True
-    _monitored_create_models = ()  # (('res.company', 'stats'),)
+    _monitored_create_models = (('res.company', 'stats'),)
     test_cursor_lock_timeout: int = 3600 if DISABLE_TIMEOUTS else 20
 
     @classmethod
@@ -1319,6 +1319,29 @@ class Approx:  # noqa: PLW1641
         return self.cmp(self.value, other) == 0
 
 
+class OperationStatsCounter:
+    def __init__(self):
+        self.count = 0
+        self.total_time = 0.0
+        self.avoided = 0
+
+    def add_call(self, time: float):
+        self.count += 1
+        self.total_time += time
+
+    def add_avoided(self):
+        self.avoided += 1
+
+    def __str__(self):
+        average_time = self.total_time / self.count if self.count else 0.0
+        saved_time = self.avoided * average_time
+        return f"""
+count: {self.count}
+total_time: {self.total_time:.2f}s
+average_time: {average_time:.2f}s
+avoided: {self.avoided}
+Estimated saved time: {saved_time:.2f}s"""
+
 class TransactionCase(BaseCase):
     """ Test class in which all test methods are run in a single transaction,
     but each test method is run in a sub-transaction managed by a savepoint.
@@ -1434,11 +1457,15 @@ class TransactionCase(BaseCase):
                     records = original_create(self, vals_list)
                     caller = inspect.stack()[1]
                     formated_caller = f"{caller.filename}:{caller.lineno} in {caller.function}"
-                    _logger.info('Create of %s took %s in %s', model_name, time.time() - start, formated_caller)
+                    create_time = time.time() - start
+                    create_stats = cls.registry._assertion_report.custom_test_stats[f'{model_name}.create']
+                    create_stats.add_call(create_time)
+                    _logger.info('Create of %s took %s in %s', model_name, create_time, formated_caller)
                     return records
             return guarded_create
 
         for model_name, action in cls._monitored_create_models:
+            cls.registry._assertion_report.custom_test_stats.setdefault(f'{model_name}.create', OperationStatsCounter())
             if model_name not in cls.registry:
                 raise ValueError(f"Unknown model guarded against create: {model_name}")
             model_class = type(cls.env[model_name])

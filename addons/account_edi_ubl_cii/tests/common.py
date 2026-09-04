@@ -23,6 +23,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
 
     @classmethod
     def setup_independent_company(cls):
+        cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
         company = cls.env.ref('base.test_company_be')
 
         company.account_fiscal_country_id = cls.env.ref('base.be')

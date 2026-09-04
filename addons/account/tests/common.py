@@ -241,6 +241,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     company = candidate_company
                     company.name = name  # maybe not the best idea but the easiest solution to avoid adapting multiple test for now.
                     cls.env.user.company_ids += company
+                    cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
                     break
 
         if not company:
@@ -270,6 +271,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             company = cls._create_company()
         else:
             company = cls.env.ref('base.test_company')
+            cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
             company.account_fiscal_country_id = cls.env.ref('base.us')  # not sure it is needed but replicates _use_chart_template behaviour
         # TODO try to remove this, may be the cause of the failure in test_tax_unit
         cls.env['account.tax.group'].sudo().create({
