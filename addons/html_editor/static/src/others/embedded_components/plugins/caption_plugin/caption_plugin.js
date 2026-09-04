@@ -62,6 +62,11 @@ export class CaptionPlugin extends Plugin {
                 return false;
             }
         },
+        can_hold_selection_after_insertion_predicates: (node) => {
+            if (closestElement(node, CAPTION_SPAN_SELECTOR)) {
+                return true;
+            }
+        },
         is_node_splittable_predicates: [
             (node) => {
                 // avoid merge
@@ -92,8 +97,9 @@ export class CaptionPlugin extends Plugin {
             if (root.matches(CAPTION_SPAN_SELECTOR)) {
                 figures = [closestElement(root, "figure")];
             } else {
-                figures = [...root.querySelectorAll("figure")]
-                    .filter(figure => figure.querySelectorAll("img").length === 1);
+                figures = [...root.querySelectorAll("figure")].filter(
+                    (figure) => figure.querySelectorAll("img").length === 1
+                );
             }
             figures.forEach((figure) => {
                 const captionSpan = figure.querySelector(CAPTION_SPAN_SELECTOR);
@@ -134,8 +140,9 @@ export class CaptionPlugin extends Plugin {
     };
 
     setup() {
-        const figures = [...this.editable.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+        const figures = [...this.editable.querySelectorAll("figure")].filter(
+            (figure) => figure.querySelectorAll("img").length === 1
+        );
         for (const figure of figures) {
             const image = figure.querySelector("img");
             figure.before(image);
@@ -162,8 +169,9 @@ export class CaptionPlugin extends Plugin {
     }
 
     cleanForSave(root) {
-        const figures = [...root.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+        const figures = [...root.querySelectorAll("figure")].filter(
+            (figure) => figure.querySelectorAll("img").length === 1
+        );
         for (const figure of figures) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");
