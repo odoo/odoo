@@ -142,6 +142,7 @@ import json
 import logging
 import mimetypes
 import os
+import posixpath
 import re
 import threading
 import time
@@ -2734,7 +2735,10 @@ class Application:
         """
 
         netloc, path = urlparse(url)[1:3]
-        path = os.path.normpath(os.path.normcase(path))
+        # URL paths are POSIX (forward slashes). Use posixpath so the `..`
+        # jail still applies while keeping `/` separators — os.path.normcase
+        # / normpath rewrite `/`->`\` on Windows and break the split below.
+        path = posixpath.normpath(path)
         try:
             path_netloc, module, static, resource = path.split(os.sep, 3)
         except ValueError:
