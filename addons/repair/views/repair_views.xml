@@ -67,10 +67,14 @@
                 <field name="has_uncomplete_moves" invisible="1"/>
                 <field name="unreserve_visible" invisible="1"/>
                 <field name="reserve_visible" invisible="1"/>
+                <field name="quality_validate_btn_style" invisible="1"/>
                <header>
                    <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
                    <button name="action_repair_start" invisible="state != 'confirmed'" type="object" string="Start Repair" class="oe_highlight" data-hotkey="q"/>
-                   <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
+                   <button name="action_repair_end" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"
+                            invisible="quality_validate_btn_style != 'primary'"/>
+                   <button name="action_repair_end" type="object" string="End Repair" class="btn-secondary" data-hotkey="x"
+                            invisible="quality_validate_btn_style != 'secondary'"/>
                    <button name="action_assign" invisible="not reserve_visible" string="Reserve" type="object"/>
                    <button name="action_create_sale_order" type="object" string="Quote" invisible="not can_create_sale_or_invoice"/>
                    <button name="action_create_invoice" type="object" string="Invoice" invisible="not (can_create_sale_or_invoice or can_create_extra_invoice) or state != 'done'"/>

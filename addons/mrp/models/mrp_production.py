@@ -313,6 +313,12 @@ class MrpProduction(models.Model):
         'The quantity to produce must be positive!',
     )
 
+    quality_validate_btn_style = fields.Selection([
+            ('primary', 'Primary'),
+            ('secondary', 'Secondary'),
+            ('invisible', 'Invisible'),
+        ], compute='_compute_quality_validate_btn_style')
+
     @api.depends('production_group_id.child_ids.production_ids')
     def _compute_mrp_production_child_count(self):
         for production in self:
@@ -572,6 +578,14 @@ class MrpProduction(models.Model):
     def _compute_show_lots(self):
         for production in self:
             production.show_final_lots = production.product_id.tracking in ['lot', 'serial']
+
+    @api.depends('state')
+    def _compute_quality_validate_btn_style(self):
+        for record in self:
+            if record.state in ('draft', 'done', 'cancel'):
+                record.quality_validate_btn_style = 'invisible'
+            else:
+                record.quality_validate_btn_style = 'primary'
 
     def _inverse_lines(self):
         """ Little hack to make sure that when you change something on these objects, it gets saved"""

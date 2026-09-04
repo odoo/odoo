@@ -196,6 +196,11 @@ class StockPicking(models.Model):
         'unique(name, company_id)',
         'Reference must be unique per company!',
     )
+    quality_validate_btn_style = fields.Selection([
+        ('primary', 'Primary'),
+        ('secondary', 'Secondary'),
+        ('invisible', 'Invisible'),
+    ], compute='_compute_quality_validate_btn_style')
 
     @api.depends('partner_id')
     @api.depends_context('display_name_partner', 'formatted_display_name')
@@ -551,6 +556,14 @@ class StockPicking(models.Model):
     @api.depends('move_ids.move_dest_ids')
     def _compute_show_next_pickings(self):
         self.show_next_pickings = len(self._get_next_transfers()) != 0
+
+    @api.depends('state')
+    def _compute_quality_validate_btn_style(self):
+        for record in self:
+            if record.state in ('done', 'cancel'):
+                record.quality_validate_btn_style = 'invisible'
+            else:
+                record.quality_validate_btn_style = 'primary'
 
     def _search_products_availability_state(self, operator, value):
         if operator != 'in':
