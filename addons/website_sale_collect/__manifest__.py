@@ -21,6 +21,7 @@ Allows customers to check in-store stock, pay on site, and pick up their orders 
         "views/stock_warehouse_views.xml",
         "views/templates.xml",
     ],
+    "demo": ["demo/stock_warehouse_demo.xml"],
     "assets": {
         "web.assets_frontend": [
             "website_sale_collect/static/src/**/*",

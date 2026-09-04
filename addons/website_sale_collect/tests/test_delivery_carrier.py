@@ -60,9 +60,11 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
         })
 
         with (
-            patch(
-                "odoo.addons.base_geolocalize.models.res_partner.ResPartner.geo_localize",
-                return_value=True,
+            patch.object(self.registry["res.partner"], "geo_localize", return_value=True),
+            patch.object(
+                self.registry["stock.warehouse"],
+                "_get_pickup_next_open_date",
+                return_value=False,
             ),
             self.mock_request(sale_order_id=so.id),
         ):
@@ -102,6 +104,8 @@ class TestDeliveryCarrier(ClickAndCollectCommon, WebsiteSaleStockCommon):
                                 "5": [],
                                 "6": [],
                             },
+                            "closing_dates": [],
+                            "next_open_date": False,
                             "distance": 0.0,
                         }
                     ],
