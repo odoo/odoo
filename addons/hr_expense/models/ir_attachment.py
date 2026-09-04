@@ -20,19 +20,20 @@ class IrAttachment(models.Model):
     def _inaccessible_comodel_records(self, model_and_ids: dict[str, Collection[int]], operation: str):
         expense_ids = list(filter(None, model_and_ids.get('hr.expense', [])))
         expenses = self.env['hr.expense'].browse(expense_ids)
-        user_expenses = expenses.filtered(lambda e: e.state in {'draft', 'submitted'} and e.employee_id.user_id == self.env.user)
-
+        accessible_user_expense_ids = set(expenses._filtered_access('read').filtered(
+            lambda e: e.state in {'draft', 'submitted'} and e.employee_id.user_id == self.env.user
+        ).ids)
         blocked_expense_ids = []
         if operation != 'read' and not self.env.su:
             blocked_expense_ids = expenses.filtered(  # Attachments cannot be added/modified once an expense has been posted
-                lambda e: not (e.id in user_expenses.ids or (e.state in {'draft', 'submitted'} and e.has_access('write'))),
+                lambda e: not (e.id in accessible_user_expense_ids or (e.state in {'draft', 'submitted'} and e.has_access('write'))),
             ).ids
             for expense_id in blocked_expense_ids:
                 yield 'hr.expense', expense_id
 
         model_and_ids = {
             **model_and_ids,
-            'hr.expense': [id_ for id_ in expense_ids if id_ not in blocked_expense_ids and id_ not in user_expenses.ids],
+            'hr.expense': [id_ for id_ in expense_ids if id_ not in blocked_expense_ids and id_ not in accessible_user_expense_ids],
         }
         yield from super()._inaccessible_comodel_records(model_and_ids, operation)
 
