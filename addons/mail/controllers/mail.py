@@ -15,7 +15,7 @@ from odoo.tools import consteq
 from odoo.tools.misc import file_open
 
 from odoo.addons.mail.tools.discuss import add_guest_to_context
-from odoo.addons.html_editor.controllers.ms_icons import MS_ICONS
+from odoo.addons.html_editor.controllers.icons import ICONS
 
 try:
     from werkzeug.utils import send_file
@@ -186,23 +186,35 @@ class MailController(http.Controller):
 
     @staticmethod
     def _get_icon_rendering_info(icon, font, fill=False):
-        info = {}
-        if font == 'oi' and icon.isdigit():
-            # custom odoo icon
-            info['path'] = 'web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff2'
-            info['icon'] = chr(int(icon))
-        elif font == 'fa':
+        if font == 'fa':
             # legacy fontawesome icon
-            info['path'] = 'web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf'
-            info['icon'] = chr(int(icon)) if icon.isdigit() else icon  # legacy fallback
-        else:
-            # default to 'oi' (material icons)
-            info['path'] = 'web/static/src/libs/materialsymbols/material_symbols_backend.woff'
-            codepoint = MS_ICONS[icon]['codepoint']
-            if fill:
-                codepoint = 0x100000 + (codepoint & 0xFFFF)
-            info['icon'] = chr(codepoint)
-        return info
+            return {
+                'path': 'web/static/src/libs/fontawesome/fonts/fontawesome-webfont.ttf',
+                'icon': chr(int(icon)) if icon.isdigit() else icon,  # legacy fallback
+            }
+
+        if icon.isdigit():
+            # legacy custom odoo icon
+            return {
+                'path': 'web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff',
+                'icon': chr(int(icon)),
+            }
+
+        if icon.startswith("oi_"):
+            # custom odoo icon
+            return {
+                'path': 'web/static/lib/odoo_ui_icons/fonts/odoo_ui_icons.woff',
+                'icon': chr(ICONS[icon]['codepoint']),
+            }
+
+        # default to 'oi' (material icons)
+        codepoint = ICONS[icon]['codepoint']
+        if fill:
+            codepoint = 0x100000 + (codepoint & 0xFFFF)
+        return {
+            'path': 'web/static/src/libs/materialsymbols/material_symbols_backend.woff',
+            'icon': chr(codepoint),
+        }
 
     @http.route('/mail/view', type='http', auth='public')
     def mail_action_view(self, model=None, res_id=None, access_token=None, **kwargs):

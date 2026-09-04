@@ -19,7 +19,7 @@ from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
 from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
-from .ms_icons import MS_ICONS
+from .icons import ICONS
 from .svg_utils import get_shape_svg, make_shaped_image, update_svg_colors
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
@@ -29,9 +29,9 @@ DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 DEFAULT_OTS_ENDPOINT = 'https://ots.api.odoo.com'
 API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
 
-MS_ICONS_INDEX = [
+ICONS_INDEX = [
     (name, icon['has_fill'], f"{name} {icon['tags']}".lower())
-    for name, icon in MS_ICONS.items()
+    for name, icon in ICONS.items()
 ]
 
 # Regex definitions to apply speed modification in SVG files
@@ -810,9 +810,9 @@ class HTML_Editor(Controller):
         else:
             return {'error': response.status_code}
 
-    @route('/html_editor/material_symbols_search', type='jsonrpc', auth='user', readonly=True)
-    def material_symbols_search(self, needle=''):
-        """Search the Material Symbols icons by name and tags.
+    @route('/html_editor/icons_search', type='jsonrpc', auth='user', readonly=True)
+    def icons_search(self, needle=''):
+        """Search icons by name and tags.
 
         :param str needle: the search term. When empty, every icon is returned,
             which also provides a plain list of all available icons.
@@ -821,6 +821,6 @@ class HTML_Editor(Controller):
         needle = (needle or '').strip().lower()
         return [
             {'name': name, 'has_fill': has_fill}
-            for name, has_fill, haystack in MS_ICONS_INDEX
+            for name, has_fill, haystack in ICONS_INDEX
             if not needle or needle in haystack
         ]

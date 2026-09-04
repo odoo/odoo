@@ -7,7 +7,7 @@ from odoo.tests.common import HttpCase
 from odoo.tools.image import binary_to_image
 from odoo.tools.misc import file_open
 
-from odoo.addons.html_editor.controllers.ms_icons import MS_ICONS
+from odoo.addons.html_editor.controllers.icons import ICONS
 
 
 class TestFontToImg(HttpCase):
@@ -68,7 +68,7 @@ class TestMaterialSymbolsToImg(HttpCase):
                     outlined, filled).getbbox() is not None
                 self.assertEqual(
                     differs,
-                    MS_ICONS[icon]['has_fill'],
-                    f"{icon!r} filled form should{'' if MS_ICONS[icon]['has_fill'] else ' not'} "
+                    ICONS[icon]['has_fill'],
+                    f"{icon!r} filled form should{'' if ICONS[icon]['has_fill'] else ' not'} "
                     "differ from its outlined one",
                 )

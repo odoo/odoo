@@ -1068,14 +1068,9 @@ function fontToImg(element) {
     for (const font of element.querySelectorAll(".oi")) {
         const beforeStyle = getComputedStyle(font, "::before");
         const content = beforeStyle["content"].trim().replace(/['"]/g, "");
-        let icon = content;
-        let fill = 0;
-        if (font.matches("[data-icon^='oi_']")) {
-            icon = content.codePointAt(0);
-        } else {
-            icon = content.replace(/_f$/, "");
-            fill = isIconFilled(beforeStyle, content) ? 1 : 0;
-        }
+        const icon = content.replace(/_f$/, "");
+        const fill = isIconFilled(beforeStyle, content) ? 1 : 0;
+
         if (icon) {
             const color =
                 convertCSSColorToPILRgba(_getStylePropertyValue(font, "color")) || "000000ff";
