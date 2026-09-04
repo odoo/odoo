@@ -1,4 +1,13 @@
-import { Component, onWillStart, t, useListener, usePlugin, useProps, xml } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    signal,
+    t,
+    useListener,
+    usePlugin,
+    useProps,
+    xml,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -8,12 +17,13 @@ import { Tabs, TabHeader, TabPanel } from "@mail/core/common/tabs";
 import { useMicrophoneVolume } from "@mail/utils/common/hooks";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
+import { SelfVideo } from "@mail/discuss/call/common/self_video";
 import { Dialog } from "@web/core/dialog/dialog";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    static components = { ActionPanel, DeviceSelect, Tabs, TabHeader, TabPanel };
+    static components = { ActionPanel, DeviceSelect, SelfVideo, Tabs, TabHeader, TabPanel };
 
     debugMode = usePlugin(DebugModePlugin);
 
@@ -26,6 +36,7 @@ export class CallSettings extends Component {
             withActionPanel: t.boolean().optional(true),
         });
         this.notification = useService("notification");
+        this.showCameraPreview = signal(false);
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
         this.microphoneVolume = useMicrophoneVolume();
@@ -98,6 +109,10 @@ export class CallSettings extends Component {
 
     onChangePushToTalk(ev) {
         this.store.settings.usePushToTalk = ev.target.checked;
+    }
+
+    onChangeShowCameraPreview(ev) {
+        this.showCameraPreview.set(ev.target.checked);
     }
 
     onInputBackgroundBlurAmount(ev) {

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.SelfVideo">
+        <div class="ratio ratio-16x9 bg-dark">
+            <video t-if="this.state.videoStream" class="object-fit-cover h-100 w-100" autoplay="" t-ref="this.videoRef"/>
+        </div>
+    </t>
+</templates>

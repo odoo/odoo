@@ -98,8 +98,19 @@
                                 </span>
                                 <DeviceSelect kind="'videoinput'"/>
                             </div>
+                            <div t-if="this.rtc.cameraPermission === 'granted' and this.showCameraPreview()" class="rounded-2 overflow-hidden mt-3">
+                                <SelfVideo/>
+                            </div>
                             <hr class="my-3 border-secondary opacity-75"/>
                             <div class="d-flex flex-column border rounded">
+                                <t t-if="this.rtc.cameraPermission === 'granted'">
+                                    <t t-call="discuss.CallSettings.textToggler"
+                                        text.translate="Preview Camera"
+                                        description.translate="Preview your camera and background settings."
+                                        value="this.showCameraPreview()"
+                                        onchange="this.onChangeShowCameraPreview"/>
+                                    <hr class="border-secondary opacity-75 m-0"/>
+                                </t>
                                 <t t-if="this.store.settings.hasCanvasFilterSupport">
                                     <t t-call="discuss.CallSettings.textToggler"
                                         text.translate="Blur video background"
