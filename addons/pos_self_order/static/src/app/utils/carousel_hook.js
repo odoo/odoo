@@ -17,6 +17,7 @@ export function useCarousel(carouselRef, timeIntervalSec = 5) {
     const bootstrap = usePlugin(BootstrapInstance);
     let carousel;
     let timeoutId;
+    let unmounted = false;
 
     const _clearTimeout = () => {
         if (timeoutId) {
@@ -47,17 +48,38 @@ export function useCarousel(carouselRef, timeIntervalSec = 5) {
     const scheduleNextSlide = async () => {
         _clearTimeout();
         const delay = session.test_mode ? 100 : await _getIntervalTime();
+        if (unmounted) {
+            // `_getIntervalTime` awaits the active video's metadata, so the
+            // page can be gone - and `carousel` disposed - by now. `next()`
+            // on a disposed instance reaches
+            // `Element.prototype.querySelector.call(null, ...)`.
+            return;
+        }
         timeoutId = setTimeout(() => carousel.next(), delay);
+    };
+
+    const _dropCallbacksOnceDisposed = (instance) => {
+        if (Object.hasOwn(instance, "_queueCallback")) {
+            return;
+        }
+        const queueCallback = instance._queueCallback;
+        instance._queueCallback = function (callback, ...args) {
+            // `_element` is the liveness sentinel: set in the constructor,
+            // nulled by `dispose()`.
+            return queueCallback.call(this, () => this._element && callback(), ...args);
+        };
     };
 
     onMounted(() => {
         const el = carouselRef();
         carousel = bootstrap.getOrCreateInstance(Carousel, el);
+        _dropCallbacksOnceDisposed(carousel);
         el.addEventListener("slid.bs.carousel", scheduleNextSlide);
         timeoutId = setTimeout(scheduleNextSlide, 100);
     });
 
     onWillUnmount(() => {
+        unmounted = true;
         _clearTimeout();
         carouselRef()?.removeEventListener("slid.bs.carousel", scheduleNextSlide);
     });
