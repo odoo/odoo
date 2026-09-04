@@ -89,6 +89,7 @@ def force_demo(env: Environment) -> None:
     Forces the `demo` flag on all modules, and installs demo data for all installed modules.
     """
     assert env.registry.ready
+    env['ir.config_parameter'].sudo().set_int('auth_password_policy.minlength', 4)
     env.cr.execute('UPDATE ir_module_module SET demo=True')
     env.cr.execute(
         "SELECT name FROM ir_module_module WHERE state IN ('installed', 'to upgrade', 'to remove')"
