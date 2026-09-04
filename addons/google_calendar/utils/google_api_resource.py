@@ -62,7 +62,7 @@ class GoogleApiResource(abc.Set):
         return value
 
     def __repr__(self):
-        return '%s%s' % (self.__class__.__name__, self.ids)
+        return '<%s (%s item(s))>' % (self.__class__.__name__, len(self))
 
     @property
     def ids(self):
