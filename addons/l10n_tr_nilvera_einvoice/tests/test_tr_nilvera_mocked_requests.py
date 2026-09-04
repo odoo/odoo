@@ -121,8 +121,7 @@ def patch_nilvera_request(function):
             # If the test expects the mock as an argument, pass it
             if 'mocked_request' in function.__code__.co_varnames:
                 return function(*args, mocked_request, **kwargs)
-            else:
-                return function(*args, **kwargs)
+            return function(*args, **kwargs)
     return wrapper
 
 
@@ -143,6 +142,13 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
             3989.33, self.env.ref('base.TRY'),
         )
         self.assertEqual(note, 'YALNIZ : ÜÇBINDOKUZYÜZSEKSENDOKUZ TRY OTUZÜÇ KURUS')
+
+    def test_amount_in_words_ignores_sign(self):
+        note_model = self.env["account.edi.xml.ubl.tr"]
+        try_currency = self.env.ref("base.TRY")
+        note = note_model._l10n_tr_get_amount_integer_partn_text_note(-158.40, try_currency)
+        self.assertEqual(note, note_model._l10n_tr_get_amount_integer_partn_text_note(158.40, try_currency))
+        self.assertNotIn("EKSI", note)
 
     @patch_nilvera_request
     def test_which_service_to_call(self):
