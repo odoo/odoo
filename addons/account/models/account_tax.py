@@ -1663,7 +1663,7 @@ class AccountTax(models.Model):
             'analytic_distribution': load('analytic_distribution', None),
         }
 
-        extra_tax_data = self._import_base_line_extra_tax_data(base_line, load('extra_tax_data', {}) or {})
+        extra_tax_data = kwargs.get('extra_tax_data') if kwargs.get('extra_tax_data') else self._import_base_line_extra_tax_data(base_line, load('extra_tax_data', {}) or {})
         base_line.update({
             # Allow to split the computation of taxes on subset of lines. For example with a down payment of 300 on a sale order of 1000,
             # the last invoice will have an amount of 1000 - 300 = 700. However, the taxes should be computed in 2 subsets of lines:

@@ -1588,7 +1588,7 @@ class AccountMove(models.Model):
             return self.invoice_currency_rate
         return abs(product_line.amount_currency / product_line.balance) if product_line.balance else 0.0
 
-    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+    def _prepare_product_base_line_for_taxes_computation_values(self, product_line, **kwargs):
         """ Convert an account.move.line having display_type='product' into a base line for the taxes computation.
 
         :param product_line: An account.move.line.
@@ -1598,7 +1598,8 @@ class AccountMove(models.Model):
         is_invoice = self.is_invoice(include_receipts=True)
         sign = self.direction_sign if is_invoice else 1
 
-        kwargs = {
+        base_line_kwargs = {
+            **kwargs,
             'price_unit': product_line.price_unit if is_invoice else product_line.amount_currency,
             'quantity': product_line.quantity if is_invoice else 1.0,
             'discount': product_line.discount if is_invoice else 0.0,
@@ -1610,11 +1611,21 @@ class AccountMove(models.Model):
 
         computation_key = (product_line.extra_tax_data or {}).get('computation_key', '')
         if computation_key.startswith('global_discount'):
-            kwargs['special_type'] = 'global_discount'
+            base_line_kwargs['special_type'] = 'global_discount'
         elif computation_key.startswith('down_payment'):
-            kwargs['special_type'] = 'down_payment'
+            base_line_kwargs['special_type'] = 'down_payment'
 
-        return self.env['account.tax']._prepare_base_line_for_taxes_computation(product_line, **kwargs)
+        return base_line_kwargs
+
+    # TODO master: add the kwargs
+    def _prepare_product_base_line_for_taxes_computation(self, product_line):
+        """ Convert an account.move.line having display_type='product' into a base line for the taxes computation.
+
+        :param product_line: An account.move.line.
+        :return: A base line returned by '_prepare_base_line_for_taxes_computation'.
+        """
+        values = self._prepare_product_base_line_for_taxes_computation_values(product_line)
+        return self.env['account.tax']._prepare_base_line_for_taxes_computation(product_line, **values)
 
     def _prepare_epd_base_line_for_taxes_computation(self, epd_line):
         """ Convert an account.move.line having display_type='epd' into a base line for the taxes computation.
@@ -5109,10 +5120,12 @@ class AccountMove(models.Model):
             tax_amounts[tax_rep_id]['balance'] += line.balance
 
         base_lines = [
-            {
-                **self._prepare_product_base_line_for_taxes_computation(line),
-                'is_refund': True,
-            }
+            self.env['account.tax']._prepare_base_line_for_taxes_computation(
+                line,
+                **self._prepare_product_base_line_for_taxes_computation_values(line),
+                is_refund=True,
+                extra_tax_data=None,
+            )
             for line in invoice_lines
         ]
         for base_line in base_lines:
