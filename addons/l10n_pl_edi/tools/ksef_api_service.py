@@ -4,6 +4,8 @@ import json
 import logging
 import os
 import time
+from datetime import timezone
+from dateutil.parser import parse
 
 import requests
 from cryptography import x509
@@ -21,6 +23,17 @@ _logger = logging.getLogger(__name__)
 TIMEOUT = 30
 
 
+def parse_time(s):
+    if s and (s := s.strip()):
+        dt = parse(s).astimezone(timezone.utc).replace(tzinfo=None)
+        return fields.Datetime.to_string(dt)
+    return False
+
+
+def format_time(date_value):
+    return date_value.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+
 def b64(value):
     if isinstance(value, str):
         value = value.encode()
@@ -31,10 +44,6 @@ def u64(value):
     if isinstance(value, str):
         value = value.encode()
     return base64.b64decode(value)
-
-
-def format_time(date_value):
-    return date_value.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 
 
 class KsefApiService:
@@ -59,7 +68,7 @@ class KsefApiService:
             'Content-Type': 'application/json',
         }
 
-    def _make_request(self, method, endpoint, is_auth_retry=False, **kwargs):
+    def _make_request(self, method, endpoint, is_auth_retry=False, set_auth_header=True, **kwargs):
         """
         Helper method to make authenticated requests, handling token refresh on 401.
         :param method: 'GET' or 'POST'
@@ -69,26 +78,24 @@ class KsefApiService:
         """
         kwargs.setdefault('headers', {})
         kwargs.setdefault('timeout', TIMEOUT)
-        kwargs['headers'].update(self._make_headers(self.company.sudo().l10n_pl_edi_access_token))
+        if set_auth_header:
+            kwargs['headers'].update(self._make_headers(self.company.sudo().l10n_pl_edi_access_token))
         try:
             response = requests.request(method, endpoint, **kwargs)
-
-            if response.status_code == 401 and not is_auth_retry:
-                _logger.info("KSeF access token expired, refreshing...")
-                self.refresh_access_token()
-                # Pass is_auth_retry=True to prevent looping
-                return self._make_request(method, endpoint, is_auth_retry=True, **kwargs)
-            elif response.status_code == 429:
-                retry_after = response.headers.get('Retry-After')
-                raise KSeFRateLimitError("Too Many Requests", retry_after=retry_after)
-            else:
-                response.raise_for_status()
-                return response
-
         except requests.exceptions.RequestException as e:
             error_text = e.response.text if e.response is not None else str(e)
             _logger.exception("KSeF API request failed: %s", error_text)
             raise UserError(self.env._("KSeF API Error: %s", error_text))
+        if response.status_code == 401 and not is_auth_retry:
+            _logger.info("KSeF access token expired, refreshing...")
+            self.refresh_access_token()
+            # Pass is_auth_retry=True to prevent looping
+            return self._make_request(method, endpoint, is_auth_retry=True, **kwargs)
+        if response.status_code == 429:
+            retry_after = response.headers.get('Retry-After')
+            raise KSeFRateLimitError("Too Many Requests", retry_after=retry_after)
+        response.raise_for_status()
+        return response
 
     def _get_public_keys(self):
         """
@@ -376,6 +383,7 @@ class KsefApiService:
                 'status': json_response['status']['code'],
                 'date_from': fields.Datetime.to_string(date_from),
                 'date_to': fields.Datetime.to_string(date_to),
+                'date_expiry': parse_time(json_response.get('packageExpirationDate')),
                 'parts': {
                     part['partName']: {
                         'name': part['partName'],

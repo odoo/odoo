@@ -20,15 +20,12 @@ KSEF_CURRENT_WINDOW = 3
 KSEF_WINDOW = 30
 KSEF_INTERVAL = 1
 KSEF_FIRST_DAY = fields.Date.from_string('2026-01-31')
+
 _logger = logging.getLogger(__name__)
 
 
 def today_datetime():
     return fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-
-
-def unpack(x, *fields):
-    return [x.get(field) for field in fields]
 
 
 class AccountMove(models.Model):
@@ -758,7 +755,23 @@ class AccountMove(models.Model):
         for batch in batches:
             batch_name = batch.name
             _logger.info("Downloading batch %s ...", batch_name)
-            batch._l10n_pl_edi_download_parts()
+            # Commit every download
+            batch_data = json.loads(batch.raw)
+            batch._l10n_pl_edi_download_parts(company, batch_data, commit=True)
+            # download_parts returns only the new parts
+            parts = batch._l10n_pl_edi_get_parts(extra_domain=[('description', '=', batch_data['number'])])
+            dest_name = batch_name.replace('json', 'zip')
+            _logger.info("Creating %s", dest_name)
+            if not self.env['ir.attachment'].sudo().search([('name', '=', dest_name)]):
+                parts.merge(
+                    dest_name=dest_name,
+                    res_model=parts[0].res_model,
+                    res_id=parts[0].res_id,
+                    delete=True,
+                    mimetype='application/zip',
+                )
+            else:
+                _logger.info("Already there %s", dest_name)
             batch.unlink()
             _logger.info("Deleted batch %s", batch_name)
             if self._can_commit():
@@ -812,14 +825,16 @@ class AccountMove(models.Model):
             match batch_data['status']:
                 case 200:
                     # Set as to download, and to delete if old
-                    if is_old:
-                        to_delete |= batch
                     to_download |= batch
+                    to_delete |= batch.filtered(lambda x: x.create_date < today_datetime())
                 case 100:
                     # Ask for a new state
-                    number, date_from_str, date_to_str = unpack(batch_data, 'number', 'date_from', 'date_to')
-                    date_from, date_to = fields.Datetime.from_string(date_from_str), fields.Datetime.from_string(date_to_str)
-                    if batch_status := service.download_batch_status(number, date_from, date_to, encryption_data):
+                    if batch_status := service.download_batch_status(
+                        number=batch_data['number'],
+                        date_from=fields.Datetime.from_string(batch_data['date_from']),
+                        date_to=fields.Datetime.from_string(batch_data['date_to']),
+                        encryption_data=encryption_data,
+                    ):
                         batch.update({
                             'raw': json.dumps(batch_status, indent=4).encode(),
                             'mimetype': 'application/json'
