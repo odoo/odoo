@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_stock_barcodes_option_group_form" model="ir.ui.view">
+        <field name="name">stock.barcodes.option.group.form</field>
+        <field name="model">stock.barcodes.option.group</field>
+        <field name="arch" type="xml">
+            <form string="Barcode options">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="barcode_guided_mode" />
+                        </group>
+                        <group>
+                            <field name="code" />
+                            <field
+                                name="display_notification"
+                                widget="boolean_toggle"
+                            />
+                        </group>
+                    </group>
+                    <group string="Behavior settings">
+                        <group>
+                            <field name="manual_entry" />
+                            <field name="manual_entry_field_focus" />
+                            <field name="confirmed_moves" />
+                            <field name="show_pending_moves" />
+                            <field
+                                name="source_pending_moves"
+                                attrs="{'invisible': [('show_pending_moves', '=', False), ('barcode_guided_mode', '=', False)]}"
+                            />
+                            <field name="group_key_for_todo_records" />
+                            <field name="location_field_to_sort" />
+                            <field name="show_detailed_operations" />
+                            <field name="auto_put_in_pack" />
+                            <field name="display_read_quant" />
+                        </group>
+                        <group>
+                            <field name="ignore_filled_fields" />
+                            <field name="keep_screen_values" />
+                            <field name="is_manual_confirm" />
+                            <field name="is_manual_qty" />
+                            <field name="accumulate_read_quantity" />
+                            <field name="allow_negative_quant" />
+                            <field name="fill_fields_from_lot" />
+                            <field name="ignore_quant_location" />
+                            <field name="auto_lot" />
+                            <field name="create_lot" />
+                            <field name="use_location_dest_putaway" />
+                        </group>
+                    </group>
+                    <separator string="Steps to scan" />
+                    <field name="option_ids">
+                        <tree editable="bottom">
+                            <field name="step" />
+                            <field name="sequence" widget="handle" />
+                            <field name="name" />
+                            <field name="field_name" />
+                            <field name="filled_default" />
+                            <field
+                                name="forced"
+                                attrs="{'column_invisible': [('parent.barcode_guided_mode', '=', False)]}"
+                            />
+                            <field name="to_scan" />
+                            <field name="required" />
+                            <field name="clean_after_done" />
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_stock_barcodes_option_tree" model="ir.ui.view">
+        <field name="name">stock.barcodes.option.tree</field>
+        <field name="model">stock.barcodes.option</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sequence" />
+                <field name="name" />
+                <field
+                    name="option_group_id"
+                    invisible="context.get('hide_option_group_id', False)"
+                />
+                <field name="field_name" />
+                <field name="filled_default" />
+                <field name="forced" />
+                <field name="to_scan" />
+                <field name="required" />
+                <field name="clean_after_done" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_stock_barcodes_option">
+        <field name="res_model">stock.barcodes.option</field>
+        <field name="name">Barcodes options</field>
+        <field name="view_mode">tree</field>
+    </record>
+    <record model="ir.actions.act_window" id="action_stock_barcodes_option_group">
+        <field name="res_model">stock.barcodes.option.group</field>
+        <field name="name">Barcodes options groups</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="menu_action_stock_barcodes_option_group"
+        action="action_stock_barcodes_option_group"
+        groups="stock.group_stock_user"
+        name="Barcode options"
+        parent="stock.menu_product_in_config_stock"
+        sequence="100"
+    />
+</odoo>

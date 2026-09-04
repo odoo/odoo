@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherit product.product view form to add field-->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.view.form.inherit.low.stocks.product.alert</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="pos_categ_id" position="after">
+                <field name="alert_tag"/>
+            </field>
+            <xpath expr="//group[@name='group_lots_and_weight']"
+                   position="inside">
+                <field name="is_low_stock_alert" invisible="1"/>
+                <field name="min_low_stock_alert" attrs="{'invisible':[('is_low_stock_alert','=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

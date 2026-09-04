@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2017-2018 Jairo Llopis <jairo.llopis@tecnativa.com>
+    Copyright 2022 Camptocamp SA (https://www.camptocamp.com).
+    License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+-->
+<templates>
+    <t t-inherit="web.legacy.FilterMenu" t-inherit-mode="extension" owl="1">
+        <CustomFilterItem position="after">
+            <AdvancedFilterItem />
+        </CustomFilterItem>
+    </t>
+    <t t-inherit="web.FilterMenu" t-inherit-mode="extension" owl="1">
+        <CustomFilterItem position="after">
+            <AdvancedFilterItem />
+        </CustomFilterItem>
+    </t>
+</templates>

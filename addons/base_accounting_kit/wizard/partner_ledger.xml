@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_report_partner_ledger_view" model="ir.ui.view">
+        <field name="name">Partner Ledger</field>
+        <field name="model">account.report.partner.ledger</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_common_report_view"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='target_move']" position="after">
+                    <field name="result_selection"/>
+                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                    <newline/>
+                    <field name="reconciled"/>
+                    <newline/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="action_partner_leadger" model="ir.actions.act_window">
+        <field name="name">Partner Ledger</field>
+        <field name="res_model">account.report.partner.ledger</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_report_partner_ledger_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem name="Partner Ledger"
+              id="menu_partner_ledger" sequence="1"
+              parent="base_accounting_kit.account_reports_partner"
+              action="action_partner_leadger"/>
+</odoo>

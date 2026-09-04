@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Form view for my workout plan-->
+    <record id="my_workout_plan_view_form" model="ir.ui.view">
+        <field name="name">my.workout.plan.view.form</field>
+        <field name="model">my.workout.plan</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="payment_term_id" placeholder="e.g. workout plan 1"/>
+                        </h1>
+                    </div>
+                    <group col="4" colspan="6">
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--Tree view for my workout plan-->
+    <record id="my_workout_plan_view_tree" model="ir.ui.view">
+        <field name="name">my.workout.plan.view.tree</field>
+        <field name="model">my.workout.plan</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="payment_term_id"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+    <!--Action for my workout plan-->
+    <record id="my_workout_plans_action" model="ir.actions.act_window">
+        <field name="name">My Workout Plan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">my.workout.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('assign_to_id', '=', uid)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                My Workout Plan!
+            </p>
+        </field>
+    </record>
+<!--Menu and Submenu-->
+    <menuitem id="gym_my_workout_menu_action"
+              name="My Workout Plan"
+              parent="gym_workout_root"
+              action="my_workout_plans_action"
+              sequence="20"/>
+</odoo>

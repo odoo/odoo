@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Inventory settings form view inherited   -->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.user.warehouse.restriction</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="1"/>
+        <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='warehouse_setting_container']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box" id="categorize_locations"
+                         attrs="{'invisible': [('group_stock_multi_locations', '=', False)]}">
+                        <div class="col-12 col-lg-6 o_setting_box" id="track_product_location"
+                             title="Check if you want to restrict warehouse for users.">
+                            <div class="o_setting_left_pane">
+                                <field name="group_user_warehouse_restriction" on_change="1"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_user_warehouse_restriction"/>
+                                <div class="text-muted">
+                                    Restrict stock warehouse to users
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

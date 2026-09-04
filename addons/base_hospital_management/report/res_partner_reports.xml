@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Patient prescription report -->
+    <record id="action_report_patient_prescription" model="ir.actions.report">
+        <field name="name">Patient Prescription</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">base_hospital_management.patient_prescription_report</field>
+        <field name="report_file">base_hospital_management.patient_prescription_report</field>
+        <field name="binding_model_id" ref="model_res_partner"/>
+        <field name="binding_type">report</field>
+    </record>
+    <!--    Patient prescription report template-->
+    <template id="patient_prescription_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <center>
+                <h1>Doctor Prescription</h1></center>
+                <div>
+                    <strong>Date :</strong>
+                    <span t-esc="date"/>
+                </div>
+                <div>
+                    <strong>Patient's Name :</strong>
+                    <span t-esc="patient_name"/>
+                </div>
+                <div>
+                    <strong>Doctor :</strong>
+                    <span t-esc="doctor_name"/>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr style="text-align:left">
+                            <th>SL.No</th>
+                            <th>Medicine</th>
+                            <th>Intake</th>
+                            <th>Time</th>
+                            <th>Quantity</th>
+                            <th>Before/ After Food</th>
+                        </tr>
+                    </thead>
+                    <t t-set="i" t-value="0"/>
+                    <tbody>
+                        <center>
+                        <tr t-foreach="datas" t-as="line">
+                            <td>
+                                <t t-set="i" t-value="i + 1"/>
+                                <span t-esc="i"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['medicine']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['intake']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['time']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['quantity']"/>
+                            </td>
+                            <td>
+                                <span t-esc="line['note']"/>
+                            </td>
+                        </tr>
+                        </center>
+                    </tbody>
+                </table>
+            </t>
+        </t>
+    </template>
+         <!--Report paper format-->
+    <record id="paperformat_patient" model="report.paperformat">
+        <field name="name">Custom Paper</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">55</field>
+        <field name="page_width">30</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">1.00</field>
+        <field name="margin_bottom">1.00</field>
+        <field name="margin_left">0.00</field>
+        <field name="margin_right">1.00</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">35</field>
+        <field name="dpi">125</field>
+    </record>
+    <!--        Patient card report action-->
+    <record id="action_report_patient_card" model="ir.actions.report">
+        <field name="name">Patient Card</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">base_hospital_management.patient_card_report</field>
+        <field name="report_file">base_hospital_management.patient_card_report</field>
+        <field name="binding_model_id" ref="model_res_partner"/>
+        <field name="paperformat_id"
+               ref="base_hospital_management.paperformat_patient"/>
+        <field name="binding_type">report</field>
+    </record>
+    <!--    Patient card template-->
+    <template id="patient_card_report">
+        <t t-call="web.html_container">
+            <section>
+                <div style="width: 500px; height: 260px; border: 2px black solid;
+            border-radius: 5px;">
+                    <div class="container"
+                         style="width: 500px; height: 50px; background-color:red">
+                        <span>
+                            <i class="fa fa-wave-pulse" style="color:black;"/>
+                        </span>
+                        <h1 style="margin-left: 150px; padding-top: 10px;
+                     color:white; border-radius: 10px;">
+                            Patient Card
+                        </h1>
+                        <div class="page">
+                            <h1 style="margin-left: 15px;">
+                                <t t-esc="name"/>
+                                <br/>
+                                <label style="font-size: 18px;">
+                                    <b>Code :
+                                        <t t-esc="code"/>
+                                    </b>
+                                </label>
+                            </h1>
+                            <p style="margin-left: 15px;">
+                                <label>
+                                    <b>Gender :</b>
+                                    <t t-esc="gender"/>
+                                </label>
+                                <br/>
+                                <label>
+                                    <b>Age :</b>
+                                    <t t-esc="age"/>
+                                </label>
+                                <br/>
+                                <label>
+                                    <b>DOB :</b>
+                                    <t t-esc="dob"/>
+                                </label>
+                                <br/>
+                                <label>
+                                    <b>Blood Group :</b>
+                                    <t t-esc="blood"/>
+                                    <br/>
+                                </label>
+                                <label>
+                                    <b>Phone :</b>
+                                    <t t-esc="phone"/>
+                                </label>
+                                <br/>
+                                <label style="position:absolute; left:350px; top:100px;">
+                                    <img t-attf-src="data:image/png;base64,{{image['image_1920']}}"
+                                         style="max-height: 130px; max-width: 130px;"/>
+                                </label>
+                                <br/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="container"
+                     style="margin-top:50px">
+                    <div style="width: 500px; height: 250px; border: 2px black
+                    solid; border-radius: 5px;">
+                        <div style="margin-left: 10px; margin-top: 10px;">
+                            <span style="padding-top:5px padding-top:5px">
+                                <b>Address:</b>
+                                <br/>
+                                <t t-esc="street"/>
+                                <br/>
+                                <t t-esc="street2"/>
+                                <br/>
+                                <t t-esc='city'/>
+                                <t t-esc='state'/>
+                                <br/>
+                                <t t-esc='country'/>
+                                <br/>
+                                <br/>
+                            </span>
+                            <span style="padding-top:5px padding-top:5px">
+                                <b>
+                                    <t t-esc="company_name"/>
+                                </b>
+                                <br/>
+                                <t t-esc="company_street"/>
+                                <br/>
+                                <t t-esc="company_street2"/>
+                                <br/>
+                                <t t-esc='company_city'/>
+                                <t t-esc='company_state'/>
+                                <br/>
+                                <t t-esc='company_zip'/>
+                                <br/>
+                                <br/>
+                            </span>
+                        </div>
+                        <div>
+                            <img style="max-height: 150px; max-width: 180px;
+                            position:absolute; left:310px; top:290px;"
+                                 t-attf-src="data:image/gif;base64,
+                                 {{barcode['barcode_png']}}"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+</odoo>

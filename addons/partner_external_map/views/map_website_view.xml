@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2015-2016 Akretion (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="map_website_form" model="ir.ui.view">
+        <field name="name">map.website.form</field>
+        <field name="model">map.website</field>
+        <field name="arch" type="xml">
+            <form string="Map Website">
+                <widget
+                    name="web_ribbon"
+                    title="Archived"
+                    bg_color="bg-danger"
+                    attrs="{'invisible': [('active', '=', True)]}"
+                />
+                <group name="main">
+                    <field name="name" />
+                    <field name="address_url" />
+                    <field name="lat_lon_url" />
+                    <field name="route_address_url" />
+                    <field name="route_lat_lon_url" />
+                    <field name="active" invisible="1" />
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="map_website_tree" model="ir.ui.view">
+        <field name="name">map.website.tree</field>
+        <field name="model">map.website</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="address_url" />
+            </tree>
+        </field>
+    </record>
+     <record id="map_website_search" model="ir.ui.view">
+        <field name="name">map.website.search</field>
+        <field name="model">map.website</field>
+        <field name="arch" type="xml">
+            <search>
+            <field name="name" />
+            <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+</record>
+
+    <record id="map_website_action" model="ir.actions.act_window">
+        <field name="name">Map Websites</field>
+        <field name="res_model">map.website</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="root_map_website_menu"
+        name="Map Websites"
+        parent="base.menu_custom"
+        sequence="100"
+    />
+    <menuitem
+        id="map_website_menu"
+        action="map_website_action"
+        parent="root_map_website_menu"
+    />
+</odoo>

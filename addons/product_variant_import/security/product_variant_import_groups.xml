@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Product variant Import/Export user group-->
+    <record model="ir.module.category" id="product_variant_import_module_management">
+        <field name="name">Import</field>
+        <field name="description">Import Product Variant</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="product_variant_access" model="res.groups">
+        <field name="name">Variant Manager</field>
+        <field name="category_id" ref="product_variant_import_module_management"/>
+    </record>
+</odoo>

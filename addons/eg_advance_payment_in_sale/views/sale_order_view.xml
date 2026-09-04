@@ -1,0 +1,31 @@
+<odoo>
+    <record id="sale_order_inherited_advance_payment_form_view" model="ir.ui.view">
+        <field name="name">sale.order.inherited.advance.payment.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Advance Payment" type="object" name="action_advance_payment" attrs="{'invisible': [('state', 'not in', ['draft', 'sent'])]}" groups="eg_advance_payment_for_sale.advance_payment_in_sale"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Account Payment" groups="eg_advance_payment_for_sale.advance_payment_in_sale">
+                    <field name="payment_line" nolabel="1" readonly="1">
+                        <tree editable="bottom">
+                            <field name="sale_id" invisible="1"/>
+                            <field name="ref"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="partner_id"/>
+                            <field name="date"/>
+                            <field name="create_uid"/>
+                            <field name="create_date"/>
+                            <field name="journal_id"/>
+                            <field name="state" invisible="1"/>
+                            <field name="payment_method_id"/>
+                            <field name="amount" sum="amount"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    Inherited form view of res.users inorder to add new fields related to
+        the module.-->
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.view.form.inherit.hide.all.print.button</field>
+        <field name="model">res.users</field>
+        <field name="priority" eval="20"/>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']//group" position="after">
+                <group string="Hide Print Button" id="hide_print">
+                    <group>
+                        <group>
+                            <field name="hide_sale_print"/>
+                            <field name="hide_invoicing_print"/>
+                            <field name="hide_purchase_print"/>
+                            <field name="hide_inventory_print"/>
+                        </group>
+                        <group attrs="{'invisible': [('hide_inventory_print', '=', False)]}">
+                            <field name="hide_stock_picking_print"/>
+                            <field name="hide_stock_picking_type_print"/>
+                            <field name="hide_stock_quant_package_print"/>
+                            <field name="hide_stock_lot_print"/>
+                            <field name="hide_stock_location_print"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="hide_project_task_print"/>
+                            <field name="hide_hr_employee_print"/>
+                            <field name="hide_mrp_print"/>
+                        </group>
+                        <group attrs="{'invisible': [('hide_mrp_print', '=', False)]}">
+                            <field name="hide_mrp_production_print"/>
+                            <field name="hide_mrp_bom_print"/>
+                        </group>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

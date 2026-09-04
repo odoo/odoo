@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Insert data for woo.sale.status -->
+        <record id="woo_sale_status_pending_data" model="woo.sale.status">
+            <field name="name">Pending payment</field>
+            <field name="code">pending</field>
+        </record>
+        <record id="woo_sale_status_processing_data" model="woo.sale.status">
+            <field name="name">Processing</field>
+            <field name="code">processing</field>
+        </record>
+        <record id="woo_sale_status_on_hold_data" model="woo.sale.status">
+            <field name="name">On hold</field>
+            <field name="code">on-hold</field>
+        </record>
+        <record id="woo_sale_status_completed_data" model="woo.sale.status">
+            <field name="name">Completed</field>
+            <field name="code">completed</field>
+            <field name="is_final_status">True</field>
+        </record>
+        <record id="woo_sale_status_cancelled_data" model="woo.sale.status">
+            <field name="name">Cancelled</field>
+            <field name="code">cancelled</field>
+        </record>
+        <record id="woo_sale_status_refunded_data" model="woo.sale.status">
+            <field name="name">Refunded</field>
+            <field name="code">refunded</field>
+        </record>
+        <record id="woo_sale_status_failed_data" model="woo.sale.status">
+            <field name="name">Failed</field>
+            <field name="code">failed</field>
+        </record>
+        <record id="woo_sale_status_trash_data" model="woo.sale.status">
+            <field name="name">Trash</field>
+            <field name="code">trash</field>
+        </record>
+        <record id="woo_sale_status_auto_draft_data" model="woo.sale.status">
+            <field name="name">Draft</field>
+            <field name="code">auto-draft</field>
+        </record>
+    </data>
+</odoo>

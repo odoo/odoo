@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_settlement_tree">
+        <field name="name">Settlements tree</field>
+        <field name="model">commission.settlement</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'cancel'">
+                <field name="agent_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="settlement_type" />
+                <field
+                    name="total"
+                    sum="Settled total"
+                    widget='monetary'
+                    options="{'currency_field': 'currency_id'}"
+                />
+                <field name="state" />
+                <field name="currency_id" invisible="1" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_settlement_search" model="ir.ui.view">
+        <field name="name">commission.settlement.search</field>
+        <field name="model">commission.settlement</field>
+        <field name="arch" type="xml">
+            <search string="Settlement search">
+                <field name="agent_id" />
+                <field name="date_from" />
+                <field name="date_to" />
+                <field name="company_id" />
+                <filter
+                    string="This year"
+                    name="thisyear"
+                    domain="[('date_from', '&gt;=', time.strftime('%%Y-01-01')), ('date_to', '&lt;=', time.strftime('%%Y-12-31'))]"
+                />
+                <separator />
+                <group expand="1" string="Group By">
+                    <filter
+                        string="Agent"
+                        name="group_agent"
+                        context="{'group_by': 'agent_id'}"
+                    />
+                    <filter
+                        string="Date from month"
+                        name="group_date"
+                        context="{'group_by': 'date_from:month'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_settlement_form">
+        <field name="name">Settlements</field>
+        <field name="model">commission.settlement</field>
+        <field name="arch" type="xml">
+            <form string="Settlement" create="false">
+                <header>
+                    <button
+                        string="Cancel"
+                        states="settled"
+                        type="object"
+                        name="action_cancel"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <field name="can_edit" invisible="1" />
+                    <group attrs="{'readonly': [('can_edit', '=', False)]}">
+                        <group colspan="2">
+                            <field name="agent_id" />
+                        </group>
+                        <group>
+                            <field name="date_from" />
+                            <field name="settlement_type" />
+                        </group>
+                        <group>
+                            <field name="date_to" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field
+                                name="currency_id"
+                                groups="base.group_multi_currency"
+                            />
+                            <field name="agent_type" invisible="1" />
+                        </group>
+                    </group>
+                    <group string="Commission lines">
+                        <field
+                            name="line_ids"
+                            nolabel="1"
+                            attrs="{'readonly': [('can_edit', '=', False)]}"
+                            colspan="2"
+                        >
+                            <tree editable="top">
+                                <field name="date" />
+                                <field name="commission_id" />
+                                <field name="settled_amount" />
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field
+                                name="total"
+                                class="oe_subtotal_footer_separator"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"
+                            />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_settlement_line_tree">
+        <field name="name">Settlement lines</field>
+        <field name="model">commission.settlement.line</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="date" />
+                <field name="agent_id" />
+                <field name="commission_id" />
+                <field name="settled_amount" sum="Settled total" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_settlement_line_search" model="ir.ui.view">
+        <field name="name">commission.settlement.line.search</field>
+        <field name="model">commission.settlement.line</field>
+        <field name="arch" type="xml">
+            <search string="Settlement lines search">
+                <field name="agent_id" />
+                <field name="date" />
+                <field name="commission_id" />
+                <filter
+                    string="This year"
+                    name="thisyear"
+                    domain="['|', ('date', '=', False), '&amp;',('date','&lt;=', time.strftime('%%Y-12-31')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
+                />
+                <separator />
+                <group expand="1" string="Group By">
+                    <filter
+                        string="Agent"
+                        name="group_agent"
+                        context="{'group_by': 'agent_id'}"
+                    />
+                    <filter
+                        string="Date month"
+                        name="group_date"
+                        context="{'group_by': 'date:month'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_settlement_line_graph" model="ir.ui.view">
+        <field name="name">commission.settlement.line.graph</field>
+        <field name="model">commission.settlement.line</field>
+        <field name="arch" type="xml">
+            <graph string="Settlement analysis" sample="1">
+                <field name="agent_id" />
+                <field name="date" interval="month" operator="+" />
+                <field name="settled_amount" operator="+" />
+            </graph>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_commission_settlement">
+        <field name="name">Settlements</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">commission.settlement</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        name="Settlements"
+        id="menu_settlement_parent"
+        parent="menu_commission"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_settlement"
+        parent="menu_settlement_parent"
+        action="action_commission_settlement"
+        sequence="10"
+    />
+</odoo>

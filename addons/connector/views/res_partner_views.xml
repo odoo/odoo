@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_partner_connector_form" model="ir.ui.view">
+        <field name="name">res.partner.connector.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="/form/sheet/notebook" position="inside">
+                <!-- change the invisible attribute to 0 when used
+                     in submodules -->
+                <page
+                    string="Connectors"
+                    name="connector"
+                    invisible="1"
+                    groups="connector.group_connector_manager"
+                >
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

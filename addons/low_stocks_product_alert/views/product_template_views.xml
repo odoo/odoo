@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Inherit product.template.tree.view to add field and attribute-->
+    <record id="product_template_tree_view" model="ir.ui.view">
+        <field name="name">
+            product.template.view.tree.inherit.low.stocks.product.alert
+        </field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='qty_available']" position="after">
+                <field name="alert_state"/>
+            </xpath>
+            <tree position="attributes">
+                <attribute name="decoration-danger">alert_state == True
+                </attribute>
+            </tree>
+        </field>
+    </record>
+    <!--Inherit product.template.kanban.view to add fields and attributes-->
+    <record id="product_template_kanban_view" model="ir.ui.view">
+        <field name="name">
+            product.template.view.kanban.inherit.low.stocks.product.alert
+        </field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="model">product.template</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="alert_state"/>
+                <field name="color_field"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_kanban_card')]"
+                   position="attributes">
+                <attribute name="t-attf-style">
+                    background-color:#{record.color_field.raw_value}
+                    !important;
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+<!--    Inherits X2Many field to Add the Searche Bar-->
+    <t t-name="One2ManySearchTemplate" t-inherit="web.X2ManyField"
+       t-inherit-mode="primary" owl="1">
+        <t t-if="displayAddButton" position="replace">
+            <div>
+                <div>
+                    <input type="text" class="oe_search_value searchInput pl-3"
+                           placeholder="Search..."
+                           t-ref="search_keyword"
+                           style="margin-bottom:10px;height:30px;"
+                           t-on-keyup="onInputKeyUp"/>
+                </div>
+            </div>
+            <t t-if="displayAddButton">
+                <div class="o_cp_buttons me-0 ms-auto" role="toolbar"
+                     aria-label="Control panel buttons"
+                     t-ref="buttons">
+                    <div>
+                        <button type="button"
+                                class="btn btn-secondary o-kanban-button-new"
+                                title="Create record"
+                                accesskey="c" t-on-click="() => this.onAdd()">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <div role="search" position="attributes">
+            <attribute name="t-if">props.value.count > props.value.limit
+            </attribute>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="1">
+    <record id="date_range_type_comp_rule" model="ir.rule">
+        <field name="name">Date Range Type multi-company</field>
+        <field name="model_id" ref="model_date_range_type" />
+        <field name="domain_force">
+            ['|',('company_id', 'in', company_ids),('company_id','=',False)]
+        </field>
+    </record>
+    <record id="date_range_comp_rule" model="ir.rule">
+        <field name="name">Date Range multi-company</field>
+        <field name="model_id" ref="model_date_range" />
+        <field name="domain_force">
+            ['|',('company_id', 'in', company_ids),('company_id','=',False)]
+        </field>
+    </record>
+</odoo>

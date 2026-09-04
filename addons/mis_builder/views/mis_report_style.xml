@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="mis_report_style_view_tree">
+        <field name="name">mis.report.style.view.tree</field>
+        <field name="model">mis.report.style</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record id="mis_report_style_view_form" model="ir.ui.view">
+        <field name="name">mis.report.style.view.form</field>
+        <field name="model">mis.report.style</field>
+        <field name="arch" type="xml">
+            <form string="MIS Report Style">
+                <sheet>
+                    <group string="Style" col="2">
+                        <field name="name" />
+                    </group>
+                    <group string="Number" col="4">
+                        <field name="dp_inherit" string="Rounding inherit" />
+                        <field
+                            name="dp"
+                            attrs="{'invisible': [('dp_inherit', '=', True)]}"
+                        />
+                        <field name="divider_inherit" string="Factor inherit" />
+                        <field
+                            name="divider"
+                            attrs="{'invisible': [('divider_inherit', '=', True)]}"
+                        />
+                        <field name="prefix_inherit" />
+                        <field
+                            name="prefix"
+                            attrs="{'invisible': [('prefix_inherit', '=', True)]}"
+                        />
+                        <field name="suffix_inherit" />
+                        <field
+                            name="suffix"
+                            attrs="{'invisible': [('suffix_inherit', '=', True)]}"
+                        />
+                    </group>
+                    <group string="Color" col="4">
+                        <field name="color_inherit" />
+                        <field
+                            name="color"
+                            attrs="{'invisible': [('color_inherit', '=', True)]}"
+                            widget="color"
+                        />
+                        <field name="background_color_inherit" />
+                        <field
+                            name="background_color"
+                            attrs="{'invisible': [('background_color_inherit', '=', True)]}"
+                            widget="color"
+                        />
+                    </group>
+                    <group string="Font" col="4">
+                        <field name="font_style_inherit" />
+                        <field
+                            name="font_style"
+                            attrs="{'invisible': [('font_style_inherit', '=', True)]}"
+                        />
+                        <field name="font_weight_inherit" />
+                        <field
+                            name="font_weight"
+                            attrs="{'invisible': [('font_weight_inherit', '=', True)]}"
+                        />
+                        <field name="font_size_inherit" />
+                        <field
+                            name="font_size"
+                            attrs="{'invisible': [('font_size_inherit', '=', True)]}"
+                        />
+                    </group>
+                    <group string="Indent" col="4">
+                        <field name="indent_level_inherit" />
+                        <field
+                            name="indent_level"
+                            attrs="{'invisible': [('indent_level_inherit', '=', True)]}"
+                        />
+                    </group>
+                    <group string="Visibility" col="4">
+                        <field name="hide_empty_inherit" />
+                        <field
+                            name="hide_empty"
+                            attrs="{'invisible': [('hide_empty_inherit', '=', True)]}"
+                        />
+                        <field name="hide_always_inherit" />
+                        <field
+                            name="hide_always"
+                            attrs="{'invisible': [('hide_always_inherit', '=', True)]}"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="mis_report_style_view_action">
+        <field name="name">MIS Report Styles</field>
+        <field name="view_id" ref="mis_report_style_view_tree" />
+        <field name="res_model">mis.report.style</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="mis_report_style_view_menu"
+        parent="mis_report_conf_menu"
+        name="MIS Report Styles"
+        action="mis_report_style_view_action"
+        sequence="22"
+    />
+</odoo>

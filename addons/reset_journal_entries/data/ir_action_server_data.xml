@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+  <!--  Setting a button inside the actions to reset to draft  journal entries-->
+  <record id="action_reset_to_draft" model="ir.actions.server">
+            <field name="name">Reset Journal Entries</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="code">records.button_draft()</field>
+  </record>
+  <!-- Setting a button inside the actions to post multiple journal entries-->
+  <record id="action_post_journal" model="ir.actions.server">
+            <field name="name">Post Journal Entries</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="code">records.action_post()</field>
+  </record>
+  <!--    Setting a button inside the actions to cancel multiple journal entries-->
+  <record id="action_cancel_journal" model="ir.actions.server">
+            <field name="name">Cancel Journal Entries</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field name="binding_model_id" ref="account.model_account_move" />
+            <field name="state">code</field>
+            <field name="code">records.button_cancel()</field>
+  </record>
+</odoo>

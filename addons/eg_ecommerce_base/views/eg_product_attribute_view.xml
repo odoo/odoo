@@ -1,0 +1,54 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_product_attribute_tree_view">
+        <field name="name">eg.product.attribute.tree.view</field>
+        <field name="model">eg.product.attribute</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-danger="update_required==True">
+                <field name="odoo_attribute_id"/>
+                <field name="instance_id"/>
+                <field name="inst_attribute_id"/>
+                <field name="update_required"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_product_attribute_form_view">
+        <field name="name">eg.product.attribute.form.view</field>
+        <field name="model">eg.product.attribute</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="odoo_attribute_id"/>
+                            <field name="inst_attribute_id"/>
+                        </group>
+                        <group>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="update_required"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Values">
+                            <field name="eg_value_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="odoo_attribute_value_id"/>
+                                    <field name="instance_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_product_attribute_action">
+        <field name="name">Attributes</field>
+        <field name="res_model">eg.product.attribute</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Attributes" id="eg_product_attribute_menu" action="eg_product_attribute_action"
+              parent="product_mapping_id" sequence="3"/>
+</odoo>

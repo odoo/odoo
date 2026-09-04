@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="ir_cron_act" model="ir.actions.act_window">
+            <field name="name">Scheduled Actions</field>
+            <field name="res_model">ir.cron</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{'search_default_all': 1, 'default_analytic': True}</field>
+            <field name="domain">[('analytic', '=', True)]</field>
+            <field name="view_id" ref="base.ir_cron_view_tree"/>
+        </record>
+    </data>
+</odoo>

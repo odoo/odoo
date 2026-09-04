@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019-2023 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+<odoo>
+	<record id="view_order_form" model="ir.ui.view">
+		<field name="name">sale.order.form</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form" />
+		<field name="arch" type="xml">
+			<xpath expr="//field[@name='payment_term_id']" position="after">
+				<field
+                    name="claim_id"
+                    attrs="{'invisible':[('claim_id', '=', False)]}"
+                    domain="[('partner_id', '=', partner_id)]"
+                    groups="!sod_crm_claim.group_crm_claim_manager"
+                />
+				<field
+                    name="claim_id"
+                    attrs="{'invisible':[('claim_id', '=', False)]}"
+                    domain="[('partner_id', '=', partner_id)]"
+                    groups="sod_crm_claim.group_crm_claim_manager"
+                    readonly="False"
+                />
+				<field
+                    name="so_claim_id"
+                    invisible="1"
+                    domain="[('partner_id', '=', partner_id)]"
+                    groups="!sod_crm_claim.group_crm_claim_manager"
+                />
+				<field
+                    name="so_claim_id"
+                    invisible="1"
+                    domain="[('partner_id', '=', partner_id)]"
+                    groups="sod_crm_claim.group_crm_claim_manager"
+                    readonly="False"
+                />
+                <field name="is_fully_return_refund" readonly="1" />
+			</xpath>
+			<xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button
+                    class="oe_stat_button"
+                    name="open_claims"
+                    icon="fa-exchange-alt"
+                    type="object"
+                >
+                    <field name="claims_count" widget="statinfo" string="Return(s)" />
+                </button>
+            </xpath>
+		</field>
+	</record>
+</odoo>

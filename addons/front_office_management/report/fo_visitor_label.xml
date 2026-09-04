@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_visitor_label">
+            <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <t>
+                            <div class="page">
+                                <div class="oe_structure"/>
+                                <div class="row">
+                                    <div class="col-xs-2" style="margin:auto;">
+                                    </div>
+                                    <center>
+                                        <div class="col-xs-8"
+                                             style="margin:auto">
+                                            <br/>
+                                            <table class="table table-condensed"
+                                                   style="border: 2px solid black !important;">
+                                                <tr>
+                                                    <td width="40%">
+                                                        <p style="text-align:center;padding-top:10px;">
+                                                            <img t-if="not o.visitor.visitor_image"
+                                                                 t-att-src="'/web/static/src/img/placeholder.png'"
+                                                                 height="120"
+                                                                 border="1"
+                                                                 width="120"/>
+                                                            <img t-if="o.visitor.visitor_image"
+                                                                 t-att-src="image_data_uri(o.visitor.visitor_image)"
+                                                                 class="float-left"
+                                                                 alt="Logo"
+                                                                 height="120"
+                                                                 border="1"
+                                                                 width="120"/>
+                                                        </p>
+                                                        <p style="text-align:center;">
+                                                            <strong>
+                                                                <span t-field="o.visitor"/>
+                                                            </strong>
+                                                        </p>
+                                                    </td>
+                                                    <td width="50%">
+                                                        <table>
+                                                            <tr>
+                                                                <t t-if="o.visiting_person">
+                                                                    <td>
+                                                                        <p style="text-align:right;padding-top:10px;">
+                                                                            <strong>
+                                                                                Visitor
+                                                                                ID:
+                                                                            </strong>
+                                                                        </p>
+                                                                        <p style="text-align:right;">
+                                                                            <strong>
+                                                                                Phone:
+                                                                            </strong>
+                                                                        </p>
+                                                                        <t t-if="o.visiting_person">
+                                                                            <p style="text-align:right;">
+                                                                                <strong>
+                                                                                    Meeting
+                                                                                    With:
+                                                                                </strong>
+                                                                            </p>
+                                                                        </t>
+                                                                        <t t-if="o.visiting_person">
+                                                                            <p style="text-align:right;">
+                                                                                <strong>
+                                                                                    Department:
+                                                                                </strong>
+                                                                            </p>
+                                                                        </t>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p style="text-align:left;padding-top:10px;padding-left:10px;"
+                                                                           t-field="o.name"/>
+                                                                        <p style="text-align:left;padding-left:10px;"
+                                                                           t-field="o.phone"/>
+                                                                        <t t-if="o.visiting_person">
+                                                                            <p style="text-align:left;padding-left:10px;"
+                                                                               t-field="o.visiting_person"/>
+                                                                        </t>
+                                                                        <t t-if="o.visiting_person">
+                                                                            <p style="text-align:left;padding-left:10px;"
+                                                                               t-field="o.department"/>
+                                                                        </t>
+                                                                    </td>
+                                                                </t>
+                                                                <t t-if="not o.visiting_person">
+                                                                    <td>
+                                                                        <p style="text-align:right;padding-top:30px;">
+                                                                            <strong>
+                                                                                VisitorID:
+                                                                            </strong>
+                                                                        </p>
+                                                                        <p style="text-align:right;padding-top:30px;">
+                                                                            <strong>
+                                                                                Phone:
+                                                                            </strong>
+                                                                        </p>
+                                                                    </td>
+                                                                    <td>
+                                                                        <p style="text-align:left;padding-top:30px;"
+                                                                           t-field="o.visitor"/>
+                                                                        <p style="text-align:left;padding-top:30px;"
+                                                                           t-field="o.phone"/>
+                                                                    </td>
+                                                                </t>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </center>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.qr.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="generate_qr" type="object" class="btn-box"
+                            icon="fa-qrcode">
+                        <field name="sequences" invisible="1"/>
+                        Generate QR
+                    </button>
+                </div>
+                <field name="category_id" position="after">
+                    <field name="sequences"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_form_inherit" model="ir.ui.view">
+            <field name="name">product.product.form.qr.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button name="generate_qr" type="object" class="btn-box"
+                            icon="fa-qrcode">
+                        <field name="sequences" invisible="1"/>
+                        Generate QR
+                    </button>
+                </div>
+                <field name="categ_id" position="after">
+                    <field name="sequences"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_template_form_inherit" model="ir.ui.view">
+            <field name="name">product.template.form.qr.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id"
+                   ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+
+                    <button name="generate_qr" type="object" class="btn-box"
+                            icon="fa-qrcode">Generate QR
+                    </button>
+                </div>
+            </field>
+        </record>
+        <record id="settings_form_inherit_for_qr" model="ir.ui.view">
+            <field name="name">res.config.inherit.qr</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id"
+                   ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='companies']" position="after">
+                    <div id="setup_qrcode">
+                        <h2>Setup QRCode</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_right_pane">
+                                    <label string="Prefixes"
+                                           for="customer_prefix"/>
+                                    <span class="fa fa-lg"/>
+                                    <div class="text-muted">
+                                        Set your unique prefix.
+                                    </div>
+                                    <div class="content-group">
+                                        <div class="mt16 row">
+                                            <label for="customer_prefix"
+                                                   class="o_light_label"/>
+                                            <field name="customer_prefix"
+                                                   class="oe_inline"/>
+                                            <label for="product_prefix"
+                                                   class="col-xs-3 col-md-6 o_light_label"/>
+                                            <field name="product_prefix"
+                                                   class="oe_inline"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+    <data noupdate="1">
+        <record id="customer_sequence_id" model="ir.sequence">
+            <field name="name">customer_sequence</field>
+            <field name="code">res.partner</field>
+            <field name="prefix"/>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+    <data noupdate="1">
+        <record id="product_sequence_id" model="ir.sequence">
+            <field name="name">product_sequence</field>
+            <field name="code">product.product</field>
+            <field name="prefix"/>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

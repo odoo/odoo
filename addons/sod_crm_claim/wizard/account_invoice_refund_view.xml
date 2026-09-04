@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2019-2023 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details) -->
+<odoo>
+		<record id="view_account_move_reversal" model="ir.ui.view">
+            <field name="name">account.move.reversal.form</field>
+            <field name="model">account.move.reversal</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal" />
+            <field name="arch" type="xml">
+                <field name="reason" position="after">
+                    <field
+                    name="claim_id"
+                    groups="!sod_crm_claim.group_crm_claim_manager"
+                />
+                    <field
+                    name="claim_id"
+                    groups="sod_crm_claim.group_crm_claim_manager"
+                    readonly="False"
+                />
+                </field>
+            </field>
+        </record>
+
+
+</odoo>

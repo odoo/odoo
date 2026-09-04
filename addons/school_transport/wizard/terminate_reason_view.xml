@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id='treminate_wizard_inherit_transport' model='ir.ui.view'>
+        <field name="name">Terminate Reason Extended Transport</field>
+        <field name="model">terminate.reason</field>
+        <field name='inherit_id' ref='school.school_terminate_reason' />
+        <field name="arch" type="xml">
+            <field name='reason' position='before'>
+                <field
+                    name='transport_info'
+                    string='Transport Info'
+                    colspan="2"
+                    readonly='1'
+                    nolabel='1'
+                    style='color: red;'
+                />
+                <seperator />
+            </field>
+        </field>
+    </record>
+</odoo>

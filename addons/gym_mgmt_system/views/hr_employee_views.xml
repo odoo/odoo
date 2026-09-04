@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Action for gym trainer -->
+    <record id="gym_trainer_emp_action" model="ir.actions.act_window">
+        <field name="name">Trainers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('trainer','=','True')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Trainer!
+            </p>
+        </field>
+    </record>
+<!--form view for trainer -->
+    <record id="view_employee_form" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherited.gym.mgmt.system</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mobile_phone']" position="after">
+                <field name="trainer"/>
+                <field name="exercise_for_ids" widget="many2many_tags"
+                attrs="{'invisible': [('trainer', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+<!-- Menu and Submenu -->
+    <menuitem
+            id="gym_trainer_root"
+            name="Trainers"
+            parent="gym_mgmt_system_menu_root"
+            sequence="20"/>
+    <menuitem
+            id="gym_trainer_menu"
+            name="Trainers"
+            parent="gym_trainer_root"
+            action="gym_trainer_emp_action"
+            sequence="10"/>
+    <menuitem id="gym_trainer_skill_menu"
+              name="Trainer skill"
+              parent="gym_trainer_root"
+              action="trainer_skill_action"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="product_tag_wizard_form_view" model="ir.ui.view">
+        <field name="name">product.tags.wizard.form</field>
+        <field name="model">product.tags.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="is_product" invisible="1"/>
+                        <field name="is_product_template" invisible="1"/>
+                        <field name="product_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('is_product','=',False)]}"/>
+                        <field name="product_tmp_ids" widget="many2many_tags"
+                               attrs="{'invisible':[('is_product_template','=',False)]}"/>
+                    </group>
+                    <group>
+                        <field name="product_tag_ids"
+                               widget="many2many_tags"
+                               options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply_product_tags" string="Apply Product Tags"
+                            type="object" class="oe_highlight" attrs="{'invisible':[('is_product','=',False)]}"/>
+                    <button name="action_apply_template_tags" string="Apply Product Tags"
+                            type="object" class="oe_highlight" attrs="{'invisible':[('is_product_template','=',False)]}"/>
+                    <button string="Cancel" class="btn btn_default"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

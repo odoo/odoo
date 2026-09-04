@@ -1,0 +1,976 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
+<title>Job Queue</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: html4css1.css 9511 2024-01-13 09:50:07Z milde $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+Despite the name, some widely supported CSS2 features are used.
+
+See https://docutils.sourceforge.io/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+.subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+.superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+object[type="image/svg+xml"], object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title, .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left, object.align-left, table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right, object.align-right, table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+img.align-center, .figure.align-center, object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+.align-top    {
+  vertical-align: top }
+
+.align-middle {
+  vertical-align: middle }
+
+.align-bottom {
+  vertical-align: bottom }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block, pre.math, pre.code {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+pre.code .ln { color: gray; } /* line numbers */
+pre.code, code { background-color: #eeeeee }
+pre.code .comment, code .comment { color: #5C6576 }
+pre.code .keyword, code .keyword { color: #3B0D06; font-weight: bold }
+pre.code .literal.string, code .literal.string { color: #0C5404 }
+pre.code .name.builtin, code .name.builtin { color: #352B84 }
+pre.code .deleted, code .deleted { background-color: #DEB0A1}
+pre.code .inserted, code .inserted { background-color: #A3D289}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic, pre.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+/* "booktabs" style (no vertical lines) */
+table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+table.docutils.booktabs * {
+  border: 0px;
+}
+table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="job-queue">
+<h1 class="title">Job Queue</h1>
+
+<!-- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! This file is generated by oca-gen-addon-readme !!
+!! changes will be overwritten.                   !!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! source digest: sha256:70f2fdbe53c21bdb067294e484445d392c386fc53fbd02127e30ac982e3e4136
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Mature" src="https://img.shields.io/badge/maturity-Mature-brightgreen.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/lgpl-3.0-standalone.html"><img alt="License: LGPL-3" src="https://img.shields.io/badge/licence-LGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/queue/tree/16.0/queue_job"><img alt="OCA/queue" src="https://img.shields.io/badge/github-OCA%2Fqueue-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/queue-16-0/queue-16-0-queue_job"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/queue&amp;target_branch=16.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p>This addon adds an integrated Job Queue to Odoo.</p>
+<p>It allows to postpone method calls executed asynchronously.</p>
+<p>Jobs are executed in the background by a <tt class="docutils literal">Jobrunner</tt>, in their own transaction.</p>
+<p>Example:</p>
+<pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">odoo</span> <span class="kn">import</span> <span class="n">models</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">api</span><span class="w">
+
+</span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
+</span>   <span class="n">_name</span> <span class="o">=</span> <span class="s1">'my.model'</span><span class="w">
+
+</span>   <span class="k">def</span> <span class="nf">my_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span><span class="w">
+</span>       <span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'executed with a: </span><span class="si">%s</span><span class="s1"> and k: </span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="w">
+
+
+</span><span class="k">class</span> <span class="nc">MyOtherModel</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
+</span>    <span class="n">_name</span> <span class="o">=</span> <span class="s1">'my.other.model'</span><span class="w">
+
+</span>    <span class="k">def</span> <span class="nf">button_do_stuff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s1">'my.model'</span><span class="p">]</span><span class="o">.</span><span class="n">with_delay</span><span class="p">()</span><span class="o">.</span><span class="n">my_method</span><span class="p">(</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre>
+<p>In the snippet of code above, when we call <tt class="docutils literal">button_do_stuff</tt>, a job <strong>capturing
+the method and arguments</strong> will be postponed.  It will be executed as soon as the
+Jobrunner has a free bucket, which can be instantaneous if no other job is
+running.</p>
+<p>Features:</p>
+<ul class="simple">
+<li>Views for jobs, jobs are stored in PostgreSQL</li>
+<li>Jobrunner: execute the jobs, highly efficient thanks to PostgreSQL’s NOTIFY</li>
+<li>Channels: give a capacity for the root channel and its sub-channels and
+segregate jobs in them. Allow for instance to restrict heavy jobs to be
+executed one at a time while little ones are executed 4 at a times.</li>
+<li>Retries: Ability to retry jobs by raising a type of exception</li>
+<li>Retry Pattern: the 3 first tries, retry after 10 seconds, the 5 next tries,
+retry after 1 minutes, …</li>
+<li>Job properties: priorities, estimated time of arrival (ETA), custom
+description, number of retries</li>
+<li>Related Actions: link an action on the job view, such as open the record
+concerned by the job</li>
+</ul>
+<p><strong>Table of contents</strong></p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#installation" id="toc-entry-1">Installation</a></li>
+<li><a class="reference internal" href="#configuration" id="toc-entry-2">Configuration</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-3">Usage</a><ul>
+<li><a class="reference internal" href="#developers" id="toc-entry-4">Developers</a><ul>
+<li><a class="reference internal" href="#delaying-jobs" id="toc-entry-5">Delaying jobs</a></li>
+<li><a class="reference internal" href="#enqueing-job-options" id="toc-entry-6">Enqueing Job Options</a></li>
+<li><a class="reference internal" href="#configure-default-options-for-jobs" id="toc-entry-7">Configure default options for jobs</a></li>
+<li><a class="reference internal" href="#testing" id="toc-entry-8">Testing</a></li>
+<li><a class="reference internal" href="#tips-and-tricks" id="toc-entry-9">Tips and tricks</a></li>
+<li><a class="reference internal" href="#patterns" id="toc-entry-10">Patterns</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-11">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#changelog" id="toc-entry-12">Changelog</a><ul>
+<li><a class="reference internal" href="#next" id="toc-entry-13">Next</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-14">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-15">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-16">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-17">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-18">Maintainers</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h1><a class="toc-backref" href="#toc-entry-1">Installation</a></h1>
+<p>Be sure to have the <tt class="docutils literal">requests</tt> library.</p>
+</div>
+<div class="section" id="configuration">
+<h1><a class="toc-backref" href="#toc-entry-2">Configuration</a></h1>
+<ul class="simple">
+<li>Using environment variables and command line:<ul>
+<li>Adjust environment variables (optional):<ul>
+<li><tt class="docutils literal">ODOO_QUEUE_JOB_CHANNELS=root:4</tt> or any other channels configuration.
+The default is <tt class="docutils literal">root:1</tt></li>
+<li>if <tt class="docutils literal">xmlrpc_port</tt> is not set: <tt class="docutils literal">ODOO_QUEUE_JOB_PORT=8069</tt></li>
+</ul>
+</li>
+<li>Start Odoo with <tt class="docutils literal"><span class="pre">--load=web,queue_job</span></tt>
+and <tt class="docutils literal"><span class="pre">--workers</span></tt> greater than 1. <a class="footnote-reference" href="#footnote-1" id="footnote-reference-1">[1]</a></li>
+</ul>
+</li>
+<li>Keep in mind that the number of workers should be greater than the number of
+channels. <tt class="docutils literal">queue_job</tt> will reuse normal Odoo workers to process jobs. It
+will not spawn its own workers.</li>
+<li>Using the Odoo configuration file:</li>
+</ul>
+<pre class="code ini literal-block">
+<span class="k">[options]</span><span class="w">
+</span><span class="na">(...)</span><span class="w">
+</span><span class="na">workers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">6</span><span class="w">
+</span><span class="na">server_wide_modules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">web,queue_job</span><span class="w">
+
+</span><span class="na">(...)</span><span class="w">
+</span><span class="k">[queue_job]</span><span class="w">
+</span><span class="na">channels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">root:2</span>
+</pre>
+<ul class="simple">
+<li>Environment variables have priority over the configuration file.</li>
+<li>Confirm the runner is starting correctly by checking the odoo log file:</li>
+</ul>
+<pre class="code literal-block">
+...INFO...queue_job.jobrunner.runner: starting
+...INFO...queue_job.jobrunner.runner: initializing database connections
+...INFO...queue_job.jobrunner.runner: queue job runner ready for db &lt;dbname&gt;
+...INFO...queue_job.jobrunner.runner: database connections ready
+</pre>
+<ul class="simple">
+<li>Create jobs (eg using <tt class="docutils literal">base_import_async</tt>) and observe they
+start immediately and in parallel.</li>
+<li>Tip: to enable debug logging for the queue job, use
+<tt class="docutils literal"><span class="pre">--log-handler=odoo.addons.queue_job:DEBUG</span></tt></li>
+</ul>
+<table class="docutils footnote" frame="void" id="footnote-1" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#footnote-reference-1">[1]</a></td><td>It works with the threaded Odoo server too, although this way
+of running Odoo is obviously not for production purposes.</td></tr>
+</tbody>
+</table>
+<ul>
+<li><p class="first">Be sure to check out <em>Jobs Garbage Collector</em> CRON and change <em>enqueued_delta</em> and <em>started_delta</em> parameters to your needs.</p>
+<ul class="simple">
+<li><tt class="docutils literal">enqueued_delta</tt>: Spent time in minutes after which an enqueued job is considered stuck.
+Set it to 0 to disable this check.</li>
+<li><tt class="docutils literal">started_delta</tt>: Spent time in minutes after which a started job is considered stuck.
+This parameter should not be less than <tt class="docutils literal"><span class="pre">--limit-time-real</span> // 60</tt> parameter in your configuration.
+Set it to 0 to disable this check. Set it to -1 to automate it, based in the server’s <tt class="docutils literal"><span class="pre">--limit-time-real</span></tt> config parameter.</li>
+</ul>
+<pre class="code python literal-block">
+<span class="c1"># `model` corresponds to 'queue.job' model</span><span class="w">
+</span><span class="n">model</span><span class="o">.</span><span class="n">requeue_stuck_jobs</span><span class="p">(</span><span class="n">enqueued_delta</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">started_delta</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</pre>
+</li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h1><a class="toc-backref" href="#toc-entry-3">Usage</a></h1>
+<p>To use this module, you need to:</p>
+<ol class="arabic simple">
+<li>Go to <tt class="docutils literal">Job Queue</tt> menu</li>
+</ol>
+<div class="section" id="developers">
+<h2><a class="toc-backref" href="#toc-entry-4">Developers</a></h2>
+<div class="section" id="delaying-jobs">
+<h3><a class="toc-backref" href="#toc-entry-5">Delaying jobs</a></h3>
+<p>The fast way to enqueue a job for a method is to use <tt class="docutils literal">with_delay()</tt> on a record
+or model:</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">button_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">with_delay</span><span class="p">()</span><span class="o">.</span><span class="n">print_confirmation_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;done&quot;</span><span class="p">})</span><span class="w">
+</span>    <span class="k">return</span> <span class="kc">True</span>
+</pre>
+<p>Here, the method <tt class="docutils literal">print_confirmation_document()</tt> will be executed asynchronously
+as a job. <tt class="docutils literal">with_delay()</tt> can take several parameters to define more precisely how
+the job is executed (priority, …).</p>
+<p>All the arguments passed to the method being delayed are stored in the job and
+passed to the method when it is executed asynchronously, including <tt class="docutils literal">self</tt>, so
+the current record is maintained during the job execution (warning: the context
+is not kept).</p>
+<p>Dependencies can be expressed between jobs. To start a graph of jobs, use <tt class="docutils literal">delayable()</tt>
+on a record or model. The following is the equivalent of <tt class="docutils literal">with_delay()</tt> but using the
+long form:</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">button_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="n">delayable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="w">
+</span>    <span class="n">delayable</span><span class="o">.</span><span class="n">print_confirmation_document</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">)</span><span class="w">
+</span>    <span class="n">delayable</span><span class="o">.</span><span class="n">delay</span><span class="p">()</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;done&quot;</span><span class="p">})</span><span class="w">
+</span>    <span class="k">return</span> <span class="kc">True</span>
+</pre>
+<p>Methods of Delayable objects return itself, so it can be used as a builder pattern,
+which in some cases allow to build the jobs dynamically:</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">button_generate_simple_with_delayable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">ensure_one</span><span class="p">()</span><span class="w">
+</span>    <span class="c1"># Introduction of a delayable object, using a builder pattern</span><span class="w">
+</span>    <span class="c1"># allowing to chain jobs or set properties. The delay() method</span><span class="w">
+</span>    <span class="c1"># on the delayable object actually stores the delayable objects</span><span class="w">
+</span>    <span class="c1"># in the queue_job table</span><span class="w">
+</span>    <span class="p">(</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="w">
+</span>        <span class="o">.</span><span class="n">generate_thumbnail</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span><span class="w">
+</span>        <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span><span class="w">
+</span>        <span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;generate xxx&quot;</span><span class="p">))</span><span class="w">
+</span>        <span class="o">.</span><span class="n">delay</span><span class="p">()</span><span class="w">
+</span>    <span class="p">)</span>
+</pre>
+<p>The simplest way to define a dependency is to use <tt class="docutils literal">.on_done(job)</tt> on a Delayable:</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">button_chain_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">ensure_one</span><span class="p">()</span><span class="w">
+</span>    <span class="n">job1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">generate_thumbnail</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span><span class="w">
+</span>    <span class="n">job2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">generate_thumbnail</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span><span class="w">
+</span>    <span class="n">job3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">generate_thumbnail</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span><span class="w">
+</span>    <span class="c1"># job 3 is executed when job 2 is done which is executed when job 1 is done</span><span class="w">
+</span>    <span class="n">job1</span><span class="o">.</span><span class="n">on_done</span><span class="p">(</span><span class="n">job2</span><span class="o">.</span><span class="n">on_done</span><span class="p">(</span><span class="n">job3</span><span class="p">))</span><span class="o">.</span><span class="n">delay</span><span class="p">()</span>
+</pre>
+<p>Delayables can be chained to form more complex graphs using the <tt class="docutils literal">chain()</tt> and
+<tt class="docutils literal">group()</tt> primitives.
+A chain represents a sequence of jobs to execute in order, a group represents
+jobs which can be executed in parallel. Using <tt class="docutils literal">chain()</tt> has the same effect as
+using several nested <tt class="docutils literal">on_done()</tt> but is more readable. Both can be combined to
+form a graph, for instance we can group [A] of jobs, which blocks another group
+[B] of jobs. When and only when all the jobs of the group [A] are executed, the
+jobs of the group [B] are executed. The code would look like:</p>
+<pre class="code python literal-block">
+<span class="kn">from</span> <span class="nn">odoo.addons.queue_job.delay</span> <span class="kn">import</span> <span class="n">group</span><span class="p">,</span> <span class="n">chain</span><span class="w">
+
+</span><span class="k">def</span> <span class="nf">button_done</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="n">group_a</span> <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_foo</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_bar</span><span class="p">())</span><span class="w">
+</span>    <span class="n">group_b</span> <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_baz</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">delayable</span><span class="p">()</span><span class="o">.</span><span class="n">method_baz</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="w">
+</span>    <span class="n">chain</span><span class="p">(</span><span class="n">group_a</span><span class="p">,</span> <span class="n">group_b</span><span class="p">)</span><span class="o">.</span><span class="n">delay</span><span class="p">()</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;done&quot;</span><span class="p">})</span><span class="w">
+</span>    <span class="k">return</span> <span class="kc">True</span>
+</pre>
+<p>When a failure happens in a graph of jobs, the execution of the jobs that depend on the
+failed job stops. They remain in a state <tt class="docutils literal">wait_dependencies</tt> until their “parent” job is
+successful. This can happen in two ways: either the parent job retries and is successful
+on a second try, either the parent job is manually “set to done” by a user. In these two
+cases, the dependency is resolved and the graph will continue to be processed. Alternatively,
+the failed job and all its dependent jobs can be canceled by a user. The other jobs of the
+graph that do not depend on the failed job continue their execution in any case.</p>
+<p>Note: <tt class="docutils literal">delay()</tt> must be called on the delayable, chain, or group which is at the top
+of the graph. In the example above, if it was called on <tt class="docutils literal">group_a</tt>, then <tt class="docutils literal">group_b</tt>
+would never be delayed (but a warning would be shown).</p>
+</div>
+<div class="section" id="enqueing-job-options">
+<h3><a class="toc-backref" href="#toc-entry-6">Enqueing Job Options</a></h3>
+<ul class="simple">
+<li>priority: default is 10, the closest it is to 0, the faster it will be
+executed</li>
+<li>eta: Estimated Time of Arrival of the job. It will not be executed before this
+date/time</li>
+<li>max_retries: default is 5, maximum number of retries before giving up and set
+the job state to ‘failed’. A value of 0 means infinite retries.</li>
+<li>description: human description of the job. If not set, description is computed
+from the function doc or method name</li>
+<li>channel: the complete name of the channel to use to process the function. If
+specified it overrides the one defined on the function</li>
+<li>identity_key: key uniquely identifying the job, if specified and a job with
+the same key has not yet been run, the new job will not be created</li>
+</ul>
+</div>
+<div class="section" id="configure-default-options-for-jobs">
+<h3><a class="toc-backref" href="#toc-entry-7">Configure default options for jobs</a></h3>
+<p>In earlier versions, jobs could be configured using the <tt class="docutils literal">&#64;job</tt> decorator.
+This is now obsolete, they can be configured using optional <tt class="docutils literal">queue.job.function</tt>
+and <tt class="docutils literal">queue.job.channel</tt> XML records.</p>
+<p>Example of channel:</p>
+<pre class="code XML literal-block">
+<span class="nt">&lt;record</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;channel_sale&quot;</span><span class="w"> </span><span class="na">model=</span><span class="s">&quot;queue.job.channel&quot;</span><span class="nt">&gt;</span><span class="w">
+    </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;name&quot;</span><span class="nt">&gt;</span>sale<span class="nt">&lt;/field&gt;</span><span class="w">
+    </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;parent_id&quot;</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;queue_job.channel_root&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+</span><span class="nt">&lt;/record&gt;</span>
+</pre>
+<p>Example of job function:</p>
+<pre class="code XML literal-block">
+<span class="nt">&lt;record</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;job_function_sale_order_action_done&quot;</span><span class="w"> </span><span class="na">model=</span><span class="s">&quot;queue.job.function&quot;</span><span class="nt">&gt;</span><span class="w">
+    </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;model_id&quot;</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;sale.model_sale_order&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+    </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;method&quot;</span><span class="nt">&gt;</span>action_done<span class="nt">&lt;/field&gt;</span><span class="w">
+    </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;channel_id&quot;</span><span class="w"> </span><span class="na">ref=</span><span class="s">&quot;channel_sale&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+    </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;related_action&quot;</span><span class="w"> </span><span class="na">eval=</span><span class="s">'{&quot;func_name&quot;: &quot;custom_related_action&quot;}'</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+    </span><span class="nt">&lt;field</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;retry_pattern&quot;</span><span class="w"> </span><span class="na">eval=</span><span class="s">&quot;{1: 60, 2: 180, 3: 10, 5: 300}&quot;</span><span class="w"> </span><span class="nt">/&gt;</span><span class="w">
+</span><span class="nt">&lt;/record&gt;</span>
+</pre>
+<p>The general form for the <tt class="docutils literal">name</tt> is: <tt class="docutils literal"><span class="pre">&lt;model.name&gt;.method</span></tt>.</p>
+<p>The channel, related action and retry pattern options are optional, they are
+documented below.</p>
+<p>When writing modules, if 2+ modules add a job function or channel with the same
+name (and parent for channels), they’ll be merged in the same record, even if
+they have different xmlids. On uninstall, the merged record is deleted when all
+the modules using it are uninstalled.</p>
+<p><strong>Job function: model</strong></p>
+<p>If the function is defined in an abstract model, you can not write
+<tt class="docutils literal">&lt;field <span class="pre">name=&quot;model_id&quot;</span> <span class="pre">ref=&quot;xml_id_of_the_abstract_model&quot;&lt;/field&gt;</span></tt>
+but you have to define a function for each model that inherits from the abstract model.</p>
+<p><strong>Job function: channel</strong></p>
+<p>The channel where the job will be delayed. The default channel is <tt class="docutils literal">root</tt>.</p>
+<p><strong>Job function: related action</strong></p>
+<p>The <em>Related Action</em> appears as a button on the Job’s view.
+The button will execute the defined action.</p>
+<p>The default one is to open the view of the record related to the job (form view
+when there is a single record, list view for several records).
+In many cases, the default related action is enough and doesn’t need
+customization, but it can be customized by providing a dictionary on the job
+function:</p>
+<pre class="code python literal-block">
+<span class="p">{</span><span class="w">
+</span>    <span class="s2">&quot;enable&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span><span class="w">
+</span>    <span class="s2">&quot;func_name&quot;</span><span class="p">:</span> <span class="s2">&quot;related_action_partner&quot;</span><span class="p">,</span><span class="w">
+</span>    <span class="s2">&quot;kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Partner&quot;</span><span class="p">},</span><span class="w">
+</span><span class="p">}</span>
+</pre>
+<ul class="simple">
+<li><tt class="docutils literal">enable</tt>: when <tt class="docutils literal">False</tt>, the button has no effect (default: <tt class="docutils literal">True</tt>)</li>
+<li><tt class="docutils literal">func_name</tt>: name of the method on <tt class="docutils literal">queue.job</tt> that returns an action</li>
+<li><tt class="docutils literal">kwargs</tt>: extra arguments to pass to the related action method</li>
+</ul>
+<p>Example of related action code:</p>
+<pre class="code python literal-block">
+<span class="k">class</span> <span class="nc">QueueJob</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span><span class="w">
+</span>    <span class="n">_inherit</span> <span class="o">=</span> <span class="s1">'queue.job'</span><span class="w">
+
+</span>    <span class="k">def</span> <span class="nf">related_action_partner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">ensure_one</span><span class="p">()</span><span class="w">
+</span>        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span><span class="w">
+</span>        <span class="n">partner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="w">
+</span>        <span class="n">action</span> <span class="o">=</span> <span class="p">{</span><span class="w">
+</span>            <span class="s1">'name'</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span><span class="w">
+</span>            <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'ir.actions.act_window'</span><span class="p">,</span><span class="w">
+</span>            <span class="s1">'res_model'</span><span class="p">:</span> <span class="n">model</span><span class="p">,</span><span class="w">
+</span>            <span class="s1">'view_type'</span><span class="p">:</span> <span class="s1">'form'</span><span class="p">,</span><span class="w">
+</span>            <span class="s1">'view_mode'</span><span class="p">:</span> <span class="s1">'form'</span><span class="p">,</span><span class="w">
+</span>            <span class="s1">'res_id'</span><span class="p">:</span> <span class="n">partner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span><span class="w">
+</span>        <span class="p">}</span><span class="w">
+</span>        <span class="k">return</span> <span class="n">action</span>
+</pre>
+<p><strong>Job function: retry pattern</strong></p>
+<p>When a job fails with a retryable error type, it is automatically
+retried later. By default, the retry is always 10 minutes later.</p>
+<p>A retry pattern can be configured on the job function. What a pattern represents
+is “from X tries, postpone to Y seconds”. It is expressed as a dictionary where
+keys are tries and values are seconds to postpone as integers:</p>
+<pre class="code python literal-block">
+<span class="p">{</span><span class="w">
+</span>    <span class="mi">1</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span><span class="w">
+</span>    <span class="mi">5</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span><span class="w">
+</span>    <span class="mi">10</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span><span class="w">
+</span>    <span class="mi">15</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span><span class="w">
+</span><span class="p">}</span>
+</pre>
+<p>Based on this configuration, we can tell that:</p>
+<ul class="simple">
+<li>5 first retries are postponed 10 seconds later</li>
+<li>retries 5 to 10 postponed 20 seconds later</li>
+<li>retries 10 to 15 postponed 30 seconds later</li>
+<li>all subsequent retries postponed 5 minutes later</li>
+</ul>
+<p><strong>Job Context</strong></p>
+<p>The context of the recordset of the job, or any recordset passed in arguments of
+a job, is transferred to the job according to an allow-list.</p>
+<p>The default allow-list is <cite>(“tz”, “lang”, “allowed_company_ids”, “force_company”, “active_test”)</cite>. It can
+be customized in <tt class="docutils literal">Base._job_prepare_context_before_enqueue_keys</tt>.
+<strong>Bypass jobs on running Odoo</strong></p>
+<p>When you are developing (ie: connector modules) you might want
+to bypass the queue job and run your code immediately.</p>
+<p>To do so you can set <cite>QUEUE_JOB__NO_DELAY=1</cite> in your enviroment.</p>
+<p><strong>Bypass jobs in tests</strong></p>
+<p>When writing tests on job-related methods is always tricky to deal with
+delayed recordsets. To make your testing life easier
+you can set <cite>queue_job__no_delay=True</cite> in the context.</p>
+<p>Tip: you can do this at test case level like this</p>
+<pre class="code python literal-block">
+<span class="nd">&#64;classmethod</span><span class="w">
+</span><span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span><span class="w">
+</span>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span><span class="w">
+</span>    <span class="bp">cls</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="w">
+</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">,</span><span class="w">
+</span>        <span class="n">queue_job__no_delay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># no jobs thanks</span><span class="w">
+</span>    <span class="p">))</span>
+</pre>
+<p>Then all your tests execute the job methods synchronously
+without delaying any jobs.</p>
+</div>
+<div class="section" id="testing">
+<h3><a class="toc-backref" href="#toc-entry-8">Testing</a></h3>
+<p><strong>Asserting enqueued jobs</strong></p>
+<p>The recommended way to test jobs, rather than running them directly and synchronously is to
+split the tests in two parts:</p>
+<blockquote>
+<ul class="simple">
+<li>one test where the job is mocked (trap jobs with <tt class="docutils literal">trap_jobs()</tt> and the test
+only verifies that the job has been delayed with the expected arguments</li>
+<li>one test that only calls the method of the job synchronously, to validate the
+proper behavior of this method only</li>
+</ul>
+</blockquote>
+<p>Proceeding this way means that you can prove that jobs will be enqueued properly
+at runtime, and it ensures your code does not have a different behavior in tests
+and in production (because running your jobs synchronously may have a different
+behavior as they are in the same transaction / in the middle of the method).
+Additionally, it gives more control on the arguments you want to pass when
+calling the job’s method (synchronously, this time, in the second type of
+tests), and it makes tests smaller.</p>
+<p>The best way to run such assertions on the enqueued jobs is to use
+<tt class="docutils literal">odoo.addons.queue_job.tests.common.trap_jobs()</tt>.</p>
+<p>Inside this context manager, instead of being added in the database’s queue,
+jobs are pushed in an in-memory list. The context manager then provides useful
+helpers to verify that jobs have been enqueued with the expected arguments. It
+even can run the jobs of its list synchronously! Details in
+<tt class="docutils literal">odoo.addons.queue_job.tests.common.JobsTester</tt>.</p>
+<p>A very small example (more details in <tt class="docutils literal">tests/common.py</tt>):</p>
+<pre class="code python literal-block">
+<span class="c1"># code</span><span class="w">
+</span><span class="k">def</span> <span class="nf">my_job_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">count</span><span class="p">):</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">write</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">name</span><span class="p">]</span> <span class="o">*</span> <span class="n">count</span><span class="p">)</span><span class="w">
+
+</span><span class="k">def</span> <span class="nf">method_to_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;other.model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">search_count</span><span class="p">([])</span><span class="w">
+</span>    <span class="bp">self</span><span class="o">.</span><span class="n">with_delay</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">(</span><span class="s2">&quot;Hi!&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="n">count</span><span class="p">)</span><span class="w">
+</span>    <span class="k">return</span> <span class="n">count</span><span class="w">
+
+</span><span class="c1"># tests</span><span class="w">
+</span><span class="kn">from</span> <span class="nn">odoo.addons.queue_job.tests.common</span> <span class="kn">import</span> <span class="n">trap_jobs</span><span class="w">
+
+</span><span class="c1"># first test only check the expected behavior of the method and the proper</span><span class="w">
+</span><span class="c1"># enqueuing of jobs</span><span class="w">
+</span><span class="k">def</span> <span class="nf">test_method_to_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="k">with</span> <span class="n">trap_jobs</span><span class="p">()</span> <span class="k">as</span> <span class="n">trap</span><span class="p">:</span><span class="w">
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">method_to_test</span><span class="p">()</span><span class="w">
+</span>        <span class="n">expected_count</span> <span class="o">=</span> <span class="mi">12</span><span class="w">
+
+</span>        <span class="n">trap</span><span class="o">.</span><span class="n">assert_jobs_count</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">)</span><span class="w">
+</span>        <span class="n">trap</span><span class="o">.</span><span class="n">assert_enqueued_job</span><span class="p">(</span><span class="w">
+</span>            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">,</span><span class="w">
+</span>            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Hi!&quot;</span><span class="p">,),</span><span class="w">
+</span>            <span class="n">kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">expected_count</span><span class="p">),</span><span class="w">
+</span>            <span class="n">properties</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="w">
+</span>        <span class="p">)</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">expected_count</span><span class="p">)</span><span class="w">
+
+
+</span> <span class="c1"># second test to validate the behavior of the job unitarily</span><span class="w">
+</span> <span class="k">def</span> <span class="nf">test_my_job_method</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>     <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span>     <span class="n">record</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">(</span><span class="s2">&quot;Hi!&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span><span class="w">
+</span>     <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi!&quot;</span><span class="p">)</span>
+</pre>
+<p>If you prefer, you can still test the whole thing in a single test, by calling
+<tt class="docutils literal">jobs_tester.perform_enqueued_jobs()</tt> in your test.</p>
+<pre class="code python literal-block">
+<span class="k">def</span> <span class="nf">test_method_to_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span><span class="w">
+</span>    <span class="k">with</span> <span class="n">trap_jobs</span><span class="p">()</span> <span class="k">as</span> <span class="n">trap</span><span class="p">:</span><span class="w">
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">method_to_test</span><span class="p">()</span><span class="w">
+</span>        <span class="n">expected_count</span> <span class="o">=</span> <span class="mi">12</span><span class="w">
+
+</span>        <span class="n">trap</span><span class="o">.</span><span class="n">assert_jobs_count</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">only</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">)</span><span class="w">
+</span>        <span class="n">trap</span><span class="o">.</span><span class="n">assert_enqueued_job</span><span class="p">(</span><span class="w">
+</span>            <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">,</span><span class="w">
+</span>            <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Hi!&quot;</span><span class="p">,),</span><span class="w">
+</span>            <span class="n">kwargs</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">expected_count</span><span class="p">),</span><span class="w">
+</span>            <span class="n">properties</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">priority</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="w">
+</span>        <span class="p">)</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">expected_count</span><span class="p">)</span><span class="w">
+
+</span>        <span class="n">trap</span><span class="o">.</span><span class="n">perform_enqueued_jobs</span><span class="p">()</span><span class="w">
+
+</span>        <span class="n">record</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">browse</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">
+</span>        <span class="n">record</span><span class="o">.</span><span class="n">my_job_method</span><span class="p">(</span><span class="s2">&quot;Hi!&quot;</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span><span class="w">
+</span>        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi! Hi!&quot;</span><span class="p">)</span>
+</pre>
+<p><strong>Execute jobs synchronously when running Odoo</strong></p>
+<p>When you are developing (ie: connector modules) you might want
+to bypass the queue job and run your code immediately.</p>
+<p>To do so you can set <tt class="docutils literal">QUEUE_JOB__NO_DELAY=1</tt> in your environment.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Do not do this in production</p>
+</div>
+<p><strong>Execute jobs synchronously in tests</strong></p>
+<p>You should use <tt class="docutils literal">trap_jobs</tt>, really, but if for any reason you could not use it,
+and still need to have job methods executed synchronously in your tests, you can
+do so by setting <tt class="docutils literal">queue_job__no_delay=True</tt> in the context.</p>
+<p>Tip: you can do this at test case level like this</p>
+<pre class="code python literal-block">
+<span class="nd">&#64;classmethod</span><span class="w">
+</span><span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span><span class="w">
+</span>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span><span class="w">
+</span>    <span class="bp">cls</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="w">
+</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">context</span><span class="p">,</span><span class="w">
+</span>        <span class="n">queue_job__no_delay</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># no jobs thanks</span><span class="w">
+</span>    <span class="p">))</span>
+</pre>
+<p>Then all your tests execute the job methods synchronously without delaying any
+jobs.</p>
+<p>In tests you’ll have to mute the logger like:</p>
+<blockquote>
+&#64;mute_logger(‘odoo.addons.queue_job.models.base’)</blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">in graphs of jobs, the <tt class="docutils literal">queue_job__no_delay</tt> context key must be in at
+least one job’s env of the graph for the whole graph to be executed synchronously</p>
+</div>
+</div>
+<div class="section" id="tips-and-tricks">
+<h3><a class="toc-backref" href="#toc-entry-9">Tips and tricks</a></h3>
+<ul class="simple">
+<li><strong>Idempotency</strong> (<a class="reference external" href="https://www.restapitutorial.com/lessons/idempotency.html">https://www.restapitutorial.com/lessons/idempotency.html</a>): The queue_job should be idempotent so they can be retried several times without impact on the data.</li>
+<li><strong>The job should test at the very beginning its relevance</strong>: the moment the job will be executed is unknown by design. So the first task of a job should be to check if the related work is still relevant at the moment of the execution.</li>
+</ul>
+</div>
+<div class="section" id="patterns">
+<h3><a class="toc-backref" href="#toc-entry-10">Patterns</a></h3>
+<p>Through the time, two main patterns emerged:</p>
+<ol class="arabic simple">
+<li>For data exposed to users, a model should store the data and the model should be the creator of the job. The job is kept hidden from the users</li>
+<li>For technical data, that are not exposed to the users, it is generally alright to create directly jobs with data passed as arguments to the job, without intermediary models.</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="section" id="known-issues-roadmap">
+<h1><a class="toc-backref" href="#toc-entry-11">Known issues / Roadmap</a></h1>
+<ul class="simple">
+<li>After creating a new database or installing <tt class="docutils literal">queue_job</tt> on an
+existing database, Odoo must be restarted for the runner to detect it.</li>
+<li>When Odoo shuts down normally, it waits for running jobs to finish.
+However, when the Odoo server crashes or is otherwise force-stopped,
+running jobs are interrupted while the runner has no chance to know
+they have been aborted. In such situations, jobs may remain in
+<tt class="docutils literal">started</tt> or <tt class="docutils literal">enqueued</tt> state after the Odoo server is halted.
+Since the runner has no way to know if they are actually running or
+not, and does not know for sure if it is safe to restart the jobs,
+it does not attempt to restart them automatically. Such stale jobs
+therefore fill the running queue and prevent other jobs to start.
+You must therefore requeue them manually, either from the Jobs view,
+or by running the following SQL statement <em>before starting Odoo</em>:</li>
+</ul>
+<pre class="code sql literal-block">
+<span class="k">update</span><span class="w"> </span><span class="n">queue_job</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="k">state</span><span class="o">=</span><span class="s1">'pending'</span><span class="w"> </span><span class="k">where</span><span class="w"> </span><span class="k">state</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">(</span><span class="s1">'started'</span><span class="p">,</span><span class="w"> </span><span class="s1">'enqueued'</span><span class="p">)</span>
+</pre>
+</div>
+<div class="section" id="changelog">
+<h1><a class="toc-backref" href="#toc-entry-12">Changelog</a></h1>
+<!-- [ The change log. The goal of this file is to help readers
+understand changes between version. The primary audience is
+end users and integrators. Purely technical changes such as
+code refactoring must not be mentioned here.
+
+This file may contain ONE level of section titles, underlined
+with the ~ (tilde) character. Other section markers are
+forbidden and will likely break the structure of the README.rst
+or other documents where this fragment is included. ] -->
+<div class="section" id="next">
+<h2><a class="toc-backref" href="#toc-entry-13">Next</a></h2>
+<ul class="simple">
+<li>[ADD] Run jobrunner as a worker process instead of a thread in the main
+process (when running with –workers &gt; 0)</li>
+<li>[REF] <tt class="docutils literal">&#64;job</tt> and <tt class="docutils literal">&#64;related_action</tt> deprecated, any method can be delayed,
+and configured using <tt class="docutils literal">queue.job.function</tt> records</li>
+<li>[MIGRATION] from 13.0 branched at rev. e24ff4b</li>
+</ul>
+</div>
+</div>
+<div class="section" id="bug-tracker">
+<h1><a class="toc-backref" href="#toc-entry-14">Bug Tracker</a></h1>
+<p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/queue/issues">GitHub Issues</a>.
+In case of trouble, please check there if your issue has already been reported.
+If you spotted it first, help us to smash it by providing a detailed and welcomed
+<a class="reference external" href="https://github.com/OCA/queue/issues/new?body=module:%20queue_job%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<p>Do not contact contributors directly about support or help with technical issues.</p>
+</div>
+<div class="section" id="credits">
+<h1><a class="toc-backref" href="#toc-entry-15">Credits</a></h1>
+<div class="section" id="authors">
+<h2><a class="toc-backref" href="#toc-entry-16">Authors</a></h2>
+<ul class="simple">
+<li>Camptocamp</li>
+<li>ACSONE SA/NV</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h2><a class="toc-backref" href="#toc-entry-17">Contributors</a></h2>
+<ul class="simple">
+<li>Guewen Baconnier &lt;<a class="reference external" href="mailto:guewen.baconnier&#64;camptocamp.com">guewen.baconnier&#64;camptocamp.com</a>&gt;</li>
+<li>Stéphane Bidoul &lt;<a class="reference external" href="mailto:stephane.bidoul&#64;acsone.eu">stephane.bidoul&#64;acsone.eu</a>&gt;</li>
+<li>Matthieu Dietrich &lt;<a class="reference external" href="mailto:matthieu.dietrich&#64;camptocamp.com">matthieu.dietrich&#64;camptocamp.com</a>&gt;</li>
+<li>Jos De Graeve &lt;<a class="reference external" href="mailto:Jos.DeGraeve&#64;apertoso.be">Jos.DeGraeve&#64;apertoso.be</a>&gt;</li>
+<li>David Lefever &lt;<a class="reference external" href="mailto:dl&#64;taktik.be">dl&#64;taktik.be</a>&gt;</li>
+<li>Laurent Mignon &lt;<a class="reference external" href="mailto:laurent.mignon&#64;acsone.eu">laurent.mignon&#64;acsone.eu</a>&gt;</li>
+<li>Laetitia Gangloff &lt;<a class="reference external" href="mailto:laetitia.gangloff&#64;acsone.eu">laetitia.gangloff&#64;acsone.eu</a>&gt;</li>
+<li>Cédric Pigeon &lt;<a class="reference external" href="mailto:cedric.pigeon&#64;acsone.eu">cedric.pigeon&#64;acsone.eu</a>&gt;</li>
+<li>Tatiana Deribina &lt;<a class="reference external" href="mailto:tatiana.deribina&#64;avoin.systems">tatiana.deribina&#64;avoin.systems</a>&gt;</li>
+<li>Souheil Bejaoui &lt;<a class="reference external" href="mailto:souheil.bejaoui&#64;acsone.eu">souheil.bejaoui&#64;acsone.eu</a>&gt;</li>
+<li>Eric Antones &lt;<a class="reference external" href="mailto:eantones&#64;nuobit.com">eantones&#64;nuobit.com</a>&gt;</li>
+<li>Simone Orsi &lt;<a class="reference external" href="mailto:simone.orsi&#64;camptocamp.com">simone.orsi&#64;camptocamp.com</a>&gt;</li>
+</ul>
+</div>
+<div class="section" id="maintainers">
+<h2><a class="toc-backref" href="#toc-entry-18">Maintainers</a></h2>
+<p>This module is maintained by the OCA.</p>
+<a class="reference external image-reference" href="https://odoo-community.org">
+<img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
+</a>
+<p>OCA, or the Odoo Community Association, is a nonprofit organization whose
+mission is to support the collaborative development of Odoo features and
+promote its widespread use.</p>
+<p>Current <a class="reference external" href="https://odoo-community.org/page/maintainer-role">maintainer</a>:</p>
+<p><a class="reference external image-reference" href="https://github.com/guewen"><img alt="guewen" src="https://github.com/guewen.png?size=40px" /></a></p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/queue/tree/16.0/queue_job">OCA/queue</a> project on GitHub.</p>
+<p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="identity_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="height: 2px;">
+                        <div class="oe_structure" />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <t t-foreach="o" t-as="student">
+                        <br /><br /><br />
+                        <table
+                                width="25%"
+                                height="50px"
+                                style="border: 3px solid black;"
+                            >
+                            <tr>
+                                <td width="100%" align="center" height="30">
+                                    <strong>
+                                        <span t-field="student.school_id.name" />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <img
+                                            t-if="student.photo"
+                                            t-att-src="'data:image/png;base64,%s' % to_text(student.photo)"
+                                            style="height:120px;width=120px"
+                                        />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="10px" />
+                            </tr>
+                            <tr>
+                                <td align="center" height="30px">
+                                    <strong>
+                                        <span t-field="student.name" />
+                                    </strong>
+                                    <strong>
+                                        <span t-field="student.middle" />
+                                    </strong>
+                                    <strong>
+                                        <span t-field="student.last" />
+                                    </strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="130">
+                                    <table width="100%">
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Roll No.</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="student.roll_no" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Standard</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        t-field="student.standard_id.standard_id.name"
+                                                    />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Division</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        t-field="student.standard_id.division_id.name"
+                                                    />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Medium</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span
+                                                        t-field="student.medium_id.name"
+                                                    />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>BirthDate</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="student.date_of_birth" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                    style="font-family: 'Helvetica';padding-left:20px;"
+                                                >
+                                                <strong>Blood Group</strong>
+                                            </td>
+                                            <td>
+                                                <strong>: </strong>
+                                            </td>
+                                            <td>
+                                                <span t-field="student.blood_group" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                      </t>
+                   </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

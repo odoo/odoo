@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Vaccine menu action-->
+    <record id="product_template_action_vaccine"
+            model='ir.actions.act_window'>
+        <field name="name">Vaccine</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('vaccine_ok','=',True)]</field>
+        <field name="context">{'default_vaccine_ok': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Vaccine
+            </p>
+        </field>
+    </record>
+    <!--    Medicine menu action-->
+    <record id="product_template_action_medicine"
+            model='ir.actions.act_window'>
+        <field name="name">Medicine</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('medicine_ok','=',True)]</field>
+        <field name="context">{'default_medicine_ok': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Medicine
+            </p>
+        </field>
+    </record>
+    <!--Inherit product template to add medicine and vaccine fields-->
+    <record id="product_template_only_form_view" model="ir.ui.view">
+        <field name="name">product.template.view.form.inherit.base.hospital
+            .management
+        </field>
+        <field name="model">product.template</field>
+        <field name="inherit_id"
+               ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_id']" position="after">
+                <field name="vaccine_ok"
+                       attrs="{'invisible': [('medicine_ok', '=', True)]}"/>
+                <field name="medicine_ok"
+                       attrs="{'invisible': [('vaccine_ok', '=', True)]}"/>
+                <field name="medicine_brand_id"
+                       attrs="{'invisible': [('vaccine_ok', '=', False),
+                       ('medicine_ok', '=', False)]}"/>
+                <field name="pharmacy_id"
+                       attrs="{'invisible': [('vaccine_ok', '=', False),
+                       ('medicine_ok', '=', False)]}"
+                       options="{'no_create': True, 'no_edit': True}"/>
+            </xpath>
+        </field>
+    </record>
+    <!--    Medicine Menu-->
+    <menuitem id="product_template_menu_medicine" name="Medicine"
+              sequence="1"
+              parent="hospital_menu_configuration"
+              action="product_template_action_medicine"/>
+    <!--    Vaccine Menu-->
+    <menuitem id="product_template_menu_vaccine" name="Vaccine" sequence="2"
+              parent="hospital_menu_configuration"
+              action="product_template_action_vaccine"/>
+</odoo>

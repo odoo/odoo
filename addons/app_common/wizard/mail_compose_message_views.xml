@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="app_mail_compose_message_form" model="ir.ui.view">
+        <field name="name">app.mail.compose.message.form</field>
+        <field name="model">mail.compose.message</field>
+        <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer/button[@name='action_send_mail']" position="before">
+                <field name="show_send_without_mail" invisible="1"/>
+                <button string="Send Without Mail" name="action_send_without_mail" type="object" class="btn-primary" data-hotkey="a"
+                         attrs="{'invisible': [('show_send_without_mail', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--    This XML record defines an action that opens a tree view and a form view of the courses in the Open Academy module. -->
+    <record id="action_openacademy_course_list" model="ir.actions.act_window">
+        <field name="name">Courses</field>
+        <field name="res_model">openacademy.course</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!--    XML record defining a tree view for the OpenAcademy Course model.-->
+    <!--    The 'openacademy_course_list_view_tree' record specifies a tree view to display a list of OpenAcademy courses, sorted by name in descending order. -->
+    <!--    The view displays two fields for each course: its name and the ID of the responsible user.-->
+    <!--    This XML record is used to define the 'openacademy.course.view.list' view for the 'openacademy.course' model in the OpenAcademy application.-->
+    <record id="openacademy_course_list_view_tree" model="ir.ui.view">
+        <field name="name">openacademy.course.view.list</field>
+        <field name="model">openacademy.course</field>
+        <field name="arch" type="xml">
+            <tree string="Course List" default_order="name desc">
+                <field name="name"/>
+                <field name="responsible_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!--    course  form view-->
+    <record id="openacademy_course_view_form" model="ir.ui.view">
+        <field name="name">openacademy.course.view.form</field>
+        <field name="model">openacademy.course</field>
+        <field name="arch" type="xml">
+            <form string="Course Form">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="responsible_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Sessions">
+                            <field name="session_ids">
+                                <tree string="Registered Sessions">
+                                    <field name="name"/>
+                                    <field name="instructor_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--&lt;!&ndash;The view allows users to search for courses by name and description. -->
+    <!--It also includes two filters: "My Courses" which displays only courses where the -->
+    <!-- -current user is the responsible person, and "Responsible" which groups the courses by the responsible person.&ndash;&gt;-->
+    <record id="openacdemy_course_view_search" model="ir.ui.view">
+        <field name="name">openacademy.course.search.view</field>
+        <field name="model">openacademy.course</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="description"/>
+                <filter name="my_courses" string="My Courses"
+                        domain="[('responsible_id', '=', uid)]"/>
+
+                <group string="Group By">
+                    <filter name="by_responsible" string="Responsible"
+                            context="{'group_by': 'responsible_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!--        The following tag is an action definition for a "window action",-->
+    <!--        that is an action opening a view or a set of views-->
+    <record id="openacademy_course_action" model="ir.actions.act_window">
+        <field name="name">Courses</field>
+        <field name="res_model">openacademy.course</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context" eval="{'search_default_my_courses': 1}"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create the first course
+            </p>
+        </field>
+    </record>
+
+    <!-- top level menu: no parent -->
+    <menuitem id="main_openacademy_menu_root" name="Open Academy"/>
+    <!-- A first level in the left side menu is needed
+         before using action= attribute -->
+    <menuitem id="openacademy_menu" name="Open Academy"
+              parent="main_openacademy_menu_root"/>
+    <!-- the following menuitem should appear *after*
+         its parent openacademy_menu and *after* its
+         action course_list_action -->
+    <menuitem id="openacdemy_courses_menu_child" name="Courses"
+              parent="openacademy_menu"
+              action="openacademy_course_action"/>
+    <!-- Full id location:
+         action="openacademy.course_list_action"
+         It is not required when it is the same module -->
+    <menuitem id="res_partner_menu_root" name="Configuration"
+              parent="main_openacademy_menu_root"/>
+    <menuitem id="res_partner_menu_child" name="Contacts"
+              parent="res_partner_menu_root"
+              action="res_partner_tree_action"/>
+    <!--    session menu-->
+    <menuitem id="openacademy_session_menu_child" name="Sessions"
+              parent="openacademy_menu"
+              action="openacademy_session_list_action"/>
+</odoo>

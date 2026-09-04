@@ -1,0 +1,187 @@
+<odoo>
+    <record id="sot_sale_order_type_form_view" model="ir.ui.view">
+        <field name="name">sale.order.type.form.view</field>
+        <field name="model">sale.order.type</field>
+        <field name="arch" type="xml">
+            <form string="Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box" />
+                    <field name="active" invisible="1" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="warehouse_id" invisible="1" />
+                            <field
+                                name="warehouse_id"
+                                options="{'no_create': True}"
+                                groups="stock.group_stock_multi_warehouses"
+                            />
+                            <field name="company_id" invisible="1" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field
+                                name="route_id"
+                                attrs="{'invisible': [('warehouse_id', '=', False)]}"
+                                groups="stock.group_adv_location"
+                            />
+                            <field name="sequence_id" />
+                            <field
+                                name="analytic_account_id"
+                                groups="analytic.group_analytic_accounting"
+                            />
+                        </group>
+                        <group>
+                            <field name="journal_id" />
+                            <field name="picking_policy" />
+                            <field name="quotation_validity_days" />
+                            <field name="payment_term_id" />
+                            <field
+                                name="pricelist_id"
+                                groups="product.group_product_pricelist"
+                            />
+                            <field
+                                name="incoterm_id"
+                                groups="sale_stock.group_display_incoterm"
+                            />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sot_sale_order_type_tree_view" model="ir.ui.view">
+        <field name="name">sale.order.type.tree.view</field>
+        <field name="model">sale.order.type</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field
+                    name="warehouse_id"
+                    groups="stock.group_stock_multi_warehouses"
+                />
+                <field name="route_id" groups="stock.group_adv_location" />
+                <field name="sequence_id" />
+                <field name="journal_id" />
+                <field name="picking_policy" />
+                <field name="payment_term_id" />
+                <field name="pricelist_id" groups="product.group_product_pricelist" />
+                <field name="incoterm_id" groups="sale_stock.group_display_incoterm" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="description" />
+            </tree>
+        </field>
+    </record>
+    <record id="sot_sale_order_type_search_view" model="ir.ui.view">
+        <field name="name">sale.order.type.search.view</field>
+        <field name="model">sale.order.type</field>
+        <field name="arch" type="xml">
+            <search string="Type">
+                <field name="name" />
+                <field
+                    name="warehouse_id"
+                    groups="stock.group_stock_multi_warehouses"
+                />
+                <field name="route_id" groups="stock.group_adv_location" />
+                <field name="sequence_id" />
+                <field name="journal_id" />
+                <field name="picking_policy" />
+                <field name="payment_term_id" />
+                <field name="pricelist_id" groups="product.group_product_pricelist" />
+                <field name="incoterm_id" groups="sale_stock.group_display_incoterm" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="warehouse"
+                        string="Warehouse"
+                        domain="[]"
+                        context="{'group_by':'warehouse_id'}"
+                        groups="stock.group_stock_multi_warehouses"
+                    />
+                    <filter
+                        name="entry_sequence"
+                        string="Entry Sequence"
+                        domain="[]"
+                        context="{'group_by':'sequence_id'}"
+                    />
+                    <filter
+                        name="billing_journal"
+                        string="Billing Journal"
+                        domain="[]"
+                        context="{'group_by':'journal_id'}"
+                    />
+                    <filter
+                        name="shipping_policy"
+                        string="Shipping Policy"
+                        domain="[]"
+                        context="{'group_by':'picking_policy'}"
+                    />
+                    <filter
+                        name="payment_term"
+                        string="Payment Term"
+                        domain="[]"
+                        context="{'group_by':'payment_term_id'}"
+                    />
+                    <filter
+                        name="price_list"
+                        string="Price List"
+                        domain="[]"
+                        context="{'group_by':'pricelist_id'}"
+                        groups="product.group_product_pricelist"
+                    />
+                    <filter
+                        name="incoterm"
+                        string="Incoterm"
+                        domain="[]"
+                        context="{'group_by':'incoterm_id'}"
+                        groups="sale_stock.group_display_incoterm"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="sot_sale_order_type_action" model="ir.actions.act_window">
+        <field name="name">Sales Order Types</field>
+        <field name="res_model">sale.order.type</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="sot_sale_order_type_tree_view" />
+        <field name="help" type="html">
+            <p
+                class="oe_view_nocontent_create"
+            >Click to set a new type for sale order.</p>
+        </field>
+    </record>
+    <record id="sot_sale_order_type_action_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="sot_sale_order_type_form_view" />
+        <field name="act_window_id" ref="sot_sale_order_type_action" />
+    </record>
+    <record id="sot_sale_order_type_action_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1" />
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="sot_sale_order_type_tree_view" />
+        <field name="act_window_id" ref="sot_sale_order_type_action" />
+    </record>
+    <menuitem
+        id="sot_sale_order_type_menu"
+        parent="sale.menu_sales_config"
+        action="sot_sale_order_type_action"
+        sequence="20"
+    />
+</odoo>

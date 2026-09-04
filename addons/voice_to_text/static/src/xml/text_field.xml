@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template name="VoiceSearch" id="search" xml:space="preserve">
+    <!--This is used to extending the TextField to add the voice recognition button-->
+    <t t-name="voiceText" t-inherit="web.TextField" t-inherit-mode="extension"
+       owl="1">
+        <xpath expr="." position="inside">
+            <div>
+                <button class="o_Composer_button  o_Composer_toolButton btn btn-light fa fa-microphone border-0 rounded-pill mx-1"
+                        id="record_voice" title="Voice" aria-label="Voice"
+                        type="button"
+                        t-on-click="recordText" t-ref="voice_record_button">
+                </button>
+            </div>
+        </xpath>
+    </t>
+</template>

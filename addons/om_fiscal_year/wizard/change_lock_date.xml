@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_change_lock_date" model="ir.ui.view">
+            <field name="name">change.lock.date.form</field>
+            <field name="model">change.lock.date</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group string="Management Closing">
+                                <field name="company_id"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       groups="base.group_multi_company"/>
+                                <field name="period_lock_date"/>
+                                <field name="tax_lock_date"/>
+                            </group>
+                            <group string="Account Period Closing">
+                                <field name="fiscalyear_lock_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Save" name="update_lock_date" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_change_lock_date" model="ir.actions.act_window">
+            <field name="name">Lock your Fiscal Period</field>
+            <field name="res_model">change.lock.date</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_change_lock_date"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_action_change_lock_date"
+                  name="Lock Dates"
+                  action="action_view_change_lock_date"
+                  parent="account.menu_finance_entries_actions"
+                  sequence="55"
+                  groups="account.group_account_manager"/>
+
+    </data>
+</odoo>

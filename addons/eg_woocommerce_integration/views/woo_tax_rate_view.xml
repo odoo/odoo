@@ -1,0 +1,52 @@
+<odoo>
+    <record model="ir.ui.view" id="woo_tax_rate_tree_view">
+        <field name="name">woo.tax.rate.tree</field>
+        <field name="model">woo.tax.rate</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+                <field name="tax_rate"/>
+                <field name="instance_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="woo_tax_rate_form_view">
+        <field name="name">woo.tax.rate.form</field>
+        <field name="model">woo.tax.rate</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="woo_tax_rate_id"/>
+                            <field name="odoo_tax_rate_id"/>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="tax_rate"/>
+                            <field name="tax_priority"/>
+                        </group>
+                        <group>
+                            <field name="country_iso_code"/>
+                            <field name="state_code"/>
+                            <field name="compound_rate"/>
+                            <field name="is_shipping_tax"/>
+                            <field name="tax_order"/>
+                            <field name="real_tax_class_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_woo_tax_rate">
+        <field name="name">Woocommerce Tax rate</field>
+        <field name="res_model">woo.tax.rate</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_woo_tex_rate" name="Tax Rate" parent="eg_ecommerce_base.sale_order_mapping_id"
+              action="action_woo_tax_rate" sequence="3"/>
+</odoo>

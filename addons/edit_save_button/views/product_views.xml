@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="view_product_form_inherit_">
+            <field name="name">view.product.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='standard_price_uom']" position='replace'>
+                        <div name="standard_price_uom" style="display: flex;" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}">
+                            <field name="standard_price" class="oe_inline" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
+                            <div style="margin-left:10px;">
+                                <span groups="uom.group_uom">per
+                                <field name="uom_name" class="oe_inline"/>
+                            </span>
+                            </div>
+                        </div>
+                </xpath>
+            </field>
+        </record>
+</odoo>

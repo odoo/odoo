@@ -1,0 +1,13 @@
+<odoo>
+    <record model="ir.cron" id="eg_import_sale_order_cron">
+        <field name="name">Woo Import Sale Order</field>
+        <field name="model_id" ref="model_eg_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">model.import_woo_sale_order(cron="yes")</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="active" eval="False"/>
+    </record>
+</odoo>

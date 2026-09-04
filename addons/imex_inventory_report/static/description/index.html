@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Imex Inventory Report</title>
+
+</head>
+<body>
+    <div id = "imex-inventory-report">
+        <h1>Imex Inventory Report</h1>
+        <p>Inventory Report with total initial, qty in, qty out, balance.</p>
+        <p><li><strong>Change logs:</strong>
+        <br/><span>1.3.1</span><br/>
+        - Now you have new "View Details" button if you selected only one product <br/>
+        - You can view the details report from tree view when you click the search button on each row.
+    </li></p>
+        <p><li><strong>Filter wizard:</strong><br/>
+            - If leave location blank mean select all internal locations<br/>
+            - If leave category blank mean select all categories<br/>
+            - If leave product blank mean select all category's products (if category set) or select all storable products (if category not set)<br/>
+            - If start date blank mean period start from 1900-01-01<br/>
+            - If end date blank mean period end date is today<br/>
+            </li>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/wizard1.png" alt="filter wizard"/>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/wizard2.png" alt="filter wizard"/>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/wizard3.png" alt="filter wizard"/>
+        <br/>
+        </p>
+        <p><li><strong>View report:</strong></li>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/report0.png" alt="report all products"/></p>
+        <p><li><strong>View details report:</strong></li>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/report2.png" alt="report all products"/></p>
+        <p><li><strong>Print report:</strong></li>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/report1.png" alt="print report pdf"/></p>
+        <p><strong>group_location cases</strong><br/>
+            case 1: location set<br/>
+                &emsp;=> count internal transfer and group by location<br/>
+                &emsp;1.1: group_location = True<br/>
+                &emsp;&emsp;=> select all child_of location<br/>
+                &emsp;1.2: group_location = False<br/>
+                &emsp;&emsp;=> select only location_id<br/>
+             case 2: location not set<br/>
+                &emsp;=> select all internal locations<br/>
+                &emsp;2.1: group_location = True<br/>
+                &emsp;&emsp;=> count internal transfer and group by location<br/>
+                &emsp;2.2: group_location = False<br/>
+                &emsp;&emsp;=> not count internal transfer and neither group by location</p>
+        <p><li><strong>Group by location example</strong> counted internal transfers:</li>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/group%20location1.png" alt="group by location example"/></p>
+        <p><li><strong>Not group by location example</strong> din't count internal transfers:</li>
+        <img src="https://raw.githubusercontent.com/longvm91/odoo-custom-modules/16.0/imex_inventory_report/static/img/group%20location2.png" alt="not group by location example"/></p>
+        <p>If you have questions, don't hesitate, leave comment or feel free to contact me <a href="mailto:longvm91@gmail.com">Jason</a></p>
+    </div>
+</body>

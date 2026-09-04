@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--    Database backup configuration views-->
+    <record id="db_backup_configure_view_tree" model="ir.ui.view">
+        <field name="name">db.backup.configure.view.tree</field>
+        <field name="model">db.backup.configure</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="(not active)">
+                <field name="name"/>
+                <field name="db_name"/>
+                <field name="backup_destination"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="db_backup_configure_view_form" model="ir.ui.view">
+        <field name="name">db.backup.configure.view.form</field>
+        <field name="model">db.backup.configure</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="db_name"/>
+                            <field name="master_pwd" password="True"/>
+                            <field name="backup_format"/>
+                            <field name="active" widget="boolean_toggle" attrs="{'readonly': [('hide_active', '=', False)]}"/>
+                            <field name="hide_active" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="backup_destination" required="1"/>
+                            <field name="backup_path"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'local')], 'required': [('backup_destination', '=', 'local')]}"/>
+                            <field name="ftp_host"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'ftp')], 'required': [('backup_destination', '=', 'ftp')]}"/>
+                            <field name="ftp_port"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'ftp')], 'required': [('backup_destination', '=', 'ftp')]}"/>
+                            <field name="ftp_user"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'ftp')], 'required': [('backup_destination', '=', 'ftp')]}"/>
+                            <field name="ftp_password"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'ftp')], 'required': [('backup_destination', '=', 'ftp')]}"
+                                   password="True"/>
+                            <field name="ftp_path"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'ftp')], 'required': [('backup_destination', '=', 'ftp')]}"/>
+                            <field name="sftp_host"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'sftp')], 'required': [('backup_destination', '=', 'sftp')]}"/>
+                            <field name="sftp_port"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'sftp')], 'required': [('backup_destination', '=', 'sftp')]}"/>
+                            <field name="sftp_user"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'sftp')], 'required': [('backup_destination', '=', 'sftp')]}"/>
+                            <field name="sftp_password"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'sftp')], 'required': [('backup_destination', '=', 'sftp')]}"
+                                   password="True"/>
+                            <field name="sftp_path"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'sftp')], 'required': [('backup_destination', '=', 'sftp')]}"/>
+                            <field name="gdrive_client_key" string="Client ID"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'google_drive')], 'required': [('backup_destination', '=', 'google_drive')]}"/>
+                            <field name="gdrive_client_secret"
+                                   string="Client Secret"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'google_drive')], 'required': [('backup_destination', '=', 'google_drive')]}"
+                                   password="True"/>
+                            <field name="gdrive_redirect_uri"
+                                   string="Redirect URI"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'google_drive')]}"/>
+                            <field name="gdrive_access_token" password="True"
+                                   invisible="1"/>
+                            <field name="gdrive_refresh_token" password="True"
+                                   invisible="1"/>
+                            <field name="gdrive_token_validity" invisible="1"/>
+                            <field name="google_drive_folder_key"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'google_drive')], 'required': [('backup_destination', '=', 'google_drive')]}"/>
+                            <field name="dropbox_client_key" string="App Key"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'dropbox')], 'required': [('backup_destination', '=', 'dropbox')]}"
+                                   password="True"/>
+                            <field name="dropbox_client_secret"
+                                   string="App Secret"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'dropbox')], 'required': [('backup_destination', '=', 'dropbox')]}"
+                                   password="True"/>
+                            <field name="onedrive_client_key" string="Client ID"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'onedrive')], 'required': [('backup_destination', '=', 'onedrive')]}"/>
+                            <field name="onedrive_client_secret"
+                                   string="Client Secret"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'onedrive')], 'required': [('backup_destination', '=', 'onedrive')]}"
+                                   password="True"/>
+                            <field name="onedrive_redirect_uri"
+                                   string="Redirect URI"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'onedrive')]}"/>
+                            <field name="onedrive_folder_key" string="Folder ID"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'onedrive')], 'required': [('backup_destination', '=', 'onedrive')]}"/>
+                            <field name="onedrive_access_token"
+                                   string="Access Token"
+                                   invisible="1" password="True"/>
+                            <field name="onedrive_refresh_token"
+                                   string="Refresh Token" invisible="1"
+                                   password="True"/>
+                            <field name="onedrive_token_validity"
+                                   string="Token Validity" invisible="1"/>
+                            <field name="is_onedrive_token_generated"
+                                   invisible="1"/>
+                            <field name="is_google_drive_token_generated"
+                                   invisible="1"/>
+                            <field name="domain" string="Domain Name"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'next_cloud')]}"/>
+                            <field name="next_cloud_user_name"
+                                   string="User Name"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'next_cloud')]}"/>
+                            <field name="next_cloud_password" string="Password"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'next_cloud')]}"/>
+                            <field name="nextcloud_folder_key" string="Folder ID"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'next_cloud')]}"/>
+
+                            <field name="aws_access_key"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'amazon_s3')]}"/>
+                            <field name="aws_secret_access_key"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'amazon_s3')]}"/>
+                            <field name="bucket_file_name"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'amazon_s3')]}"/>
+                            <field name="aws_folder_name"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'amazon_s3')]}"/>
+                            <div attrs="{'invisible': [('backup_destination', '!=', 'dropbox')]}">
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'dropbox'), ('is_dropbox_token_generated', '=', False)]}">
+                                    <i class="text-success fa fa-check"/>
+                                    Refresh token set
+                                </div>
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'dropbox'), ('is_dropbox_token_generated', '=', True)]}">
+                                    <i class="fa fa-exclamation-triangle text-warning"/>
+                                    No refresh token set
+                                </div>
+                            </div>
+                            <div attrs="{'invisible': [('backup_destination', '!=', 'dropbox')]}">
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'dropbox'), ('is_dropbox_token_generated', '=', True)]}">
+                                    <button class="btn btn-link"
+                                            name="action_get_dropbox_auth_code"
+                                            type="object">
+                                        <i class="fa fa-arrow-right"/>
+                                        Setup Token
+                                    </button>
+                                </div>
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'dropbox'), ('is_dropbox_token_generated', '=', False)]}">
+                                    <button class="btn btn-link"
+                                            name="action_get_dropbox_auth_code"
+                                            type="object">
+                                        <i class="fa fa-arrow-right"/>
+                                        Reset Token
+                                    </button>
+                                </div>
+                            </div>
+                            <div attrs="{'invisible': [('backup_destination', '!=', 'google_drive')]}">
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'google_drive'), ('is_google_drive_token_generated', '=', False)]}">
+                                    <i class="text-success fa fa-check"/>
+                                    Refresh token set
+                                </div>
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'google_drive'), ('is_google_drive_token_generated', '=', True)]}">
+                                    <i class="fa fa-exclamation-triangle text-warning"/>
+                                    No refresh token set
+                                </div>
+                            </div>
+                            <div attrs="{'invisible': [('backup_destination', '!=', 'google_drive')]}">
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'google_drive'), ('is_google_drive_token_generated', '=', True)]}">
+                                    <button class="btn btn-link"
+                                            name="action_get_gdrive_auth_code"
+                                            type="object">
+                                        <i class="fa fa-arrow-right"/>
+                                        Setup Token
+                                    </button>
+                                </div>
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'google_drive'), ('is_google_drive_token_generated', '=', False)]}">
+                                    <button class="btn btn-link"
+                                            name="action_get_gdrive_auth_code"
+                                            type="object">
+                                        <i class="fa fa-arrow-right"/>
+                                        Reset Token
+                                    </button>
+                                </div>
+                            </div>
+                            <div attrs="{'invisible': [('backup_destination', '!=', 'onedrive')]}">
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'onedrive'), ('is_onedrive_token_generated', '=', False)]}">
+                                    <i class="text-success fa fa-check"/>
+                                    Refresh token set
+                                </div>
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'onedrive'), ('is_onedrive_token_generated', '=', True)]}">
+                                    <i class="fa fa-exclamation-triangle text-warning"/>
+                                    No refresh token set
+                                </div>
+                            </div>
+                            <div attrs="{'invisible': [('backup_destination', '!=', 'onedrive')]}">
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'onedrive'), ('is_onedrive_token_generated', '=', True)]}">
+                                    <button class="btn btn-link"
+                                            name="action_get_onedrive_auth_code"
+                                            type="object">
+                                        <i class="fa fa-arrow-right"/>
+                                        Setup Token
+                                    </button>
+                                </div>
+                                <div attrs="{'invisible': ['|', ('backup_destination', '!=', 'onedrive'), ('is_onedrive_token_generated', '=', False)]}">
+                                    <button class="btn btn-link"
+                                            name="action_get_onedrive_auth_code"
+                                            type="object">
+                                        <i class="fa fa-arrow-right"/>
+                                        Reset Token
+                                    </button>
+                                </div>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="notify_user"/>
+                            <field name="user_id"
+                                   attrs="{'invisible': [('notify_user', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="dropbox_refresh_token" invisible="1"/>
+                            <field name="is_dropbox_token_generated" invisible="1"/>
+                            <field name="dropbox_folder"
+                                   attrs="{'invisible': [('backup_destination', '!=', 'dropbox')], 'required': [('backup_destination', '=', 'dropbox')]}"/>
+                            <field name="auto_remove"/>
+                            <label for="days_to_remove" class="oe_inline"
+                                   attrs="{'invisible': [('auto_remove', '=', False)]}"/>
+                            <div attrs="{'invisible': [('auto_remove', '=', False)]}">
+                                <field name="days_to_remove" class="oe_inline"
+                                       attrs="{'required': [('auto_remove', '=', True)]}"/>
+                                Days
+                            </div>
+                            <button name="action_sftp_connection" type="object"
+                                    string="Test Connection"
+                                    icon="fa-television"
+                                    attrs="{'invisible': [('backup_destination', 'not in', ('ftp', 'sftp'))]}"/>
+
+                            <button name="action_nextcloud" type="object"
+                                    string="Test Connection"
+                                    icon="fa-television"
+                                    attrs="{'invisible': [('backup_destination', '!=', 'next_cloud')]}"/>
+                            <button name="action_s3cloud" type="object"
+                                    string="Test Connection"
+                                    icon="fa-television"
+                                    attrs="{'invisible': [('backup_destination', '!=', 'amazon_s3')]}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="db_backup_configure_view_search" model="ir.ui.view">
+        <field name="name">db.backup.configure.view.search</field>
+        <field name="model">db.backup.configure</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="db_name"/>
+                <filter string="All" name="all"
+                        domain="['|', ('active', '=',  True), ('active', '!=',  True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive"
+                        domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Backup Type" name="backup_type" domain="[]"
+                            context="{'group_by': 'backup_destination'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="db_backup_configure_action" model="ir.actions.act_window">
+        <field name="name">Database Backup</field>
+        <field name="res_model">db.backup.configure</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No backup configured!
+            </p>
+        </field>
+        <field name="context">{'search_default_all': 1}</field>
+    </record>
+
+    <menuitem id="db_backup_menu_root" name="Automatic Database Backup"
+              parent="base.menu_custom" sequence="10"/>
+    <menuitem id="db_backup_configure_menu" parent="db_backup_menu_root"
+              name="Backup Configuration"
+              action="db_backup_configure_action"/>
+</odoo>

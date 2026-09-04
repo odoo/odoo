@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--Pharmacy dashboard template-->
+<template>
+    <t t-name="PharmacyDashboard">
+        <div class="oh_dashboards">
+            <div class="container-fluid o_pj_dashboard"
+                 style="height: 100vh; overflow: scroll;">
+                <div style="width:100%; margin:0; padding:0;">
+                    <div class="container">
+                        <div class="row">
+                            <div class="container col-lg-12 mt-4 pharma_container"
+                                 style="">
+                                <div class="row">
+                                    <div class="col-lg-2 mt-2 pharma_2"
+                                         style="width: 250px; height: 788px; background-color: rgb(255, 255, 255); border-radius: 40px 0px 0px 40px; margin-left: 6px;">
+                                        <h1 class="ms-4 mt-4"
+                                            style="font-size: 32px;">
+                                            <i class="fa fa-plus-circle"/>
+                                            Pharma
+                                        </h1>
+                                        <div class="menu_class">
+                                            <ul class="menu-ul">
+                                                <a href="#" class="menu_link">
+                                                    <li class="menu_item patient home">
+                                                        Home
+                                                    </li>
+                                                </a>
+                                                <a href="#" class="menu_link">
+                                                    <li class="menu_item medicine_search">
+                                                        Medicines
+                                                    </li>
+                                                </a>
+                                                <a href="#" class="menu_link">
+                                                    <li class="menu_item vaccine_search">
+                                                        Vaccines
+                                                    </li>
+                                                </a>
+                                                <a href="#" class="menu_link">
+                                                    <li class="menu_item sale_orders">
+                                                        Orders
+                                                    </li>
+                                                </a>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 main_div mt-2 ms-2">
+                                        <div class="row content_div container"
+                                             id="content_div">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 profile_div mt-2 ms-2">
+                                        <div class="d-flex p_search"
+                                             role="search"
+                                             style="max-height:40px; margin-top:2vh;">
+                                            <input class="form-control border-end-0 border rounded-pill patient_search"
+                                                   id="patient_search"
+                                                   type="search"
+                                                   placeholder="Patient Code Search"
+                                                   autofocus="autofocus"
+                                                   aria-label="Search"/>
+                                            <button class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill search_btn  search_pe"
+                                                    style="">
+                                                <i class="fa fa-search"/>
+                                            </button>
+                                            <button class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill clear_btn search_pe"
+                                                    style="">
+                                                <i class="fa fa-times"/>
+                                            </button>
+                                        </div>
+                                        <img id="patient-image"
+                                             class="profile_pic"
+                                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"/>
+                                        <h2 class="profile_name"
+                                            id="patient-title"/>
+                                        <h3 class="profile_code"
+                                            id="patient-code"/>
+                                        <h3 class="profile_gender"
+                                            id="patient-gender"/>
+                                        <h3 class="profile_bloodgroup"
+                                            id="patient-blood"/>
+                                        <div class="medical_list"
+                                             id="medical_list">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="height:100px"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

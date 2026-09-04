@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- This view is needed for proper visualization of the popup / embedded one2many -->
+    <record id="invoice_line_agent_tree" model="ir.ui.view">
+        <field name="model">account.invoice.line.agent</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="agent_id" context="{'default_agent': True}" />
+                <field
+                    name="commission_id"
+                    domain="['|', ('settlement_type', '=', 'sale_invoice'), ('settlement_type', '=', False)]"
+                />
+                <field
+                    name="amount"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                />
+                <field name="currency_id" invisible="1" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_move_line_form" model="ir.ui.view">
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='blocked']/.." position="after">
+                <field name="settlement_id" invisible="1" />
+                <group
+                    string="Commissions"
+                    name="group_commission"
+                    attrs="{'invisible': [('agent_ids', '=', [])], 'readonly': [('any_settled', '=', True)]}"
+                >
+                    <field name="any_settled" invisible="1" />
+                    <field name="commission_free" force_save="1" />
+                    <field
+                        name="agent_ids"
+                        attrs="{'readonly': [('commission_free', '=', True)]}"
+                        force_save="1"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.invoice.form.agent</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='open_created_caba_entries']" position="after">
+                <button
+                    name="action_view_settlement"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    attrs="{'invisible': [('settlement_count', '=', 0)]}"
+                >
+                    <field
+                        name="settlement_count"
+                        widget="statinfo"
+                        string="Settlements"
+                    />
+                </button>
+            </xpath>
+            <xpath
+                expr="//field[@name='invoice_line_ids']/tree//field[@name='price_subtotal']"
+                position="after"
+            >
+                <field name="settlement_id" invisible="1" />
+                <field name="commission_free" invisible="1" />
+                <field name="any_settled" invisible="1" />
+                <button
+                    name="button_edit_agents"
+                    title="Edit agents"
+                    icon="fa-users"
+                    attrs="{'invisible': [
+                        '|',
+                        ('commission_free', '=', True),
+                        ('any_settled', '=', True),
+                    ],
+                    'column_invisible': [
+                        ('parent.move_type', 'not in', ['out_invoice', 'out_refund'])
+                    ]}"
+                    type="object"
+                />
+                <field
+                    name="commission_status"
+                    attrs="{'column_invisible': [
+                        ('parent.move_type', 'not in', ['out_invoice', 'out_refund'])
+                    ]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']" position="after">
+                <button
+                    name="recompute_lines_agents"
+                    type="object"
+                    string="Regenerate agents"
+                    attrs="{'invisible': [
+                        '|',
+                        ('move_type', 'not in', ['out_invoice', 'out_refund']),
+                        ('state', '!=', 'draft')
+                    ]}"
+                />
+            </xpath>
+            <!-- Needed for fields in invoice lines to be saved -->
+            <xpath expr="//field[@name='line_ids']/tree" position="inside">
+                <field name="settlement_id" invisible="1" />
+                <field name="commission_free" invisible="1" />
+                <field name="any_settled" invisible="1" />
+                <field name="commission_status" invisible="1" />
+            </xpath>
+            <field name="tax_totals" position="after">
+                <field
+                    name="commission_total"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                    attrs="{'invisible': [
+                        ('move_type', 'not in', ['out_invoice', 'out_refund'])
+                    ]}"
+                />
+            </field>
+        </field>
+    </record>
+    <record id="view_in_invoice_bill_tree_inherit" model="ir.ui.view">
+        <field name="name">account.out.invoice.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree" />
+        <field name="arch" type="xml">
+            <field name="invoice_partner_display_name" position="after">
+                <button
+                    name="action_view_settlement"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    string="Settlements"
+                    attrs="{'invisible': [('settlement_count', '=', 0)]}"
+                />
+                <field name="settlement_count" invisible="1" />
+            </field>
+        </field>
+    </record>
+    <record id="view_account_invoice_filter_agent" model="ir.ui.view">
+        <field name="name">view_account_invoice_filter_agent</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="partner_agent_ids" operator="child_of" />
+            </field>
+        </field>
+    </record>
+</odoo>
