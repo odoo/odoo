@@ -230,9 +230,11 @@ class TestWarehouse(TestStockCommon):
         Create the move from Shop to Customer and ensure that all the pull
         rules are triggered in order to complete the move chain to Stock.
         """
+        stock_partner = self.env['res.partner'].sudo().create({'name': 'Test stock Address'})
         warehouse_stock = self.env['stock.warehouse'].sudo().create({
             'name': 'Stock.',
             'code': 'STK',
+            'partner_id': stock_partner.id,
         })
 
         distribution_partner = self.env['res.partner'].create({'name': 'Distribution Center'})
@@ -300,8 +302,8 @@ class TestWarehouse(TestStockCommon):
         self.assertTrue(self.env['stock.move'].search([('location_dest_id', '=', warehouse_shop.lot_stock_id.id)]))
         self.assertTrue(self.env['stock.move'].search([('location_id', '=', warehouse_shop.lot_stock_id.id)]))
 
-        self.assertTrue(self.env['stock.picking'].search([('location_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', distribution_partner.id)]))
-        self.assertTrue(self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', distribution_partner.id)]))
+        self.assertTrue(self.env['stock.picking'].search([('location_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', warehouse_distribution.partner_id.id)]))
+        self.assertTrue(self.env['stock.picking'].search([('location_dest_id', '=', self.env.company.internal_transit_location_id.id), ('partner_id', '=', warehouse_distribution.partner_id.id)]))
 
     def test_mutiple_resupply_warehouse(self):
         """ Simulate the following situation:
@@ -313,10 +315,11 @@ class TestWarehouse(TestStockCommon):
         warehouse.
         """
         customer_location = self.customer_location
-
+        wavre_partner = self.env['res.partner'].sudo().create({'name': 'wavre Address'})
         warehouse_distribution_wavre = self.env['stock.warehouse'].sudo().create({
             'name': 'Stock Wavre.',
             'code': 'WV',
+            'partner_id': wavre_partner.id,
         })
 
         warehouse_shop_wavre = self.env['stock.warehouse'].sudo().create({
@@ -325,9 +328,11 @@ class TestWarehouse(TestStockCommon):
             'resupply_wh_ids': [Command.set([warehouse_distribution_wavre.id])],
         })
 
+        namur_partner = self.env['res.partner'].sudo().create({'name': 'wavre Address'})
         warehouse_distribution_namur = self.env['stock.warehouse'].sudo().create({
             'name': 'Stock Namur.',
             'code': 'NM',
+            'partner_id': namur_partner.id,
         })
 
         warehouse_shop_namur = self.env['stock.warehouse'].sudo().create({
@@ -450,9 +455,11 @@ class TestWarehouse(TestStockCommon):
     def test_add_resupply_warehouse_one_by_one(self):
         """ Checks that selecting a warehouse as a resupply warehouse one after another correctly sets the routes as well.
         """
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH Address'})
         warehouse_A, warehouse_B, warehouse_C = self.env['stock.warehouse'].sudo().create([{
             'name': code,
             'code': code,
+            'partner_id': dummy_partner.id,
         } for code in ['WH_A', 'WH_B', 'WH_C']])
         warehouse_A.resupply_wh_ids = [Command.link(warehouse_B.id)]
         # Assign Warehouse B as supplier warehouse
@@ -469,9 +476,11 @@ class TestWarehouse(TestStockCommon):
     def test_toggle_resupply_warehouse(self):
         """ Checks that selecting then unselecting a warehouse as resupply correctly archives/unarchives the related route.
         """
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH Address'})
         warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse A',
             'code': 'WH_A',
+            'partner_id': dummy_partner.id,
         })
         warehouse_B = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse B',
@@ -498,10 +507,12 @@ class TestWarehouse(TestStockCommon):
         - A reordering rule is set on the product to fill the second warehouse
         Ensure that the product can move all the way from the first to the second warehouse.
         """
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH Address'})
         warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse A',
             'code': 'WH_A',
             'delivery_steps': 'pick_pack_ship',
+            'partner_id': dummy_partner.id,
         })
         warehouse_B = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse B',
@@ -554,9 +565,11 @@ class TestWarehouse(TestStockCommon):
         """ Verifies that when changing the delivery steps of a warehouse, it correctly adds/removes the extra rule
         that is required to resupply the Output location.
         """
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH Address'})
         warehouse_A = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse X',
             'code': 'WH_X',
+            'partner_id': dummy_partner.id,
         })
         warehouse_B = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse Y',

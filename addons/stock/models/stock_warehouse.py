@@ -38,7 +38,7 @@ class StockWarehouse(models.Model):
         'res.company', 'Company', default=lambda self: self.env.company,
         readonly=True, required=True,
         help='The company is automatically set from your user preferences.')
-    partner_id = fields.Many2one('res.partner', 'Address', default=lambda self: self.env.company.partner_id, check_company=True)
+    partner_id = fields.Many2one('res.partner', 'Address', check_company=True)
     view_location_id = fields.Many2one(
         'stock.location', 'View Location',
         domain="[('usage', '=', 'view'), ('company_id', '=', company_id)]",
@@ -148,6 +148,7 @@ class StockWarehouse(models.Model):
             # Update global route with specific warehouse rule.
             warehouse._create_or_update_global_routes_rules()
 
+            self._check_resupply_addresses(warehouse.resupply_wh_ids)
             # create route selectable on the product to resupply the warehouse from another one
             warehouse.create_resupply_routes(warehouse.resupply_wh_ids)
 
@@ -172,13 +173,13 @@ class StockWarehouse(models.Model):
     def write(self, vals):
         if 'company_id' in vals:
             for warehouse in self:
+                self._check_resupply_addresses(warehouse.resupply_wh_ids)
                 if warehouse.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
 
         Route = self.env['stock.route']
         warehouses = self.with_context(active_test=False)
         warehouses._create_missing_locations(vals)
-
         if vals.get('reception_steps'):
             warehouses._update_location_reception(vals['reception_steps'])
         if vals.get('delivery_steps'):
@@ -266,6 +267,8 @@ class StockWarehouse(models.Model):
                     warehouse.write(values)
 
         if vals.get('resupply_wh_ids') and not vals.get('resupply_route_ids'):
+            for record in self:
+                self._check_resupply_addresses(record.resupply_wh_ids)
             for warehouse in warehouses:
                 new_resupply_whs = warehouse.resupply_wh_ids
                 to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
@@ -296,6 +299,27 @@ class StockWarehouse(models.Model):
         res = super().unlink()
         self._check_multiwarehouse_group()
         return res
+
+    def _check_resupply_addresses(self, supply_from_whs):
+        # check whether the list of warehouses given all have an address otherwise advice the user to create an address
+        missing_address_whs = supply_from_whs.filtered(lambda wh: not wh.partner_id)
+        if missing_address_whs:
+            wh_names = ', '.join(missing_address_whs.mapped('name'))
+            action = self.env.ref('stock.action_warehouse_form').sudo().read()[0]
+            if len(missing_address_whs) == 1:
+                action['views'] = [(False, 'form')]
+                action['res_id'] = missing_address_whs.id
+                error_message = f"The following resupply warehouse is missing an address: {wh_names}. Please set an address on it before continuing."
+                button_text = "Go to Warehouse"
+            else:
+                action['domain'] = [('id', 'in', missing_address_whs.ids)]
+                error_message = f"The following resupply warehouses are missing an address: {wh_names}. Please set an address on them before continuing."
+                button_text = "Go to Warehouses"
+            raise RedirectWarning(
+                error_message,
+                action,
+                button_text,
+            )
 
     def _check_multiwarehouse_group(self):
         cnt_by_company = self.env['stock.warehouse'].sudo()._read_group([('active', '=', True)], ['company_id'], aggregates=['__count'])

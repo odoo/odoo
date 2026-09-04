@@ -240,9 +240,11 @@ class TestReportStockQuantity(tests.TransactionCase):
             product = self.env['product.product'].with_context(to_date=inv_datetime).browse(product_id)
             return (product.qty_available, product.virtual_available)
         # We add a second warehouse and put the resuplying flow in push mechanic to test receipt in 2 steps with an external transfer
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH2 Address'})
         warehouse, warehouse_2 = self.wh, self.env['stock.warehouse'].sudo().create({
             'name': 'Resupplier warehouse',
             'code': 'WH02',
+            'partner_id': dummy_partner.id,
         })
         transit_loc = self.wh.company_id.internal_transit_location_id
         warehouse.write({
