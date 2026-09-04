@@ -103,7 +103,7 @@ EAS_MAPPING = {
     'RS': {'9948': 'vat'},
     'SE': {'0007': 'company_registry', '9955': 'vat'},
     'SI': {'9949': 'vat'},
-    'SK': {'9950': 'vat', '0245': 'company_registry'},
+    'SK': {'0245': 'company_registry', '9950': 'vat'},  # TODO: wait for PR #280178 (income_tax_id/l10n_sk_dic)
     'SM': {'9951': 'vat'},
     'TR': {'9952': 'vat'},
     'VA': {'9953': 'vat'},

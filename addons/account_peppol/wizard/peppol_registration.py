@@ -250,11 +250,20 @@ class PeppolRegistration(models.TransientModel):
             if eas not in DEPRECATED_PEPPOL_EAS or eas == self.env.company.peppol_eas
         ]
 
+    # Contact details may already be provided by an external registration flow (e.g. national KYC)
+    def _is_email_required(self):
+        return True
+
+    def _is_phone_required(self):
+        return True
+
     def _ensure_mandatory_fields(self):
         if self.use_parent_connection:
             return
-        if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+        if self._is_email_required() and not self.contact_email:
+            raise ValidationError(_("Contact email is required."))
+        if self._is_phone_required() and not self.phone_number:
+            raise ValidationError(_("Contact phone number is required."))
         if not self.peppol_eas or not self.peppol_endpoint:
             raise ValidationError(_("Peppol Address should be provided."))
         if (
@@ -386,6 +395,14 @@ class PeppolRegistration(models.TransientModel):
         """
         pass
 
+    def _get_peppol_registration_data(self):
+        return {
+            'peppol_eas': self.peppol_eas,
+            'peppol_endpoint': self.peppol_endpoint,
+            'account_peppol_contact_email': self.contact_email,
+            'account_peppol_phone_number': self.phone_number,
+        }
+
     @handle_demo
     def button_register_peppol_participant(self):
         self.ensure_one()
@@ -396,12 +413,7 @@ class PeppolRegistration(models.TransientModel):
         self._ensure_pdp_not_sent_through_peppol()
 
         if self.use_parent_connection:
-            self.company_id.write({
-                'peppol_eas': self.peppol_eas,
-                'peppol_endpoint': self.peppol_endpoint,
-                'account_peppol_contact_email': self.contact_email,
-                'account_peppol_phone_number': self.phone_number,
-            })
+            self.company_id.write({**self._get_peppol_registration_data()})
         elif self.account_peppol_proxy_state in ('smp_registration', 'receiver', 'rejected'):
             raise UserError(
                 _('Cannot register a user with a %s application', self.account_peppol_proxy_state))
