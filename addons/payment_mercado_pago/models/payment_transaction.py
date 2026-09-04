@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta, timezone
 from urllib.parse import quote as url_quote
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 from odoo.tools.urls import urljoin
@@ -34,6 +35,14 @@ class PaymentTransaction(models.Model):
         payload = self._mercado_pago_prepare_preference_request_payload()
         try:
             response_content = self._send_api_request("POST", "/checkout/preferences", json=payload)
+            preference_update_payload = (
+                self._mercado_pago_prepare_preference_update_request_payload()
+            )
+            self._send_api_request(
+                "PUT",
+                f"/checkout/preferences/{response_content['id']}",
+                json=preference_update_payload,
+            )
         except ValidationError as error:
             self._set_error(str(error))
             return {}
@@ -76,6 +85,22 @@ class PaymentTransaction(models.Model):
             },
         })
         return payload
+
+    def _mercado_pago_prepare_preference_update_request_payload(self):
+        """Create the payload for the preference update request.
+
+        :return: The preference update request payload.
+        :rtype: dict
+        """
+        cash_payment_expiration_date = fields.Datetime.now() + timedelta(
+            days=self.provider_id.mercado_pago_cash_payment_days_to_settle
+        )
+        return {
+            "expires": True,
+            "date_of_expiration": cash_payment_expiration_date.replace(
+                tzinfo=timezone.utc
+            ).isoformat(timespec="milliseconds"),
+        }
 
     def _mercado_pago_prepare_payment_request_payload(self):
         """Create the payload for the direct payment request based on the transaction values.

@@ -48,6 +48,12 @@ class PaymentProvider(models.Model):
     mercado_pago_public_key = fields.Char(
         string="Mercado Pago Public Key", copy=False, groups="base.group_system"
     )
+    mercado_pago_cash_payment_days_to_settle = fields.Integer(
+        string="Cash Payment Days to Settle",
+        default=3,
+        required_if_provider="mercado_pago",
+        help="The number of days before a Mercado Pago cash payment expires.",
+    )
 
     # === COMPUTE METHODS === #
 
@@ -114,6 +120,14 @@ class PaymentProvider(models.Model):
             for p in self
         ):
             raise ValidationError(self.env._("Connect your account before enabling tokenization."))
+
+    @api.constrains("mercado_pago_cash_payment_days_to_settle")
+    def _check_mercado_pago_cash_payment_days_to_settle(self):
+        for provider in self.filtered(lambda p: p.code == "mercado_pago"):
+            if provider.mercado_pago_cash_payment_days_to_settle <= 0:
+                raise ValidationError(
+                    self.env._("The cash payment settlement period must be positive.")
+                )
 
     # === CRUD METHODS === #
 
