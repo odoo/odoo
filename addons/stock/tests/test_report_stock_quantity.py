@@ -114,6 +114,50 @@ class TestReportStockQuantity(tests.TransactionCase):
         forecast_report = [qty for __, __, state, qty in report if state == 'forecast']
         self.assertEqual(forecast_report, [-20, -20])
 
+    def test_report_stock_uom_conversion(self):
+        """ Ensure the stock quantity report correctly converts done move quantities
+            from the move's UoM to the product's UoM when computing forecast quantities,
+            without affecting historical quantities.
+
+            Initial setup for product1:
+                Past: 0 units
+                Today:   +100 units
+                In 3 days: -20 units
+
+            This test adds a receipt of 10 dozens (120 units) and verifies that the
+            forecast report uses the converted quantity, resulting in:
+                Past: 0 units
+                Today:   +220 units
+                In 3 days: +100 units
+        """
+        self.product1.tracking = 'none'
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.wh.lot_stock_id.id,
+            'picking_type_id': self.wh.in_type_id.id,
+            'move_ids': [
+                Command.create({
+                    'name': 'test_transit_in_1',
+                    'location_id': self.supplier_location.id,
+                    'location_dest_id': self.wh.lot_stock_id.id,
+                    'product_id': self.product1.id,
+                    'product_uom': uom_dozen.id,
+                    'product_uom_qty': 10.0,
+                })
+            ]
+        })
+        receipt.button_validate()
+        self.assertEqual(receipt.state, "done")
+        self.assertEqual(receipt.date_done.date(), self.fake_today)
+        report = self.env['report.stock.quantity']._read_group(
+            [('date', '>=', self.fake_today - timedelta(days=1)), ('date', '<=', self.fake_today + timedelta(days=4)), ('product_id', '=', self.product1.id)],
+            ['date:day', 'product_id', 'state'],
+            ['product_qty:sum'])
+        forecast_report = [round(qty, 6) for __, __, state, qty in report if state == 'forecast']
+        self.assertEqual(forecast_report, [0, 220, 220, 220, 100, 100])
+
     def test_replenishment_report_1(self):
         self.product_replenished = self.env['product.product'].create({
             'name': 'Security razor',
