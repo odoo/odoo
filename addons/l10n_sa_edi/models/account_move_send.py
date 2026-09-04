@@ -37,6 +37,10 @@ class AccountMoveSend(models.AbstractModel):
 
         for invoice, invoice_data in invoices_data.items():
             if 'sa_edi' in invoice_data['extra_edis'] or 'sa_edi_test' in invoice_data['extra_edis']:
+                # Batch sending is processed by a cron, so the invoice can be reset to draft while it is being sent.
+                # Also skip the invoices that another transaction is working on, otherwise they get submitted to ZATCA even as draft.
+                if not self.env['res.company']._with_locked_records(records=invoice, allow_raising=False):
+                    continue
                 invoice.l10n_sa_edi_document_id._l10n_sa_post_zatca_edi(len(invoices_data.keys()) == 1)
 
     def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
