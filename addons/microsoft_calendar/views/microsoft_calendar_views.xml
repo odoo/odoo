@@ -44,4 +44,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="calendar_calendar_view_form_inherit_microsoft_calendar" model="ir.ui.view">
+        <field name="name">calendar.calendar.view.form.inherit.microsoft.calendar</field>
+        <field name="model">calendar.calendar</field>
+        <field name="inherit_id" ref="calendar.calendar_calendar_view_form"/>
+        <field name="arch" type="xml">
+            <field name="color" position="after">
+                <field name="microsoft_sync_enabled" string="Outlook Sync"/>
+            </field>
+        </field>
+    </record>
 </odoo>
