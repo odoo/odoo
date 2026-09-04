@@ -6,6 +6,7 @@ import re
 import time
 import traceback
 from collections import defaultdict
+from contextlib import contextmanager
 from uuid import uuid4
 
 from dateutil.relativedelta import relativedelta
@@ -60,6 +61,22 @@ def _domain_fields_differences(automation, domain1, domain2):
     in_d1_only_fields = d1_fields - d2_fields
     in_d2_only_fields = d2_fields - d1_fields
     return in_d1_only_fields, in_d2_only_fields
+
+
+@contextmanager
+def _keep_to_compute(env, changed_fields):
+    """ Keep the computed fields depending on ``changed_fields`` as-is, so that
+    they are recomputed once the values of ``changed_fields`` are set.
+    """
+    to_compute = {
+        dep: comp
+        for f in changed_fields
+        for dep in env.registry.get_dependent_fields(f)
+        if (comp := env.records_to_compute(dep))
+    }
+    yield
+    for dep, comp in to_compute.items():
+        env.add_to_compute(dep, comp)
 
 
 DATE_RANGE = {
@@ -735,7 +752,7 @@ class BaseAutomation(models.Model):
             interval_type = 'hours'
         return interval, interval_type
 
-    def _filter_pre(self, records, feedback=False, changed_fields=()):
+    def _filter_pre(self, records, feedback=False):
         """ Filter the records that satisfy the precondition of automation ``self``. """
         self_sudo = self.sudo()
         if self_sudo.filter_pre_domain and records:
@@ -744,18 +761,7 @@ class BaseAutomation(models.Model):
                 # automations while evaluating their precondition
                 records = records.with_context(__action_feedback=True)
             domain = safe_eval.safe_eval(self_sudo.filter_pre_domain, self._get_eval_context())
-            # keep computed fields depending on the currently changed field
-            # as-is so they are recomputed after the value is set
-            # see `test_computation_sequence`
-            to_compute = {
-                dep: comp
-                for f in changed_fields
-                for dep in self.env.registry.get_dependent_fields(f)
-                if (comp := self.env.records_to_compute(dep))
-            }
             records = records.sudo().filtered_domain(domain).with_env(records.env)
-            for dep, comp in to_compute.items():
-                self.env.add_to_compute(dep, comp)
         return records
 
     def _filter_post(self, records, feedback=False):
@@ -894,7 +900,8 @@ class BaseAutomation(models.Model):
                 records = create.origin(self.with_env(automations.env), vals_list, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=None):
-                    automation._process(automation._filter_post(records, feedback=True), trigger='create')
+                    with _keep_to_compute(self.env, self.env._protected):
+                        automation._process(automation._filter_post(records, feedback=True), trigger='create')
                 return records.with_env(self.env)
 
             return create
@@ -907,8 +914,10 @@ class BaseAutomation(models.Model):
                 if not (automations and self):
                     return write.origin(self, vals, **kw)
                 records = self.with_env(automations.env).filtered('id')
+                written_fields = [records._fields[n] for n in vals if n in records._fields]
                 # check preconditions on records
-                pre = {a: a._filter_pre(records) for a in automations}
+                with _keep_to_compute(self.env, written_fields):
+                    pre = {a: a._filter_pre(records) for a in automations}
                 # read old values before the update
                 old_values = {
                     record.id: {field_name: record[field_name] for field_name in vals if field_name in record._fields and record._fields[field_name].store}
@@ -918,8 +927,9 @@ class BaseAutomation(models.Model):
                 write.origin(self.with_env(automations.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
-                    records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
-                    automation._process(records, domain_post=domain_post, trigger='write')
+                    with _keep_to_compute(self.env, written_fields):
+                        records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
+                        automation._process(records, domain_post=domain_post, trigger='write')
                 return True
 
             return write
@@ -943,18 +953,20 @@ class BaseAutomation(models.Model):
                 # check preconditions on records
                 # changed fields are all fields computed by the function
                 changed_fields = [f for f in records._fields.values() if f.compute == field.compute]
-                pre = {a: a._filter_pre(records, changed_fields=changed_fields) for a in automations}
-                # read old values before the update
-                old_values = {
-                    record.id: {fname: record[fname] for fname in stored_fnames}
-                    for record in records
-                }
+                with _keep_to_compute(self.env, changed_fields):
+                    pre = {a: a._filter_pre(records) for a in automations}
+                    # read old values before the update
+                    old_values = {
+                        record.id: {fname: record[fname] for fname in stored_fnames}
+                        for record in records
+                    }
                 # call original method
                 _compute_field_value.origin(self, field)
                 # check postconditions, and execute automations on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
-                    records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
-                    automation._process(records, domain_post=domain_post, trigger='_compute_field_value')
+                    with _keep_to_compute(self.env, changed_fields):
+                        records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
+                        automation._process(records, domain_post=domain_post, trigger='_compute_field_value')
                 return True
 
             return _compute_field_value
@@ -967,7 +979,8 @@ class BaseAutomation(models.Model):
                 records = self.with_env(automations.env)
                 # check conditions, and execute actions on the records that satisfy them
                 for automation in automations:
-                    automation._process(automation._filter_post(records, feedback=True), trigger='unlink')
+                    with _keep_to_compute(self.env, self.env._protected):
+                        automation._process(automation._filter_post(records, feedback=True), trigger='unlink')
                 # call original method
                 return unlink.origin(self, **kwargs)
 
@@ -1025,8 +1038,9 @@ class BaseAutomation(models.Model):
                 mail_trigger = "on_message_received" if not message_sudo.author_id or message_sudo.author_id.partner_share else "on_message_sent"
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
-                    records = automation._filter_pre(self, feedback=True)
-                    automation._process(records, trigger='_message_post')
+                    with _keep_to_compute(self.env, self.env._protected):
+                        records = automation._filter_pre(self, feedback=True)
+                        automation._process(records, trigger='_message_post')
 
                 return message
             return _message_post
