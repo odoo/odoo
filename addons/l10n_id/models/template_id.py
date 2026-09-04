@@ -23,7 +23,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_fiscal_country_id': 'base.id',
                 'bank_account_code_prefix': '1112',
                 'cash_account_code_prefix': '1111',
-                'transfer_account_code_prefix': '1999999',
+                'transfer_account_id': 'l10n_id_19999991',
                 'default_cash_difference_income_account_id': 'l10n_id_99900002',
                 'default_cash_difference_expense_account_id': 'l10n_id_99900001',
                 'account_default_pos_receivable_account_id': 'l10n_id_11210011',
