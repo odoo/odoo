@@ -11,7 +11,7 @@ class WebsiteCheckoutStep(models.Model):
     _description = "Website Checkout Step"
     _inherit = ["website.published.multi.mixin"]
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(required=True, translate=True, copy=True)
     sequence = fields.Integer()
     step_href = fields.Char(string="Href", required=True)
     main_button_label = fields.Char(translate=True)
