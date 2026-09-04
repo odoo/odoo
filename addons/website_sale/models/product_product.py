@@ -223,9 +223,10 @@ class ProductProduct(models.Model):
         :rtype: list[str]
         """
         self.ensure_one()
+        images = (self.product_variant_image_ids + self.product_template_image_ids).with_context(bin_size=True)
         return [
             self.env['website'].image_url(extra_image, 'image_1920')
-            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            for extra_image in images
             if extra_image.image_128  # only images, no video urls
         ]
 
