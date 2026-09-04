@@ -34,8 +34,9 @@ export class MailComposerAttachmentSelector extends Component {
             id: resIds[0],
         });
         const file = new File([dataUrlToBlob(data, type)], name, { type });
-        const isThreadComposer = this.props.record.context.is_thread_composer;
-        let composer = isThreadComposer ? thread.composer : undefined;
+        const syncAttachmentsToThreadComposer =
+            this.props.record.context.sync_attachments_to_thread_composer;
+        let composer = syncAttachmentsToThreadComposer ? thread.composer : undefined;
         // Use an isolated composer object instead of thread.composer to
         // avoid pushing into the main thread's composer.attachments list,
         // which is observed by the chatter.
