@@ -29,6 +29,7 @@ export const selectMenuProps = {
                 enabled: t.boolean().optional(),
                 value: t.any(),
                 label: t.string(),
+                attrs: t.object().optional({}),
             })
         )
         .optional([]),
@@ -40,6 +41,7 @@ export const selectMenuProps = {
                     t.object({
                         value: t.any(),
                         label: t.string(),
+                        attrs: t.object().optional({}),
                     })
                 ),
                 section: t.string().optional(),
@@ -75,6 +77,8 @@ export const selectMenuProps = {
     onClosed: t.function().optional(() => () => {}),
     slots: t.object().optional(),
     disabled: t.boolean().optional(false),
+    setDefaultSearchText: t.boolean().optional(true),
+    focusFirstItem: t.boolean().optional(true),
 };
 
 export class SelectMenu extends Component {
@@ -167,7 +171,7 @@ export class SelectMenu extends Component {
         };
 
         this.navigationOptions = {
-            shouldFocusFirstItem: !hasTouch(),
+            shouldFocusFirstItem: this.props.focusFirstItem && !hasTouch(),
             virtualFocus: this.props.searchable,
             hotkeys: {
                 enter: {
@@ -208,7 +212,11 @@ export class SelectMenu extends Component {
         for (const ref of Object.values(this.inputRefs)) {
             const el = ref();
             if (el) {
-                el.value = value || this.pendingValue || this.selectedChoice()?.label || "";
+                el.value =
+                    value ||
+                    this.pendingValue ||
+                    (this.props.setDefaultSearchText && this.selectedChoice()?.label) ||
+                    "";
             }
         }
     }

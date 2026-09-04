@@ -115,6 +115,61 @@ export function useActionInfo(props, options) {
 }
 
 /**
+ * Updates/returns the items environment when a builder component's items are
+ * props objects rather than sub-components.
+ *
+ * @param {object} item
+ * @param {object} extension
+ */
+export function useItemEnv(item, extension) {
+    if (extension) {
+        const itemEnv = Object.create(item.env);
+        const descrs = Object.getOwnPropertyDescriptors(extension);
+        const env = Object.freeze(Object.defineProperties(itemEnv, descrs));
+        item.env = env;
+    }
+    return item?.env || {};
+}
+
+/**
+ * Sets up the `selectableContext` required for options to correctly handle
+ * selectable items, which may be managed differently by each component.
+ *
+ * @param {{
+ *  add?: () => void;
+ *  remove?: () => void;
+ *  clean?: () => void;
+ *  [key: string]: any;
+ * }} params
+ */
+export function useSelectableContext({ add, remove, clean, ...config } = {}) {
+    useSubEnv({
+        selectableContext: {
+            addSelectableItem: add,
+            removeSelectableItem: remove,
+            cleanSelectedItem: clean,
+            ...config,
+        },
+    });
+}
+
+/**
+ * Returns the new component's editing elements defined by the applyTo selector.
+ *
+ * @param {HTMLElement[]} els The default editing elements.
+ * @param {string} applyTo
+ */
+export function getApplyToElements(els, applyTo) {
+    const elSet = new Set();
+    for (const editingEl of els) {
+        for (const child of editingEl.querySelectorAll(applyTo)) {
+            elSet.add(child);
+        }
+    }
+    return [...elSet];
+}
+
+/**
  * @param {DefaultBuilderProps} props
  */
 export function useBuilderComponent(props) {
@@ -122,13 +177,7 @@ export function useBuilderComponent(props) {
         /** @type {HTMLElement[]} */
         const els = oldEnv.getEditingElements();
         if (applyTo) {
-            const elSet = new Set();
-            for (const editingEl of els) {
-                for (const child of editingEl.querySelectorAll(applyTo)) {
-                    elSet.add(child);
-                }
-            }
-            editingElements = [...elSet];
+            editingElements = getApplyToElements(els, applyTo);
         } else {
             editingElements = els;
         }
@@ -165,8 +214,12 @@ export function useBuilderComponent(props) {
             builder: localization.direction,
         };
     }
-
-    useSubEnv(newEnv);
+    // Some component items are plain props objects rather than Owl
+    // components (e.g. `BuilderSearchSelect`). Since `useSubEnv` only
+    // works with components, those objects cannot inherit the parent
+    // environment automatically. In that case, we update their `env`
+    // manually here.
+    props.useItemEnv ? props.useItemEnv(newEnv) : useSubEnv(newEnv);
 }
 
 /**
@@ -241,41 +294,8 @@ export function useGetItemValue() {
     };
 }
 
-/**
- * @param {DefaultBuilderProps} props
- * @param {{ onItemChange?: (item: any) => any }} [options]
- */
-export function useSelectableComponent(props, { onItemChange } = {}) {
-    useBuilderComponent(props);
-    const selectableItems = [];
+export function useLtrRtlHandler() {
     const ltrRtlMappedItems = new Map();
-    const refreshCurrentItemDebounced = useDebounced(refreshCurrentItem, 0, { immediate: true });
-    const env = useEnv();
-
-    const state = proxy({
-        currentSelectedItem: null,
-    });
-
-    function refreshCurrentItem() {
-        if (env.editor.isDestroyed || env.editor.shared.history.getIsPreviewing()) {
-            return;
-        }
-        let currentItem;
-        let itemPriority = 0;
-        for (const selectableItem of selectableItems) {
-            if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
-                currentItem = selectableItem;
-                itemPriority = selectableItem.priority;
-            }
-        }
-        if (currentItem && currentItem !== toRaw(state.currentSelectedItem)) {
-            state.currentSelectedItem = currentItem;
-            env.dependencyManager.triggerDependencyUpdated();
-        }
-        if (currentItem) {
-            onItemChange?.(currentItem);
-        }
-    }
 
     onMounted(() => {
         for (const [ltrRtlMapping, mappedItems] of ltrRtlMappedItems.entries()) {
@@ -341,6 +361,70 @@ export function useSelectableComponent(props, { onItemChange } = {}) {
         }
     }
 
+    return {
+        addLtrRtlMappedItem: (item) => {
+            if (!ltrRtlMappedItems.has(item.ltrRtlMapping)) {
+                ltrRtlMappedItems.set(item.ltrRtlMapping, [item]);
+            } else {
+                ltrRtlMappedItems.get(item.ltrRtlMapping).push(item);
+            }
+        },
+        removeLtrRtlMappedItem: (item) => {
+            const mappedItems = ltrRtlMappedItems.get(item.ltrRtlMapping);
+            if (!mappedItems) {
+                return;
+            }
+            if (mappedItems.length === 1) {
+                ltrRtlMappedItems.delete(item.ltrRtlMapping);
+                return;
+            }
+            const index = mappedItems.indexOf(item);
+            if (index !== -1) {
+                mappedItems.splice(index, 1);
+            }
+        },
+        updateLtrRtlMappedItem: handleLtrRtl,
+    };
+}
+
+/**
+ * @param {DefaultBuilderProps} props
+ * @param {{ onItemChange?: (item: any) => any }} [options]
+ */
+export function useSelectableComponent(props, { onItemChange } = {}) {
+    useBuilderComponent(props);
+    const selectableItems = [];
+    const refreshCurrentItemDebounced = useDebounced(refreshCurrentItem, 0, { immediate: true });
+    const env = useEnv();
+
+    const state = proxy({
+        currentSelectedItem: null,
+    });
+
+    const { addLtrRtlMappedItem, removeLtrRtlMappedItem, updateLtrRtlMappedItem } =
+        useLtrRtlHandler();
+
+    function refreshCurrentItem() {
+        if (env.editor.isDestroyed || env.editor.shared.history.getIsPreviewing()) {
+            return;
+        }
+        let currentItem;
+        let itemPriority = 0;
+        for (const selectableItem of selectableItems) {
+            if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
+                currentItem = selectableItem;
+                itemPriority = selectableItem.priority;
+            }
+        }
+        if (currentItem && currentItem !== toRaw(state.currentSelectedItem)) {
+            state.currentSelectedItem = currentItem;
+            env.dependencyManager.triggerDependencyUpdated();
+        }
+        if (currentItem) {
+            onItemChange?.(currentItem);
+        }
+    }
+
     if (props.id) {
         useDependencyDefinition(props, {
             type: "select",
@@ -350,51 +434,29 @@ export function useSelectableComponent(props, { onItemChange } = {}) {
 
     onMounted(refreshCurrentItem);
     useListener(env.editorBus, "DOM_UPDATED", refreshCurrentItem);
-    function cleanSelectedItem(...args) {
-        if (state.currentSelectedItem) {
-            return state.currentSelectedItem.clean(...args);
-        }
-    }
 
-    useSubEnv({
-        selectableContext: {
-            cleanSelectedItem,
-            addSelectableItem: (item) => {
-                selectableItems.push(item);
-            },
-            removeSelectableItem: (item) => {
-                const index = selectableItems.indexOf(item);
-                if (index !== -1) {
-                    selectableItems.splice(index, 1);
-                }
-            },
-            update: refreshCurrentItemDebounced,
-            items: selectableItems,
-            refreshCurrentItem: () => refreshCurrentItem(),
-            getSelectableState: () => state,
-            addLtrRtlMappedItem: (item) => {
-                if (!ltrRtlMappedItems.has(item.ltrRtlMapping)) {
-                    ltrRtlMappedItems.set(item.ltrRtlMapping, [item]);
-                } else {
-                    ltrRtlMappedItems.get(item.ltrRtlMapping).push(item);
-                }
-            },
-            removeLtrRtlMappedItem: (item) => {
-                const mappedItems = ltrRtlMappedItems.get(item.ltrRtlMapping);
-                if (!mappedItems) {
-                    return;
-                }
-                if (mappedItems.length === 1) {
-                    ltrRtlMappedItems.delete(item.ltrRtlMapping);
-                    return;
-                }
-                const index = mappedItems.indexOf(item);
-                if (index !== -1) {
-                    mappedItems.splice(index, 1);
-                }
-            },
-            updateLtrRtlMappedItem: handleLtrRtl,
+    useSelectableContext({
+        add: (item) => {
+            selectableItems.push(item);
         },
+        remove: (item) => {
+            const index = selectableItems.indexOf(item);
+            if (index !== -1) {
+                selectableItems.splice(index, 1);
+            }
+        },
+        clean: (...args) => {
+            if (state.currentSelectedItem) {
+                return state.currentSelectedItem.clean(...args);
+            }
+        },
+        update: refreshCurrentItemDebounced,
+        items: selectableItems,
+        refreshCurrentItem: () => refreshCurrentItem(),
+        getSelectableState: () => state,
+        addLtrRtlMappedItem,
+        removeLtrRtlMappedItem,
+        updateLtrRtlMappedItem,
     });
 }
 
@@ -662,7 +724,7 @@ export function revertPreview(editor) {
  */
 export function useClickableBuilderComponent(props) {
     useBuilderComponent(props);
-    const env = useEnv();
+    const env = props.useItemEnv?.() || useEnv();
     const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(props);
     const getAction = env.editor.shared.builderActions.getAction;
 
@@ -1395,7 +1457,6 @@ function _shouldClean(env, props, hasClean, isApplied) {
     const shouldClean = shouldToggle && isApplied;
     return props.inverseAction ? !shouldClean : shouldClean;
 }
-
 export function convertParamToObject(param) {
     if (param === undefined) {
         param = {};

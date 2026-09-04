@@ -8,6 +8,7 @@ import { BuilderRow } from "./building_blocks/builder_row";
 import { BuilderButton } from "./building_blocks/builder_button";
 import { BuilderNumberInput } from "./building_blocks/builder_number_input";
 import { BuilderSelect } from "./building_blocks/builder_select";
+import { BuilderSearchSelect } from "./building_blocks/builder_search_select";
 import { BuilderSelectItem } from "./building_blocks/builder_select_item";
 import { BuilderColorPicker } from "./building_blocks/builder_colorpicker";
 import { BuilderTextInput } from "./building_blocks/builder_text_input";
@@ -55,6 +56,7 @@ export class BuilderComponentPlugin extends Plugin {
             BuilderColorPicker,
             BuilderSelect,
             BuilderSelectItem,
+            BuilderSearchSelect,
             BuilderCheckbox,
             BasicMany2Many,
             BuilderMany2Many,

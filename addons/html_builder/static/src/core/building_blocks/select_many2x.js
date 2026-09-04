@@ -6,6 +6,34 @@ import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { shallowEqual } from "@web/core/utils/arrays";
 
+export function useSelectMenuHandler(
+    menuRef,
+    { onSelectMenuOpened, onSelectMenuClosed, onNavigatedAway, onNavigatedBack } = {}
+) {
+    let removeListeners = undefined;
+    return {
+        removeListeners,
+        onOpened: () => {
+            const menuEl = menuRef();
+            if (menuEl) {
+                removeListeners?.();
+                menuEl.addEventListener("pointerleave", onNavigatedAway);
+                menuEl.addEventListener("pointerenter", onNavigatedBack);
+                removeListeners = () => {
+                    removeListeners = undefined;
+                    menuEl.removeEventListener("pointerleave", onNavigatedAway);
+                    menuEl.removeEventListener("pointerenter", onNavigatedBack);
+                };
+            }
+            onSelectMenuOpened?.();
+        },
+        onClosed: () => {
+            removeListeners?.();
+            onSelectMenuClosed?.();
+        },
+    };
+}
+
 class SelectMany2XCreate extends Component {
     static template = "html_builder.SelectMany2XCreate";
     props = useProps({
@@ -60,26 +88,14 @@ export class SelectMany2X extends Component {
             this.state.searchResults = [];
         });
         this.menuRef = signal.ref();
-        onWillDestroy(() => this.removeListeners?.());
-    }
-    onOpened() {
-        const menuEl = this.menuRef();
-        if (menuEl) {
-            this.removeListeners?.();
-            const onNavigatedAway = this.onNavigatedAway.bind(this);
-            const onNavigatedBack = this.onNavigatedBack.bind(this);
-            menuEl.addEventListener("pointerleave", onNavigatedAway);
-            menuEl.addEventListener("pointerenter", onNavigatedBack);
-            this.removeListeners = () => {
-                delete this.removeListeners;
-                menuEl.removeEventListener("pointerleave", onNavigatedAway);
-                menuEl.removeEventListener("pointerenter", onNavigatedBack);
-            };
-        }
-    }
-    onClosed() {
-        this.removeListeners?.();
-        this.onNavigatedAway();
+        const { removeListeners, onOpened, onClosed } = useSelectMenuHandler(this.menuRef, {
+            onSelectMenuClosed: this.onNavigatedAway.bind(this),
+            onNavigatedAway: this.onNavigatedAway.bind(this),
+            onNavigatedBack: this.onNavigatedBack.bind(this),
+        });
+        this.onOpened = onOpened.bind(this);
+        this.onClosed = onClosed.bind(this);
+        onWillDestroy(() => removeListeners?.());
     }
     searchInvalidationKey(props) {
         return JSON.stringify([props.model, props.fields, props.domain, props.displayNameField]);
