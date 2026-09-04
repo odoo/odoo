@@ -213,6 +213,7 @@
                                 <group>
                                     <field name="user_id" widget="many2one_avatar_user" readonly="not user_can_edit"/>
                                     <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}" readonly="not user_can_edit"/>
+                                    <field name="calendar_id" invisible="user_id != uid" readonly="not user_can_edit or recurrence_id and recurrence_update != 'all_events'" options="{'no_open': True}"/>
                                     <field name="description"
                                         string="Calendar description"
                                         options="{'height': 120}"
@@ -386,6 +387,10 @@
                     <i class="oi oi-filled" data-icon="circle" title="Show as"/>
                     <field name="show_as" nolabel="1" class="w-100"/>
                 </div>
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
+                    <i class="oi" data-icon="calendar_today" title="Calendar"/>
+                    <field name="calendar_id" nolabel="1" class="w-100" options="{'no_open': True}"/>
+                </div>
                 <div class="o_outlined d-flex align-items-start mb-2 gap-2">
                     <i class="oi oi-filled" data-icon="sticky_note_2" title="Notes"/>
                     <field name="notes" nolabel="1" class="w-100" placeholder="Notes" widget="calendar_event_notes_html"/>
@@ -404,7 +409,9 @@
                 event_limit="5"
                 quick_create="true"
                 quick_create_view_id="%(calendar.view_calendar_event_form_quick_create)d"
-                color="partner_ids">
+                color="calendar_color">
+                <field name="calendar_color" invisible="1"/>
+                <field name="available_calendar_ids" invisible="1"/>
                 <field name="attendees_count" invisible="1"/>
                 <field name="accepted_count" invisible="1"/>
                 <field name="declined_count" invisible="1"/>
@@ -420,8 +427,7 @@
                 <field name="partner_ids" options="{'block': True, 'icon': 'group', 'icon_class': 'oi-filled'}"
                        filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
-                       string="Calendars" invisible="not partner_ids"
-                />
+                       string="Meet with" invisible="not partner_ids"/>
                 <field name="videocall_location" widget="CopyClipboardURL" text="Join Video Call"
                        options="{'icon': 'videocam', 'icon_class': 'oi-filled'}" invisible="not videocall_location"/>
                 <field name="res_model_name" invisible="not res_id" widget="calendar_open_event"
@@ -429,6 +435,9 @@
                 <field name="alarm_ids" invisible="not alarm_ids" options="{'icon': 'notifications'}"/>
                 <field name="categ_ids" invisible="not categ_ids" options="{'icon': 'label', 'color_field': 'color', 'on_tag_click': 'edit_color'}"/>
                 <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
+                <field name="calendar_id" filters="1" write_model="calendar.user" write_field="calendar_id"
+                       filter_field="is_filter_checked" color="filter_color" options="{'icon': 'calendar_today', 'no_open': True}"
+                       string="My Calendars" invisible="user_id != uid"/>
                 <field name="description" class="text-wrap" invisible="not display_description" options="{'icon': 'sticky_note_2', 'icon_class': 'oi-filled'}"/>
             </calendar>
         </field>
@@ -595,5 +604,13 @@
         id="menu_calendar_alarm"
         parent="menu_calendar_configuration"
         action="action_calendar_alarm"/>
+
+    <menuitem
+        id="menu_calendar_calendars"
+        parent="calendar_menu_config"
+        name="Calendars"
+        sequence="46"
+        action="action_calendar_calendar"
+        groups="base.group_system"/>
 
 </odoo>

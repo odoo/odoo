@@ -21,6 +21,7 @@ export class CalendarFilterSection extends Component {
     props = useProps({
         model: t.object(),
         section: t.object(),
+        placeholder: t.string().optional(),
     });
 
     setup() {
@@ -36,7 +37,7 @@ export class CalendarFilterSection extends Component {
         return {
             autoSelect: true,
             resetOnSelect: true,
-            placeholder: _t("+ Add %s", this.section.label),
+            placeholder: this.props.placeholder ?? _t("+ Add %s", this.section.label),
             sources: [
                 {
                     placeholder: _t("Loading..."),
@@ -90,7 +91,7 @@ export class CalendarFilterSection extends Component {
     async loadSource(request) {
         const resModel = this.props.model.fields[this.section.fieldName].relation;
         const activeIds = this.section.filters.map((f) => f.value);
-        const domain = [["id", "not in", activeIds]];
+        const domain = this.getFilterDomain(activeIds);
         const records = await this.orm.call(resModel, "name_search", [], {
             name: request,
             operator: "ilike",
@@ -104,7 +105,7 @@ export class CalendarFilterSection extends Component {
                 id: result[0],
             },
             label: result[1],
-            onSelect: () => this.props.model.createFilter(this.section.fieldName, result[0]),
+            onSelect: () => this.onFilterSelected(result),
         }));
 
         if (records.length > 7) {
@@ -123,6 +124,14 @@ export class CalendarFilterSection extends Component {
         }
 
         return options;
+    }
+
+    onFilterSelected(filterRecord) {
+        this.props.model.createFilter(this.section.fieldName, filterRecord[0])
+    }
+
+    getFilterDomain(activeIds) {
+        return [["id", "not in", activeIds]]
     }
 
     toggleSection() {

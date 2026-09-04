@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="calendar_user_view_form" model="ir.ui.view">
+        <field name="name">calendar.user.view.form</field>
+        <field name="model">calendar.user</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" string="Name"/>
+                    <field name="filter_color" widget="color_picker"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

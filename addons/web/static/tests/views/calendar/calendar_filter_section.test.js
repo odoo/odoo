@@ -85,6 +85,27 @@ test(`filters with no avatar`, async () => {
     expect(`.o_calendar_filter .o_cw_filter_avatar`).toHaveCount(0);
 });
 
+test(`filters with placeholder`, async () => {
+    await mountWithCleanup(CalendarFilterSection, {
+        props: {
+            model: FAKE_MODEL,
+            section: FAKE_FILTER_SECTIONS[0],
+            placeholder: "Custom placeholder",
+        },
+    });
+    expect(`.o_calendar_filter .o-autocomplete--input`).toHaveAttribute("placeholder", "Custom placeholder");
+})
+
+test(`filters without placeholder`, async () => {
+    await mountWithCleanup(CalendarFilterSection, {
+        props: {
+            model: FAKE_MODEL,
+            section: FAKE_FILTER_SECTIONS[0],
+        },
+    });
+    expect(`.o_calendar_filter .o-autocomplete--input`).toHaveAttribute("placeholder", "+ Add Attendees");
+})
+
 test(`filter can have remove button`, async () => {
     await mountWithCleanup(CalendarFilterSection, {
         props: {
