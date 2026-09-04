@@ -11,6 +11,7 @@ import babel.dates
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import _, fields, http, tools
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.http.stream import content_disposition
@@ -357,8 +358,23 @@ class EventTrackController(http.Controller):
     # TRACK PAGE VIEW
     # ------------------------------------------------------------
 
+    @sitemap_group("events")
+    def sitemap_event_track(env, rule, qs):
+        slug = env['ir.http']._slug
+        events = env['event.event'].search(Domain('website_track', '=', True))
+        # Fetch only what the loop reads, here and on the related records.
+        tracks = env['event.track'].with_context(prefetch_fields=False).search_fetch(
+            [('event_id', 'in', events.ids)],
+            ['name', 'seo_name', 'event_id', 'write_date'],
+        )
+        event_slugs = {event.id: slug(event) for event in tracks.event_id}
+        for track in tracks:
+            loc = f'/event/{event_slugs[track.event_id.id]}/track/{slug(track)}'
+            if not qs or qs.lower() in loc.lower():
+                yield {'loc': loc, 'lastmod': track.write_date.date()}
+
     @http.route('''/event/<model("event.event", "[('website_track', '=', True)]"):event>/track/<model("event.track", "[('event_id', '=', event.id)]"):track>''',
-                type='http', auth="public", website=True, sitemap=True, readonly=True)
+                type='http', auth="public", website=True, sitemap=sitemap_event_track, readonly=True)
     def event_track_page(self, event, track, **options):
         track = self._fetch_track(track.id, allow_sudo=False)
 

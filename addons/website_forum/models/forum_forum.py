@@ -209,6 +209,25 @@ class ForumForum(models.Model):
             | Domain([('privacy', '=', 'private'), ('authorized_group_id', 'in', self.env.user.all_group_ids.ids)])
         )
 
+    def _get_sitemap_lastmod_map(self, website, limit):
+        """ Latest change shown on each forum's question listing.
+
+        A forum renders one page of questions, in its own `default_order`.
+
+        :param website: website the listing is rendered for
+        :param int limit: the listing's page size
+        :rtype: dict
+        """
+        Post = self.env['forum.post']
+        base_domain = Post._search_get_base_domain(website)
+        res = {}
+        for forum in self:
+            first_page = Post.search_fetch(
+                base_domain & Domain('forum_id', '=', forum.id),
+                ['write_date'], order=forum.default_order, limit=limit)
+            res[forum.id] = max(first_page.mapped('write_date') + [forum.write_date])
+        return res
+
     @api.depends_context('uid')
     def _compute_has_pending_post(self):
         domain = [

@@ -19,7 +19,7 @@ from odoo.tools.translate import LazyTranslate
 from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.models.ir_http import sitemap_qs2dom, sitemap_group
 from odoo.addons.website_sale.const import MAX_EXPANDED_FILTER_SECTIONS, SHOP_PATH
 from odoo.addons.website_sale.models.website import (
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
@@ -181,6 +181,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         return Domain.AND(domains)
 
+    @sitemap_group("products")
     def sitemap_shop(env, _rule, qs):  # noqa: N805
         if env.website and env.website.ecommerce_access == "logged_in" and not qs:
             # Make sure urls are not listed in sitemap when restriction is active
@@ -188,16 +189,38 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return
 
         if not qs or qs.lower() in SHOP_PATH:
-            yield {"loc": SHOP_PATH}
+            # `/shop` renders one page; a product further down the catalogue is
+            # not a change to this URL.
+            first_page = env["product.template"].search_fetch(
+                Domain(env.website.sale_product_domain()), ["write_date"],
+                order=env.website.shop_default_sort, limit=env.website.shop_ppg)
+            page = {"loc": SHOP_PATH}
+            if first_page:
+                page["lastmod"] = max(first_page.mapped("write_date")).date()
+            yield page
 
         Category = env["product.public.category"]
         dom = sitemap_qs2dom(qs, f"{SHOP_PATH}/category", Category._rec_name)
         dom &= env.website.website_domain()
-        for cat in Category.search(dom):
-            loc = cat.website_url
+        # `website_url` walks `parents_and_self`, so fetch what `_slug` reads too.
+        categories = Category.search_fetch(dom, ["write_date", "parent_path", "name", "seo_name"])
+        # The category page lists its products, so a published product must
+        # advance the recrawl signal of the category page.
+        categories_lastmod = {category.id: category.write_date for category in categories}
+        for category, lastmod in env["product.template"]._read_group(
+            [("public_categ_ids", "in", categories.ids)],
+            groupby=["public_categ_ids"], aggregates=["write_date:max"],
+        ):
+            # Grouping on a m2m also returns the other categories of a matched
+            # product, which `qs` may have left out of `categories`.
+            if category.id in categories_lastmod:
+                categories_lastmod[category.id] = max(categories_lastmod[category.id], lastmod)
+        for category in categories:
+            loc = category.website_url
             if not qs or qs.lower() in loc:
-                yield {"loc": loc}
+                yield {"loc": loc, "lastmod": categories_lastmod[category.id].date()}
 
+    @sitemap_group("products")
     def sitemap_products(env, _rule, qs):  # noqa: N805
         if env.website and env.website.ecommerce_access == "logged_in" and not qs:
             # Make sure urls are not listed in sitemap when restriction is active
@@ -207,10 +230,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductTemplate = env["product.template"]
         dom = sitemap_qs2dom(qs, SHOP_PATH, ProductTemplate._rec_name)
         dom &= Domain(env.website.sale_product_domain())
-        for product in ProductTemplate.with_context(prefetch_fields=False).search(dom):
+        # Fetch only what the loop reads, not the HTML columns.
+        products = ProductTemplate.search_fetch(
+            dom, ["seo_name", "name", "default_code", "write_date"],
+        )
+        # The shop page renders variants, images and attribute lines: a change
+        # to any of them must advance the recrawl signal.
+        products_lastmod = {template.id: template.write_date for template in products}
+        for comodel in ('product.product', 'product.image', 'product.template.attribute.line'):
+            for template, lastmod in env[comodel]._read_group(
+                [('product_tmpl_id', 'in', products.ids)],
+                groupby=['product_tmpl_id'], aggregates=['write_date:max'],
+            ):
+                products_lastmod[template.id] = max(products_lastmod[template.id], lastmod)
+        for product in products:
             loc = product.website_url
             if not qs or qs.lower() in loc:
-                yield {"loc": loc}
+                yield {"loc": loc, "lastmod": products_lastmod[product.id].date()}
 
     def _get_search_options(
         self,

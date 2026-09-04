@@ -2,6 +2,7 @@
 import contextlib
 import functools
 import logging
+import re
 import unittest
 from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
 
@@ -34,6 +35,24 @@ def sitemap_qs2dom(qs, route, field='name'):
         else:
             return Domain.FALSE
     return Domain.TRUE
+
+
+def sitemap_group(name):
+    """ Declare which ``/sitemap.xml`` group a sitemap function feeds.
+
+    Undecorated functions fall back on the module they are defined in.
+
+    :param str name: lowercase letters, digits and dashes only, as it becomes
+                     part of the sub-sitemap URL
+    """
+    if not re.fullmatch(r'[a-z0-9-]+', name):
+        raise ValueError(f"Invalid sitemap group {name!r}: use lowercase letters,"
+                         " digits and dashes only.")
+
+    def decorate(func):
+        func._sitemap_group = name
+        return func
+    return decorate
 
 
 class IrHttp(models.AbstractModel):

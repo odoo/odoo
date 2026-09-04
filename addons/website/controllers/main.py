@@ -9,8 +9,8 @@ import re
 import urllib.parse
 import zipfile
 from hashlib import md5, sha256
+from collections import defaultdict
 from io import BytesIO
-from itertools import islice
 from textwrap import shorten
 from xml.etree import ElementTree as ET
 
@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 # Completely arbitrary limits
 MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
-SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
+SITEMAP_CACHE_TIME = datetime.timedelta(seconds=5)
 MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
 SUPPORTED_FONT_EXTENSIONS = ['ttf', 'woff', 'woff2', 'otf']
 FORCE_SHOW_FIELDS = ['name', 'search_item_metadata', 'tags']
@@ -160,20 +160,24 @@ class Website(Home):
         def match(loc):
             return not qs or qs.lower() in loc.lower()
 
+        def page_lastmod(page):
+            # `menu.page_id` is empty when the menu links to a route, e.g. /shop.
+            return page.write_date.date() if page else None
+
         website_page = env['website.page'].sudo().search([
             ('url', '=', '/'),
             ('is_published', '=', True),
         ], limit=1)
         if website_page and match('/'):
-            yield {'loc': '/'}
+            yield {'loc': '/', 'lastmod': page_lastmod(website_page)}
             return
 
         top_menu = env.website.menu_id
         reachable_menus = top_menu.child_id.filtered(env.website.is_reachable)
         if reachable_menus:
-            loc = reachable_menus[0].url
-            if match(loc):
-                yield {'loc': loc}
+            menu = reachable_menus[0]
+            if match(menu.url):
+                yield {'loc': menu.url, 'lastmod': page_lastmod(menu.page_id)}
 
     @http.route('/', auth="public", website=True, sitemap=sitemap_index)
     def index(self, **kw):
@@ -412,6 +416,52 @@ class Website(Home):
                 'name': url,
                 'url': url,
             })
+
+        def write_sitemap_chunks():
+            """ Write one file per group, return the entries for the index. """
+            index_entries = []
+            pending = defaultdict(list)  # {group: locs waiting for a file}
+            chunk_count = defaultdict(int)  # {group: files written so far}
+
+            def write_chunk(group):
+                """ Write the locs buffered for `group` as one sitemap file. """
+                chunk_locs = pending.pop(group)
+                chunk_count[group] += 1
+                urls = self.env.website._render_template('website.sitemap_locs', {
+                    'locs': chunk_locs,
+                    'url_root': url_root[:-1],
+                })
+                content = self.env.website._render_template('website.sitemap_xml', {'content': urls})
+                # One group can need several files: blogs-1.xml, blogs-2.xml
+                suffix = f'{group}-{chunk_count[group]}'
+                create_sitemap(f'{sitemap_base_url}-{suffix}.xml', content)
+                lastmod = None
+                for loc in chunk_locs:
+                    if not (curr_lastmod := loc.get('lastmod')):
+                        # One loc without a date leaves the whole file undated.
+                        lastmod = None
+                        break
+                    lastmod = max(lastmod or curr_lastmod, curr_lastmod)
+                # TODO: Move current_website_id in template directly
+                index_entries.append({
+                    'id': f'{self.env.website.id}-{hashed_url_root}-{suffix}',
+                    'lastmod': lastmod,
+                })
+
+            # Locs of every group come mixed, and no group knows its own size
+            # upfront: buffer each one, write a file as soon as it is full.
+            locs = self.env.website.with_user(self.env.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
+            for loc in locs:
+                group = loc.get('group') or 'pages'
+                pending[group].append(loc)
+                if len(pending[group]) == LOC_PER_SITEMAP:
+                    write_chunk(group)
+
+            # Write what is left. Loop on a copy, `write_chunk` pops from `pending`.
+            for group in list(pending.keys()):
+                write_chunk(group)
+            return index_entries
+
         dom = [('url', '=', '%s.xml' % sitemap_base_url), ('type', '=', 'binary')]
         sitemap = Attachment.search(dom, limit=1)
         if sitemap:
@@ -428,41 +478,17 @@ class Website(Home):
             sitemaps = Attachment.search(dom)
             sitemaps.unlink()
 
-            pages = 0
-            locs = self.env.website.with_user(self.env.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
-            while True:
-                values = {
-                    'locs': islice(locs, 0, LOC_PER_SITEMAP),
-                    'url_root': url_root[:-1],
-                }
-                urls = self.env.website._render_template('website.sitemap_locs', values)
-                if urls.strip():
-                    content = self.env.website._render_template('website.sitemap_xml', {'content': urls})
-                    pages += 1
-                    last_sitemap = create_sitemap('%s-%d.xml' % (sitemap_base_url, pages), content)
-                else:
-                    break
-
-            if not pages:
+            index_entries = write_sitemap_chunks()
+            if not index_entries:
                 return request.not_found()
-            elif pages == 1:
-                # rename the -id-page.xml => -id.xml
-                last_sitemap.write({
-                    'url': "%s.xml" % sitemap_base_url,
-                    'name': "%s.xml" % sitemap_base_url,
-                })
-            else:
-                # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = ["%d-%s-%d" % (self.env.website.id, hashed_url_root, p) for p in range(1, pages + 1)]
 
-                # Sitemaps must be split in several smaller files with a sitemap index
-                content = self.env.website._render_template('website.sitemap_index_xml', {
-                    'pages': pages_with_website,
-                    # URLs inside the sitemap index have to be on the same
-                    # domain as the sitemap index itself
-                    'url_root': url_root,
-                })
-                create_sitemap('%s.xml' % sitemap_base_url, content)
+            content = self.env.website._render_template('website.sitemap_index_xml', {
+                'sitemaps': index_entries,
+                # URLs inside the sitemap index have to be on the same
+                # domain as the sitemap index itself
+                'url_root': url_root,
+            })
+            create_sitemap(f'{sitemap_base_url}.xml', content)
 
         return request.make_response(content, [('Content-Type', mimetype)])
 

@@ -9,7 +9,7 @@ import werkzeug.urls
 import werkzeug.wrappers
 
 from odoo import _, http, tools
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
@@ -65,13 +65,27 @@ class WebsiteForum(WebsiteProfile):
     # Forum
     # --------------------------------------------------
 
+    @sitemap_group("forums")
     def sitemap_forum(env, rule, qs):
-        domain = env.website.website_domain()
-        forums_count = env['forum.forum'].search_count(domain, limit=2)
+        # One search feeds every /forum* listing URL: the index, each forum's
+        # question listing and its faq.
+        slug = env['ir.http']._slug
+        Forum = env['forum.forum']
+        forums = Forum.search_fetch(
+            env.website.website_domain(), ['write_date', 'seo_name', 'name'])
+        forums_lastmod = forums._get_sitemap_lastmod_map(env.website, WebsiteForum._post_per_page)
 
-        if forums_count > 1:
-            if not qs or qs.lower() in '/forum':
-                yield {'loc': '/forum'}
+        if len(forums) > 1 and (not qs or qs.lower() in '/forum'):
+            yield {'loc': '/forum', 'lastmod': max(forums_lastmod.values()).date()}
+
+        for forum in forums:
+            listing = f'/forum/{slug(forum)}'
+            if not qs or qs.lower() in listing:
+                yield {'loc': listing, 'lastmod': forums_lastmod[forum.id].date()}
+            faq = f'/forum/{slug(forum)}/faq'
+            if not qs or qs.lower() in faq:
+                # The faq shows the forum's config, not its posts: date it from the forum.
+                yield {'loc': faq, 'lastmod': forum.write_date.date()}
 
     @http.route(['/forum'], type='http', auth="public", website=True, sitemap=sitemap_forum, readonly=True, list_as_website_content=_lt("Forum"))
     def forum(self, **kwargs):
@@ -85,16 +99,6 @@ class WebsiteForum(WebsiteProfile):
             'forums': forums,
             'structured_data': forums._render_jsonld(),
         })
-
-    def sitemap_forum_all(env, rule, qs):
-        Forum = env['forum.forum']
-        dom = sitemap_qs2dom(qs, '/forum', Forum._rec_name)
-        dom &= env.website.website_domain()
-        slug = env['ir.http']._slug
-        for f in Forum.search(dom):
-            loc = f'/forum/{slug(f)}'
-            if not qs or qs.lower() in loc:
-                yield {'loc': loc}
 
     def _get_forum_post_search_options(
         self, forum=None, tag=None, filters=None, my=None,
@@ -116,7 +120,7 @@ class WebsiteForum(WebsiteProfile):
                  '/forum/<model("forum.forum"):forum>/page/<int:page>',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions''',
                  '''/forum/<model("forum.forum"):forum>/tag/<model("forum.tag"):tag>/questions/page/<int:page>''',
-                 ], type='http', auth="public", website=True, sitemap=sitemap_forum_all, readonly=True)
+                 ], type='http', auth="public", website=True, sitemap=sitemap_forum, readonly=True)
     def questions(
         self, forum=None, tag=None, page=1, filters='all', my=None, sorting=None, search='',
         create_uid=False, include_answers=False, **post,
@@ -197,7 +201,7 @@ class WebsiteForum(WebsiteProfile):
         return request.render("website_forum.forum_index", values)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/faq'''], type='http', auth="public",
-        website=True, sitemap=True, readonly=True)
+        website=True, sitemap=sitemap_forum, readonly=True)
     def forum_faq(self, forum, **post):
         values = self._prepare_user_values(forum=forum, searches={}, header={'is_guidelines': True}, **post)
         return request.render("website_forum.faq", values)
@@ -292,6 +296,7 @@ class WebsiteForum(WebsiteProfile):
         slug = request.env['ir.http']._slug
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)), code=301)
 
+    @sitemap_group("forums")
     def sitemap_forum_post(env, rule, qs):
         ForumPost = env['forum.post']
         dom = (
@@ -300,10 +305,22 @@ class WebsiteForum(WebsiteProfile):
             & Domain('can_view', '=', True)
         )
         slug = env['ir.http']._slug
-        for forum_post in ForumPost.search(dom):
-            loc = f'/forum/{slug(forum_post.forum_id)}/{slug(forum_post)}'
+        # Fetch only what the loop reads, here and on the related records.
+        posts = ForumPost.with_context(prefetch_fields=False).search_fetch(
+            dom, ['name', 'seo_name', 'forum_id', 'write_date'])
+        # The question page renders its answers, so a new or edited answer
+        # must advance the recrawl signal of the question.
+        posts_lastmod = {post.id: post.write_date for post in posts}
+        for question, lastmod in ForumPost._read_group(
+            [('parent_id', 'in', posts.ids), ('can_view', '=', True)],
+            groupby=['parent_id'], aggregates=['write_date:max'],
+        ):
+            posts_lastmod[question.id] = max(posts_lastmod[question.id], lastmod)
+        forum_slugs = {forum.id: slug(forum) for forum in posts.forum_id}
+        for forum_post in posts:
+            loc = f'/forum/{forum_slugs[forum_post.forum_id.id]}/{slug(forum_post)}'
             if not qs or qs.lower() in loc:
-                yield {'loc': loc, 'lastmod': forum_post.write_date.date()}
+                yield {'loc': loc, 'lastmod': posts_lastmod[forum_post.id].date()}
 
     def _prepare_question_template_vals(self, forum, post, question):
         values = self._prepare_user_values(forum=forum, searches=post)

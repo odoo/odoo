@@ -3190,8 +3190,9 @@ Disallow: /*/my/*
 
 <template id="sitemap_index_xml"><t t-translation="off">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 <sitemapindex t-attf-xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap t-translation="off" t-foreach="pages" t-as="page">
-    <loc><t t-out="url_root"/>sitemap-<t t-out="page"/>.xml</loc>
+  <sitemap t-translation="off" t-foreach="sitemaps" t-as="sitemap">
+    <loc><t t-out="url_root"/>sitemap-<t t-out="sitemap['id']"/>.xml</loc><t t-if="sitemap.get('lastmod')">
+    <lastmod t-out="sitemap['lastmod']"/></t>
   </sitemap>
 </sitemapindex>
 </t>

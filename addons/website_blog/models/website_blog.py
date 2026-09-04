@@ -298,13 +298,18 @@ class BlogPost(models.Model):
         return res
 
     @api.model
+    def _search_get_base_domain(self, website):
+        """ Domain of the posts listed on `/blog`, before its filters. """
+        return [website.website_domain()]
+
+    @api.model
     def _search_get_detail(self, website, order, options):
         blog = options.get('blog')
         tags = options.get('tag')
         date_begin = options.get('date_begin')
         date_end = options.get('date_end')
         state = options.get('state')
-        domain = [website.website_domain()]
+        domain = self._search_get_base_domain(website)
         if blog:
             domain.append([('blog_id', '=', self.env['ir.http']._unslug(blog)[1])])
         if tags:

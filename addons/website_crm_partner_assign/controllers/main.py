@@ -10,6 +10,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partnership.controllers.main import WebsitePartnership
 from odoo.fields import Domain
@@ -197,28 +198,38 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
 
         return domain
 
+    @sitemap_group("partners")
     def sitemap_partners(env, rule, qs):
-        if not qs or qs.lower() in '/partners':
-            yield {'loc': '/partners'}
-
         slug = env['ir.http']._slug
+        Partner = env['res.partner'].sudo()
         base_partner_domain = [
             ('grade_id', '!=', False),
             ('website_published', '=', True),
             ('grade_id.website_published', '=', True),
             ('grade_id.active', '=', True),
         ]
-        grades = env['res.partner'].sudo()._read_group(base_partner_domain, groupby=['grade_id'])
-        for [grade] in grades:
-            loc = '/partners/grade/%s' % slug(grade)
-            if not qs or qs.lower() in loc:
-                yield {'loc': loc}
-        country_partner_domain = base_partner_domain + [('country_id', '!=', False)]
-        countries = env['res.partner'].sudo()._read_group(country_partner_domain, groupby=['country_id'])
-        for [country] in countries:
-            loc = '/partners/country/%s' % slug(country)
-            if not qs or qs.lower() in loc:
-                yield {'loc': loc}
+        # Mirrors `_get_base_partner_domain`, uncallable here: it reads `request`.
+        if env.website.is_view_active('website_partnership.companies_only_setting'):
+            base_partner_domain.append(('is_company', '=', True))
+        if not qs or qs.lower() in '/partners':
+            # Dated from every partner: the listing's first page varies by visitor.
+            partners_lastmod = Partner._read_group(
+                base_partner_domain, aggregates=['write_date:max'])[0][0]
+            page = {'loc': '/partners'}
+            if partners_lastmod:
+                page['lastmod'] = partners_lastmod.date()
+            yield page
+
+        for prefix, groupby, domain in (
+            ('grade', 'grade_id', base_partner_domain),
+            ('country', 'country_id', base_partner_domain + [('country_id', '!=', False)]),
+        ):
+            for record, last_write in Partner._read_group(
+                domain, groupby=[groupby], aggregates=['write_date:max'],
+            ):
+                loc = f'/partners/{prefix}/{slug(record)}'
+                if not qs or qs.lower() in loc:
+                    yield {'loc': loc, 'lastmod': last_write.date()}
 
     def _get_partners_detail_values(self, partner_id, **post):
         values = super()._get_partners_detail_values(partner_id, **post)

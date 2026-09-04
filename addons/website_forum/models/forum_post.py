@@ -933,6 +933,15 @@ class ForumPost(models.Model):
         return self.env['website'].get_client_action(self.website_url)
 
     @api.model
+    def _search_get_base_domain(self, website, include_answers=False):
+        """ Domain of the questions listed on a forum, before its filters. """
+        domain = website.website_domain()
+        domain &= Domain('state', '=', 'active') & Domain('can_view', '=', True)
+        if not include_answers:
+            domain &= Domain('parent_id', '=', False)
+        return domain
+
+    @api.model
     def _search_get_detail(self, website, order, options):
         search_fields = ['name', 'tag_ids.name']
         fetch_fields = ['id', 'name', 'website_url']
@@ -944,11 +953,7 @@ class ForumPost(models.Model):
             'tags': {'name': 'tag_ids', 'type': 'tags', 'match': True},
         }
 
-        domain = website.website_domain()
-        domain &= Domain('state', '=', 'active') & Domain('can_view', '=', True)
-        include_answers = options.get('include_answers', False)
-        if not include_answers:
-            domain &= Domain('parent_id', '=', False)
+        domain = self._search_get_base_domain(website, options.get('include_answers', False))
         forum = options.get('forum')
         if forum:
             domain &= Domain('forum_id', '=', self.env['ir.http']._unslug(forum)[1])

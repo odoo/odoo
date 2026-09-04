@@ -578,14 +578,26 @@ class EventEvent(models.Model):
         ]
 
     @api.model
+    def _search_get_base_domain(self, website, date=None):
+        """ Domain of the events listed on `/event`, before its filters.
+
+        `date` names one of the `_search_build_dates` filters, e.g. `scheduled`
+        for the upcoming events the listing opens on.
+        """
+        domain = [website.website_domain(), [('is_visible_on_website', '=', True)]]
+        if date:
+            dates = {key: date_domain for key, _label, date_domain, _count in self._search_build_dates()}
+            domain.append(dates[date])
+        return domain
+
+    @api.model
     def _search_get_detail(self, website, order, options):
         date = options.get('date', 'all')
         country = options.get('country')
         tags = options.get('tags')
         event_type = options.get('type', 'all')
 
-        domain = [website.website_domain()]
-        domain.append([('is_visible_on_website', '=', True)])
+        domain = self._search_get_base_domain(website)
 
         if event_type != 'all':
             domain.append([("event_type_id", "=", int(event_type))])

@@ -102,6 +102,11 @@ spirit. To be successful, you will have solid solving problem skills.''')
         return super().action_archive()
 
     @api.model
+    def _search_get_base_domain(self, website):
+        """ Domain of the jobs listed on `/jobs`, before its filters. """
+        return [website.website_domain()]
+
+    @api.model
     def _search_get_detail(self, website, order, options):
         requires_sudo = False
         country_id = options.get('country_id')
@@ -112,7 +117,7 @@ spirit. To be successful, you will have solid solving problem skills.''')
         is_other_department = options.get('is_other_department')
         is_untyped = options.get('is_untyped')
 
-        domain = [website.website_domain()]
+        domain = self._search_get_base_domain(website)
         if country_id:
             domain.append([('address_id.country_id', '=', int(country_id))])
             requires_sudo = True

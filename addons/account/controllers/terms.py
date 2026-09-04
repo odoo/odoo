@@ -10,7 +10,8 @@ def sitemap_terms(env, rule, qs):
         return
     use_invoice_terms = env['ir.config_parameter'].sudo().get_bool('account.use_invoice_terms')
     if use_invoice_terms and env.company.terms_type == 'html':
-        yield {'loc': '/terms'}
+        # The page renders `invoice_terms_html`, so the company carries its content.
+        yield {'loc': '/terms', 'lastmod': env.company.write_date.date()}
 
 
 class TermsController(http.Controller):
