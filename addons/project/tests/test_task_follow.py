@@ -48,3 +48,19 @@ class TestTaskFollow(TestProjectCommon):
             task_follower.subtype_ids,
             "Follower should still be subscribed to 'Discussions'.",
         )
+
+    def test_batch_activity_creation_multi_project_follower(self):
+        """ Test batch activity creation on tasks from different projects with a shared follower """
+        (self.project_pigs | self.project_goats).message_subscribe(partner_ids=self.user_projectuser.partner_id.ids)
+        self.task_2.project_id = self.project_goats
+        activity_type = self.env['mail.activity.type'].search([], limit=1)
+        wizard = self.env['mail.activity.schedule'].with_context(
+            active_ids=(self.task_1 | self.task_2).ids,
+            active_model=self.task_1._name,
+        ).create({
+            'activity_type_id': activity_type.id,
+            'activity_user_id': self.user_projectuser.id,
+        })
+        wizard.action_schedule_activities()
+        self.assertIn(self.user_projectuser.partner_id, self.task_1.message_partner_ids)
+        self.assertIn(self.user_projectuser.partner_id, self.task_2.message_partner_ids)
