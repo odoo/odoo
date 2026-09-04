@@ -9,6 +9,22 @@
                 <group name="GTU" string="GTU">
                     <field name="l10n_pl_vat_gtu"/>
                 </group>
+                <group name="MPP" string="MPP" invisible="not l10n_pl_is_current_company_pl">
+                    <field name="l10n_pl_subject_to_split_payment"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_category_form" model="ir.ui.view">
+        <field name="name">product.category.form.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='accounting']" position="inside">
+                <group name="MPP" string="MPP" invisible="not l10n_pl_is_current_company_pl">
+                    <field name="l10n_pl_subject_to_split_payment"/>
+                </group>
             </xpath>
         </field>
     </record>
