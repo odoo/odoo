@@ -66,7 +66,7 @@
                 />
             </t>
         </div>
-        <div t-if="!this.props.chatWindow.folded or this.ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': this.editingName() }" t-ref="this.chatWindowContentRef">
+        <div t-if="!this.props.chatWindow.folded or this.ui.isSmall" class="d-flex flex-column h-100 overflow-auto scrollbar-width-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': this.editingName() }" t-ref="this.chatWindowContentRef">
             <t name="thread content">
                 <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" class="h-100 bg-inherit" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}">
                     <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>

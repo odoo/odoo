@@ -67,7 +67,7 @@
                         }"/>
                         <Wysiwyg t-if="this.composerService.htmlEnabled" class="'w-100 min-w-0 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="this.onLoadWysiwyg"/>
                         <t t-else="">
-                                <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin o-discuss-text-body user-select-auto"
+                                <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto scrollbar-width-thin o-discuss-text-body user-select-auto"
                                 t-att-class="inputClasses"
                                 t-ref="this.ref"
                                 t-on-keydown="this.onKeydown"
@@ -99,7 +99,7 @@
                     <t t-call="mail.Composer.quickActions"/>
                 </div>
             </div>
-            <div class="o-mail-Composer-footer min-w-0 overflow-auto o-scrollbar-thin">
+            <div class="o-mail-Composer-footer min-w-0 overflow-auto scrollbar-width-thin">
                 <AttachmentList
                     t-if="this.props.composer.attachments.length > 0"
                     attachmentGroups="this.attachmentGroups"

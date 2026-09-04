@@ -12,7 +12,7 @@
             'o-selfInCall': this.isActiveCall,
             'border-bottom': !this.isActiveCall,
         }" t-ref="this.rootRef">
-            <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="this.onMouseleaveMain">
+            <div class="o-discuss-Call-main d-flex flex-column align-items-center justify-content-center position-relative overflow-auto scrollbar-width-thin" t-on-mouseleave="this.onMouseleaveMain">
                 <PttAdBanner t-if="!this.props.compact"/>
                 <BlurPerformanceWarning t-if="this.store.settings.blurPerformanceWarning"/>
                 <CallPresentationBar t-if="this.rtc.selfSession and this.isAnyonePresenting" />

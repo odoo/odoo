@@ -38,7 +38,6 @@
     .o_bottom_sheet_rail {
         @include o-position-absolute(0, 0, 0, 0);
         overflow-y: auto;
-        scrollbar-width: none;
         touch-action: pan-y;
         pointer-events: auto;
 
@@ -109,7 +108,6 @@
         background-color: $dropdown-bg;
 
         .o_bottom_sheet_body {
-            scrollbar-width: none;
             flex: 1;
         }
     }
