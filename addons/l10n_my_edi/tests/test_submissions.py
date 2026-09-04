@@ -143,8 +143,35 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
             })
             # Cancel the invoice
             wizard.button_request_update()
+        first_document = self.basic_invoice.l10n_my_edi_document_ids[0]
+
         self.assertEqual(self.basic_invoice.state, 'cancel')
-        self.assertEqual(self.basic_invoice.l10n_my_edi_document_ids[0].myinvois_state, 'cancelled')
+        self.assertEqual(first_document.myinvois_state, 'cancelled')
+        # The invoice itself should reflect the cancellation, instead of looking like it was never sent.
+        self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'cancelled')
+
+        # A cancelled invoice can still be reset to draft and reissued, same as an invalid one (test_06).
+        self.assertTrue(self.basic_invoice.show_reset_to_draft_button)
+        self.basic_invoice.button_draft()
+
+        # Resetting to draft clears the stale status, so the new posting cycle doesn't look like it
+        # inherited the previous one's outcome. The old, cancelled document is still linked, but it
+        # shouldn't block resending.
+        self.assertTrue(first_document.is_superseded)
+        self.assertFalse(self.basic_invoice.l10n_my_edi_state)
+        self.basic_invoice.action_post()
+        self.assertFalse(self.basic_invoice.l10n_my_edi_state)
+
+        with patch(CONTACT_PROXY_METHOD, new=self._test_04_mock):
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+        # A cancelled document is terminal and can never be reused: a new one must have been created for the reissue.
+        second_document = self.basic_invoice.l10n_my_edi_document_ids - first_document
+        self.assertEqual(len(second_document), 1)
+        # The old document must stay superseded, and the new one must start clean.
+        self.assertTrue(first_document.is_superseded)
+        self.assertFalse(second_document.is_superseded)
+        self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'valid')
 
     @freeze_time('2024-07-15 10:00:00')
     def test_05_new_cancellation_failures(self):
@@ -317,6 +344,8 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
             # Cancel the invoice
             wizard.button_request_update()
             self.assertEqual(self.basic_invoice.l10n_my_edi_document_ids[0].myinvois_state, 'cancelled')
+            # The invoice itself should reflect the cancellation too, same as in test_04.
+            self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'cancelled')
 
     @freeze_time('2024-07-15 10:00:00')
     def test_11_qr_code_generation(self):
@@ -523,6 +552,67 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         with patch(CONTACT_PROXY_METHOD, new=self._test_02_mock):
             with self.assertRaisesRegex(UserError, 'This document could not be sent for the following reason'):
                 self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+    @freeze_time('2024-07-15 10:00:00')
+    def test_16_show_reset_to_draft_button(self):
+        """
+        'Reset to Draft' must stay hidden while a document is active on the MyInvois platform: not only once
+        it is 'valid'/'rejected' (which the base 'need_cancel_request' logic already covers), but also while
+        it is still 'in_progress'. The base logic does not consider an 'in_progress' document active, so this
+        specifically protects the explicit l10n_my_edi override of _compute_show_reset_to_draft_button.
+        """
+        self.assertTrue(self.basic_invoice.show_reset_to_draft_button)
+
+        self.get_submission_status_count = 0
+        with patch(CONTACT_PROXY_METHOD, new=self._test_07_mock):
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
+            self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'in_progress')
+            # The base 'need_cancel_request' logic doesn't treat an 'in_progress' document as active: without
+            # the l10n_my_edi override, the button would incorrectly reappear at this point.
+            self.assertFalse(self.basic_invoice.need_cancel_request)
+            self.assertFalse(self.basic_invoice.show_reset_to_draft_button)
+
+            self.env['myinvois.document']._myinvois_statuses_update_cron()
+            self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'valid')
+            self.assertTrue(self.basic_invoice.need_cancel_request)
+            self.assertFalse(self.basic_invoice.show_reset_to_draft_button)
+
+        with patch(CONTACT_PROXY_METHOD, new=self._test_10_mock):
+            self.basic_invoice.action_l10n_my_edi_update_status()
+            self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'rejected')
+            self.assertFalse(self.basic_invoice.show_reset_to_draft_button)
+
+    @freeze_time('2024-07-15 10:00:00')
+    def test_17_resend_after_failed_automatic_cancellation(self):
+        """
+        Reaching a terminal state on the platform also cancels the invoice in Odoo, but that can fail (lock date, ...).
+        The invoice then stays posted with a cancelled document, and can be sent again without ever being reset to
+        draft: the document left behind must still be superseded by the new one.
+        """
+        with patch(CONTACT_PROXY_METHOD, new=self._test_04_mock):
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
+
+            # Ensure that the cancellation in Odoo fails, leaving the invoice posted.
+            self.env.company.fiscalyear_lock_date = '2024-07-15'
+            action = self.basic_invoice.button_request_cancel()
+            wizard = self.env[action['res_model']].with_context(action['context']).create({
+                'reason': 'Discount not applied',
+            })
+            wizard.button_request_update()
+        first_document = self.basic_invoice.l10n_my_edi_document_ids
+
+        self.assertEqual(self.basic_invoice.state, 'posted')
+        self.assertRecordValues(first_document, [{'myinvois_state': 'cancelled', 'is_superseded': False}])
+        self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'cancelled')
+
+        # Sending again creates a new document, as a cancelled one can never be reused.
+        with patch(CONTACT_PROXY_METHOD, new=self._test_04_mock):
+            self.basic_invoice.action_l10n_my_edi_send_invoice()
+        second_document = self.basic_invoice.l10n_my_edi_document_ids - first_document
+
+        self.assertRecordValues(first_document, [{'is_superseded': True}])
+        self.assertRecordValues(second_document, [{'myinvois_state': 'valid', 'is_superseded': False}])
+        self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'valid')
 
     # -------------------------------------------------------------------------
     # Patched methods
