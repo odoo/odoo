@@ -87,7 +87,7 @@ export class ImageShapeOptionPlugin extends Plugin {
                 this.editable,
                 {
                     selector: "img",
-                    exclude: "[data-oe-type='image'] > img",
+                    exclude: "[data-oe-type='image'] > img, [data-oe-type='image_url'] > img",
                 }
             ),
         // TODO: Remove in master. Kept for stable to add default shape colors
