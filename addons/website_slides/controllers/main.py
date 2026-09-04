@@ -171,7 +171,7 @@ class WebsiteSlides(WebsiteProfile):
                 'display_name' : resource.display_name,
                 'download_url': resource.download_url,
                 'id': resource.id,
-                'link': resource.link,
+                'link': resource._get_absolute_link(),
                 'resource_type': resource.resource_type,
             } for resource in slides_resources]
         }
