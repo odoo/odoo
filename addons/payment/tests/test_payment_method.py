@@ -48,6 +48,30 @@ class TestPaymentMethod(PaymentCommon):
         )
         self.assertTrue(brand_payment_method.active)
 
+    def test_unlink_not_allowed_when_linked_to_providers(self):
+        """Test that a payment method linked to a provider cannot be deleted."""
+        # `self.payment_method` is already covered by `_unlink_if_not_default_payment_method`.
+        payment_method_with_provider = self.env["payment.method"].create(
+            {
+                "name": "Dummy Method",
+                "code": "dummymethod",
+                "provider_ids": self.provider.ids,
+            }
+        )
+        with self.assertRaises(UserError):
+            payment_method_with_provider.unlink()
+
+    def test_unlink_allowed_when_not_linked_to_providers(self):
+        """Test that a payment method linked to no provider can be deleted."""
+        payment_method_without_provider = self.env["payment.method"].create(
+            {
+                "name": "Dummy Method",
+                "code": "dummymethod",
+                "provider_ids": [],
+            }
+        )
+        self._assert_does_not_raise(UserError, payment_method_without_provider.unlink)
+
     def test_payment_method_compatible_when_provider_is_enabled(self):
         """Test that a payment method is available when it is supported by an enabled provider."""
         compatible_payment_methods = self.env[
