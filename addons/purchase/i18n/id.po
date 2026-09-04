@@ -11,14 +11,15 @@
 # "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 01:54+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-20 05:58+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
 "purchase/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -36,14 +37,14 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Request for "
-"Quotation - %s' % (object.name) or\n"
+"                (object.state in ('draft', 'sent') and 'Permintaan Penawaran "
+"- %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
 msgid "# Vendor Bills"
-msgstr "# Tagihan Pemasok"
+msgstr "# Tagihan Vendor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
@@ -54,7 +55,7 @@ msgstr "# Baris"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "%(added_lines_count)s PO lines added to the bill."
-msgstr ""
+msgstr "%(added_lines_count)s baris PO ditambahkan ke tagihan."
 
 #. module: purchase
 #. odoo-python
@@ -63,6 +64,8 @@ msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
 msgstr ""
+"%(matched_lines_count)s baris tagihan cocok, %(unmatched_lines_count)s tidak "
+"cocok tersisa."
 
 #. module: purchase
 #. odoo-python
@@ -85,7 +88,7 @@ msgstr "&amp;nbsp;"
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.report_purchase_quotation
 msgid "'Request for Quotation - %s' % (object.name)"
-msgstr "'Request for Quotation - %s' % (object.name)"
+msgstr "'Permintaan Penawaran - %s' % (object.name)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -106,7 +109,7 @@ msgstr "-&gt;"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "0 bill lines matched with this PO."
-msgstr ""
+msgstr "0 baris tagihan cocok dengan PO ini."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -413,7 +416,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Request for Quotation #</span>\n"
+"<span class=\"d-none d-md-inline\">Permintaan Penawaran #</span>\n"
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: purchase
@@ -424,6 +427,10 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">Permintaan Penawaran</span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Order Pembelian</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -444,11 +451,14 @@ msgid ""
 "                                    Incoming\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                    Masuk\n"
+"                                </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span invisible=\"not receipt_reminder_email\">day(s) before</span>"
-msgstr ""
+msgstr "<span invisible=\"not receipt_reminder_email\">hari sebelumnya</span>"
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
@@ -483,7 +493,7 @@ msgstr "<strong class=\"d-block mb-1\">Faktur</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Alamat pengiriman:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -520,7 +530,7 @@ msgstr "<strong>Disc.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Expected Arrival:</strong>"
-msgstr "<strong>Kedatangan yang Diharapkan:</strong>"
+msgstr "<strong>Perkiraan Kedatangan:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -531,7 +541,7 @@ msgstr "<strong>Tanggal Perkiraan</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
-msgstr ""
+msgstr "<strong>Incoterm:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -673,7 +683,7 @@ msgstr "Dekorasi Pengecualian Aktivitas"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_plans_ids
 msgid "Activity Plans"
-msgstr "Rencana-Rencana Kegiatan"
+msgstr "Rencana Aktivitas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
@@ -693,7 +703,7 @@ msgstr "Jenis aktivitas"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
 msgid "Add Down Payment"
-msgstr "Tambahkan Down Payment"
+msgstr "Tambahkan Uang Muka"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -718,17 +728,17 @@ msgstr "Add a section"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Tambahkan catatan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add product"
-msgstr ""
+msgstr "Tambahkan produk"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Tambahkan bagian"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -810,7 +820,7 @@ msgstr "Semua RFQ Terkirim"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_supplierinfo_tree_view2
 msgid "All variants"
-msgstr ""
+msgstr "Semua varian"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -890,7 +900,7 @@ msgstr "Apakah Anda yakin ingin membatalkan RFQ/RFO terpilih?"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Arrival Confirmation"
-msgstr ""
+msgstr "Konfirmasi Kedatangan"
 
 #. module: purchase
 #. odoo-python
@@ -923,7 +933,7 @@ msgstr "Atribut"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Auto-Complete"
-msgstr "Auto-Complete"
+msgstr "Isi Otomatis"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
@@ -935,7 +945,7 @@ msgstr "Auto-complete dari SPB masa lalu."
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Auto-complete from a previous bill, refund, or purchase order."
-msgstr ""
+msgstr "Isi otomatis dari tagihan, refund, atau order pembelian sebelumnya."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -976,19 +986,19 @@ msgstr "Baris Tagihan"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
 msgid "Bill Matched Ratio"
-msgstr ""
+msgstr "Rasio Pencocokan Tagihan"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Bill Matching"
-msgstr "Pencocokkan Tagihan"
+msgstr "Pencocokan Tagihan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Bill Qty"
-msgstr ""
+msgstr "Jml Tagihan"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -1187,7 +1197,7 @@ msgstr "Hubungkan software Anda"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "Mata Uang Konsolidasi"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
@@ -1265,7 +1275,7 @@ msgstr "Customer Portal URL"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Date"
-msgstr ""
+msgstr "Tanggal"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
@@ -1299,7 +1309,7 @@ msgstr "Hari untuk Mengonfirmasi"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Days to Order"
-msgstr ""
+msgstr "Hari untuk Memesan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1363,6 +1373,8 @@ msgstr "Deskripsi"
 msgid ""
 "Difference between demand and quantity but not affected by invoice policy"
 msgstr ""
+"Perbedaan antara permintaan dan kuantitas, tetapi tidak dipengaruhi "
+"kebijakan faktur"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1384,12 +1396,12 @@ msgstr "Diskon:"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__display_auto_complete_field
 #: model:ir.model.fields,field_description:purchase.field_account_move__display_auto_complete_field
 msgid "Display Auto Complete Field"
-msgstr ""
+msgstr "Tampilkan Field yang Diisi Otomatis"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
 msgid "Display Matching Tag"
-msgstr ""
+msgstr "Tampilkan Tag yang Sesuai"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
@@ -1427,7 +1439,7 @@ msgstr "Distribution Analytic Account"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__document_tax_mode
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "Mode Pajak Dokumen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1443,13 +1455,13 @@ msgstr "Jumlah validasi ganda"
 #. odoo-python
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid "Down Payment (ref: %(ref)s)"
-msgstr "Down Payment (ref: %(ref)s)"
+msgstr "Uang Muka (ref: %(ref)s)"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Down Payments"
-msgstr "Down Payment"
+msgstr "Uang Muka"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
@@ -1484,7 +1496,7 @@ msgstr "Pesanan Duplikat"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
 msgid "Expected Arrival"
-msgstr "Kedatangan yang Diharapkan"
+msgstr "Perkiraan Kedatangan"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
@@ -1504,7 +1516,7 @@ msgstr "Baris tambahan dengan %s "
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__fiscal_position_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__fiscal_position_id
 msgid "Fiscal Position"
-msgstr "Fiscal Position"
+msgstr "Posisi Fiskal"
 
 #. module: purchase
 #: model:portal.entry,description:purchase.portal_purchase_orders
@@ -1691,7 +1703,7 @@ msgstr "Incoterm"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_location
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Lokasi Incoterm"
 
 #. module: purchase
 #. odoo-javascript
@@ -1801,13 +1813,13 @@ msgstr "Aktivitas terakhir"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late RFQ"
-msgstr ""
+msgstr "PPw Terlambat"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late Receipt"
-msgstr ""
+msgstr "Penerimaan Terlambat"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1858,7 +1870,7 @@ msgstr "Satuan Ukuran Baris"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Link RFQs together and compare them."
-msgstr ""
+msgstr "Hubungkan PPw bersama dan bandingkan."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1891,7 +1903,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage blanket orders and purchase templates"
-msgstr "Kelola blanket order dan beli templat"
+msgstr "Kelola blanket order dan template pembelian"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1916,25 +1928,25 @@ msgstr "Cocokkan"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Matched"
-msgstr ""
+msgstr "Cocok"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
 msgid "Matched Invoices Count"
-msgstr ""
+msgstr "Jumlah Faktur yang Sesuai"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Matching"
-msgstr ""
+msgstr "Sesuai"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Matching Invoices"
-msgstr ""
+msgstr "Faktur yang Sesuai"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
@@ -1994,7 +2006,7 @@ msgstr "Field yang diperlukan kurang pada baris SPB accountable."
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My"
-msgstr ""
+msgstr "Saya"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2113,7 +2125,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No Products for the selected Vendor."
-msgstr ""
+msgstr "Tidak ada Produk untuk Vendor terpilih."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -2149,7 +2161,7 @@ msgstr "Tidak ada request for quotation yang ditemukan. Ayo kita buat!"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__non_deductible_tax
 msgid "Non Deductible Tax"
-msgstr ""
+msgstr "Pajak yang Tidak Dapat Dipotong"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
@@ -2166,7 +2178,7 @@ msgstr "Tidak Diakui"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice_raw
 msgid "Not Invoiced Quantity"
-msgstr ""
+msgstr "Kuantitas Tidak Difakturkan"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__receipt_status__pending
@@ -2192,7 +2204,7 @@ msgstr "Catatan"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__no
 msgid "Nothing to Bill"
-msgstr "Belum"
+msgstr "Belum Ada Tagihan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
@@ -2364,7 +2376,7 @@ msgstr "Tanggal Order"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Order DeadLine: Last 365 Days"
-msgstr ""
+msgstr "Tenggat Order: 365 Hari Terakhir"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -2377,7 +2389,7 @@ msgstr "Deadline Order"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Deadline: Last 365 Days"
-msgstr ""
+msgstr "Tenggat Order: 365 Hari Terakhir"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2402,6 +2414,9 @@ msgid ""
 "Ordered quantity not invoiced. This may or may not include quantities that "
 "won't be invoiced, depending on the product's Control Policy."
 msgstr ""
+"Kuantitas yang dipesan tidak ditagih. Hal ini dapat mencakup atau tidak "
+"mencakup kuantitas yang tidak akan ditagih, tergantung pada Kebijakan "
+"Kontrol produk."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
@@ -2419,7 +2434,7 @@ msgstr "Pesanan jatuh tempo %(date)s"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Other Info"
-msgstr ""
+msgstr "Info Lainnya"
 
 #. module: purchase
 #: model:portal.entry,name:purchase.portal_purchase_orders
@@ -2429,12 +2444,12 @@ msgstr "Order Kami"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "PO Matching"
-msgstr ""
+msgstr "Pencocokan PO"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "PO Qty"
-msgstr ""
+msgstr "Jml PO"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
@@ -2597,7 +2612,7 @@ msgstr "Menyediakan mekanisme dua kali validasi untuk pembelian"
 #: model:res.groups.privilege,name:purchase.res_groups_privilege_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Purchase"
-msgstr "Pembelian"
+msgstr "Purchase"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
@@ -2607,7 +2622,7 @@ msgstr "Perjanjian Pembelian"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_alternative
 msgid "Purchase Alternative"
-msgstr ""
+msgstr "Alternatif Pembelian"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
@@ -2647,7 +2662,7 @@ msgstr "Beli Entri Grid"
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Purchase History for %s"
-msgstr "Sejarah Purchasing untuk %s"
+msgstr "Riwayat Purchasing untuk %s"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_warn_msg
@@ -2658,24 +2673,24 @@ msgstr "Pesan Peringatan Baris Pembelian"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
-msgstr "Tampilan pencocokkan Baris Purchase dan Baris Tagihan Vendor"
+msgstr "Tampilan pencocokan Baris Purchase dan Baris Tagihan Vendor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
 msgid "Purchase Matched Ratio"
-msgstr ""
+msgstr "Rasio Pencocokan Pembelian"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Purchase Matching"
-msgstr "Pencocokkan Purchase"
+msgstr "Pencocokan Purchase"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
 msgid "Purchase Matching Issue Msg"
-msgstr ""
+msgstr "Psn Masalah Pencocokan Pembelian"
 
 #. module: purchase
 #. odoo-python
@@ -2792,7 +2807,7 @@ msgstr "Laporan Purchasing"
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
 msgid "Purchase Vendor Bill"
-msgstr ""
+msgstr "Tagihan Vendor Pembelian"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_warning_text
@@ -2862,6 +2877,8 @@ msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
 "orders not received, or partially received"
 msgstr ""
+"Dibeli dalam 365 hari terakhir. \"Masuk\" mewakili order pembelian yang "
+"telah dikonfirmasi, tetapi belum diterima, atau baru diterima sebagian"
 
 #. module: purchase
 #. odoo-python
@@ -2875,7 +2892,7 @@ msgstr "Pembelian"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_union
 msgid "Purchases & Bills Union"
-msgstr ""
+msgstr "Pembelian & Penggabungan Tagihan"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__dest_address_id
@@ -2910,12 +2927,12 @@ msgstr "Kuantitas Diterima"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice_raw
 msgid "Qty not invoiced"
-msgstr ""
+msgstr "Jml belum ditagih"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "Qty to Invoice"
-msgstr ""
+msgstr "Jml akan Ditagih"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
@@ -3014,7 +3031,7 @@ msgstr "Status Kwitansi"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Receive"
-msgstr ""
+msgstr "Terima"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_at_date
@@ -3061,7 +3078,7 @@ msgstr "Referensi"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_tree
 msgid "Reference Document"
-msgstr ""
+msgstr "Dokumen Referensi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__uom_id
@@ -3120,7 +3137,7 @@ msgstr "Minta manajer untuk menyetujui order diatas jumlah minimum"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
 msgid "Requests For Quotation"
-msgstr "Request for Quotation"
+msgstr "Permintaan Penawaran"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_rfq_form
@@ -3152,6 +3169,9 @@ msgid ""
 "time                                     and previous information from the "
 "RFQ."
 msgstr ""
+"Atur ulang ke tanggal hari ini untuk menghitung ulang perkiraan kedatangan "
+"berdasarkan waktu tunggu yang tersedia                                     "
+"dan informasi sebelumnya dari PPw."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -3184,7 +3204,7 @@ msgstr "Cari Order Pembelian"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Search Reference Document"
-msgstr ""
+msgstr "Cari Dokumen Referensi"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
@@ -3210,7 +3230,7 @@ msgstr "Pilih baris Tagihan Vendor untuk ditambahkan ke PO"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "Select a purchase document"
-msgstr ""
+msgstr "Pilih dokumen pembelian"
 
 #. module: purchase
 #. odoo-javascript
@@ -3238,7 +3258,7 @@ msgstr "Kirim PO"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ"
-msgstr "Kirim RFQ"
+msgstr "Kirim PPw"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -3259,7 +3279,7 @@ msgstr "Kirim melalui email"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Send the request for quotation to your vendor."
-msgstr "Kirim RFQ ke vendor Anda."
+msgstr "Kirim PPw ke vendor Anda."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -3384,7 +3404,7 @@ msgstr "Subseksi"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "Nama Subbagian"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -3441,12 +3461,12 @@ msgstr "Pajak Negara"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_excluded
 msgid "Tax Excl."
-msgstr ""
+msgstr "Blm Pajak"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__document_tax_mode__tax_included
 msgid "Tax Incl."
-msgstr ""
+msgstr "Sdh Pajak"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
@@ -3510,13 +3530,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Template for Products"
-msgstr ""
+msgstr "Template untuk Produk"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Template for Requests for Quotation"
-msgstr ""
+msgstr "Template untuk Permintaan Penawaran"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3549,16 +3569,18 @@ msgid ""
 "The following purchase orders %(invalid_orders)s can't be received. "
 "Cancelled all receptions."
 msgstr ""
+"Order pembelian berikut %(invalid_orders)s tidak dapat diterima. Semua "
+"penerimaan dibatalkan."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity and unit price have been updated."
-msgstr ""
+msgstr "Kuantitas pesanan dan harga satuan telah diperbarui."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Kuantitas pesanan telah diperbarui."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3575,7 +3597,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The unit price has been updated."
-msgstr ""
+msgstr "Harga satuan telah diperbarui."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3592,7 +3614,7 @@ msgstr "Saat ini tidak ada RFQ untuk akun Anda."
 #: code:addons/purchase/wizard/bill_to_po_wizard.py:0
 msgid ""
 "There are no products to add to the Purchase Order. Are these Down Payments?"
-msgstr "Tidak ada produk untuk ditambahkan ke PO. Apakah ini Down Payment?"
+msgstr "Tidak ada produk untuk ditambahkan ke PO. Apakah ini Uang Muka?"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -3603,7 +3625,7 @@ msgid ""
 "performance of your vendors, etc"
 msgstr ""
 "Analisis ini memungkinkan Anda untuk dengan mudah memeriksa dan menganalisa "
-"pembelian dan performa sejarah pembelian perusahaan Anda.\n"
+"pembelian dan performa riwayat pembelian perusahaan Anda.\n"
 "                Anda dapat melacak performa negosiasi, performa pengiriman "
 "vendor Anda, dsb"
 
@@ -3659,7 +3681,7 @@ msgstr "Akan Disetujui"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal_to_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_list_invoice
 msgid "To Invoice"
-msgstr ""
+msgstr "Siap Difakturkan"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
@@ -3735,13 +3757,13 @@ msgstr "Total jumlah yang dibeli"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__translated_product_name
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Terjemahan Nama Produk"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "Coba hapus filter di atas untuk memperluas pencarian"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3811,12 +3833,12 @@ msgstr "Buka"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_unmatch_lines
 msgid "Unmatch"
-msgstr ""
+msgstr "Batalkan Pencocokan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Unmatched"
-msgstr ""
+msgstr "Pencocokan Dibatalkan"
 
 #. module: purchase
 #. odoo-python
@@ -3845,13 +3867,13 @@ msgstr "Total Sebelum Pajak"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "Update"
-msgstr ""
+msgstr "Perbarui"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "Unggah Tagihan"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3898,12 +3920,12 @@ msgstr "Variant Grid Entry"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Vendor"
-msgstr "Pemasok"
+msgstr "Vendor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Tagihan Vendor"
 
 #. module: purchase
 #. odoo-python
@@ -3928,29 +3950,29 @@ msgstr "Negara Vendor"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_id
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_id
 msgid "Vendor Incoterm"
-msgstr ""
+msgstr "Incoterm Vendor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_incoterm_location
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_incoterm_location
 msgid "Vendor Incoterm Location"
-msgstr ""
+msgstr "Lokasi Incoterm Vendor"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
-msgstr "Daftar Harga Pemasok"
+msgstr "Daftar Harga Vendor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_list_invoice
 msgid "Vendor Reference"
-msgstr "Referensi Pemasok"
+msgstr "Referensi Vendor"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
 msgid "Vendors"
-msgstr "Pemasok"
+msgstr "Vendor"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -3996,7 +4018,7 @@ msgstr "Volume"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__to_invoice
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Waiting Bills"
-msgstr "Siap Difakturkan"
+msgstr "Menunggu Tagihan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -4108,11 +4130,15 @@ msgid ""
 " Please change the company of your RFQ or remove the products from other "
 "companies (%(bad_products)s)."
 msgstr ""
+"Permintaan Penawaran Anda berisi produk dari perusahaan %(product_company)s, "
+"padahal dokumen tersebut milik perusahaan %(quote_company)s. \n"
+" Silakan ubah perusahaan pada Permintaan Penawaran Anda atau hapus produk "
+"dari perusahaan lain (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "billing"
-msgstr ""
+msgstr "penagihan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -4128,7 +4154,7 @@ msgstr "contoh. Vendor ini sedang libur sampai akhir Agustus."
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -4138,7 +4164,7 @@ msgstr "atau buat baru"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "purchase"
-msgstr ""
+msgstr "pembelian"
 
 #. module: purchase
 #. odoo-python
@@ -4172,7 +4198,7 @@ msgstr "untuk mempelajari semua cara untuk terhubung ke software Anda dengan"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "tracking"
-msgstr ""
+msgstr "pelacakan"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -4192,9 +4218,5 @@ msgid ""
 "{{ object.company_id.name }} Request for Quotation (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-
-#~ msgid "Search a vendor name, or create one on the fly."
-#~ msgstr "Cari nama vendor, atau dengan cepat buat baru."
-
-#~ msgid "Select a product, or create a new one on the fly."
-#~ msgstr "Pilih produk, atau dengan cepat buat produk baru."
+"{{ object.company_id.name }} Permintaan Penawaran (Ref {{ object.name or 'n/"
+"a' }})"

@@ -14,14 +14,15 @@
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Grace Conlon <grco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 04:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-27 16:08+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
 "website_sale/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -29,12 +30,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "\" category"
-msgstr ""
+msgstr "\" categoría"
 
 #. module: website_sale
 #. odoo-python
@@ -49,6 +50,7 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "%(product_name)s was not added to your cart because it is unavailable."
 msgstr ""
+"%(product_name)s no se ha añadido a la cesta porque no está disponible."
 
 #. module: website_sale
 #. odoo-python
@@ -300,7 +302,7 @@ msgstr "/tienda"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__prevent_sale_for__zero_price
 msgid "0 price products"
-msgstr ""
+msgstr "Productos a 0"
 
 #. module: website_sale
 #. odoo-javascript
@@ -320,49 +322,49 @@ msgstr "2 columnas"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "2 columns"
-msgstr ""
+msgstr "2 columnas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "3 Columns"
-msgstr ""
+msgstr "3 columnas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "3 columns"
-msgstr ""
+msgstr "3 columnas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "4 Columns"
-msgstr ""
+msgstr "4 columnas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "4 columns"
-msgstr ""
+msgstr "4 columnas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "5 Columns"
-msgstr ""
+msgstr "5 columnas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "5 columns"
-msgstr ""
+msgstr "5 columnas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "6 Columns"
-msgstr ""
+msgstr "6 columnas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -468,6 +470,83 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <t t-set=\"secondary_color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-set=\"primary_color\" t-"
+"value=\"object.company_id.email_primary_color or '#FFFFFF'\"/>\n"
+"                    <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
+"'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display: block; "
+"height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p style=\"margin: 0 0 12px; padding: 0px; line-height: "
+"18px; font-size: 14px;\">\n"
+"                        Hola, <t t-out=\"object.partner_id.display_name\"/"
+">:\n"
+"                        <br/><br/>\n"
+"                        ¡Tómate un minuto para valorar tu pedido!\n"
+"                        <br/>\n"
+"                        <t t-if=\"not is_html_empty(object.user_id.signature)"
+"\">\n"
+"                            <div style=\"font-size: 14px; margin: 0 0 16px;"
+"\"><t t-out=\"object.user_id.signature\"/></div>\n"
+"                        </t>\n"
+"                        <br/>\n"
+"                        <t t-foreach=\"object.order_line.filtered(lambda l: "
+"l._is_sellable())\" t-as=\"line\">\n"
+"                            <t t-set=\"product\" t-value=\"line.product_id\"/"
+">\n"
+"                            <table width=\"100%\" t-attf-style=\"font-size: "
+"14px; border-collapse: collapse; margin-bottom: 10px; max-width: 590px; "
+"{{not line_last and 'border-bottom: 1px solid #dee2e6;'}}\">\n"
+"                                <tr>\n"
+"                                    <td style=\"width: 84px; padding: 10px "
+"10px 10px 0; vertical-align: top;\">\n"
+"                                        <img t-attf-src=\"/web/image/"
+"product.product/{{ product.id }}/image_128\" t-attf-style=\"width: 64px; "
+"height: {{object.website_id and "
+"object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
+"cover; object-position: center;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td style=\"padding: 10px 10px 10px "
+"0;\">\n"
+"                                        <div>\n"
+"                                            <h3 t-attf-style=\"font-size: "
+"14px; margin-bottom: {{line.product_id.product_template_attribute_value_ids "
+"and '6px' or '0'}};\">\n"
+"                                                <strong t-attf-"
+"style=\"color: {{secondary_color}};\" t-out=\"product.name\"/>\n"
+"                                            </h3>\n"
+"                                        </div>\n"
+"                                        <div>\n"
+"                                            <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
+"#6c757d;\">\n"
+"                                                <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                            </span>\n"
+"                                        </div>\n"
+"                                    </td>\n"
+"                                    <td style=\"padding: 10px 0; text-align: "
+"right;\">\n"
+"                                        <a t-att-"
+"href=\"product.website_absolute_url + '#o_product_page_reviews'\" t-attf-"
+"style=\"border-radius: 5px; background-color: {{secondary_color}}; padding: "
+"8px 16px 8px 16px; color: {{primary_color}}; text-decoration: none; font-"
+"size:13px; white-space: nowrap;\" target=\"_blank\">\n"
+"                                            Valorar ahora\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -732,7 +811,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"fw-bold fs-5 w-100\">Donate</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold fs-5 w-100\">Donar</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -862,30 +941,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>"
-msgstr ""
+msgstr "<span class=\"s_donation_currency pe-1\">€</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>10"
-msgstr ""
+msgstr "10 <span class=\"s_donation_currency pe-1\">€</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "<span class=\"s_donation_currency pe-1\">$</span>100"
-msgstr ""
+msgstr "100 <span class=\"s_donation_currency pe-1\">€</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>25"
-msgstr ""
+msgstr "25 <span class=\"s_donation_currency pe-1\">€</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "<span class=\"s_donation_currency pe-1\">$</span>50"
-msgstr ""
+msgstr "50 <span class=\"s_donation_currency pe-1\">€</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -906,7 +985,7 @@ msgstr "<span class=\"s_website_form_label_content\">Su referencia</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "<span class=\"text-300\">|</span>"
-msgstr ""
+msgstr "<span class=\"text-300\">|</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -932,7 +1011,7 @@ msgstr "<span class=\"visually-hidden\">filtros activos</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span invisible=\"not default_show_availability\">units</span>"
-msgstr ""
+msgstr "<span invisible=\"not default_show_availability\">unidades</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper_boxed
@@ -1424,6 +1503,338 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" "
+"style=\"max-width: 590px; padding: 0px; background-color: white; color: "
+"#454748; border-collapse: collapse;\" role=\"presentation\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"100%\" style=\"max-width: 590px; background-color: white; padding: "
+"0px 0px 0px 0px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
+"'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display: block; "
+"height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p style=\"margin: 0 0 12px; line-height: 18px;\">\n"
+"                        Hola, <t t-out=\"object.partner_id.display_name or "
+"''\">Johnny Tester</t>:\n"
+"                        <br/><br/>\n"
+"                        No has completado tu pedido online.<br/>\n"
+"                        ¿Tienes alguna pregunta sobre nuestros productos?<br/"
+">\n"
+"                        ¡Envíanos un correo y responderemos a tus preguntas!"
+"<br/>\n"
+"                    </p>\n"
+"                    <t t-if=\"not is_html_empty(user.signature)\">\n"
+"                        <div style=\"font-size: 14px; margin: 0 0 16px;\"><t "
+"t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"                    </t>\n"
+"                    <t t-if=\"'hide_recovery_button' not in ctx\">\n"
+"                        <div t-attf-style=\"margin-bottom: 22px; font-size: "
+"14px;\">\n"
+"                            <a t-attf-href=\"{{ object.get_base_url() }}/"
+"shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px "
+"8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#fff'}}; border-radius: 5px; "
+"font-size:14px;\">\n"
+"                                Continuar pedido\n"
+"                            </a>\n"
+"                        </div>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <!-- The following loop is also used in the addons > "
+"sale > data > mail_template_data.xml file because we want the same layout. --"
+">\n"
+"                        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+"                            <t t-if=\"(not hasattr(line, 'is_delivery') or "
+"not line.is_delivery) and not line.combo_item_id\">\n"
+"                                <table width=\"100%\" style=\"max-width: "
+"590px; color: #454748; font-size: 14px; border-collapse: collapse;\" "
+"role=\"presentation\">\n"
+"                                    <tr>\n"
+"                                        <td width=\"24%\" style=\"max-width: "
+"120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                            <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
+"height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                        </td>\n"
+"                                        <td align=\"left\" style=\"vertical-"
+"align: top; padding-bottom: 22px;\">\n"
+"                                            <h3 t-attf-style=\"mso-line-"
+"height-rule:exactly; margin:0; font-size: 14px; color: {{color}}; {{'margin-"
+"bottom: 6px;' if line.product_type == 'combo' else ''}}\">\n"
+"                                                <strong t-"
+"out=\"line.product_id.name or ''\">Curso de cuidado de los árboles</strong>\n"
+"                                                <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
+"#6c757d;\">\n"
+"                                                    <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                                </span>\n"
+"                                            </h3>\n"
+"                                            <t t-set=\"combo_line_idx\" t-"
+"value=\"0\"/>\n"
+"                                            <t t-set=\"totalComboLines\" t-"
+"value=\"0\"/>\n"
+"                                            <t t-set=\"line_idx\" t-"
+"value=\"line_index\"/>\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
+"                                                <t t-if=\"(not hasattr(line, "
+"'is_delivery') or not line.is_delivery) and (combo_liness.linked_line_id.id "
+"== line.id) and line_idx == line_index\">\n"
+"                                                    <t t-"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
+"                                                        <t t-"
+"set=\"totalComboLines\" t-value=\"totalComboLines + 1\"/>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\">\n"
+"                                                <t t-if=\"(not hasattr(line, "
+"'is_delivery') or not line.is_delivery) and (combo_line.linked_line_id.id == "
+"line.id) and combo_line.combo_item_id and line_idx == line_index\">\n"
+"                                                        <t t-"
+"set=\"borderRadiusStyle\" t-value=\"''\"/>\n"
+"                                                        <t t-"
+"set=\"borderTopStyle\" t-value=\"''\"/>\n"
+"                                                        <t t-"
+"set=\"borderBottomStyle\" t-value=\"''\"/>\n"
+"\n"
+"                                                        <t t-"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != "
+"line.id\">\n"
+"                                                            <t t-"
+"set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"elif=\"combo_line.id == line.id and line_idx != line_index\">\n"
+"                                                            <t t-"
+"set=\"combo_line_idx\" t-value=\"0\"/>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"if=\"combo_line_idx == 1\">\n"
+"                                                            <t t-"
+"if=\"totalComboLines != 1\">\n"
+"                                                                <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px 6px 0 0;'\"/>\n"
+"                                                                <t t-"
+"set=\"borderBottomStyle\" t-value=\"'border-bottom: none;'\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-else=\"\">\n"
+"                                                                <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px;'\"/>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <t t-"
+"elif=\"totalComboLines == combo_line_idx\">\n"
+"                                                            <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 0 0 6px 6px;'\"/>\n"
+"                                                            <t t-"
+"if=\"totalComboLines != 2\">\n"
+"                                                                <t t-"
+"set=\"borderTopStyle\" t-value=\"'border-top: none;'\"/>\n"
+"                                                            </t>\n"
+"                                                        </t>\n"
+"                                                        <div t-attf-"
+"style=\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; "
+"{{ borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\">\n"
+"                                                                    <t t-"
+"out=\"combo_line.product_id.name or ''\">Curso de cuidado de los árboles</"
+"t>\n"
+"                                                                    <span t-"
+"if=\"combo_line.product_id.product_template_attribute_value_ids\" "
+"style=\"color: #6c757d;\">\n"
+"                                                                        <t t-"
+"out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                                                    </span>\n"
+"                                                                    -\n"
+"                                                                    <span>\n"
+"                                                                        <t t-"
+"out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
+"                                                                        <t t-"
+"out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                                                    </span>\n"
+"                                                                    <p t-"
+"if=\"hasattr(combo_line, 'is_rental') and combo_line.is_rental and "
+"combo_line.id == line.id\" style=\"color: #6c757d;\">\n"
+"                                                                        <t t-"
+"out=\"combo_line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                                    </p>\n"
+"                                                                    <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
+"                                                                        <t t-"
+"set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"/>\n"
+"                                                                        <div "
+"t-if=\"description_lines\" style=\"color: #6c757d;\">\n"
+"                                                                            <t "
+"t-foreach=\"description_lines\" t-as=\"description_line\">\n"
+"                                                                                <p "
+"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 "
+"0;\"/>\n"
+"                                                                            </"
+"t>\n"
+"                                                                        </"
+"div>\n"
+"                                                                    </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                <t t-"
+"elif=\"not(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
+"                                                    <p t-if=\"hasattr(line, "
+"'is_rental') and line.is_rental\" style=\"margin: 4px 0 0; color: #6c757d;"
+"\">\n"
+"                                                        <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                    </p>\n"
+"                                                    <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
+"                                                        <t t-"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"/>\n"
+"                                                        <div t-"
+"if=\"product_description_lines\" style=\"color: #6c757d;\">\n"
+"                                                            <t t-"
+"foreach=\"product_description_lines\" t-as=\"product_description_line\">\n"
+"                                                                <p t-"
+"if=\"product_description_line\" t-out=\"product_description_line\" "
+"style=\"margin: 4px 0 0;\"/>\n"
+"                                                            </t>\n"
+"                                                        </div>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                            </t>\n"
+"                                            <span style=\"display: inline-"
+"block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
+"color: #e9ecef; color: #454748; font-size: 12px;\">\n"
+"                                                <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                            </span>\n"
+"                                        </td>\n"
+"                                        <td width=\"19%\" align=\"right\" "
+"style=\"max-width: 100px; vertical-align: top;\">\n"
+"                                            <t t-if=\"line.product_type == "
+"'combo'\">\n"
+"                                                <span t-"
+"out=\"format_amount(line._get_cart_display_price(), object.currency_id) or "
+"''\">10,00 €</span>\n"
+"                                            </t>\n"
+"                                            <t t-else=\"\">\n"
+"                                                <span style=\"white-space: "
+"nowrap;\">\n"
+"                                                    <t t-"
+"if=\"object.website_id.show_line_subtotals_tax_selection == "
+"'tax_excluded'\">\n"
+"                                                        <t t-"
+"out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">10,00 "
+"€</t>\n"
+"                                                    </t>\n"
+"                                                    <t t-else=\"\">\n"
+"                                                        <t t-"
+"out=\"format_amount(line.price_total, object.currency_id) or ''\">10,00 €</"
+"t>\n"
+"                                                    </t>\n"
+"                                                </span>\n"
+"                                            </t>\n"
+"                                            <t t-if=\"hasattr(line, "
+"'recurring_invoice') and line.recurring_invoice\">\n"
+"                                                <br/>\n"
+"                                                <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                            </t>\n"
+"                                        </td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" "
+"style=\"font-size: 14px; border-collapse:collapse;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; color: #495057;\">Envío</td>\n"
+"                                <td style=\"padding-top: 8px;  border-top: "
+"1px solid #dee2e6; text-align: right; color: #495057;\" width=\"100px\" "
+"align=\"right\">\n"
+"                                    <t t-"
+"out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">-</"
+"t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 4px; color: "
+"#495057;\">Subtotal</td>\n"
+"                                <td style=\"padding-top: 4px; text-align: "
+"right; color: #495057;\" width=\"100px\" align=\"right\"><t t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">-</"
+"t></td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                        <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                            <t t-set=\"all_tax_lines\" t-value=\"[tax for "
+"line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/>\n"
+"                            <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"font-size: 14px; border-collapse:collapse;\" role=\"presentation\">\n"
+"                                <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                    <td style=\"padding: 4px 0 8px 0; color: "
+"#495057;\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                    <td style=\"padding: 4px 0 8px 0; text-"
+"align: right; color: #495057;\" width=\"100px\" align=\"right\" t-"
+"out=\"format_amount(tax_line['tax_amount_currency'], object.currency_id) or "
+"''\">0,00 €</td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <table width=\"100%\" role=\"presentation\" "
+"style=\"font-size: 14px; border-collapse:collapse;\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40;\"><strong>Total</strong></td>\n"
+"                                <td style=\"padding-top: 8px; border-top: "
+"1px solid #343a40; text-align: right\" width=\"100px\" align=\"right\">\n"
+"                                    <strong t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">-</"
+"strong>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </t>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or "
+"object.user_id.company_id or user.company_id\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1434,9 +1845,9 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"Una descripción del producto que quiera comunicar a sus clientes. Esta "
-"descripción se copiará a cada pedido de venta, orden de entrega y factura/"
-"factura rectificativa del cliente."
+"Una descripción del producto que quieras mostrar a tus clientes. Esta "
+"descripción se copiará en cada pedido de venta, albarán y factura o factura "
+"rectificativa del cliente"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -1444,8 +1855,8 @@ msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
 "'/' to discover more features."
 msgstr ""
-"Una descripción detallada y con formato para promocionar su producto en esta "
-"página. Use '/' para explorar más funciones."
+"Una descripción detallada y con formato para promocionar tu producto en esta "
+"página. Utiliza «/» para descubrir más funcionalidades."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1483,7 +1894,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "A year of cultural awakening."
-msgstr ""
+msgstr "Un año de despertar cultural."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1584,14 +1995,14 @@ msgstr "Acciones"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__active
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
 msgid "Add"
-msgstr ""
+msgstr "Añadir"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1603,19 +2014,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Add Media"
-msgstr "Añadir medios"
+msgstr "Añadir archivo multimedia"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option_plugin.js:0
 msgid "Add a description here"
-msgstr ""
+msgstr "Añadir una descripción aquí"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Add a product"
-msgstr ""
+msgstr "Añadir un producto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1623,6 +2034,8 @@ msgid ""
 "Add a reference price per UoM on products (e.g $/kg), in addition to "
 "the                           sale price"
 msgstr ""
+"Añade un precio de referencia por unidad de medida en los productos (€/kg), "
+"además del                           precio de venta"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__compare_list_price
@@ -1684,7 +2097,7 @@ msgstr "Añadir a la cesta"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_add_to_compare
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Add to compare"
-msgstr ""
+msgstr "Añadir para comparar"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1692,13 +2105,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_add_to_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "Add to wishlist"
-msgstr ""
+msgstr "Añadir a la lista de deseos"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "Added to your wishlist"
-msgstr ""
+msgstr "Añadido a la lista de deseos"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_address
@@ -1711,7 +2124,7 @@ msgstr "Dirección"
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__alerts
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_alert_mixin__alerts
 msgid "Alerts"
-msgstr ""
+msgstr "Alertas"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__align_category_content
@@ -1784,13 +2197,13 @@ msgid ""
 "Allow customers to pick up their online purchases at your store and pay in "
 "person"
 msgstr ""
-"Permita a los clientes recoger sus compras en línea en su tienda y pagar en "
-"persona."
+"Permite que los clientes recojan sus compras en línea en tu tienda y paguen "
+"en persona"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Allow selection up to"
-msgstr ""
+msgstr "Permitir la selección hasta"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -1828,7 +2241,7 @@ msgstr "Productos alternativos"
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Amount"
-msgstr ""
+msgstr "Importe"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -1841,6 +2254,8 @@ msgid ""
 "Animation showing how to create a new product: Click 'New' in the top-right "
 "corner, then select 'Product'."
 msgstr ""
+"Animación que muestra cómo crear un nuevo producto: Haz clic en «Nuevo» en "
+"la esquina superior derecha y, a continuación, selecciona «Producto»."
 
 #. module: website_sale
 #. odoo-python
@@ -1861,7 +2276,7 @@ msgstr "Aplicar"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "Apply Filters"
-msgstr ""
+msgstr "Aplicar filtros"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1895,7 +2310,7 @@ msgstr "Número de archivos adjuntos"
 #: model:ir.actions.act_window,name:website_sale.product_attribute_category_action
 #: model:ir.ui.menu,name:website_sale.menu_attribute_category_action
 msgid "Attribute Categories"
-msgstr ""
+msgstr "Categorías de atributos"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -1932,17 +2347,18 @@ msgstr "Recorte automático"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_automate_suggested_products
 msgid "Automate suggested products"
-msgstr ""
+msgstr "Automatizar los productos sugeridos"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_automate_suggested_products
 msgid "Automatically add optional, accessory and alternative products"
-msgstr ""
+msgstr "Añadir automáticamente productos opcionales, accesorios y alternativos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically add optional, accessory, and alternative products."
 msgstr ""
+"Añadir automáticamente productos opcionales, accesorios y alternativos."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__publish_on
@@ -2005,7 +2421,7 @@ msgstr "Insignia"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "Based on"
-msgstr ""
+msgstr "Basado en"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_bathroom
@@ -2030,7 +2446,7 @@ msgstr "Camas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Below"
-msgstr ""
+msgstr "A continuación"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_benelux
@@ -2111,13 +2527,13 @@ msgstr "Con bordes"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Bottom"
-msgstr ""
+msgstr "Parte inferior"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Bottom of Page"
-msgstr ""
+msgstr "Parte inferior de la página"
 
 #. module: website_sale
 #. odoo-python
@@ -2166,7 +2582,7 @@ msgstr "Clase CSS para el diseño de productos de la tienda"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_opt_products_design_classes
 msgid "CSS class for wishlist page design"
-msgstr ""
+msgstr "Clase CSS para el diseño de la página de la lista de deseos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -2187,7 +2603,7 @@ msgstr "Caducidad de la caché"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr "¿Se puede ampliar la imagen 1024?"
+msgstr "La imagen 1024 puede ampliarse"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__can_publish
@@ -2212,7 +2628,7 @@ msgstr "Diseño de las tarjetas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Caring for a baby for 1 month."
-msgstr ""
+msgstr "Cuidar a un bebé durante 1 mes."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2280,7 +2696,7 @@ msgstr "Pie de página de categoría"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_options.xml:0
 msgid "Category Header"
-msgstr ""
+msgstr "Encabezado de categoría"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_public_category_default
@@ -2297,7 +2713,7 @@ msgstr "Lista de categorías"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__name
 msgid "Category Name"
-msgstr ""
+msgstr "Nombre de la categoría"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filmstrip_categories
@@ -2360,7 +2776,7 @@ msgstr "Patatas fritas"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Choose Your Amount"
-msgstr ""
+msgstr "Elige tu importe"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2373,7 +2789,7 @@ msgstr "Elige un diseño predefinido y personalízalo como quieras"
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your"
-msgstr ""
+msgstr "Elige tu"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -2412,7 +2828,7 @@ msgstr "Clic y recoger"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to go back to block tab."
-msgstr ""
+msgstr "Haz clic aquí para volver a la pestaña de bloques."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2430,13 +2846,13 @@ msgstr "Haga clic en <em>Guardar</em> para crear el producto."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click on the <b>Content</b> category."
-msgstr ""
+msgstr "Haz clic en la categoría <b>contenido</b>."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click on the <b>Text - Image</b> building block."
-msgstr ""
+msgstr "Haz clic en el bloque de creación <b>Texto - Imagen</b>."
 
 #. module: website_sale
 #. odoo-javascript
@@ -2546,18 +2962,18 @@ msgstr "Nombre de la empresa"
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.comparison_button
 msgid "Compare"
-msgstr ""
+msgstr "Comparar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Compare Products"
-msgstr ""
+msgstr "Comparar productos"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 msgid "Compare products"
-msgstr ""
+msgstr "Comparar productos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__compare_list_price
@@ -2632,7 +3048,7 @@ msgstr "Confirmar"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Confirmar pedidos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2669,14 +3085,14 @@ msgstr "Contacto"
 #: model_terms:ir.ui.view,arch_db:website_sale.cta_wrapper
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Contact Us"
-msgstr "Contáctenos"
+msgstr "Contacta con nosotros"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_buttons
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Contact us"
-msgstr "Contáctenos"
+msgstr "Contacta con nosotros"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2687,17 +3103,17 @@ msgstr "Ancho de contenido"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Continue Selling"
-msgstr ""
+msgstr "Seguir vendiendo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr ""
+msgstr "Seguir vendiendo aunque no haya stock"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Continue shopping"
-msgstr ""
+msgstr "Continuar comprando"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
@@ -2730,7 +3146,7 @@ msgstr "Crear"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Create Invoices"
-msgstr ""
+msgstr "Crear facturas"
 
 #. module: website_sale
 #: model:ir.model,website_form_label:website_sale.model_res_partner
@@ -2740,7 +3156,7 @@ msgstr "Crear un cliente"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_attribute_category_action
 msgid "Create a new attribute category"
-msgstr ""
+msgstr "Crear una nueva categoría de atributo"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -2750,7 +3166,7 @@ msgstr "Crear un nuevo producto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Create your first product"
-msgstr ""
+msgstr "Crea tu primer producto"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__create_uid
@@ -2796,12 +3212,12 @@ msgstr "Categoría actual o todo"
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "Custom Amount"
-msgstr ""
+msgstr "Importe personalizado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Custom amount"
-msgstr ""
+msgstr "Importe personalizado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2850,6 +3266,7 @@ msgstr "Personalizar plantillas de correo electrónico"
 #: model:ir.model.fields,field_description:website_sale.field_website__rating_email_delay
 msgid "Days After Order to Send Rating Email"
 msgstr ""
+"Días después del pedido para enviar el correo electrónico de valoración"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2872,7 +3289,7 @@ msgstr "Por defecto (1/1)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Default Amount"
-msgstr ""
+msgstr "Importe predeterminado"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2896,12 +3313,12 @@ msgstr "Ordenación por defecto"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__journal_id
 #: model:ir.model.fields,field_description:website_sale.field_website__journal_id
 msgid "Default Website Journal"
-msgstr ""
+msgstr "Diario predeterminado del sitio web"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Default accounting journal for online orders"
-msgstr ""
+msgstr "Diario contable predeterminado para los pedidos online"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2909,6 +3326,8 @@ msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
+"Modo de disponibilidad predeterminado establecido para los productos "
+"almacenables recién creados. Puede modificarse a nivel del producto."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -2956,7 +3375,7 @@ msgstr "Eliminar cinta"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 msgid "Deliveries"
-msgstr ""
+msgstr "Entregas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
@@ -2978,17 +3397,17 @@ msgstr "Gastos de envío"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_calendar_id
 msgid "Delivery Calendar"
-msgstr ""
+msgstr "Calendario de entrega"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_estimate_lead_days
 msgid "Delivery Estimate Lead Days"
-msgstr ""
+msgstr "Plazo estimado de entrega"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__delivery_estimate_range_days
 msgid "Delivery Estimate Range Days"
-msgstr ""
+msgstr "Plazo estimado de entrega en días"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_delivery_carrier
@@ -3042,7 +3461,7 @@ msgstr "Descripción para el sitio web"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Descriptions"
-msgstr ""
+msgstr "Descripciones"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3073,7 +3492,7 @@ msgstr "Escritorios"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Desktop"
-msgstr ""
+msgstr "Escritorio"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3107,7 +3526,7 @@ msgstr "Resumen"
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_dimensions
 msgid "Dimensions"
-msgstr ""
+msgstr "Dimensiones"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3190,7 +3609,7 @@ msgstr "Nombre para mostrar"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Display Options"
-msgstr ""
+msgstr "Mostrar opciones"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3207,6 +3626,8 @@ msgstr "Tipo de pantalla"
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__enable_delivery_estimate
 msgid "Display estimated date to your customer. Editable if range is defined."
 msgstr ""
+"Muestra una fecha estimada a tu cliente. Se puede editar si se ha definido "
+"un intervalo."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__show_category_description
@@ -3240,36 +3661,36 @@ msgstr "Se muestra solo en el bloque de lista de categorías."
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_inline
 msgid "Donate"
-msgstr ""
+msgstr "Donar"
 
 #. module: website_sale
 #: model:product.template,name:website_sale.product_donation
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets
 msgid "Donation"
-msgstr ""
+msgstr "Donación"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Donation product not found."
-msgstr ""
+msgstr "No se ha encontrado el producto de donación."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
 msgid "Donation products cannot be archived."
-msgstr ""
+msgstr "Los productos de donación no se pueden archivar."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/product_template.py:0
 msgid "Donation products cannot be deleted."
-msgstr ""
+msgstr "Los productos de donación no se pueden eliminar."
 
 #. module: website_sale
 #: model:product.category,name:website_sale.product_category_donations
 msgid "Donations"
-msgstr ""
+msgstr "Donaciones"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3281,27 +3702,29 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download"
-msgstr ""
+msgstr "Descargar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download Invoice"
-msgstr ""
+msgstr "Descargar factura"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Download Sale Order"
-msgstr ""
+msgstr "Descargar pedido de venta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "Drag blocks here to add them on all products"
-msgstr ""
+msgstr "Arrastra los bloques hasta aquí para añadirlos a todos los productos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag blocks here to customize the Shop page header"
 msgstr ""
+"Arrastra los bloques hasta aquí para personalizar el encabezado de la página "
+"de la tienda"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3309,6 +3732,8 @@ msgid ""
 "Drag blocks here to customize the footer of\n"
 "                                    the \""
 msgstr ""
+"Arrastra los bloques aquí para personalizar el pie de página de\n"
+"                                    «"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3316,6 +3741,8 @@ msgid ""
 "Drag blocks here to customize the header of\n"
 "                                        the \""
 msgstr ""
+"Arrastra los bloques aquí para personalizar el encabezado de\n"
+"                                    «"
 
 #. module: website_sale
 #. odoo-python
@@ -3346,12 +3773,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.constraint,message:website_sale.constraint_product_wishlist_product_unique_partner_id
 msgid "Duplicated wishlisted product for this partner."
-msgstr ""
+msgstr "Producto duplicado en la lista de deseos de este contacto."
 
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_duration
 msgid "Duration"
-msgstr ""
+msgstr "Duración"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
@@ -3394,7 +3821,7 @@ msgstr "Comercio electrónico: recuperación de la cesta"
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_order_rating
 msgid "Ecommerce: Order Rating Request"
-msgstr ""
+msgstr "Comercio electrónico: solicitud de valoración de un pedido"
 
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_withdrawal_request_confirmation
@@ -3461,7 +3888,7 @@ msgstr "Lo esencial"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__enable_delivery_estimate
 msgid "Estimated Delivery"
-msgstr ""
+msgstr "Entrega estimada"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3472,7 +3899,7 @@ msgstr "Explorar ahora"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__external_identifier
 msgid "External Identifier"
-msgstr ""
+msgstr "Identificador externo"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__external_identifier
@@ -3480,6 +3907,8 @@ msgid ""
 "External Identifier will ensure a precise matching between your attributes "
 "and attributes in SEO and other external platforms."
 msgstr ""
+"El identificador externo garantizará una coincidencia precisa entre tus "
+"atributos y los de SEO y otras plataformas externas."
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_extra
@@ -3564,12 +3993,12 @@ msgstr "Filtro"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "Filter by in stock products"
-msgstr ""
+msgstr "Filtrar por productos disponibles"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "Filter by on sale products"
-msgstr ""
+msgstr "Filtrar por productos en oferta"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3593,13 +4022,13 @@ msgstr "Fitness"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed"
-msgstr ""
+msgstr "Fijo"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Fixed - On Hover"
-msgstr ""
+msgstr "Fijo - Al pasar el cursor"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3662,7 +4091,7 @@ msgstr "Seguimiento de cestas abandonadas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Follow us"
-msgstr "Síganos"
+msgstr "Síguenos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_abandoned_cart_search
@@ -3700,7 +4129,7 @@ msgstr "Contenedores para comida"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "For"
-msgstr ""
+msgstr "Para"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -3720,7 +4149,7 @@ msgstr "Gratis"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__free_order_label
 msgid "Free Order Label"
-msgstr ""
+msgstr "Etiqueta de envío gratuita"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -3786,7 +4215,7 @@ msgstr "Espacio"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_gap
 msgid "Gap between products on the wishlist page"
-msgstr ""
+msgstr "Espacio entre los productos de la página de la lista de deseos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3797,13 +4226,13 @@ msgstr "General"
 #. module: website_sale
 #: model:product.attribute.category,name:website_sale.product_attribute_category_general_features
 msgid "General Features"
-msgstr ""
+msgstr "Características generales"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "Get notified when back in stock"
-msgstr ""
+msgstr "Recibe una notificación cuando vuelva a estar disponible"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
@@ -3820,7 +4249,7 @@ msgstr "Proceder al pago"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Go to Products Manager"
-msgstr ""
+msgstr "Ir al gestor de productos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_gmc_feed
@@ -3849,6 +4278,8 @@ msgid ""
 "Group attributes by category that will appear in the specification\n"
 "                part of a product page."
 msgstr ""
+"Agrupa los atributos por categoría que aparecerán en la parte de\n"
+"               especificaciones de una página de producto."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
@@ -3858,7 +4289,7 @@ msgstr "Enrutamiento HTTP"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "Handle your wishlist from the menu icon."
-msgstr ""
+msgstr "Gestiona tu lista de deseos desde el icono del menú."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__has_message
@@ -3894,7 +4325,7 @@ msgstr "Ocultar"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__prevent_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_sale
 msgid "Hide Add To Cart"
-msgstr ""
+msgstr "Ocultar Añadir a la cesta"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4007,6 +4438,8 @@ msgstr "Si está marcada, algunos mensajes tienen error de envío."
 #: model:ir.model.fields,help:website_sale.field_product_public_category__not_in_shop
 msgid "If checked, the category will not be displayed in the main catalog page"
 msgstr ""
+"Si se selecciona, la categoría no se mostrará en la página principal del "
+"catálogo"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__extra_step_category_ids
@@ -4095,13 +4528,13 @@ msgstr "Sombra de la imagen"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Image on the left"
-msgstr ""
+msgstr "Imagen de la izquierda"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Image on the right"
-msgstr ""
+msgstr "Imagen de la derecha"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4120,28 +4553,28 @@ msgstr "Área de imágenes"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "In"
-msgstr ""
+msgstr "En"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "In accordion"
-msgstr ""
+msgstr "En acordeón"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "In stock"
-msgstr ""
+msgstr "En stock"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wishlist_button
 msgid "In your wishlist"
-msgstr ""
+msgstr "En tu lista de deseos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.order_tax_lines
 msgid "Including"
-msgstr ""
+msgstr "Incluyendo"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4159,7 +4592,7 @@ msgstr "Inline"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Input"
-msgstr ""
+msgstr "Entrada"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -4171,18 +4604,20 @@ msgstr "Instagram"
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
 msgstr ""
+"Las variantes creadas al instante están disponibles para seleccionarlas en "
+"la página /tienda."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "Invalid Email"
-msgstr ""
+msgstr "Correo electrónico no válido"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/product_page.js:0
 msgid "Invalid email"
-msgstr ""
+msgstr "Correo electrónico no válido"
 
 #. module: website_sale
 #. odoo-python
@@ -4205,12 +4640,12 @@ msgstr "La URL del video que ha proporcionado no es válida."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Inventory"
-msgstr ""
+msgstr "Inventario"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr ""
+msgstr "Valores predeterminados de la aplicación Inventario"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_cols_order__inverse
@@ -4225,7 +4660,7 @@ msgstr "Facturar automáticamente al realizar el pago."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Journal"
-msgstr ""
+msgstr "Diario de facturación"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4235,7 +4670,7 @@ msgstr "Política de facturación"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__is_donation
 msgid "Is Donation"
-msgstr ""
+msgstr "Es donación"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_is_follower
@@ -4270,8 +4705,8 @@ msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
 msgstr ""
-"Parece que ya hay una transacción para su pedido, así que ya no se puede "
-"cambiar el método de entrega"
+"Parece que ya existe una transacción correspondiente a tu pedido; ya no "
+"puedes cambiar el método de entrega."
 
 #. module: website_sale
 #. odoo-javascript
@@ -4282,7 +4717,7 @@ msgstr "Se eliminará de todos los productos. ¿Estás seguro?"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Journal"
-msgstr ""
+msgstr "Diario"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -4413,7 +4848,7 @@ msgstr "Año anterior"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggested_products_last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggested_products_last_update
 msgid "Last update of suggested products"
-msgstr ""
+msgstr "Última actualización de los productos sugeridos"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_laundry
@@ -4473,7 +4908,7 @@ msgstr "Color del enlace"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__contact_us_link_url
 #: model:ir.model.fields,field_description:website_sale.field_website__contact_us_link_url
 msgid "Link URL"
-msgstr ""
+msgstr "URL del enlace"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
@@ -4503,7 +4938,7 @@ msgstr "Etiqueta del botón principal"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Make a Donation"
-msgstr ""
+msgstr "Hacer una donación"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4529,7 +4964,7 @@ msgstr "Manualmente"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Maximum"
-msgstr ""
+msgstr "Máximo"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4576,13 +5011,13 @@ msgstr "Mensajes"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Minimal Cards"
-msgstr ""
+msgstr "Tarjetas compactas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Minimum"
-msgstr ""
+msgstr "Mínimo"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__minimum_quantity
@@ -4657,7 +5092,7 @@ msgstr "Mi cesta"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "My Wishlist"
-msgstr ""
+msgstr "Mi lista de deseos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4819,7 +5254,7 @@ msgstr "No disponible con %s"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__not_in_shop
 msgid "Not in Shop"
-msgstr ""
+msgstr "No disponible en la tienda"
 
 #. module: website_sale
 #. odoo-python
@@ -4830,7 +5265,7 @@ msgstr "No se puede volver a pedir ningún producto de este pedido"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Number"
-msgstr ""
+msgstr "Número"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
@@ -4847,11 +5282,13 @@ msgstr "Número de acciones"
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_mobile_columns
 msgid "Number of columns to display on mobile for the wishlist page (1 or 2)"
 msgstr ""
+"Número de columnas que se mostrarán en la página de la lista de deseos (1 o "
+"2) desde un dispositivo móvil"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_grid_columns
 msgid "Number of columns to display on the wishlist page"
-msgstr ""
+msgstr "Número de columnas que se mostrarán en la página de la lista de deseos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__message_has_error_counter
@@ -5099,7 +5536,7 @@ msgstr "En oferta"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.ribbon_filter_pills
 msgid "On sale"
-msgstr ""
+msgstr "En oferta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
@@ -5116,7 +5553,7 @@ msgstr "Sobre ruedas"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Once you click on <b>Save</b>, your product is updated."
-msgstr "Una vez que haga clic en <b>Guardar</b>, se actualizará su producto."
+msgstr "Cuando hagas clic en <b>Guardar</b>, se actualizará el producto."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5126,18 +5563,18 @@ msgstr "Un producto puede tener diferentes atributos (tamaño, color, etc.)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "One year in elementary school."
-msgstr ""
+msgstr "Un año en primaria."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation_form
 msgid "One year in high school."
-msgstr ""
+msgstr "Un año en secundaria."
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Online Catalog Template"
-msgstr ""
+msgstr "Plantilla de catálogo online"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -5232,7 +5669,7 @@ msgstr "Confirmación del pedido"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_unpaid
 msgid "Order Date"
-msgstr "Fecha de pedido"
+msgstr "Fecha del pedido"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
@@ -5279,19 +5716,19 @@ msgstr "Pedidos a facturar"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Confirm"
-msgstr ""
+msgstr "Pedidos por confirmar"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Fulfill"
-msgstr ""
+msgstr "Pedidos por tramitar"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Pedidos por facturar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.price_dynamic_filter_template_product_product
@@ -5304,7 +5741,7 @@ msgstr "Precio original"
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale.specifications_table
 msgid "Others"
-msgstr ""
+msgstr "Otros"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -5315,23 +5752,23 @@ msgstr "Nuestros métodos de pago"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "Out of Stock"
-msgstr ""
+msgstr "Agotado"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr "Fuera de stock"
+msgstr "Agotado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Out-of-Stock"
-msgstr ""
+msgstr "Agotado"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr ""
+msgstr "Mensaje que aparecerá cuando no haya existencias"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5342,7 +5779,7 @@ msgstr "Superponer"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__partner_id
 msgid "Owner"
-msgstr ""
+msgstr "Propietario"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.packaging_title
@@ -5394,7 +5831,7 @@ msgstr "Pagos"
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_confirmation
 msgid "Payment Confirmation"
-msgstr ""
+msgstr "Confirmación del pago"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_token
@@ -5417,11 +5854,12 @@ msgstr "El pago ya está siendo procesado."
 #: code:addons/website_sale/models/payment_transaction.py:0
 msgid "Payment was not successful, please try again."
 msgstr ""
+"El pago no se ha realizado correctamente; por favor, inténtalo de nuevo."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_providers
 msgid "Payments"
-msgstr ""
+msgstr "Pagos"
 
 #. module: website_sale
 #. odoo-python
@@ -5456,13 +5894,13 @@ msgstr "Continúe con su cesta actual."
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "Please select or enter an amount"
-msgstr ""
+msgstr "Selecciona o introduce un importe"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "Please sign in to proceed."
-msgstr ""
+msgstr "Inicia sesión para continuar."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5484,7 +5922,7 @@ msgstr "Posición"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Pre-filled Options"
-msgstr ""
+msgstr "Opciones predefinidas"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5501,12 +5939,12 @@ msgstr "Pulsa «Intro» para añadir a la cesta"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__prevent_sale_for
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_sale_for
 msgid "Prevent Sale For"
-msgstr ""
+msgstr "Evitar la venta de"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Prevent from selling the specified packagings"
-msgstr ""
+msgstr "Evitar la venta de los embalajes especificados"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5545,7 +5983,7 @@ msgstr "Precio - bajo a alto"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "Price Range"
-msgstr ""
+msgstr "Rango de precios"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
@@ -5563,7 +6001,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__price
 msgid "Price of the product when it has been added in the wishlist"
-msgstr ""
+msgstr "Precio del producto en el momento de añadirlo a la lista de deseos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -5587,7 +6025,7 @@ msgstr "Regla de la lista de precios"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_wishlist__pricelist_id
 msgid "Pricelist when added"
-msgstr ""
+msgstr "Lista de precios cuando se añadió"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
@@ -5599,7 +6037,7 @@ msgstr "Listas de precios"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Prices have changed. Please review your cart."
-msgstr ""
+msgstr "Los precios han cambiado. Por favor, revisa tu cesta."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -5609,7 +6047,7 @@ msgstr "Política de privacidad"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 msgid "Process the order once the payment is received."
-msgstr "Procese el pedido una vez que se reciba el pago."
+msgstr "Procesar el pedido una vez que se reciba el pago."
 
 #. module: website_sale
 #. odoo-javascript
@@ -5640,7 +6078,7 @@ msgstr "Atributo de producto"
 #: model:ir.model,name:website_sale.model_product_attribute_category
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_category_tree_view
 msgid "Product Attribute Category"
-msgstr ""
+msgstr "Categoría del atributo de producto"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -5655,7 +6093,7 @@ msgstr "Categoría de producto"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "Combinación de productos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5763,7 +6201,7 @@ msgstr "Ancho de la imagen de la página del producto"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 msgid "Product Page Template"
-msgstr ""
+msgstr "Plantilla de la página del producto"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_cols_order
@@ -5845,12 +6283,12 @@ msgstr "Historial de vistas de productos"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_wishlist
 msgid "Product Wishlist"
-msgstr ""
+msgstr "Lista de productos deseados"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Product image"
-msgstr ""
+msgstr "Imagen del producto"
 
 #. module: website_sale
 #. odoo-python
@@ -5866,12 +6304,13 @@ msgstr "Cinta del producto"
 #. module: website_sale
 #: model:mail.template,name:website_sale.email_template_back_in_stock
 msgid "Product: Back in Stock Email"
-msgstr ""
+msgstr "Producto: correo electrónico de disponibilidad en stock"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "Product: send email regarding products availability"
 msgstr ""
+"Producto: enviar correo electrónico sobre la disponibilidad de productos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6036,7 +6475,7 @@ msgstr "Texto de calificación media"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__rating_email_template_id
 #: model:ir.model.fields,field_description:website_sale.field_website__rating_email_template_id
 msgid "Rating Email Template"
-msgstr ""
+msgstr "Plantilla del correo de valoración"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
@@ -6071,7 +6510,7 @@ msgstr "Número de calificación"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__is_rating_email_sent
 msgid "Rating email already sent"
-msgstr ""
+msgstr "Correo electrónico de valoración enviado"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6136,7 +6575,7 @@ msgstr "Reforzado para cargas pesadas"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__attribute_ids
 msgid "Related Attributes"
-msgstr ""
+msgstr "Atributos relacionados"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_relocation_and_moving
@@ -6160,14 +6599,14 @@ msgstr "Eliminar todo"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Remove all"
-msgstr ""
+msgstr "Eliminar todo"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Remove all products from comparison"
-msgstr ""
+msgstr "Eliminar todos los productos de la comparación"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -6182,7 +6621,7 @@ msgstr "Eliminar de los elementos vistos recientemente"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Remove from wishlist"
-msgstr ""
+msgstr "Eliminar de la lista de deseos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6203,7 +6642,7 @@ msgstr "Eliminar uno"
 #: code:addons/website_sale/static/src/js/product_row/product_row.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Remove product from comparison"
-msgstr ""
+msgstr "Eliminar producto de la comparación"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6240,7 +6679,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__send_order_rating_emails
 #: model:ir.model.fields,field_description:website_sale.field_website__send_order_rating_emails
 msgid "Request ratings"
-msgstr ""
+msgstr "Solicitar valoraciones"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6263,7 +6702,7 @@ msgstr "Adaptativo"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__restricted_uom_ids
 #: model:ir.model.fields,field_description:website_sale.field_website__restricted_uom_ids
 msgid "Restrict Packagings"
-msgstr ""
+msgstr "Restringir paquetes/embalajes"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6305,7 +6744,7 @@ msgstr ""
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_order_rating
 msgid "Review your recent order!"
-msgstr ""
+msgstr "¡Revisa tu pedido reciente!"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6445,7 +6884,7 @@ msgstr "Muestra"
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "Save for Later"
-msgstr ""
+msgstr "Guardar para más tarde"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6534,13 +6973,13 @@ msgstr "Seleccionable"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_page_empty_screen
 msgid "Sell Online"
-msgstr ""
+msgstr "Vender en línea"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale.field_product_template__allow_out_of_stock_order
 msgid "Sell when Out-of-Stock"
-msgstr ""
+msgstr "Vender cuando esté agotado"
 
 #. module: website_sale
 #: model:ir.module.module,summary:base.module_website_sale
@@ -6561,7 +7000,7 @@ msgstr "Enviar un correo electrónico de recuperación"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Send a rating request for each order"
-msgstr ""
+msgstr "Enviar una solicitud de valoración para cada pedido"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -6581,7 +7020,7 @@ msgstr "Enviar por correo electrónico"
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_order_rating
 msgid "Sent to customers to request feedback on their order"
-msgstr ""
+msgstr "Enviado a los clientes para solicitar su opinión sobre el pedido"
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_withdrawal_request_confirmation
@@ -6628,6 +7067,8 @@ msgid ""
 "Set a category to regroup similar attributes under the same section in the "
 "Comparison page of eCommerce."
 msgstr ""
+"Define una categoría para reagrupar los atributos similares bajo la misma "
+"sección en la página de comparación del comercio electrónico."
 
 #. module: website_sale
 #. odoo-javascript
@@ -6688,7 +7129,7 @@ msgstr "Finalización de la compra - Información adicional"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Shop Comparator"
-msgstr ""
+msgstr "Comparador de tiendas"
 
 #. module: website_sale
 #. odoo-python
@@ -6726,7 +7167,7 @@ msgstr "Tienda - pago"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Shop Wishlist"
-msgstr ""
+msgstr "Lista de deseos de la tienda"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -6743,16 +7184,18 @@ msgstr "Cesta"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Show \"Contact Us\" for zero-priced products or specific categories."
 msgstr ""
+"Mostrar la opción «Contacta con nosotros» para productos con precio cero o "
+"categorías específicas."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Show Available Qty"
-msgstr ""
+msgstr "Mostrar la cantidad disponible"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Show Available Quantity"
-msgstr ""
+msgstr "Mostrar la cantidad disponible"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__show_category_description
@@ -6779,14 +7222,14 @@ msgstr "Mostrar vacío"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__show_in_breadcrumb
 msgid "Show In Breadcrumb"
-msgstr ""
+msgstr "Mostrar en la ruta de navegación"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__available_threshold
 #: model:ir.model.fields,field_description:website_sale.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_available_threshold
 msgid "Show Threshold"
-msgstr ""
+msgstr "Mostrar umbral"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__is_thumbnail_visible
@@ -6811,13 +7254,13 @@ msgstr "Mostrar la navegación de tira de película en la parte superior"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__default_show_availability
 msgid "Show availability Qty"
-msgstr ""
+msgstr "Mostrar la cantidad disponible"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Show description"
-msgstr ""
+msgstr "Mostrar descripción"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6840,7 +7283,7 @@ msgstr "Mostrar en el comercio electrónico"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_comparison_bottom_bar/product_comparison_bottom_bar.xml:0
 msgid "Show products added to comparison"
-msgstr ""
+msgstr "Mostrar los productos añadidos a la comparación"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6866,7 +7309,7 @@ msgstr "Exhibición"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Showcase Grid"
-msgstr ""
+msgstr "Cuadrícula de presentación"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6918,7 +7361,7 @@ msgstr "Tamaño Y"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Slider"
-msgstr ""
+msgstr "Control deslizante"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6932,7 +7375,7 @@ msgstr "Pequeño"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_donation
 msgid "Small or large, your contribution is essential."
-msgstr ""
+msgstr "Todas las contribuciones suman."
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_sofas
@@ -6951,6 +7394,8 @@ msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry "
 "for the inconvenience."
 msgstr ""
+"Algunos productos han dejado de estar disponibles y se ha actualizado la "
+"cesta. Sentimos las molestias."
 
 #. module: website_sale
 #. odoo-python
@@ -6979,19 +7424,19 @@ msgstr "Espacios"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__prevent_sale_for__specific_categories
 msgid "Specific categories"
-msgstr ""
+msgstr "Categorías específicas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Specification"
-msgstr ""
+msgstr "Especificación"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_specs_item
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attributes_body
 msgid "Specifications"
-msgstr ""
+msgstr "Especificaciones"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_feed__pricelist_id
@@ -7025,7 +7470,7 @@ msgstr "Estado"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/donation/donation_option.xml:0
 msgid "Step"
-msgstr ""
+msgstr "Paso"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets_storage
@@ -7056,19 +7501,19 @@ msgstr "Subtotal"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_accessory_products
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_accessory_products
 msgid "Suggest Accessory Products"
-msgstr ""
+msgstr "Sugerir productos complementarios"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_alternative_products
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_alternative_products
 msgid "Suggest Alternative Products"
-msgstr ""
+msgstr "Sugerir productos alternativos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__suggest_optional_products
 #: model:ir.model.fields,field_description:website_sale.field_product_template__suggest_optional_products
 msgid "Suggest Optional Products"
-msgstr ""
+msgstr "Sugerir productos opcionales"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
@@ -7136,7 +7581,7 @@ msgstr "Indicación de impuestos"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Tax Total"
-msgstr ""
+msgstr "Total de impuestos"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__amount_delivery
@@ -7225,8 +7670,8 @@ msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
 msgstr ""
-"La compañía del sitio web del que intenta vender (%(website_company)s) es "
-"diferente a la que quiere utilizar (%(company)s)."
+"La empresa del sitio web desde el que intentas vender (%(website_company)s) "
+"es diferente a la que quieres utilizar (%(company)s)"
 
 #. module: website_sale
 #. odoo-python
@@ -7235,6 +7680,8 @@ msgid ""
 "The estimated delivery date was no longer possible. We apologize for any "
 "inconvenience."
 msgstr ""
+"La fecha de entrega estimada ya no es posible. Lamentamos las molestias "
+"ocasionadas."
 
 #. module: website_sale
 #. odoo-python
@@ -7301,12 +7748,14 @@ msgid ""
 "The label to be displayed on the payment buttons for orders with Total "
 "Amount zero"
 msgstr ""
+"La etiqueta que aparecerá en los botones de pago para los pedidos con "
+"importe total cero"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/snippets/s_donation/donation_snippet.js:0
 msgid "The minimum donation amount is %(amount)s"
-msgstr ""
+msgstr "El importe mínimo de donación es %(amount)s"
 
 #. module: website_sale
 #: model:ir.model.constraint,message:website_sale.constraint_product_template_minimum_quantity_non_negative
@@ -7362,6 +7811,8 @@ msgid ""
 "The selected delivery date was no longer available. Please pick another "
 "delivery date."
 msgstr ""
+"La fecha de entrega seleccionada ya no está disponible. Elige otra fecha de "
+"entrega."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -7402,7 +7853,7 @@ msgstr "Tema predeterminado"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "There is no confirmed order from the website"
-msgstr "No hay un pedido confirmado de este sitio web."
+msgstr "No hay ningún pedido confirmado de este sitio web"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
@@ -7463,7 +7914,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "This product has already been added to the comparison."
-msgstr ""
+msgstr "Este producto ya se ha añadido a la comparación."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -7481,13 +7932,13 @@ msgstr "Este producto ya no está disponible."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
-msgstr ""
+msgstr "Este producto ya no está disponible en esta unidad de medida."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "This product is not eligible for stock notifications."
-msgstr ""
+msgstr "Este producto no permite recibir notificaciones de disponibilidad."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -7529,21 +7980,21 @@ msgstr "Estilo del título"
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "To Confirm"
-msgstr ""
+msgstr "Por confirmar"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "To Fulfill"
-msgstr ""
+msgstr "Por tramitar"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "To Invoice"
-msgstr ""
+msgstr "Por facturar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -7567,7 +8018,7 @@ msgstr "Hoy"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "Too many products to compare"
-msgstr ""
+msgstr "Demasiados productos para comparar"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7584,12 +8035,12 @@ msgstr "Arriba"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Total sin impuestos"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Total con impuestos incluidos"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
@@ -7645,7 +8096,7 @@ msgstr "URL de un vídeo para promocionar su producto."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_compare
 msgid "Uncategorized"
-msgstr ""
+msgstr "Sin categoría"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_drawers_underbed
@@ -7660,6 +8111,9 @@ msgid ""
 "does not match the amount of your cart. Please contact the responsible of "
 "the shop for more information."
 msgstr ""
+"No podemos confirmar tu pedido, ya que el importe del pago no coincide con "
+"el importe total de la cesta. Por favor, ponte en contacto con nosotros para "
+"obtener más información."
 
 #. module: website_sale
 #. odoo-python
@@ -7668,12 +8122,15 @@ msgid ""
 "Unfortunately, the delivery method that you selected is no longer available. "
 "Please update your choice. We apologize for any inconvenience."
 msgstr ""
+"Lo sentimos, el método de entrega que has seleccionado ya no está "
+"disponible. Elige otro. Disculpa las molestias."
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Unfortunately, there is no longer enough stock to fulfill your order."
 msgstr ""
+"Lo sentimos, ya no hay existencias suficientes para tramitar tu pedido."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -7720,7 +8177,7 @@ msgstr "Sin definir"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.action_update_suggested_products
 msgid "Update suggested products"
-msgstr ""
+msgstr "Actualizar productos sugeridos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7750,7 +8207,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #. module: website_sale
 #. odoo-javascript
@@ -7867,13 +8324,13 @@ msgstr "Selección del visitante"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/dashboard/dashboard.js:0
 msgid "Visitors"
-msgstr ""
+msgstr "Visitantes"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Visual Cards"
-msgstr ""
+msgstr "Tarjetas visuales"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_wardrobes
@@ -7923,6 +8380,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "We'll notify you once the product is back in stock"
 msgstr ""
+"Te enviaremos una notificación cuando el producto vuelva a estar disponible"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -7962,7 +8420,7 @@ msgstr "Categoría del sitio web"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_alert_mixin
 msgid "Website Checkout Alert Mixin"
-msgstr ""
+msgstr "Mixin de alertas del proceso de pago del sitio web"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
@@ -8020,7 +8478,7 @@ msgstr "Visitante del sitio web"
 #. odoo-python
 #: code:addons/website_sale/controllers/product_feed.py:0
 msgid "Website does not match."
-msgstr ""
+msgstr "El sitio web no coincide."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
@@ -8074,7 +8532,7 @@ msgstr "Al ser nuevo"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__out_of_stock
 msgid "When out of stock"
-msgstr ""
+msgstr "Cuando se agote el stock"
 
 #. module: website_sale
 #. odoo-python
@@ -8108,33 +8566,33 @@ msgstr "Más ancho (2/19)"
 #: model_terms:ir.ui.view,arch_db:website_sale.header_wishlist_link
 #: model_terms:ir.ui.view,arch_db:website_sale.product_cart_lines
 msgid "Wishlist"
-msgstr ""
+msgstr "Lista de deseos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_grid_columns
 msgid "Wishlist Grid Columns"
-msgstr ""
+msgstr "Columnas de la cuadrícula de la lista de deseos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_gap
 msgid "Wishlist Grid Gap"
-msgstr ""
+msgstr "Espaciado de la cuadrícula de la lista de deseos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_mobile_columns
 msgid "Wishlist Mobile Columns"
-msgstr ""
+msgstr "Columnas de la lista de deseos en dispositivos móviles"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/wishlist_page_option.xml:0
 msgid "Wishlist Page"
-msgstr ""
+msgstr "Página de la lista de deseos"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__wishlist_opt_products_design_classes
 msgid "Wishlist Page Design Class"
-msgstr ""
+msgstr "Clase de diseño de la página de la lista de deseos"
 
 #. module: website_sale
 #. odoo-python
@@ -8179,7 +8637,7 @@ msgstr "Ayer"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "You already added all the available product in your cart"
-msgstr ""
+msgstr "Ya has añadido todos los productos disponibles a tu cesta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -8202,7 +8660,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/interactions/add_to_comparison.js:0
 msgid "You can compare up to 4 products at a time."
-msgstr ""
+msgstr "Puedes comparar hasta 4 productos a la vez."
 
 #. module: website_sale
 #. odoo-python
@@ -8228,6 +8686,8 @@ msgid ""
 "You requested %(desired)g %(product_name)s, but only %(available)g are "
 "available in stock."
 msgstr ""
+"Has solicitado %(desired)g %(product_name)s, pero solo hay %(available)g "
+"disponibles en stock."
 
 #. module: website_sale
 #. odoo-python
@@ -8236,6 +8696,8 @@ msgid ""
 "You requested %(qty)g %(product_name)s, but only %(avl_qty)g are available "
 "in stock."
 msgstr ""
+"Has solicitado %(qty)g %(product_name)s, pero solo hay %(avl_qty)g "
+"disponibles en stock."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -8273,17 +8735,20 @@ msgid ""
 "Your billing address appears to be incomplete or invalid. Please ensure all "
 "required fields are correctly filled and try again."
 msgstr ""
+"Parece que tu dirección de facturación está incompleta o no es válida. "
+"Asegúrate de que todos los campos obligatorios estén correctamente "
+"rellenados e inténtalo de nuevo."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 msgid "Your cart is empty!"
-msgstr "¡Su cesta está vacía!"
+msgstr "¡Tu cesta está vacía!"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/delivery.py:0
 msgid "Your cart is empty."
-msgstr "¡Su cesta está vacía!"
+msgstr "Tu cesta está vacía."
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
@@ -8297,6 +8762,9 @@ msgid ""
 "Your delivery address appears to be incomplete or invalid. Please ensure all "
 "required fields are correctly filled and try again."
 msgstr ""
+"Parece que tu dirección de entrega está incompleta o no es válida. Asegúrate "
+"de que todos los campos obligatorios estén correctamente rellenados e "
+"inténtalo de nuevo."
 
 #. module: website_sale
 #. odoo-python
@@ -8312,7 +8780,7 @@ msgstr "Se ha completado su cesta anterior."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_wishlist
 msgid "Your wishlist is empty!"
-msgstr ""
+msgstr "¡Tu lista de deseos está vacía!"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_delivery_zip_prefix
@@ -8352,12 +8820,12 @@ msgstr "Alejar (ligero)"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "days after order confirmation"
-msgstr ""
+msgstr "días tras la confirmación del pedido"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "e.g. 'Will be back soon'"
-msgstr ""
+msgstr "p. ej., «volverá a estar disponible pronto»"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8423,7 +8891,7 @@ msgstr "Cesta del comercio electrónico"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.update_suggested_products_cron_ir_actions_server
 msgid "eCommerce: Update suggested products"
-msgstr ""
+msgstr "Comercio electrónico: actualizar productos sugeridos"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_abandoned_email_ir_actions_server
@@ -8436,12 +8904,13 @@ msgstr ""
 #: model:ir.actions.server,name:website_sale.ir_cron_send_order_rating_emails_ir_actions_server
 msgid "eCommerce: send order rating request emails"
 msgstr ""
+"Comercio electrónico: enviar correos de solicitud de valoración del pedido"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "in"
-msgstr ""
+msgstr "en"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -8452,13 +8921,13 @@ msgstr "en la categoría \""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "in stock"
-msgstr ""
+msgstr "en stock"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "in your cart)"
-msgstr ""
+msgstr "en tu cesta)"
 
 #. module: website_sale
 #. odoo-python
@@ -8548,6 +9017,13 @@ msgid ""
 "            o_wsale_products_opt_has_wishlist "
 "o_wsale_products_opt_has_comparison"
 msgstr ""
+"o_wsale_products_opt_name_color_regular o_wsale_products_opt_thumb_2_3\n"
+"            o_wsale_products_opt_thumb_cover "
+"o_wsale_products_opt_img_secondary_show\n"
+"            o_wsale_products_opt_img_hover_zoom_out_light "
+"o_wsale_products_opt_has_cta\n"
+"            o_wsale_products_opt_has_wishlist "
+"o_wsale_products_opt_has_comparison"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8566,12 +9042,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "only if below"
-msgstr ""
+msgstr "solo si es inferior a"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "slide"
-msgstr ""
+msgstr "diapositiva"
 
 #. module: website_sale
 #. odoo-python
@@ -8587,7 +9063,7 @@ msgstr "términos y condiciones"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
 msgid "working days"
-msgstr ""
+msgstr "días laborables"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
@@ -8598,121 +9074,20 @@ msgstr "x"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "youremail@gmail.com"
-msgstr ""
+msgstr "tucorreo@gmail.com"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
+msgstr "{{ object.name or 'Product' }} vuelve a estar disponible"
+
+msgid ""
+"<i class=\"oi d-md-none\" data-icon=\"shopping_cart\" role=\"presentation\"/"
+">\n"
+"                                    <span class=\"d-none d-md-inline\">Add "
+"to cart</span>"
 msgstr ""
-
-#~ msgid "<b>Communication: </b>"
-#~ msgstr "<b>Comunicación: </b>"
-
-#~ msgid ""
-#~ "<i class=\"oi d-md-none\" data-icon=\"shopping_cart\" "
-#~ "role=\"presentation\"/>\n"
-#~ "                                    <span class=\"d-none d-md-"
-#~ "inline\">Add to cart</span>"
-#~ msgstr ""
-#~ "<i class=\"oi d-md-none\" data-icon=\"shopping_cart\" "
-#~ "role=\"presentation\"/>\n"
-#~ "                                    <span class=\"d-none d-md-"
-#~ "inline\">Añadir a la cesta</span>"
-
-#~ msgid ""
-#~ "<small class=\"text-muted mb-0\">\n"
-#~ "                <a href=\"/terms\" class=\"o_translate_inline text-"
-#~ "muted\">\n"
-#~ "                    <u>Terms and Conditions</u>\n"
-#~ "                </a><br/>\n"
-#~ "                30-day money-back guarantee<br/>\n"
-#~ "                Shipping: 2-3 Business Days\n"
-#~ "            </small>"
-#~ msgstr ""
-#~ "<small class=\"text-muted mb-0\">\n"
-#~ "                <a href=\"/terms\" class=\"o_translate_inline text-"
-#~ "muted\">\n"
-#~ "                    <u>Términos y condiciones</u>\n"
-#~ "                </a><br/>\n"
-#~ "                Garantía de devolución de 30 días<br/>\n"
-#~ "                Envío: 2-3 días hábiles\n"
-#~ "            </small>"
-
-#~ msgid "Abandoned Email"
-#~ msgstr "Correo electrónico abandonado"
-
-#~ msgid "Automate abandoned checkout emails"
-#~ msgstr "Automatizar los correos electrónicos de cestas abandonadas"
-
-#~ msgid "Blocks Design"
-#~ msgstr "Diseño de bloques"
-
-#~ msgid ""
-#~ "Created in 2021, the company is young and dynamic. Discover the "
-#~ "composition of the team and their skills."
-#~ msgstr ""
-#~ "Creada en 2021, la empresa es joven y dinámica. Descubra la composición "
-#~ "del equipo y sus habilidades."
-
-#~ msgid "Customize Abandoned Email Template"
-#~ msgstr "Personalizar plantilla de correo electrónico abandonada"
-
-#~ msgid "Darken overlay"
-#~ msgstr "Superposición oscura"
-
-#~ msgid "Discover our team"
-#~ msgstr "Descubra nuestro equipo"
-
-#~ msgid "Dynamic Content"
-#~ msgstr "Contenido dinámico"
-
-#~ msgid "Furnitures"
-#~ msgstr "Muebles"
-
-#~ msgid "Global options for all inner blocks."
-#~ msgstr "Opciones globales para todos los bloques internos."
-
-#~ msgid "Mega menu default image"
-#~ msgstr "Imagen por defecto del mega menú"
-
-#~ msgid "No product defined"
-#~ msgstr "Ningún producto definido"
-
-#~ msgid "No product defined in this category."
-#~ msgstr "No hay productos definidos en esta categoría."
-
-#~ msgid "Or scan me with your banking app."
-#~ msgstr "O escanéeme desde su aplicación bancaria."
-
-#~ msgid "Recovery Email Sent"
-#~ msgstr "Correo electrónico de recuperación enviado"
-
-#~ msgid "Recovery Email to Send"
-#~ msgstr "Correo electrónico de recuperación a enviar"
-
-#~ msgid "Send email to customers who abandoned their cart."
-#~ msgstr ""
-#~ "Envíe un correo electrónico a los clientes que abandonaron su cesta."
-
-#~ msgid "Show B2B Fields"
-#~ msgstr "Mostrar campos B2B"
-
-#~ msgid "Spring collection has arrived!"
-#~ msgstr "¡La colección de primavera ya está aquí!"
-
-#~ msgid "Suggested Accessories"
-#~ msgstr "Accesorios sugeridos"
-
-#~ msgid "Terms and Conditions"
-#~ msgstr "Términos y condiciones"
-
-#~ msgid "The team"
-#~ msgstr "El equipo"
-
-#~ msgid "Time when the 'Send abandoned cart email' feature was activated."
-#~ msgstr ""
-#~ "Momento en el que se activó la función “Enviar correo electrónico de "
-#~ "cesta abandonada”."
-
-#~ msgid "hours."
-#~ msgstr "horas."
+"<i class=\"oi d-md-none\" data-icon=\"shopping_cart\" role=\"presentation\"/"
+">\n"
+"                                    <span class=\"d-none d-md-"
+"inline\">Añadir a la cesta</span>"

@@ -18,28 +18,28 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 06:14+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 13:58+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "project/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr "# Bewertungen"
+msgstr "Anzahl Bewertungen"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_model.js:0
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
-msgstr "# Aufgaben"
+msgstr "Anzahl Aufgaben"
 
 #. module: project
 #. odoo-javascript
@@ -834,8 +834,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Ein Python-Dictionary, das Standardwerte zur Verfügung stellt, wenn neue "
-"Datensätze für diesen Alias angelegt werden."
+"Ein Python-Dictionary, das Standardwerte bereitstellt, wenn neue Datensätze "
+"für diesen Alias erstellt werden."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
@@ -860,6 +860,7 @@ msgstr ""
 #: model:ir.model.constraint,message:project.constraint_project_task_private_task_has_no_parent
 msgid "A private (non-template) task cannot have a parent."
 msgstr ""
+"Eine private Aufgabe (keine Vorlage) kann keine übergeordnete Aufgabe haben."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -896,7 +897,7 @@ msgstr "Zugriffswarnung"
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__active
@@ -920,14 +921,14 @@ msgstr "Aktivitäten von"
 #. module: project
 #: model:ir.model,name:project.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "Aktivität"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitätsausnahme-Dekoration"
+msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
@@ -1038,6 +1039,8 @@ msgid ""
 "Administrator: Can manage projects and stages, with access to reporting and "
 "configuration."
 msgstr ""
+"Administrator: Kann Projekte und Phasen verwalten und hat Zugriff auf "
+"Berichte und Konfigurationen."
 
 #. module: project
 #. odoo-javascript
@@ -1103,7 +1106,7 @@ msgstr "Alle"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "All Projects"
-msgstr ""
+msgstr "Alle Projekte"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_all_task
@@ -1495,6 +1498,9 @@ msgid ""
 "Cannot convert back to regular task because the task has no project defined "
 "but has a parent or sub-tasks."
 msgstr ""
+"Kann nicht wieder in eine reguläre Aufgabe umgewandelt werden, da für die "
+"Aufgabe kein Projekt definiert ist, sie jedoch über eine übergeordnete "
+"Aufgabe oder Teilaufgaben verfügt."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
@@ -1706,7 +1712,7 @@ msgstr "Kontaktnummer"
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_convert_project_to_template_cog_menu/project_convert_project_to_template_cog_menu.xml:0
 msgid "Convert Project to Template"
-msgstr ""
+msgstr "Projekt in Vorlage umwandeln"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_convert_to_subtask_view_form
@@ -1760,13 +1766,13 @@ msgstr "Erstellt am"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "Projekt erstellen"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/wizard/project_template_create_wizard.py:0
 msgid "Create Project (Template: %s)"
-msgstr ""
+msgstr "Projekt erstellen (Vorlage: %s)"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_res_partner
@@ -1776,7 +1782,7 @@ msgstr "Kunden erstellen"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_create_project_template
 msgid "Create a Project Template"
-msgstr ""
+msgstr "Eine Projektvorlage erstellen"
 
 #. module: project
 #: model:ir.model,website_form_label:project.model_project_task
@@ -2597,7 +2603,7 @@ msgstr "Glückliches Gesicht"
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr "Hat eine Nachricht"
+msgstr "Hat Nachricht"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_project_template
@@ -3478,7 +3484,7 @@ msgstr "Keine Projektrolle gefunden. Erstellen Sie eine!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_template
 msgid "No project templates found. Let's create one!"
-msgstr ""
+msgstr "Keine Projektvorlagen gefunden. Erstellen Sie eine!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3545,7 +3551,7 @@ msgstr "Anzahl der Aktionen"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_needaction_counter
@@ -3857,6 +3863,9 @@ msgid ""
 "Private (non-template) tasks cannot be converted into sub-tasks. Please set "
 "a project on the task to gain access to this feature."
 msgstr ""
+"Private Aufgaben (keine Vorlagen) können nicht in Teilaufgaben umgewandelt "
+"werden. Bitte weisen Sie der Aufgabe ein Projekt zu, um Zugriff auf diese "
+"Funktion zu erhalten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -4674,6 +4683,10 @@ msgid ""
 "                    Standardize workflows and ensure consistency across "
 "projects."
 msgstr ""
+"Sparen Sie Zeit, indem Sie Projektvorlagen mit vorausgefüllten Angaben "
+"verwenden.<br>\n"
+"                    Standardisieren Sie Arbeitsabläufe und gewährleisten Sie "
+"Einheitlichkeit in allen Projekten."
 
 #. module: project
 #. odoo-javascript
@@ -5377,7 +5390,7 @@ msgstr "Aufgabenphasen"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.js:0
 msgid "Tasks Templates"
-msgstr ""
+msgstr "Vorlagen für Aufgaben"
 
 #. module: project
 #. odoo-python
@@ -6120,7 +6133,7 @@ msgstr "Benutzereinstellungen"
 #. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User: Can manage tasks in projects shared with them."
-msgstr ""
+msgstr "Benutzer: Kann Aufgaben in geteilten Projekten verwalten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_card
@@ -6131,7 +6144,7 @@ msgstr "Ansicht"
 #. odoo-javascript
 #: code:addons/project/static/src/views/components/project_task_template_dropdown.xml:0
 msgid "View More"
-msgstr ""
+msgstr "Mehr anzeigen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -6275,7 +6288,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/chatter/composer_patch.js:0
 msgid "Write a message…"
-msgstr ""
+msgstr "Schreiben Sie eine Nachricht …"
 
 #. module: project
 #. odoo-javascript
@@ -6654,52 +6667,3 @@ msgstr "👤 Nicht zugewiesen"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
-
-#~ msgid " All internal users and invited portal users"
-#~ msgstr " Alle internen Benutzer und eingeladenen Portalbenutzer"
-
-#~ msgid ""
-#~ "Add project-specific property fields on tasks to customize your project "
-#~ "management process."
-#~ msgstr ""
-#~ "Fügen Sie projektspezifische Eigenschaftsfelder zu Aufgaben hinzu, um "
-#~ "Ihre Projektverwaltungsprozess anzupassen."
-
-#~ msgid ""
-#~ "Create tasks by sending an email to the email address of your project."
-#~ msgstr ""
-#~ "Erstellen Sie Aufgaben, indem Sie eine E-Mail an die E-Mail-Adresse Ihres "
-#~ "Projekts senden."
-
-#~ msgid "Emails sent to"
-#~ msgstr "E-Mail-Versand an"
-
-#~ msgid ""
-#~ "Quickly check the status of tasks for approvals or change requests and "
-#~ "identify those on hold until dependencies are resolved with the hourglass "
-#~ "icon."
-#~ msgstr ""
-#~ "Überprüfen Sie schnell den Status von Aufgaben für Genehmigungen oder "
-#~ "Änderungsanfragen und identifizieren Sie mit dem Sanduhr-Symbol die "
-#~ "Aufgaben, die in der Warteschleife liegen, bis die Abhängigkeiten geklärt "
-#~ "sind."
-
-#~ msgid "Tip: Use task states to keep track of your tasks' progression"
-#~ msgstr ""
-#~ "Tipp: Verwenden Sie Aufgabenstatus, um den Fortschritt Ihrer Aufgaben im "
-#~ "Auge zu behalten"
-
-#~ msgid "Tip: Your Own Personal Kanban"
-#~ msgstr "Hinweis: Ihre eigene persönliche Kanban-Ansicht"
-
-#~ msgid ""
-#~ "Use personal stages to organize your tasks and create your own workflow."
-#~ msgstr ""
-#~ "Verwenden Sie persönliche Phasen, um Ihre Aufgaben zu organisieren und "
-#~ "Ihren Arbeitsablauf zu erstellen."
-
-#~ msgid "project."
-#~ msgstr "-Projekt."
-
-#~ msgid "will generate tasks in your"
-#~ msgstr "wird Aufgaben erstellen in Ihrem"

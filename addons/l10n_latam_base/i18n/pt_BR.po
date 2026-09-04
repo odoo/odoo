@@ -3,21 +3,90 @@
 # * l10n_latam_base
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:05+0000\n"
-"PO-Revision-Date: 2025-11-17 03:12+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-19-l10n/l10n_latam_base/pt_BR/>\n"
+"POT-Creation-Date: 2026-08-28 18:15+0000\n"
+"PO-Revision-Date: 2026-08-21 20:22+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"s19-4/l10n_latam_base/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_latam_base
+#: model:ir.module.module,description:base.module_l10n_latam_base
+msgid ""
+"\n"
+"Add a new model named \"Identification Type\" that extend the vat field "
+"functionality in the partner and let the user to identify (an eventually "
+"invoice) to contacts not only with their fiscal tax ID (VAT) but with other "
+"types of identifications like national document, passport, foreign ID, etc. "
+"With this module installed you will see now in the partner form view two "
+"fields:\n"
+"\n"
+"* Identification Type\n"
+"* Identification Number\n"
+"\n"
+"This behavior is a common requirement for some latam countries like "
+"Argentina and Chile. If your localization has this requirements then you "
+"need to depend on this module and define in your localization module the "
+"identifications types that are used in your country. Generally these types "
+"of identifications are defined by the government authorities that regulate "
+"the fiscal operations. For example:\n"
+"\n"
+"* ARCA in Argentina defines DNI, CUIT (vat for legal entities), CUIL (vat "
+"for natural person), and another 80 valid identification types.\n"
+"\n"
+"Each identification holds this information:\n"
+"\n"
+"* name: short name of the identification\n"
+"* description: could be the same short name or a long name\n"
+"* country_id: the country where this identification belongs\n"
+"* is_vat: identify this record as the corresponding VAT for the specific "
+"country.\n"
+"* sequence: let us to sort the identification types depending on the ones "
+"that are most used.\n"
+"* active: we can activate/inactivate identifications to make it easier to "
+"our customers\n"
+"\n"
+"In order to make this module compatible for multi-company environments where "
+"we have companies that does not need/support this requirement, we have added "
+"generic identification types and generic rules to manage the contact "
+"information and make it transparent for the user when only use the VAT as we "
+"formerly know.\n"
+"\n"
+"Generic Identifications:\n"
+"\n"
+"* VAT: The Fiscal Tax Identification or VAT number, by default will be "
+"selected as identification type so the user will only need to add the "
+"related vat number.\n"
+"* Passport\n"
+"* Foreign ID (Foreign National Document)\n"
+"\n"
+"Rules when creating a new partner: We will only see the identification types "
+"that are meaningful, taking into account these rules:\n"
+"\n"
+"* If the partner have not country address set: Will show the generic "
+"identification types plus the ones defined in the partner's related company "
+"country (If the partner has not specific company then will show the "
+"identification types related to the current user company)\n"
+"\n"
+"* If the partner has country address: will show the generic identification "
+"types plus the ones defined for the country of the partner.\n"
+"\n"
+"When creating a new company, will set to the related partner always the "
+"related country is_vat identification type.\n"
+"\n"
+"All the defined identification types can be reviewed and activate/deactivate "
+"in \"Contacts / Configuration / Identification Type\" menu.\n"
+msgstr ""
 
 #. module: l10n_latam_base
 #: model_terms:ir.ui.view,arch_db:l10n_latam_base.view_partner_latam_form
@@ -25,6 +94,8 @@ msgid ""
 "<span class=\"oe_read_only\" invisible=\"is_vat and 'LATAMID' not in "
 "fiscal_country_group_codes\"> - </span>"
 msgstr ""
+"<span class=\"oe_read_only\" invisible=\"is_vat and 'LATAMID' not in "
+"fiscal_country_group_codes\"> - </span>"
 
 #. module: l10n_latam_base
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__active
@@ -44,11 +115,14 @@ msgid ""
 "been                         issued for your account. Please contact us "
 "directly for this operation."
 msgstr ""
+"Não é permitido alterar o tipo de identificação depois que os Documentos "
+"tiverem sido emitidos para sua conta. Entre em contato conosco diretamente "
+"para realizar essa operação."
 
 #. module: l10n_latam_base
 #: model:ir.model,name:l10n_latam_base.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: l10n_latam_base
 #: model:ir.model,name:l10n_latam_base.model_res_partner
@@ -59,6 +133,11 @@ msgstr "Contato"
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__country_id
 msgid "Country"
 msgstr "País"
+
+#. module: l10n_latam_base
+#: model:ir.model,website_form_label:l10n_latam_base.model_res_partner
+msgid "Create a Customer"
+msgstr "Criar um cliente"
 
 #. module: l10n_latam_base
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__create_uid
@@ -116,7 +195,7 @@ msgstr "Tipo de identificação"
 #. module: l10n_latam_base
 #: model_terms:ir.ui.view,arch_db:l10n_latam_base.address_form_fields
 msgid "Identification Type..."
-msgstr ""
+msgstr "Tipo de identificação..."
 
 #. module: l10n_latam_base
 #: model:ir.model,name:l10n_latam_base.model_l10n_latam_identification_type
@@ -131,6 +210,16 @@ msgid "Is Vat"
 msgstr "É CNPJ"
 
 #. module: l10n_latam_base
+#: model:ir.module.module,summary:base.module_l10n_latam_base
+msgid "LATAM Identification Types"
+msgstr ""
+
+#. module: l10n_latam_base
+#: model:ir.module.module,shortdesc:base.module_l10n_latam_base
+msgid "LATAM Localization Base"
+msgstr ""
+
+#. module: l10n_latam_base
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__write_uid
 msgid "Last Updated by"
 msgstr "Última atualização por"
@@ -143,7 +232,7 @@ msgstr "Última atualização em"
 #. module: l10n_latam_base
 #: model:res.country.group,name:l10n_latam_base.latam
 msgid "Latin America Identification"
-msgstr ""
+msgstr "Identificação da América Latina"
 
 #. module: l10n_latam_base
 #: model:ir.model.fields,field_description:l10n_latam_base.field_l10n_latam_identification_type__name
@@ -180,6 +269,3 @@ msgstr "O tipo de identificação"
 #: model_terms:ir.ui.view,arch_db:l10n_latam_base.view_partner_latam_form
 msgid "Type"
 msgstr "Tipo"
-
-#~ msgid "Create a Customer"
-#~ msgstr "Criar um cliente"

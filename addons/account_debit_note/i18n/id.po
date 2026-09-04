@@ -3,14 +3,15 @@
 # * account_debit_note
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 05:56+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-05 14:23+0000\n"
+"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_debit_note/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +40,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"debit_origin_move_type != 'in_invoice'\">Vendor Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"debit_origin_move_type != "
+"'out_invoice'\">Faktur</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"debit_origin_move_type != 'in_invoice'\">Tagihan Vendor</span>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -48,12 +53,12 @@ msgstr "<span class=\"o_stat_text\">Nota Debit</span>"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Debit Note Date</strong>"
-msgstr ""
+msgstr "<strong>Tanggal Nota Debit</strong>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Invoice Date</strong>"
-msgstr ""
+msgstr "<strong>Tanggal Faktur</strong>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
@@ -63,22 +68,22 @@ msgstr "Wizard Tambahkan Nota Debit"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Debit Note"
-msgstr ""
+msgstr "Nota Debit Dibatalkan"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "Faktur Dibatalkan"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Debit Note"
-msgstr ""
+msgstr "Nota Debit Proforma Dibatalkan"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Invoice"
-msgstr ""
+msgstr "Faktur Proforma Dibatalkan"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
@@ -145,7 +150,7 @@ msgstr "Nota-Nota Debit"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_move_type
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_move_type
 msgid "Debit Origin Move Type"
-msgstr ""
+msgstr "Tipe Transaksi Asal Nota Debit"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
@@ -162,22 +167,22 @@ msgstr "Nama Tampilan"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Debit Note"
-msgstr ""
+msgstr "Draft Nota Debit"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Draft Faktur"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Debit Note"
-msgstr ""
+msgstr "Draft Nota Debit Proforma"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Invoice"
-msgstr ""
+msgstr "Draft Faktur Proforma"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
@@ -204,13 +209,13 @@ msgstr ""
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Invoice"
-msgstr ""
+msgstr "Faktur"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Invoices"
-msgstr ""
+msgstr "Faktur"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -262,12 +267,12 @@ msgstr "Faktur Asli yang Didebit"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Debit Note"
-msgstr ""
+msgstr "Nota Debit Proforma"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "Faktur Proforma"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -298,7 +303,7 @@ msgstr "Gunakan Jurnal Khusus"
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Vendor Bills"
-msgstr ""
+msgstr "Tagihan Vendor"
 
 #. module: account_debit_note
 #. odoo-python
@@ -326,8 +331,8 @@ msgstr ""
 "Anda tidak dapat membuat nota debit untuk faktur yang sudah di-link ke nota "
 "debit."
 
-#~ msgid "This debit note was created from: %s"
-#~ msgstr "Nota debit dibuat dari: %s"
+msgid "This debit note was created from: %s"
+msgstr "Nota debit dibuat dari: %s"
 
-#~ msgid "debit_origin_id"
-#~ msgstr "debit_origin_id"
+msgid "debit_origin_id"
+msgstr "debit_origin_id"

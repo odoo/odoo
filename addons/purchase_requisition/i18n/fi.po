@@ -31,9 +31,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-22 00:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-31 09:11+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "purchase_requisition/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -183,7 +183,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "An example of a purchase agreement is a blanket order."
-msgstr "Esimerkki ostosopimuksesta on yleistilaus."
+msgstr "Esimerkki ostosopimuksesta on puitetilaus."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
@@ -214,12 +214,12 @@ msgstr "BO00004"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__requisition_type__blanket_order
 msgid "Blanket Order"
-msgstr "Yleistilaus"
+msgstr "Puitetilaus"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Blanket Orders"
-msgstr "Yleistilaukset"
+msgstr "Puitetilaukset"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -377,9 +377,9 @@ msgid ""
 "benefit\n"
 "            from the negotiated prices."
 msgstr ""
-"Yleistilausta varten voit kirjata sopimuksen tietyksi ajanjaksoksi\n"
-"            (esim. vuosi) ja tilata tuotteita tämän sopimuksen puitteissa "
-"hyödyntääksesi siinä\n"
+"Voit kirjata puitetilauksen sopimuksen tietyksi ajanjaksoksi\n"
+"            (esim. vuosi) ja tilata tuotteita tämän sopimuksen mukaisesti "
+"hyödyntääksesi\n"
 "            neuvoteltuja hintoja."
 
 #. module: purchase_requisition
@@ -458,7 +458,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_ids
@@ -588,7 +588,7 @@ msgstr "Tuote"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
@@ -661,12 +661,12 @@ msgstr "Ostopyynnön rivi"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__requisition_type__purchase_template
 msgid "Purchase Template"
-msgstr "Oston malli"
+msgstr "Oston mallipohja"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Purchase Templates"
-msgstr "Oston mallit"
+msgstr "Oston mallipohjat"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__product_qty
@@ -687,7 +687,7 @@ msgstr "RFQs / tilaukset"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__reference
@@ -825,9 +825,8 @@ msgid ""
 "There is already an open blanket order for this supplier. We suggest you "
 "complete this open blanket order, instead of creating a new one."
 msgstr ""
-"Tälle toimittajalle on jo tehty avoin yleistilaus. Suosittelemme, että "
-"täydennät tämän avoimen kokonaistilauksen sen sijaan, että luot uuden "
-"tilauksen."
+"Tälle toimittajalle on jo olemassa puitetilaus. Suosittelemme täydentämään "
+"tämän puitetilauksen uuden tilauksen luomisen sijaan."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -908,13 +907,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a price."
-msgstr "Et voi vahvistaa yleistilausta, jonka riveiltä puuttuu hinta."
+msgstr "Et voi vahvistaa puitetilausta, jonka riveiltä puuttuu hinta."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "You cannot confirm a blanket order with lines missing a quantity."
-msgstr "Et voi vahvistaa yleistilausta, jonka riveiltä puuttuu määrä."
+msgstr "Et voi vahvistaa puitetilausta, jonka riveiltä puuttuu määrä."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -934,18 +933,15 @@ msgid ""
 "blanket order."
 msgstr ""
 "Negatiivinen hinta tai yksikköhinta ei voi olla 0 jo vahvistetulle "
-"yleistilaukselle."
+"puitetilaukselle."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "e.g. PO0025"
 msgstr "esim. PO0025"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Font awesome -ikoni esim.. fa-tasks"
+msgid "Website Messages"
+msgstr "Verkkosivun ilmoitukset"
 
-#~ msgid "Website Messages"
-#~ msgstr "Verkkosivun ilmoitukset"
-
-#~ msgid "Website communication history"
-#~ msgstr "Verkkosivun viestihistoria"
+msgid "Website communication history"
+msgstr "Verkkosivun viestihistoria"

@@ -43,9 +43,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 11:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-20 11:12+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -361,6 +361,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hei <t t-"
+"out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
+"                        <t t-else=\"\">Hei,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Kiitos ostoksestasi <t t-"
+"out=\"store_name\">Myymälän nimi</t>!</div>\n"
+"                    <div>Löydät liitteenä kuitin ostoksestasi <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> <t "
+"t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">aika</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Ystävällisin terveisin,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -5031,7 +5061,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__name
 msgid "Label"
-msgstr "Otsikko"
+msgstr "Nimike"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_lang
@@ -5519,7 +5549,7 @@ msgstr "Viesti"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_has_error
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6280,7 +6310,7 @@ msgstr "Yhden klikkauksen maksu"
 #: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
-msgstr "Jatkuva"
+msgstr "Käynnissä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_appointment
@@ -6601,7 +6631,7 @@ msgstr "Tilauksen viite"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Order Reference"
-msgstr "Tilauksen viite"
+msgstr "Tilausviite"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_seq_id
@@ -8127,7 +8157,7 @@ msgstr "Tuotetunnisteet"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_tmpl_id
 msgid "Product Template"
-msgstr "Tuotemalli"
+msgstr "Tuotepohja"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_line
@@ -8152,7 +8182,7 @@ msgstr "Tuotteen yksikkö"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_attribute_action
@@ -8281,7 +8311,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__rating_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8602,7 +8632,7 @@ msgstr "Rajoita hintojen muokkaaminen esimiehille"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Retail"
-msgstr "Jälleenmyynti"
+msgstr "Vähittäiskauppa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9068,7 +9098,7 @@ msgstr "Lähetetty asiakkaille, kuitti liitteenä"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
@@ -9723,7 +9753,7 @@ msgstr "Veron näyttäminen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal
 msgid "Tax Excl."
-msgstr "Veroton."
+msgstr "Veroton"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_price_inclusion_wizard_form
@@ -9744,7 +9774,7 @@ msgstr "Verotunnus"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
-msgstr "Vero sis."
+msgstr "sis. verot"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_price_inclusion_wizard_form
@@ -12194,52 +12224,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "Auto-generated session for orphan orders, ignored in constraints"
-#~ msgstr ""
-#~ "Automaattisesti luotu istunto orpoja tilauksia varten, jätetään huomiotta "
-#~ "rajoituksissa"
-
-#~ msgid "Be aware that reloading data will delete unsaved orders."
-#~ msgstr ""
-#~ "Huomaa, että tietojen uudelleenlataaminen poistaa tallentamattomat "
-#~ "tilaukset."
-
-#~ msgid "Full"
-#~ msgstr "Täysi"
-
-#~ msgid "Full Synchronization:"
-#~ msgstr "Täysi synkronointi:"
-
-#~ msgid "Limited"
-#~ msgstr "Rajoitettu"
-
-#~ msgid "Limited Synchronization:"
-#~ msgstr "Rajoitettu synkronointi:"
-
-#~ msgid "Module"
-#~ msgstr "Moduuli"
-
-#~ msgid "Number of Rescue Session"
-#~ msgstr "Pelastusistuntojen lukumäärä"
-
-#~ msgid "PoS Customer Display opened in a new window"
-#~ msgstr "Kassan asiakasnäyttö on avattu uuteen ikkunaan"
-
-#~ msgid "Recovery Session"
-#~ msgstr "Toipumisistunto"
-
-#~ msgid "Rescue Sessions"
-#~ msgstr "Pelastusistunnot"
-
-#~ msgid "Store edited orders in the backend"
-#~ msgstr "Tallenna muokatut tilaukset backendiin"
-
-#~ msgid "Track orders edits"
-#~ msgstr "Seuraa tilausten muokkauksia"
-
-#~ msgid "You can update it by selecting one of the following options:"
-#~ msgstr "Voit päivittää sen valitsemalla jonkin seuraavista vaihtoehdoista:"
-
-#~ msgid "outstanding rescue session"
-#~ msgstr "avoin pelastusistunto"

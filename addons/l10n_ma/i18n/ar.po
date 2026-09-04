@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 18:15+0000\n"
-"PO-Revision-Date: 2025-11-17 03:14+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19-l10n/"
+"POT-Creation-Date: 2026-08-28 18:21+0000\n"
+"PO-Revision-Date: 2026-07-21 20:27+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/"
 "l10n_ma/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,16 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_ma
+#: model:ir.module.module,description:base.module_l10n_ma
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Morocco.\n"
+"\n"
+"This module has been built with the help of Caudigef.\n"
+msgstr ""
 
 #. module: l10n_ma
 #: model_terms:ir.ui.view,arch_db:l10n_ma.address_form_fields
@@ -48,6 +57,7 @@ msgstr "مخطط مستندات الشركة"
 
 #. module: l10n_ma
 #: model:ir.model.fields,field_description:l10n_ma.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_ma.field_account_journal__display_name
 #: model:ir.model.fields,field_description:l10n_ma.field_base_document_layout__display_name
 msgid "Display Name"
 msgstr "اسم العرض"
@@ -63,19 +73,24 @@ msgid "ICE"
 msgstr ""
 
 #. module: l10n_ma
-#. odoo-python
-#: code:addons/l10n_ma/controllers/portal.py:0
-msgid "ICE number should consist of 15 digits."
-msgstr ""
-
-#. module: l10n_ma
 #: model:ir.model.fields,field_description:l10n_ma.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_ma.field_account_journal__id
 #: model:ir.model.fields,field_description:l10n_ma.field_base_document_layout__id
 msgid "ID"
 msgstr "المُعرف"
 
-#~ msgid "Contact"
-#~ msgstr "جهة الاتصال"
+#. module: l10n_ma
+#: model:ir.model,name:l10n_ma.model_account_journal
+msgid "Journal"
+msgstr ""
 
-#~ msgid "Create a Customer"
-#~ msgstr "Create a Customer"
+#. module: l10n_ma
+#: model:ir.module.module,shortdesc:base.module_l10n_ma
+msgid "Morocco - Accounting"
+msgstr ""
+
+msgid "Contact"
+msgstr "جهة الاتصال"
+
+msgid "Create a Customer"
+msgstr "Create a Customer"

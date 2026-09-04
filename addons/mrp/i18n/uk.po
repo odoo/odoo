@@ -6,17 +6,17 @@
 # Martin Trigaux, 2022
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 18:47+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-master/"
-"mrp/uk/>\n"
+"PO-Revision-Date: 2026-07-21 08:16+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-s19-4/mrp/"
+"uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,13 +56,10 @@ msgstr " <br/><br/> Компоненти будуть взяті з <b>%s</b>."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid ""
 " <br/><br/> The manufactured products will be moved towards <b>%"
 "(destination)s</b>, <br/> as specified from <b>%(operation)s</b> destination."
 msgstr ""
-" <br/><br/> Вироблена продукція буде переміщена до <b>%(destination)s</b>, "
-"<br/> як визначено в <b>%(operation)s</b> призначенні."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_bom__ready_to_produce__all_available
@@ -110,23 +107,20 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s Sequence picking before manufacturing"
-msgstr "%(name)s Послідовний вибір перед виробництвом"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s Sequence production"
-msgstr "%(name)s Послідовність виробництва"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_warehouse.py:0
-#, fuzzy
 msgid "%(name)s Sequence stock after manufacturing"
-msgstr "%(name)s Послідовність запасів після виробництва"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -137,9 +131,8 @@ msgstr "%(producible_qty)s Готово"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_unbuild.py:0
-#, fuzzy
 msgid "%(product)s: Insufficient Quantity To Unbuild"
-msgstr "%(product)s: Недостатня кількість для розбирання"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -255,17 +248,12 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_steps
-#, fuzzy
 msgid ""
 "1 Step: Consume components from stock and produce.\n"
 "              2 Steps: Pick components from stock and then produce.\n"
 "              3 Steps: Pick components from stock, produce, and then move "
 "final product(s) from production area to stock."
 msgstr ""
-"1. Крок: Спожити компоненти зі складу та виробити.\n"
-"2. Кроки: Відібрати компоненти зі складу та виробити.\n"
-"3. Кроки: Відібрати компоненти зі складу, виробити, а потім перемістити "
-"кінцевий(і) продукт(и) з виробничої зони на склад."
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
@@ -280,9 +268,8 @@ msgstr "8 GB RAM"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/workcenter_dashboard_graph/workcenter_dashboard_graph_field.js:0
-#, fuzzy
 msgid ":  hours"
-msgstr ":  години"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -328,27 +315,23 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#, fuzzy
 msgid "<span class=\"col-6\">In Progress</span>"
-msgstr "<span class=\"col-6\">В процесі</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#, fuzzy
 msgid "<span class=\"col-6\">Late</span>"
-msgstr "<span class=\"col-6\">Протерміновані</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#, fuzzy
 msgid "<span class=\"col-6\">To Close</span>"
-msgstr "<span class=\"col-6\">До закриття</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#, fuzzy
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr "<span class=\"col-6\">В очікуванні</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -509,11 +492,9 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid ""
 "<span name=\"to_produce\" class=\"fw-bold text-nowrap\">To Produce</span>"
 msgstr ""
-"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">Виготовити</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -533,9 +514,8 @@ msgstr "<span>Дії</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "<span>Generate BOM</span>"
-msgstr "<span>Створити BOM</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -733,9 +713,8 @@ msgstr "Оформлення виключення дії"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_plans_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_plans_ids
-#, fuzzy
 msgid "Activity Plans"
-msgstr "Плани дій"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -854,13 +833,10 @@ msgstr "Всі товари"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__batch_size
-#, fuzzy
 msgid ""
 "All automatically generated manufacturing orders for this product will be of "
 "this size."
 msgstr ""
-"Усі автоматично згенеровані замовлення на виробництво цього товару будуть "
-"такого розміру."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
@@ -1167,16 +1143,14 @@ msgstr "Рядки специфікації згаданої специфіка�
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
-#, fuzzy
 msgid "Back to BoM"
-msgstr "Повернутися до BoM"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
-#, fuzzy
 msgid "Back to Production"
-msgstr "Повернутися до виробництва"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
@@ -1225,9 +1199,8 @@ msgstr "Базується на"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__enable_batch_size
-#, fuzzy
 msgid "Batch Size"
-msgstr "Розмір партії"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__batch_size
@@ -1388,9 +1361,8 @@ msgstr "Вартість специфікації"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
-#, fuzzy
 msgid "BoM Costs"
-msgstr "Вартість BoM"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
@@ -1499,9 +1471,8 @@ msgstr "Скасувати"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#, fuzzy
 msgid "Cancel Manufacturing Order"
-msgstr "Скасувати замовлення на виробництво"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -1586,13 +1557,10 @@ msgstr "Змінити кількість для виробництва"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid ""
 "Changing the product or variant will permanently reset all previously "
 "encoded variant-related data."
 msgstr ""
-"Зміна товару або варіанту призведе до остаточного скидання всіх раніше "
-"закодованих даних, пов’язаних із варіантом."
 
 #. module: mrp
 #. odoo-javascript
@@ -1722,9 +1690,8 @@ msgstr "Статус доступності компоненту"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Components Available"
-msgstr "Доступні компоненти"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_src_id
@@ -1783,9 +1750,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-#, fuzzy
 msgid "Conflicts"
-msgstr "Конфлікти"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__product_consumed_qty_uom
@@ -1859,9 +1825,8 @@ msgstr "Розділена вартість (%)"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost as it is currently accumulated"
-msgstr "Вартість, накопичена на даний момент"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__cost_mode
@@ -1871,9 +1836,8 @@ msgstr ""
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost based on cost projection"
-msgstr "Вартість на основі прогнозу витрат"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -1886,9 +1850,8 @@ msgstr ""
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
-#, fuzzy
 msgid "Cost based on the BoM"
-msgstr "Собівартість на основі специфікації"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -2105,9 +2068,8 @@ msgstr "Дата"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__search_date_category
-#, fuzzy
 msgid "Date Category"
-msgstr "Категорія дати"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2214,13 +2176,10 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
-#, fuzzy
 msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
 msgstr ""
-"Визначте графік роботи ресурсу. Якщо його не встановлено, ресурс матиме "
-"повністю гнучкий робочий графік."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delay_alert_date
@@ -2229,15 +2188,13 @@ msgstr "Дата сповіщення про затримку"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Delayed Productions"
-msgstr "Затримані виробництва"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
-#, fuzzy
 msgid "Delegate part of the production process to subcontractors"
-msgstr "Передайте частину виробничого процесу субпідрядникам"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
@@ -2246,9 +2203,8 @@ msgstr "Замовлення на доставку"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "Demand"
-msgstr "Попит"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__note
@@ -2297,9 +2253,8 @@ msgstr "Відмінити"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.xml:0
 #: code:addons/mrp/static/src/components/wo_list_view_dropdown/wo_list_view_dropdown.js:0
-#, fuzzy
 msgid "Display"
-msgstr "Відобразити"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__display_name
@@ -2830,9 +2785,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__hours_per_week
-#, fuzzy
 msgid "Hours per Week"
-msgstr "Години на тиждень"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__id
@@ -3028,11 +2982,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
-#, fuzzy
 msgid "Impossible to plan. Please check the workcenter availabilities."
 msgstr ""
-"Неможливо спланувати. Будь ласка, перевірте наявність місць у робочому "
-"центрі."
 
 #. module: mrp
 #. odoo-javascript
@@ -3056,15 +3007,13 @@ msgstr "На транзиті"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
-#, fuzzy
 msgid "In the BoM"
-msgstr "У BoM"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
-#, fuzzy
 msgid "In the MO"
-msgstr "В MO"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_deadline
@@ -3077,9 +3026,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_default_code
-#, fuzzy
 msgid "Internal Reference"
-msgstr "Внутрішні посилання"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
@@ -3100,9 +3048,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_delayed
-#, fuzzy
 msgid "Is Delayed"
-msgstr "Затримано"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_due_today
@@ -3293,9 +3240,8 @@ msgstr "Останні дії"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Late Availability"
-msgstr "Пізня доступність"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -3461,9 +3407,8 @@ msgstr "Звіт огляду MO"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "MO Pending"
-msgstr "MO в очікуванні"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -3736,9 +3681,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
-#, fuzzy
 msgid "Max Batch Size"
-msgstr "Максимальний розмір партії"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_merge
@@ -3789,9 +3733,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__move_id
-#, fuzzy
 msgid "Move"
-msgstr "Переміщення"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -3842,9 +3785,8 @@ msgstr "Дедлайн моєї дії"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "My MOs"
-msgstr "Мої MO"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__name
@@ -3853,9 +3795,8 @@ msgstr "Назва"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__never_product_template_attribute_value_ids
-#, fuzzy
 msgid "Never attribute values"
-msgstr "Ніколи не приписувати значення"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -3916,9 +3857,8 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/stock_rule.py:0
-#, fuzzy
 msgid "No BoM Found"
-msgstr "Не знайдено BoM"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -4055,9 +3995,8 @@ msgstr "Кількість дій"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_in_progress
-#, fuzzy
 msgid "Number of Manufacturing Orders In Progress"
-msgstr "Кількість виробничих замовлень, що виконуються"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
@@ -4066,9 +4005,8 @@ msgstr "Кількість замовлень на виробництво піз
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_to_close
-#, fuzzy
 msgid "Number of Manufacturing Orders To Close"
-msgstr "Кількість виробничих замовлень, що мають бути закриті"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
@@ -4480,9 +4418,8 @@ msgstr "Комплектувати компоненти, а потім виго�
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm
-#, fuzzy
 msgid "Pick components then manufacture (2 steps)"
-msgstr "Вибір компонентів, а потім виробництво (2 кроки)"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -4493,9 +4430,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_warehouse__manufacture_steps__pbm_sam
-#, fuzzy
 msgid "Pick components, manufacture, then store products (3 steps)"
-msgstr "Вибір компонентів, виробництво, а потім зберігання продукції (3 кроки)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
@@ -4570,9 +4506,8 @@ msgstr "Заплановано"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_start
-#, fuzzy
 msgid "Planned Date"
-msgstr "Очікувана дата"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.mrp_planning_menu_root
@@ -4583,9 +4518,8 @@ msgstr "Планування"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
-#, fuzzy
 msgid "Planning Issues"
-msgstr "Помилки планування"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -4675,9 +4609,8 @@ msgstr "До виробництва"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
-#, fuzzy
 msgid "Prepare MO"
-msgstr "Підготувати MO"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__previous_date_start
@@ -4761,9 +4694,8 @@ msgstr "Виготовлено"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "Produced Quantity"
-msgstr "Виготовлена кількість"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
@@ -4808,22 +4740,19 @@ msgstr "Завантаженість виробництва"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_bom
-#, fuzzy
 msgid "Product Catalog Product Is In Bom"
-msgstr "Каталог товарів у специфікації"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_mo
-#, fuzzy
 msgid "Product Catalog Product Is In Mo"
-msgstr "Каталог товарів у виробництві"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-#, fuzzy
 msgid "Product Documents"
-msgstr "Документи товару"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_virtual_available
@@ -4852,9 +4781,8 @@ msgstr "Переміщення товару (Рядок складського �
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_name
-#, fuzzy
 msgid "Product Name"
-msgstr "Назва товару"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_qty_available
@@ -4868,9 +4796,8 @@ msgstr "Поповнення товару"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_replenish_mixin
-#, fuzzy
 msgid "Product Replenish Mixin"
-msgstr "Поповнення товару Mixin"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_tmpl_id
@@ -5036,9 +4963,8 @@ msgstr "Розмножте скасування та розбийте"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__properties
-#, fuzzy
 msgid "Properties"
-msgstr "Властивості"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_quality_control
@@ -5260,9 +5186,8 @@ msgstr "Залишилось днів"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
-#, fuzzy
 msgid "Remaining Time"
-msgstr "Час що залишився"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__remaining_time
@@ -5535,9 +5460,8 @@ msgstr "Показати колонку специфікації"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__show_bom
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__show_bom
-#, fuzzy
 msgid "Show Bom"
-msgstr "Показати Bom"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__show_bom_tab
@@ -5582,9 +5506,8 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr "Показати усі записи з протермінованими діями"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
@@ -5728,9 +5651,8 @@ msgstr "Початкова дата"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
-#, fuzzy
 msgid "Start date"
-msgstr "Початкова дата"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
@@ -5939,16 +5861,14 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "The backorder %s has been created."
-msgstr "Дозамовлення %s створене."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
-#, fuzzy
 msgid "The batch size must be positive!"
-msgstr "Розмір партії повинен бути позитивним числом!"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -5963,9 +5883,8 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__day_2
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
-#, fuzzy
 msgid "The day after tomorrow"
-msgstr "Післязавтра"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6119,9 +6038,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
-#, fuzzy
 msgid "The total should be equal to the quantity to produce."
-msgstr "Загальна сума повинна дорівнювати кількості для виробництва."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__cost_mode__estimated
@@ -6270,9 +6188,8 @@ msgstr "Журнали часу"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "Time Spent"
-msgstr "Витрачений час"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6346,9 +6263,8 @@ msgstr "Для запуску"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
-#, fuzzy
 msgid "To Manufacture"
-msgstr "До виготовлення"
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -6394,9 +6310,8 @@ msgstr "Верхній шар дерев'яної панелі."
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
-#, fuzzy
 msgid "Total Cost"
-msgstr "Загальна вартість"
+msgstr ""
 
 #. module: mrp
 #. odoo-javascript
@@ -6756,16 +6671,14 @@ msgstr "ABC постачальника"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#, fuzzy
 msgid "View Planning"
-msgstr "Переглянути розклад"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
-#, fuzzy
 msgid "Visible to all"
-msgstr "Видно всім"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -6786,9 +6699,8 @@ msgstr "Склад"
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
-#, fuzzy
 msgid "Warehouse:"
-msgstr "Склад:"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
@@ -7190,9 +7102,8 @@ msgstr "Ви можете об'єднати виробництво лише з �
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot cancel a manufacturing order that is already done."
-msgstr "Ви не можете скасувати виробниче замовлення, яке вже виконано."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7216,9 +7127,8 @@ msgstr "Ви не можете створити циклічну залежні�
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid "You cannot delete a manufacturing order that is already done."
-msgstr "Ви не можете видалити виробниче замовлення, яке вже виконано."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7348,13 +7258,10 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
-#, fuzzy
 msgid ""
 "You need to supply Lot/Serial Number for products and 'consume' them: %"
 "(missing_products)s"
 msgstr ""
-"Вам потрібно надати номер партії/серії товарів та «спожити» їх: %"
-"(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7487,142 +7394,126 @@ msgstr "реальна тривалість"
 msgid "split"
 msgstr "розділити"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d дні"
+msgid "Allocation Report for Manufacturing Orders"
+msgstr "Звіт про розподіл для замовлень на виробництво"
+
+msgid "Create backorder"
+msgstr "Створити дозамовлення"
+
+msgid "MRP Reception Report"
+msgstr "Звіт про прийом MRP"
+
+msgid "No Backorder"
+msgstr "Немає дозамовлення"
+
+msgid "Produce All"
+msgstr "Виготовити все"
+
+msgid "Set Quantities & Validate"
+msgstr "Встановіть Кількість та Підтвердіть"
+
+msgid "Show Produce"
+msgstr "Показати Виготовити"
+
+msgid "Show Produce All"
+msgstr "Показати Виготовити все"
+
+msgid "Stock Reception Report"
+msgstr "Звіт поповнення складу"
+
+msgid "Technical field to check if produce all button can be shown"
+msgstr ""
+"Технічне поле, щоб перевірити, чи можна показати кнопку «Виготовити все»."
+
+msgid "Technical field to check if produce button can be shown"
+msgstr "Технічне поле для перевірки, чи можна показати кнопку виробництва"
+
+msgid "Use Reception Report with Manufacturing Orders"
+msgstr "Використовуйте звіт про прийом із замовленнями на виробництво"
 
 #, fuzzy
-#~ msgid "+ %s day(s)"
-#~ msgstr "+ %s день(дні)"
+msgid ""
+"View and allocate production quantities to customer orders or other "
+"manufacturing orders"
+msgstr ""
+"Перегляд та розподіл обсягів виробництва між замовленнями клієнтів або "
+"іншими виробничими замовленнями"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
+msgid "Check availability"
+msgstr "Перевірте наявність"
 
-#~ msgid "Print Labels"
-#~ msgstr "Друк етикеток"
+msgid ""
+"Create operation level dependencies that will influence both planning and "
+"the status of work orders upon MO confirmation. If this feature is ticked, "
+"and nothing is specified, Odoo will assume that all operations can be "
+"started simultaneously."
+msgstr ""
+"Створіть залежності рівня операцій, які впливатимуть як на планування, так і "
+"на статус робочих нарядів після підтвердження MO. Якщо ця функція позначена "
+"галочкою, і нічого не вказано, Odoo вважатиме, що всі операції можна "
+"розпочати одночасно."
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "Інформація про поповнення запасів постачальника"
+msgid "Operation Dependencies"
+msgstr "Залежності операції"
 
-#~ msgid "Allocation Report for Manufacturing Orders"
-#~ msgstr "Звіт про розподіл для замовлень на виробництво"
+msgid ""
+"Set the order that work orders should be processed in. Activate the feature "
+"within each BoM's Miscellaneous tab"
+msgstr ""
+"Установіть порядок обробки робочих замовлень. Активуйте цю функцію на "
+"вкладці «Різне» кожного опису"
 
-#~ msgid "Create backorder"
-#~ msgstr "Створити дозамовлення"
-
-#~ msgid "MRP Reception Report"
-#~ msgstr "Звіт про прийом MRP"
-
-#~ msgid "No Backorder"
-#~ msgstr "Немає дозамовлення"
-
-#~ msgid "Produce All"
-#~ msgstr "Виготовити все"
-
-#~ msgid "Set Quantities & Validate"
-#~ msgstr "Встановіть Кількість та Підтвердіть"
-
-#~ msgid "Show Produce"
-#~ msgstr "Показати Виготовити"
-
-#~ msgid "Show Produce All"
-#~ msgstr "Показати Виготовити все"
-
-#~ msgid "Stock Reception Report"
-#~ msgstr "Звіт поповнення складу"
-
-#~ msgid "Technical field to check if produce all button can be shown"
-#~ msgstr ""
-#~ "Технічне поле, щоб перевірити, чи можна показати кнопку «Виготовити все»."
-
-#~ msgid "Technical field to check if produce button can be shown"
-#~ msgstr "Технічне поле для перевірки, чи можна показати кнопку виробництва"
-
-#~ msgid "Use Reception Report with Manufacturing Orders"
-#~ msgstr "Використовуйте звіт про прийом із замовленнями на виробництво"
+msgid "The number of products already handled by this work order"
+msgstr "Кількість товарів, які вже обробляються цим робочим замовленням"
 
 #, fuzzy
-#~ msgid ""
-#~ "View and allocate production quantities to customer orders or other "
-#~ "manufacturing orders"
-#~ msgstr ""
-#~ "Перегляд та розподіл обсягів виробництва між замовленнями клієнтів або "
-#~ "іншими виробничими замовленнями"
+msgid "Time Remaining"
+msgstr "Час що залишився"
 
-#~ msgid "Check availability"
-#~ msgstr "Перевірте наявність"
+msgid "Total To Consume"
+msgstr "Всього до споживання"
 
-#~ msgid ""
-#~ "Create operation level dependencies that will influence both planning and "
-#~ "the status of work orders upon MO confirmation. If this feature is "
-#~ "ticked, and nothing is specified, Odoo will assume that all operations "
-#~ "can be started simultaneously."
-#~ msgstr ""
-#~ "Створіть залежності рівня операцій, які впливатимуть як на планування, "
-#~ "так і на статус робочих нарядів після підтвердження MO. Якщо ця функція "
-#~ "позначена галочкою, і нічого не вказано, Odoo вважатиме, що всі операції "
-#~ "можна розпочати одночасно."
+msgid "Unbuild: %s"
+msgstr "Розібрати: %s"
 
-#~ msgid "Operation Dependencies"
-#~ msgstr "Залежності операції"
+msgid "Use Operation Dependencies"
+msgstr "Використовувати залежності операцій"
 
-#~ msgid ""
-#~ "Set the order that work orders should be processed in. Activate the "
-#~ "feature within each BoM's Miscellaneous tab"
-#~ msgstr ""
-#~ "Установіть порядок обробки робочих замовлень. Активуйте цю функцію на "
-#~ "вкладці «Різне» кожного опису"
+msgid "Website Messages"
+msgstr "Повідомлення з веб-сайту"
 
-#~ msgid "The number of products already handled by this work order"
-#~ msgstr "Кількість товарів, які вже обробляються цим робочим замовленням"
+msgid "Website communication history"
+msgstr "Історія бесіди на сайті"
 
-#, fuzzy
-#~ msgid "Time Remaining"
-#~ msgstr "Час що залишився"
+msgid "days"
+msgstr "дні"
 
-#~ msgid "Total To Consume"
-#~ msgstr "Всього до споживання"
+msgid ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Upload files to your product\n"
+"                    </p><p>\n"
+"                        Use this feature to store any files, like drawings "
+"or specifications.\n"
+"                    </p>"
+msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Завантажте файли на ваш товар\n"
+"                    </p><p>\n"
+"                        Використовуйте цю функцію для зберігання будь-яких "
+"файлів, таких як креслення або специфікації.\n"
+"                    </p>"
 
-#~ msgid "Unbuild: %s"
-#~ msgstr "Розібрати: %s"
+msgid "Attachments Count"
+msgstr "Підрахунок прикріплення"
 
-#~ msgid "Use Operation Dependencies"
-#~ msgstr "Використовувати залежності операцій"
+msgid "Files attached to the product."
+msgstr "Файли прикріплені до товару."
 
-#~ msgid "Website Messages"
-#~ msgstr "Повідомлення з веб-сайту"
+msgid "Hidden"
+msgstr "Приховано"
 
-#~ msgid "Website communication history"
-#~ msgstr "Історія бесіди на сайті"
+msgid "Product Attachments"
+msgstr "Прикріплення товару"
 
-#~ msgid "days"
-#~ msgstr "дні"
-
-#~ msgid ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Upload files to your product\n"
-#~ "                    </p><p>\n"
-#~ "                        Use this feature to store any files, like "
-#~ "drawings or specifications.\n"
-#~ "                    </p>"
-#~ msgstr ""
-#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
-#~ "                        Завантажте файли на ваш товар\n"
-#~ "                    </p><p>\n"
-#~ "                        Використовуйте цю функцію для зберігання будь-"
-#~ "яких файлів, таких як креслення або специфікації.\n"
-#~ "                    </p>"
-
-#~ msgid "Attachments Count"
-#~ msgstr "Підрахунок прикріплення"
-
-#~ msgid "Files attached to the product."
-#~ msgstr "Файли прикріплені до товару."
-
-#~ msgid "Hidden"
-#~ msgstr "Приховано"
-
-#~ msgid "Product Attachments"
-#~ msgstr "Прикріплення товару"
-
-#~ msgid "Product Document"
-#~ msgstr "Документ товару"
+msgid "Product Document"
+msgstr "Документ товару"

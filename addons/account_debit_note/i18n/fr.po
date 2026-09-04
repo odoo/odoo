@@ -4,21 +4,22 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# "Cécile Collart (cco)" <cco@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 01:05+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-27 07:26+0000\n"
+"Last-Translator: \"Cécile Collart (cco)\" <cco@odoo.com>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_debit_note/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_debit_note
 #: model:ir.module.module,description:base.module_account_debit_note
@@ -40,6 +41,11 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"debit_origin_move_type != 'in_invoice'\">Vendor Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"debit_origin_move_type != "
+"'out_invoice'\">Facture</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"debit_origin_move_type != 'in_invoice'\">Facture fournisseur</"
+"span>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -49,12 +55,12 @@ msgstr "<span class=\"o_stat_text\">Notes de débit</span>"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Debit Note Date</strong>"
-msgstr ""
+msgstr "<strong>Date de la note de début</strong>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Invoice Date</strong>"
-msgstr ""
+msgstr "<strong>Date de la facture</strong>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
@@ -64,22 +70,22 @@ msgstr "Assistant d'ajout de note de débit"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Debit Note"
-msgstr ""
+msgstr "Note de débit annulée"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "Facture annulée"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Debit Note"
-msgstr ""
+msgstr "Note de débit pro forma annulée"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Invoice"
-msgstr ""
+msgstr "Facture pro forma annulée"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
@@ -146,7 +152,7 @@ msgstr "Notes de débit"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_move_type
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_move_type
 msgid "Debit Origin Move Type"
-msgstr ""
+msgstr "Type de mouvement d'origine du débit"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
@@ -163,22 +169,22 @@ msgstr "Nom d'affichage"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Debit Note"
-msgstr ""
+msgstr "Note de débit brouillon"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Facture brouillon"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Debit Note"
-msgstr ""
+msgstr "Brouillon de note de débit pro forma"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Invoice"
-msgstr ""
+msgstr "Brouillon de facture pro forma"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
@@ -190,7 +196,7 @@ msgstr "ID"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr "Si vide, utilise le journal de l’écriture comptable à débiter."
+msgstr "Si vide, utilise le journal de la pièce comptable à débiter."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -205,13 +211,13 @@ msgstr ""
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Invoice"
-msgstr ""
+msgstr "Facture"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Invoices"
-msgstr ""
+msgstr "Factures"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -263,12 +269,12 @@ msgstr "Facture originale débitée"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Debit Note"
-msgstr ""
+msgstr "Note de débit pro forma"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "Facture pro forma"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -299,7 +305,7 @@ msgstr "Utiliser un journal spécifique"
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Vendor Bills"
-msgstr ""
+msgstr "Factures fournisseurs"
 
 #. module: account_debit_note
 #. odoo-python
@@ -327,8 +333,8 @@ msgstr ""
 "Vous ne pouvez pas établir une note de débit pour une facture qui est déjà "
 "liée à une note de débit."
 
-#~ msgid "This debit note was created from: %s"
-#~ msgstr "Cette note de débit a été créée à partir de : %s"
+msgid "This debit note was created from: %s"
+msgstr "Cette note de débit a été créée à partir de : %s"
 
-#~ msgid "debit_origin_id"
-#~ msgstr "debit_origin_id"
+msgid "debit_origin_id"
+msgstr "debit_origin_id"

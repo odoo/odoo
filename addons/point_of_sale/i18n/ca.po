@@ -39,9 +39,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 17:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-17 18:09+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -358,6 +358,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hola, <t t-"
+"out=\"client_name\">nom del client</t>:</t>\n"
+"                        <t t-else=\"\">Hola:</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Gràcies per comprar a <t t-out=\"store_name\">nom "
+"de la botiga</t>!</div>\n"
+"                    <div>Adjunt trobaràs el tiquet de la compra realitzada "
+"el <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, "
+"dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or "
+"''\">data</t> <t t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">a les (hora)</"
+"t>.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Salutacions cordials,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Nom de la botiga</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -2298,7 +2328,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Choose Customer"
-msgstr ""
+msgstr "Tria un client"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2944,7 +2974,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Create Product"
-msgstr ""
+msgstr "Crear producte"
 
 #. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
@@ -3244,7 +3274,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Daily Sale"
-msgstr ""
+msgstr "Venda diària"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -4197,7 +4227,7 @@ msgstr "Gratuït"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "Free To Use:"
-msgstr ""
+msgstr "Disponible:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_free
@@ -6232,7 +6262,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "On hand:"
-msgstr ""
+msgstr "En estoc:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6644,7 +6674,7 @@ msgstr "Anàlisi de comandes"
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Orders status"
-msgstr ""
+msgstr "Estat de les comandes"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7737,7 +7767,7 @@ msgstr "Preu extra"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Price incl. Tax:"
-msgstr ""
+msgstr "Preu amb impostos inclosos:"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__barcode_rule__type__price
@@ -8468,7 +8498,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
 msgid "Reload Data"
-msgstr ""
+msgstr "Recarregar dades"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8485,7 +8515,7 @@ msgstr "Torna a carregar el menú TPV"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Reload data"
-msgstr ""
+msgstr "Recarregar dades"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9603,7 +9633,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
 msgid "TAXES:"
-msgstr ""
+msgstr "IMPOSTOS:"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__paper_size__tm_l100_40
@@ -9748,7 +9778,7 @@ msgstr "Preu amb impostos"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Tax:"
-msgstr ""
+msgstr "Impostos:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10861,7 +10891,7 @@ msgstr "Preu total sense impostos:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Total Price incl. Tax:"
-msgstr ""
+msgstr "Preu total amb impostos inclosos:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__cash_rounding
@@ -10878,7 +10908,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.js:0
 msgid "Total Tax:"
-msgstr ""
+msgstr "Total d'impostos:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__amount_currency
@@ -11724,7 +11754,7 @@ msgstr "Heu d'assignar un punt de venda a la vostra sessió."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "You still have"
-msgstr ""
+msgstr "Encara tens"
 
 #. module: point_of_sale
 #. odoo-python
@@ -12145,33 +12175,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "Auto-generated session for orphan orders, ignored in constraints"
-#~ msgstr "Sessió auto-generada per comandes orfes, ignorat a les restriccions"
-
-#~ msgid "Full"
-#~ msgstr "Complet"
-
-#~ msgid "Module"
-#~ msgstr "Mòdul"
-
-#~ msgid "Number of Rescue Session"
-#~ msgstr "Nombre de sessions de recuperació"
-
-#~ msgid "PoS Customer Display opened in a new window"
-#~ msgstr "La pantalla del client del TPV s'ha obert en una nova finestra"
-
-#~ msgid "Recovery Session"
-#~ msgstr "Recuperar sessió"
-
-#~ msgid "Rescue Sessions"
-#~ msgstr "Sessions de rescat"
-
-#~ msgid "Store edited orders in the backend"
-#~ msgstr "Emmagatzema les comandes modificades al back-end"
-
-#~ msgid "Track orders edits"
-#~ msgstr "Fer seguiment de les modificacions de les comandes"
-
-#~ msgid "outstanding rescue session"
-#~ msgstr "sessió de recuperació pendent"

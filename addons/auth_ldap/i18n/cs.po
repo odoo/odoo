@@ -7,15 +7,15 @@
 # Martin Trigaux, 2019
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2019
 # trendspotter <j.podhorecky@volny.cz>, 2019
-# "Marta (wacm)" <wacm@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 01:01+0000\n"
+"PO-Revision-Date: 2026-07-21 02:29+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Czech <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-4/"
 "auth_ldap/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -159,7 +159,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "An error occurred: %(error)s"
-msgstr ""
+msgstr "Došlo k chybě: %(error)s"
 
 #. module: auth_ldap
 #: model:ir.module.module,shortdesc:base.module_auth_ldap
@@ -179,7 +179,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Cannot contact LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "Nelze se spojit s LDAP serverem na adrese %(server)s:%(port)d"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -201,19 +201,19 @@ msgstr "Nastavení konfigurace"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Failed!"
-msgstr ""
+msgstr "Test připojení selhal!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Successful!"
-msgstr ""
+msgstr "Test připojení proběhl úspěšně!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection to LDAP server at %(server)s:%(port)d timed out"
-msgstr ""
+msgstr "Připojení k serveru LDAP na adrese %(server)s:%(port)d vypršelo"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -236,6 +236,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN rozsahu vyhledávání uživatelů: Všechny podřízené položky této základny "
+"budou prohledány."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
@@ -257,7 +259,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Invalid credentials for bind DN %(binddn)s"
-msgstr ""
+msgstr "Neplatné přihlašovací údaje pro vazební DN %(binddn)s"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
@@ -364,7 +366,7 @@ msgstr "Nastavte váš server LDAP"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "Úspěšné připojení k serveru LDAP na adrese %(server)s:%(port)d"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -374,7 +376,7 @@ msgstr "Šablona uživatele"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Test Connection"
-msgstr ""
+msgstr "Vyzkoušet připojení"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
@@ -402,7 +404,7 @@ msgstr "Použít TLS"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Uživatel"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form

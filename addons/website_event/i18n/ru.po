@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 01:18+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 10:39+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "website_event/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -37,7 +37,7 @@ msgstr "'. Отображение результатов для '"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "(Max."
-msgstr ""
+msgstr "(Макс."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -55,7 +55,7 @@ msgstr ", в"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Cancelled</b>"
-msgstr ""
+msgstr "<b>Отменено</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -212,6 +212,8 @@ msgid ""
 "<span class=\"fw-bold text-uppercase\">AUG</span>\n"
 "                            <span class=\"fw-light lh-1\">23</span>"
 msgstr ""
+"<span class=\"fw-bold text-uppercase\">23 АВГУСТА</span>\n"
+"                            <span class=\"fw-light lh-1\"></span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_badge_preview_data
@@ -315,6 +317,7 @@ msgstr "<span>Онлайн-мероприятия</span>"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "<strong> You cannot order more than available seats</strong>"
 msgstr ""
+"<strong> Вы не можете заказать больше мест, чем имеется в наличии</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -324,7 +327,7 @@ msgstr "<strong> Вы заказали больше билетов, чем св�
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "<strong>8:15 PM</strong>"
-msgstr ""
+msgstr "<strong>20:15</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
@@ -341,13 +344,13 @@ msgstr "<strong>Местоположение</strong>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "<strong>Los Angeles, CA, United States</strong>"
-msgstr ""
+msgstr "<strong>Los Angeles, CA, United States</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_single_card
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_card_preview_data
 msgid "<strong>Time</strong>"
-msgstr ""
+msgstr "<strong>Время</strong>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_preview_data
@@ -455,7 +458,7 @@ msgstr "Добавить в iCal/Outlook"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_calendar_links
 msgid "Add to your calendar"
-msgstr ""
+msgstr "Добавить в календарь"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -500,12 +503,12 @@ msgstr "Участники"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_offset_preview_data
 msgid "August 23, 2025"
-msgstr ""
+msgstr "23 августа 2025 года"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_events_single_entry_preview_data
 msgid "August 23, 2025 at 8:15 PM"
-msgstr ""
+msgstr "23 августа 2025 года в 20:15"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
@@ -534,7 +537,7 @@ msgstr "Назад ко всем мероприятиям"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.navbar
 msgid "Back to {{0}}"
-msgstr ""
+msgstr "Назад к {{0}}"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_question_about_0_answer_1
@@ -557,7 +560,7 @@ msgstr "Бизнес-семинары"
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 msgid "Calendar links"
-msgstr ""
+msgstr "Ссылки на календарь"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
@@ -705,6 +708,10 @@ msgid ""
 "            Note that the EventEvent is however always available via its "
 "link."
 msgstr ""
+"Определяет видимость мероприятия на вебсайте и в результатах поиска.\n"
+"\n"
+"            Обратите внимание, что мероприятие EventEvent всегда доступно по "
+"ссылке."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -759,7 +766,7 @@ msgstr "Скачать все билеты"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
 msgid "Download Tickets"
-msgstr ""
+msgstr "Скачать билеты"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
@@ -832,7 +839,7 @@ msgstr "Регистрация на мероприятия"
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "Слот мероприятия"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -960,7 +967,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 msgid "Fixed Sidebar"
-msgstr ""
+msgstr "Фиксированная боковая панель"
 
 #. module: website_event
 #. odoo-javascript
@@ -1040,6 +1047,8 @@ msgid ""
 "Honoring outstanding accomplishments, dedication, and impact across all "
 "fields."
 msgstr ""
+"В знак признания выдающихся достижений, преданности делу и вклада во всех "
+"областях деятельности."
 
 #. module: website_event
 #: model:event.question,title:website_event.event_question_about_us
@@ -1135,7 +1144,7 @@ msgstr "Опубликовано"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
 msgid "Join online"
-msgstr ""
+msgstr "Присоединяйтесь онлайн"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_ticket_access
@@ -1208,6 +1217,8 @@ msgid ""
 "Melancholic melodies and textured soundscapes exploring memory and quiet "
 "distance."
 msgstr ""
+"Меланхоличные мелодии и текстурные звуковые ландшафты, исследующие память и "
+"тишину."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
@@ -1247,7 +1258,7 @@ msgstr "Следующий"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "Next Dates"
-msgstr ""
+msgstr "Следующие даты"
 
 #. module: website_event
 #. odoo-python
@@ -1258,7 +1269,7 @@ msgstr "Следующие мероприятия"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "No Future Dates Available"
-msgstr ""
+msgstr "Нет доступных будущих дат"
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
@@ -1458,7 +1469,7 @@ msgstr "Другое"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__other_menu_ids
 msgid "Other Menus"
-msgstr ""
+msgstr "Другие меню"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
@@ -1617,6 +1628,7 @@ msgstr "Регистрация подтверждена!"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registration failed! Suspicious activity detected by Google reCaptcha."
 msgstr ""
+"Ошибка при регистрации! Google reCaptcha обнаружил подозрительную активность."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -1638,7 +1650,7 @@ msgstr "Регистрация закрыта"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
 msgid "Registrations not open"
-msgstr ""
+msgstr "Регистрация закрыта"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
@@ -1721,7 +1733,7 @@ msgstr ""
 #: code:addons/website_event/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 msgid "Scheduled Events"
-msgstr ""
+msgstr "Запланированные мероприятия"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_card
@@ -1738,7 +1750,7 @@ msgstr ""
 #: code:addons/website_event/static/src/interactions/website_event_slot_details.js:0
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "Select a Date:"
-msgstr ""
+msgstr "Выберите дату:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_search
@@ -1750,7 +1762,7 @@ msgstr "Избранные ответы"
 #. odoo-javascript
 #: code:addons/website_event/static/src/interactions/website_event_slot_details.js:0
 msgid "Selected Date:"
-msgstr ""
+msgstr "Выбранная дата:"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
@@ -1764,6 +1776,7 @@ msgstr "Имя Seo"
 #: model_terms:ir.ui.view,arch_db:website_event.s_event_upcoming_snippet_card_preview_data
 msgid "Shaping tomorrow through ideas that transform how we live today."
 msgstr ""
+"Формируем будущее с помощью идей, которые меняют нашу сегодняшнюю жизнь."
 
 #. module: website_event
 #. odoo-javascript
@@ -1781,7 +1794,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/dynamic_snippet_events_option.xml:0
 msgid "Show location"
-msgstr ""
+msgstr "Показать местоположение"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
@@ -1805,12 +1818,12 @@ msgstr "Боковая панель"
 #. odoo-javascript
 #: code:addons/website_event/static/src/website_builder/event_page_option.xml:0
 msgid "Sidebar Blocks"
-msgstr ""
+msgstr "Блоки боковой панели"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "Slots"
-msgstr ""
+msgstr "Слоты"
 
 #. module: website_event
 #: model:event.question.answer,name:website_event.event_question_about_0_answer_0
@@ -1990,7 +2003,7 @@ msgstr "Просмотр"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "View More"
-msgstr ""
+msgstr "Показать больше"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -2139,7 +2152,7 @@ msgstr "Начнется ли мероприятие сегодня, если е
 #. module: website_event
 #: model:event.question,title:website_event.event_question_working_field
 msgid "Which field are you working in?"
-msgstr ""
+msgstr "В какой области вы работаете?"
 
 #. module: website_event
 #. odoo-javascript
@@ -2166,7 +2179,7 @@ msgstr "доступно)"
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 msgid "date_end"
-msgstr ""
+msgstr "date_end"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -2176,7 +2189,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "iCal"
-msgstr ""
+msgstr "iCal"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template

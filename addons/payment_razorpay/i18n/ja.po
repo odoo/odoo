@@ -3,16 +3,16 @@
 # * payment_razorpay
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 20:13+0000\n"
+"PO-Revision-Date: 2026-07-22 02:03+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "payment_razorpay/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +85,7 @@ msgstr ""
 #. module: payment_razorpay
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid "Disconnect"
-msgstr ""
+msgstr "終了"
 
 #. module: payment_razorpay
 #: model:payment.method,name:payment_razorpay.payment_method_discover
@@ -216,7 +216,7 @@ msgstr "Razorpay アカウントID"
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_is_oauth_supported
 msgid "Razorpay Is Oauth Supported"
-msgstr ""
+msgstr "RazorpayはOAuthに対応"
 
 #. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
@@ -249,6 +249,8 @@ msgstr "Razorpay Webhookシークレット"
 msgid ""
 "Razorpay credentials are missing. Please fill them to set up your account."
 msgstr ""
+"Razorpayの認証情報が未設定です。アカウントを設定するために、入力してくださ"
+"い。"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -257,6 +259,8 @@ msgid ""
 "Razorpay credentials are missing. Please set the state back to 'Disabled' "
 "and click the \"Connect\" button to set up your account."
 msgstr ""
+"Razorpayの認証情報が未設定です。ステータスを「無効」に戻し、「接続」ボタンを"
+"クリックしてアカウントを設定してください。"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -359,6 +363,10 @@ msgid ""
 "the recommended OAuth\n"
 "                    method."
 msgstr ""
+"現在、Razorpayには認証情報による方法で接続されていますが、この方法は\n"
+"                    非推奨となっています。推奨されるOAuth\n"
+"                    方式を使用するには、上の「接続」ボタンをクリックしてくだ"
+"さい。"
 
 #. module: payment_razorpay
 #. odoo-python
@@ -385,7 +393,3 @@ msgid ""
 msgstr ""
 "最後のお支払い%s は間もなく処理されます。24時間以内に再度お試しいただくか、別"
 "のお支払い方法をご利用ください。"
-
-#~ msgid ""
-#~ "An error occurred during the processing of your payment. Please try again."
-#~ msgstr "支払処理中にエラーが発生しました。再度試して下さい。"

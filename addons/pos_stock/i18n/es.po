@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_stock
+# * pos_stock
 #
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-18 23:40+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-20 13:31+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
 "pos_stock/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -28,50 +29,56 @@ msgid ""
 "method to ensure that even the smallest quantity in the original unit does "
 "not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Este error se produce porque la cantidad se convierte en cero después del "
+"redondeo durante la conversión. Para solucionarlo, ajusta los factores de "
+"conversión o el método de redondeo para garantizar que incluso la cantidad "
+"más pequeña de la unidad original no se redondee a cero en la unidad de "
+"destino."
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/stock_move.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
+msgstr " - De \"%(uom_from)s\" a \"%(uom_to)s\""
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "Preparación de pedidos del PdV %(name)s"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "(as of opening)"
-msgstr ""
+msgstr "(desde la apertura)"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
 msgid "<span>Expected delivery:</span>"
-msgstr ""
+msgstr "<span>Fecha de entrega prevista:</span>"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Allow Ship Later"
-msgstr ""
+msgstr "Permitir enviar más tarde"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "Lo antes posible, con entregas parciales"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing"
-msgstr ""
+msgstr "Al cerrar la sesión"
 
 #. module: pos_stock
 #: model:ir.model.fields,help:pos_stock.field_res_company__point_of_sale_update_stock_quantities
@@ -81,6 +88,9 @@ msgid ""
 "it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
+"Al cerrar la sesión: se crea un albarán para toda la sesión cuando esta se "
+"cierra\n"
+" En tiempo real: cada pedido enviado al servidor crea su propio albarán"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -91,18 +101,18 @@ msgstr ""
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Ajustes de configuración"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: pos_stock
 #. odoo-python
@@ -111,34 +121,36 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero "
 "quantity due to rounding:"
 msgstr ""
+"Error de conversión: el resultado de las siguientes conversiones de unidades "
+"de medida es cero debido al redondeo:"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "Create Lot/Serial number..."
-msgstr ""
+msgstr "Crear número de lote o serie..."
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Creado el"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "DatePicker"
-msgstr ""
+msgstr "Selector de fecha"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Descartar"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_account_move__display_name
@@ -161,13 +173,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre a mostrar"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__failed_pickings
 msgid "Failed Pickings"
-msgstr ""
+msgstr "Pickings fallidos"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -178,7 +190,7 @@ msgstr ""
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking_type__has_stock_reports_to_print
 msgid "Has Stock Reports To Print"
-msgstr ""
+msgstr "Tiene informes de inventario para imprimir"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_account_move__id
@@ -201,7 +213,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_stock
 #: model:ir.model.fields,help:pos_stock.field_pos_config__picking_policy
@@ -211,49 +223,52 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Si entregas todos los productos a la vez, el albarán se programará teniendo "
+"en cuenta el plazo de entrega más largo. De lo contrario, se programará "
+"según el más corto."
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__res_company__point_of_sale_update_stock_quantities__real
 msgid "In real time"
-msgstr ""
+msgstr "En tiempo real"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/utils/order_payment_validation.js:0
 msgid "Incorrect address for shipping"
-msgstr ""
+msgstr "Dirección de envío incorrecta"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Inventory"
-msgstr ""
+msgstr "Inventario"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Inventory Management"
-msgstr ""
+msgstr "Gestión de inventario"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Asiento contable"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Apunte contable"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última actualización por"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última actualización el"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -261,35 +276,35 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "Lot"
-msgstr ""
+msgstr "Lote"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
-msgstr ""
+msgstr "Nombre del lote"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial %s is expired"
-msgstr ""
+msgstr "El número de lote/serie %s ha caducado"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Lot/Serial number"
-msgstr ""
+msgstr "Número de serie/lote"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial number(s) required for"
-msgstr ""
+msgstr "Número (o números) de serie o lote necesarios para"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "Número de serie/lote"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -297,31 +312,31 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "Lot:"
-msgstr ""
+msgstr "Lote:"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "No"
-msgstr ""
+msgstr "No"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/pos_order_line.py:0
 msgid "No PoS configuration found"
-msgstr ""
+msgstr "No se ha encontrado ninguna configuración de punto de venta"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "No existing Lot/Serial number found..."
-msgstr ""
+msgstr "No se ha encontrado ningún número de serie o lote existente..."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "No existing serial/lot number"
-msgstr ""
+msgstr "No existe ningún número de serie/lote"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -335,34 +350,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_picking_type_id
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Operation Type"
-msgstr ""
+msgstr "Tipo de operación"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "Los tipos de operación aparecen en el tablero de Inventario."
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__order_id
 msgid "Order Ref"
-msgstr ""
+msgstr "Ref. del pedido"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__picking_ids
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__picking_ids
 msgid "Picking"
-msgstr ""
+msgstr "Operación de inventario"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "Número de operaciones de inventario"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Tipo de operación de inventario"
 
 #. module: pos_stock
 #. odoo-python
@@ -371,7 +386,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_pos_session_form
 msgid "Pickings"
-msgstr ""
+msgstr "Operaciones de inventario"
 
 #. module: pos_stock
 #: model:ir.module.module,shortdesc:base.module_pos_stock
@@ -383,78 +398,78 @@ msgstr ""
 #: code:addons/pos_stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:pos_stock.field_stock_reference__pos_order_ids
 msgid "PoS Orders"
-msgstr ""
+msgstr "Pedidos de PdV"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Configuración del punto de venta"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "Tipo de operación de punto de venta"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Pedido del punto de venta"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "Línea del pedido de punto de venta"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Generador de tickets de pedidos del punto de venta"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Sesión del punto de venta"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr ""
+msgstr "Pedido del PdV"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "Línea de pedido de PdV"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "Sesión del PdV"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_template
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__product_id
 msgid "Product"
-msgstr ""
+msgstr "Producto"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Categoría de producto"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__stock_reference_ids
 msgid "Reference"
-msgstr ""
+msgstr "Referencia"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Referencia entre documentos de stock"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_removal
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Estrategia de salida"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -462,7 +477,7 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "SN"
-msgstr ""
+msgstr "N.º serie"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -470,30 +485,30 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "SN:"
-msgstr ""
+msgstr "N.º serie:"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Select the shipping date"
-msgstr ""
+msgstr "Seleccionar la fecha de envío"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Selected date cannot be in the past."
-msgstr ""
+msgstr "La fecha seleccionada no puede estar en el pasado."
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Sell products and deliver them later."
-msgstr ""
+msgstr "Vender productos y entregarlos más tarde."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Server communication problem"
-msgstr ""
+msgstr "Problema de comunicación con el servidor"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -501,50 +516,52 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__ship_later
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_ship_later
 msgid "Ship Later"
-msgstr ""
+msgstr "Enviar más tarde"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "Fecha de envío"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__picking_policy
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_picking_policy
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Política de envío"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "Faltan algunos números de serie/lote"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Specific route"
-msgstr ""
+msgstr "Ruta específica"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__route_id
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_route_id
 msgid "Specific route for products delivered later."
-msgstr ""
+msgstr "Ruta específica para productos entregados más tarde."
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
 msgstr ""
+"Especifica el número de lote o de serie del producto en la línea del pedido "
+"del PdV"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Movimiento de stock"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Regla de inventario"
 
 #. module: pos_stock
 #: model:ir.module.module,summary:base.module_pos_stock
@@ -554,25 +571,25 @@ msgstr ""
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "El stock debe actualizarse al cierre"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/pos_session.py:0
 msgid "Stock variation for %s"
-msgstr ""
+msgstr "Variación de existencias para %s"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "The Lot/Serial number is already added."
-msgstr ""
+msgstr "El número de lote o serie ya está añadido."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "The Lot/Serial number is not valid"
-msgstr ""
+msgstr "El número de serie o lote no es válido"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -581,12 +598,14 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"No se han podido obtener los números de serie o de lote existentes. \n"
+"¿Quieres continuar sin comprobar la validez de los números de serie/lote?"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/utils/order_payment_validation.js:0
 msgid "The selected customer needs an address."
-msgstr ""
+msgstr "El cliente seleccionado necesita una dirección."
 
 #. module: pos_stock
 #. odoo-javascript
@@ -595,18 +614,20 @@ msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
 msgstr ""
+"El producto seleccionado no tiene número de serie ni de lote, y no es "
+"posible crearlos desde la aplicación Punto de venta."
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Traslado"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "Actualizar cantidades en stock"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
@@ -614,35 +635,37 @@ msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
 msgstr ""
+"Se utiliza para registrar los movimientos de productos. Los productos se "
+"consumen desde su ubicación de origen predeterminada."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Validation Error"
-msgstr ""
+msgstr "Error de validación"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Warehouse"
-msgstr ""
+msgstr "Almacén"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_warehouse_id
 msgid "Warehouse (PoS)"
-msgstr ""
+msgstr "Almacén (PdV)"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__picking_policy__one
 msgid "When all products are ready"
-msgstr ""
+msgstr "Cuando todos los productos estén listos"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -652,6 +675,9 @@ msgid ""
 "are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"Estás intentando vender productos con números de serie o de lote, pero "
+"algunos de ellos no están configurados.\n"
+"¿Quieres continuar de todos modos?"
 
 #. module: pos_stock
 #. odoo-python
@@ -660,6 +686,8 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
+"No puedes archivar «%(picking_type)s», ya que se está usado en la "
+"configuración de punto de venta «%(config)s»."
 
 #. module: pos_stock
 #. odoo-javascript
@@ -671,14 +699,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "available,"
-msgstr ""
+msgstr "disponible,"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "forecasted"
-msgstr ""
+msgstr "previsto"
 
 #. module: pos_stock
 #. odoo-javascript

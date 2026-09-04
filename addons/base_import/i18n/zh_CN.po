@@ -6,15 +6,17 @@
 # Martin Trigaux, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 22:34+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-06 06:29+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/base_import/zh_Hans/>\n"
+"projects/odoo-s19-4/base_import/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +103,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Attachments"
-msgstr ""
+msgstr "附件"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -126,26 +128,27 @@ msgstr ""
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, fuzzy
 msgid "Batch"
-msgstr ""
+msgstr "批"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch interval"
-msgstr ""
+msgstr "批处理间隔"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch max size"
-msgstr ""
+msgstr "批量最大大小"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch size"
-msgstr ""
+msgstr "批次大小"
 
 #. module: base_import
 #. odoo-javascript
@@ -212,20 +215,21 @@ msgstr "数据库 ID"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Date Format"
-msgstr ""
+msgstr "日期格式"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Datetime Format"
-msgstr ""
+msgstr "日期时间格式"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator"
-msgstr ""
+msgstr "小数点分隔符"
 
 #. module: base_import
 #. odoo-javascript
@@ -239,19 +243,19 @@ msgstr ""
 msgid ""
 "Defines the number of records that will be imported in one transaction. "
 "Reduce the batch size in case of heavy imports"
-msgstr ""
+msgstr "定义单次事务中将导入的记录数。若导入量较大，请减少批处理大小"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Delay applied after each batch to prevent unthrottled calls"
-msgstr ""
+msgstr "为防止无节流调用，每批处理后均会添加延迟"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Delimiter"
-msgstr ""
+msgstr "分隔符"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -264,8 +268,9 @@ msgstr "显示名称"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+#, fuzzy
 msgid "Documentation"
-msgstr ""
+msgstr "文档"
 
 #. module: base_import
 #. odoo-javascript
@@ -283,8 +288,9 @@ msgstr "下载"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Encoding"
-msgstr ""
+msgstr "编码"
 
 #. module: base_import
 #. odoo-python
@@ -369,13 +375,14 @@ msgstr "文件大小超出配置的最大值 (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import"
-msgstr ""
+msgstr "待检查和/或导入的文件"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, fuzzy
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "在中断前完成当前批次的工作..."
 
 #. module: base_import
 #. odoo-javascript
@@ -423,22 +430,29 @@ msgid ""
 "If checked, the changes are tracked in the chatter and notifications can be "
 "sent to followers, which could slow down the import"
 msgstr ""
+"如果勾选此选项，更改内容将在沟通栏中进行追踪，并可向关注者发送通知，这可能会"
+"减慢导入速度"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "If checked, the first row of the sheet will not be imported"
-msgstr ""
+msgstr "若勾选此选项，工作表的第一行将不会被导入"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, fuzzy
 msgid ""
 "If the file contains\n"
 "                    the column names, Odoo can try auto-detecting the\n"
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"如果该文件包含\n"
+"                    列名，Odoo可以尝试自动检测列所对应的\n"
+"                    与该列对应的字段。这使得导入\n"
+"                    更加简单，特别是当文件有很多列时。"
 
 #. module: base_import
 #. odoo-javascript
@@ -452,7 +466,7 @@ msgstr "导入"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Import failed: see errors below"
-msgstr ""
+msgstr "导入失败：请参阅以下错误信息"
 
 #. module: base_import
 #. odoo-python
@@ -463,8 +477,9 @@ msgstr "导入文件没有内容或已损坏"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
+#, fuzzy
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "导入预览失败，原因：“"
 
 #. module: base_import
 #. odoo-javascript
@@ -498,13 +513,13 @@ msgstr "无效的单元格数据在行%(row)s, 列%(col)s: %(cell_value)s"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Lang:"
-msgstr ""
+msgstr "语言："
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Language"
-msgstr ""
+msgstr "语言"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -544,8 +559,9 @@ msgstr "模型"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "发生多个错误"
 
 #. module: base_import
 #. odoo-javascript
@@ -557,13 +573,13 @@ msgstr "没有分隔符"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No date detected"
-msgstr ""
+msgstr "未检测到日期"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No datetime detected"
-msgstr ""
+msgstr "未检测到日期和时间"
 
 #. module: base_import
 #. odoo-javascript
@@ -574,8 +590,9 @@ msgstr "未选择文件"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "找不到以下名称的匹配记录"
 
 #. module: base_import
 #. odoo-javascript
@@ -586,8 +603,9 @@ msgstr "字段"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Other"
-msgstr ""
+msgstr "其他"
 
 #. module: base_import
 #. odoo-javascript
@@ -623,7 +641,7 @@ msgstr "进度条"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Re-Upload"
-msgstr ""
+msgstr "重新上传"
 
 #. module: base_import
 #. odoo-javascript
@@ -635,7 +653,7 @@ msgstr "关联字段"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Required Fields"
-msgstr ""
+msgstr "必填字段"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -646,7 +664,7 @@ msgstr "Res 模型"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Resume"
-msgstr "恢复"
+msgstr "重新开始"
 
 #. module: base_import
 #. odoo-javascript
@@ -658,13 +676,14 @@ msgstr "搜索字段..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a language..."
-msgstr ""
+msgstr "搜索一种语言..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "See possible values"
-msgstr ""
+msgstr "查看可能的值"
 
 #. module: base_import
 #. odoo-javascript
@@ -681,8 +700,9 @@ msgstr "分号"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Separator"
-msgstr ""
+msgstr "分隔符"
 
 #. module: base_import
 #. odoo-javascript
@@ -769,6 +789,8 @@ msgid ""
 "There was an issue decoding the file using encoding “%s”.\n"
 "This encoding was automatically detected."
 msgstr ""
+"使用“%s”编码解码文件时出现问题。\n"
+"该编码是自动检测到的。"
 
 #. module: base_import
 #. odoo-python
@@ -777,6 +799,8 @@ msgid ""
 "There was an issue decoding the file using encoding “%s”.\n"
 "This encoding was manually selected."
 msgstr ""
+"使用编码“%s”解码文件时出现问题。\n"
+"此编码是手动选择的。"
 
 #. module: base_import
 #. odoo-javascript
@@ -787,8 +811,9 @@ msgstr "这一栏将在字段中串联起"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
+#, fuzzy
 msgid "Thousands Separator"
-msgstr ""
+msgstr "千位分隔符"
 
 #. module: base_import
 #. odoo-javascript
@@ -806,7 +831,7 @@ msgstr "执行导入，请选择一个字段..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Track changes in chatter"
-msgstr ""
+msgstr "在沟通栏中追踪更改"
 
 #. module: base_import
 #. odoo-python
@@ -833,7 +858,7 @@ msgstr "未命名的"
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "上传"
 
 #. module: base_import
 #. odoo-javascript
@@ -841,7 +866,7 @@ msgstr ""
 msgid ""
 "Upload attachments such as images or files that can be mapped with imported "
 "data"
-msgstr ""
+msgstr "上传可与导入数据关联的附件，例如图片或文件"
 
 #. module: base_import
 #. odoo-javascript
@@ -870,7 +895,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr ""
+msgstr "使用第一行作为标题"
 
 #. module: base_import
 #. odoo-javascript
@@ -878,7 +903,7 @@ msgstr ""
 msgid ""
 "Use unique key across objects for External ID's, for example \"lead_1\" "
 "instead of \"1\""
-msgstr ""
+msgstr "对于外部 ID，请在各个对象中使用唯一的键，例如使用“lead_1”而非“1”"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -914,20 +939,23 @@ msgstr "您必须配置至少一个要导入的字段"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "at multiple rows"
-msgstr ""
+msgstr "在多行处的匹配"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "at row"
-msgstr ""
+msgstr "在行"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "in field"
-msgstr ""
+msgstr "与字段"
 
 #. module: base_import
 #. odoo-javascript
@@ -938,20 +966,22 @@ msgstr "分钟"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
+#, fuzzy
 msgid "more"
-msgstr ""
+msgstr "更多"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "or drag a file"
-msgstr ""
+msgstr "或拖拽文件"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#, fuzzy
 msgid "out of"
-msgstr ""
+msgstr "之外"
 
 #. module: base_import
 #. odoo-javascript
@@ -965,8 +995,3 @@ msgstr "秒数"
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
 msgstr "未知编码错误 %s"
-
-#~ msgid ""
-#~ "Image size excessive, imported images must be smaller than 42 million "
-#~ "pixel"
-#~ msgstr "图像尺寸过大，导入的图像必须小于4200万像素"

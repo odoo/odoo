@@ -3,21 +3,70 @@
 # * l10n_br
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:08+0000\n"
-"PO-Revision-Date: 2025-11-17 03:09+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
-"odoo-19-l10n/l10n_br/pt_BR/>\n"
+"POT-Creation-Date: 2026-08-28 18:18+0000\n"
+"PO-Revision-Date: 2026-08-21 20:36+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"s19-4/l10n_br/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_br
+#: model:ir.module.module,description:base.module_l10n_br
+msgid ""
+"\n"
+"Base module for the Brazilian localization\n"
+"==========================================\n"
+"\n"
+"This module consists of:\n"
+"\n"
+"- Generic Brazilian chart of accounts\n"
+"- Brazilian taxes such as:\n"
+"\n"
+"  - IPI\n"
+"  - ICMS\n"
+"  - PIS\n"
+"  - COFINS\n"
+"  - ISS\n"
+"  - IR\n"
+"  - CSLL\n"
+"\n"
+"- Document Types as NFC-e, NFS-e, etc.\n"
+"- Identification Documents as CNPJ and CPF\n"
+"\n"
+"In addition to this module, the Brazilian Localizations is also\n"
+"extended and complemented with several additional modules.\n"
+"\n"
+"Brazil - Accounting Reports (l10n_br_reports)\n"
+"---------------------------------------------\n"
+"Adds a simple tax report that helps check the tax amount per tax group\n"
+"in a given period of time. Also adds the P&L and BS adapted for the\n"
+"Brazilian market.\n"
+"\n"
+"Avatax Brazil (l10n_br_avatax)\n"
+"------------------------------\n"
+"Add Brazilian tax calculation via Avatax and all necessary fields needed to\n"
+"configure Odoo in order to properly use Avatax and send the needed fiscal\n"
+"information to retrieve the correct taxes.\n"
+"\n"
+"Avatax for SOs in Brazil (l10n_br_avatax_sale)\n"
+"----------------------------------------------\n"
+"Same as the l10n_br_avatax module with the extension to the sales order "
+"module.\n"
+"\n"
+"Electronic invoicing through Avatax (l10n_br_edi)\n"
+"-------------------------------------------------\n"
+"Create electronic sales invoices with Avatax.\n"
+msgstr ""
 
 #. module: l10n_br
 #. odoo-python
@@ -40,6 +89,19 @@ msgstr "<span> - </span>"
 #: model:ir.model,name:l10n_br.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Modelo de plano da contas"
+
+#. module: l10n_br
+#: model:ir.model.fields,field_description:l10n_br.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:l10n_br.field_res_partner_bank__proxy_type
+msgid "Account Identifier Type"
+msgstr ""
+
+#. module: l10n_br
+#: model_terms:ir.ui.view,arch_db:l10n_br.res_config_settings_view_form
+msgid ""
+"Add a QR-code to your invoices so that your customers can pay instantly with "
+"their mobile banking application."
+msgstr ""
 
 #. module: l10n_br
 #: model:l10n_latam.document.type,name:l10n_br.dt_10
@@ -85,6 +147,11 @@ msgid ""
 msgstr ""
 "Brasil: Campo técnico que vincula uma cidade a um ou mais intervalos de "
 "código postal."
+
+#. module: l10n_br
+#: model:ir.module.module,shortdesc:base.module_l10n_br
+msgid "Brazilian - Accounting"
+msgstr ""
 
 #. module: l10n_br
 #: model:ir.model,name:l10n_br.model_l10n_br_zip_range
@@ -270,6 +337,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "Country"
 msgstr "País"
+
+#. module: l10n_br
+#: model:ir.model,website_form_label:l10n_br.model_res_partner
+msgid "Create a Customer"
+msgstr ""
 
 #. module: l10n_br
 #: model:ir.model.fields,field_description:l10n_br.field_l10n_br_zip_range__create_uid
@@ -854,10 +926,11 @@ msgid "Other interstate"
 msgstr "Outro interestadual"
 
 #. module: l10n_br
-#: model:ir.model.fields,field_description:l10n_br.field_account_setup_bank_manual_config__proxy_type
-#: model:ir.model.fields,field_description:l10n_br.field_res_partner_bank__proxy_type
-msgid "Proxy Type"
-msgstr "Tipo de proxy"
+#. odoo-python
+#: code:addons/l10n_br/models/res_partner_bank.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_br.res_config_settings_view_form
+msgid "Pix QR Code"
+msgstr ""
 
 #. module: l10n_br
 #: model:l10n_latam.document.type,name:l10n_br.dt_11
@@ -945,7 +1018,7 @@ msgstr "Endereço"
 #. module: l10n_br
 #: model_terms:ir.ui.view,arch_db:l10n_br.br_partner_address_form
 msgid "Street #"
-msgstr ""
+msgstr "Nº"
 
 #. module: l10n_br
 #: model_terms:ir.ui.view,arch_db:l10n_br.address_form_fields
@@ -981,21 +1054,27 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_br/models/res_partner_bank.py:0
 msgid ""
-"The mobile number %s is invalid. It must start with +55, contain a 2 digit "
-"territory or state code followed by a 9 digit number."
+"The account identifier type must be Email Address, Mobile Number, CPF/CNPJ "
+"(BR) or Random Key (BR) for Pix code generation."
 msgstr ""
-"O número de celular %s é inválido. Ele deve começar com +55, conter o DDD de "
-"2 dígitos e o número de 9 dígitos."
+
+#. module: l10n_br
+#: model:ir.model.fields,help:l10n_br.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,help:l10n_br.field_res_partner_bank__proxy_type
+msgid ""
+"The identification method linked to this bank account (e.g., Mobile Number, "
+"Company ID) used to route QR payments to this account."
+msgstr ""
 
 #. module: l10n_br
 #. odoo-python
 #: code:addons/l10n_br/models/res_partner_bank.py:0
 msgid ""
-"The proxy type must be Email Address, Mobile Number, CPF/CNPJ (BR) or Random "
-"Key (BR) for Pix code generation."
+"The mobile number %s is invalid. It must start with +55, contain a 2 digit "
+"territory or state code followed by a 9 digit number."
 msgstr ""
-"O tipo de proxy para geração do código Pix deve ser endereço de e-mail, "
-"número de celular, CPF/CNPF ou chave aleatória."
+"O número de celular %s é inválido. Ele deve começar com +55, conter o DDD de "
+"2 dígitos e o número de 9 dígitos."
 
 #. module: l10n_br
 #. odoo-python
@@ -1016,11 +1095,9 @@ msgstr "Até"
 #. odoo-python
 #: code:addons/l10n_br/models/res_partner_bank.py:0
 msgid ""
-"To generate a Pix code the proxy type for %s must be Email Address, Mobile "
-"Number, CPF/CNPJ (BR) or Random Key (BR)."
+"To generate a Pix code the account identifier type for %s must be Email "
+"Address, Mobile Number, CPF/CNPJ (BR) or Random Key (BR)."
 msgstr ""
-"Para gerar um código Pix, o tipo de proxy de %s deve ser endereço de e-mail, "
-"número de celular, CPF/CNPJ ou chave aleatória."
 
 #. module: l10n_br
 #: model:ir.model.fields,help:l10n_br.field_account_tax__amount_mva
@@ -1047,6 +1124,3 @@ msgstr ""
 #: model:l10n_latam.document.type,name:l10n_br.dt_15
 msgid "e-Baggage Ticket"
 msgstr ""
-
-#~ msgid "Create a Customer"
-#~ msgstr "Criar um cliente"

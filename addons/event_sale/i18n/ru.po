@@ -5,14 +5,15 @@
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 18:18+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 11:33+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "event_sale/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -107,6 +108,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Разрешить несколько временных слотов. Рассылки, максимальное количество "
+"участников и максимальное количество регистраций на билеты задаются для "
+"каждого временного слота отдельно, а не для всего мероприятия в целом."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -164,6 +168,8 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Выберите слот мероприятия, и регистрация на этот слот будет создана "
+"автоматически."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -314,7 +320,7 @@ msgstr "Отчет о продажах на мероприятиях"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Слот мероприятия"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -380,6 +386,7 @@ msgstr "ID"
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
 msgstr ""
+"Недопустимый выбор слота «%(slot_name)s» для мероприятия «%(event_name)s»."
 
 #. module: event_sale
 #. odoo-python
@@ -397,7 +404,7 @@ msgstr "Выставить счет в адрес"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Несколько слотов"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -575,7 +582,7 @@ msgstr "Продажи"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event__sale_price_total
 msgid "Sales (Tax Included)"
-msgstr ""
+msgstr "Продажи (включая налоги)"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_sale_order
@@ -641,6 +648,9 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"Позиция заказа на продажу с товаром «%(product_name)s» должна содержать "
+"мероприятие, билет и временной интервал, если мероприятие имеет несколько "
+"временных интервалов."
 
 #. module: event_sale
 #. odoo-python
@@ -708,7 +718,7 @@ msgstr "Не удалось найти подходящий билет для д
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "изменено с"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

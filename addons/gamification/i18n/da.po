@@ -7,15 +7,16 @@
 # Martin Trigaux, 2022
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Kira Petersen François (peti)" <peti@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-20 01:35+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Danish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-07 13:50+0000\n"
+"Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/"
 "gamification/da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -126,7 +127,6 @@ msgstr ""
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_goal_reminder
-#, fuzzy
 msgid ""
 "<div>\n"
 "    <strong>Reminder</strong><br/>\n"
@@ -142,19 +142,6 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
-"<div>\n"
-"    <strong>Påmindelse</strong><br/>\n"
-"    Du har ikke opdateret din fremgang for målet <t t-"
-"out=\"object.definition_id.name or ''\"/> (som i øjeblikket er på <t t-"
-"out=\"object.completeness or ''\"/>%) i mindst <t t-"
-"out=\"object.remind_update_delay or ''\"/> dage. Husk at gøre det.\n"
-"    <br/><br/>\n"
-"    Mange tak.\n"
-"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"/>\n"
-"    </t>\n"
-"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -183,9 +170,8 @@ msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "<span class=\"o_stat_text\">Related Goals</span>"
-msgstr "<span class=\"o_stat_text\">Tilknyttede mål</span>"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
@@ -236,7 +222,6 @@ msgstr ""
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
-#, fuzzy
 msgid ""
 "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"background-"
 "color: #EEE; border-collapse: collapse;\">\n"
@@ -541,308 +526,6 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"background-"
-"color: #EEE; border-collapse: collapse;\">\n"
-"<tr>\n"
-"    <td valign=\"top\" align=\"center\">\n"
-"        <t t-set=\"object_ctx\" t-value=\"ctx.get('object')\"/>\n"
-"        <t t-set=\"company\" t-value=\"object_ctx and object_ctx.company_id "
-"or user.company_id\"/>\n"
-"        <t t-set=\"challenge_lines\" t-value=\"ctx.get('challenge_lines', [])"
-"\"/>\n"
-"        <table cellspacing=\"0\" cellpadding=\"0\" width=\"600\" "
-"style=\"margin: 0 auto; width: 570px;\">\n"
-"            <tr><td>\n"
-"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
-"                    <tr>\n"
-"                        <div>\n"
-"                            <t t-if=\"object.visibility_mode == "
-"'ranking'\">\n"
-"                                <td style=\"padding:15px;\">\n"
-"                                    <p style=\"font-"
-"size:20px;color:#666666;\" align=\"center\">Rangliste</p>\n"
-"                                </td>\n"
-"                            </t>\n"
-"                        </div>\n"
-"                    </tr>\n"
-"                </table>\n"
-"                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" "
-"bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
-"                    <tr><td style=\"padding: 15px;\">\n"
-"                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
-"                            <span style=\"color:#666666;font-size:13px;"
-"\">Din nuværende fremgang i udfordringen <strong t-out=\"object.name or ''\"/"
-">.</span>\n"
-"                            <table cellspacing=\"0\" cellpadding=\"0\" "
-"width=\"100%\" style=\"margin-top:20px;\">\n"
-"                                <tr>\n"
-"                                    <td align=\"center\">\n"
-"                                        <div>Personlig præstation</div>\n"
-"                                    </td>\n"
-"                                </tr>\n"
-"                            </table>\n"
-"                            <table cellspacing=\"0\" cellpadding=\"0\" "
-"width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
-"                                <thead>\n"
-"                                    <tr style=\"color:#9A6C8E; font-"
-"size:12px;\">\n"
-"                                        <th align=\"left\" style=\"padding-"
-"bottom: 0px;width:40%;text-align:left;\">Mål</th>\n"
-"                                        <th style=\"width:20%;text-"
-"align:right;\" align=\"left\">Mål</th>\n"
-"                                        <th style=\"width:20%;text-"
-"align:right;\" align=\"right\">Nuværende</th>\n"
-"                                        <th style=\"width:20%;text-"
-"align:right;\" align=\"right\">Fuldstændighed</th>\n"
-"                                    </tr>\n"
-"                                    <tr>\n"
-"                                        <td colspan=\"5\" "
-"style=\"height:1px;background-color:#9A6C8E;\"/>\n"
-"                                    </tr>\n"
-"                                </thead>\n"
-"                                <tbody t-foreach=\"challenge_lines\" t-"
-"as=\"line\">\n"
-"                                    <tr style=\"font-weight:bold;\">\n"
-"                                        <td style=\"padding: 20px 0;\" "
-"align=\"left\">\n"
-"                                            <t t-out=\"line['name'] or ''\"/"
-">\n"
-"                                            <t t-if=\"line['suffix'] or "
-"line['monetary']\">\n"
-"                                                (<t t-"
-"out=\"line['full_suffix'] or ''\"/>)\n"
-"                                            </t>\n"
-"                                        </td>\n"
-"                                        <td style=\"padding: 20px 0;\" "
-"align=\"right\"><t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"/>\n"
-"                                            <t t-if=\"line['suffix']\" t-"
-"out=\"line['suffix'] or ''\"/>\n"
-"                                        </td>\n"
-"                                        <td style=\"padding: 20px 0;\" "
-"align=\"right\"><t t-out=\"&quot;%.2f&quot; % line['current'] or ''\"/>\n"
-"                                            <t t-if=\"line['suffix']\" t-"
-"out=\"line['suffix'] or ''\"/>\n"
-"                                        </td>\n"
-"                                        <td style=\"padding: 20px 0;font-"
-"size:25px;color:#9A6C8E;\" align=\"right\"><strong><t t-"
-"out=\"int(line['completeness']) or ''\"/>%</strong></td>\n"
-"                                    </tr>\n"
-"                                    <tr>\n"
-"                                        <td colspan=\"5\" "
-"style=\"height:1px;background-color:#e3e3e3;\"/>\n"
-"                                    </tr>\n"
-"                                </tbody>\n"
-"                            </table>                   \n"
-"                        </t>\n"
-"                        <t t-else=\"\">\n"
-"                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
-"                                Udfordring: <strong t-out=\"object.name or "
-"''\"/>.\n"
-"                            </span> \n"
-"                            <t t-foreach=\"challenge_lines\" t-as=\"line\">\n"
-"                                <!-- Header + Button table -->\n"
-"                                <table cellspacing=\"0\" cellpadding=\"0\" "
-"width=\"100%\" style=\"margin-top:35px;\">\n"
-"                                    <tr>\n"
-"                                        <td width=\"50%\">\n"
-"                                            <div>Toppræstationer for mål "
-"<strong t-out=\"line['name'] or ''\"/></div>\n"
-"                                        </td>\n"
-"                                    </tr>\n"
-"                                </table>\n"
-"                                <!-- Podium -->\n"
-"                                <t t-if=\"len(line['goals']) == 2\">\n"
-"                                    <table cellspacing=\"0\" "
-"cellpadding=\"0\" width=\"100%\" style=\"margin-top:10px;\">\n"
-"                                        <tr><td style=\"padding:0 30px;\">\n"
-"                                            <table cellspacing=\"0\" "
-"cellpadding=\"0\" width=\"100%\" style=\"table-layout: fixed;\">\n"
-"                                                <tr>\n"
-"                                                    <t t-set=\"top_goals\" t-"
-"value=\"line['goals'][:3]\"/>\n"
-"                                                    <t t-"
-"foreach=\"top_goals\" t-as=\"goal\">\n"
-"                                                        <td align=\"center\" "
-"style=\"width:32%;\">\n"
-"                                                            <t t-"
-"if=\"loop.index == 1\">\n"
-"                                                                <t t-"
-"set=\"extra_div\" t-value=\"'&lt;div style=&quot;height:40px;&quot;&gt;&lt;/"
-"div&gt;'\"/>\n"
-"                                                                <t t-"
-"set=\"heightA\" t-value=\"95\"/>\n"
-"                                                                <t t-"
-"set=\"heightB\" t-value=\"75\"/>\n"
-"                                                                <t t-"
-"set=\"bgColor\" t-value=\"'#b898b0'\"/>\n"
-"                                                                <t t-"
-"set=\"fontSize\" t-value=\"50\"/>\n"
-"                                                                <t t-"
-"set=\"podiumPosition\" t-value=\"'2'\"/>\n"
-"                                                            </t>\n"
-"                                                            <t t-"
-"elif=\"loop.index == 2\">\n"
-"                                                                <t t-"
-"set=\"extra_div\" t-value=\"''\"/>\n"
-"                                                                <t t-"
-"set=\"heightA\" t-value=\"55\"/>\n"
-"                                                                <t t-"
-"set=\"heightB\" t-value=\"115\"/>\n"
-"                                                                <t t-"
-"set=\"bgColor\" t-value=\"'#9A6C8E'\"/>\n"
-"                                                                <t t-"
-"set=\"fontSize\" t-value=\"85\"/>\n"
-"                                                                <t t-"
-"set=\"podiumPosition\" t-value=\"'1'\"/>\n"
-"                                                            </t>\n"
-"                                                            <t t-"
-"elif=\"loop.index == 3\">\n"
-"                                                                <t t-"
-"set=\"extra_div\" t-value=\"'&lt;div style=&quot;height:60px;&quot;&gt;&lt;/"
-"div&gt;'\"/>\n"
-"                                                                <t t-"
-"set=\"heightA\" t-value=\"115\"/>\n"
-"                                                                <t t-"
-"set=\"heightB\" t-value=\"55\"/>\n"
-"                                                                <t t-"
-"set=\"bgColor\" t-value=\"'#c8afc1'\"/>\n"
-"                                                                <t t-"
-"set=\"fontSize\" t-value=\"35\"/>\n"
-"                                                                <t t-"
-"set=\"podiumPosition\" t-value=\"'3'\"/>\n"
-"                                                            </t>\n"
-"                                                            <div "
-"style=\"margin:0 3px 0 3px;height:220px;\">\n"
-"                                                                <div t-attf-"
-"style=\"height:{{ heightA }}px;\">\n"
-"                                                                    <t t-"
-"out=\"extra_div or ''\"/>\n"
-"                                                                    <div "
-"style=\"height:55px;\">\n"
-"                                                                        <img "
-"style=\"margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-"
-"fit:cover;\" t-att-"
-"src=\"image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_128)\" "
-"t-att-alt=\"goal['name']\"/>\n"
-"                                                                    </div>\n"
-"                                                                    <div "
-"align=\"center\" t-attf-style=\"color:{{ bgColor }};height:20px\">\n"
-"                                                                        <t t-"
-"out=\"goal['name'] or ''\"/>\n"
-"                                                                    </div>\n"
-"                                                                </div>\n"
-"                                                                <div t-attf-"
-"style=\"background-color:{{ bgColor }};height:{{ heightB }}px;\">\n"
-"                                                                    <strong><span "
-"t-attf-style=\"color:#fff;font-size:{{ fontSize }}px;\" t-"
-"out=\"podiumPosition or ''\"/></strong>\n"
-"                                                                </div>\n"
-"                                                                <div "
-"style=\"height:30px;\">\n"
-"                                                                    <t t-"
-"out=\"&quot;%.2f&quot; % goal['current'] or ''\"/>\n"
-"                                                                    <t t-"
-"if=\"line['suffix'] or line['monetary']\">\n"
-"                                                                        <t t-"
-"out=\"line['full_suffix'] or ''\"/>\n"
-"                                                                    </t>\n"
-"                                                                </div>\n"
-"                                                            </div>\n"
-"                                                        </td>\n"
-"                                                    </t>\n"
-"                                                </tr>\n"
-"                                            </table>\n"
-"                                            </td>\n"
-"                                        </tr>\n"
-"                                    </table>\n"
-"                                </t>\n"
-"                                <!-- data table -->\n"
-"                                <table cellspacing=\"0\" cellpadding=\"0\" "
-"width=\"100%\" style=\"margin-bottom:5px\">\n"
-"                                    <tr>\n"
-"                                        <td>\n"
-"                                            <table cellspacing=\"0\" "
-"cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;margin-"
-"bottom:5px;color:#666666;\">\n"
-"                                                <thead>\n"
-"                                                    <tr "
-"style=\"color:#9A6C8E; font-size:12px;\">\n"
-"                                                        <th "
-"style=\"width:15%;text-align:center;\">Rang</th>\n"
-"                                                        <th "
-"style=\"width:25%;text-align:left;\">Navn</th>\n"
-"                                                        <th "
-"style=\"width:30%;text-align:right;\">Præstation \n"
-"                                                            <t t-"
-"if=\"line['suffix']\">\n"
-"                                                                (<t t-"
-"out=\"line['suffix'] or ''\"/>)\n"
-"                                                            </t>\n"
-"                                                            <t t-"
-"elif=\"line['monetary']\">\n"
-"                                                                (<t t-"
-"out=\"company.currency_id.symbol or ''\"/>)\n"
-"                                                            </t>\n"
-"                                                        </th>\n"
-"                                                        <th "
-"style=\"width:30%;text-align:right;\">Fuldstændighed</th>\n"
-"                                                    </tr>\n"
-"                                                    <tr>\n"
-"                                                        <td colspan=\"5\" "
-"style=\"height:1px;background-color:#9A6C8E;\"/>\n"
-"                                                    </tr>\n"
-"                                                </thead>\n"
-"                                                <tbody t-"
-"foreach=\"line['goals']\" t-as=\"goal\">\n"
-"                                                    <tr>\n"
-"                                                        <t t-"
-"set=\"tdBgColor\" t-value=\"'#fff'\"/>\n"
-"                                                        <t t-set=\"tdColor\" "
-"t-value=\"'gray'\"/>\n"
-"                                                        <t t-"
-"set=\"mutedColor\" t-value=\"'#AAAAAA'\"/>\n"
-"                                                        <t t-"
-"set=\"tdPercentageColor\" t-value=\"'#9A6C8E'\"/>\n"
-"                                                        <td width=\"15%\" "
-"align=\"center\" valign=\"middle\" t-attf-style=\"background-color:"
-"{{ tdBgColor }};padding :5px 0;font-size:20px;\"><t t-out=\"goal['rank']+1 "
-"or ''\"/>\n"
-"                                                        </td>\n"
-"                                                        <td width=\"25%\" "
-"align=\"left\" valign=\"middle\" t-attf-style=\"background-color:"
-"{{ tdBgColor }};padding :5px 0;font-size:13px;\"><t t-out=\"goal['name'] or "
-"''\"/></td>\n"
-"                                                        <td width=\"30%\" "
-"align=\"right\" t-attf-style=\"background-color:{{ tdBgColor }};padding:5px "
-"0;line-height:1;\"><t t-out=\"&quot;%.2f&quot; % goal['current'] or ''\"/"
-"><br/><span t-attf-style=\"font-size:13px;color:{{ mutedColor }};\">på <t t-"
-"out=\"&quot;%.2f&quot; % line['target'] or ''\"/></span>\n"
-"                                                        </td>\n"
-"                                                        <td width=\"30%\" t-"
-"attf-style=\"color:{{ tdPercentageColor }};background-color:"
-"{{ tdBgColor }};padding-right:15px;font-size:22px;\" "
-"align=\"right\"><strong><t t-out=\"int(goal['completeness']) or ''\"/>%</"
-"strong></td>\n"
-"                                                    </tr>\n"
-"                                                    <tr>\n"
-"                                                        <td colspan=\"5\" "
-"style=\"height:1px;background-color:#DADADA;\"/>\n"
-"                                                    </tr>\n"
-"                                                </tbody>\n"
-"                                            </table>\n"
-"                                        </td>\n"
-"                                    </tr>\n"
-"                                </table> \n"
-"                            </t>\n"
-"                        </t>\n"
-"                    </td></tr>\n"
-"                </table>\n"
-"            </td></tr>\n"
-"        </table>\n"
-"    </td>\n"
-"</tr>\n"
-"</table>\n"
-"            "
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.badge_list_action
@@ -938,9 +621,8 @@ msgstr "Aktiv"
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
 #: code:addons/gamification/models/res_users.py:0
 #: code:addons/gamification/tests/test_karma_tracking.py:0
-#, fuzzy
 msgid "Add Manually"
-msgstr "Tilføj manuelt"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -965,9 +647,8 @@ msgstr "Arkiveret"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
-#, fuzzy
 msgid "Assign Challenge to"
-msgstr "Tildel udfordring til"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
@@ -1209,9 +890,8 @@ msgstr "Konsolideret"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_karma_tracking.py:0
-#, fuzzy
 msgid "Consolidation from %(from_date)s to %(end_date)s"
-msgstr "Konsolideret fra %(from_date)s til %(end_date)s"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_new_simplified_res_users
@@ -1387,7 +1067,7 @@ msgstr "Visningstilstand"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 #: model:ir.model.fields,field_description:gamification.field_res_users__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
@@ -1430,9 +1110,8 @@ msgstr "Udkast"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_newbie
-#, fuzzy
 msgid "Earn your first points and join the adventure!"
-msgstr "Optjen først dine point, og lad eventyret begynde!"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__end_date
@@ -1587,15 +1266,13 @@ msgstr "Gamificering generisk mål for udfordring"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
-#, fuzzy
 msgid "Gamification: Badge Received"
-msgstr "Gamificering: Badge modtaget"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,name:gamification.simple_report_template
-#, fuzzy
 msgid "Gamification: Challenge Report"
-msgstr "Gamificering: udfordringsrapport"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
@@ -1609,15 +1286,13 @@ msgstr "Gamificering: Karma sporing konsolidering"
 
 #. module: gamification
 #: model:mail.template,name:gamification.mail_template_data_new_rank_reached
-#, fuzzy
 msgid "Gamification: New Rank Reached"
-msgstr "Gamificering: Ny rang opnået"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_goal_reminder
-#, fuzzy
 msgid "Gamification: Reminder For Goal Update"
-msgstr "Gamificering: Påmindelse for målopdatering"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1717,15 +1392,13 @@ msgstr "Tildel dette badge"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
-#, fuzzy
 msgid "Granted By"
-msgstr "Tildelt af"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
-#, fuzzy
 msgid "Granted on"
-msgstr "Tildelt den"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -1910,23 +1583,20 @@ msgstr "Karma Ændringer"
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
-#, fuzzy
 msgid "Karma Owner"
-msgstr "Karma-ejer"
+msgstr ""
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
-#, fuzzy
 msgid "Karma Tracking"
-msgstr "Karma-sporing"
+msgstr ""
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
-#, fuzzy
 msgid "Karma Updates"
-msgstr "Karma-opdateringer"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
@@ -2055,9 +1725,8 @@ msgstr "Motiverende"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__description_motivational
-#, fuzzy
 msgid "Motivational phrase to reach this rank on your profile page"
-msgstr "Motivationssætning for at opnå denne rang på din profilside"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
@@ -2066,9 +1735,8 @@ msgstr "Mine mål"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
-#, fuzzy
 msgid "My Karma"
-msgstr "Min karma"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
@@ -2107,15 +1775,13 @@ msgstr "Ny Karma Værdi"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
-#, fuzzy
 msgid "New badge {{ object.badge_id.name }} granted"
-msgstr "Nyt badge {{ object.badge_id.name }} tildelt"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,subject:gamification.mail_template_data_new_rank_reached
-#, fuzzy
 msgid "New rank: {{ object.rank_id.name }}"
-msgstr "Ny rang: {{ object.rank_id.name }}"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
@@ -2134,9 +1800,8 @@ msgstr "Næste rapport dato"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
-#, fuzzy
 msgid "No Karma Tracking"
-msgstr "Ingen karma-sporing"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2161,13 +1826,10 @@ msgstr "Ingen, tildel gennem udfordringer"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-#, fuzzy
 msgid ""
 "Nobody has succeeded to reach every goal, no badge is rewarded for this "
 "challenge."
 msgstr ""
-"Ingen har opnået alle mål, og der er ikke tildelt noget badge for denne "
-"udfordring."
 
 #. module: gamification
 #. odoo-python
@@ -2278,13 +1940,10 @@ msgstr "Periode"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__period
-#, fuzzy
 msgid ""
 "Period of automatic goal assignment. If none is selected, should be launched "
 "manually."
 msgstr ""
-"Periode for automatisk tildeling af mål. Hvis ingen periode vælges, skal "
-"tildelingen startes manuelt."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__period
@@ -2293,9 +1952,8 @@ msgstr "Hyppighed"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
-#, fuzzy
 msgid "Previous Total"
-msgstr "Forrige samlet beløb"
+msgstr ""
 
 #. module: gamification
 #: model:gamification.badge,name:gamification.badge_problem_solver
@@ -2351,51 +2009,43 @@ msgstr "Rang liste"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-#, fuzzy
 msgid "Reach the next rank and become a Master!"
-msgstr "Nå den næste rang, og bliv mester!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-#, fuzzy
 msgid "Reach the next rank and become a powerful user!"
-msgstr "Nå næste rang, og bliv en mægtig bruger!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-#, fuzzy
 msgid "Reach the next rank and gain a very magic wand!"
-msgstr "Nå den næste rang, og få en særlig magisk tryllestav!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-#, fuzzy
 msgid "Reach the next rank and gain a very nice hat!"
-msgstr "Nå den næste rang, og få en fin hat!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-#, fuzzy
 msgid "Reach the next rank and gain a very nice mug!"
-msgstr "Nå den næste rang, og få et rigtig fint krus!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-#, fuzzy
 msgid "Reach the next rank and gain a very nice unicorn!"
-msgstr "Nå den næste rang, og få en skøn enhjørning!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-#, fuzzy
 msgid "Reach the next rank to improve your status!"
-msgstr "Nå den næste rang for at forbedre din status!"
+msgstr ""
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-#, fuzzy
 msgid "Reach the next rank to show the rest of the world you exist."
-msgstr "Nå den næste rang for at vise resten af verden, at du findes."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2493,13 +2143,10 @@ msgstr "Belønning"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-#, fuzzy
 msgid ""
 "Reward (badge %(badge_name)s) for every succeeding user was sent to %"
 "(users)s."
 msgstr ""
-"Belønning (badge %(badge_name)s) til hver efterfølgende bruger blev sendt "
-"til %(users)s."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_failure
@@ -2587,9 +2234,8 @@ msgstr "Send rapport"
 
 #. module: gamification
 #: model:mail.template,description:gamification.simple_report_template
-#, fuzzy
 msgid "Send a challenge report to all participants"
-msgstr "Send en udfordringsrapport til alle deltagere"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__report_message_group_id
@@ -2603,21 +2249,18 @@ msgstr "Afsender"
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_goal_reminder
-#, fuzzy
 msgid "Sent automatically to participant who haven't updated their goal"
-msgstr "Send automatisk til deltagere, der ikke har opdateret deres mål"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,description:gamification.email_template_badge_received
-#, fuzzy
 msgid "Sent automatically to the user who received a badge"
-msgstr "Send automatisk til den bruger, der modtog et badge"
+msgstr ""
 
 #. module: gamification
 #: model:mail.template,description:gamification.mail_template_data_new_rank_reached
-#, fuzzy
 msgid "Sent automatically when user reaches a new rank"
-msgstr "Send automatisk, når bruger når en ny rang"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__sequence
@@ -2678,13 +2321,10 @@ msgstr "Kildetype"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
-#, fuzzy
 msgid ""
 "Special rewards were sent to the top competing users. The ranking for this "
 "challenge is:"
 msgstr ""
-"Særlige belønninger blev sendt til de bedste deltagere. Ranglisten for denne "
-"udfordring er:"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2756,9 +2396,8 @@ msgstr "Mål: mindre end"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/tests/test_karma_tracking.py:0
-#, fuzzy
 msgid "Test Reason"
-msgstr "Testårsag"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__action_id
@@ -2947,11 +2586,10 @@ msgstr "Enheden for mål og nuværende værdier"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__goal_definition_ids
-#, fuzzy
 msgid ""
 "The users that have succeeded these goals will receive automatically the "
 "badge."
-msgstr "De brugere, der har opnået disse mål, modtager badget automatisk."
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
@@ -3009,9 +2647,8 @@ msgstr "Spor Karma Ændringer"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
-#, fuzzy
 msgid "Track the sources of the users karma and monitor"
-msgstr "Spor brugerens kilder, og hold øje med dem"
+msgstr ""
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
@@ -3064,9 +2701,8 @@ msgstr "Bruger"
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
-#, fuzzy
 msgid "User Creation"
-msgstr "Brugeroprettelse"
+msgstr ""
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__user_domain

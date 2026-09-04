@@ -8,14 +8,15 @@
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 16:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/payment/"
+"PO-Revision-Date: 2026-08-11 11:44+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/payment/"
 "th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -147,12 +148,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment methods are available</strong>"
-msgstr ""
+msgstr "<strong>ไม่มีวิธีการชำระเงินใดที่ใช้งานได้</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment providers are configured</strong>"
-msgstr ""
+msgstr "<strong>ไม่มีการตั้งค่าผู้ให้บริการการชำระเงิน</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -181,6 +182,8 @@ msgid ""
 "                        supported; please use the <em>Duplicate</em> action "
 "instead."
 msgstr ""
+"<strong>คำเตือน:</strong> การสร้างผู้ให้บริการการชำระเงินจากเริ่มแรกไม่\n"
+"                        ได้รับการสนับสนุน โปรดใช้การดำเนินการ \"<em>ทำซ้ำ</em>\" แทน"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -205,7 +208,7 @@ msgstr "<strong>คำเตือน</strong> คุณต้องเข้า
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Account"
-msgstr ""
+msgstr "บัญชี"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
@@ -217,7 +220,7 @@ msgstr "เปิดใช้งาน"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_add_payment_method
 msgid "Add a Payment Method"
-msgstr ""
+msgstr "เพิ่มวิธีการชำระเงิน"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -1482,7 +1485,7 @@ msgstr "ดำเนินการโดย"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Production Environment"
-msgstr ""
+msgstr "สภาพแวดล้อมการใช้งานจริง"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__provider_id
@@ -2260,6 +2263,8 @@ msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
 msgstr ""
+"ระบุว่ารายการนี้เกิดขึ้นบนระบบใช้งานจริงหรือไม่ (จะแสดงเป็น False "
+"สำหรับรายการที่ถูกสร้างขึ้นก่อนเริ่มเปิดใช้งานระบบติดตามนี้)"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer

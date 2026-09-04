@@ -3,16 +3,16 @@
 # * sale_loyalty
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-21 13:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-10 04:09+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/sale_loyalty/zh_Hans/>\n"
+"projects/odoo-s19-4/sale_loyalty/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -148,9 +148,8 @@ msgstr "创建日期"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
-#, fuzzy
 msgid "Discard"
-msgstr "丢弃"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
@@ -199,15 +198,13 @@ msgstr "礼品卡代码"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
-#, fuzzy
 msgid "Gift Card Count"
-msgstr "礼品卡计数"
+msgstr ""
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
-#, fuzzy
 msgid "Gift Cards"
 msgstr "礼品卡"
 
@@ -264,7 +261,6 @@ msgstr "是一个方案奖励行"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
-#, fuzzy
 msgid "Journal Item"
 msgstr "日记账项目"
 
@@ -335,7 +331,7 @@ msgstr "未选择奖励。"
 #. odoo-python
 #: code:addons/sale_loyalty/tests/common.py:0
 msgid "No reward to claim with this coupon"
-msgstr ""
+msgstr "该优惠券无可用奖励可领取"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -408,7 +404,6 @@ msgstr "奖励产品"
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-#, fuzzy
 msgid "Rewards Available"
 msgstr "可用奖励"
 
@@ -435,9 +430,8 @@ msgstr "销售订单优惠券积分-追踪销售订单如何影响优惠券的�
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
-#, fuzzy
 msgid "Sale Order Customer"
-msgstr "销售订单客户"
+msgstr "销售单客户"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -508,7 +502,6 @@ msgstr "销售订单，生成优惠券"
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-#, fuzzy
 msgid "There are available rewards not added to this order."
 msgstr "有可用奖励未加入此订单中。"
 
@@ -600,6 +593,8 @@ msgid ""
 "To take advantage of this offer, your order must include at least %(amount)s "
 "%(currency)s of the eligible products."
 msgstr ""
+"要享受此优惠，您的订单中必须包含至少%(amount)s %(currency)s 的符合条件的产"
+"品。"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
@@ -617,7 +612,7 @@ msgstr ""
 msgid ""
 "You don't have enough coupon points to proceed. Please check your applied "
 "rewards and coupon balance. "
-msgstr ""
+msgstr "您的优惠券积分不足，无法继续操作。请查看您已使用的奖励和优惠券余额。 "
 
 #. module: sale_loyalty
 #. odoo-python
@@ -637,15 +632,5 @@ msgstr ""
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
-#, fuzzy
 msgid "order_id"
 msgstr "order_id"
-
-#~ msgid "<strong>Loyalty Card</strong>"
-#~ msgstr "<strong>会员卡</strong>"
-
-#~ msgid "Issued"
-#~ msgstr "已充值"
-
-#~ msgid "Used"
-#~ msgstr "已使用"

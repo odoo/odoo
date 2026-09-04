@@ -9,15 +9,16 @@
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-20 19:09+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-13 09:11+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "sale_stock/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -72,7 +73,7 @@ msgstr "อาจจำเป็นต้องดำเนินการด้
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 msgid "1 Quotation"
-msgstr ""
+msgstr "1 ใบเสนอราคา"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
@@ -166,6 +167,11 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"อ้างอิงจากการตั้งค่าสินค้า ปริมาณที่ส่งมอบสามารถคำนวณได้โดยอัตโนมัติผ่านกลไกดังต่อไปนี้:\n"
+"  - แบบทำด้วยมือ: ปริมาณถูกกำหนดด้วยตนเองในบรรทัดนั้น\n"
+"  - แบบวิเคราะห์จากค่าใช้จ่าย: ปริมาณคือผลรวมของปริมาณจากค่าใช้จ่ายที่บันทึกแล้ว\n"
+"  - แบบใบบันทึกเวลา: ปริมาณคือผลรวมของชั่วโมงที่บันทึกไว้ในงานที่เชื่อมโยงกับบรรทัดนี้\n"
+"  - แบบการเคลื่อนย้ายสินค้า: ปริมาณมาจากการหยิบสินค้าที่ได้รับการยืนยัน\n"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
@@ -198,7 +204,7 @@ msgstr "ใช้เส้นทางเฉพาะ"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "จัดส่งทันที (แยกส่งสินค้าค้าง)"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -220,8 +226,9 @@ msgstr "พร้อม"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Available in stock"
-msgstr ""
+msgstr "มีในสต็อก"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_replenishment_info__sale_delay
@@ -237,8 +244,9 @@ msgstr "เลือกใช้เส้นทาง SO เฉพาะ"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "บริษัท"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
@@ -471,8 +479,9 @@ msgstr "เป็น Mto"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
+#, fuzzy
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr ""
+msgstr "ระบุสินค้าที่จะส่งมอบบางส่วนหรือทั้งหมดในครั้งเดียว"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_damaged_product
@@ -579,8 +588,9 @@ msgstr "ยังไม่มีการจัดส่ง! ให้ระบ�
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "No future availability"
-msgstr ""
+msgstr "ไม่มีว่างในอนาคต"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -601,8 +611,9 @@ msgstr "ไม่ได้จัดส่ง"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Not enough future availability"
-msgstr ""
+msgstr "ความพร้อมใช้งานในอนาคตไม่เพียงพอ"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
@@ -614,8 +625,9 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "เมื่อ"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
@@ -669,8 +681,9 @@ msgstr ""
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "Quotations"
-msgstr ""
+msgstr "ใบเสนอราคา"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__name
@@ -705,8 +718,9 @@ msgstr "อ้างอิง"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "อุปสงค์คงเหลืออยู่ที่"
 
 #. module: sale_stock
 #. odoo-python
@@ -927,8 +941,9 @@ msgstr "รายงานกฎสต็อก"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+#, fuzzy
 msgid "The delivery"
-msgstr ""
+msgstr "การจัดส่ง"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -937,7 +952,7 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered. "
 "Instead, create a return in your inventory."
 msgstr ""
-"ปริมาณที่สั่งไม่สามารถลดลงต่ำกว่าจำนวนที่จัดส่งไปแล้วได้ ให้สร้างการคืนสินค้าในสินค้าคงคลังของคุณแทน"
+"ปริมาณที่สั่งไม่สามารถลดลงต่ำกว่าจำนวนที่จัดส่งไปแล้วได้ ให้สร้างการคืนสินค้าในคลังสินค้าของคุณแทน"
 
 #. module: sale_stock
 #. odoo-python
@@ -947,7 +962,7 @@ msgid ""
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
 "ปริมาณที่สั่งของรายการใบสั่งขายไม่สามารถลดลงต่ำกว่าจำนวนที่จัดส่งแล้วได้ "
-"ให้สร้างการส่งคืนในสินค้าคงคลังของคุณแทน"
+"ให้สร้างการส่งคืนในคลังสินค้าของคุณแทน"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -978,8 +993,9 @@ msgstr "ผู้ใช้"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "View Forecast"
-msgstr ""
+msgstr "ดูการพยากรณ์"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -1042,30 +1058,25 @@ msgstr "ดำเนินการแทน"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+#, fuzzy
 msgid "will be late."
+msgstr "จะล่าช้า"
+
+msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>ยกเลิกแล้ว"
+
+msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>การเตรียมการ"
+
+msgid ""
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"oi oi-fw\" data-"
+"icon=\"local_shipping\"/> Shipped\n"
+"                                    </span>"
 msgstr ""
-
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"close\"/>Cancelled"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"close\"/>ยกเลิกแล้ว"
-
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>Preparation"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/>การเตรียมการ"
-
-#~ msgid ""
-#~ "<span class=\"small badge rounded-pill text-bg-success "
-#~ "orders_label_text_align\">\n"
-#~ "                                        <i class=\"oi oi-fw\" data-"
-#~ "icon=\"local_shipping\"/> Shipped\n"
-#~ "                                    </span>"
-#~ msgstr ""
-#~ "<span class=\"small badge rounded-pill text-bg-success "
-#~ "orders_label_text_align\">\n"
-#~ "                                        <i class=\"oi oi-fw\" data-"
-#~ "icon=\"local_shipping\"/> จัดส่งแล้ว\n"
-#~ "                                    </span>"
-
-#~ msgid "Date:"
-#~ msgstr "วันที่:"
-
-#~ msgid "Last Delivery Orders"
-#~ msgstr "คำสั่งซื้อการจัดส่งครั้งสุดท้าย"
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"oi oi-fw\" data-"
+"icon=\"local_shipping\"/> จัดส่งแล้ว\n"
+"                                    </span>"

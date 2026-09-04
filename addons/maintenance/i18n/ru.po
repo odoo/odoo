@@ -4,14 +4,15 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 23:31+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 11:31+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "maintenance/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -490,7 +491,7 @@ msgstr "Псевдоним почты"
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_id
 msgid "Email alias for this maintenance team."
-msgstr ""
+msgstr "Псевдоним электронной почты для этой группы обслуживания."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_team__alias_domain
@@ -506,7 +507,7 @@ msgstr "Дата окончания"
 #. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 msgid "End date cannot be earlier than start date."
-msgstr ""
+msgstr "Дата окончания не может быть раньше даты начала."
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_action
@@ -587,7 +588,7 @@ msgstr "Ожидаемое среднее время наработки на о�
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__schedule_end
 msgid "Expected completion date and time of the maintenance request."
-msgstr ""
+msgstr "Плановые дата и время выполнения заявки на обслуживание."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__fold
@@ -906,7 +907,7 @@ msgstr "Заявки на техническое обслуживание"
 #: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
 #: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
 msgid "Maintenance Requests Analysis"
-msgstr ""
+msgstr "Анализ заявок на обслуживание"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_stage
@@ -1005,7 +1006,7 @@ msgstr "Месяцев"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Activities"
-msgstr ""
+msgstr "Мои дела"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
@@ -1339,7 +1340,7 @@ msgstr "Планируемая дата"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_end
 msgid "Scheduled End"
-msgstr ""
+msgstr "Плановое окончание"
 
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
@@ -1379,6 +1380,7 @@ msgstr "Настройки"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Показать все записи, для которых истекла дата выполнения следующего дела"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_software
@@ -1498,7 +1500,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 msgid "The repeat interval cannot be less than 1."
-msgstr ""
+msgstr "Интервал повторения не может быть меньше 1."
 
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
@@ -1607,7 +1609,7 @@ msgstr "Оч. мало"
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
 msgid "Visible to all"
-msgstr ""
+msgstr "Видно всем"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
@@ -1631,6 +1633,8 @@ msgid ""
 "You can’t delete an equipment category if some equipment or maintenance "
 "requests are linked to it."
 msgstr ""
+"Нельзя удалить категорию оборудования, пока к ней привязаны оборудование или "
+"заявки на обслуживание."
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1676,6 +1680,3 @@ msgstr "например, экран не работает"
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. mycompany.com"
 msgstr "например, mycompany.com"
-
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Шрифт, отличный значок, например. к.-а.-задачи"

@@ -13,7 +13,7 @@
 # Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 # Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
@@ -21,9 +21,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-29 07:15+0000\n"
+"PO-Revision-Date: 2026-08-07 07:15+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/sale/th/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/sale/th/"
 ">\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -45,6 +45,11 @@ msgid ""
 "            UBL-RequestForQuotation file will work as well.\n"
 "        "
 msgstr ""
+"\n"
+"            หากลูกค้าของคุณใช้ Odoo 18 หรือสูงกว่า ข้อมูลลูกค้าและรายการใบสั่งขาย\n"
+"            จะถูกสร้างขึ้นโดยอัตโนมัติ เอกสาร pdf อื่นๆ ที่มีไฟล์แนบ\n"
+"            UBL-RequestForQuotation จะใช้งานได้เช่นกัน\n"
+"        "
 
 #. module: sale
 #: model:ir.module.module,description:base.module_sale
@@ -89,7 +94,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO FORMA - %s' % (object.name)"
-msgstr ""
+msgstr "'ใบแจ้งหนี้ชั่วคราว (PRO FORMA) - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -560,6 +565,452 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
+"                    <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
+"'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
+"                    <img t-att-src=\"logo_src\" style=\"display: block; "
+"height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p style=\"margin: 0 0 12px; padding: 0px; line-height: "
+"18px; font-size: 14px;\">\n"
+"                        สวัสดีค่ะ/ครับ <t t-out=\"object.partner_id.display_name "
+"or ''\">Johnny Tester</t>,\n"
+"                        <br/><br/>\n"
+"                        <t t-set=\"tx_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
+"                        คำสั่งซื้อของคุณ <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">S00049</span>\n"
+"                        <t t-if=\"object.client_order_ref\">\n"
+"                            (<t t-out=\"object.client_order_ref or "
+"''\">หมายเลขอ้างอิงลูกค้า</t>)\n"
+"                        </t>\n"
+"                        <t t-if=\"object.state == 'sale' or (tx_sudo and "
+"tx_sudo.state in ('done', 'authorized'))\">\n"
+"                            <t t-if=\"hasattr(object, 'carrier_id') and "
+"object.carrier_id.delivery_type == 'in_store'\">\n"
+"                                <t t-if=\"object.commitment_date and "
+"object.commitment_date.date() != object.date_order.date()\">\n"
+"                                    ได้รับการยืนยันแล้วและจะพร้อมในวันที่\n"
+"                                    <span t-field=\"object.commitment_date\" "
+"t-options=\"{&quot;widget&quot;: &quot;date&quot;}\"/>.<br/>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    ได้รับการยืนยันแล้วและจะพร้อมในเร็วๆ นี้<br/>\n"
+"                                </t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                ได้รับการยืนยันแล้ว<br/>\n"
+"                            </t>\n"
+"                            ขอบคุณสำหรับความไว้วางใจของคุณ\n"
+"                        </t>\n"
+"                        <t t-elif=\"tx_sudo and tx_sudo.state == "
+"'pending'\">\n"
+"                            อยู่ระหว่างดำเนินการ "
+"จะได้รับการยืนยันเมื่อได้รับการชำระเงินแล้ว\n"
+"                            <t t-if=\"object.reference\">\n"
+"                                หมายเลขการชำระเงินของคุณคือ <span style=\"font-"
+"weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
+"                            </t>\n"
+"                        </t>\n"
+"                        <br/>\n"
+"                        <t t-set=\"documents\" t-"
+"value=\"object._get_product_documents()\"/>\n"
+"                        <t t-if=\"documents\">\n"
+"                            <br/>\n"
+"                            <t t-if=\"len(documents)&gt;1\">\n"
+"                                นี่คือเอกสารเพิ่มเติมที่คุณอาจสนใจ:\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                นี่คือเอกสารเพิ่มเติมที่คุณอาจสนใจ:\n"
+"                            </t>\n"
+"                            <ul style=\"margin-bottom: 0;\">\n"
+"                                <t t-foreach=\"documents\" t-"
+"as=\"document\">\n"
+"                                    <li style=\"font-size: 14px;\">\n"
+"                                        <a t-"
+"out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/"
+"document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                                    </li>\n"
+"                                </t>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                        <t t-if=\"not is_html_empty(object.user_id.signature)"
+"\">\n"
+"                            <div style=\"font-size: 14px; margin: 0 0 16px;"
+"\"><t t-out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                    <t t-if=\"hasattr(object, 'website_id') and "
+"object.website_id\">\n"
+"                        <div style=\"margin: 0px; padding: 0px;\">\n"
+"                            <!-- The following loop is also used in the "
+"addons > sale > data > mail_template_data.xml ไฟล์เพราะเราต้องการรูปแบบเดียวกัน --"
+">\n"
+"                            <t t-foreach=\"object.order_line\" t-"
+"as=\"line\">\n"
+"                                <t t-if=\"(not hasattr(line, 'is_delivery') "
+"or not line.is_delivery) and not line.combo_item_id\">\n"
+"                                    <table width=\"100%\" style=\"max-width: "
+"590px; font-size: 14px; border-collapse: collapse;\" role=\"presentation\">\n"
+"                                        <tr>\n"
+"                                            <td width=\"24%\" style=\"max-"
+"width: 120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                                <img t-"
+"if=\"line.product_id\" t-attf-src=\"/web/image/product.product/"
+"{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: "
+"{{object.website_id and object.website_id._get_product_image_ratio_height() "
+"or '64px'}}; object-fit: cover; object-position: center;\" alt=\"Product "
+"image\"/>\n"
+"                                            </td>\n"
+"                                            <td align=\"left\" "
+"style=\"vertical-align: top; padding-bottom: 22px;\">\n"
+"                                                <h3 t-attf-style=\"mso-line-"
+"height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if "
+"line.product_type == 'combo' else ''}}\">\n"
+"                                                    <strong t-"
+"out=\"line.product_id.name or line.name\" t-attf-style=\"color: #{color};"
+"\">หลักสูตรการดูแลต้นไม้</strong>\n"
+"                                                    <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"opacity: "
+"0.5;\">\n"
+"                                                        <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                                    </span>\n"
+"                                                </h3>\n"
+"                                                <t t-set=\"combo_line_idx\" "
+"t-value=\"0\"/>\n"
+"                                                <t t-set=\"totalComboLines\" "
+"t-value=\"0\"/>\n"
+"                                                <t t-set=\"line_idx\" t-"
+"value=\"line_index\"/>\n"
+"                                                <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
+"                                                    <t t-if=\"(not "
+"hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_liness.linked_line_id.id == line.id) and line_idx == line_index\">\n"
+"                                                        <t t-"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
+"                                                            <t t-"
+"set=\"totalComboLines\" t-value=\"totalComboLines + 1\"/>\n"
+"                                                        </t>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\">\n"
+"                                                    <t t-if=\"(not "
+"hasattr(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_line.linked_line_id.id == line.id) and combo_line.combo_item_id and "
+"line_idx == line_index\">\n"
+"                                                            <t t-"
+"set=\"borderRadiusStyle\" t-value=\"''\"/>\n"
+"                                                            <t t-"
+"set=\"borderTopStyle\" t-value=\"''\"/>\n"
+"                                                            <t t-"
+"set=\"borderBottomStyle\" t-value=\"''\"/>\n"
+"\n"
+"                                                            <t t-"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != "
+"line.id\">\n"
+"                                                                <t t-"
+"set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-"
+"elif=\"combo_line.id == line.id and line_idx != line_index\">\n"
+"                                                                <t t-"
+"set=\"combo_line_idx\" t-value=\"0\"/>\n"
+"                                                            </t>\n"
+"                                                            <t t-"
+"if=\"combo_line_idx == 1\">\n"
+"                                                                <t t-"
+"if=\"totalComboLines != 1\">\n"
+"                                                                    <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px 6px 0 0;'\"/>\n"
+"                                                                    <t t-"
+"set=\"borderBottomStyle\" t-value=\"'border-bottom: none;'\"/>\n"
+"                                                                </t>\n"
+"                                                                <t t-"
+"else=\"\">\n"
+"                                                                    <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px;'\"/>\n"
+"                                                                </t>\n"
+"                                                            </t>\n"
+"                                                            <t t-"
+"elif=\"totalComboLines == combo_line_idx\">\n"
+"                                                                <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 0 0 6px 6px;'\"/>\n"
+"                                                                <t t-"
+"if=\"totalComboLines != 2\">\n"
+"                                                                    <t t-"
+"set=\"borderTopStyle\" t-value=\"'border-top: none;'\"/>\n"
+"                                                                </t>\n"
+"                                                            </t>\n"
+"                                                            <div t-attf-"
+"style=\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; "
+"{{ borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\">\n"
+"                                                                        <t t-"
+"out=\"combo_line.product_id.name or ''\">หลักสูตรการดูแลต้นไม้</t>\n"
+"                                                                        <span "
+"t-if=\"combo_line.product_id.product_template_attribute_value_ids\" "
+"style=\"opacity: 0.5;\">\n"
+"                                                                            <t "
+"t-out=\"', "
+"'.join(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                                                        </"
+"span>\n"
+"                                                                        -\n"
+"                                                                        <span>\n"
+"                                                                            <t "
+"t-out=\"int(combo_line.product_uom_qty) or ''\">10000</t>\n"
+"                                                                            <t "
+"t-out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                                                        </"
+"span>\n"
+"                                                                        <p t-"
+"if=\"hasattr(combo_line, 'is_rental') and combo_line.is_rental and "
+"combo_line.id == line.id\" style=\"opacity: 0.7;\">\n"
+"                                                                            <t "
+"t-out=\"combo_line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                                        </"
+"p>\n"
+"                                                                        <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
+"                                                                            <t "
+"t-set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"/>\n"
+"                                                                            <div "
+"t-if=\"description_lines\" style=\"opacity: 0.7;\">\n"
+"                                                                                <t "
+"t-foreach=\"description_lines\" t-as=\"description_line\">\n"
+"                                                                                    <p "
+"t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px 0 "
+"0;\"/>\n"
+"                                                                                </"
+"t>\n"
+"                                                                            </"
+"div>\n"
+"                                                                        </"
+"t>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                    <t t-"
+"elif=\"not(combo_line.linked_line_id) and combo_line.id == line.id\">\n"
+"                                                        <p t-"
+"if=\"hasattr(line, 'is_rental') and line.is_rental\" style=\"margin: 4px 0 "
+"0; opacity: 0.7;\">\n"
+"                                                            <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"/><br/>\n"
+"                                                        </p>\n"
+"                                                        <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or "
+"(hasattr(combo_line, 'event_id') and combo_line.event_id) or "
+"(hasattr(combo_line, 'calendar_event_id') and combo_line.calendar_event_id)"
+"\">\n"
+"                                                            <t t-"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"/>\n"
+"                                                            <div t-"
+"if=\"product_description_lines\" style=\"opacity: 0.7;\">\n"
+"                                                                <t t-"
+"foreach=\"product_description_lines\" t-as=\"product_description_line\">\n"
+"                                                                    <p t-"
+"if=\"product_description_line\" t-out=\"product_description_line\" "
+"style=\"margin: 4px 0 0;\"/>\n"
+"                                                                </t>\n"
+"                                                            </div>\n"
+"                                                        </t>\n"
+"                                                    </t>\n"
+"                                                </t>\n"
+"                                                <span style=\"display: "
+"inline-block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; "
+"background-color: #e9ecef; color: #454748; font-size: 12px;\">\n"
+"                                                    <t t-"
+"out=\"int(line.product_uom_qty) or ''\">10000</t>\n"
+"                                                    <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                                </span>\n"
+"                                            </td>\n"
+"                                            <td width=\"19%\" "
+"align=\"right\" style=\"max-width: 100px; vertical-align: top;\">\n"
+"                                                <t t-if=\"line.product_type "
+"== 'combo'\">\n"
+"                                                    <span t-"
+"out=\"format_amount(line._get_cart_display_price(), object.currency_id) or "
+"''\">$ 10.00</span>\n"
+"                                                </t>\n"
+"                                                <t t-else=\"\">\n"
+"                                                    <span style=\"white-"
+"space: nowrap;\">\n"
+"                                                        <t t-"
+"if=\"hasattr(object, 'website_id') and "
+"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                                                            <t t-"
+"out=\"format_amount(line.price_subtotal, object.currency_id) or ''\">$ "
+"10.00</t>\n"
+"                                                        </t>\n"
+"                                                        <t t-else=\"\">\n"
+"                                                            <t t-"
+"out=\"format_amount(line.price_total, object.currency_id) or ''\">$ 10.00</"
+"t>\n"
+"                                                        </t>\n"
+"                                                    </span>\n"
+"                                                </t>\n"
+"                                                <t t-if=\"hasattr(line, "
+"'recurring_invoice') and line.recurring_invoice\">\n"
+"                                                    <br/>\n"
+"                                                    <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                                </t>\n"
+"                                            </td>\n"
+"                                        </tr>\n"
+"                                    </table>\n"
+"                                </t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                        <div style=\"margin: 10px 0 16px; padding: 0px;\">\n"
+"                            <table width=\"100%\" t-if=\"hasattr(object, "
+"'carrier_id') and object.carrier_id\" style=\"max-width: 590px; font-size: "
+"14px; border-spacing: 0px 4px; white-space: nowrap;\" "
+"role=\"presentation\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding-top: 8px; width: "
+"50%; border-top: 1px solid #dee2e6;\" align=\"left\">จัดส่ง</td>\n"
+"                                    <td style=\"padding-top: 8px; width: "
+"50%; border-top: 1px solid #dee2e6;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ "
+"0.00</td>\n"
+"                                </tr>\n"
+"                                <tr>\n"
+"                                    <td style=\"width: 50%;\" "
+"align=\"left\">จำนวนเงินที่ยังไม่เสียภาษี</td>\n"
+"                                    <td style=\"width: 50%;\" "
+"align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+"object.currency_id) or ''\">$ 10.00</td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <table width=\"100%\" t-else=\"\" style=\"max-"
+"width: 590px; opacity: 0.8; font-size: 14px; border-spacing: 0px 4px; white-"
+"space: nowrap;\" role=\"presentation\">\n"
+"                                <tr>\n"
+"                                    <td style=\"width: 50%; border-top: 1px "
+"solid #dee2e6;\" align=\"left\">จำนวนเงินที่ยังไม่เสียภาษี</td>\n"
+"                                    <td style=\"width: 50%; border-top: 1px "
+"solid #dee2e6;\" align=\"right\" t-"
+"out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ "
+"10.00</td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                            <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                                <t t-set=\"all_tax_lines\" t-value=\"[tax "
+"for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/"
+">\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: "
+"nowrap;\" role=\"presentation\">\n"
+"                                    <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-"
+"bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                        <td style=\"width: 80%;\" "
+"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
+"object.currency_id) or ''\">$ 0.00</td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
+"                            <table width=\"100%\" style=\"max-width: 590px; "
+"font-size: 14px; border-spacing: 0px; white-space: nowrap;\" "
+"role=\"presentation\">\n"
+"                                <tr>\n"
+"                                    <td style=\"width: 20%; padding-top: "
+"4px; border-top: 1px solid #343a40; opacity: 0.9;\" "
+"align=\"left\"><strong>ยอดรวม</strong></td>\n"
+"                                    <td style=\"width: 80%; padding-top: "
+"4px; border-top: 1px solid #343a40; font-weight: bold; \" align=\"right\">\n"
+"                                        <span style=\"display: inline-block; "
+"margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-"
+"radius: 4px;\">\n"
+"                                            <span t-attf-style=\"color: "
+"#{color}; font-weight: bold;\">\n"
+"                                                <t t-"
+"out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
+"                                            </span>\n"
+"                                        </span>\n"
+"                                        <span style=\"opacity: 0.9;\"><t t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ "
+"10.00</t></span>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </div>\n"
+"                        <table t-if=\"object.partner_shipping_id and not "
+"object.only_services\" width=\"295\" style=\"vertical-align: top; font-size: "
+"14px; margin-bottom: 12px;\" align=\"left\" role=\"presentation\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-bottom: 4px; font-"
+"weight: bold;\">\n"
+"                                    <t t-if=\"not (hasattr(object, "
+"'carrier_id') and object.carrier_id.delivery_type == 'in_store')\">\n"
+"                                        <span style=\"opacity: "
+"0.9;\">การจัดส่งกับ</span>\n"
+"                                    </t>\n"
+"                                    <span t-attf-style=\"color: {{color}}; "
+"opacity: 1;\"><t t-out=\"object.carrier_id.name or ''\"/></span>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td style=\"opacity: 0.9;\">\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.street or ''\">1201 S Figueroa St</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.city or ''\">Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.state_id.name or ''\">California</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.zip or ''\">90015</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.country_id.name or ''\">United States</t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                        <table t-if=\"object.partner_invoice_id\" "
+"width=\"295\" style=\"vertical-align: top; opacity: 0.8; font-size: 14px;\" "
+"align=\"left\" role=\"presentation\">\n"
+"                            <tr>\n"
+"                                <td style=\"padding-bottom: 4px;\">\n"
+"                                    <span style=\"font-weight:bold;"
+"\">การเรียกเก็บเงิน</span>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.street or ''\">1201 S Figueroa St</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.city or ''\">Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.state_id.name or ''\">California</t>\n"
+"                                    <t t-out=\"object.partner_invoice_id.zip "
+"or ''\">90015</t><br/>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.country_id.name or ''\">United States</t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </t>\n"
+"                </div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_payment_executed
@@ -620,6 +1071,61 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
+"        <t t-set=\"transaction_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/>\n"
+"        สวัสดีค่ะ/ครับ\n"
+"        <br/><br/>\n"
+"        การชำระเงินพร้อมเลขที่อ้างอิง\n"
+"        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
+"or ''\">SOOO49</span>\n"
+"        เป็นจำนวน\n"
+"        <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
+"10.00</span>\n"
+"        สำหรับการสั่งซื้อของคุณ\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
+"''\">S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
+"'pending'\">\n"
+"            กำลังดำเนินการ\n"
+"            <br/>\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
+"+ transaction_sudo.amount, object.amount_total) &gt;= 0 and object.state in "
+"('draft', 'sent')\">\n"
+"                คำสั่งซื้อของคุณจะได้รับการยืนยัน เมื่อได้รับการยืนยันการชำระเงินแล้ว\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                เมื่อยืนยันแล้ว\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid - "
+"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                ยังคงต้องชำระ\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            ได้รับการยืนยันแล้ว\n"
+"            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
+"object.amount_total) &lt; 0\">\n"
+"                <br/>\n"
+"                <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total - object.amount_paid, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
+"                ยังคงต้องชำระ\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        ขอขอบคุณสำหรับความไว้วางใจ!\n"
+"        <br/>\n"
+"        โปรดติดต่อเราหากคุณมีคำถามใดๆ\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"object.user_id.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_proforma
@@ -835,7 +1341,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 msgid "<span id=\"o_sale_portal_use_amount_total\">By paying,</span>"
-msgstr ""
+msgstr "<span id=\"o_sale_portal_use_amount_total\">โดยการชำระเงิน</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -843,6 +1349,8 @@ msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
 msgstr ""
+"<span invisible=\"advance_payment_method != 'percentage'\" "
+"class=\"oe_inline\">% </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -952,7 +1460,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>รายชื่อผู้ติดต่อ</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -962,7 +1470,7 @@ msgstr "<strong>วันที่จัดส่งสินค้า</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Expiration</strong>"
-msgstr ""
+msgstr "<strong>หมดอายุ</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -972,7 +1480,7 @@ msgstr "<strong>หมายเหตุเงื่อนไขภาษี:</s
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Incoterm</strong>"
-msgstr ""
+msgstr "<strong>Incoterm</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -997,7 +1505,7 @@ msgstr "<strong>ใบเสนอราคานี้ถูกยกเลิ�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference</strong>"
-msgstr ""
+msgstr "<strong>การอ้างอิงของคุณ</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -1041,7 +1549,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "สินค้าที่จัดเก็บได้คือสินค้าที่คุณจัดการสต็อกไว้"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1080,6 +1588,11 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"อ้างอิงจากการตั้งค่าสินค้า ปริมาณที่ส่งมอบสามารถคำนวณได้โดยอัตโนมัติผ่านกลไกดังต่อไปนี้:\n"
+"  - แบบทำด้วยมือ: ปริมาณถูกกำหนดด้วยตนเองในบรรทัดนั้น\n"
+"  - แบบวิเคราะห์จากค่าใช้จ่าย: ปริมาณคือผลรวมของปริมาณจากค่าใช้จ่ายที่บันทึกแล้ว\n"
+"  - แบบใบบันทึกเวลา: ปริมาณคือผลรวมของชั่วโมงที่บันทึกไว้ในงานที่เชื่อมโยงกับบรรทัดนี้\n"
+"  - แบบการเคลื่อนย้ายสินค้า: ปริมาณมาจากการหยิบสินค้าที่ได้รับการยืนยัน\n"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -1101,7 +1614,7 @@ msgstr "กิจกรรม"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Activities of"
-msgstr ""
+msgstr "กิจกรรมของ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
@@ -1154,17 +1667,17 @@ msgstr "เพิ่ม"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add Line"
-msgstr ""
+msgstr "เพิ่มรายการ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add Note"
-msgstr ""
+msgstr "เพิ่มโน้ต"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add Section"
-msgstr ""
+msgstr "เพิ่มส่วน"
 
 #. module: sale
 #. odoo-javascript
@@ -1187,32 +1700,32 @@ msgstr "เพิ่มตัวเลือกสินค้าหลายร
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Add to order"
-msgstr ""
+msgstr "เพิ่มในการสั่งซื้อ"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "เพิ่ม/ลบผู้ติดตาม"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__allow_invoice_overages
 msgid "Allow Invoice Overages"
-msgstr ""
+msgstr "อนุญาตให้มีการเกินยอดในใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "หน่วยวัดที่อนุญาต"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro Forma Invoice to your customers"
-msgstr ""
+msgstr "ช่วยให้คุณสามารถส่งใบแจ้งหนี้ชั่วคราว(Pro Forma Invoice ) ให้กับลูกค้าของคุณ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro forma invoice."
-msgstr ""
+msgstr "ช่วยให้คุณสามารถส่งใบแจ้งหนี้ชั่วคราว(pro forma invoice)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_document__attached_on_sale
@@ -1257,7 +1770,7 @@ msgstr "จำนวน"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Amount paid:"
-msgstr ""
+msgstr "จำนวนที่จ่าย:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1267,7 +1780,7 @@ msgstr "จำนวน"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 msgid "Analytic Account"
-msgstr ""
+msgstr "บัญชีวิเคราะห์"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1333,11 +1846,14 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.\n"
 "If you want to change it, please archive the product and create a new one."
 msgstr ""
+"เนื่องจากมีการใช้งานหน่วยวัดอื่น (เช่น: %(problem_uom)s) นอกเหนือจาก %(uom)s "
+"กับสินค้านี้แล้ว จึงไม่สามารถเปลี่ยนหน่วยวัดได้ หากต้องการเปลี่ยนหน่วยวัด กรุณาเก็บถาวร "
+"(archive) สินค้านี้ไว้ และสร้างรายการสินค้าใหม่"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__sales_price
 msgid "At Sales price"
-msgstr ""
+msgstr "ในราคาขาย"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
@@ -1369,19 +1885,19 @@ msgstr "ธุรกรรมที่ได้รับอนุญาต"
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_automatic_invoice
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_automatic_invoice
 msgid "Automatic Invoicing"
-msgstr ""
+msgstr "การออกใบแจ้งหนี้อัตโนมัติ"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
 msgid "Availability"
-msgstr ""
+msgstr "ความพร้อม"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
 msgid "Available"
-msgstr ""
+msgstr "พร้อม"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
@@ -1421,6 +1937,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"สีน้ำเงิน: ยังไม่ได้จัดส่ง/ยังไม่เริ่มต้น\n"
+"            สีส้ม : จัดส่งบางส่วนแล้ว\n"
+"            สีเขียว : จัดส่งครบถ้วน"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1486,7 +2005,7 @@ msgstr "ยกเลิก"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Cancel Order"
-msgstr ""
+msgstr "ยกเลิกคำสั่งซื้อ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
@@ -1510,12 +2029,14 @@ msgid ""
 "Cancelling this order will set its status to 'Cancelled' and will update "
 "related documents and processes. Are you sure?"
 msgstr ""
+"การยกเลิกคำสั่งนี้จะตั้งสถานะเป็น 'ยกเลิกแล้ว' และจะอัปเดตเอกสารและกระบวนการที่เกี่ยวข้อง "
+"คุณแน่ใจหรือไม่?"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Cannot close %(orders_name)s: must be in 'Sales Order' state."
-msgstr ""
+msgstr "ไม่สามารถปิด%(orders_name)s ได้: ต้องอยู่ในสถานะ 'คำสั่งขาย'"
 
 #. module: sale
 #. odoo-python
@@ -1564,7 +2085,7 @@ msgstr "หมวดหมู่"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Category"
-msgstr ""
+msgstr "หมวดหมู่"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
@@ -1592,18 +2113,18 @@ msgstr "คลิกที่นี่เพื่อเพิ่มสินค
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_card/product_card.xml:0
 msgid "Click to configure"
-msgstr ""
+msgstr "คลิกเพื่อตั้งค่า"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "คลิกเพื่อกำหนดเป้าหมายการออกใบแจ้งหนี้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
 msgid "Client's most used account"
-msgstr ""
+msgstr "บัญชีที่ลูกค้าใช้บ่อยที่สุด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1615,17 +2136,17 @@ msgstr "ปิด"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_close_invoicing
 msgid "Close Invoicing"
-msgstr ""
+msgstr "ปิดใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_composition
 msgid "Collapse Composition"
-msgstr ""
+msgstr "ซ่อนการแสดงเนื้อหา"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__collapse_prices
 msgid "Collapse Prices"
-msgstr ""
+msgstr "ซ่อนราคา"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_combos
@@ -1641,7 +2162,7 @@ msgstr "รายการคอมโบ"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Combo Product"
-msgstr ""
+msgstr "สินค้าคอมโบ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_commission
@@ -1688,14 +2209,14 @@ msgstr "กำหนดค่า"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "กำหนดวิธีการจัดส่ง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
-msgstr ""
+msgstr "กำหนดวิธีการส่งหรือทำงานร่วมกับผู้ให้บริการส่งผ่านระบบการผสานรวมที่มีอยู่"
 
 #. module: sale
 #. odoo-javascript
@@ -1713,12 +2234,12 @@ msgstr "ยืนยัน"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
 msgid "Confirm Orders"
-msgstr ""
+msgstr "ยืนยันคำสั่งซื้อ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirmation"
-msgstr ""
+msgstr "การยืนยัน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
@@ -1728,12 +2249,12 @@ msgstr "ข้อความยืนยัน"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connect"
-msgstr ""
+msgstr "เชื่อมต่อ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connect Stripe"
-msgstr ""
+msgstr "เชื่อมต่อ Stripe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1748,7 +2269,7 @@ msgstr "การเรียกเก็บเงินรวม"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "สกุลเงินรวม"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1837,6 +2358,8 @@ msgid ""
 "Create one invoice for all orders related to same customer, same invoicing "
 "address and same delivery address."
 msgstr ""
+"สร้างใบแจ้งหนี้หนึ่งใบสำหรับทุกคำสั่งซื้อที่เกี่ยวข้องกับลูกค้าเดียวกัน "
+"ที่อยู่สำหรับการออกใบแจ้งหนี้เดียวกัน และที่อยู่สำหรับการจัดส่งเดียวกัน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1920,7 +2443,7 @@ msgstr "อุตสาหกรรมลูกค้า"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__order_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 msgid "Customer Order"
-msgstr ""
+msgstr "คำสั่งซื้อของลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
@@ -1941,7 +2464,7 @@ msgstr "สถานะลูกค้า"
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_tag_ids
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Tags"
-msgstr ""
+msgstr "แท็กลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__partner_zip
@@ -2026,7 +2549,7 @@ msgstr "ลบ"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_deliver_sold_quantity
 msgid "Deliver"
-msgstr ""
+msgstr "ส่ง"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
@@ -2078,13 +2601,13 @@ msgstr "ปริมาณการจัดส่ง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "สถานะการจัดส่ง"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
 msgid "Delivery Time"
-msgstr ""
+msgstr "เวลาส่งมอบ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2105,6 +2628,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"ระยะเวลาจัดส่ง (นับเป็นวัน) คือจำนวนวันที่สัญญาไว้กับลูกค้า "
+"โดยนับตั้งแต่วันที่ยืนยันใบสั่งขายจนถึงวันที่จัดส่งสินค้า"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2123,7 +2648,7 @@ msgstr "คำอธิบาย"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr "ส่วนลด%"
+msgstr "ลด%"
 
 #. module: sale
 #. odoo-javascript
@@ -2151,7 +2676,7 @@ msgstr "ส่วนลด %"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount %(percent)s%%"
-msgstr ""
+msgstr "ส่วนลด %(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -2193,7 +2718,7 @@ msgstr "ส่วนลดทางรายการ"
 #. odoo-python
 #: code:addons/sale/wizard/sale_order_discount.py:0
 msgid "Discount- On products with the following taxes %(taxes)s"
-msgstr ""
+msgstr "ส่วนลด - สำหรับสินค้าที่มีภาษีดังต่อไปนี้ %(taxes)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2247,12 +2772,12 @@ msgstr "แสดงชื่อ"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__display_product_images_on_so
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Display Product Images"
-msgstr ""
+msgstr "แสดงภาพสินค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
-msgstr ""
+msgstr "วิดเจ็ตแสดงปริมาณ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
@@ -2276,7 +2801,7 @@ msgstr "บัญชีวิเคราะห์การจัดจำหน
 #: model:ir.model.fields,field_description:sale.field_sale_order__document_tax_mode
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "โหมดภาษีของเอกสาร"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2349,7 +2874,7 @@ msgstr "เงินดาวน์ <br/>"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
 msgid "Down payment Account Active"
-msgstr ""
+msgstr "บัญชีเงินดาวน์เปิดใช้งานแล้ว"
 
 #. module: sale
 #. odoo-python
@@ -2376,13 +2901,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Download"
-msgstr ""
+msgstr "ดาวน์โหลด"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__downpayment_account_id
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_id
 msgid "Downpayment Account"
-msgstr ""
+msgstr "บัญชีเงินดาวน์"
 
 #. module: sale
 #. odoo-python
@@ -2399,7 +2924,7 @@ msgstr "เอกสารที่ซ้ำกัน"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__duplicated_order_ids
 msgid "Duplicated Order"
-msgstr ""
+msgstr "คำสั่งซ้ำ"
 
 #. module: sale
 #. odoo-javascript
@@ -2420,7 +2945,7 @@ msgstr "อีเมลที่ส่งถึงลูกค้าเมื่
 #. module: sale
 #: model:res.groups,name:sale.group_services_and_material
 msgid "Enable Services and Materials in Sales"
-msgstr ""
+msgstr "เปิดใช้งานบริการและวัสดุในการขาย"
 
 #. module: sale
 #. odoo-javascript
@@ -2431,7 +2956,7 @@ msgstr "ป้อนค่าที่กำหนดเอง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Excl. Tax)"
-msgstr ""
+msgstr "ไม่รวมภาษี)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2441,7 +2966,7 @@ msgstr "วันที่คาดหวัง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Expenses, Services & Materials"
-msgstr ""
+msgstr "ค่าใช้จ่าย บริการ และวัสดุ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -2451,7 +2976,7 @@ msgstr "สิ้นสุด"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Expired"
-msgstr ""
+msgstr "หมดอายุแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
@@ -2461,7 +2986,7 @@ msgstr "ข้อมูลภาษีเพิ่มเติม"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__extra_total_fields
 msgid "Extra Total Fields"
-msgstr ""
+msgstr "ฟิลด์ข้อมูลเพิ่มเติมทั้งหมด"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_no_variant_attribute_value_ids
@@ -2477,7 +3002,7 @@ msgstr "รายการเพิ่มเติมด้วย %s"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Financial Account"
-msgstr ""
+msgstr "บัญชีการเงิน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2491,6 +3016,7 @@ msgid ""
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"ฐานะการเงินใช้เพื่อปรับภาษีและบัญชีสำหรับลูกค้าเฉพาะหรือใบสั่งขาย/ใบแจ้งหนี้ ค่าเริ่มต้นมาจากลูกค้า"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2518,6 +3044,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                            sale orders."
 msgstr ""
+"สำหรับสูตรหรือราคาคงที่ ราคาเดิมจะไม่แสดงใน\n"
+"                            ใบสั่งขาย"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_section_fields_null
@@ -2534,7 +3062,7 @@ msgstr "ค่าที่ถูกห้ามในไลน์คำสั่
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.js:0
 msgid "Forecasted Stock"
-msgstr ""
+msgstr "การคาดการณ์สต็อก"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__quotation
@@ -2560,7 +3088,7 @@ msgstr "เต็มจำนวน <br/>"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "จัดส่งครบแล้ว"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
@@ -2595,7 +3123,7 @@ msgstr "สร้างใบแจ้งหนี้โดยอัตโนม
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Generated Orders"
-msgstr ""
+msgstr "คำสั่งซื้อที่สร้างขึ้น"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2645,7 +3173,7 @@ msgstr "เก็บถาวรสินค้า"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_authorized_transaction_ids
 msgid "Has Authorized Transactions"
-msgstr ""
+msgstr "ธุรกรรมที่ได้รับอนุญาต"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
@@ -2660,7 +3188,7 @@ msgstr "มีข้อความ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_overages
 msgid "Has Overages"
-msgstr ""
+msgstr "มีค่าใช้จ่ายเกินงบประมาณ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -2723,6 +3251,7 @@ msgstr "ถ้าเลือก ข้อความบางข้อคว�
 #: model:ir.model.fields,help:sale.field_sale_order__invoicing_closed
 msgid "If enabled, the order is considered fully invoiced regardless of lines."
 msgstr ""
+"หากเปิดใช้งาน ระบบจะถือว่าใบสั่งขายนี้ออกใบแจ้งหนี้ครบถ้วนแล้ว โดยไม่คำนึงถึงรายการสินค้า"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__journal_id
@@ -2751,7 +3280,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Immediate"
-msgstr ""
+msgstr "ชำระทันที"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2774,7 +3303,7 @@ msgstr "นำเข้าเทมเพลตสำหรับสินค้
 #: code:addons/sale/static/src/views/sale_file_upload_kanban/sale_file_upload_kanban_renderer.js:0
 #: code:addons/sale/static/src/views/sale_file_upload_list/sale_file_upload_list_renderer.js:0
 msgid "Import a request for quotation from a customer"
-msgstr ""
+msgstr "นำเข้าคำขอใบเสนอราคาจากลูกค้า"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
@@ -2782,6 +3311,8 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                            discount column."
 msgstr ""
+"ในบรรทัดคำสั่งขาย ราคาเดิมคือราคาต่อหน่วย และส่วนลดอยู่ใน\n"
+"                            คอลัมน์ส่วนลด"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2792,21 +3323,21 @@ msgstr "ในการสั่งซื้อ"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
 msgid "Included"
-msgstr ""
+msgstr "รวมแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm
 msgid "Incoterm"
-msgstr ""
+msgstr "Incoterm"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_res_users__incoterm_location
 #: model:ir.model.fields,field_description:sale.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "ตำแหน่ง Incoterm"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__sale_warning_text
@@ -2822,7 +3353,7 @@ msgstr "คำเตือนภายในสำหรับพาร์ทเ
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "Incoterm คือชุดของข้อกำหนดทางการค้าที่กำหนดไว้ล่วงหน้าที่ใช้ในธุรกรรมระหว่างประเทศ"
 
 #. module: sale
 #. odoo-python
@@ -2846,7 +3377,7 @@ msgstr "ข้อมูลลายเซ็นไม่ถูกต้อง"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Invoice"
-msgstr ""
+msgstr "ใบแจ้งหนี้"
 
 #. module: sale
 #. odoo-python
@@ -2873,17 +3404,17 @@ msgstr "รายการใบแจ้งหนี้"
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__invoice_overages
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_overages
 msgid "Invoice Overages"
-msgstr ""
+msgstr "ยอดเกินในใบแจ้งหนี้"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
 msgid "Invoice Paid"
-msgstr ""
+msgstr "ใบแจ้งหนี้ได้รับการชำระแล้ว"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
 msgid "Invoice Posted"
-msgstr ""
+msgstr "ใบแจ้งหนี้ลงบันทึกเรียบร้อยแล้ว"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -2906,7 +3437,7 @@ msgstr "ใบแจ้งหนี้หลังการจัดส่ง �
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__reinvoice_move_id
 msgid "Invoice created from related SO line"
-msgstr ""
+msgstr "ใบแจ้งหนี้ที่สร้างจากบรรทัดใบสั่งขายที่เกี่ยวข้อง"
 
 #. module: sale
 #. odoo-python
@@ -2943,7 +3474,7 @@ msgstr "จำนวนใบแจ้งหนี้"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_posted
 msgid "Invoiced Quantity (posted)"
-msgstr ""
+msgstr "ปริมาณที่ออกใบแจ้งหนี้ (ที่บันทึกแล้ว)"
 
 #. module: sale
 #. odoo-python
@@ -2999,13 +3530,13 @@ msgstr "เป้าหมายการออกใบแจ้งหนี้
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Invoicing closed"
-msgstr ""
+msgstr "การออกใบแจ้งหนี้ได้ปิดแล้ว"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Invoicing reopened"
-msgstr ""
+msgstr "การออกใบแจ้งหนี้ได้เปิดใหม่แล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
@@ -3030,7 +3561,7 @@ msgstr "เป็นผลิตภัณฑ์ที่เก็บถาวร
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__mandatory_product
 msgid "Is Product Mandatory"
-msgstr ""
+msgstr "สินค้านี้เป็นสิ่งจำเป็นหรือไม่"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
@@ -3055,7 +3586,7 @@ msgstr "เป็นจริงถ้าไลน์คำสั่งขาย
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Issued Date"
-msgstr ""
+msgstr "วันที่ออกเอกสาร"
 
 #. module: sale
 #. odoo-python
@@ -3070,7 +3601,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Journal"
-msgstr ""
+msgstr "สมุดรายวัน"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -3160,7 +3691,7 @@ msgstr "เชื่อมโยงไลน์คำสั่ง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_ids
 msgid "Linked Order Lines"
-msgstr ""
+msgstr "บรรทัดคำสั่งที่เชื่อมโยง"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_virtual_id
@@ -3224,12 +3755,12 @@ msgstr "จัดการโปรโมชั่น คูปอง บัต�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
-msgstr ""
+msgstr "จัดการเป้าหมายและค่าคอมมิชชันของฝ่ายขายและทีม"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_order_mandatory_product
 msgid "Mandatory Product"
-msgstr ""
+msgstr "สินค้าที่จำเป็น"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -3244,7 +3775,7 @@ msgstr "การชำระเงินด้วยตัวเอง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoicing_closed
 msgid "Manually Closed For Invoicing"
-msgstr ""
+msgstr "ปิดด้วยมือเพื่อออกใบแจ้งหนี้"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
@@ -3275,7 +3806,7 @@ msgstr "อัตราส่วน"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark as Sent"
-msgstr ""
+msgstr "ทำเครื่องหมายว่าส่งแล้ว"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -3285,7 +3816,7 @@ msgstr "การตลาด"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_marketplaces
 msgid "Marketplaces"
-msgstr ""
+msgstr "มาร์เก็ตเพลส"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
@@ -3335,18 +3866,18 @@ msgstr "แอดมิน Mitchell"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Move Down"
-msgstr ""
+msgstr "เลื่อนลง"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Move Up"
-msgstr ""
+msgstr "เลื่อนขึ้น"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "My"
-msgstr ""
+msgstr "ของฉัน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3439,12 +3970,12 @@ msgstr "ไม่แก้ไขคำสั่งได้เมื่อได
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "No, go back"
-msgstr ""
+msgstr "ไม่, กลับไป"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "ไม่ได้จัดส่ง"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
@@ -3475,7 +4006,7 @@ msgstr "จํานวนการดําเนินการ"
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
-msgstr ""
+msgstr "จำนวนวันระหว่างการยืนยันคำสั่งซื้อและการส่งสินค้า"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3495,13 +4026,13 @@ msgstr "จํานวนข้อความที่มีข้อผิด
 #. module: sale
 #: model:product.template,description_sale:sale.product_product_1_product_template
 msgid "Office chairs can harm your floor: protect it"
-msgstr ""
+msgstr "เก้าอี้สำนักงานสามารถทำร้ายพื้นของคุณได้: ปกป้องมัน"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
 msgid "On"
-msgstr ""
+msgstr "เมื่อ"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -3521,6 +4052,9 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "Set the quantity to 0 instead."
 msgstr ""
+"เมื่อคำสั่งซื้อได้รับการยืนยันแล้ว คุณไม่สามารถลบรายการใดในคำสั่งซื้อนั้นได้ "
+"(เราจำเป็นต้องติดตามว่าสินค้าใดถูกออกใบแจ้งหนี้หรือส่งมอบแล้ว)\n"
+"แทนที่จะลบ ให้ตั้งค่าจำนวนเป็น 0 แทน"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -3644,7 +4178,7 @@ msgstr "สถานะใบสั่งซื้อ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__line_name
 msgid "Order Line Name"
-msgstr ""
+msgstr "ชื่อบรรทัดคำสั่งซื้อ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3742,7 +4276,7 @@ msgstr "เครื่องมือสร้างใบเสนอราค
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO FORMA Invoice"
-msgstr ""
+msgstr "ใบแจ้งหนี้ชั่วคราว (PRO FORMA Invoice)"
 
 #. module: sale
 #. odoo-javascript
@@ -3753,17 +4287,17 @@ msgstr "การบรรจุหีบห่อ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "รายการบรรทัดหลัก"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "จัดส่งแล้วบางส่วน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
 msgid "Partner"
-msgstr ""
+msgstr "พาร์ทเนอร์"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -3798,7 +4332,7 @@ msgstr "การชำระเงิน"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Payment Link"
-msgstr ""
+msgstr "ลิงค์การชำระเงิน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__preferred_payment_method_line_id
@@ -3829,13 +4363,13 @@ msgstr "ธุรกรรมสำหรับการชำระเงิน
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_paid
 msgid "Payment Transactions Amount"
-msgstr ""
+msgstr "จำนวนเงินในการทำธุรกรรมชำระเงิน"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.payment_provider_menu
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Payments"
-msgstr ""
+msgstr "การชำระเงิน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pending_email_template_id
@@ -3868,7 +4402,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_amount
 msgid "Prepayment Amount"
-msgstr ""
+msgstr "จำนวนเงินที่ชำระล่วงหน้า"
 
 #. module: sale
 #. odoo-python
@@ -3880,7 +4414,7 @@ msgstr "เปอร์เซ็นต์การชำระเงินล่
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Prevent selling without a linked product"
-msgstr ""
+msgstr "ป้องกันการขายสินค้าโดยไม่มีสินค้าที่เชื่อมโยง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3890,12 +4424,12 @@ msgstr "ตัวอย่าง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__previously_bought_by_customer
 msgid "Previously Bought By Customer"
-msgstr ""
+msgstr "สินค้าที่ลูกค้าเคยซื้อมาก่อน"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "Previously bought"
-msgstr ""
+msgstr "ซื้อไว้แล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
@@ -3937,17 +4471,17 @@ msgstr "กำหนดราคา"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro Forma Invoice"
-msgstr ""
+msgstr "ใบแจ้งหนี้ชั่วคราว (Pro-Forma Invoice)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro Forma Invoice #"
-msgstr ""
+msgstr "ใบแจ้งหนี้ชั่วคราว #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro Forma Invoices"
-msgstr ""
+msgstr "ใบแจ้งหนี้ชั่วคราว"
 
 #. module: sale
 #. odoo-javascript
@@ -4033,12 +4567,12 @@ msgstr "สินค้า"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__commitment_date
 msgid "Promised Delivery"
-msgstr ""
+msgstr "วันที่ส่งมอบ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Promotions, Loyalty & Gift Card"
-msgstr ""
+msgstr "โปรโมชั่น โปรแกรมสะสมแต้ม และบัตรของขวัญ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4053,7 +4587,7 @@ msgstr "จำนวน"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_available_today
 msgid "Qty Available Today"
-msgstr ""
+msgstr "จำนวนที่พร้อมวันนี้"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
@@ -4073,7 +4607,7 @@ msgstr "จำนวนคำสั่ง"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_overage
 msgid "Qty Overage"
-msgstr ""
+msgstr "ปริมาณเกิน"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
@@ -4109,7 +4643,7 @@ msgstr "ปริมาณในใบแจ้งหนี้"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quantity:"
-msgstr "ปริมาณ:"
+msgstr "จำนวน:"
 
 #. module: sale
 #. odoo-python
@@ -4129,7 +4663,7 @@ msgstr "ใบเสนอราคา #"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr ""
+msgstr "ใบเสนอราคา / คำสั่งซื้อ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4159,7 +4693,7 @@ msgstr "จำเป็นต้องมีใบเสนอราคาที
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "ใบเสนอราคาที่ถูกเปิดดู"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -4222,7 +4756,7 @@ msgstr "ใบเสนอราคาเพื่อตรวจสอบ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "อัตรา"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -4233,7 +4767,7 @@ msgstr "การให้คะแนน"
 #: model:ir.model.fields,field_description:sale.field_product_product__reinvoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__reinvoice_policy
 msgid "Re-Invoice Costs"
-msgstr ""
+msgstr "ค่าใช้จ่ายในการออกใบแจ้งหนี้ใหม่"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_reinvoice_policy
@@ -4255,7 +4789,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reference"
-msgstr ""
+msgstr "การอ้างอิง"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4286,7 +4820,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "นำออก"
 
 #. module: sale
 #. odoo-javascript
@@ -4297,7 +4831,7 @@ msgstr "นำออกหนึ่ง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reopen Invoicing"
-msgstr ""
+msgstr "เปิดใบแจ้งหนี้ใหม่อีกครั้ง"
 
 #. module: sale
 #: model:ir.model,name:sale.model_ir_actions_report
@@ -4362,7 +4896,7 @@ msgstr "รายได้สร้างโดยแคมเปญ"
 #. module: sale
 #: model:portal.entry,description:sale.portal_quotations_to_review
 msgid "Review your quotations"
-msgstr ""
+msgstr "ตรวจสอบใบเสนอราคาของคุณ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
@@ -4384,7 +4918,7 @@ msgstr "การขาย"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sale_line_warn_msg
 msgid "Sale Line Warn Msg"
-msgstr ""
+msgstr "ข้อความเตือนการขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__sale_order_ids
@@ -4429,7 +4963,7 @@ msgstr "จำนวนใบสั่งขาย"
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
 msgid "Sale Warning"
-msgstr ""
+msgstr "คำเตือนเกี่ยวกับการขาย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4484,7 +5018,7 @@ msgstr "การวิเคราะห์การขายโดยลูก
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
 msgid "Sales Analysis By Products"
-msgstr ""
+msgstr "การวิเคราะห์การขายสินค้า"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
@@ -4539,7 +5073,7 @@ msgstr "รายการคำสั่งขาย"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_line_warn_msg
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_line_warn_msg
 msgid "Sales Order Line Warning"
-msgstr ""
+msgstr "คำเตือนเกี่ยวกับรายการคำสั่งขาย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__sale_line_ids
@@ -4643,7 +5177,7 @@ msgstr "การขาย: ชำระเงินเรียบร้อย�
 #. module: sale
 #: model:mail.template,name:sale.email_template_proforma
 msgid "Sales: Send Pro Forma"
-msgstr ""
+msgstr "ฝ่ายขาย: ใบแจ้งหนี้ชั่วคราว (Pro Forma)"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -4730,7 +5264,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
 msgid "Selected Combo Items"
-msgstr ""
+msgstr "รายการคอมโบที่เลือก"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4752,7 +5286,7 @@ msgstr "ส่ง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO FORMA Invoice"
-msgstr ""
+msgstr "ส่งใบแจ้งหนี้ชั่วคราว (PRO FORMA Invoice)"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
@@ -4780,24 +5314,24 @@ msgstr "ลำดับ"
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__service_line_count
 #: model:ir.model.fields,field_description:sale.field_account_move__service_line_count
 msgid "Service Line Count"
-msgstr ""
+msgstr "จำนวนรายการของงานบริการ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Services"
-msgstr ""
+msgstr "บริการ"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_service_material
 #: model:ir.ui.menu,name:sale.menu_service_material
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
 msgid "Services & Material"
-msgstr ""
+msgstr "บริการและวัสดุ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_services_and_material
 msgid "Services & Materials"
-msgstr ""
+msgstr "บริการและวัสดุ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4829,12 +5363,12 @@ msgstr "การจัดส่งสินค้า"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
 msgid "Shopee Sync"
-msgstr ""
+msgstr "ซิงค์กับ Shopee"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_ship_button
 msgid "Show Ship Button"
-msgstr ""
+msgstr "แสดงปุ่มการจัดส่ง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4849,7 +5383,7 @@ msgstr "แสดงอัตราส่วนบนคำสั่ง"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show product images on your PDF and online quotes."
-msgstr ""
+msgstr "แสดงภาพสินค้าใน PDF และใบเสนอราคาออนไลน์ของคุณ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4885,7 +5419,7 @@ msgstr "เข้าสู่ระบบ"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
 msgid "So, are you sure you want to cancel these"
-msgstr ""
+msgstr "คุณแน่ใจแล้วหรือว่าต้องการยกเลิก"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sales_count
@@ -4902,6 +5436,7 @@ msgid ""
 "Sold in the last 365 days. Outgoing represents confirmed sales orders not "
 "delivered, or partially delivered"
 msgstr ""
+"ขายได้ในช่วง 365 วันที่ผ่านมา การส่งออกหมายถึงคำสั่งซื้อที่ยืนยันแล้วแต่ยังไม่ส่ง หรือส่งเพียงส่วนหนึ่ง"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -4941,7 +5476,7 @@ msgstr "อีเมลเฉพาะ"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__started
 msgid "Started"
-msgstr ""
+msgstr "เริ่มต้นแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -4978,12 +5513,12 @@ msgstr "Stripe Connect ไม่สามารถใช้งานได้ใ
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "ส่วนย่อย"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "ชื่อส่วนย่อย"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal
@@ -5303,7 +5838,7 @@ msgstr "คำสั่งซื้อไม่อยู่ในสถานะ
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "The ordered quantity has been updated."
-msgstr "จำนวนคำสั่งที่่อัปเดตแล้ว"
+msgstr "จำนวนคำสั่งที่อัปเดตแล้ว"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
@@ -5331,7 +5866,7 @@ msgstr "เปอร์เซ็นต์ของจำนวนเงินท
 msgid ""
 "The percentage of the amount that must be paid by the customer to confirm "
 "the order."
-msgstr ""
+msgstr "เปอร์เซ็นต์ของจำนวนเงินที่ลูกค้าต้องชำระเพื่อยืนยันคำสั่งซื้อ"
 
 #. module: sale
 #. odoo-python
@@ -5535,8 +6070,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "วันนี้"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5583,8 +6119,9 @@ msgstr "รวม: %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "Track Inventory"
-msgstr ""
+msgstr "ติดตามสินค้าคงคลัง"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__service_type
@@ -5744,7 +6281,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,description:sale.email_template_proforma
 msgid "Used by salespeople when they send pro forma to prospects"
-msgstr ""
+msgstr "ใช้โดยพนักงานขายเมื่อส่งใบแจ้งหนี้ชั่วคราว (Pro Forma) ไปยังลูกค้าเป้าหมาย"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale
@@ -5785,8 +6322,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "ค่าที่ตั้งไว้นี้เป็นค่าเฉพาะบริษัท"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5821,8 +6359,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_available_at_date
+#, fuzzy
 msgid "Virtual Available At Date"
-msgstr ""
+msgstr "พร้อมใช้งานเสมือนจริง ณ วันที่"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5957,8 +6496,9 @@ msgstr "คำสั่งซื้อของคุณ"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "เบราว์เซอร์ของคุณไม่รองรับ iframe"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6102,6 +6642,8 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro "
 "Forma' or 'Order'}} (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and 'Pro "
+"Forma' or 'Order'}} (อ้างอิง {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -6111,147 +6653,20 @@ msgid ""
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
 
-#~ msgid ""
-#~ ", it's 100% free! You'll save time creating beautiful quotations and "
-#~ "track sales."
-#~ msgstr "ฟรี 100%! คุณจะประหยัดเวลาในการสร้างใบเสนอราคาที่สวยงามและติดตามยอดขาย"
+msgid "<i class=\"oi me-1\" data-icon=\"print\"/>View Details"
+msgstr "<i class=\"oi me-1\" data-icon=\"print\"/>ดูรายละเอียด"
 
-#~ msgid "<i class=\"oi me-1\" data-icon=\"print\"/>View Details"
-#~ msgstr "<i class=\"oi me-1\" data-icon=\"print\"/>ดูรายละเอียด"
+msgid "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Feedback"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> ผลตอบรับ"
 
-#~ msgid "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Feedback"
-#~ msgstr "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> ผลตอบรับ"
+msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Authorized"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> ได้รับการอนุมัติ"
 
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Authorized"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> ได้รับการอนุมัติ"
+msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Paid"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> ชำระแล้ว"
 
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Paid"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> ชำระแล้ว"
+msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Reversed"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> ย้อนกลับ"
 
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Reversed"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> ย้อนกลับ"
-
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Waiting Payment"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> รอชำระเงิน"
-
-#~ msgid "<small class=\"text-muted\">Your contact</small>"
-#~ msgstr "<small class=\"text-muted\">ผู้ติดต่อของคุณ</small>"
-
-#~ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-#~ msgstr "<small><b class=\"text-muted\">ประโยชน์ของคุณ</b></small>"
-
-#~ msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-#~ msgstr "<strong class=\"d-block mt-3\">ที่อยู่จัดส่ง</strong>"
-
-#~ msgid ""
-#~ "An order is to upsell when delivered quantities are above initially\n"
-#~ "            ordered quantities, and the invoicing policy is based on "
-#~ "ordered quantities."
-#~ msgstr ""
-#~ "คำสั่งซื้อคือการขายเพิ่ม เมื่อปริมาณที่ส่งมอบสูงกว่าในตอนแรก\n"
-#~ "           ปริมาณที่สั่ง และนโยบายการออกใบแจ้งหนี้จะขึ้นอยู่กับปริมาณที่สั่ง"
-
-#~ msgid ""
-#~ "As an example, if you sell pre-paid hours of services, Odoo recommends "
-#~ "you\n"
-#~ "            to sell extra hours when all ordered hours have been consumed."
-#~ msgstr ""
-#~ "ตัวอย่างเช่น หากคุณขายการบริการแบบชำระเงินล่วงหน้า Odoo แนะนำให้คุณ\n"
-#~ "           ขายชั่วโมงเพิ่มเติม เมื่อชั่วโมงที่สั่งซื้อถูกใช้หมดแล้ว"
-
-#~ msgid "Connect with your software!"
-#~ msgstr "เชื่อมต่อกับซอฟต์แวร์ของคุณ!"
-
-#~ msgid "Copy"
-#~ msgstr "คัดลอก"
-
-#~ msgid "Date:"
-#~ msgstr "วันที่:"
-
-#~ msgid ""
-#~ "Drag and drop the request for quotation PDF file into your list of "
-#~ "quotations in Odoo. Enjoy the automation!"
-#~ msgstr ""
-#~ "ลากและวางไฟล์ PDF คำขอใบเสนอราคาลงในรายการใบเสนอราคาของคุณใน Odoo "
-#~ "สนุกไปกับการทำงานแบบอัตโนมัติ!"
-
-#~ msgid "Expiration Date:"
-#~ msgstr "วันหมดอายุ:"
-
-#~ msgid "Invoicing Address"
-#~ msgstr "ที่อยู่แจ้งหนี้"
-
-#~ msgid "Invoicing and Shipping Address"
-#~ msgstr "การออกใบแจ้งหนี้และที่อยู่ในการจัดส่ง"
-
-#~ msgid "Last Invoices"
-#~ msgstr "ใบแจ้งหนี้ล่าสุด"
-
-#~ msgid "No orders to invoice found"
-#~ msgstr "ไม่พบคำสั่งในใบแจ้งหนี้"
-
-#~ msgid "No orders to upsell found."
-#~ msgstr "ไม่พบคำสั่งสำหรับการเพิ่มยอดขาย"
-
-#~ msgid "Not using Odoo?"
-#~ msgstr "ไม่ได้ใช้ Odoo?"
-
-#~ msgid "Odoo"
-#~ msgstr "Odoo"
-
-#~ msgid "Order Date:"
-#~ msgstr "วันที่สั่งซื้อ:"
-
-#~ msgid "Payment terms"
-#~ msgstr "เงื่อนไขการชําระเงิน"
-
-#~ msgid "Read the documentation"
-#~ msgstr "อ่านเอกสารประกอบ"
-
-#~ msgid "Sale Information"
-#~ msgstr "ข้อมูลการขาย"
-
-#~ msgid "Search a customer name, or create one on the fly."
-#~ msgstr "ค้นหาชื่อลูกค้าหรือสร้างชื่อได้ทันที"
-
-#~ msgid "Select a product, or create a new one on the fly."
-#~ msgstr "เลือกสินค้าหรือสร้างสินค้าใหม่ได้ทันที"
-
-#~ msgid "Shipping Address"
-#~ msgstr "ที่อยู่สำหรับจัดส่ง"
-
-#~ msgid "Start on Odoo"
-#~ msgstr "เริ่มใช้งาน Odoo"
-
-#~ msgid "Terms &amp; Conditions"
-#~ msgstr "เงื่อนไขและข้อกำหนด"
-
-#~ msgid ""
-#~ "Use the above REST URL to get structured data of the purchase order in "
-#~ "UBL format."
-#~ msgstr "ใช้ URL REST ด้านบนเพื่อรับข้อมูลโครงสร้างของใบสั่งซื้อในรูปแบบ UBL"
-
-#~ msgid ""
-#~ "Validity of the order, after that you will not able to sign & pay the "
-#~ "quotation."
-#~ msgstr ""
-#~ "ความถูกต้องของคำสั่งซื้อ หลังจากนั้นคุณจะไม่สามารถลงนามและชำระเงินในใบเสนอราคาได้"
-
-#~ msgid "Want to import this document in Odoo?"
-#~ msgstr "ต้องการนำเข้าเอกสารนี้ใน Odoo หรือไม่"
-
-#~ msgid ""
-#~ "You can select all orders and invoice them in batch,<br>\n"
-#~ "            or check every order and invoice them one by one."
-#~ msgstr ""
-#~ "คุณสามารถเลือกคำสั่งซื้อทั้งหมดและออกใบแจ้งหนี้เป็นชุด<br>\n"
-#~ "           หรือตรวจสอบทุกคำสั่งซื้อและออกใบแจ้งหนี้ทีละรายการ"
-
-#~ msgid "You don't use a good CRM software?"
-#~ msgstr "คุณไม่ได้ใช้ซอฟต์แวร์ CRM ที่ดีใช่ไหม?"
-
-#~ msgid "Your Reference:"
-#~ msgstr "ข้อมูลอ้างอิงของคุณ:"
-
-#~ msgid "to learn all the ways to connect your software with"
-#~ msgstr "เพื่อเรียนรู้วิธีต่างๆ ในการเชื่อมต่อซอฟต์แวร์ของคุณด้วย"
+msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Waiting Payment"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> รอชำระเงิน"

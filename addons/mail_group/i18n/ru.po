@@ -4,14 +4,15 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 14:22+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 11:44+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "mail_group/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -32,17 +33,17 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Members"
-msgstr ""
+msgstr "#Участники"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#Messages"
-msgstr ""
+msgstr "#Сообщения"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
 msgid "#To Review"
-msgstr ""
+msgstr "#На проверку"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -57,6 +58,8 @@ msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    Начните обсуждение, отправив письмо на адрес"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -504,13 +507,15 @@ msgstr "Выберите или настройте пользовательск�
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Closed"
-msgstr ""
+msgstr "Закрыто"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
+"Закрытые группы могут оставаться доступными, но отправленные в них письма "
+"будут возвращаться с ошибкой"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -679,7 +684,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
 msgid "Groups"
-msgstr ""
+msgstr "Группы"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -707,6 +712,12 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"Здравствуйте!\n"
+"    <br/><br/>\n"
+"    Список рассылки, к которому вы обращаетесь, закрыт и больше не принимает "
+"новые сообщения.\n"
+"    <br/><br/>\n"
+"    С уважением,"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -771,7 +782,7 @@ msgstr "Запрещено"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
 msgid "Is Closed"
-msgstr ""
+msgstr "Закрыто"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
@@ -969,7 +980,7 @@ msgstr "Сообщения, требующие действий"
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
 msgid "Moderate"
-msgstr ""
+msgstr "Модерируйте"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1133,7 +1144,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "Здесь пока нет сообщений."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1301,7 +1312,7 @@ msgstr "Удалить сообщение с объяснением"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Responsibles"
-msgstr ""
+msgstr "Ответственные"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1326,7 +1337,7 @@ msgstr "Поиск по списку модерации"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Select users"
-msgstr ""
+msgstr "Выберите пользователей"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1362,12 +1373,12 @@ msgstr "Отправить электронное письмо автору со
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
 msgid "Send email"
-msgstr ""
+msgstr "Оправить письмо"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "Отправлять правила новым участникам"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1576,13 +1587,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "Вы не можете вступить в закрытую группу."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "Нельзя отправить правила для закрытой группы."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1618,7 +1629,7 @@ msgstr "например, \"Информационный бюллетень\""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "Например: «Эта группа посвящена...»"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1628,7 +1639,7 @@ msgstr "например, mycompany.com"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "Например: «Пожалуйста, соблюдайте вежливость и ...»"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1643,7 +1654,7 @@ msgstr "был"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "members<br/>"
-msgstr ""
+msgstr "участники<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1653,7 +1664,7 @@ msgstr "сообщения / месяц"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "messages to review"
-msgstr ""
+msgstr "сообщения на проверку"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short

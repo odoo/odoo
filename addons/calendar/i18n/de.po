@@ -10,22 +10,21 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 16:53+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 13:58+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "calendar/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: calendar
 #: model:ir.module.module,description:base.module_calendar
@@ -46,7 +45,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_res_partner__meeting_count
 #: model:ir.model.fields,field_description:calendar.field_res_users__meeting_count
 msgid "# Meetings"
-msgstr "# Meetings"
+msgstr "Anzahl Meetings"
 
 #. module: calendar
 #. odoo-python
@@ -1104,10 +1103,11 @@ msgid ""
 "<span class=\"w-100 mb-1\">The following attendees do not have an email "
 "address set. They will not be invited to the event.</span>"
 msgstr ""
+"<span class=\"w-100 mb-1\">Für die folgenden Teilnehmer ist keine E-Mail-"
+"Adresse hinterlegt. Sie werden nicht zum Termin eingeladen.</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "<span invisible=\"allday\"> or </span>"
 msgstr "<span invisible=\"allday\"> oder </span>"
 
@@ -1124,6 +1124,8 @@ msgid ""
 "<span>The following attendees do not have an email address set. They will "
 "not be invited to the event.</span>"
 msgstr ""
+"<span>Für die folgenden Teilnehmer ist keine E-Mail-Adresse hinterlegt. Sie "
+"werden nicht zum Termin eingeladen.</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1162,7 +1164,7 @@ msgstr "Aktion"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_mail_activity_type__category
@@ -1474,7 +1476,7 @@ msgstr "Kalender: Erinnerung"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 msgid "Calendars"
-msgstr ""
+msgstr "Kalender"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
@@ -1582,7 +1584,7 @@ msgstr "Kontaktdaten"
 #. odoo-python
 #: code:addons/calendar/models/res_partner.py:0
 msgid "Contact created through Calendar sync."
-msgstr ""
+msgstr "Kontakt über Kalender-Synchronisierung erstellt."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
@@ -2141,7 +2143,7 @@ msgstr "HTTP-Routing"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
 msgid "Has Message"
-msgstr "Hat eine Nachricht"
+msgstr "Hat Nachricht"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -2670,7 +2672,7 @@ msgstr "Anzahl Wiederholungen"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
@@ -3153,7 +3155,7 @@ msgstr "Stopp"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop Sync"
-msgstr ""
+msgstr "Synchronisierung stoppen"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
@@ -3188,13 +3190,13 @@ msgstr "Sonntag"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync is paused"
-msgstr ""
+msgstr "Synchronisierung ist pausiert"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync unsuccessful"
-msgstr ""
+msgstr "Synchronisierung fehlgeschlagen"
 
 #. module: calendar
 #. odoo-javascript
@@ -3218,7 +3220,7 @@ msgstr "Synchronisieren Sie Ihren Kalender mit Outlook"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Syncing"
-msgstr ""
+msgstr "Synchronisierung"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
@@ -3384,7 +3386,7 @@ msgstr "Auslöser"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Try again"
-msgstr ""
+msgstr "Erneut versuchen"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -3445,7 +3447,7 @@ msgstr "Bis"
 #. odoo-python
 #: code:addons/calendar/models/res_users.py:0
 msgid "Upcoming Meetings"
-msgstr ""
+msgstr "Anstehende Meetings"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
@@ -3664,7 +3666,6 @@ msgstr "z. B.: 31.12.2030"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "guests"
 msgstr "Gäste"
 
@@ -3701,23 +3702,14 @@ msgstr "{{ object.event_id.name }}: Datum aktualisiert"
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Aktualisierung der Veranstaltung"
 
-#~ msgid "<i class=\"oi mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
-#~ msgstr "<i class=\"oi mt-1\" data-icon=\"schedule\" title=\"Daten\"/>"
+msgid "<i class=\"oi mt-1\" data-icon=\"schedule\" title=\"Dates\"/>"
+msgstr "<i class=\"oi mt-1\" data-icon=\"schedule\" title=\"Daten\"/>"
 
-#~ msgid "<i class=\"oi\" data-icon=\"label\" title=\"Booking Name\"/>"
-#~ msgstr "<i class=\"oi\" data-icon=\"label\" title=\"Name der Buchung\"/>"
+msgid "<i class=\"oi\" data-icon=\"label\" title=\"Booking Name\"/>"
+msgstr "<i class=\"oi\" data-icon=\"label\" title=\"Name der Buchung\"/>"
 
-#~ msgid "<i class=\"oi\" data-icon=\"lock\" title=\"Visibility\"/>"
-#~ msgstr "<i class=\"oi\" data-icon=\"lock\" title=\"Sichtbarkeit\"/>"
+msgid "<i class=\"oi\" data-icon=\"lock\" title=\"Visibility\"/>"
+msgstr "<i class=\"oi\" data-icon=\"lock\" title=\"Sichtbarkeit\"/>"
 
-#~ msgid "<i class=\"oi\" data-icon=\"map\" title=\"Location\"/>"
-#~ msgstr "<i class=\"oi\" data-icon=\"map\" title=\"Ort\"/>"
-
-#~ msgid "Invitation"
-#~ msgstr "Einladung"
-
-#~ msgid "Schedule"
-#~ msgstr "Planen"
-
-#~ msgid "Select attendees..."
-#~ msgstr "Teilnehmer auswählen ..."
+msgid "<i class=\"oi\" data-icon=\"map\" title=\"Location\"/>"
+msgstr "<i class=\"oi\" data-icon=\"map\" title=\"Ort\"/>"

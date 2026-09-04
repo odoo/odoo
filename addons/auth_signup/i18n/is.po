@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-04 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
 "Language: is\n"
@@ -14,6 +14,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
+
+#. module: auth_signup
+#: model:ir.module.module,description:base.module_auth_signup
+msgid ""
+"\n"
+"Allow users to sign up and reset their password\n"
+"===============================================\n"
+msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -86,10 +94,27 @@ msgstr ""
 #: model:mail.template,body_html:auth_signup.set_password_email
 msgid ""
 "<t>\n"
-"Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"You have been invited by <t t-out=\"object.create_uid.name or ''\">OdooBot</"
-"t> of <t t-out=\"object.company_id.name or ''\">YourCompany</t> to connect "
-"on Odoo.\n"
+"<t t-set=\"company_name\" t-value=\"object.company_id.name or ''\"/>\n"
+"<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
+"Hi <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"<em>This link is valid for <t t-"
+"out=\"(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') "
+"or 144)//24\">link_validity_days</t> days </em><br/>\n"
+"<b><t t-out=\"company_name\"/></b> uses <a href=\"https://odoo.com\" t-attf-"
+"style=\"color: {{object.company_id.email_secondary_color or '#875A7B'}};"
+"\">Odoo</a>\n"
+"to run its business. You have been invited by <b><t t-"
+"out=\"object.create_uid.name or ''\">OdooBot</t></b> to connect.\n"
+"<br/><br/>\n"
+"Once accepted, you can reconnect through: <br/>\n"
+"<ul>\n"
+"    <li>Login: <a t-attf-href=\"/web/login?login={{ object.email }}\" "
+"target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></"
+"li>\n"
+"    <li>Link: <a t-att-href=\"website_url\" t-out=\"website_url or "
+"''\">http://yourcompany.odoo.com</a></li>\n"
+"</ul>\n"
+"<br/>\n"
 "<div style=\"margin: 16px 0px 16px 0px;\">\n"
 "    <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-"
 "style=\"background-color: {{object.company_id.email_secondary_color or "
@@ -99,27 +124,10 @@ msgid ""
 "        Accept invitation\n"
 "    </a>\n"
 "</div>\n"
-"<b>  This link will remain valid during <t t-"
-"out=\"(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') "
-"or 144)//24\"/> days </b> <br/>\n"
-"<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
-"Your Odoo domain is: <b><a t-att-href=\"website_url\" t-out=\"website_url or "
-"''\">http://yourcompany.odoo.com</a></b><br/>\n"
-"Your sign in email is: <b><a t-attf-href=\"/web/login?"
-"login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
-"''\">mark.brown23@example.com</a></b><br/><br/>\n"
-"Never heard of Odoo? It’s an all-in-one business software loved by 12+ "
-"million users. It will considerably improve your experience at work and "
-"increase your productivity.\n"
-"<br/><br/>\n"
-"Have a look at the <a href=\"https://www.odoo.com/page/tour?"
-"utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: "
-"{{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo Tour</a> to "
-"discover the tool.\n"
-"<br/><br/>\n"
-"Enjoy Odoo!<br/>\n"
-"--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
-"            </t>"
+"<br/>\n"
+"Enjoy Odoo!<br/><br/>\n"
+"--<br/>The <t t-out=\"company_name\"/> Team</t>\n"
+"            "
 msgstr ""
 
 #. module: auth_signup
@@ -162,6 +170,7 @@ msgstr ""
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/models/res_users.py:0
 msgid "Another user is already registered using this email address."
 msgstr ""
 
@@ -295,6 +304,17 @@ msgstr ""
 msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "        Thanks,"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__inactive
+msgid "Inactive"
+msgstr ""
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+msgid "Invalid email; please enter a valid email address."
 msgstr ""
 
 #. module: auth_signup
@@ -474,6 +494,11 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.module.module,shortdesc:base.module_auth_signup
+msgid "Signup"
 msgstr ""
 
 #. module: auth_signup

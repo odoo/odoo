@@ -3,21 +3,61 @@
 # * l10n_ec
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.5alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:08+0000\n"
-"PO-Revision-Date: 2025-11-17 03:10+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-08-28 18:19+0000\n"
+"PO-Revision-Date: 2026-08-21 21:13+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-19-l10n/l10n_ec/es_419/>\n"
+"odoo-s19-4/l10n_ec/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_ec
+#: model:ir.module.module,description:base.module_l10n_ec
+msgid ""
+"\n"
+"Functional\n"
+"----------\n"
+"\n"
+"This module adds accounting features for Ecuadorian localization, which\n"
+"represent the minimum requirements to operate a business in Ecuador in "
+"compliance\n"
+"with local regulation bodies such as the ecuadorian tax authority -SRI- and "
+"the\n"
+"Superintendency of Companies -Super Intendencia de Compañías-\n"
+"\n"
+"Follow the next configuration steps:\n"
+"1. Go to your company and configure your country as Ecuador\n"
+"2. Install the invoicing or accounting module, everything will be handled "
+"automatically\n"
+"\n"
+"Highlights:\n"
+"* Ecuadorian chart of accounts will be automatically installed, based on "
+"example provided by Super Intendencia de Compañías\n"
+"* List of taxes (including withholds) will also be installed, you can switch "
+"off the ones your company doesn't use\n"
+"* Fiscal position, document types, list of local banks, list of local "
+"states, etc, will also be installed\n"
+"\n"
+"Technical\n"
+"---------\n"
+"Master Data:\n"
+"* Chart of Accounts, based on recomendation by Super Cías\n"
+"* Ecuadorian Taxes, Tax Tags, and Tax Groups\n"
+"* Ecuadorian Fiscal Positions\n"
+"* Document types (there are about 41 purchase documents types in Ecuador)\n"
+"* Identification types\n"
+"* Ecuador banks\n"
+"* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
+msgstr ""
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_chart_template
@@ -44,22 +84,22 @@ msgstr ""
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_103_3030
 msgid "Base imponible(3030)"
-msgstr ""
+msgstr "Base imponible(3030)"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_103_3120
 msgid "Base imponible(3120)"
-msgstr ""
+msgstr "Base imponible(3120)"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_103_3121
 msgid "Base imponible(3121)"
-msgstr ""
+msgstr "Base imponible(3121)"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_103_3140
 msgid "Base imponible(3140)"
-msgstr ""
+msgstr "Base imponible(3140)"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_latam_document_type__l10n_ec_check_format
@@ -92,11 +132,13 @@ msgid ""
 "Comisiones pagadas a sociedades, nacionales o extranjeras residentes en el "
 "Ecuador y establecimientos permanentes domiciliados en el país"
 msgstr ""
+"Comisiones pagadas a sociedades, nacionales o extranjeras residentes en el "
+"Ecuador y establecimientos permanentes domiciliados en el país"
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_parent_line_report_178
@@ -104,6 +146,8 @@ msgid ""
 "Compras al Comercializador: de Bienes de Origen Bioacuático, Forestal y los "
 "Descritos el Art.27.1 de LRTI"
 msgstr ""
+"Compras al Comercializador: de Bienes de Origen Bioacuático, Forestal y los "
+"Descritos el Art.27.1 de LRTI"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_parent_line_report_177
@@ -112,11 +156,19 @@ msgid ""
 "apícola, cunícola, bioacuático, forestal y carnes en estado natural y los "
 "descritos en el art.27.1 de LRTI."
 msgstr ""
+"Compras al productor: de bienes de origen agrícola, avícola, pecuario, "
+"apícola, cunícola, bioacuático, forestal y carnes en estado natural y los "
+"descritos en el art.27.1 de LRTI."
 
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_res_partner
 msgid "Contact"
 msgstr "Contacto"
+
+#. module: l10n_ec
+#: model:ir.model,website_form_label:l10n_ec.model_res_partner
+msgid "Create a Customer"
+msgstr "Crear un cliente"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_l10n_ec_sri_payment__create_uid
@@ -154,7 +206,7 @@ msgstr "Mostrar nombre"
 #. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_tax
 msgid "ETA tax codes mixin"
-msgstr ""
+msgstr "Mixin de códigos tributarios"
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_journal__l10n_ec_emission_address_id
@@ -177,6 +229,8 @@ msgid ""
 "Ecuador: Indicates if the purchase invoice supports tax credit or cost or "
 "expenses, conforming table 5 of ATS."
 msgstr ""
+"Ecuador: Indica si la factura de compra admite crédito fiscal, costos o "
+"gastos, de acuerdo con la tabla 5 de ATS."
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_bank_statement_line__l10n_ec_sri_payment_id
@@ -190,12 +244,21 @@ msgid ""
 "Ecuador: Tax declaration code of the base amount prior to the calculation of "
 "the tax."
 msgstr ""
+"Ecuador: Código de declaración tributaria del importe base antes del cálculo "
+"del impuesto."
 
 #. module: l10n_ec
 #: model:ir.model.fields,help:l10n_ec.field_account_tax__l10n_ec_code_applied
 msgid ""
 "Ecuador: Tax declaration code of the resulting amount after the calculation "
 "of the tax."
+msgstr ""
+"Ecuador: Código de declaración tributaria del importe resultante después del "
+"cálculo del impuesto."
+
+#. module: l10n_ec
+#: model:ir.module.module,shortdesc:base.module_l10n_ec
+msgid "Ecuadorian Accounting"
 msgstr ""
 
 #. module: l10n_ec
@@ -339,7 +402,7 @@ msgstr "Forma de pago (SRI)"
 #: model:ir.model.fields,field_description:l10n_ec.field_account_bank_statement_line__l10n_ec_sri_payment_id
 #: model:ir.model.fields,field_description:l10n_ec.field_account_move__l10n_ec_sri_payment_id
 msgid "Payment Method (SRI)"
-msgstr ""
+msgstr "Método de pago (SRI)"
 
 #. module: l10n_ec
 #: model:ir.actions.act_window,name:l10n_ec.action_account_l10n_ec_sri_payment_tree
@@ -375,7 +438,7 @@ msgstr "Liquidación de compras"
 #. module: l10n_ec
 #: model:l10n_latam.identification.type,name:l10n_ec.ec_ruc
 msgid "RUC"
-msgstr ""
+msgstr "RUC"
 
 #. module: l10n_ec
 #: model:ir.model.fields,field_description:l10n_ec.field_account_journal__l10n_ec_require_emission
@@ -395,12 +458,12 @@ msgstr "Secuencia"
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_parent_line_report_156
 msgid "Servicios profesionales prestados por sociedades residentes"
-msgstr ""
+msgstr "Servicios profesionales prestados por sociedades residentes"
 
 #. module: l10n_ec
 #: model:l10n_latam.identification.type,description:l10n_ec.ec_ruc
 msgid "Single Taxpayer Registration"
-msgstr ""
+msgstr "Registro Único de Contribuyente"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__ice
@@ -458,7 +521,7 @@ msgstr "Iva 12%"
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat13
 msgid "VAT 13%"
-msgstr ""
+msgstr "IVA 13%"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat14
@@ -468,7 +531,7 @@ msgstr "IVA 14%"
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat15
 msgid "VAT 15%"
-msgstr ""
+msgstr "IVA 15%"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat05
@@ -509,22 +572,19 @@ msgstr "Retención del IVA sobre las ventas"
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_103_3530
 msgid "Valor retenido(3530)"
-msgstr ""
+msgstr "Valor retenido (3530)"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_103_3621
 msgid "Valor retenido(3621)"
-msgstr ""
+msgstr "Valor retenido (3621)"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_103_3640
 msgid "Valor retenido(3640)"
-msgstr ""
+msgstr "Valor retenido (3640)"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__l10n_latam_document_type__internal_type__withhold
 msgid "Withhold"
 msgstr "Retención"
-
-#~ msgid "Create a Customer"
-#~ msgstr "Crear un cliente"

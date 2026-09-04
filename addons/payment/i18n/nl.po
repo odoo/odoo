@@ -13,10 +13,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-20 06:15+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
-"payment/nl/>\n"
+"PO-Revision-Date: 2026-08-12 07:12+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/payment/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -154,12 +154,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment methods are available</strong>"
-msgstr ""
+msgstr "<strong>Er zijn geen betaalmethoden beschikbaar</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment providers are configured</strong>"
-msgstr ""
+msgstr "<strong>Er zijn geen betaalproviders geconfigureerd</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -193,6 +193,9 @@ msgid ""
 "                        supported; please use the <em>Duplicate</em> action "
 "instead."
 msgstr ""
+"<strong>Waarschuwing:</strong> Het helemaal zelf aanmaken van een "
+"betaalprovider wordt niet ondersteund. Gebruik in plaats daarvan de actie "
+"<em>Dupliceren</em>."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -218,7 +221,7 @@ msgstr "<strong>Waarschuwing</strong> Je moet ingelogd zijn om te betalen."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Account"
-msgstr ""
+msgstr "Rekening"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__active
@@ -230,7 +233,7 @@ msgstr "Actief"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_add_payment_method
 msgid "Add a Payment Method"
-msgstr ""
+msgstr "Betaalmethode toevoegen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -245,12 +248,12 @@ msgstr "Adyen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Countries"
-msgstr ""
+msgstr "Alle landen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Currencies"
-msgstr ""
+msgstr "Alle valuta's"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -423,6 +426,9 @@ msgid ""
 "you want to charge your customers cards only when you are sure you can ship "
 "the goods to them."
 msgstr ""
+"Verwerk de betaling vanuit Odoo zodra de levering is voltooid. Gebruik dit "
+"als je de kaart van je klant pas wilt belasten wanneer je zeker weet dat je "
+"de goederen kunt verzenden."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
@@ -494,7 +500,7 @@ msgstr "Bevestigd"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Connect"
-msgstr ""
+msgstr "Verbinden"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -528,7 +534,7 @@ msgstr "Land"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Create"
-msgstr ""
+msgstr "Aanmaken"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -544,7 +550,7 @@ msgstr "Een klant aanmaken"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 msgid "Created On"
-msgstr ""
+msgstr "Aangemaakt op"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -641,7 +647,7 @@ msgstr "Neem gerust contact met ons op als je niets ontvangt."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__done_msg
 msgid "Done Message"
-msgstr "Bericht bij gereed"
+msgstr "Bericht bij voltooid"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
@@ -651,7 +657,7 @@ msgstr "Concept"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
@@ -678,7 +684,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout"
-msgstr "Snel bestellen"
+msgstr "Express afrekenen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__express_checkout_form_view_id
@@ -700,17 +706,17 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Express checkout not supported"
-msgstr ""
+msgstr "Snel afrekenen wordt niet ondersteund"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__errored
 msgid "Failed"
-msgstr ""
+msgstr "Mislukt"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "Betaalprovider vinden"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -801,6 +807,9 @@ msgid ""
 "If live mode is disabled, a fake payment is processed through a test payment "
 "interface. This mode is advised when setting up the provider."
 msgstr ""
+"Als de live-modus is uitgeschakeld, wordt een fictieve betaling verwerkt via "
+"een testbetalingsinterface. Deze modus wordt aanbevolen bij het instellen "
+"van de provider."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -811,19 +820,19 @@ msgstr "Afbeelding"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible country"
-msgstr ""
+msgstr "Incompatibel land"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible currency"
-msgstr ""
+msgstr "Incompatibele valuta"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Incompatible website"
-msgstr ""
+msgstr "Incompatibele website"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -854,7 +863,7 @@ msgstr "Geïnstalleerd"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__installed_provider_id
 msgid "Installed Provider"
-msgstr ""
+msgstr "Geïnstalleerde provider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
@@ -933,12 +942,12 @@ msgstr "Laatst bijgewerkt op"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Live"
-msgstr ""
+msgstr "Live"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
 msgid "Logo"
-msgstr ""
+msgstr "Logo"
 
 #. module: payment
 #: model:portal.entry,description:payment.payment_methods_portal_entry
@@ -959,18 +968,18 @@ msgstr "Handmatige opname ondersteund"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Manual capture not supported"
-msgstr ""
+msgstr "Handmatige vastlegging wordt niet ondersteund"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Manually confirmed by the user."
-msgstr ""
+msgstr "Handmatig bevestigd door de gebruiker."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.action_confirm_payment_transaction
 msgid "Mark as Confirmed"
-msgstr ""
+msgstr "Markeren als bevestigd"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1015,7 +1024,7 @@ msgstr "Minimumbedrag"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Minimum or maximum amount exceeded"
-msgstr ""
+msgstr "Minimum- of maximumbedrag overschreden"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
@@ -1120,7 +1129,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
-msgstr ""
+msgstr "Opties"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1130,7 +1139,7 @@ msgstr "Andere betaalmethodes"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Others"
-msgstr ""
+msgstr "Overige"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
@@ -1168,7 +1177,7 @@ msgstr "Label 'Nu betalen'"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_pay_on_invoice
 msgid "Pay on Invoice"
-msgstr ""
+msgstr "Op factuur betalen"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paypal
@@ -1178,12 +1187,12 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__payload
 msgid "Payload"
-msgstr ""
+msgstr "Payload"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1204,7 +1213,7 @@ msgstr "Betalingsbevestiging"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_data_count
 msgid "Payment Data Count"
-msgstr ""
+msgstr "Aantal betalingsgegevens"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1230,7 +1239,7 @@ msgstr "Betaalinformatie"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr "Betaal ink"
+msgstr "Betaallink"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_method
@@ -1334,13 +1343,13 @@ msgstr "Betaalmethode"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Payment method unavailable"
-msgstr ""
+msgstr "Betaalmethode niet beschikbaar"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Payment method with duplicate code"
-msgstr ""
+msgstr "Betaalmethode met dubbele code"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -1372,6 +1381,10 @@ msgid ""
 "queue payment data for processing, or pass payment_safe_write=True to the "
 "context after ensuring that the update can tolerate a rollback."
 msgstr ""
+"Betalingstransacties mogen niet direct worden bijgewerkt. Gebruik ofwel "
+"_record() om betalingsgegevens in de wachtrij te plaatsen voor verwerking, "
+"of geef payment_safe_write=True door aan de context nadat je je ervan hebt "
+"verzekerd dat de update een rollback kan verdragen."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -1381,7 +1394,7 @@ msgstr "Betaling: transacties na verwerking"
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
 msgid "Payment: Run Processing"
-msgstr ""
+msgstr "Betaling: Verwerking uitvoeren"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1411,7 +1424,7 @@ msgstr "Bericht in behandeling"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Pending Updates"
-msgstr ""
+msgstr "Updates in behandeling"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_data
@@ -1427,7 +1440,7 @@ msgstr "Telefoon"
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
 msgid "Please choose another payment method."
-msgstr ""
+msgstr "Kies een andere betaalmethode."
 
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
@@ -1480,12 +1493,13 @@ msgstr "Primaire betaalmethode"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__primary_payment_method_ids
 msgid "Primary Payment Methods"
-msgstr ""
+msgstr "Primaire betaalmethoden"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__processed_amount
+#, fuzzy
 msgid "Processed Amount"
-msgstr ""
+msgstr "Verwerkt bedrag"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1598,7 +1612,7 @@ msgstr "Gerelateerde documentmodel"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Restrictions"
-msgstr ""
+msgstr "Beperkingen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1688,7 +1702,7 @@ msgstr "Ondersteund door"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Test"
-msgstr ""
+msgstr "Testen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1989,13 +2003,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_method_provider_id_code_uniq
 msgid "The provider already has a payment method with this code."
-msgstr ""
+msgstr "De provider heeft al een betaalmethode met deze code."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "The provider must not be archived to make a request."
-msgstr ""
+msgstr "De provider mag niet gearchiveerd zijn om een verzoek in te dienen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -2010,7 +2024,7 @@ msgstr "De providerreferentie van de transactie"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_id
 msgid "The provider supporting this payment method."
-msgstr ""
+msgstr "De provider die deze betaalmethode ondersteunt."
 
 #. module: payment
 #. odoo-python
@@ -2129,6 +2143,8 @@ msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider."
 msgstr ""
+"Deze actie zal ook %s tokens archiveren die met deze provider zijn "
+"geregistreerd."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
@@ -2138,6 +2154,10 @@ msgid ""
 "saved in the provider's database, allowing the customer to reuse it for a "
 "next purchase."
 msgstr ""
+"Dit bepaalt of klanten hun betaalmethoden kunnen opslaan als "
+"betalingstokens. Een betalingstoken is een anonieme link naar de details van "
+"de betaalmethode die zijn opgeslagen in de database van de provider, zodat "
+"de klant deze kan hergebruiken voor een volgende bestselling."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2180,7 +2200,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
 msgid "Token Count"
-msgstr ""
+msgstr "Aantal tokens"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2207,18 +2227,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization not supported"
-msgstr ""
+msgstr "Tokenisatie niet ondersteund"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "Tokenization without payment no supported"
-msgstr ""
+msgstr "Tokenisatie zonder betaling niet ondersteund"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Tokens"
-msgstr ""
+msgstr "Tokens"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
@@ -2234,7 +2254,7 @@ msgstr "Transactie"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "Aantal transacties"
 
 #. module: payment
 #. odoo-python
@@ -2249,7 +2269,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Transactions"
-msgstr ""
+msgstr "Transacties"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -2360,6 +2380,8 @@ msgid ""
 "You can't unarchive tokens linked to inactive payment methods or archived "
 "providers."
 msgstr ""
+"Je kunt tokens die gekoppeld zijn aan inactieve betaalmethoden of "
+"gearchiveerde providers niet uit het archief halen."
 
 #. module: payment
 #. odoo-python
@@ -2383,6 +2405,8 @@ msgstr "Je kunt de standaardbetaalmethode niet verwijderen."
 msgid ""
 "You cannot delete the payment provider %s; archive or uninstall it instead."
 msgstr ""
+"Je kunt de betaalprovider %s niet verwijderen; archiveer of deïnstalleer "
+"deze in plaats daarvan."
 
 #. module: payment
 #. odoo-python
@@ -2402,12 +2426,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your order is being processed."
-msgstr ""
+msgstr "Je order wordt verwerkt."
 
 #. module: payment
 #: model_terms:payment.provider,done_msg:payment.payment_provider_pay_on_invoice
 msgid "Your order is confirmed, you will receive your invoice shortly."
-msgstr ""
+msgstr "Je order is bevestigd. Je ontvangt binnenkort je factuur."
 
 #. module: payment
 #. odoo-python
@@ -2540,7 +2564,7 @@ msgstr "Je betaling is nog niet verwerkt."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Your payment is being processed."
-msgstr ""
+msgstr "Je betaling wordt verwerkt."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -2557,7 +2581,7 @@ msgstr "Je betaalmethode is bewaard."
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment method has not been saved yet."
-msgstr ""
+msgstr "Je betaalmethode is nog niet opgeslagen."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2605,7 +2629,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "the website administrator."
-msgstr ""
+msgstr "de website-administrator."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -2620,9 +2644,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "transaction_id"
-msgstr ""
+msgstr "transaction_id"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "websocket berichtverwerking"

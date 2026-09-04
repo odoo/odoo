@@ -18,9 +18,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 23:56+0000\n"
+"PO-Revision-Date: 2026-08-12 07:11+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "purchase_stock/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On Time"
-msgstr ""
+msgstr "% Oตรงเวลา"
 
 #. module: purchase_stock
 #. odoo-python
@@ -44,13 +44,13 @@ msgstr "%(otd)s %%"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid "%(value)s for %(quantity)s %(unit)s from %(bills)s"
-msgstr ""
+msgstr "%(value)s สำหรับ%(quantity)s %(unit)s จาก%(bills)s"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_move.py:0
 msgid "%(value)s for %(quantity)s %(unit)s from %(quotation)s (not billed)"
-msgstr ""
+msgstr "%(value)s สำหรับ%(quantity)s %(unit)s จาก%(quotation)s (ไม่เรียกเก็บเงิน)"
 
 #. module: purchase_stock
 #. odoo-python
@@ -67,12 +67,12 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<small class=\"text-muted ms-1\"> / month</small>"
-msgstr ""
+msgstr "<small class=\"text-muted ms-1\"> / เดือน</small>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<small class=\"text-muted\">Demand: </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">ความต้องการ: </small>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -92,12 +92,12 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-info fw-bold fs-5 me-1\">Suggest</span>"
-msgstr ""
+msgstr "<span class=\"text-info fw-bold fs-5 me-1\">เสนอ</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-muted small ms-1\">Forecasted</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small ms-1\">คาดการณ์</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
@@ -146,13 +146,13 @@ msgstr "การดำเนินการ"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Add All"
-msgstr ""
+msgstr "เพิ่มทั้งหมด"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "After next month last year"
-msgstr ""
+msgstr "หลังจากเดือนหน้าของปีที่แล้ว"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -171,7 +171,7 @@ msgstr "เสมอ"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse_orderpoint__available_vendor
 msgid "Any vendor on the product's pricelist"
-msgstr ""
+msgstr "ผู้จำหน่ายใดก็ตามในรายชื่อราคาของสินค้า"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
@@ -181,7 +181,7 @@ msgstr "การมาถึง"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__available_vendor
 msgid "Available Vendor"
-msgstr ""
+msgstr "ผู้จำหน่ายที่มีอยู่"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -299,6 +299,13 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"กำหนดว่า RFQ ควรถูกจัดกลุ่ม         เข้าด้วยกันหรือไม่ โดยอิงตามวันที่คาดว่าจะมาถึง "
+"ยกเว้นการดำเนินการแบบดรอปชิป\n"
+"         เมื่อมีคำสั่งซื้อ: ความต้องการเติมสินค้าจะถูกจัดกลุ่มเข้าด้วยกัน ยกเว้น MTO\n"
+"         รายวัน: ความต้องการเติมสินค้าจะถูกจัดกลุ่มหากวันที่คาดว่าจะมาถึงเป็นวันเดียวกัน\n"
+"         รายสัปดาห์: "
+"ความต้องการเติมสินค้าจะถูกจัดกลุ่มหากวันที่คาดว่าจะมาถึงอยู่ในสัปดาห์เดียวกันหรือวันเดียวกันของสัปดาห์\n"
+"         ตลอดเวลา: ความต้องการเติมสินค้าจะถูกจัดกลุ่มเสมอ"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -601,7 +608,7 @@ msgstr "อาจจำเป็นต้องดำเนินการด้
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "กฎขั้นต่ำของสินค้าคงคลัง"
+msgstr "กฎขั้นต่ำของคลังสินค้า"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1172,7 +1179,7 @@ msgstr "จำนวนรวม"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__is_storable
 msgid "Track Inventory"
-msgstr "ติดตามสินค้าคงคลัง"
+msgstr "ติดตามคลังสินค้า"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
@@ -1322,20 +1329,14 @@ msgstr ""
 msgid "x"
 msgstr ""
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d วัน"
+msgid "<strong>Incoterm:</strong>"
+msgstr "<strong>Incoterm:</strong>"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "ข้อมูลการเติมสต็อกของซัพพลายเออร์"
+msgid "Incoterm Location"
+msgstr "ตำแหน่ง Incoterm"
 
-#~ msgid "<strong>Incoterm:</strong>"
-#~ msgstr "<strong>Incoterm:</strong>"
+msgid "Location from procurement"
+msgstr "ที่ตั้งจากการจัดซื้อจัดจ้าง"
 
-#~ msgid "Incoterm Location"
-#~ msgstr "ตำแหน่ง Incoterm"
-
-#~ msgid "Location from procurement"
-#~ msgstr "ที่ตั้งจากการจัดซื้อจัดจ้าง"
-
-#~ msgid "Stock Valuation"
-#~ msgstr "การประเมินมูลค่าสต็อก"
+msgid "Stock Valuation"
+msgstr "การประเมินมูลค่าสต็อก"

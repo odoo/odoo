@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 00:14+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 13:58+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "mass_mailing/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mass_mailing
 #. odoo-python
@@ -35,6 +35,10 @@ msgid ""
 "currently matches your rules!</p>\n"
 "            "
 msgstr ""
+"\n"
+"               <p class=\"o_view_nocontent_smiling_face\"> Derzeit gibt es "
+"keinen Eintrag, der Ihren Regeln entspricht!</p>\n"
+"            "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -103,7 +107,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__recipients_count
 msgid "# Of Recipients"
-msgstr ""
+msgstr "Anzahl der Empfänger"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -141,25 +145,25 @@ msgstr "%(contact_name)s hat sich von folgende(n) Mailingliste(n) abgemeldet"
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s added"
-msgstr ""
+msgstr "%(count)s hinzugefügt"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s already subscribed"
-msgstr ""
+msgstr "%(count)s bereits abonniert"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s ignored (no email)"
-msgstr ""
+msgstr "%(count)s ignoriert (keine E-Mail)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s opted out"
-msgstr ""
+msgstr "%(count)s abgemeldet"
 
 #. module: mass_mailing
 #. odoo-python
@@ -189,7 +193,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "%(record_name)s created from %(link)s"
-msgstr ""
+msgstr "%(record_name)s erstellt aus %(link)s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
@@ -637,7 +641,7 @@ msgstr "<i class=\"oi\" data-icon=\"east\"></i> Abmeldungsgründe konfigurieren"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "<i>e.g. \"Recent shoppers\" or \"B2B leads in Canada\"</i>"
-msgstr ""
+msgstr "<i>z. B. „Kürzliche Kunden“ oder „B2B-Leads in Kanada“</i>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -760,6 +764,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"mailing_contact_ids.length == 1\">Mailing Contacts</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"mailing_contact_ids.length != "
+"1\">Mailingkontakt</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"mailing_contact_ids.length == 1\">Mailingkontakte</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -926,12 +934,12 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Created by</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">Erstellt von</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Recipients</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">Empfänger</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -941,7 +949,7 @@ msgstr "<span invisible=\"not mailing_on_mailing_list\">Mailingkontakt</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span invisible=\"not scheduled or not process\">, </span>"
-msgstr ""
+msgstr "<span invisible=\"not scheduled or not process\">, </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -962,7 +970,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"process_text\">emails are being processed</span>"
-msgstr ""
+msgstr "<span name=\"process_text\">E-Mails werden verarbeitet.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -979,6 +987,8 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent soon</"
 "span>"
 msgstr ""
+"<span name=\"scheduled_text\">E-Mails befinden sich in der Warteschlange und "
+"werden bald versendet.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
@@ -997,7 +1007,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>.</span>"
-msgstr ""
+msgstr "<span>.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_coupon_code
@@ -1008,7 +1018,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>Recipients</span>"
-msgstr ""
+msgstr "<span>Empfänger</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -1434,7 +1444,7 @@ msgstr "OPTIONEN TROTZDEM ANSEHEN"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__active
@@ -1456,7 +1466,7 @@ msgstr "Aktivitäten"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitätsausnahme-Dekoration"
+msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_plans_ids
@@ -1486,7 +1496,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add (Mailing) Contacts to Mailing List"
-msgstr ""
+msgstr "Kontakte zur Mailingliste hinzufügen"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1503,7 +1513,7 @@ msgstr "Bedingungen hinzufügen"
 #. module: mass_mailing
 #: model:ir.actions.client,name:mass_mailing.res_partner_to_list_results_action
 msgid "Add Contacts to Mailing List results"
-msgstr ""
+msgstr "Kontakte zu Mailinglisten-Ergebnissen hinzufügen"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1514,7 +1524,7 @@ msgstr "Benutzerdefinierten Link hinzufügen"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
 msgid "Add Mailing Contacts to a Mailing List"
-msgstr ""
+msgstr "Mailingkontakte zu einer Mailingliste hinzufügen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -1529,18 +1539,18 @@ msgstr "Zu Liste hinzufügen"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Add to Lists"
-msgstr ""
+msgstr "Zu Listen hinzufügen"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.res_partner_to_list_action
 msgid "Add to Mailing List"
-msgstr ""
+msgstr "Zur Mailingliste hinzufügen"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "Added to Mailing Lists"
-msgstr ""
+msgstr "Zu Mailinglisten hinzugefügt"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -2150,7 +2160,7 @@ msgstr "Abgebrochen"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__canceled_ratio
 msgid "Cancelled Ratio"
-msgstr ""
+msgstr "Stornierungsrate"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2159,6 +2169,8 @@ msgid ""
 "Cannot set an owner on '%(server)s': it is configured as the dedicated Email "
 "Marketing server."
 msgstr ""
+"Für „%(server)s“ kann kein Eigentümer festgelegt werden, da es als "
+"dedizierter Server für E-Mail-Marketing konfiguriert ist."
 
 #. module: mass_mailing
 #. odoo-python
@@ -2166,6 +2178,8 @@ msgstr ""
 msgid ""
 "Cannot set an owner on '%(server)s': it is used by mailing '%(mailing)s'."
 msgstr ""
+"Es kann kein Eigentümer für „%(server)s“ festgelegt werden: Es wird vom "
+"Mailing „%(mailing)s“ verwendet."
 
 #. module: mass_mailing
 #. odoo-python
@@ -2173,6 +2187,8 @@ msgstr ""
 msgid ""
 "Cannot use the model %s to send a mailing. Only mailing models can be used."
 msgstr ""
+"Das Modell „%s“ kann nicht zum Versenden eines Mailings verwendet werden. Es "
+"dürfen nur Mailing-Modelle verwendet werden."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2308,7 +2324,7 @@ msgstr "Angeklickt am"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__clicks_ratio
 msgid "Clicks Ratio"
-msgstr ""
+msgstr "Klickrate"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_schedule
@@ -2319,7 +2335,7 @@ msgstr "Erfahrungsberichte von Kunden"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_contact
@@ -2583,7 +2599,7 @@ msgstr "Kunden erstellen"
 #: model:ir.actions.act_window,name:mass_mailing.action_mailing_filter_quick_create
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "Create a Dynamic List"
-msgstr ""
+msgstr "Dynamische Liste erstellen"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
@@ -2620,7 +2636,7 @@ msgstr "Eine alternative Version erstellen"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "Created"
-msgstr ""
+msgstr "Erstellt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
@@ -2782,7 +2798,7 @@ msgstr "Zugestellt"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Delivered On"
-msgstr ""
+msgstr "Zugestellt am"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3024,19 +3040,19 @@ msgstr "Duplizierte E-Mail"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Dynamic List saved!"
-msgstr ""
+msgstr "Dynamische Liste gespeichert!"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_filter_action
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_ids
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_dynamic_lists
 msgid "Dynamic Lists"
-msgstr ""
+msgstr "Dynamische Listen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Dynamic Lists:"
-msgstr ""
+msgstr "Dynamische Listen:"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -3045,6 +3061,9 @@ msgid ""
 "                Define your rules to automatically target recipients who "
 "match specific conditions."
 msgstr ""
+"Dynamische Listen sind intelligente Listen, die sich selbst aktualisieren.\n"
+"                Definieren Sie Ihre Regeln, um automatisch Empfänger "
+"anzusprechen, die bestimmte Bedingungen erfüllen."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_coupon_code
@@ -3082,7 +3101,7 @@ msgstr "Bedingungen bearbeiten"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/iframe/mass_mailing_iframe.js:0
 msgid "Edit Design"
-msgstr ""
+msgstr "Design bearbeiten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -3216,7 +3235,7 @@ msgstr "E-Mails auf der schwarzen Liste ausschließen"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Exclude Blacklisted Recipients"
-msgstr ""
+msgstr "Empfänger auf der schwarzen Liste ausschließen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -3504,7 +3523,7 @@ msgstr "HTTP-Routing"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__has_message
 msgid "Has Message"
-msgstr "Hat eine Nachricht"
+msgstr "Hat Nachricht"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -3910,7 +3929,7 @@ msgstr "Lasagna al Forno"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_clicked_datetime
 msgid "Last Clicked On"
-msgstr ""
+msgstr "Zuletzt angeklickt am"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_name
@@ -3920,12 +3939,12 @@ msgstr "Nachname"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_opened_datetime
 msgid "Last Opened On"
-msgstr ""
+msgstr "Zuletzt geöffnet am"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_replied_datetime
 msgid "Last Replied On"
-msgstr ""
+msgstr "Zuletzt beantwortet am"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -4103,7 +4122,7 @@ msgstr "Listen"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "Lists that are created by me"
-msgstr ""
+msgstr "Von mir erstellte Listen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -4251,7 +4270,7 @@ msgstr "Mailingkontakte"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Dynamic List"
-msgstr ""
+msgstr "Dynamische Mailingliste"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__is_mailing_enabled
@@ -4622,7 +4641,7 @@ msgstr "Modell"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Model id"
-msgstr ""
+msgstr "Modell-ID"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4644,7 +4663,7 @@ msgstr "Frist für meine Aktivitäten"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "My Lists"
-msgstr ""
+msgstr "Meine Listen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -4912,7 +4931,7 @@ msgstr "Anzahl Abmeldungen"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error_counter
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_needaction_counter
@@ -5092,6 +5111,9 @@ msgid ""
 "Oops! You can't add more than %(count)s contacts to a Mailing List at once.\n"
 "Please reduce your selection and try again."
 msgstr ""
+"Hoppla! Sie können nicht mehr als %(count)s Kontakte gleichzeitig zu einer "
+"Mailingliste hinzufügen.\n"
+"Bitte reduzieren Sie Ihre Auswahl und versuchen Sie es erneut."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__opened
@@ -5431,7 +5453,7 @@ msgstr "Vorschau des Inhalts anzeigen"
 #: code:addons/mass_mailing/models/mailing.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Preview Mailing"
-msgstr ""
+msgstr "Vorschau der E-Mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__preview_text
@@ -5563,7 +5585,7 @@ msgstr "Grund"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "Received"
-msgstr ""
+msgstr "Erhalten"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__received_ratio
@@ -5792,31 +5814,31 @@ msgstr "Speichern"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_filter_form_view_dialog/mailing_filter_form_view_dialog.xml:0
 msgid "Save & Apply"
-msgstr ""
+msgstr "Speichern & Anwenden"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/mass_mailing_builder.xml:0
 msgid "Save & Quit"
-msgstr ""
+msgstr "Speichern & Beenden"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Save As a Dynamic List"
-msgstr ""
+msgstr "Als dynamische Liste speichern"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Save as a Dynamic List"
-msgstr ""
+msgstr "Als dynamische Liste speichern"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_filter_form_view_dialog/mailing_filter_form_view_dialog.xml:0
 msgid "Save for later"
-msgstr ""
+msgstr "Für später speichern"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5939,12 +5961,12 @@ msgstr "Wählen Sie Blöcke aus und löschen Sie sie, um Funktionen zu entfernen
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select dynamic lists..."
-msgstr ""
+msgstr "Dynamische Listen auswählen …"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Select lists..."
-msgstr ""
+msgstr "Listen auswählen …"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -6008,7 +6030,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_send_test_form
 msgid "Send a sample mailing for testing purpose to the address below."
-msgstr ""
+msgstr "Senden Sie ein Test-Mailing an die unten stehende Adresse."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_view_generic
@@ -6036,7 +6058,7 @@ msgstr "Versenden am"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_send_test_form
 msgid "Send test"
-msgstr ""
+msgstr "Test versenden"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6308,7 +6330,7 @@ msgstr "Viereck"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/iframe/mass_mailing_iframe.js:0
 msgid "Start Designing"
-msgstr ""
+msgstr "Mit Design starten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
@@ -6498,7 +6520,7 @@ msgstr "Vorlage"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "Template for Mailing Contacts"
-msgstr ""
+msgstr "Vorlage für Mailingkontakte"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -6510,7 +6532,7 @@ msgstr "Testen"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "Test Mailing"
-msgstr ""
+msgstr "Test-Mailing"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -6651,6 +6673,8 @@ msgid ""
 "The saved filters target different recipients and are incompatible with this "
 "mailing."
 msgstr ""
+"Die gespeicherten Filter richten sich an unterschiedliche Empfänger und sind "
+"mit diesem Mailing nicht kompatibel."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -6694,6 +6718,8 @@ msgstr "Diese"
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "This action should be used with a single kind of Contacts as input."
 msgstr ""
+"Diese Aktion sollte mit einer einzigen Art von Kontakten als Eingabe "
+"verwendet werden."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7502,7 +7528,7 @@ msgstr "[TEST] %(mailing_subject)s"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "close"
-msgstr ""
+msgstr "schließen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -7570,6 +7596,8 @@ msgid ""
 "email1@example.com\n"
 "email2@example.com"
 msgstr ""
+"email1@beispiel.com\n"
+"email2@beispiel.com"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -7665,12 +7693,3 @@ msgstr "✽  Nudeln"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_pricelist_boxed
 msgid "✽  Pizzas"
 msgstr "✽  Pizza"
-
-#~ msgid ""
-#~ "Test email sent to %(success)s recipient(s), could not send to %(failed)s."
-#~ msgstr ""
-#~ "Test-E-Mail an %(success)s Empfänger gesendet, konnte nicht an %(failed)s "
-#~ "gesendet werden."
-
-#~ msgid "Test email sent to %(success)s recipient(s)."
-#~ msgstr "Test-E-Mail an %(success)s Empfänger gesendet."

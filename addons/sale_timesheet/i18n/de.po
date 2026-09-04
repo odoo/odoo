@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-20 01:50+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 10:38+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/"
 "sale_timesheet/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -247,11 +247,13 @@ msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
 "reported as </span>"
 msgstr ""
+"<span class=\"text-muted\">Zeiterfassungen ohne Verkaufsauftragsposition "
+"werden gemeldet als</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
 msgid "<span>Sales Order Item: </span>"
-msgstr ""
+msgstr "<span>Verkaufsauftragsposition: </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
@@ -332,6 +334,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Je nach Produktkonfiguration kann die gelieferte Menge automatisch durch "
+"einen Mechanismus berechnet werden:\n"
+"  - Manuell: Die Menge wird manuell auf der Position eingestellt\n"
+"  - Kostenrechnung aus Auslagen: Die Menge ist die Mengensumme aus gebuchten "
+"Auslagen\n"
+"  - Zeiterfassung: Die Menge ist die Summe der Stunden, die für Aufgaben "
+"erfasst wurden, die mit dieser Verkaufsposition verbunden sind.\n"
+"  - Lagerbuchungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -557,7 +567,7 @@ msgstr "Anzeigename"
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__display_timesheet_portal_link
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__display_timesheet_portal_link
 msgid "Display Timesheet Portal Link"
-msgstr ""
+msgstr "Link zum Zeiterfassungsportal anzeigen"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
@@ -1004,7 +1014,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Order"
-msgstr ""
+msgstr "Auftrag"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__30_other_costs
@@ -1503,7 +1513,7 @@ msgstr "Zeiterfassung"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__02_billable_fixed
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__02_billable_fixed
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "Zeiterfassungen (Festpreis)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__billable_type__09_non_billable
@@ -1660,7 +1670,7 @@ msgstr "Gültige Arbeitserlaubnis für Belgien"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__billable_type__12_vendor_bill
 msgid "Vendor Bills"
-msgstr ""
+msgstr "Lieferantenrechnungen"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit

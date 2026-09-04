@@ -5,7 +5,7 @@
 # Translators:
 # Noma Yuki, 2022
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025, 2026.
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
@@ -16,9 +16,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 06:13+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-21 11:09+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -135,7 +135,7 @@ msgstr "%s客が  \"%s\"用に見つかりました。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s days left"
-msgstr ""
+msgstr "%s 残日数"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -148,7 +148,7 @@ msgstr "%sは合計%sの金額があります。本当にこのオーダを削�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s hours left"
-msgstr ""
+msgstr "%s 残時間"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -156,7 +156,7 @@ msgstr ""
 msgid ""
 "%s is more than %s% of the order's total amount. Are you sure of this tip "
 "amount?"
-msgstr ""
+msgstr "%s ご注文総額の%s% を超えています。このチップ額でよろしいですか?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -168,7 +168,7 @@ msgstr "残り%s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s min. left"
-msgstr ""
+msgstr "残り%s分"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -215,19 +215,19 @@ msgstr "(重複 !)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "(Replace [printer_ip] with the printer IP address)"
-msgstr ""
+msgstr "([printer_ip] をプリンタの IP アドレスに置き換えてください)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 msgid "(up to"
-msgstr ""
+msgstr "(最大"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 msgid "+ Add"
-msgstr ""
+msgstr "+ 追加"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -238,7 +238,7 @@ msgstr "+ 新規のショップ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ", you can skip the system parameter section."
-msgstr ""
+msgstr "、システムパラメータのセクションは省略可能です。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -250,19 +250,19 @@ msgstr "1時間"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "1 day left"
-msgstr ""
+msgstr "残り1日"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "1 hour left"
-msgstr ""
+msgstr "残り1時間"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "19.1 or above"
-msgstr ""
+msgstr "19.1以降"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -430,6 +430,8 @@ msgid ""
 "<span class=\"o_field_widget o_readonly_modifier\" "
 "invisible=\"is_total_cost_computed\">To be determined</span>"
 msgstr ""
+"<span class=\"o_field_widget o_readonly_modifier\" "
+"invisible=\"is_total_cost_computed\">未定</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -491,7 +493,7 @@ msgstr "<span name=\"ticket\">チケット</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -750,7 +752,7 @@ msgstr "アクセストークン"
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
 "Access printer configuration panel by puttin this URL in your search bar:"
-msgstr ""
+msgstr "検索バーに次のURLを入力して、プリンタ設定パネルにアクセスしてください:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -759,6 +761,8 @@ msgid ""
 "Access the below URL but replace [printer_ip] with your current Pritner IP "
 "address"
 msgstr ""
+"以下のURLにアクセスし、[printer_ip]を現在のプリンターのIPアドレスに置き換えて"
+"ください"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_warning
@@ -949,6 +953,7 @@ msgid ""
 "Add a reference price per UoM on products (e.g $/kg), in addition to the "
 "sale price"
 msgstr ""
+"販売価格とは別に、プロダクトに単位当たりの参考価格(例: ￥/kg)を設定します"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -965,12 +970,12 @@ msgstr "開始ノートを追加..."
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_bill
 msgid "Add coins and bills"
-msgstr ""
+msgstr "硬貨と紙幣を追加"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_combo_choice_action
 msgid "Add combo choices"
-msgstr ""
+msgstr "コンボの選択肢を追加"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -987,7 +992,7 @@ msgstr "一つを追加"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Add system parameter"
-msgstr ""
+msgstr "システムパラメータを追加"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -998,7 +1003,7 @@ msgstr "支払後にチップを追加"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 msgid "Add to order"
-msgstr ""
+msgstr "オーダに追加"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1077,7 +1082,7 @@ msgstr "Adyen決済端末"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "After 19.1:"
-msgstr ""
+msgstr "19.1以降:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1089,12 +1094,12 @@ msgstr "午後"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "All Orders"
-msgstr ""
+msgstr "すべてのオーダ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__all_providers_installed
 msgid "All Providers Installed"
-msgstr ""
+msgstr "すべてのプロバイダーがインストールされました"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1146,7 +1151,7 @@ msgstr "すべての販売明細"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Allow"
-msgstr ""
+msgstr "許可"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1242,7 +1247,7 @@ msgstr "金額合計"
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Amount:"
-msgstr ""
+msgstr "金額:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1365,7 +1370,7 @@ msgstr "顧客が支払いを望んでいることを確認しますか"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/tip_screen/tip_screen.js:0
 msgid "Are you sure?"
-msgstr ""
+msgstr "間違いありませんか?"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_sourdough_loaf_product_template
@@ -1376,7 +1381,7 @@ msgstr "表面カリっと、中はふわふわ職人技のサワードウブレ
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 msgid "As from"
-msgstr ""
+msgstr "以下より"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -1439,7 +1444,7 @@ msgstr "許容差額"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__auto_validate_electronic_payment
 msgid "Auto Validate Electronic Payment"
-msgstr ""
+msgstr "電子決済の自動確認"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order_line__price_type__automatic
@@ -1486,7 +1491,7 @@ msgstr "決済端末で支払われたオーダを自動的に検証"
 msgid ""
 "Automatically validates orders paid with an electronic payment (terminals, "
 "qr codes, ...)."
-msgstr ""
+msgstr "電子決済（端末、QRコードなど）で支払われたオーダを自動的に確認します。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_avatax
@@ -1513,7 +1518,7 @@ msgstr "処理可能"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__available_payment_method_types
 msgid "Available Payment Method Types"
-msgstr ""
+msgstr "対応可能な支払方法タイプ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__available_payment_method_ids
@@ -1523,7 +1528,7 @@ msgstr "利用可能な支払方法"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__available_payment_providers
 msgid "Available Payment Providers"
-msgstr ""
+msgstr "対応可能な決済プロバイダー"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -1671,6 +1676,7 @@ msgstr "バーコード"
 #: code:addons/point_of_sale/models/product_product.py:0
 msgid "Barcode \"%(barcode)s\" already assigned to \"%(product_list)s\""
 msgstr ""
+"バーコード「%(barcode)s 」は既に「%(product_list)s 」に割り当てられています"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1686,7 +1692,7 @@ msgstr "バーコードルール"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "バーコードスキャナ"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1708,13 +1714,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Be aware that it works only on chromium based browser:"
-msgstr ""
+msgstr "Chromiumベースのブラウザでのみ動作することに注意してください:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Before 19.1:"
-msgstr ""
+msgstr "19.1以前:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1785,12 +1791,12 @@ msgstr "パン"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Browser LNA Prompt"
-msgstr ""
+msgstr "ブラウザLNAプロンプト"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_combo_choice_action
 msgid "Build flexible product combinations."
-msgstr ""
+msgstr "柔軟なプロダクトの組み合わせを構築します。"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_bus_mixin
@@ -1992,7 +1998,7 @@ msgstr "現金 家具屋"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 msgid "Cash In"
-msgstr ""
+msgstr "入金"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2016,7 +2022,7 @@ msgstr "現金明細"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "Cash Machine"
-msgstr ""
+msgstr "自動釣銭機"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2033,13 +2039,13 @@ msgstr "現金オープニング"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 msgid "Cash Out"
-msgstr ""
+msgstr "出金"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Cash Receipt"
-msgstr ""
+msgstr "現金レシート"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_cash_register_balance
@@ -2049,7 +2055,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
-msgstr ""
+msgstr "現金丸め："
 
 #. module: point_of_sale
 #. odoo-python
@@ -2079,7 +2085,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash drawer opened (%(ACTION)s)"
-msgstr ""
+msgstr "キャッシュドロワーが開きました (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2097,7 +2103,7 @@ msgstr "%sの現金入金/出金は無視されます。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "Cash inserted"
-msgstr ""
+msgstr "現金が投入されました:"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2201,19 +2207,19 @@ msgstr "ヒントを変更する"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "Change:"
-msgstr ""
+msgstr "お釣り:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Changes Receipt"
-msgstr ""
+msgstr "レシートの変更"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Check if"
-msgstr ""
+msgstr "確認事項："
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -2231,13 +2237,13 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Check list"
-msgstr ""
+msgstr "チェックリスト"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Check printer reachability:"
-msgstr ""
+msgstr "プリンタの接続状態を要確認："
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2303,7 +2309,7 @@ msgstr "選択"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Choose Customer"
-msgstr ""
+msgstr "顧客を選択"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2352,7 +2358,7 @@ msgstr "シナモンロール"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "City"
-msgstr ""
+msgstr "市町村"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_classic_brown_jacket_product_template
@@ -2591,7 +2597,7 @@ msgstr "会社"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "Company Employer"
-msgstr ""
+msgstr "会社名雇用主"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -2651,7 +2657,7 @@ msgstr "設定 &gt; 管理設定"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Configure"
-msgstr ""
+msgstr "設定"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_l10n_at_pos
@@ -2720,18 +2726,19 @@ msgstr "POSに予備プリンタを接続"
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Connect printer to internet (Ethernet cable recommended)"
 msgstr ""
+"プリンタをインターネットに接続してください(イーサネットケーブルの使用を推奨)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect printers to your PoS"
-msgstr ""
+msgstr "POSにプリンタを接続"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_other_devices
 msgid "Connect printers to your PoS."
-msgstr ""
+msgstr "POSにプリンタを接続します。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2753,7 +2760,7 @@ msgstr "接続がなくなりました"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__timeout
 msgid "Connection Timeout (ms)"
-msgstr ""
+msgstr "接続タイムアウト (ms)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2856,7 +2863,7 @@ msgstr "原価:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Count"
-msgstr ""
+msgstr "カウント"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_config
@@ -3784,7 +3791,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr "設定オプションのセットを簡単に読み込みます。"
+msgstr "設定オプションセットの簡易ロード"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4712,7 +4719,7 @@ msgstr "内部カテゴリー"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__internal_note
 msgid "Internal Note"
-msgstr "内部注釈"
+msgstr "内部メモ"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5956,7 +5963,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
 msgid "Not required"
-msgstr "不要です"
+msgstr "不要"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6982,7 +6989,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__ticket
 msgid "Payment Receipt Info"
-msgstr "領収書情報"
+msgstr "支払レシート情報"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__payment_name
@@ -8461,7 +8468,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/error_dialog/error_dialog.xml:0
 msgid "Reload Data"
-msgstr "データを再読み込みする"
+msgstr "データを再読込み"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8629,7 +8636,7 @@ msgstr "確認"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.js:0
 msgid "Review Orders"
-msgstr "注文内容の確認"
+msgstr "オーダ確認"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
@@ -8713,7 +8720,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
-msgstr "販売ライン数"
+msgstr "販売明細数"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -9647,7 +9654,7 @@ msgstr "テーブル、メニュー、キッチンディスプレイなど"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Take out / Delivery / Members"
-msgstr "テイクアウト / 配送 / メンバー"
+msgstr "テイクアウト / デリバリー / 会員"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12110,50 +12117,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "Auto-generated session for orphan orders, ignored in constraints"
-#~ msgstr "孤立した注文の自動生成されたセッション、制約では無視されます"
-
-#~ msgid "Be aware that reloading data will delete unsaved orders."
-#~ msgstr ""
-#~ "データの再読み込みを行うと、未保存のオーダが削除されることにご注意くださ"
-#~ "い。"
-
-#~ msgid "Full"
-#~ msgstr "フル"
-
-#~ msgid "Full Synchronization:"
-#~ msgstr "完全同期:"
-
-#~ msgid "Limited"
-#~ msgstr "制限付き"
-
-#~ msgid "Limited Synchronization:"
-#~ msgstr "部分同期:"
-
-#~ msgid "Module"
-#~ msgstr "モジュール"
-
-#~ msgid "Number of Rescue Session"
-#~ msgstr "レスキューセッション数"
-
-#~ msgid "PoS Customer Display opened in a new window"
-#~ msgstr "PoS顧客ディスプレイが新しいウィンドウで開かれました"
-
-#~ msgid "Recovery Session"
-#~ msgstr "回復セッション"
-
-#~ msgid "Rescue Sessions"
-#~ msgstr "レスキューセッション"
-
-#~ msgid "Store edited orders in the backend"
-#~ msgstr "バックエンドで編集したオーダを保存します。"
-
-#~ msgid "Track orders edits"
-#~ msgstr "オーダ編集を追跡"
-
-#~ msgid "You can update it by selecting one of the following options:"
-#~ msgstr "以下のオプションのいずれかを選択することで、更新することができます:"
-
-#~ msgid "outstanding rescue session"
-#~ msgstr "未処理のレスキューセッション"

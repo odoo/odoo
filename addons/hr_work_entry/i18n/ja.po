@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 06:56+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-28 03:24+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_work_entry/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -57,13 +57,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
 msgid "%(duration)s hours %(work_entry_type)s"
-msgstr ""
+msgstr "%(duration)s 時間%(work_entry_type)s"
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/resource_calendar_attendance.py:0
 msgid "%(hour_from)s - %(hour_to)s (%(duration)s) %(work_entry_type)s"
-msgstr ""
+msgstr "%(hour_from)s -%(hour_to)s (%(duration)s)%(work_entry_type)s"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -76,6 +76,8 @@ msgid ""
 "<span class=\"text-muted fst-italic\">Define how this time type affects "
 "payslips and salary computation.</span>"
 msgstr ""
+"<span class=\"text-muted fst-italic\">この勤務形態が給与明細および給与計算に"
+"どのような影響を与えるかを定義してください。</span>"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_attendance
@@ -173,7 +175,7 @@ msgstr "欠勤時間"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "要アクション"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -184,27 +186,28 @@ msgstr "有効"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "活動"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_exception_decoration
+#, fuzzy
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "例外の活動を示す装飾"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "活動計画"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "活動状態"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "活動タイプアイコン"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.be_work_entry_type_additional_hours_100
@@ -258,12 +261,12 @@ msgstr "補助活動・防衛義務による休暇"
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_annual_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_annual_leave
 msgid "Annual Leave"
-msgstr ""
+msgstr "年次休暇"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__4
 msgid "April"
-msgstr ""
+msgstr "4月"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -274,7 +277,7 @@ msgstr "アーカイブ済"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "添付ファイル数"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_attendance
@@ -315,42 +318,42 @@ msgstr "勤怠"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_dbl_hol
 msgid "Attendance - Double Holiday"
-msgstr ""
+msgstr "勤怠 - 祝日2倍"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_dbl_hol_rest
 msgid "Attendance - Double Holiday (Rest Day)"
-msgstr ""
+msgstr "出勤 - 祝日2倍(休日)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rh
 msgid "Attendance - Regular Holiday"
-msgstr ""
+msgstr "出勤 - 通常祝日"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rh_rest
 msgid "Attendance - Regular Holiday (Rest Day)"
-msgstr ""
+msgstr "出勤 - 通常祝日(休日)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_rest
 msgid "Attendance - Rest Day"
-msgstr ""
+msgstr "出勤 - 休日"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_snw
 msgid "Attendance - Special Non-Working Holiday"
-msgstr ""
+msgstr "勤怠 - 特別な非就業休日"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance_snw_rest
 msgid "Attendance - Special Non-Working Holiday (Rest Day)"
-msgstr ""
+msgstr "休日 - 特別な非就業休日 (休日)"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__8
 msgid "August"
-msgstr ""
+msgstr "8月"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_available_not_working
@@ -375,7 +378,7 @@ msgstr "BHB(出産による短期失業)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_us_work_entry_type_bereavement
 msgid "Bereavement"
-msgstr ""
+msgstr "忌引"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_id_work_entry_type_bereavement_leave
@@ -386,12 +389,12 @@ msgstr "試験休暇"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paternity_legal
 msgid "Birth Leave (Father / Co-parent) (Circumstantial leave)"
-msgstr ""
+msgstr "出産休暇 (父親/共同養育者)(状況に応じた休暇)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_small_unemployment_birth
 msgid "Birth leave (Circumstantial leave)"
-msgstr ""
+msgstr "出産休暇 (状況に応じた休暇)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_breast_feeding
@@ -441,7 +444,7 @@ msgstr "CLA(非労災事故)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_compassionate_leave
 msgid "COM"
-msgstr ""
+msgstr "COM(忌引休暇)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_corona
@@ -504,7 +507,7 @@ msgstr "介護休暇"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_child_adoption
 msgid "Child Adoption / Long-Term Foster Care (Circumstantial leave)"
-msgstr ""
+msgstr "児童の養子縁組 / 長期里親養育（事情による休暇）"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_child_ceremony
@@ -574,12 +577,12 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_compassionate_leave
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_compassionate_leave
 msgid "Compassionate Leave"
-msgstr "忌引休暇"
+msgstr "慶弔休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_compassionate_leave
 msgid "Compassionate leave"
-msgstr ""
+msgstr "忌引休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_compensatory
@@ -684,7 +687,7 @@ msgstr "国コード"
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_type_action
 msgid "Create a new Time type"
-msgstr ""
+msgstr "新しい時間区分を作成"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_export_work_entries__create_uid
@@ -716,7 +719,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_day_overtime
 msgid "Day time Overtime Hours"
-msgstr ""
+msgstr "日中残業時間"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_death_one_day
@@ -950,7 +953,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_export_work_entries
 msgid "Export Work Entries"
-msgstr ""
+msgstr "勤務記録のエクスポート"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -1031,12 +1034,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__2
 msgid "February"
-msgstr ""
+msgstr "2月"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_fdrcl
 msgid "First Degree Relatives Compassionate Leave"
-msgstr ""
+msgstr "一親等の慶弔休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_construction_bad_weather_first_day
@@ -1290,7 +1293,7 @@ msgstr "ID"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_iddah_leave
 msgid "IDD"
-msgstr ""
+msgstr "IDD"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_construction_imperative_maintained_salary
@@ -1342,7 +1345,7 @@ msgstr "イドダ休暇"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_iddah_leave
 msgid "Iddah leave"
-msgstr ""
+msgstr "イドダ休暇"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__message_needaction
@@ -1361,12 +1364,14 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time type "
 "without removing it."
 msgstr ""
+"アクティブフィールドがfalseに設定されている場合、タイムタイプを削除せずに非表"
+"示にできます。"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__amount_rate
 msgid ""
 "If you want the hours to be paid double, the rate should be set to 200%."
-msgstr ""
+msgstr "時間給を2倍にしたい場合は、レートを200に設定してください% 。"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_ami
@@ -1391,6 +1396,8 @@ msgid ""
 "during the theoretical legal period of guaranteed salary for reasons "
 "attributable to the worker"
 msgstr ""
+"労働者の責に帰すべき事由による病気・事故(法定の給与保障期間内であっても給与保"
+"障の対象外となるケース)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_common_law_illness_non_attributable_to_worker
@@ -1580,7 +1587,7 @@ msgstr "補償付き兵役休暇(MLC)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "MTY"
-msgstr ""
+msgstr "MTY"
 
 #. module: hr_work_entry
 #: model:ir.module.module,summary:base.module_hr_work_entry
@@ -1652,7 +1659,7 @@ msgstr "出産休暇 (支払 75%)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_maternity_leave
 msgid "Maternity leave"
-msgstr ""
+msgstr "出産休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_maternity_time_off_converted
@@ -1854,7 +1861,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_night_overtime
 msgid "Night time Overtime Hours"
-msgstr ""
+msgstr "夜間残業時間"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_non_taxable_political_service
@@ -2236,7 +2243,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_public_duty
 msgid "PDU"
-msgstr ""
+msgstr "PDU"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_public_holiday
@@ -2298,12 +2305,12 @@ msgstr "無給の公職従事(PMU)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n1
 msgid "PN1"
-msgstr ""
+msgstr "PN1"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n2
 msgid "PN2"
-msgstr ""
+msgstr "PN2"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_political_leave
@@ -2496,17 +2503,17 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n1
 msgid "Postponed Paid Time Off N-1"
-msgstr ""
+msgstr "繰越有給休暇(前年分)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_postponed_paid_time_off_n2
 msgid "Postponed Paid Time Off N-2"
-msgstr ""
+msgstr "繰越有給休暇(前々年分)"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Provide a description of the Time Type, in which case should it be used"
-msgstr ""
+msgstr "時間区分の説明と、どのような場合に使用するかを入力してください"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.au_work_entry_type_public_holiday
@@ -2571,7 +2578,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_public_duty
 msgid "Public duty"
-msgstr ""
+msgstr "公的義務"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_public_holiday_temporary_unemployment
@@ -2799,12 +2806,12 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Time Type"
-msgstr ""
+msgstr "時間区分を検索"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sdrcl
 msgid "Second Degree Relatives Compassionate Leave"
-msgstr ""
+msgstr "二親等の慶弔休暇"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__resource_calendar_selectable
@@ -2819,7 +2826,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_export_work_entries__reference_month__9
 msgid "September"
-msgstr ""
+msgstr "9月"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -2829,7 +2836,7 @@ msgstr "シーケンス"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ph_hr_payroll_sil_leave
 msgid "Service Incentive Leave"
-msgstr ""
+msgstr "勤続奨励休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_non_provided_service_childminders
@@ -2848,27 +2855,27 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_kw_work_entry_type_sick_leave
 msgid "Sick Leave"
-msgstr ""
+msgstr "病気休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
-msgstr ""
+msgstr "病気休暇 (100% 有給)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_35
 msgid "Sick Leave (35% Paid)"
-msgstr ""
+msgstr "病気休暇 (35%有給)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_50
 msgid "Sick Leave (50% Paid)"
-msgstr ""
+msgstr "病気休暇 (50%有給)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_sick_leave_75
 msgid "Sick Leave (75% Paid)"
-msgstr ""
+msgstr "病気休暇 (75% 有給)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_jo_work_entry_type_sick_leave_unpaid
@@ -3069,7 +3076,7 @@ msgstr "一時的失業・集団休業(協定あり)(TUC)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_trade_union_duty
 msgid "TUD"
-msgstr ""
+msgstr "労働組合業務(TUD)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_collective_closure
@@ -3153,7 +3160,7 @@ msgstr "労働時間短縮の一環としての代休による会社の集団休
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure
 msgid "Temporary unemployment due to force majeure"
-msgstr ""
+msgstr "不可抗力による一時的な失業"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_temporary_unemployment_force_majeure_medical
@@ -3198,7 +3205,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_work_entry.field_resource_calendar_attendance__color
 msgid ""
 "The color selected here will be used in every screen with the time type."
-msgstr ""
+msgstr "ここで選択した色は、その時刻タイプが使用される毎の画面で適用されます。"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -3235,13 +3242,13 @@ msgstr "このコードは変更可能です。表示目的のみです（最大
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Time Type"
-msgstr ""
+msgstr "時間区分"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view_employee
 msgid "Time Types"
-msgstr ""
+msgstr "時間区分"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_time_credit_not_equated
@@ -3256,7 +3263,7 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_trade_union_duty
 msgid "Trade union duty"
-msgstr ""
+msgstr "労働組合の義務"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_training
@@ -3331,7 +3338,7 @@ msgstr "UN"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_upcomming_public_holiday
 msgid "UPH"
-msgstr ""
+msgstr "UPH"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_unpredictable
@@ -3403,7 +3410,7 @@ msgstr "他の時間帯に勤務したことに対する振替休暇(無給)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_upcomming_public_holiday
 msgid "Upcoming Public Holiday"
-msgstr ""
+msgstr "今後の祝日"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_unpredictable
@@ -3487,17 +3494,17 @@ msgstr "労働災害（無給）(WAU)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.iq_work_entry_type_wedding_leave
 msgid "WED"
-msgstr ""
+msgstr "水"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.l10n_be_work_entry_type_worker_time_off
 msgid "WTO"
-msgstr ""
+msgstr "休暇(WTO)"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.iq_work_entry_type_wedding_leave
 msgid "Wedding leave"
-msgstr ""
+msgstr "結婚休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_om_work_entry_type_overtime_work_days_daytime
@@ -3601,7 +3608,7 @@ msgstr "業務上のリスク (IMSS)"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_worker_time_off
 msgid "Worker Time Off"
-msgstr ""
+msgstr "従業員の休暇"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_au_work_entry_type_compensation
@@ -3651,6 +3658,8 @@ msgid ""
 "You cannot create more than one time type of code \"%(code)s\" for the same "
 "country (%(country)s)"
 msgstr ""
+"同じ国（%(country)s ）に対して、「%(code)s 」という種類のコードを複数作成する"
+"ことはできません"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
@@ -3683,91 +3692,49 @@ msgstr "例：WORK100、LEAVE210、OUT、..."
 msgid "workentries_"
 msgstr ""
 
-#~ msgid "Added to Monthly Pay"
-#~ msgstr "月給に追加済"
+msgid "Brief Holiday (Birth)"
+msgstr "出産に伴う短期休暇"
 
-#~ msgid ""
-#~ "Check this setting if you want the hours to be considered as extra time "
-#~ "and added as a bonus to the basic salary."
-#~ msgstr ""
-#~ "この設定を有効にすると、該当の時間が残業時間として扱われ、基本給に対する"
-#~ "ボーナスとして加算されます。"
+msgid "Double Time Hours"
+msgstr "ダブルタイム勤務時間"
 
-#~ msgid "Type of Work"
-#~ msgstr "勤務区分"
+msgid "Overtime Hours (Paid at 150%)"
+msgstr "時間外労働時間(150％の割増賃金)"
 
-#~ msgid "YSO"
-#~ msgstr "若年者休暇(YSO)"
+msgid "Prophylactic Time Off"
+msgstr "予防的休暇"
 
-#~ msgid "Youth / Senior Time Off"
-#~ msgstr "若年者/高齢者休暇"
+msgid "Retro Overtime Hours"
+msgstr "遡って支給される残業時間"
 
-#~ msgid "Cash Out of Leave in Service"
-#~ msgstr "在職中の休暇買取"
+msgid "Retro Regular Pay Hours"
+msgstr "遡って支給される通常勤務時間"
 
-#~ msgid "Other Paid Leave"
-#~ msgstr "その他の有給休暇"
+msgid "Small Unemployment (Brief Holiday)"
+msgstr "短期失業 (短期間の休暇)"
 
-#~ msgid "Overtime: Public Time Off"
-#~ msgstr "残業: 祝日"
+msgid "VY1"
+msgstr "未取得休暇(初年度)(VY1)"
 
-#~ msgid "Overtime: Regular"
-#~ msgstr "残業: 通常"
+msgid "VY2"
+msgstr "未取得休暇(2年目)(VY2)"
 
-#~ msgid "Overtime: Saturday & Public Time Off"
-#~ msgstr "残業: 土曜日・祝日"
+msgid ""
+"Vacation that a worker was unable to take due to certain suspensions and "
+"which is taken during the first year following the vacation year"
+msgstr ""
+"特定の休業により取得できなかった休暇で、休暇年の翌年の初年度に取得される休暇"
 
-#~ msgid "Overtime: Sunday & Public Time Off"
-#~ msgstr "残業: 日曜日・祝日"
+msgid ""
+"Vacation that a worker was unable to take due to certain suspensions and "
+"which is taken during the second year following the vacation year"
+msgstr "特定の休業により取得できなかった休暇で、休暇年の翌々年に取得される休暇"
 
-#~ msgid "Unused Leave on Termination"
-#~ msgstr "退職時の未使用休暇"
+msgid "Work Entry Type"
+msgstr "勤務記録タイプ"
 
-#~ msgid "Brief Holiday (Birth)"
-#~ msgstr "出産に伴う短期休暇"
+msgid "Configuration"
+msgstr "設定"
 
-#~ msgid "Double Time Hours"
-#~ msgstr "ダブルタイム勤務時間"
-
-#~ msgid "Overtime Hours (Paid at 150%)"
-#~ msgstr "時間外労働時間(150％の割増賃金)"
-
-#~ msgid "Prophylactic Time Off"
-#~ msgstr "予防的休暇"
-
-#~ msgid "Retro Overtime Hours"
-#~ msgstr "遡って支給される残業時間"
-
-#~ msgid "Retro Regular Pay Hours"
-#~ msgstr "遡って支給される通常勤務時間"
-
-#~ msgid "Small Unemployment (Brief Holiday)"
-#~ msgstr "短期失業 (短期間の休暇)"
-
-#~ msgid "VY1"
-#~ msgstr "未取得休暇(初年度)(VY1)"
-
-#~ msgid "VY2"
-#~ msgstr "未取得休暇(2年目)(VY2)"
-
-#~ msgid ""
-#~ "Vacation that a worker was unable to take due to certain suspensions and "
-#~ "which is taken during the first year following the vacation year"
-#~ msgstr ""
-#~ "特定の休業により取得できなかった休暇で、休暇年の翌年の初年度に取得される休"
-#~ "暇"
-
-#~ msgid ""
-#~ "Vacation that a worker was unable to take due to certain suspensions and "
-#~ "which is taken during the second year following the vacation year"
-#~ msgstr ""
-#~ "特定の休業により取得できなかった休暇で、休暇年の翌々年に取得される休暇"
-
-#~ msgid "Work Entry Type"
-#~ msgstr "勤務記録タイプ"
-
-#~ msgid "Configuration"
-#~ msgstr "設定"
-
-#~ msgid "Week Days Overtime"
-#~ msgstr "平日残業時間"
+msgid "Week Days Overtime"
+msgstr "平日残業時間"

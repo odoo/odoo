@@ -4,14 +4,15 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 14:46+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 11:30+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
 "event_booth_sale/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -369,6 +370,10 @@ msgid ""
 "Category, %(event_booth_category_name)s. The service_tracking must remain "
 "\"Event Booth\"."
 msgstr ""
+"Значение «service_tracking» для шаблона товара %(product_template_name)s "
+"нельзя изменить, так как один из его вариантов привязан к категории стендов "
+"мероприятия %(event_booth_category_name)s. Значение должно оставаться «Стенд "
+"мероприятия»."
 
 #. module: event_booth_sale
 #. odoo-python
@@ -387,6 +392,8 @@ msgid ""
 "The product, %(product_name)s , is used for Event Booth, it must have "
 "service_tracking set to \"Event Booth\"."
 msgstr ""
+"Товар %(product_name)s используется для стендов мероприятия, поэтому "
+"параметр «service_tracking» должен иметь значение «Стенд мероприятия»."
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
@@ -423,6 +430,9 @@ msgid ""
 "because it is already assigned to %(booth_category_name)s. The "
 "service_tracking must remain 'event_booth'."
 msgstr ""
+"Нельзя изменить параметр «service_tracking» для товара %(product_name)s, так "
+"как он уже привязан к %(booth_category_name)s. Значение должно оставаться "
+"'event_booth'."
 
 #. module: event_booth_sale
 #. odoo-python

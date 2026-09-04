@@ -9,14 +9,16 @@
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
+# "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-18 19:09+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-06 06:27+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_payment/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -167,7 +169,7 @@ msgstr ""
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_provider_form
 msgid "All Pricelists"
-msgstr ""
+msgstr "Semua Daftar Harga"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
@@ -188,7 +190,7 @@ msgstr "Jumlah Belum Dibayar"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "Amount of"
-msgstr ""
+msgstr "Sejumlah"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -214,7 +216,7 @@ msgstr "Transaksi Diotorisasi"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Baris Rekening Koran"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -448,6 +450,8 @@ msgid ""
 "Only allow this payment provider when the partner's pricelist matches one of "
 "these."
 msgstr ""
+"Hanya izinkan penyedia pembayaran ini jika daftar harga partner sesuai "
+"dengan salah satu ketentuan ini."
 
 #. module: account_payment
 #. odoo-python
@@ -564,7 +568,7 @@ msgstr "Silakan login untuk membayar faktur Anda yang terlambat"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_provider__available_pricelist_ids
 msgid "Pricelists"
-msgstr ""
+msgstr "Daftar Harga"
 
 #. module: account_payment
 #. odoo-python
@@ -765,6 +769,9 @@ msgid ""
 "You can't delete a payment method that is linked to an installed provider.\n"
 "Linked providers(s): %s"
 msgstr ""
+"Anda tidak dapat menghapus metode pembayaran yang terhubung dengan penyedia "
+"terpasang.\n"
+"Penyedia terhubung: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -783,6 +790,9 @@ msgid ""
 "You must first uninstall a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"Penyedia pembayaran harus dihapus instalasinya terlebih dahulu sebelum "
+"menghapus jurnalnya.\n"
+"Penyedia terhubung: %s"
 
 #. module: account_payment
 #. odoo-javascript
@@ -805,6 +815,7 @@ msgstr "telah diterapkan."
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_payment
 msgid "is already paid on this invoice, please make sure to not pay twice."
 msgstr ""
+"sudah membayar faktur ini, harap pastikan agar tidak membayar dua kali."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -815,16 +826,4 @@ msgstr "terlambat"
 #. odoo-python
 #: code:addons/account_payment/models/payment_provider.py:0
 msgid "pricelist not allowed"
-msgstr ""
-
-#~ msgid "Payment Methods"
-#~ msgstr "Metode-Metode Pembayaran"
-
-#~ msgid "Payment Providers"
-#~ msgstr "Penyedia Pembayaran"
-
-#~ msgid "Payment Tokens"
-#~ msgstr "Token Pembayaran"
-
-#~ msgid "Payment Transactions"
-#~ msgstr "Transaksi Tagihan"
+msgstr "daftar harga tidak diperbolehkan"

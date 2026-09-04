@@ -8,17 +8,54 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:09+0000\n"
-"PO-Revision-Date: 2026-01-24 20:12+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
+"POT-Creation-Date: 2026-08-28 18:19+0000\n"
+"PO-Revision-Date: 2026-07-21 13:00+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
 "l10n_fr_account/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_fr_account
+#: model:ir.module.module,description:base.module_l10n_fr_account
+msgid ""
+"\n"
+"This is the module to manage the accounting chart for France in Odoo.\n"
+"========================================================================\n"
+"\n"
+"This module applies to companies based in France mainland. It doesn't apply "
+"to\n"
+"companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, "
+"Mayotte).\n"
+"\n"
+"This localisation module creates the VAT taxes of type 'tax included' for "
+"purchases\n"
+"(it is notably required when you use the module 'hr_expense'). Beware that "
+"these\n"
+"'tax included' VAT taxes are not managed by the fiscal positions provided by "
+"this\n"
+"module (because it is complex to manage both 'tax excluded' and 'tax "
+"included'\n"
+"scenarios in fiscal positions).\n"
+"\n"
+"This localisation module doesn't properly handle the scenario when a France-"
+"mainland\n"
+"company sells services to a company based in the DOMs. We could manage it in "
+"the\n"
+"fiscal positions, but it would require to differentiate between 'product' "
+"VAT taxes\n"
+"and 'service' VAT taxes. We consider that it is too 'heavy' to have this by "
+"default\n"
+"in l10n_fr_account; companies that sell services to DOM-based companies "
+"should update the\n"
+"configuration of their taxes and fiscal positions manually.\n"
+"\n"
+"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
+msgstr ""
 
 #. module: l10n_fr_account
 #: model_terms:ir.ui.view,arch_db:l10n_fr_account.report_invoice_document
@@ -98,6 +135,11 @@ msgstr "CompteNum"
 #. module: l10n_fr_account
 #: model:ir.model,name:l10n_fr_account.model_res_partner
 msgid "Contact"
+msgstr ""
+
+#. module: l10n_fr_account
+#: model:ir.model,website_form_label:l10n_fr_account.model_res_partner
+msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_fr_account
@@ -194,6 +236,11 @@ msgstr "Pied de page de tous les rapports."
 #: model:ir.ui.menu,name:l10n_fr_account.account_reports_fr_statements_menu
 msgid "France"
 msgstr "France"
+
+#. module: l10n_fr_account
+#: model:ir.module.module,shortdesc:base.module_l10n_fr_account
+msgid "France - Accounting"
+msgstr ""
 
 #. module: l10n_fr_account
 #. odoo-python

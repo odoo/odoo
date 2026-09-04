@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_ecpay
+# * payment_ecpay
 #
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2026.
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.4a1\n"
+"Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 19:11+0000\n"
+"PO-Revision-Date: 2026-07-21 20:53+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
 "payment_ecpay/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +36,8 @@ msgid ""
 "An error occurred (return code %(return_code)s; return message %"
 "(return_message)s)."
 msgstr ""
+"Se ha producido un error (código de retorno %(return_code)s; mensaje de "
+"retorno %(return_message)s)."
 
 #. module: payment_ecpay
 #: model:payment.method,name:payment_ecpay.payment_method_bank_transfer
@@ -54,39 +57,39 @@ msgstr ""
 #. module: payment_ecpay
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_provider__code
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: payment_ecpay
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre a mostrar"
 
 #. module: payment_ecpay
 #: model:ir.model.fields.selection,name:payment_ecpay.selection__payment_provider__code__ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment_ecpay
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_provider__ecpay_merchant_id
 msgid "ECPay Merchant ID"
-msgstr ""
+msgstr "ID de comerciante de ECPay"
 
 #. module: payment_ecpay
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_provider__ecpay_hash_iv
 msgid "ECPay Secure Hash IV"
-msgstr ""
+msgstr "Vector de inicialización (IV) de hash seguro de ECPay"
 
 #. module: payment_ecpay
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_provider__ecpay_hash_key
 msgid "ECPay Secure Hash Key"
-msgstr ""
+msgstr "Clave de hash seguro de ECPay"
 
 #. module: payment_ecpay
 #. odoo-python
 #: code:addons/payment_ecpay/models/payment_provider.py:0
 msgid "ECPay only supports TWD."
-msgstr ""
+msgstr "ECPay solo admite TWD."
 
 #. module: payment_ecpay
 #: model:payment.method,name:payment_ecpay.payment_method_family_mart
@@ -102,7 +105,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_ecpay.field_payment_transaction__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: payment_ecpay
 #: model:payment.method,name:payment_ecpay.payment_method_jcb
@@ -122,7 +125,7 @@ msgstr ""
 #. module: payment_ecpay
 #: model_terms:ir.ui.view,arch_db:payment_ecpay.payment_provider_form
 msgid "Merchant ID"
-msgstr ""
+msgstr "ID de comerciante"
 
 #. module: payment_ecpay
 #: model:payment.method,name:payment_ecpay.payment_method_mobile_wallet
@@ -137,7 +140,7 @@ msgstr ""
 #. module: payment_ecpay
 #: model:ir.model,name:payment_ecpay.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Proveedor de pago"
 
 #. module: payment_ecpay
 #: model:ir.module.module,shortdesc:base.module_payment_ecpay
@@ -147,23 +150,23 @@ msgstr ""
 #. module: payment_ecpay
 #: model:ir.model,name:payment_ecpay.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
+msgstr "Transacción de pago"
 
 #. module: payment_ecpay
 #. odoo-python
 #: code:addons/payment_ecpay/models/payment_transaction.py:0
 msgid "Received data with missing return code."
-msgstr ""
+msgstr "Los datos recibidos no incluyen el código de retorno."
 
 #. module: payment_ecpay
 #: model_terms:ir.ui.view,arch_db:payment_ecpay.payment_provider_form
 msgid "Secure Hash IV"
-msgstr ""
+msgstr "Vector de inicialización (IV) de hash seguro"
 
 #. module: payment_ecpay
 #: model_terms:ir.ui.view,arch_db:payment_ecpay.payment_provider_form
 msgid "Secure Hash Secret"
-msgstr ""
+msgstr "Secreto de hash seguro"
 
 #. module: payment_ecpay
 #: model:payment.method,name:payment_ecpay.payment_method_twqr
@@ -174,11 +177,12 @@ msgstr ""
 #: model:ir.model.fields,help:payment_ecpay.field_payment_provider__ecpay_merchant_id
 msgid "The Merchant ID solely used to identify your ECPay account."
 msgstr ""
+"El ID de comerciante se utiliza únicamente para identificar tu cuenta ECPay."
 
 #. module: payment_ecpay
 #: model:ir.model.fields,help:payment_ecpay.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "El código técnico de este proveedor de pago."
 
 #. module: payment_ecpay
 #: model:payment.method,name:payment_ecpay.payment_method_unionpay

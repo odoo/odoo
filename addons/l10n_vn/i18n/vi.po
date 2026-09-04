@@ -6,15 +6,42 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 18:22+0000\n"
-"PO-Revision-Date: 2024-08-15 11:07+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"POT-Creation-Date: 2026-08-28 18:23+0000\n"
+"PO-Revision-Date: 2026-07-21 14:52+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-4/"
+"l10n_vn/vi/>\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_vn
+#: model:ir.module.module,description:base.module_l10n_vn
+msgid ""
+"\n"
+"This is the module to manage the accounting chart, bank information for "
+"Vietnam in Odoo.\n"
+"========================================================================================\n"
+"\n"
+"- This module applies to companies based in Vietnamese Accounting Standard "
+"(VAS)\n"
+"  with Chart of account under Circular No. 200/2014/TT-BTC\n"
+"- Add Vietnamese bank information (like name, bic ..) as announced and "
+"yearly updated by State Bank\n"
+"  of Viet Nam (https://sbv.gov.vn/webcenter/portal/en/home/sbv/paytreasury/"
+"bankidno).\n"
+"- Add VietQR feature for invoice\n"
+"\n"
+"**Credits:**\n"
+"    - General Solutions.\n"
+"    - Trobz\n"
+"    - Jean Nguyen - The Bean Family (https://github.com/anhjean/vietqr) for "
+"VietQR.\n"
+"\n"
+msgstr ""
 
 #. module: l10n_vn
 #: model:ir.model.fields.selection,name:l10n_vn.selection__res_partner_bank__proxy_type__atm_card
@@ -25,6 +52,19 @@ msgstr "Số thẻ ATM"
 #: model:ir.model,name:l10n_vn.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "Mẫu hệ thống tài khoản"
+
+#. module: l10n_vn
+#: model:ir.model.fields,field_description:l10n_vn.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:l10n_vn.field_res_partner_bank__proxy_type
+msgid "Account Identifier Type"
+msgstr ""
+
+#. module: l10n_vn
+#: model_terms:ir.ui.view,arch_db:l10n_vn.res_config_settings_view_form
+msgid ""
+"Add a QR-code to your invoices so that your customers can pay instantly with "
+"their mobile banking application."
+msgstr ""
 
 #. module: l10n_vn
 #: model:ir.model,name:l10n_vn.model_res_partner_bank
@@ -88,12 +128,24 @@ msgstr "ID Người bán"
 #. module: l10n_vn
 #. odoo-python
 #: code:addons/l10n_vn/models/res_bank.py:0
+msgid "Missing Account Identifier Type."
+msgstr ""
+
+#. module: l10n_vn
+#. odoo-python
+#: code:addons/l10n_vn/models/res_bank.py:0
 msgid ""
 "Missing Bank Identifier Code.\n"
 "Please configure the Bank Identifier Code inside the bank settings."
 msgstr ""
 "Thiếu mã định danh ngân hàng.\n"
 "Hãy cấu hình nó ở trong phần thiết lập ngân hàng."
+
+#. module: l10n_vn
+#. odoo-python
+#: code:addons/l10n_vn/models/res_bank.py:0
+msgid "Missing Identifier Value."
+msgstr ""
 
 #. module: l10n_vn
 #. odoo-python
@@ -108,27 +160,9 @@ msgid "Missing Merchant City or State."
 msgstr "Thiếu thành phố hoặc tỉnh thành của người bán. "
 
 #. module: l10n_vn
-#. odoo-python
-#: code:addons/l10n_vn/models/res_bank.py:0
-msgid "Missing Proxy Type."
-msgstr "Thiếu loại proxy."
-
-#. module: l10n_vn
-#. odoo-python
-#: code:addons/l10n_vn/models/res_bank.py:0
-msgid "Missing Proxy Value."
-msgstr "Thiếu giá trị proxy."
-
-#. module: l10n_vn
 #: model:ir.model.fields.selection,name:l10n_vn.selection__res_partner_bank__proxy_type__payment_service
 msgid "Payment Service"
 msgstr "Dịch vụ Thanh toán"
-
-#. module: l10n_vn
-#: model:ir.model.fields,field_description:l10n_vn.field_account_setup_bank_manual_config__proxy_type
-#: model:ir.model.fields,field_description:l10n_vn.field_res_partner_bank__proxy_type
-msgid "Proxy Type"
-msgstr "Loại proxy"
 
 #. module: l10n_vn
 #. odoo-python
@@ -144,11 +178,29 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_vn/models/res_bank.py:0
 msgid ""
-"The proxy type %s is not supported for Vietnamese partners. It must be "
-"either Merchant ID, ATM Card Number or Bank Account"
+"The account identifier type %s is not supported for Vietnamese partners. It "
+"must be either Merchant ID, ATM Card Number or Bank Account"
 msgstr ""
-"Loại proxy %s không được hỗ trợ cho khách hàng Việt Nam. Nó phải là ID người "
-"bán, số thẻ ATM hoặc tài khoản ngân hàng"
+
+#. module: l10n_vn
+#: model:ir.model.fields,help:l10n_vn.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,help:l10n_vn.field_res_partner_bank__proxy_type
+msgid ""
+"The identification method linked to this bank account (e.g., Mobile Number, "
+"Company ID) used to route QR payments to this account."
+msgstr ""
+
+#. module: l10n_vn
+#. odoo-python
+#: code:addons/l10n_vn/models/res_bank.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_vn.res_config_settings_view_form
+msgid "VietQR Code"
+msgstr ""
+
+#. module: l10n_vn
+#: model:ir.module.module,shortdesc:base.module_l10n_vn
+msgid "Vietnam - Accounting"
+msgstr ""
 
 #. module: l10n_vn
 #: model:ir.model.fields,field_description:l10n_vn.field_account_bank_statement_line__l10n_vn_e_invoice_number

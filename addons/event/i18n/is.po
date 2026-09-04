@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:42+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
 "Language: is\n"
@@ -14,6 +14,24 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
+
+#. module: event
+#: model:ir.module.module,description:base.module_event
+msgid ""
+"\n"
+"Organization and management of Events.\n"
+"======================================\n"
+"\n"
+"The event module allows you to efficiently organize events and all related "
+"tasks: planning, registration tracking,\n"
+"attendances, etc.\n"
+"\n"
+"Key Features\n"
+"------------\n"
+"* Manage your Events and Registrations\n"
+"* Use emails to automatically confirm and send acknowledgments for any event "
+"registration\n"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_count
@@ -81,12 +99,6 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 msgid "%(ticket_name)s (Sold out)"
 msgstr ""
-
-#. module: event
-#. odoo-python
-#: code:addons/event/models/event_event.py:0
-msgid "%s (copy)"
-msgstr "%s (afrita)"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_attendee_list
@@ -214,6 +226,14 @@ msgid ""
 msgstr ""
 
 #. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Show the "
+"live schedule on dedicated location screens</span>"
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "<em>If you wish to make a presentation, please send your topic proposal as "
@@ -224,46 +244,50 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
-msgid "<i class=\"fa fa-arrow-right mx-2\" title=\"to\"/>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
-msgid "<i class=\"fa fa-group mt-1 me-2 text-center\" title=\"Attendees\"/>"
+msgid "<i class=\"oi me-2\" data-icon=\"east\" title=\"End date\"/>"
 msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
-"<i class=\"fa fa-info-circle me-2\"></i>This event and all the conferences "
-"are in <b>English</b>!"
+"<i class=\"oi me-2\" data-icon=\"info\"></i>This event and all the "
+"conferences are in <b>English</b>!"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
+msgid "<i class=\"oi mx-2\" data-icon=\"arrow_forward\" title=\"to\"/>"
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
-"<i class=\"fa fa-map-marker mt-1 me-2 text-center ps-1\" title=\"Location\"/>"
-msgstr ""
-
-#. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
-msgid "<i class=\"fa fa-ticket\" title=\"Ticket type\"/>"
+"<i class=\"oi oi-filled mt-1 me-2 text-center\" data-icon=\"group\" "
+"title=\"Attendees\"/>"
 msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
-msgid "<i class=\"oi oi-arrow-right me-2\" title=\"End date\"/>"
+msgid ""
+"<i class=\"oi oi-filled mt-1 me-2 text-center\" data-icon=\"location_on\" "
+"title=\"Location\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Slot\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid "<i class=\"oi\" data-icon=\"business\" title=\"Attendee Company\"/>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+msgid ""
+"<i class=\"oi\" data-icon=\"confirmation_number\" title=\"Ticket type\"/>"
 msgstr ""
 
 #. module: event
@@ -1680,7 +1704,6 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
-#: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
 msgid "All Events"
 msgstr ""
 
@@ -2049,6 +2072,12 @@ msgid ""
 msgstr ""
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "Close"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 #: model:ir.model.fields,field_description:event.field_event_slot__color
 msgid "Color"
@@ -2146,6 +2175,12 @@ msgstr ""
 
 #. module: event
 #. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Confirm the selected dates."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 msgid "Confirmation"
 msgstr ""
@@ -2154,12 +2189,6 @@ msgstr ""
 #: model:ir.model,name:event.model_res_partner
 msgid "Contact"
 msgstr "Tengiliður"
-
-#. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Continue"
-msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2352,7 +2381,7 @@ msgstr ""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
-msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
+msgid "Download Tickets <i class=\"oi ms-1\" data-icon=\"download\"/>"
 msgstr ""
 
 #. module: event
@@ -2365,7 +2394,7 @@ msgstr ""
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Edit"
+msgid "Edit Ticket"
 msgstr ""
 
 #. module: event
@@ -2383,6 +2412,15 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Enable barcode scanning"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event_ticket__entry_limit
+#: model:ir.model.fields,help:event.field_event_registration__ticket_entry_limit
+msgid ""
+"Enable multi-entry tickets\n"
+"- Set to 0 or 1 to disable.\n"
+"- Enter 2 or more to define the maximum number of allowed entries."
 msgstr ""
 
 #. module: event
@@ -2418,6 +2456,11 @@ msgstr ""
 #. module: event
 #: model:event.event,subtitle:event.event_2
 msgid "Enhance your architectural business and improve professional skills."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__entry_limit
+msgid "Entry Limit"
 msgstr ""
 
 #. module: event
@@ -2701,6 +2744,11 @@ msgid "Events Mail Schedulers"
 msgstr ""
 
 #. module: event
+#: model:ir.module.module,shortdesc:base.module_event
+msgid "Events Organization"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_tree
 msgid "Events Stage"
@@ -2775,12 +2823,6 @@ msgstr "Fylgjendur"
 #: model:ir.model.fields,field_description:event.field_event_registration__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Fylgjendur (viðskiptafélagar)"
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event__activity_type_icon
-#: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3018,8 +3060,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_mail_template__id
 #: model:ir.model.fields,field_description:event.field_res_config_settings__id
 #: model:ir.model.fields,field_description:event.field_res_partner__id
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "ID"
 msgstr "Auðkenni"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "ID of your Google app"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_icon
@@ -3108,6 +3156,11 @@ msgstr ""
 msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__ticket_entry_limit
+msgid "Initial Entry Limit"
 msgstr ""
 
 #. module: event
@@ -3245,11 +3298,6 @@ msgid "Kanban State"
 msgstr ""
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
-msgid "Key"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields,field_description:event.field_digest_digest__kpi_nbr_of_registrations_value
 msgid "Kpi Nbr Of Registrations Value"
 msgstr ""
@@ -3367,6 +3415,12 @@ msgid "Live Music Festival"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_location_display
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Location Display"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
 #: model:ir.model.fields.selection,name:event.selection__event_mail__template_ref__mail_template
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__notification_type__mail
@@ -3412,6 +3466,12 @@ msgid "Mail Slot"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_registration__main_registration_id
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Main Registration"
+msgstr ""
+
+#. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage & publish a schedule with tracks"
 msgstr ""
@@ -3442,6 +3502,12 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Marketing"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__activity_type_icon
+#: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: event
@@ -3538,6 +3604,8 @@ msgstr ""
 
 #. module: event
 #. odoo-javascript
+#. odoo-python
+#: code:addons/event/models/event_registration.py:0
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.xml:0
 #: model:event.stage,name:event.event_stage_new
 msgid "New"
@@ -3548,6 +3616,14 @@ msgstr ""
 #: code:addons/event/static/src/views/event_slot/calendar/event_slot_calendar_controller.js:0
 #: code:addons/event/static/src/views/event_slot/list/event_slot_list_controller.js:0
 msgid "New Slot"
+msgstr ""
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_registration.py:0
+msgid ""
+"New attendance by this attendee created at %(attendance_datetime)s, see %"
+"(attendance_link)s"
 msgstr ""
 
 #. module: event
@@ -3572,6 +3648,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_type_id
 msgid "Next Activity Type"
+msgstr ""
+
+#. module: event
+#: model:res.groups.privilege,placeholder:event.res_groups_privilege_events
+msgid "No"
 msgstr ""
 
 #. module: event
@@ -3753,6 +3834,12 @@ msgid "Open date range picker.<br/>Pick a Start and End date for your event."
 msgstr ""
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Open the Tickets tab."
+msgstr ""
+
+#. module: event
 #: model_terms:event.event,description:event.event_0
 msgid ""
 "OpenElec Applications reserves the right to cancel, re-name or re-locate the "
@@ -3797,6 +3884,18 @@ msgstr "Sími"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Phone number"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Pick a start date."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Pick an end date."
 msgstr ""
 
 #. module: event
@@ -4017,6 +4116,13 @@ msgid "Registrations started"
 msgstr ""
 
 #. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+#: model:ir.model.fields,field_description:event.field_event_registration__remaining_entries
+msgid "Remaining Entries"
+msgstr ""
+
+#. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "Rendering of template failed with error: %(error)s."
@@ -4073,6 +4179,12 @@ msgstr ""
 
 #. module: event
 #. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid "Save the ticket."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Scan or Tap"
 msgstr ""
@@ -4123,6 +4235,11 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Secret"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Secret of your Google app"
 msgstr ""
 
 #. module: event
@@ -4433,6 +4550,13 @@ msgid "Text answer"
 msgstr ""
 
 #. module: event
+#. odoo-python
+#: code:addons/event/models/event_ticket.py:0
+msgid ""
+"The Entry Limit of event tickets %(ticket_names)s cannot be lower than 0."
+msgstr ""
+
+#. module: event
 #: model:event.event,subtitle:event.event_1
 msgid ""
 "The Great Reno Balloon Race is the world's largest free hot-air ballooning "
@@ -4474,7 +4598,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_7
 msgid ""
-"The finest OpenWood furnitures are coming to your house in a brand new "
+"The finest OpenWood furniture is coming to your house in a brand new "
 "collection"
 msgstr ""
 
@@ -4517,6 +4641,14 @@ msgstr ""
 #: code:addons/event/models/event_ticket.py:0
 msgid ""
 "The limit per order must be positive. Please check ticket %(ticket_name)s"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid ""
+"The offer may have expired or you may have reached the maximum number of "
+"entries allowed."
 msgstr ""
 
 #. module: event
@@ -4567,6 +4699,12 @@ msgstr ""
 msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+msgid "This Card/Ticket is currently unavailable."
 msgstr ""
 
 #. module: event
@@ -4667,12 +4805,6 @@ msgid "Ticket Type"
 msgstr ""
 
 #. module: event
-#. odoo-javascript
-#: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
-msgid "Ticket already scanned!"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
 msgstr ""
@@ -4683,6 +4815,13 @@ msgstr ""
 msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
+msgstr ""
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+msgid ""
+"Ticket types allow you to distinguish your attendees. Let's create a new one."
 msgstr ""
 
 #. module: event
@@ -4768,6 +4907,16 @@ msgstr ""
 #. module: event
 #: model:event.type,name:event.event_type_1
 msgid "Training"
+msgstr ""
+
+#. module: event
+#: model:ir.module.module,summary:base.module_event
+msgid "Trainings, Conferences, Meetings, Exhibitions, Registrations"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
+msgid "Transaction"
 msgstr ""
 
 #. module: event
@@ -4886,7 +5035,7 @@ msgstr ""
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
-msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
+msgid "Use the breadcrumbs to go back to your kanban overview."
 msgstr ""
 
 #. module: event
@@ -4947,18 +5096,6 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
-#: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: event
-#: model:ir.model.fields,help:event.field_event_event__website_message_ids
-#: model:ir.model.fields,help:event.field_event_registration__website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__weeks
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_unit__weeks
 msgid "Weeks"
@@ -4999,6 +5136,15 @@ msgstr ""
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
 msgid "You are truly among the best."
+msgstr ""
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_registration.py:0
+msgid ""
+"You cannot cancel the last attendance of the sub-registration with id: %"
+"(registration_id)s. Please try again from the original registration of this "
+"attendee."
 msgstr ""
 
 #. module: event

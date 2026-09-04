@@ -11,7 +11,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2023, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Adrian Cocos <adrian.cocos@capps.ai>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
@@ -19,9 +19,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 23:41+0000\n"
+"PO-Revision-Date: 2026-07-22 02:27+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-4/"
 "stock/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -332,8 +332,9 @@ msgstr "'Lot-Serial - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
+#, fuzzy
 msgid "'Operation-type - %s' % object.name"
-msgstr ""
+msgstr "'Tip operațiune - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
@@ -724,8 +725,9 @@ msgstr "<span class=\"o_stat_text\">Rute</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Rebut</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -1095,8 +1097,9 @@ msgstr "Activitate Excepție Decorare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Planuri de activitate"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -2194,13 +2197,15 @@ msgstr "Confirmă"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "Confirmă comanda"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Confirmation Email"
-msgstr ""
+msgstr "E-mail de confirmare"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -3237,8 +3242,9 @@ msgstr "Diferență"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
+#, fuzzy
 msgid "Digest"
-msgstr ""
+msgstr "Rezumat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3559,14 +3565,16 @@ msgstr "Excepție:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Exchange"
-msgstr ""
+msgstr "Schimb Valutar"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "Estimat"
 
 #. module: stock
 #. odoo-python
@@ -5406,8 +5414,9 @@ msgstr "Lot/Număr Serial Relocat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
+#, fuzzy
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Lot/Serie Nr."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -6077,8 +6086,9 @@ msgstr "Nu a fost găsit niciun transfer. Să creăm unul!"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "Fără"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6174,6 +6184,7 @@ msgstr "Octombrie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
 "print instantly,\n"
@@ -6182,6 +6193,12 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"Odoo deschide implicit o previzualizare PDF. Dacă (doar utilizatorii "
+"Enterprise) doriți să imprimați instantaneu,\n"
+"                                        instalați aplicația IoT pe un "
+"computer care este pe aceeași rețea locală ca și\n"
+"                                        operatorul de coduri de bare și "
+"configurați rutarea rapoartelor."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -6879,8 +6896,9 @@ msgstr "Instrucțiuni specifice partenerului"
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
+#, fuzzy
 msgid "Pay now"
-msgstr ""
+msgstr "Achită acum"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
@@ -6954,8 +6972,9 @@ msgstr "Operații ridicare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
+#, fuzzy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Politica de ridicare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -7004,8 +7023,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "Preceding operations"
-msgstr ""
+msgstr "Operațiuni anterioare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -7020,8 +7040,9 @@ msgstr "Fișă tehnologică preferată"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Valoarea prefixului înregistrării pentru secvența"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -8106,8 +8127,9 @@ msgstr "Metodă Rezervare"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "Rezervă"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8261,8 +8283,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
+#, fuzzy
 msgid "Revert"
-msgstr ""
+msgstr "Revenire"
 
 #. module: stock
 #. odoo-python
@@ -8435,8 +8458,9 @@ msgstr "Eșantion de date"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "Salvează"
 
 #. module: stock
 #. odoo-python
@@ -8542,8 +8566,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, fuzzy
 msgid "Scrapped"
-msgstr ""
+msgstr "Rebutat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -8632,9 +8657,12 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Send an automatic confirmation Text Message when Delivery Orders are done"
 msgstr ""
+"Trimiteți un mesaj text automat de confirmare atunci când comenzile de "
+"livrare sunt finalizate"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -9331,8 +9359,9 @@ msgstr "Validare text stoc cu mișcare de stoc"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "Stock To Reserve:"
-msgstr ""
+msgstr "Stoc de rezervat:"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenishment_info
@@ -10168,8 +10197,9 @@ msgstr "Orizont de timp"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
+#, fuzzy
 msgid "Time to replenish:"
-msgstr ""
+msgstr "Timp pentru reaprovizionare:"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
@@ -10761,8 +10791,9 @@ msgstr "Validează"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Validare inventar"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10953,8 +10984,9 @@ msgstr "Rutele depozitului"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
+#, fuzzy
 msgid "Warehouse:"
-msgstr ""
+msgstr "Depozit:"
 
 #. module: stock
 #. odoo-javascript
@@ -11147,8 +11179,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "When to start shipping"
-msgstr ""
+msgstr "Când să începeți expedierea"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -11789,8 +11822,9 @@ msgstr "de exemplu. Recepție în doi pași"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
+#, fuzzy
 msgid "expected on"
-msgstr ""
+msgstr "așteptat pe"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo
@@ -11842,8 +11876,9 @@ msgstr "de"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "planned on"
-msgstr ""
+msgstr "planificat pe"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11919,308 +11954,245 @@ msgstr ""
 "{{ object.company_id.name }} Comanda de livrare (Ref {{ object.name or 'n/"
 "a' }})"
 
-#~ msgid ""
-#~ "), a replenishment must be done to reach the maximum level of stock ("
-#~ msgstr ""
-#~ "), trebuie făcută o reaprovizionare pentru a atinge nivelul maxim de stoc "
-#~ "("
+msgid "Andrwep"
+msgstr "Andrwep"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d zi(le)"
+msgid "DEMO_DATE"
+msgstr "DATA_DEMO"
 
-#~ msgid "Close"
-#~ msgstr "Închide"
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "NUME_ORIGINE_DEMO_AFIȘAT"
 
-#~ msgid ""
-#~ "Creation date of this move line until updated due to: quantity being "
-#~ "increased, 'picked' status has updated, or move line is done."
-#~ msgstr ""
-#~ "Data creării acestei linii de mișcare până la actualizare din cauza: "
-#~ "creșterii cantității, actualizării stării 'ridicat' sau finalizării "
-#~ "liniei de mișcare."
+msgid "DEMO_PARTNER_NAME"
+msgstr "NUME_PARTENER_DEMONSTRATIV"
 
-#~ msgid ""
-#~ "Estimate the sales volume for the period based on past period or order "
-#~ "the forecasted quantity for that period."
-#~ msgstr ""
-#~ "Estimați volumul vânzărilor pentru perioadă pe baza perioadei trecute sau "
-#~ "comandați cantitatea estimată pentru acea perioadă."
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "NUME_PRODUS_DEMO_AFIȘAT"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
+msgid "DEMO_QUANTITY"
+msgstr "CANTITATE_DEMONSTRATIVA"
 
-#~ msgid "In %s day(s)"
-#~ msgstr "În %s zi(e)"
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "NUME_AFIȘAT_SURSĂ_DEMO"
 
-#~ msgid "Min - Max"
-#~ msgstr "Min - Max"
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
 
-#~ msgid "Ordering Frequency: On demand"
-#~ msgstr "Frecvența de comandare: La cerere"
+msgid "Demo Display Name"
+msgstr "Nume Afișat Demonstrativ"
 
-#~ msgid "Stock level to reach when replenishing."
-#~ msgstr "Nivelul stocului de atins la reaprovizionare."
+msgid "Dispatch Management System"
+msgstr "Sistem de management al livrărilor"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "Informații de reaprovizionare furnizor stoc"
+msgid "Expected Delivery:"
+msgstr "Livrare estimată:"
 
-#~ msgid "The minimum Stock level that will trigger a replenishment."
-#~ msgstr "Nivelul minim de stoc care va declanșa o reaprovizionare."
+msgid ""
+"If this checkbox is ticked, Odoo will automatically show the reception "
+"report (if there are moves to allocate to) when validating."
+msgstr ""
+"Dacă această casetă de selectare este bifată, Odoo va afișa automat raportul "
+"de primire (dacă există mișcări de alocare) la validare."
 
-#~ msgid "When the stock level at the forecasted date is below the minimum ("
-#~ msgstr "Când nivelul stocului la data prognozată este sub minim ("
+msgid "No %s selected or a delivery order selected"
+msgstr "Niciun %s selectat sau o comandă de livrare selectată"
+
+msgid "Print Label"
+msgstr "Tipăriți eticheta"
+
+msgid "Reason"
+msgstr "Motiv"
+
+msgid "Show Reception Report at Validation"
+msgstr "Afișare raport de primire la validare"
+
+msgid "Stock Reception Report"
+msgstr "Raport de primire stoc"
+
+msgid "This report cannot be used for done and not done %s at the same time"
+msgstr ""
+"Acest raport nu poate fi utilizat pentru %s finalizat și nefinalizat în "
+"același timp"
 
-#~ msgid "Choose your date"
-#~ msgstr "Alegeți data"
+msgid "Transport management: organize packs in your fleet, or carriers."
+msgstr ""
+"Managementul transportului: organizează pachetele în flota ta sau la "
+"transportatori."
 
-#~ msgid "Location Barcode"
-#~ msgstr "Cod de bare Locație"
+msgid "Use Reception Report"
+msgstr "Folosește raportul de primire"
 
-#~ msgid "Product Catalog Mixin"
-#~ msgstr "Mixin catalog produs"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"Nu toate componentele au putut fi rezervate. Faceți clic pe butonul "
+"\"Verificați disponibilitatea\" pentru a încerca rezervarea componentelor."
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "Istoricul cantităților de stoc"
+msgid "Check Availability"
+msgstr "Verifică disponibilitatea"
 
-#~ msgid "Andrwep"
-#~ msgstr "Andrwep"
+msgid "Click or press enter to add a description"
+msgstr "Apasă sau apasă Enter pentru a adăuga o descriere"
 
-#~ msgid "DEMO_DATE"
-#~ msgstr "DATA_DEMO"
+msgid "Compute shipping costs and ship with DHL"
+msgstr "Calculați costurile de transport și expediați cu DHL"
 
-#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
-#~ msgstr "NUME_ORIGINE_DEMO_AFIȘAT"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu DHL<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
-#~ msgid "DEMO_PARTNER_NAME"
-#~ msgstr "NUME_PARTENER_DEMONSTRATIV"
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "Calculați costurile de transport și expediați cu Easypost"
 
-#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
-#~ msgstr "NUME_PRODUS_DEMO_AFIȘAT"
+msgid "Compute shipping costs and ship with Envia.com"
+msgstr "Calculați costurile de transport și expediați cu Envia.com"
 
-#~ msgid "DEMO_QUANTITY"
-#~ msgstr "CANTITATE_DEMONSTRATIVA"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "Calculați costurile de transport și expediați cu FedEx"
 
-#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
-#~ msgstr "NUME_AFIȘAT_SURSĂ_DEMO"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu FedEx<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
-#~ msgid "DEMO_UOM"
-#~ msgstr "DEMO_UOM"
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Calculați costurile de transport și expediați cu Sendcloud"
 
-#~ msgid "Demo Display Name"
-#~ msgstr "Nume Afișat Demonstrativ"
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "Calculați costurile de transport și expediați cu Shiprocket"
 
-#~ msgid "Dispatch Management System"
-#~ msgstr "Sistem de management al livrărilor"
+msgid "Compute shipping costs and ship with Starshipit"
+msgstr "Calculează costurile de transport și expediază cu Starshipit"
 
-#~ msgid "Expected Delivery:"
-#~ msgstr "Livrare estimată:"
+msgid "Compute shipping costs and ship with UPS"
+msgstr "Calculați costurile de transport și expediați cu UPS"
 
-#~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically show the reception "
-#~ "report (if there are moves to allocate to) when validating."
-#~ msgstr ""
-#~ "Dacă această casetă de selectare este bifată, Odoo va afișa automat "
-#~ "raportul de primire (dacă există mișcări de alocare) la validare."
-
-#~ msgid "No %s selected or a delivery order selected"
-#~ msgstr "Niciun %s selectat sau o comandă de livrare selectată"
-
-#~ msgid "Print Label"
-#~ msgstr "Tipăriți eticheta"
-
-#~ msgid "Reason"
-#~ msgstr "Motiv"
-
-#~ msgid "Show Reception Report at Validation"
-#~ msgstr "Afișare raport de primire la validare"
-
-#~ msgid "Stock Reception Report"
-#~ msgstr "Raport de primire stoc"
-
-#~ msgid "This report cannot be used for done and not done %s at the same time"
-#~ msgstr ""
-#~ "Acest raport nu poate fi utilizat pentru %s finalizat și nefinalizat în "
-#~ "același timp"
-
-#~ msgid "Transport management: organize packs in your fleet, or carriers."
-#~ msgstr ""
-#~ "Managementul transportului: organizează pachetele în flota ta sau la "
-#~ "transportatori."
-
-#~ msgid "Use Reception Report"
-#~ msgstr "Folosește raportul de primire"
-
-#~ msgid ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                All products could not be reserved. Click "
-#~ "on the \"Check Availability\" button to try to reserve products."
-#~ msgstr ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "Nu toate componentele au putut fi rezervate. Faceți clic pe butonul "
-#~ "\"Verificați disponibilitatea\" pentru a încerca rezervarea componentelor."
+msgid ""
+"Compute shipping costs and ship with UPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu UPS<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
-#~ msgid "Check Availability"
-#~ msgstr "Verifică disponibilitatea"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "Calculați costurile de transport și expediați cu USPS"
 
-#~ msgid "Click or press enter to add a description"
-#~ msgstr "Apasă sau apasă Enter pentru a adăuga o descriere"
-
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "Calculați costurile de transport și expediați cu DHL"
-
-#~ msgid ""
-#~ "Compute shipping costs and ship with DHL<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Calculați costurile de transport și expediați cu DHL<br/>\n"
-#~ "                                    <strong>(vă rugăm să mergeți la "
-#~ "Acasă&gt;Aplicații pentru instalare)</strong>"
-
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "Calculați costurile de transport și expediați cu Easypost"
+msgid ""
+"Compute shipping costs and ship with USPS<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Calculați costurile de transport și expediați cu USPS<br/>\n"
+"                                    <strong>(vă rugăm să mergeți la "
+"Acasă&gt;Aplicații pentru instalare)</strong>"
 
-#~ msgid "Compute shipping costs and ship with Envia.com"
-#~ msgstr "Calculați costurile de transport și expediați cu Envia.com"
+msgid "Compute shipping costs and ship with bpost"
+msgstr "Calculați costurile de transport și expediați cu bpost"
 
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "Calculați costurile de transport și expediați cu FedEx"
-
-#~ msgid ""
-#~ "Compute shipping costs and ship with FedEx<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Calculați costurile de transport și expediați cu FedEx<br/>\n"
-#~ "                                    <strong>(vă rugăm să mergeți la "
-#~ "Acasă&gt;Aplicații pentru instalare)</strong>"
+msgid "DHL Connector"
+msgstr "Conector DHL"
 
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "Calculați costurile de transport și expediați cu Sendcloud"
+msgid "DHL Express Connector"
+msgstr "Conector DHL Express"
 
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "Calculați costurile de transport și expediați cu Shiprocket"
+msgid "Default Return Name"
+msgstr "Returnează Nume Implicit"
 
-#~ msgid "Compute shipping costs and ship with Starshipit"
-#~ msgstr "Calculează costurile de transport și expediază cu Starshipit"
+msgid "Demo Address and Name"
+msgstr "Nume și Adresă Demonstrative"
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "Calculați costurile de transport și expediați cu UPS"
+msgid "Easypost Connector"
+msgstr "Conector Easypost"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with UPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Calculați costurile de transport și expediați cu UPS<br/>\n"
-#~ "                                    <strong>(vă rugăm să mergeți la "
-#~ "Acasă&gt;Aplicații pentru instalare)</strong>"
+msgid "Envia.com Connector"
+msgstr "Conector Envia.com"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "Calculați costurile de transport și expediați cu USPS"
+msgid "FedEx Connector"
+msgstr "Conector FedEx"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with USPS<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Calculați costurile de transport și expediați cu USPS<br/>\n"
-#~ "                                    <strong>(vă rugăm să mergeți la "
-#~ "Acasă&gt;Aplicații pentru instalare)</strong>"
+msgid "Generate Serials/Lots"
+msgstr "Generați Serii/Loturi"
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "Calculați costurile de transport și expediați cu bpost"
+msgid "Import Serials/Lots"
+msgstr "Importați Seriile/Loturile"
 
-#~ msgid "DHL Connector"
-#~ msgstr "Conector DHL"
+msgid "Nothing to check the availability for."
+msgstr "Nu trebuie făcută verificarea disponibilități."
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "Conector DHL Express"
+msgid ""
+"Please put this document inside your return parcel.<br/>\n"
+"                                Your parcel must be sent to this address:"
+msgstr ""
+"Puneți acest document în coletul de retur.<br/>\n"
+"Coletul trebuie trimis la această adresă:"
 
-#~ msgid "Default Return Name"
-#~ msgstr "Returnează Nume Implicit"
+msgid "Sendcloud Connector"
+msgstr "Conector pentru Sendcloud"
 
-#~ msgid "Demo Address and Name"
-#~ msgstr "Nume și Adresă Demonstrative"
+msgid "Shipping Connectors"
+msgstr "Conectori de transport"
 
-#~ msgid "Easypost Connector"
-#~ msgstr "Conector Easypost"
+msgid "Shiprocket Connector"
+msgstr "Conector Shiprocket"
 
-#~ msgid "Envia.com Connector"
-#~ msgstr "Conector Envia.com"
+msgid "Starshipit Connector"
+msgstr "Conector Starshipit"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "Conector FedEx"
+msgid ""
+"Technical field used to compute whether the button \"Check Availability\" "
+"should be displayed."
+msgstr ""
+"Câmp tehnic folosit pentru a calcula dacă butonul \"Check Availability\" ar "
+"trebui să fie afișat."
 
-#~ msgid "Generate Serials/Lots"
-#~ msgstr "Generați Serii/Loturi"
+msgid "UPS Connector"
+msgstr "Conector UPS"
 
-#~ msgid "Import Serials/Lots"
-#~ msgstr "Importați Seriile/Loturile"
+msgid "USPS Connector"
+msgstr "Conector USPS"
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "Nu trebuie făcută verificarea disponibilități."
+msgid "Website Messages"
+msgstr "Mesaje Website"
 
-#~ msgid ""
-#~ "Please put this document inside your return parcel.<br/>\n"
-#~ "                                Your parcel must be sent to this address:"
-#~ msgstr ""
-#~ "Puneți acest document în coletul de retur.<br/>\n"
-#~ "Coletul trebuie trimis la această adresă:"
+msgid "Website communication history"
+msgstr "Istoric comunicare website"
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "Conector pentru Sendcloud"
+msgid "bpost Connector"
+msgstr "Conector bPost"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "Conectori de transport"
+msgid "Demo Lot/SN"
+msgstr "Lot/SN demonstrativ"
 
-#~ msgid "Shiprocket Connector"
-#~ msgstr "Conector Shiprocket"
+msgid "Demo Product"
+msgstr "Produs Demonstrativ"
 
-#~ msgid "Starshipit Connector"
-#~ msgstr "Conector Starshipit"
+msgid "Final Location"
+msgstr "Locație finală"
 
-#~ msgid ""
-#~ "Technical field used to compute whether the button \"Check Availability\" "
-#~ "should be displayed."
-#~ msgstr ""
-#~ "Câmp tehnic folosit pentru a calcula dacă butonul \"Check Availability\" "
-#~ "ar trebui să fie afișat."
+msgid ""
+"The operation brings the products to the intermediate location.But this "
+"operation is part of a chain of operations targeting the final location."
+msgstr ""
+"Operațiunea aduce produsele într-o locație intermediară. Dar această "
+"operațiune face parte dintr-un lanț de operațiuni care vizează locația "
+"finală."
 
-#~ msgid "UPS Connector"
-#~ msgstr "Conector UPS"
+msgid "On hand:"
+msgstr "În stoc:"
 
-#~ msgid "USPS Connector"
-#~ msgstr "Conector USPS"
-
-#~ msgid "Website Messages"
-#~ msgstr "Mesaje Website"
-
-#~ msgid "Website communication history"
-#~ msgstr "Istoric comunicare website"
-
-#~ msgid "bpost Connector"
-#~ msgstr "Conector bPost"
-
-#~ msgid "Demo Lot/SN"
-#~ msgstr "Lot/SN demonstrativ"
-
-#~ msgid "Demo Product"
-#~ msgstr "Produs Demonstrativ"
-
-#~ msgid "Final Location"
-#~ msgstr "Locație finală"
-
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr ""
-#~ "Operațiunea aduce produsele într-o locație intermediară. Dar această "
-#~ "operațiune face parte dintr-un lanț de operațiuni care vizează locația "
-#~ "finală."
-
-#~ msgid "On hand:"
-#~ msgstr "În stoc:"
-
-#~ msgid "Real Quantity"
-#~ msgstr "Cantitate faptică"
+msgid "Real Quantity"
+msgstr "Cantitate faptică"

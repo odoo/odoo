@@ -58,9 +58,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 08:39+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-21 20:51+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -4713,9 +4713,8 @@ msgstr "Kreator automatycznego księgowania rachunków"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "AvaTax"
-msgstr "AvaTax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -11847,9 +11846,8 @@ msgstr "Informacja"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Initial Setup"
-msgstr "Wstępna konfiguracja"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16765,7 +16763,7 @@ msgstr "Druk i reprodukcja"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_id
 msgid "Private Share Account"
-msgstr "Prywatne konto akcyjne"
+msgstr "Prywatne współdzielone konto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_active
@@ -21843,7 +21841,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Ten wpis został odwrócony z %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -25060,213 +25058,3 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (kopia)"
-
-#~ msgid "(copy)"
-#~ msgstr "(kopia)"
-
-#, fuzzy
-#~ msgid "+ Add Section"
-#~ msgstr "+ Dodaj sekcję"
-
-#~ msgid ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
-#~ "t><br/><br/>\n"
-#~ "        Thank you for your payment.\n"
-#~ "        Here is your payment receipt <span style=\"font-weight:bold;\" t-"
-#~ "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
-#~ "span> amounting\n"
-#~ "        to <span style=\"font-weight:bold;\" t-"
-#~ "out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-#~ "span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-#~ "        <br/><br/>\n"
-#~ "        Do not hesitate to contact us if you have any questions.\n"
-#~ "        <br/><br/>\n"
-#~ "        Best regards,\n"
-#~ "        <t t-if=\"not is_html_empty(user.signature)\">\n"
-#~ "            <br/><br/>\n"
-#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
-#~ "><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
-#~ "        </t>\n"
-#~ "    </p>\n"
-#~ "</div>\n"
-#~ msgstr ""
-#~ "<div style=\"margin: 0px; padding: 0px;\">\n"
-#~ "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-#~ "        Dzień dobry <t t-out=\"object.partner_id.name or ''\">Azure "
-#~ "Interior</t><br/><br/>\n"
-#~ "        Dziękujemy za dokonanie płatności.\n"
-#~ "        Oto dowód wpłaty <span style=\"font-weight:bold;\" t-"
-#~ "out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</"
-#~ "span> w kwocie\n"
-#~ "        <span style=\"font-weight:bold;\" t-"
-#~ "out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</"
-#~ "span> od <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-#~ "        <br/><br/>\n"
-#~ "        Jeśli masz jakiekolwiek pytania, nie wahaj się z nami "
-#~ "skontaktować.\n"
-#~ "        <br/><br/>\n"
-#~ "        Z pozdrowieniami,\n"
-#~ "        <t t-if=\"not is_html_empty(user.signature)\">\n"
-#~ "            <br/><br/>\n"
-#~ "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/"
-#~ "><t t-out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
-#~ "        </t>\n"
-#~ "    </p>\n"
-#~ "</div>\n"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-#~ msgstr "<span class=\"o_stat_text\">Wpisy dziennika</span>"
-
-#~ msgid "<span title=\"Latest Statement\">Last Statement</span>"
-#~ msgstr "<span title=\"Latest Statement\">Ostatni wyciąg</span>"
-
-#~ msgid "<span>1.00</span>"
-#~ msgstr "<span>1,00</span>"
-
-#~ msgid "<span>1</span>"
-#~ msgstr "<span>1</span>"
-
-#~ msgid "<span>=</span>"
-#~ msgstr "<span>=</span>"
-
-#~ msgid "CLABE should be a string of 18 digits."
-#~ msgstr "CLABE powinno być ciągiem 18 cyfr."
-
-#~ msgid "Cash Rounding"
-#~ msgstr "Zaokrąglenie gotówki"
-
-#~ msgid "Cash Roundings"
-#~ msgstr "Zaokrąglenie gotówki"
-
-#~ msgid "Create the first cash rounding"
-#~ msgstr "Utwórz pierwsze zaokrąglenie gotówki"
-
-#~ msgid "Define the smallest coinage of the currency used to pay by cash"
-#~ msgstr "Określ najmniejszą walutę używaną do płatności gotówką"
-
-#~ msgid "Exchange Rate Currency Code"
-#~ msgstr "Kod waluty kursu wymiany"
-
-#~ msgid "Exclude this journal entry from follow-up reports."
-#~ msgstr "Wyklucz ten wpis z raportów z działań następczych."
-
-#~ msgid "Exclude this journal item from follow-up reports."
-#~ msgstr "Wyklucz tę pozycję dziennika z dalszych raportów."
-
-#~ msgid "Is Sale Installed"
-#~ msgstr "Czy Sprzedaż jest zainstalowana?"
-
-#~ msgid "No Follow-Up"
-#~ msgstr "Brak dalszych działań"
-
-#~ msgid "Not Due"
-#~ msgstr "Nie należy się"
-
-#~ msgid "Online Payments"
-#~ msgstr "Płatności online"
-
-#~ msgid "Open On"
-#~ msgstr "Otwórz na"
-
-#~ msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
-#~ msgstr ""
-#~ "Reprezentuje najmniejszą wartość różną od zera monet (na przykład 0,05)."
-
-#~ msgid "Rounding Precision"
-#~ msgstr "Precyzja zaokrąglania"
-
-#~ msgid "Rounding Strategy"
-#~ msgstr "Strategia zaokrąglenia"
-
-#~ msgid "Send invoices and payment follow-ups by post"
-#~ msgstr "Wysyłaj pocztą faktury i potwierdzenia płatności"
-
-#~ msgid ""
-#~ "Specify which way will be used to round the invoice amount to the "
-#~ "rounding precision"
-#~ msgstr ""
-#~ "Określ, w jaki sposób zaokrąglić kwotę faktury do dokładności zaokrąglenia"
-
-#~ msgid ""
-#~ "The IBAN does not seem to be correct. You should have entered something "
-#~ "like this %s\n"
-#~ "Where B = National bank code, S = Branch code, C = Account No, k = Check "
-#~ "digit"
-#~ msgstr ""
-#~ "Numer IBAN wydaje się być nieprawidłowy. Należy wprowadzić coś w rodzaju: "
-#~ "%s\n"
-#~ "Gdzie B = kod banku krajowego, S = kod oddziału, C = numer konta, k = "
-#~ "cyfra kontrolna"
-
-#~ msgid "The IBAN is invalid, it should begin with the country code"
-#~ msgstr "Numer IBAN jest nieprawidłowy, powinien zaczynać się od kodu kraju"
-
-#~ msgid "The running balance (%s) doesn't match the specified ending balance."
-#~ msgstr "Saldo bieżące (%s) nie jest zgodne z podanym saldem końcowym."
-
-#~ msgid ""
-#~ "The starting balance doesn't match the ending balance of the previous "
-#~ "statement, or an earlier statement is missing."
-#~ msgstr ""
-#~ "Bilans początkowy nie zgadza się z bilansem końcowym poprzedniego "
-#~ "zestawienia lub brakuje wcześniejszego zestawienia."
-
-#~ msgid "The tie-breaking rule used for float rounding operations"
-#~ msgstr "Reguła tie-breaking stosowana do operacji zaokrąglania po przecinku"
-
-#~ msgid "There is no IBAN code."
-#~ msgstr "Nie ma żadnego kodu IBAN."
-
-#~ msgid "This CLABE does not pass the checksum check, please verify it."
-#~ msgstr ""
-#~ "Niniejszy plik CLABE nie przeszedł kontroli sumy kontrolnej, proszę to "
-#~ "zweryfikować."
-
-#~ msgid "This IBAN does not pass the validation check, please verify it."
-#~ msgstr ""
-#~ "Ten numer IBAN nie przeszedł kontroli poprawności, proszę go zweryfikować."
-
-#~ msgid "This Week"
-#~ msgstr "Ten tydzień"
-
-#~ msgid "Units"
-#~ msgstr "Jednostki"
-
-#~ msgid ""
-#~ "You can not archive a journal containing draft journal entries.\n"
-#~ "\n"
-#~ "To proceed:\n"
-#~ "1/ click on the top-right button 'Journal Entries' from this journal "
-#~ "form\n"
-#~ "2/ then filter on 'Draft' entries\n"
-#~ "3/ select them all and post or delete them through the action menu"
-#~ msgstr ""
-#~ "Nie można zarchiwizować dziennika zawierającego wstępne wpisy dziennika.\n"
-#~ "\n"
-#~ "Aby kontynuować:\n"
-#~ "1/ z poziomu tego formularza dziennika kliknąć prawy górny przycisk "
-#~ "'Wpisy do dziennika'\n"
-#~ "2/ następnie wyfiltrować wpisy w wersji roboczej\n"
-#~ "3/ zaznaczyć je wszystkie i opublikować lub usunąć poprzez menu akcji"
-
-#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
-#~ msgstr ""
-#~ "Nie możesz modyfikować następujących pól tylko do odczytu na "
-#~ "opublikowanym ruchu: %s"
-
-#~ msgid "You cannot reset to draft a tax cash basis journal entry."
-#~ msgstr ""
-#~ "Nie można zresetować, aby sporządzić wpis do dziennika dotyczący zasady "
-#~ "kasowości podatkowej."
-
-#~ msgid ""
-#~ "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/"
-#~ "a' }})"
-#~ msgstr ""
-#~ "{{ object.company_id.name }} Pokwitowanie zapłaty (Ref {{ object.name or "
-#~ "'n/a' }})"

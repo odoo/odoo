@@ -14,9 +14,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 17:33+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-23 08:12+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
 "delivery/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,10 @@ msgid ""
 "object.name)\n"
 "        "
 msgstr ""
+"\n"
+"            \"Leveringsbon - %s - %s\" % (object.partner_id.name of \"\", "
+"object.name)\n"
+"        "
 
 #. module: delivery
 #: model:ir.module.module,description:base.module_delivery
@@ -93,6 +97,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
+"        Je bestelling is verzonden.\n"
+"        <t t-if=\"object.tracking_ref\">\n"
+"            Je trackingreferentie is\n"
+"            <strong>\n"
+"                <t t-if=\"object.tracking_url\">\n"
+"                    <a t-attf-href=\"{{ object.tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.tracking_ref\"/>.\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <t t-out=\"object.tracking_ref\"/>.\n"
+"                </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Zie bijgevoegd je leveringsorder voor meer details.<br/><br/>\n"
+"        Bedankt,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -144,17 +176,17 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<span>Delivery Note</span>"
-msgstr ""
+msgstr "<span>Leveringsbon</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Klant</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery Address</strong>"
-msgstr ""
+msgstr "<strong>Afleveradres</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_report_saleorder_document
@@ -164,27 +196,27 @@ msgstr "<strong>Beschrijving van de levering</strong>"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Delivery method</strong>"
-msgstr ""
+msgstr "<strong>Leveringsmethode</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Order</strong>"
-msgstr ""
+msgstr "<strong>Order</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Remaining quantities to ship:</strong>"
-msgstr ""
+msgstr "<strong>Resterende te verzenden hoeveelheden:</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Shipping Date</strong>"
-msgstr ""
+msgstr "<strong>Verzenddatum</strong>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "<strong>Tracking Number</strong>"
-msgstr ""
+msgstr "<strong>Trackingnummer:</strong>"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
@@ -193,11 +225,14 @@ msgid ""
 "customers on the Sales Order and sales confirmation email. E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Een beschrijving van de leveringsmethode die je aan je klanten wilt meedelen "
+"op de verkooporder en in de e-mail met de verkoopbevestiging. Bv. "
+"instructies die klanten moeten volgen."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders."
-msgstr ""
+msgstr "Actie bij het bevestigen van leveringsorders."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -242,6 +277,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency."
 msgstr ""
+"Orderbedrag om te kunnen genieten van gratis verzending, uitgedrukt in de "
+"bedrijfsvaluta."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -299,7 +336,7 @@ msgstr "Betaling bij levering"
 #. odoo-python
 #: code:addons/delivery/models/payment_provider.py:0
 msgid "Cash on delivery not allowed by selected delivery method"
-msgstr ""
+msgstr "Contant bij levering is niet toegestaan voor de gekozen verzendmethode"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -316,17 +353,17 @@ msgstr "Voorwaarde"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Configuratie-instellingen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Configure Methods"
-msgstr ""
+msgstr "Methoden configureren"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Confirm Shipment"
-msgstr ""
+msgstr "Verzending bevestigen"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
@@ -451,23 +488,23 @@ msgstr "Verzendmethoden"
 #: model:ir.actions.report,name:delivery.action_report_delivery_note
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_form_view
 msgid "Delivery Note"
-msgstr ""
+msgstr "Leveringsbon"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard_line
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_note_list_view
 msgid "Delivery Note Line"
-msgstr ""
+msgstr "Leveringsbonregel"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__note_id
 msgid "Delivery Note Reference"
-msgstr ""
+msgstr "Leveringsbonreferentie"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_note_wizard
 msgid "Delivery Note Wizard"
-msgstr ""
+msgstr "Wizard leveringsbon"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -503,7 +540,7 @@ msgstr "Leveringskosten moeten opnieuw berekend worden"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__dm_id
 msgid "Delivery method"
-msgstr ""
+msgstr "Leveringsmethode"
 
 #. module: delivery
 #. odoo-python
@@ -641,7 +678,7 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Find a Delivery Provider"
-msgstr ""
+msgstr "Vind een bezorgdienst"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_margin
@@ -704,6 +741,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping."
 msgstr ""
+"Als het totaal bedrag van de order (excl. verzending) groter of gelijk is "
+"aan deze waarde, kan de klant profiteren van gratis verzending."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__max_volume
@@ -726,7 +765,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_image
 msgid "Image 128"
-msgstr ""
+msgstr "Afbeelding 128"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -859,12 +898,12 @@ msgstr "Niet beschikbaar voor huidige order"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__name
 msgid "Note Reference"
-msgstr ""
+msgstr "Leveringsbonreferentie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__note_line_ids
 msgid "Operations"
-msgstr ""
+msgstr "Bewerkingen"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -879,12 +918,12 @@ msgstr "Order"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__so_reference
 msgid "Order reference"
-msgstr ""
+msgstr "Orderreferentie"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_method
 msgid "Payment Method"
-msgstr ""
+msgstr "Betaalmethode"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_payment_provider
@@ -947,7 +986,7 @@ msgstr "Prijsregels"
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_id
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Product"
-msgstr ""
+msgstr "Product"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
@@ -976,7 +1015,7 @@ msgstr "Aantal"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__remaining_qty_to_ship
 msgid "Remaining Qty To Ship"
-msgstr ""
+msgstr "Resterend aantal te verzenden"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1007,7 +1046,7 @@ msgstr "Verkooporderregel"
 #. module: delivery
 #: model:mail.template,description:delivery.mail_template_data_delivery_note
 msgid "Sent to the customers when orders are shipped."
-msgstr ""
+msgstr "Wordt naar de klanten verzonden wanneer bestellingen worden verzonden."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -1029,23 +1068,23 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Ship"
-msgstr ""
+msgstr "Verzenden"
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "Ship Order %s"
-msgstr ""
+msgstr "Order %s verzenden"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_delivery_note
 msgid "Shipped"
-msgstr ""
+msgstr "Verzonden"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "Verzenddatum"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
@@ -1064,12 +1103,12 @@ msgstr ""
 #. module: delivery
 #: model:mail.template,name:delivery.mail_template_data_delivery_note
 msgid "Shipping: Send by Email"
-msgstr ""
+msgstr "Verzending: Verzenden per e-mail"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__sol_id
 msgid "Source Sale Order Line"
-msgstr ""
+msgstr "Bron verkooporderregel"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -1085,7 +1124,7 @@ msgstr "Staten / Provincies"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_cash_on_delivery
 msgid "Supports Cash On Delivery"
-msgstr ""
+msgstr "Ondersteunt cash bij levering"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -1188,17 +1227,17 @@ msgstr "Traceerlink"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Referentie"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "Trackinglink"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard_line__product_uom_id
 msgid "Unit"
-msgstr ""
+msgstr "Eenheid"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1231,7 +1270,7 @@ msgstr "Variabele Factor"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable_unit
 msgid "Variable Unit"
-msgstr ""
+msgstr "Variabele eenheid"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -1283,6 +1322,13 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Je kunt de verzendkosten niet bijwerken voor een bestelling die al is "
+"gefactureerd!\n"
+"\n"
+"De volgende leveringsregels (product, gefactureerde hoeveelheid en prijs) "
+"zijn al verwerkt:\n"
+"\n"
+"%s"
 
 #. module: delivery
 #. odoo-python
@@ -1307,7 +1353,7 @@ msgstr "Je betaling is geannuleerd."
 #. module: delivery
 #: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
 msgid "Your payment has been processed but is waiting for approval."
-msgstr ""
+msgstr "Je betaling is verwerkt, maar wacht nog op goedkeuring."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list
@@ -1336,6 +1382,5 @@ msgid ""
 "{{ object.so_id.company_id.name }} Shipping Confirmation (Ref "
 "{{ object.so_id.name or 'n/a' }})"
 msgstr ""
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (kopie)"
+"{{ object.so_id.company_id.name }} Verzendbevestiging (Ref. "
+"{{ object.so_id.name or 'n/a' }})"

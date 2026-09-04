@@ -8,14 +8,15 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:40+0000\n"
-"PO-Revision-Date: 2026-06-21 17:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-17 15:21+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
 "sale_management/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -75,12 +76,12 @@ msgstr "Actief"
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Add Section"
-msgstr ""
+msgstr "Sectie toevoegen"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a note"
-msgstr "Voeg een notitie toe"
+msgstr "Notitie toevoegen"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -121,7 +122,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__user_has_access
 msgid "Can User access"
-msgstr ""
+msgstr "Gebruikerstoegang mogelijk"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_composition
@@ -143,7 +144,7 @@ msgstr "Bedrijf"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Confirmation"
-msgstr ""
+msgstr "Bevestiging"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
@@ -170,7 +171,7 @@ msgstr "Aangemaakt op"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_custom_attribute_value_ids
@@ -181,7 +182,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
-msgstr ""
+msgstr "Verwijderen"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
@@ -197,12 +198,12 @@ msgstr "Overzicht"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Disc %"
-msgstr ""
+msgstr "Kort.%"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "Korting (%)"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__display_name
@@ -212,7 +213,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__display_name
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__display_type
@@ -252,7 +253,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__has_productless_lines
 msgid "Has Productless Lines"
-msgstr ""
+msgstr "Heeft regels zonder product"
 
 #. module: sale_management
 #. odoo-python
@@ -291,16 +292,18 @@ msgid ""
 "If unchecked, it will allow you to hide the Order template without removing "
 "it."
 msgstr ""
+"Als dit niet is aangevinkt, kun je het ordersjabloon verbergen zonder het te "
+"verwijderen."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturatie"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__mandatory_product
 msgid "Is Product Mandatory"
-msgstr ""
+msgstr "Is Verplicht product"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__is_configurable_product
@@ -310,7 +313,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
 msgid "Journal"
-msgstr ""
+msgstr "Dagboek"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -338,25 +341,25 @@ msgstr "Regels"
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required UoM on accountable sale quote line."
-msgstr ""
+msgstr "Verplichte maateenheid ontbreekt op verrekenbare verkoopofferteregel."
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/views/components/template_dropdown.xml:0
 msgid "New"
-msgstr ""
+msgstr "Nieuw"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/views/components/template_dropdown.xml:0
 msgid "New Quotation"
-msgstr ""
+msgstr "Nieuwe offerte"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "New Section"
-msgstr ""
+msgstr "Nieuwe sectie"
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -396,7 +399,7 @@ msgstr "Optionele sectie"
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_template
 msgid "Order Templates"
-msgstr ""
+msgstr "Ordersjablonen"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
@@ -443,7 +446,7 @@ msgstr "Aantal"
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template__template_type__quotation
 msgid "Quotation"
-msgstr ""
+msgstr "Offerte"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
@@ -520,18 +523,18 @@ msgstr "Verkooporderregel"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__team_ids
 msgid "Sales Team"
-msgstr ""
+msgstr "Verkoopteam"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Save as Template"
-msgstr ""
+msgstr "Opslaan als sjabloon"
 
 #. module: sale_management
 #: model:ir.actions.server,name:sale_management.model_sale_order_action_create_quotation_template
 msgid "Save as template"
-msgstr ""
+msgstr "Opslaan als sjabloon"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -553,7 +556,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Section Templates"
-msgstr ""
+msgstr "Sectiesjablonen"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__section_uom_id
@@ -564,13 +567,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "Section template %s created successfully"
-msgstr ""
+msgstr "Sectiesjabloon %s succesvol aangemaakt"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "Section template %s updated successfully"
-msgstr ""
+msgstr "Sectiesjabloon %s succesvol bijgewerkt"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
@@ -580,8 +583,8 @@ msgid ""
 "feature also exists in the Purchase application."
 msgstr ""
 "Verkoop je hetzelfde product in verschillende maten of kleuren? Probeer het "
-"productmatrix en vul je orders met meerdere hoeveelheden van elke variant. "
-"Deze functie bestaat ook in de inkoop app."
+"productraster en vul je orders met meerdere hoeveelheden van elke variant. "
+"Deze functie bestaat ook in de Inkoop-app."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sequence
@@ -599,12 +602,12 @@ msgstr "Optionele instelling activeren"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Settings"
-msgstr ""
+msgstr "Instellingen"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__share_template
 msgid "Share"
-msgstr ""
+msgstr "Delen"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
@@ -628,26 +631,26 @@ msgstr "Subsectie"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__tax_ids
 msgid "Taxes"
-msgstr ""
+msgstr "Btw"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order__sale_order_template_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
 msgid "Template"
-msgstr ""
+msgstr "Sjabloon"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order.py:0
 msgid "Template from %s"
-msgstr ""
+msgstr "Sjabloon van %s"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
 #: model:ir.ui.menu,name:sale_management.sale_order_template_menu
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Templates"
-msgstr ""
+msgstr "Sjablonen"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -701,7 +704,7 @@ msgstr "Tip: verkoop of koop producten in bulk met matrices"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__template_type
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
@@ -711,7 +714,7 @@ msgstr "Eenheid"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__price_unit
 msgid "Unit Price"
-msgstr ""
+msgstr "Prijs per stuk"
 
 #. module: sale_management
 #. odoo-javascript
@@ -753,7 +756,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "You cannot save a section with combo lines as a template"
-msgstr ""
+msgstr "Je kunt een sectie met comboregels niet als sjabloon opslaan"
 
 #. module: sale_management
 #. odoo-python
@@ -809,29 +812,16 @@ msgstr "dagen"
 msgid "e.g. Standard Consultancy Package"
 msgstr "bijv. Standaard consultancypakket"
 
-#~ msgid "Online Payment"
-#~ msgstr "Online betaling"
+msgid "Config Settings"
+msgstr "Configuratie-instellingen"
 
-#~ msgid "Prepayment percentage"
-#~ msgstr "Percentage vooruitbetaling"
+msgid "Create standardized offers with default products"
+msgstr "Maak gestandaardiseerde offertes met standaard producten"
 
-#~ msgid ""
-#~ "Request an online payment to the customer in order to confirm orders "
-#~ "automatically."
-#~ msgstr ""
-#~ "Vraag een online betaling aan de klant om automatisch de orders te "
-#~ "bevestigen."
+msgid "Missing required product and UoM on accountable sale quote line."
+msgstr ""
+"Ontbrekend verplicht product en maateenheid op verrekenbare "
+"verkoopofferteregel."
 
-#~ msgid "Config Settings"
-#~ msgstr "Configuratie-instellingen"
-
-#~ msgid "Create standardized offers with default products"
-#~ msgstr "Maak gestandaardiseerde offertes met standaard producten"
-
-#~ msgid "Missing required product and UoM on accountable sale quote line."
-#~ msgstr ""
-#~ "Ontbrekend verplicht product en maateenheid op verrekenbare "
-#~ "verkoopofferteregel."
-
-#~ msgid "Invoicing Journal"
-#~ msgstr "Facturatiedagboek"
+msgid "Invoicing Journal"
+msgstr "Facturatiedagboek"

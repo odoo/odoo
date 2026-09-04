@@ -8,15 +8,15 @@
 # Linkup <link-up@naver.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-20 05:33+0000\n"
+"PO-Revision-Date: 2026-07-21 01:39+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/sale/"
+"Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-4/sale/"
 "ko/>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -1098,8 +1098,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_storable
+#, fuzzy
 msgid "A storable product is a product for which you manage stock."
-msgstr ""
+msgstr "저장 가능 품목이란 재고로 관리되는 품목입니다."
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -1244,8 +1245,9 @@ msgstr "그리드에서 주문서로 여러 세부선택 항목을 추가합니�
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Add to order"
-msgstr ""
+msgstr "주문 추가"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1324,8 +1326,9 @@ msgstr "금액:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
+#, fuzzy
 msgid "Analytic Account"
-msgstr ""
+msgstr "분석 계정"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1474,11 +1477,15 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__delivery_status
+#, fuzzy
 msgid ""
 "Blue: Not Delivered/Started\n"
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"파란색: 배송되지 않음/시작되지 않음\n"
+"            주황색: 부분 배송됨\n"
+"            녹색: 배송 완료됨"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
@@ -1657,8 +1664,9 @@ msgstr "환경설정 클릭"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+#, fuzzy
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "청구서 발행 대상을 지정하려면 클릭하세요."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -1747,8 +1755,9 @@ msgstr "환경설정"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "배송 방법 설정"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1772,8 +1781,9 @@ msgstr "승인"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
+#, fuzzy
 msgid "Confirm Orders"
-msgstr ""
+msgstr "주문 확인"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2147,8 +2157,9 @@ msgstr "배송 상태"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
+#, fuzzy
 msgid "Delivery Time"
-msgstr ""
+msgstr "배송 기간"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2165,10 +2176,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
+#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"일 단위의 배송 리드타임입니다. 판매 주문 확인에서 배송까지 고객에게 약속된 날"
+"짜수입니다."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2541,8 +2555,9 @@ msgstr "행 추가됨:%s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Financial Account"
-msgstr ""
+msgstr "재무 계정"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2551,11 +2566,14 @@ msgstr "재정 위치"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+#, fuzzy
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"재정 위치는 특정 고객이나 판매주문서/청구서용으로 세금 및 계정을 조정할 때 사"
+"용합니다. 기본값은 고객 정보에서 가져옵니다."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2857,8 +2875,9 @@ msgstr "주문서 상"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Included"
-msgstr ""
+msgstr "포함 사항"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -2885,10 +2904,11 @@ msgstr "사용자가 설정한 파트너 또는 품목 에 대한 내부 경고�
 #: model:ir.model.fields,help:sale.field_res_partner__incoterm_id
 #: model:ir.model.fields,help:sale.field_res_users__incoterm_id
 #: model:ir.model.fields,help:sale.field_sale_order__incoterm
+#, fuzzy
 msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
-msgstr ""
+msgstr "인코텀즈란 해외 업체와 거래할 때 통용되는 상업 용어입니다."
 
 #. module: sale
 #. odoo-python
@@ -3570,8 +3590,9 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "사용"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -4198,8 +4219,9 @@ msgstr "견적서 #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
+#, fuzzy
 msgid "Quotation / Order"
-msgstr ""
+msgstr "견적 / 주문"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4355,8 +4377,9 @@ msgstr ""
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "제거"
 
 #. module: sale
 #. odoo-javascript
@@ -5415,8 +5438,9 @@ msgstr "제품 (%(product)s)에 호환되지 않는 값이 있습니다: %(value
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/payment_link_wizard.py:0
+#, fuzzy
 msgid "The sale order has expired."
-msgstr ""
+msgstr "만료된 판매주문서입니다."
 
 #. module: sale
 #. odoo-python
@@ -5714,8 +5738,9 @@ msgstr "UTM 캠페인"
 #: model:ir.model.fields,field_description:sale.field_account_move__utm_reference
 #: model:ir.model.fields,field_description:sale.field_sale_order__utm_reference
 #: model:ir.model.fields,field_description:sale.field_sale_report__utm_reference
+#, fuzzy
 msgid "UTM Reference"
-msgstr ""
+msgstr "UTM 참조 번호"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_to_invoice
@@ -5858,8 +5883,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "회사별로 다르게 설정됩니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -6032,8 +6058,9 @@ msgstr "내 주문"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "이 브라우저는 iframe을 지원하지 않습니다."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -6186,159 +6213,20 @@ msgid ""
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
 
-#~ msgid ""
-#~ ", it's 100% free! You'll save time creating beautiful quotations and "
-#~ "track sales."
-#~ msgstr ""
-#~ ", 완전 무료입니다! 매력적인 견적을 작성하고 효율적으로 판매를 추적하여 시"
-#~ "간을 절약할 수 있습니다."
+msgid "<i class=\"oi me-1\" data-icon=\"print\"/>View Details"
+msgstr "<i class=\"oi me-1\" data-icon=\"print\"/> 상세 보기"
 
-#~ msgid "<i class=\"oi me-1\" data-icon=\"print\"/>View Details"
-#~ msgstr "<i class=\"oi me-1\" data-icon=\"print\"/> 상세 보기"
+msgid "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Feedback"
+msgstr "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> 피드백"
 
-#~ msgid "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> Feedback"
-#~ msgstr "<i class=\"oi oi-filled\" data-icon=\"chat_bubble\"/> 피드백"
+msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Authorized"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> 인증 완료"
 
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Authorized"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> 인증 완료"
+msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Paid"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> 결제 완료"
 
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Paid"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> 결제 완료"
+msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Reversed"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> 반전"
 
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"check\"/> Reversed"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"check\"/> 반전"
-
-#~ msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Waiting Payment"
-#~ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> 결제 대기 중"
-
-#~ msgid "<small class=\"text-muted\">Your contact</small>"
-#~ msgstr "<small class=\"text-muted\">내 연락처</small>"
-
-#~ msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-#~ msgstr "<small><b class=\"text-muted\">혜택을 확인하세요</b></small>"
-
-#~ msgid "<span>1.00 Units</span>"
-#~ msgstr "<span>1.00 개</span>"
-
-#~ msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-#~ msgstr "<strong class=\"d-block mt-3\">배송지 주소</strong>"
-
-#~ msgid ""
-#~ "An order is to upsell when delivered quantities are above initially\n"
-#~ "            ordered quantities, and the invoicing policy is based on "
-#~ "ordered quantities."
-#~ msgstr ""
-#~ "배송 수량이 처음에 주문한 수량보다 많은 경우, 상향 판매로 봅니다.\n"
-#~ "            주문 수량을 기준으로 청구서를 발행합니다."
-
-#~ msgid ""
-#~ "As an example, if you sell pre-paid hours of services, Odoo recommends "
-#~ "you\n"
-#~ "            to sell extra hours when all ordered hours have been consumed."
-#~ msgstr ""
-#~ "예를 들어, 서비스를 선불 시간제 품목으로 판매하는 경우, Odoo에서는\n"
-#~ "            주문 시간을 전부 소진한 후에 추가 시간을 판매하는 것을 추천하"
-#~ "고 있습니다."
-
-#~ msgid "Connect with your software!"
-#~ msgstr "소프트웨어에 연결하세요!"
-
-#~ msgid "Copy"
-#~ msgstr "사본"
-
-#~ msgid "Date:"
-#~ msgstr "날짜:"
-
-#~ msgid "Delivery Date:"
-#~ msgstr "배송일:"
-
-#~ msgid ""
-#~ "Drag and drop the request for quotation PDF file into your list of "
-#~ "quotations in Odoo. Enjoy the automation!"
-#~ msgstr ""
-#~ "견적서 요청 PDF 파일을 Odoo의 견적서 목록으로 끌어다 놓으세요. 자동화를 즐"
-#~ "겨보세요!"
-
-#~ msgid "Expiration Date:"
-#~ msgstr "만료일:"
-
-#~ msgid "Incoterm:"
-#~ msgstr "인코텀즈:"
-
-#~ msgid "Invoicing Address"
-#~ msgstr "청구서 발행 주소:"
-
-#~ msgid "Invoicing and Shipping Address"
-#~ msgstr "청구서 및 배송지 주소"
-
-#~ msgid "Last Invoices"
-#~ msgstr "최근 청구서"
-
-#~ msgid "No orders to invoice found"
-#~ msgstr "청구서를 발행할 주문서를 찾을 수 없습니다."
-
-#~ msgid "No orders to upsell found."
-#~ msgstr "상향 판매 대상 주문서를 찾을 수 없습니다."
-
-#~ msgid "Not using Odoo?"
-#~ msgstr "Odoo를 사용하지 않으시나요?"
-
-#~ msgid "Odoo"
-#~ msgstr "Odoo"
-
-#~ msgid "Order Date:"
-#~ msgstr "주문일:"
-
-#~ msgid "Payment terms"
-#~ msgstr "지급 조건"
-
-#~ msgid "Read the documentation"
-#~ msgstr "문서 읽기"
-
-#~ msgid "Sale Information"
-#~ msgstr "판매 정보"
-
-#~ msgid "Search a customer name, or create one on the fly."
-#~ msgstr "고객 이름을 검색하거나 새로 생성합니다."
-
-#~ msgid "Select a product, or create a new one on the fly."
-#~ msgstr "품목을 선택하거나 지금 바로 새 품목을 생성해 보세요."
-
-#~ msgid "Shipping Address"
-#~ msgstr "배송 주소"
-
-#~ msgid "Start on Odoo"
-#~ msgstr "Odoo에서 시작하기"
-
-#~ msgid "Terms &amp; Conditions"
-#~ msgstr "이용 약관"
-
-#~ msgid ""
-#~ "Use the above REST URL to get structured data of the purchase order in "
-#~ "UBL format."
-#~ msgstr ""
-#~ "위의 REST URL을 사용하여 UBL 형식의 구조화된 주문 데이터를 가져옵니다."
-
-#~ msgid ""
-#~ "Validity of the order, after that you will not able to sign & pay the "
-#~ "quotation."
-#~ msgstr "주문의 유효 기간이 지나면 견적서에 서명하고 결제할 수 없습니다."
-
-#~ msgid "Want to import this document in Odoo?"
-#~ msgstr "이 문서를 Odoo로 가져오시겠습니까?"
-
-#~ msgid ""
-#~ "You can select all orders and invoice them in batch,<br>\n"
-#~ "            or check every order and invoice them one by one."
-#~ msgstr ""
-#~ "전체 주문서를 선택하여 한꺼번에 발행하거나<br>\n"
-#~ "              검토 후 개별적으로 청구서를 발행합니다."
-
-#~ msgid "You don't use a good CRM software?"
-#~ msgstr "좋은 CRM 소프트웨어를 사용하고 있지 않으신가요?"
-
-#~ msgid "Your Reference:"
-#~ msgstr "내 참조:"
-
-#~ msgid "to learn all the ways to connect your software with"
-#~ msgstr "소프트웨어를 연결하는 모든 방법을 알아보려면"
+msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Waiting Payment"
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> 결제 대기 중"

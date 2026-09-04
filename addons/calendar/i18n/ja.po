@@ -4,20 +4,20 @@
 #
 # Translators:
 # 江口和志 <sandwhale1010@gmail.com>, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022, 2025.
+# Ryoko Tsuda <ryoko@quartile.co>, 2022, 2025, 2026.
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 01:31+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-17 05:08+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "calendar/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -67,7 +67,7 @@ msgstr "%(day)s 以下における(%(start)s から %(end)s) (%(timezone)s)"
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "%s has accepted the invitation"
-msgstr "%sが招待を承認しました"
+msgstr "%s が招待を承諾しました"
 
 #. module: calendar
 #. odoo-python
@@ -80,14 +80,12 @@ msgstr "%s が招待を拒否しました"
 #. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
 #: code:addons/calendar/static/src/core/web/activity_patch.js:0
-#, fuzzy
 msgid "%s others"
 msgstr "%s その他"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_model.js:0
-#, fuzzy
 msgid "%s pending activities"
 msgstr "%s 保留中の活動"
 
@@ -100,7 +98,6 @@ msgstr "(タイトルなし)"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
-#, fuzzy
 msgid "...and"
 msgstr "...そして"
 
@@ -1097,10 +1094,11 @@ msgid ""
 "<span class=\"w-100 mb-1\">The following attendees do not have an email "
 "address set. They will not be invited to the event.</span>"
 msgstr ""
+"<span class=\"w-100 mb-1\">以下の参加者にはメールアドレスが設定されていませ"
+"ん。そのため、このイベントには招待されません。</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "<span invisible=\"allday\"> or </span>"
 msgstr "<span invisible=\"allday\"> または</span>"
 
@@ -1115,6 +1113,8 @@ msgid ""
 "<span>The following attendees do not have an email address set. They will "
 "not be invited to the event.</span>"
 msgstr ""
+"<span>以下の参加者はメールアドレスが設定されていません。これらの参加者にはイ"
+"ベントへの招待状は送られません。</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1257,7 +1257,6 @@ msgstr "終日"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
-#, fuzzy
 msgid "All Day Duration"
 msgstr "終日"
 
@@ -1269,7 +1268,6 @@ msgstr "終日、%(day)s"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "All day"
 msgstr "終日"
 
@@ -1300,7 +1298,7 @@ msgstr "参加者"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Attendees"
-msgstr "出席者"
+msgstr "参加者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
@@ -1466,7 +1464,7 @@ msgstr "カレンダ: リマインダ"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 msgid "Calendars"
-msgstr ""
+msgstr "カレンダー"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__can_edit_body
@@ -1536,7 +1534,6 @@ msgstr "設定"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
-#, fuzzy
 msgid "Confirm"
 msgstr "確定"
 
@@ -1574,7 +1571,7 @@ msgstr "コンタクトの詳細"
 #. odoo-python
 #: code:addons/calendar/models/res_partner.py:0
 msgid "Contact created through Calendar sync."
-msgstr ""
+msgstr "カレンダーの同期を通じて作成された連絡先。"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__body
@@ -2490,7 +2487,7 @@ msgstr "月"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
 msgid "More Options"
-msgstr "さらなるオプション"
+msgstr "他のオプション"
 
 #. module: calendar
 #. odoo-javascript
@@ -2555,7 +2552,6 @@ msgstr "次の活動タイプ"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
-#, fuzzy
 msgid "Next Week"
 msgstr "来週"
 
@@ -2683,7 +2679,6 @@ msgstr "OK"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
-#, fuzzy
 msgid "Online"
 msgstr "オンライン"
 
@@ -2804,7 +2799,6 @@ msgstr "プライバシー"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy_placeholder
-#, fuzzy
 msgid "Privacy Placeholder"
 msgstr "プライバシーに関するプレースホルダ"
 
@@ -2937,13 +2931,11 @@ msgstr "担当者"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__activity_user_id
-#, fuzzy
 msgid "Responsible User"
 msgstr "担当ユーザ"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
-#, fuzzy
 msgid "Room or Location"
 msgstr "部屋または場所"
 
@@ -3068,15 +3060,13 @@ msgstr "ステータス表示が必要"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_users_settings__calendar_show_activities
-#, fuzzy
 msgid "Show Activities in Calendar"
 msgstr "カレンダーに活動を表示"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "Show all opportunities for which the next action date is before today"
-msgstr "次の行動日が今日までのすべての案件を表示する"
+msgstr "次の行動日が今日までのすべての案件を表示"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -3113,7 +3103,6 @@ msgstr "ステータス"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_state
-#, fuzzy
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -3139,7 +3128,7 @@ msgstr "停止"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop Sync"
-msgstr ""
+msgstr "同期を停止"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__stop
@@ -3174,13 +3163,13 @@ msgstr "日曜"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync is paused"
-msgstr ""
+msgstr "同期が一時停止されています"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Sync unsuccessful"
-msgstr ""
+msgstr "同期に失敗しました"
 
 #. module: calendar
 #. odoo-javascript
@@ -3204,7 +3193,7 @@ msgstr "カレンダーをOutlookと同期"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Syncing"
-msgstr ""
+msgstr "同期中"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
@@ -3239,7 +3228,6 @@ msgstr "・"
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_alarm_manager.py:0
-#, fuzzy
 msgid "The %s reminder was sent"
 msgstr "%s のリマインダーが送信されました"
 
@@ -3344,20 +3332,17 @@ msgstr "メールテンプレートに使用されるタイムゾーン"
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
-#, fuzzy
 msgid "Today"
 msgstr "今日"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
-#, fuzzy
 msgid "Today Activities"
-msgstr "今日の活動"
+msgstr "本日の活動"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
-#, fuzzy
 msgid "Tomorrow"
 msgstr "明日"
 
@@ -3370,7 +3355,7 @@ msgstr "トリガー"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Try again"
-msgstr ""
+msgstr "再試行"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tue
@@ -3391,7 +3376,6 @@ msgstr "タイプ"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__activity_exception_decoration
-#, fuzzy
 msgid "Type of the exception activity on record."
 msgstr "レコード上の例外の活動タイプ。"
 
@@ -3410,7 +3394,7 @@ msgstr "使用不可"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids
 msgid "Unavailable Attendees"
-msgstr "参加不可の出席者"
+msgstr "参加不可の参加者"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -3432,13 +3416,13 @@ msgstr "終了"
 #. odoo-python
 #: code:addons/calendar/models/res_users.py:0
 msgid "Upcoming Meetings"
-msgstr ""
+msgstr "今後のミーティング"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notify attendees"
-msgstr "出席者に手動で通知するために使用します。"
+msgstr "参加者に手動で通知するために使用します"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -3474,15 +3458,13 @@ msgstr "ビデオコールソース"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
-#, fuzzy
 msgid "View"
-msgstr "ビュー"
+msgstr "表示"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.message_meeting_activity_done
-#, fuzzy
 msgid "View Meeting"
 msgstr "会議を表示"
 
@@ -3580,7 +3562,7 @@ msgstr "ベースイベントなしに繰返しを更新することはできま
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 msgid "You cannot duplicate a calendar attendee."
-msgstr "カレンダの出席者は重複できません。"
+msgstr "カレンダの参加者は重複できません。"
 
 #. module: calendar
 #. odoo-python
@@ -3597,21 +3579,18 @@ msgstr "このミーティングにはあなたしかいません。"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
-#, fuzzy
 msgid "accepted"
 msgstr "承諾済"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
-#, fuzzy
 msgid "attendees"
 msgstr "参加者"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
-#, fuzzy
 msgid "declined"
 msgstr "拒否済"
 
@@ -3647,34 +3626,29 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "e.g: 12/31/2030"
 msgstr "例: 12/31/2023"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
 msgid "guests"
 msgstr "ゲスト"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
-#, fuzzy
 msgid "more"
-msgstr "さらに表示"
+msgstr "他"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
-#, fuzzy
 msgid "this.props.placeholder"
 msgstr "this.props.placeholder"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
-#, fuzzy
 msgid "uncertain"
 msgstr "未確定"
 
@@ -3692,12 +3666,3 @@ msgstr "{{ object.event_id.name }}: 日付が更新されました"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: イベント更新"
-
-#~ msgid "Invitation"
-#~ msgstr "招待"
-
-#~ msgid "Schedule"
-#~ msgstr "スケジュール"
-
-#~ msgid "Select attendees..."
-#~ msgstr "出席者選択..."

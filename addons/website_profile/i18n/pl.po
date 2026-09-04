@@ -22,9 +22,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-21 20:43+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-11 12:17+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
 "website_profile/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -61,13 +61,13 @@ msgid ""
 ". Collect points on the forum or on the eLearning platform. Those points "
 "will make you reach new ranks."
 msgstr ""
-". Zbieraj punkty na forum lub na platformie eLearning. Punkty pozwolą ci "
+". Zbieraj punkty na forum lub na platformie eLearningowej. Punkty pozwolą ci "
 "osiągać nowe stopnie."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr "Spróbuj innego wyszukiwania."
+msgstr ". Spróbuj innego wyszukiwania."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -102,7 +102,7 @@ msgstr "<i class=\"oi\" data-icon=\"east\"/> Wszystkie odznaki"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid "<i class=\"text-muted\"> awarded users</i>"
-msgstr "<i class=\"text-muted\">nagrodzeni użytkownicy</i>"
+msgstr "<i class=\"text-muted\"> nagrodzeni użytkownicy</i>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -117,7 +117,7 @@ msgstr "<small class=\"fw-bold\">Odznaki</small>"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "<small class=\"fw-bold\">Joined</small>"
-msgstr "<small class=\"fw-bold\">Połączony</small>"
+msgstr "<small class=\"fw-bold\">Dołączył</small>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
@@ -144,7 +144,9 @@ msgstr "<span class=\"text-muted\">XP</span>"
 msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
-msgstr "Gratulacje! Twój email został zweryfikowany.</span>"
+msgstr ""
+"<span id=\"email_validated_message\">Gratulacje! Twój email został "
+"zweryfikowany.</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -177,9 +179,9 @@ msgstr ""
 "<t>\n"
 "                            Dzień dobry <t t-out=\"object.name or ''\">Marc "
 "Demo</t>,<br/><br/>\n"
-"                            Zostałeś poproszony do zweryfikowania swojego "
-"adresu e-mail, aby uzyskać dostęp do strony internetowej <t t-"
-"out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"                            Zweryfikuj swój adres e-mail, aby uzyskać dostęp "
+"do strony internetowej <t t-out=\"object.company_id.name or "
+"''\">YourCompany</t>.\n"
 "                            Aby zweryfikować swój adres e-mail, kliknij "
 "poniższy przycisk:\n"
 "                           <div style=\"margin: 32px 0px 32px 0px;\">\n"
@@ -212,7 +214,7 @@ msgstr "<u>tutaj</u>"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "About"
-msgstr "O programie"
+msgstr "O..."
 
 #. module: website_profile
 #: model:ir.module.module,summary:base.module_website_profile
@@ -246,7 +248,7 @@ msgstr ""
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__publish_on
 msgid "Auto publish on"
-msgstr "Opublikuj automatycznie na"
+msgstr "Automatyczna publikacja"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__publish_on
@@ -288,7 +290,7 @@ msgstr "Biografia"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
 msgid "Can Publish"
-msgstr "Można publikować"
+msgstr "Może publikować"
 
 #. module: website_profile
 #. odoo-javascript
@@ -299,8 +301,8 @@ msgid ""
 "Changing the country is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Zmiana kraju nie jest dozwolona po opublikowaniu dokumentów na Twoim koncie. "
-"W tej sprawie skontaktuj się z nami bezpośrednio."
+"Zmiana kraju nie jest dozwolona, jeśli dokumenty zostały już wystawione dla "
+"Twojego konta. Skontaktuj się bezpośrednio z nami, aby wykonać tę operację."
 
 #. module: website_profile
 #. odoo-javascript
@@ -388,7 +390,7 @@ msgstr "Zdobądź"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Home"
-msgstr "Dom"
+msgstr "Strona główna"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -410,7 +412,7 @@ msgstr "ID"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
 msgid "Is Published"
-msgstr "Opublikowane"
+msgstr "Opublikowano"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -441,12 +443,12 @@ msgstr "Nazwa"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Nav"
-msgstr "Nav"
+msgstr "Nawigacja"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Next rank:"
-msgstr "Następna Ranga;"
+msgstr "Następna ranga:"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_main
@@ -495,7 +497,7 @@ msgstr "Rangi i odznaki"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
 msgid "Return to the website."
-msgstr "Powrót na stronę internetową."
+msgstr "Powróć na stronę internetową."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -505,7 +507,7 @@ msgstr "Szukaj"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search users"
-msgstr "Wyszukiwanie użytkowników"
+msgstr "Wyszukaj użytkowników"
 
 #. module: website_profile
 #: model:mail.template,description:website_profile.validation_email
@@ -515,13 +517,15 @@ msgstr "Wysyłane do użytkowników forum w celu potwierdzenia adresu e-mail"
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr "Pełen adres URL dostępu do dokumentu przez stronę internetową."
+msgstr ""
+"Kompletny adres URL umożliwiający dostęp do dokumentu przez stronę "
+"internetową."
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
 msgid "The full relative URL to access the document through the website."
 msgstr ""
-"Pełen względny adres URL umożliwiający dostęp do dokumentu przez stronę "
+"Pełny względny adres URL umożliwiający dostęp do dokumentu przez stronę "
 "internetową."
 
 #. module: website_profile
@@ -544,7 +548,7 @@ msgstr "Ten tydzień"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Update"
-msgstr "Aktualizacja"
+msgstr "Aktualizuj"
 
 #. module: website_profile
 #. odoo-javascript
@@ -594,7 +598,7 @@ msgstr "Strona internetowa"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_absolute_url
 msgid "Website Absolute URL"
-msgstr "Pełen adres URL strony"
+msgstr "Pełny adres URL strony"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website
@@ -604,7 +608,7 @@ msgstr "Link do strony internetowej"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_res_users__website_description
 msgid "Website Partner Full Description"
-msgstr "Pełny opis partnera strony internetowej"
+msgstr "Pełny opis partnera na stronie"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
@@ -638,7 +642,7 @@ msgstr "XP"
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "You are not allowed to edit this user"
-msgstr ""
+msgstr "Nie masz uprawnień do edytowania tego użytkownika"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -680,7 +684,7 @@ msgstr "punkt"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "s"
-msgstr ""
+msgstr "s"
 
 #. module: website_profile
 #. odoo-python
@@ -715,7 +719,7 @@ msgid ""
 "                        to level up!"
 msgstr ""
 "xp\n"
-"                        aby awansować!"
+"                        do następnego poziomu!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner

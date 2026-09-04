@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Heiðar Sigurðsson, 2022\n"
 "Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
@@ -21,8 +21,29 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: fleet
+#: model:ir.module.module,description:base.module_fleet
+msgid ""
+"\n"
+"Vehicle, leasing, insurances, cost\n"
+"==================================\n"
+"With this module, Odoo helps you managing all your vehicles, the\n"
+"contracts associated to those vehicle as well as services, costs\n"
+"and many other features necessary to the management of your fleet\n"
+"of vehicle(s)\n"
+"\n"
+"Main Features\n"
+"-------------\n"
+"* Add vehicles to your fleet\n"
+"* Manage contracts for vehicles\n"
+"* Reminder when a contract reach its expiration date\n"
+"* Add services, odometer values for all vehicles\n"
+"* Show all costs associated to a vehicle or to a type of service\n"
+"* Analysis graph for costs\n"
+msgstr ""
+
+#. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
-msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
+msgid "<i class=\"oi\" data-icon=\"location_on\" title=\"Location\"/>"
 msgstr ""
 
 #. module: fleet
@@ -57,13 +78,6 @@ msgstr ""
 msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,             such as pulling trailers, boats, or other vehicles."
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__trailer_hook
-msgid ""
-"A trailer hitch is a device attached to a vehicle's chassis for towing "
-"purposes,            such as pulling trailers, boats, or other vehicles."
 msgstr ""
 
 #. module: fleet
@@ -544,7 +558,6 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__color
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__color
 msgid "Color"
 msgstr "Color"
@@ -869,6 +882,7 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Description"
 msgstr ""
 
@@ -905,7 +919,10 @@ msgid "Display Name"
 msgstr "Nafn"
 
 #. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__done
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__done
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "Done"
 msgstr ""
 
@@ -1097,6 +1114,7 @@ msgid "Fiscality"
 msgstr ""
 
 #. module: fleet
+#: model:ir.module.module,shortdesc:base.module_fleet
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
 #: model:ir.ui.menu,name:fleet.fleet_vehicles
 #: model:ir.ui.menu,name:fleet.menu_root
@@ -1165,14 +1183,6 @@ msgstr "Fylgjendur"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Fylgjendur (viðskiptafélagar)"
-
-#. module: fleet
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
-#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__4wd
@@ -1299,12 +1309,6 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
 msgid "Horsepower (hp)"
-msgstr ""
-
-#. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__horsepower_tax
-msgid "Horsepower Taxation"
 msgstr ""
 
 #. module: fleet
@@ -1585,6 +1589,11 @@ msgid "Manage efficiently your vehicle Odometers with Odoo."
 msgstr ""
 
 #. module: fleet
+#: model:ir.module.module,summary:base.module_fleet
+msgid "Manage your fleet and track car costs"
+msgstr ""
+
+#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
 msgid "Management Fee"
 msgstr ""
@@ -1608,6 +1617,19 @@ msgstr ""
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_search
 msgid "Manufacturers"
+msgstr ""
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Mark as Done"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
 msgstr ""
 
 #. module: fleet
@@ -1776,14 +1798,9 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__no
+#: model:res.groups.privilege,placeholder:fleet.res_groups_privilege_fleet
 msgid "No"
 msgstr "No"
-
-#. module: fleet
-#. odoo-python
-#: code:addons/fleet/models/fleet_vehicle.py:0
-msgid "No Plate"
-msgstr ""
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
@@ -1804,11 +1821,6 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__none
 msgid "None"
-msgstr ""
-
-#. module: fleet
-#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Note"
 msgstr ""
 
 #. module: fleet
@@ -2198,12 +2210,6 @@ msgid "Review driver change"
 msgstr ""
 
 #. module: fleet
-#. odoo-python
-#: code:addons/fleet/models/fleet_vehicle.py:0
-msgid "Review driver change of %s and specify End date"
-msgstr ""
-
-#. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_39
 msgid "Rotate Tires"
 msgstr ""
@@ -2463,7 +2469,7 @@ msgstr ""
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
 msgid ""
 "The date from which this vehicle becomes available for assignment. Leave "
-"empty if it’s available immediately."
+"empty if it's available immediately."
 msgstr ""
 
 #. module: fleet
@@ -2550,7 +2556,6 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__trailer_hook
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__trailer_hook
 msgid "Trailer Hitch"
 msgstr ""
 
@@ -2602,6 +2607,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__odometer_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer__unit
 msgid "Unit"
+msgstr ""
+
+#. module: fleet
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+msgid "Unnamed Vehicle"
 msgstr ""
 
 #. module: fleet
@@ -2806,7 +2817,9 @@ msgstr ""
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
-msgid "Write here any other information related to this vehicle"
+msgid ""
+"Write here any other information related to this vehicle to show in salary "
+"configurator"
 msgstr ""
 
 #. module: fleet

@@ -8,29 +8,40 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 18:11+0000\n"
-"PO-Revision-Date: 2026-04-18 13:18+0000\n"
-"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>\n"
+"POT-Creation-Date: 2026-08-28 18:22+0000\n"
+"PO-Revision-Date: 2026-07-21 14:29+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
-"odoo-s19-2-l10n/l10n_rs_edi/sr_Latn/>\n"
+"odoo-s19-4/l10n_rs_edi/sr_Latn/>\n"
 "Language: sr@latin\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_rs_edi
+#: model:ir.module.module,description:base.module_l10n_rs_edi
+msgid ""
+"\n"
+"eFaktura E-invoice implementation for Serbia\n"
+msgstr ""
+
+#. module: l10n_rs_edi
+#. odoo-python
+#: code:addons/l10n_rs_edi/models/account_move.py:0
+msgid "%(error_code)s: %(message)s"
+msgstr ""
 
 #. module: l10n_rs_edi
 #: model_terms:ir.ui.view,arch_db:l10n_rs_edi.view_move_form
 msgid ""
-"<i class=\"fa fa-warning\" role=\"img\" title=\"Serbian eFaktura\"/>\n"
+"<i class=\"oi\" data-icon=\"warning\" role=\"img\" title=\"Serbian "
+"eFaktura\"/>\n"
 "                            <span class=\"mx-1\">Serbian E-invoice Error:</"
 "span>"
 msgstr ""
-"<i class=\"fa fa-warning\" role=\"img\" title=\"Serbian eFaktura\"/>\n"
-"                            <span class=\"mx-1\">Greška srpska e-Faktura:</"
-"span>"
 
 #. module: l10n_rs_edi
 #: model_terms:ir.ui.view,arch_db:l10n_rs_edi.res_config_settings_view_form
@@ -88,6 +99,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: l10n_rs_edi
+#: model:ir.model,website_form_label:l10n_rs_edi.model_res_partner
+msgid "Create a Customer"
+msgstr ""
+
+#. module: l10n_rs_edi
 #. odoo-python
 #: code:addons/l10n_rs_edi/models/res_partner.py:0
 msgid "Customer identification number should be 8 or 13 digits"
@@ -103,6 +119,11 @@ msgstr "Identifikacioni broj kupca treba da bude 8 ili 13 cifara"
 #: model:ir.model.fields,field_description:l10n_rs_edi.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Naziv za prikaz"
+
+#. module: l10n_rs_edi
+#: model:ir.module.module,summary:base.module_l10n_rs_edi
+msgid "E-Invoice implementation for Serbia"
+msgstr ""
 
 #. module: l10n_rs_edi
 #: model:ir.model.fields.selection,name:l10n_rs_edi.selection__account_move__l10n_rs_edi_state__sending_failed
@@ -220,6 +241,11 @@ msgid "Sent"
 msgstr "Poslato"
 
 #. module: l10n_rs_edi
+#: model:ir.module.module,shortdesc:base.module_l10n_rs_edi
+msgid "Serbia - eFaktura E-invoicing"
+msgstr ""
+
+#. module: l10n_rs_edi
 #: model:ir.model.fields,field_description:l10n_rs_edi.field_account_bank_statement_line__l10n_rs_edi_error
 #: model:ir.model.fields,field_description:l10n_rs_edi.field_account_move__l10n_rs_edi_error
 msgid "Serbia E-Invoice error"
@@ -329,5 +355,8 @@ msgstr "eFaktura kredencijali"
 msgid "eFaktura XML Attachment"
 msgstr "eFaktura XML prilog"
 
-#~ msgid "Create a Customer"
-#~ msgstr "Kreiraj kupca"
+#. module: l10n_rs_edi
+#. odoo-python
+#: code:addons/l10n_rs_edi/models/account_move.py:0
+msgid "eFaktura returned an invalid response: %s"
+msgstr ""

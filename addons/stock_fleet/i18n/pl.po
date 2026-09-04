@@ -4,14 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-06-19 12:57+0000\n"
+"PO-Revision-Date: 2026-07-22 00:22+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-4/"
 "stock_fleet/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -71,6 +72,9 @@ msgid ""
 "                        <span class=\"fw-bold\" invisible=\"code "
 "=='outgoing'\">To</span>"
 msgstr ""
+"<span class=\"fw-bold\" invisible=\"code !='outgoing'\">Od</span>\n"
+"                        <span class=\"fw-bold\" invisible=\"code "
+"=='outgoing'\">Do</span>"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.report_picking_batch_inherit
@@ -95,7 +99,7 @@ msgstr ""
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__allowed_dock_ids
 msgid "Allowed Docks"
-msgstr ""
+msgstr "Dopuszczalne doki"
 
 #. module: stock_fleet
 #: model:ir.module.module,description:base.module_stock_fleet
@@ -118,7 +122,7 @@ msgstr ""
 #: model:ir.model,name:stock_fleet.model_stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_pivot
 msgid "Batch Transfer"
-msgstr "Przekaz zbiorczy"
+msgstr "Transfer zbiorczy"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -220,7 +224,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__has_dispatch_management
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dispatch_management
 msgid "Dispatch Management"
-msgstr ""
+msgstr "Zarządzanie wysyłką"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_model_category__display_name
@@ -237,7 +241,7 @@ msgstr "Nazwa wyświetlana"
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__dock_id
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_type__dock_ids
 msgid "Dock"
-msgstr ""
+msgstr "Dok"
 
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_type_kanban_inherit_stock_fleet
@@ -252,7 +256,7 @@ msgstr "Lokalizacja doku"
 #. module: stock_fleet
 #: model_terms:ir.ui.view,arch_db:stock_fleet.view_picking_type_form
 msgid "Dock Locations"
-msgstr ""
+msgstr "Lokacje doków"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__driver_id
@@ -266,6 +270,8 @@ msgid ""
 "Enable this option to display dispatch management related details in the "
 "batch/wave form view and operations kanban overview."
 msgstr ""
+"Włącz tę opcję, aby wyświetlać szczegóły związane z zarządzaniem wysyłką w "
+"widoku formularza partii/fali oraz w przeglądzie kanbanu operacji."
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_batch__end_date
@@ -644,6 +650,3 @@ msgstr "Kod pocztowy"
 #: model_terms:ir.ui.view,arch_db:stock_fleet.stock_picking_batch_form
 msgid "semi-truck"
 msgstr "półciężarówka"
-
-#~ msgid "Today"
-#~ msgstr "Dzisiaj"

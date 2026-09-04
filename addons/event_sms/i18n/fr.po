@@ -8,14 +8,15 @@
 # Jolien De Paepe, 2023
 # Jérémy Kersten <jke@openerp.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 09:31+0000\n"
+"PO-Revision-Date: 2026-07-21 08:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-4/"
 "event_sms/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -74,6 +75,15 @@ msgid ""
 "object.event_id._fields else 'Join us on %s/event/%i!' % "
 "(object.get_base_url(), object.event_id.id) }}"
 msgstr ""
+"Prêt pour \"{{ object.event_id.name }}\" {{ object.event_date_range }} ?\n"
+"{{ 'L'événement commence à %s' % format_time(time=object.event_begin_date, "
+"tz=object.event_id.date_tz, time_format='short', "
+"lang_code=object.partner_id.lang) + (', à %s' % "
+"object.event_id.contact_address_inline if "
+"object.event_id.contact_address_inline else '') + '.\\nÀ bientôt !' if "
+"object.event_id.contact_address_inline or 'website_published' not in "
+"object.event_id._fields else 'Rejoignez-nous sur %s/event/%i !' % "
+"(object.get_base_url(), object.event_id.id) }}"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration

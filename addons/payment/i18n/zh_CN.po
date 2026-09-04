@@ -8,16 +8,16 @@
 # Martin Trigaux, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025.
+# "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-06-21 15:08+0000\n"
+"PO-Revision-Date: 2026-07-21 00:01+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/payment/zh_Hans/>\n"
+"projects/odoo-s19-4/payment/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -640,7 +640,7 @@ msgstr "草稿"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
@@ -698,7 +698,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "寻找支付提供商"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -2069,6 +2069,8 @@ msgid ""
 "saved in the provider's database, allowing the customer to reuse it for a "
 "next purchase."
 msgstr ""
+"该选项用于控制客户是否可将支付方式保存为支付令牌。支付令牌是对接支付服务商数"
+"据库中支付信息的匿名标识，方便客户下次购物时直接复用该支付方式。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2093,12 +2095,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "To add a provider to the current company:"
-msgstr ""
+msgstr "要向当前公司添加服务商："
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Toggle the main company in the company switcher."
-msgstr ""
+msgstr "在公司切换器中切换主公司。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -2255,6 +2257,7 @@ msgid ""
 "Whether the transaction happened in a production environment. False for "
 "transactions created before this tracking was implemented."
 msgstr ""
+"用于判断交易是否发生在生产环境。追踪功能启用前创建的交易，此字段统一设为否。"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -2486,13 +2489,13 @@ msgstr "你的付款方式"
 msgid ""
 "Your payment operation could not be completed for following transactions: %"
 "(tx_refs)s"
-msgstr ""
+msgstr "以下交易的支付操作未能完成：%(tx_refs)s"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 msgid "Your payment operation has been successfully submitted."
-msgstr ""
+msgstr "您的支付操作已成功提交。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
@@ -2519,7 +2522,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "the website administrator."
-msgstr ""
+msgstr "网站管理员。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning

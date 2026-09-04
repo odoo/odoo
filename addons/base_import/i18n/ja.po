@@ -12,9 +12,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 01:39+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-10 04:09+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "base_import/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -106,7 +106,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Attachments"
-msgstr ""
+msgstr "添付"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -132,25 +132,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Batch"
-msgstr ""
+msgstr "バッチ"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch interval"
-msgstr ""
+msgstr "一括処理間隔"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch max size"
-msgstr ""
+msgstr "一括処理の最大サイズ"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Batch size"
-msgstr ""
+msgstr "バッチサイズ"
 
 #. module: base_import
 #. odoo-javascript
@@ -220,25 +220,25 @@ msgstr "データベースID"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Date Format"
-msgstr ""
+msgstr "日付書式"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Datetime Format"
-msgstr ""
+msgstr "日付と時刻の書式"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Decimals Separator"
-msgstr ""
+msgstr "小数点記号"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Defines how many megabytes can be imported in each batch"
-msgstr ""
+msgstr "バッチインポートごとにインポートできるメガバイト数を定義します"
 
 #. module: base_import
 #. odoo-javascript
@@ -247,18 +247,20 @@ msgid ""
 "Defines the number of records that will be imported in one transaction. "
 "Reduce the batch size in case of heavy imports"
 msgstr ""
+"1回の取引でインポートされるレコード数を定義します。大量のインポートを行う場合"
+"は、バッチサイズを小さくしてください"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Delay applied after each batch to prevent unthrottled calls"
-msgstr ""
+msgstr "無制限の呼び出しを防ぐため、各一括処理後に遅延を適用します"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Delimiter"
-msgstr ""
+msgstr "区切り文字"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -272,7 +274,7 @@ msgstr "表示名"
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Documentation"
-msgstr ""
+msgstr "ドキュメンテーション"
 
 #. module: base_import
 #. odoo-javascript
@@ -291,7 +293,7 @@ msgstr "ダウンロード"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Encoding"
-msgstr ""
+msgstr "エンコード"
 
 #. module: base_import
 #. odoo-python
@@ -386,7 +388,7 @@ msgstr "要確認および/またはインポートするファイル"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "中断する前に現在のバッチを最終処理しています..."
 
 #. module: base_import
 #. odoo-javascript
@@ -437,12 +439,15 @@ msgid ""
 "If checked, the changes are tracked in the chatter and notifications can be "
 "sent to followers, which could slow down the import"
 msgstr ""
+"このチェックボックスをオンにすると、変更内容がチャットで追跡され、フォロワー"
+"に通知が送信されるため、インポート処理が遅くなる可能性があります"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
 msgid "If checked, the first row of the sheet will not be imported"
 msgstr ""
+"このチェックボックスをオンにすると、シートの最初の行はインポートされません"
 
 #. module: base_import
 #. odoo-javascript
@@ -453,6 +458,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"ファイルに列名が含まれている場合\n"
+"　　　Odoo はフィールドに関連する列を自動認識します。\n"
+"　　　この機能により、列が多いファイルのインポートでも簡単に\n"
+"　　　作業ができます。"
 
 #. module: base_import
 #. odoo-javascript
@@ -466,7 +475,7 @@ msgstr "インポート"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Import failed: see errors below"
-msgstr ""
+msgstr "インポートに失敗しました：以下のエラーを参照してください"
 
 #. module: base_import
 #. odoo-python
@@ -478,7 +487,7 @@ msgstr "インポートファイルにコンテンツがないか、破損して
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Import preview failed due to: \""
-msgstr ""
+msgstr "インポートプレビューに失敗しました　理由:「"
 
 #. module: base_import
 #. odoo-javascript
@@ -513,13 +522,13 @@ msgstr "異常値あり 行 %(row)s, 列%(col)s: %(cell_value)s"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Lang:"
-msgstr ""
+msgstr "言語:"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Language"
-msgstr ""
+msgstr "言語"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -560,7 +569,7 @@ msgstr "モデル"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "複数のエラーが発生しました"
 
 #. module: base_import
 #. odoo-javascript
@@ -572,13 +581,13 @@ msgstr "セパレータなし"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No date detected"
-msgstr ""
+msgstr "日付が検出されませんでした"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "No datetime detected"
-msgstr ""
+msgstr "日付と時刻が検出されませんでした"
 
 #. module: base_import
 #. odoo-javascript
@@ -590,7 +599,7 @@ msgstr "ファイルが選択されていません"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
-msgstr ""
+msgstr "下記の名前に一致する記録がありません"
 
 #. module: base_import
 #. odoo-javascript
@@ -602,7 +611,7 @@ msgstr "Odooフィールド"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Other"
-msgstr ""
+msgstr "その他"
 
 #. module: base_import
 #. odoo-javascript
@@ -640,7 +649,7 @@ msgstr "進捗バー"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Re-Upload"
-msgstr ""
+msgstr "再アップロード"
 
 #. module: base_import
 #. odoo-javascript
@@ -652,7 +661,7 @@ msgstr "関連フィールド"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
 msgid "Required Fields"
-msgstr ""
+msgstr "必須項目"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
@@ -675,13 +684,13 @@ msgstr "フィールドを検索..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a language..."
-msgstr ""
+msgstr "言語を検索..."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "See possible values"
-msgstr ""
+msgstr "利用可能な値を見る"
 
 #. module: base_import
 #. odoo-javascript
@@ -699,7 +708,7 @@ msgstr "セミコロン"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Separator"
-msgstr ""
+msgstr "区切り文字"
 
 #. module: base_import
 #. odoo-javascript
@@ -810,7 +819,7 @@ msgstr "この列はフィールド内で連結されます"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Thousands Separator"
-msgstr ""
+msgstr "千単位区切り"
 
 #. module: base_import
 #. odoo-javascript
@@ -828,7 +837,7 @@ msgstr "インポートするにはフィールドを選択..."
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Track changes in chatter"
-msgstr ""
+msgstr "チャターでの変更履歴"
 
 #. module: base_import
 #. odoo-python
@@ -859,7 +868,7 @@ msgstr "無題"
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "アップロード"
 
 #. module: base_import
 #. odoo-javascript
@@ -868,6 +877,8 @@ msgid ""
 "Upload attachments such as images or files that can be mapped with imported "
 "data"
 msgstr ""
+"インポートされたデータと関連付け可能な画像やファイルなどの添付ファイルをアッ"
+"プロードしてください"
 
 #. module: base_import
 #. odoo-javascript
@@ -899,7 +910,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Use first row as header"
-msgstr ""
+msgstr "先頭行を見出しとする"
 
 #. module: base_import
 #. odoo-javascript
@@ -908,6 +919,8 @@ msgid ""
 "Use unique key across objects for External ID's, for example \"lead_1\" "
 "instead of \"1\""
 msgstr ""
+"外部IDには、オブジェクト間で一意のキーを使用してください。例えば、「1」ではな"
+"く「lead_1」のようにします。"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -946,19 +959,19 @@ msgstr "インポートするために少なくとも一つのフィールドを
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at multiple rows"
-msgstr ""
+msgstr "複数行に発生"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "at row"
-msgstr ""
+msgstr "行："
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "in field"
-msgstr ""
+msgstr "項目："
 
 #. module: base_import
 #. odoo-javascript
@@ -970,19 +983,19 @@ msgstr "分"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "more"
-msgstr ""
+msgstr "さらに表示"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "or drag a file"
-msgstr ""
+msgstr "またはファイルをドラッグ"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "out of"
-msgstr ""
+msgstr "以下のうち："
 
 #. module: base_import
 #. odoo-javascript
@@ -996,10 +1009,3 @@ msgstr "秒"
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
 msgstr "不明のエラーコード%s"
-
-#~ msgid ""
-#~ "Image size excessive, imported images must be smaller than 42 million "
-#~ "pixel"
-#~ msgstr ""
-#~ "画像サイズが大きすます、アップロードされた画像は4200万ピクセル未満である必"
-#~ "要があります。"

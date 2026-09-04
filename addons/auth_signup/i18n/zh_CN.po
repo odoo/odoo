@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 18:43+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-10 04:08+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/auth_signup/zh_Hans/>\n"
+"projects/odoo-s19-4/auth_signup/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -285,7 +285,7 @@ msgstr "联系人"
 #. odoo-javascript
 #: code:addons/auth_signup/static/src/components/signup.xml:0
 msgid "Copy Reset Password Link"
-msgstr ""
+msgstr "复制重置密码链接"
 
 #. module: auth_signup
 #. odoo-python
@@ -376,6 +376,8 @@ msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "        Thanks,"
 msgstr ""
+"如果您不期待收到此邮件，可以放心忽略。<br/><br/>\n"
+"        谢谢，"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__inactive
@@ -386,7 +388,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 msgid "Invalid email; please enter a valid email address."
-msgstr ""
+msgstr "电邮地址无效！请输入有效的电邮地址。"
 
 #. module: auth_signup
 #. odoo-python
@@ -397,7 +399,7 @@ msgstr "无效的注册令牌"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Invited"
-msgstr ""
+msgstr "受邀"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -413,7 +415,7 @@ msgstr "允许您的客户登录来查看他们的文档"
 #. odoo-javascript
 #: code:addons/auth_signup/static/src/components/signup.js:0
 msgid "Link copied to clipboard!"
-msgstr ""
+msgstr "链接被复制到剪贴板!"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -452,7 +454,7 @@ msgstr "应邀"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Only administrators can generate reset password link."
-msgstr ""
+msgstr "只有管理员才能生成重置密码链接。"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -503,7 +505,7 @@ msgstr "重置密码"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Password Reset"
-msgstr ""
+msgstr "发送密码重置链接"
 
 #. module: auth_signup
 #: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
@@ -524,7 +526,7 @@ msgstr "如果新用户未响应邀请，则自动发送给管理员"
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.portal_set_password_email
 msgid "Sent to new portal user after you invited them"
-msgstr ""
+msgstr "在您邀请新门户用户后发送给该用户"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
@@ -544,7 +546,7 @@ msgstr "设置：新建门户注册"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.portal_set_password_email
 msgid "Settings: New Portal User Invite"
-msgstr ""
+msgstr "设置：新门户用户邀请"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
@@ -656,7 +658,7 @@ msgstr "用户：有关未注册用户的通知"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Welcome to Odoo"
-msgstr ""
+msgstr "欢迎来到Odoo"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
@@ -673,14 +675,14 @@ msgstr "不能对归档用户执行此操作。"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "You cannot perform this action on your own user."
-msgstr ""
+msgstr "无法对当前登录账号执行该操作。"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Your Account"
-msgstr ""
+msgstr "您的账号"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.portal_set_password_email
@@ -711,75 +713,3 @@ msgid ""
 msgstr ""
 "来自 {{ object.company_id.name }} 的 {{ object.create_uid.name }} 邀请您连接 "
 "Odoo"
-
-#~ msgid ""
-#~ "<t>\n"
-#~ "Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-#~ "You have been invited by <t t-out=\"object.create_uid.name or "
-#~ "''\">OdooBot</t> of <t t-out=\"object.company_id.name or "
-#~ "''\">YourCompany</t> to connect on Odoo.\n"
-#~ "<div style=\"margin: 16px 0px 16px 0px;\">\n"
-#~ "    <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-"
-#~ "style=\"background-color: {{object.company_id.email_secondary_color or "
-#~ "'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-#~ "{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: "
-#~ "5px; font-size:13px;\">\n"
-#~ "        Accept invitation\n"
-#~ "    </a>\n"
-#~ "</div>\n"
-#~ "<b>  This link will remain valid during <t t-"
-#~ "out=\"(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') "
-#~ "or 144)//24\"/> days </b> <br/>\n"
-#~ "<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
-#~ "Your Odoo domain is: <b><a t-att-href=\"website_url\" t-out=\"website_url "
-#~ "or ''\">http://yourcompany.odoo.com</a></b><br/>\n"
-#~ "Your sign in email is: <b><a t-attf-href=\"/web/login?"
-#~ "login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or "
-#~ "''\">mark.brown23@example.com</a></b><br/><br/>\n"
-#~ "Never heard of Odoo? It’s an all-in-one business software loved by 12+ "
-#~ "million users. It will considerably improve your experience at work and "
-#~ "increase your productivity.\n"
-#~ "<br/><br/>\n"
-#~ "Have a look at the <a href=\"https://www.odoo.com/page/tour?"
-#~ "utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: "
-#~ "{{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo Tour</a> "
-#~ "to discover the tool.\n"
-#~ "<br/><br/>\n"
-#~ "Enjoy Odoo!<br/>\n"
-#~ "--<br/>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> "
-#~ "Team\n"
-#~ "            </t>"
-#~ msgstr ""
-#~ "<t>\n"
-#~ "亲爱的 <t t-out=\"object.name or ''\">Marc Demo</t>，<br/><br/>\n"
-#~ "您已收到<t t-out=\"object.company_id.name or ''\">YourCompany</t>员工<t t-"
-#~ "out=\"object.create_uid.name or ''\">Odoo 机器人</t>的邀请，诚邀您加入 "
-#~ "Odoo 系统建立连接。\n"
-#~ "    <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-"
-#~ "style=\"background-color: {{object.company_id.email_secondary_color or "
-#~ "'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
-#~ "{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: "
-#~ "5px; font-size:13px;\">\n"
-#~ "        接受邀请\n"
-#~ "    </a>\n"
-#~ "</div>\n"
-#~ "<b>  本邀请链接有效期为<t t-"
-#~ "out=\"(object.env['ir.config_parameter'].sudo().get_int('auth_signup.signup.validity.hours') "
-#~ "or 144)//24\"/> 天 </b> <br/>\n"
-#~ "<t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
-#~ "您的 Odoo 系统域名：<b><a t-att-href=\"website_url\" t-out=\"website_url "
-#~ "or ''\">http://yourcompany.odoo.com</a></b><br/>\n"
-#~ "您的登录邮箱：<b><a t-attf-href=\"/web/login?login={{ object.email }}\" "
-#~ "target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</"
-#~ "a></b><br/><br/>\n"
-#~ "若您对 Odoo 尚陌生：它是一款备受全球 1200 万 + 用户青睐的一体化企业管理软"
-#~ "件，能显著优化您的工作体验，提升办公效率。\n"
-#~ "<br/><br/>\n"
-#~ "点击 <a href=\"https://www.odoo.com/page/tour?"
-#~ "utm_source=db&amp;utm_medium=auth\" t-attf-style=\"color: "
-#~ "{{object.company_id.email_secondary_color or '#875A7B'}};\">Odoo 功能导览"
-#~ "</a> ，探索这款工具的强大之处。\n"
-#~ "<br/><br/>\n"
-#~ "祝您使用愉快！<br/>\n"
-#~ "--<br/> <t t-out=\"object.company_id.name or ''\">YourCompany</t> 团队\n"
-#~ "            </t>"

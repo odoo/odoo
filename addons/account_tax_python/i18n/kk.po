@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-16 18:36+0000\n"
+"POT-Creation-Date: 2026-08-28 17:41+0000\n"
 "PO-Revision-Date: 2015-09-07 16:04+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Kazakh (http://www.transifex.com/odoo/odoo-9/language/kk/)\n"
@@ -33,6 +33,19 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
+#: model:ir.module.module,description:base.module_account_tax_python
+msgid ""
+"\n"
+"A tax defined as python code consists of two snippets of python code which "
+"are executed in a local environment containing data such as the unit price, "
+"product or partner.\n"
+"\n"
+"\"Applicable Code\" defines if the tax is to be applied.\n"
+"\n"
+"\"Python Code\" defines the amount of the tax.\n"
+msgstr ""
+
+#. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__formula
 msgid ""
 "Compute the amount of the tax.\n"
@@ -46,6 +59,11 @@ msgstr ""
 #. module: account_tax_python
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
 msgid "Custom Formula"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.module.module,shortdesc:base.module_account_tax_python
+msgid "Define Taxes as Python Code"
 msgstr ""
 
 #. module: account_tax_python
@@ -136,4 +154,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
+msgstr ""
+
+#. module: account_tax_python
+#: model:ir.module.module,summary:base.module_account_tax_python
+msgid "Use python code to define taxes"
 msgstr ""

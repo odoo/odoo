@@ -16,9 +16,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 06:08+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-27 14:09+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -334,6 +334,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">مرحباً <t t-"
+"out=\"client_name\">\"اسم العميل\"</t>،</t>\n"
+"                        <t t-else=\"\">مرحباً،</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>نشكرك على طلبك من <t t-out=\"store_name\">\"اسم "
+"المتجر\"</t>!</div>\n"
+"                    <div>ستجد في المرفقات الإيصال الخاص بطلبك <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">التاريخ</t> <t t-"
+"out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">الوقت</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>مع وافر الشكر والتقدير،</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">\"اسم المتجر\"</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -4851,6 +4881,8 @@ msgid ""
 "It seems that no barcode nomenclature is set in your point of sale. You can "
 "add it in the settings of your shop."
 msgstr ""
+"يبدو أنه لم يتم تعيين أي تسمية للباركود في نقطة البيع الخاصة بك. يمكنك "
+"إضافتها في إعدادات متجرك."
 
 #. module: point_of_sale
 #. odoo-python
@@ -12037,47 +12069,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
-
-#~ msgid "Auto-generated session for orphan orders, ignored in constraints"
-#~ msgstr ""
-#~ "جلسة تم إنشاؤها آلياً للأوامر التي لا تملك جلسة، وتم تجاهل كافة الضوابط "
-#~ "فيها"
-
-#~ msgid "Full"
-#~ msgstr "كامل"
-
-#~ msgid "Full Synchronization:"
-#~ msgstr "المزامنة الكاملة:"
-
-#~ msgid "Limited"
-#~ msgstr "محدود"
-
-#~ msgid "Limited Synchronization:"
-#~ msgstr "المزتمنة المحدودة:"
-
-#~ msgid "Module"
-#~ msgstr "التطبيق"
-
-#~ msgid "Number of Rescue Session"
-#~ msgstr "عدد جلسات الاسترجاع"
-
-#~ msgid "PoS Customer Display opened in a new window"
-#~ msgstr "تم فتح شاشة عرض عملاء نقطة البيع في نافذة جديدة"
-
-#~ msgid "Recovery Session"
-#~ msgstr "جلسة الاستعادة"
-
-#~ msgid "Rescue Sessions"
-#~ msgstr "جلسات الاسترجاع"
-
-#~ msgid "Store edited orders in the backend"
-#~ msgstr "تخزين الطلبات التي تم تحريرها في الواجهة الخلفية"
-
-#~ msgid "Track orders edits"
-#~ msgstr "تتبع عمليات تحرير الطلبات"
-
-#~ msgid "You can update it by selecting one of the following options:"
-#~ msgstr "يمكنك التحديث عن طريق تحديد إحدى الخيارات التالية:"
-
-#~ msgid "outstanding rescue session"
-#~ msgstr "جلسة استرجاع معلقة"

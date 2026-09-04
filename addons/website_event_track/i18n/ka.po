@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:43+0000\n"
 "PO-Revision-Date: 2016-06-27 15:58+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Georgian (http://www.transifex.com/odoo/odoo-9/language/ka/)\n"
@@ -128,7 +128,9 @@ msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
-msgid "<i class=\"fa fa-bell mx-2 text-muted\"/> Favorite Talks"
+msgid ""
+"<i class=\"oi oi-filled mx-2 text-muted\" data-icon=\"notifications\"/> "
+"Favorite Talks"
 msgstr ""
 
 #. module: website_event_track
@@ -137,16 +139,10 @@ msgid "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 msgstr ""
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
-#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
-msgid "<span class=\"fa fa-plus me-1\"/> Schedule Tracks"
-msgstr ""
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" "
+"                                    <i class=\"oi mr4\" data-icon=\"close\" "
 "role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
 "                                    <span "
 "class=\"o_wetrack_proposal_error_message\"/>\n"
@@ -165,6 +161,12 @@ msgstr ""
 msgid ""
 "<span class=\"o_wetrack_proposal_label_content\">Talk Title</span>\n"
 "                                        <span>*</span>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "<span class=\"oi me-1\" data-icon=\"add\"/> Schedule Tracks"
 msgstr ""
 
 #. module: website_event_track
@@ -685,6 +687,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Add this talk to your agenda ?"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.module.module,shortdesc:base.module_website_event_track
+msgid "Advanced Events"
 msgstr ""
 
 #. module: website_event_track
@@ -1358,11 +1365,6 @@ msgid "Followers (Partners)"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__footer_visible
 msgid "Footer Visible"
 msgstr ""
@@ -1859,6 +1861,11 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Material Symbols icon e.g. checklist"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
 msgstr "საშუალო"
@@ -2033,6 +2040,60 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_24
 msgid "Old is New"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.module.module,description:base.module_website_event_track
+msgid ""
+"Organize Events, Trainings & Webinars\n"
+"-------------------------------------\n"
+"\n"
+"### Schedule, Promote, Sell, Organize\n"
+"\n"
+"Get extra features per event; multiple pages, sponsors, multiple talks, talk "
+"proposal form, agenda, event-related news, documents (slides of "
+"presentations), event-specific menus.\n"
+"\n"
+"Organize Your Tracks\n"
+"--------------------\n"
+"\n"
+"### From the talk proposal to the publication\n"
+"\n"
+"Add a talk proposal form on your events to allow visitors to submit talks "
+"and speakers. Organize the validation process of every talk, and schedule "
+"easily.\n"
+"\n"
+"Odoo's unique frontend and backend integration makes organization and "
+"publication so easy. Easily design beautiful speaker biographies and talks "
+"description.\n"
+"\n"
+"Agenda and List of Talks\n"
+"------------------------\n"
+"\n"
+"### A strong user interface\n"
+"\n"
+"Get a beautiful agenda for each event published automatically on your "
+"website. Allow your visitors to easily search and browse talks, filter by "
+"tags, locations or speakers.\n"
+"\n"
+"Manage Sponsors\n"
+"---------------\n"
+"\n"
+"### Sell sponsorship, promote your sponsors\n"
+"\n"
+"Add sponsors to your events and publish sponsors per level (e.g. bronze, "
+"silver, gold) on the bottom of every page of the event.\n"
+"\n"
+"Sell sponsorship packages online through the Odoo eCommerce for a full sales "
+"cycle integration.\n"
+"\n"
+"Communicate Efficiently\n"
+"-----------------------\n"
+"\n"
+"### Activate a blog for some events\n"
+"\n"
+"You can activate a blog for each event allowing you to communicate on "
+"specific events. Visitors can subscribe to news to get informed."
 msgstr ""
 
 #. module: website_event_track
@@ -2319,6 +2380,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 msgid "Speakers"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.module.module,summary:base.module_website_event_track
+msgid "Sponsors, Tracks, Agenda, Event News"
 msgstr ""
 
 #. module: website_event_track
@@ -2902,11 +2968,6 @@ msgid "Website Menu"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
 msgstr ""
@@ -2914,11 +2975,6 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: website_event_track

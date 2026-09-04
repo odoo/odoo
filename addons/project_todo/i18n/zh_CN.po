@@ -9,10 +9,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 13:17+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-14 04:26+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
-"projects/odoo-master/project_todo/zh_Hans/>\n"
+"projects/odoo-s19-4/project_todo/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,6 +156,10 @@ msgid ""
 "        </span>\n"
 "        <br/>"
 msgstr ""
+"<span style=\"font-size: 14px;\">\n"
+"        在标题中使用这些关键词来简化你的待办事项：\n"
+"    </span>\n"
+"    <br/>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -333,6 +337,9 @@ msgid ""
 "                </span>\n"
 "                Mark the to-do as urgent"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                    <font class=\"text-o-color-2\">!!!：</font>\n"
+"                </span>                将待办事项标记为紧急"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -342,6 +349,10 @@ msgid ""
 "                </span>\n"
 "                Mark the to-do as high priority"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                <font class=\"text-o-color-2\">!!:</font>\n"
+"            </span>\n"
+"            将待办事项标记为高优先级"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -351,6 +362,10 @@ msgid ""
 "                </span>\n"
 "                Mark the to-do as medium priority"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                    <font class=\"text-o-color-2\">!:</font>\n"
+"                </span>\n"
+"                将此待办事项标记为中等优先级"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -360,6 +375,10 @@ msgid ""
 "                </span>\n"
 "                Add tags to categorize the to-do"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                    <font class=\"text-o-color-2\">#标签：</font>\n"
+"                </span>\n"
+"                添加标签以对待办事项进行分类"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -369,6 +388,10 @@ msgid ""
 "                </span>\n"
 "                Assign the to-do to a specific user"
 msgstr ""
+"<span style=\"font-weight: bolder;\">\n"
+"                    <font class=\"text-o-color-2\">@用户：</font>\n"
+"                </span>\n"
+"                将待办事项分配给特定用户"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -523,7 +546,7 @@ msgstr "截止日期"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid "Enhance Your To-Dos with Shortcuts &amp;#9889;"
-msgstr ""
+msgstr "使用快捷方式优化待办事项&amp;#9889;"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -666,7 +689,7 @@ msgstr "任务"
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 msgid "Task Title..."
-msgstr ""
+msgstr "任务标题..."
 
 #. module: project_todo
 #. odoo-javascript
@@ -757,6 +780,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"在新的任务标题中，使用这些关键字进行设置：\n"
+"\n"
+"        30h：向任务分配 30 小时\n"
+"        #标签名称：为任务设置标签\n"
+"        @用户名：将任务指派给用户\n"
+"        !：将任务设为中等优先级别\n"
+"        !!：将任务设为高优先级别\n"
+"        !!!：将任务设为紧急\n"
+"\n"
+"        记得使用正确格式及顺序，例如：改进配置画面 5h #特色功能 #v16 "
+"@Mitchell!"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_quick_create_form
@@ -772,6 +806,16 @@ msgid ""
 "                             Ensure you follow the correct format and order. "
 "For example: \"Send invitations #event @Mitchell !\""
 msgstr ""
+"在标题中使用以下关键词以优化待办事项：\n"
+"\n"
+"                             #tags：添加标签以对待办事项进行分类\n"
+"                             @user：将待办事项分配给特定用户\n"
+"                             !：将待办事项标记为中等优先级\n"
+"                             !!：将待办事项标记为高优先级\n"
+"                             !!!：将待办事项标记为紧急\n"
+"\n"
+"                             请确保遵循正确的格式和顺序。 例如：“发送邀请 #活"
+"动 @Mitchell !”"
 
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_res_users

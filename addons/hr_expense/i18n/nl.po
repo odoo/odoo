@@ -9,14 +9,15 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Bren Driesen <brdri@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-21 19:55+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-12 13:59+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
 "hr_expense/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -61,6 +62,12 @@ msgid ""
 "directly on the expense account, as usual.\n"
 "            "
 msgstr ""
+" - Als er al een leveranciersfactuur bestaat, wordt voor de betaling de "
+"crediteurenrekening van de leverancier gebruikt, zodat deze aan de "
+"leveranciersfactuur kan worden gekoppeld.\n"
+"                 - Wanneer er geen leveranciersfactuur bestaat, wordt de "
+"betaling zoals gewoonlijk direct op de onkostenrekening geboekt.\n"
+"            "
 
 #. module: hr_expense
 #. odoo-python
@@ -215,7 +222,7 @@ msgstr "Actie gevraagd"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Action Required"
-msgstr ""
+msgstr "Actie vereist"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_ids
@@ -314,6 +321,10 @@ msgid ""
 "For company paid expenses with a matched bill, the account needs to be the "
 "payable account of the bill."
 msgstr ""
+"Er wordt een onkostenrekening verwacht voor door de werknemer betaalde "
+"onkosten en door het bedrijf betaalde uitgaven zonder bijbehorende factuur.\n"
+"Voor door het bedrijf betaalde onkosten met een bijbehorende factuur moet de "
+"rekening de crediteurenrekening van de factuur zijn."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -322,13 +333,16 @@ msgid ""
 "An expense with the same product, amount, and date already exists.\n"
 "Are you sure you want to submit this one as well?"
 msgstr ""
+"Er bestaat al een onkostenpost met hetzelfde product, hetzelfde bedrag en "
+"dezelfde datum.\n"
+"Weet je zeker dat je deze ook wilt indienen?"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split_form_view
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Analytic"
-msgstr ""
+msgstr "Analytisch"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -402,7 +416,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "Bijlage"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -595,7 +609,7 @@ msgstr "Wisselkoers"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -742,7 +756,7 @@ msgstr "Onkosten van werknemer"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Enter a description and select a product to proceed."
-msgstr ""
+msgstr "Voer een beschrijving in en selecteer een product om door te gaan."
 
 #. module: hr_expense
 #. odoo-python
@@ -756,6 +770,8 @@ msgstr "Voer een beschrijving in om door te gaan."
 msgid ""
 "Enter a name then choose a product and configure the amount of your expense."
 msgstr ""
+"Voer een naam in, kies vervolgens een product en stel het bedrag van je "
+"uitgave in."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -779,7 +795,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__existing_bill_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Existing Bill"
-msgstr ""
+msgstr "Bestaande leveranciersfactuur"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -856,7 +872,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr ""
+msgstr "Onkostenproducten"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -907,7 +923,7 @@ msgstr "Onkost betaald"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense products can be reinvoiced to your customers."
-msgstr ""
+msgstr "Onkostenproducten kunnen worden doorgefactureerd aan je klanten."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -979,7 +995,7 @@ msgstr "Onkosten van je teamleden"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expenses similar to %(other_expense_name)s"
-msgstr ""
+msgstr "Onkosten vergelijkbaar met %(other_expense_name)s"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_to_approve
@@ -1076,7 +1092,7 @@ msgstr "Richtlijnen"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_existing_bill
 msgid "Has Existing Bill"
-msgstr ""
+msgstr "Heeft bestaande leveranciersfactuur"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_expense_job_position_limit
@@ -1508,7 +1524,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "No (Direct Expense)"
-msgstr ""
+msgstr "No (directe onkost)"
 
 #. module: hr_expense
 #. odoo-python
@@ -1525,7 +1541,7 @@ msgstr "Nog geen gegevens!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense products found. Let's create one!"
-msgstr ""
+msgstr "Er zijn geen onkostenproducten gevonden. Laten we er een aanmaken!"
 
 #. module: hr_expense
 #. odoo-python
@@ -1567,7 +1583,7 @@ msgstr "Aantal onkosten"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_count
 msgid "Number of Split Expenses"
-msgstr ""
+msgstr "Aantal gesplitste onkosten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1762,11 +1778,13 @@ msgid ""
 "Please specify if the expenses were paid by the company, reimbursed to the "
 "employee directly, or in a payslip."
 msgstr ""
+"Geef aan of de onkosten door het bedrijf zijn betaald, rechtstreeks aan de "
+"werknemer zijn vergoed of via de loonstrook zijn vergoed."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Post"
-msgstr ""
+msgstr "Boeken"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1844,12 +1862,12 @@ msgstr "Productvarianten"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product:"
-msgstr ""
+msgstr "Product:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product: not found"
-msgstr ""
+msgstr "Product: niet gevonden"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
@@ -1934,12 +1952,12 @@ msgstr "Terugbetalen via loonstrook"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Reimbursement"
-msgstr ""
+msgstr "Vergoeding"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Related"
-msgstr ""
+msgstr "Gerelateerd"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_actions_report
@@ -2014,13 +2032,13 @@ msgstr "Scan"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Select Bill..."
-msgstr ""
+msgstr "Selecteer leveranciersfactuur..."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Select a product to proceed."
-msgstr ""
+msgstr "Selecteer een product om door te gaan."
 
 #. module: hr_expense
 #. odoo-python
@@ -2060,6 +2078,11 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"Stuur een e-mail naar dit e-mailalias met de bon als bijlage om met één klik "
+"een onkost aan te maken. Als het eerste woord van het e-mailonderwerp de "
+"interne referentie van het product of de productnaam bevat, wordt het "
+"bijbehorende product automatisch ingesteld. Typ het onkostenbedrag in het e-"
+"mailonderwerp om dit ook op de onkostenpost in te stellen."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -2281,6 +2304,8 @@ msgstr ""
 #: code:addons/hr_expense/models/res_company.py:0
 msgid "The employee expense journal must be a purchase journal."
 msgstr ""
+"Het dagboek voor onkostendeclaraties van werknemers moet een inkoopdagboek "
+"zijn."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2288,6 +2313,8 @@ msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
 msgstr ""
+"Het eerste woord van het e-mailonderwerp kwam niet overeen met een "
+"productcode. Je moet het product handmatig instellen in de onkost."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2296,6 +2323,9 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"De volgende goedgekeurde onkosten hebben dezelfde werknemer, hetzelfde "
+"bedrag en hetzelfde product als sommige onkosten in dit rapport. Controleer "
+"of dit rapport geen duplicaten bevat."
 
 #. module: hr_expense
 #. odoo-python
@@ -2350,6 +2380,9 @@ msgid ""
 "There are draft expenses linked to this product. Updating the product cost "
 "will change expense amounts. Make sure it is what you want to do."
 msgstr ""
+"Er zijn conceptonkosten gekoppeld aan dit product. Het bijwerken van de "
+"productkosten zal de onkostenbedragen wijzigen. Zorg ervoor dat dit is wat "
+"je wilt doen."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2430,7 +2463,7 @@ msgstr "Totaal onbelast bedrag in valuta"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Total With Conversion"
-msgstr ""
+msgstr "Totaal met omrekening"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2550,6 +2583,12 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
+"Wanneer de kost van een onkostenproduct anders is dan 0, kan de gebruiker "
+"die dit product gebruikt het bedrag van de onkosten niet wijzigen, maar "
+"alleen de hoeveelheid. Gebruik kosten die anders zijn dan 0 voor "
+"onkostenproducten die door het bedrijf worden gefinancierd tegen een vast "
+"bedrag, zoals kilometervergoedingen, dagvergoedingen, accommodatie of "
+"maaltijden."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2565,7 +2604,7 @@ msgstr "Wizard"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Yes (Match to Bill)"
-msgstr ""
+msgstr "Ja (koppelen aan leveranciersfactuur)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2584,6 +2623,8 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You can't add an attachment to an expense once it has been approved."
 msgstr ""
+"Je kunt geen bijlage meer toevoegen aan een onkostendeclaratie zodra deze is "
+"goedgekeurd."
 
 #. module: hr_expense
 #. odoo-python
@@ -2591,6 +2632,8 @@ msgstr ""
 msgid ""
 "You can't delete attachments from an expense once it has been submitted."
 msgstr ""
+"Je kunt bijlagen niet meer verwijderen uit een onkostendeclaratie nadat deze "
+"is ingediend."
 
 #. module: hr_expense
 #. odoo-python
@@ -2693,7 +2736,7 @@ msgstr "Je hebt de rechten niet om deze onkost te bewerken."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You don't have the access rights to modify this expense."
-msgstr ""
+msgstr "Je hebt geen toegangsrechten om deze onkostendeclaratie te wijzigen."
 
 #. module: hr_expense
 #. odoo-python
@@ -2785,12 +2828,9 @@ msgstr "gebruik OCR om gegevens uit een foto van de rekening in te vullen"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same category, date, amount, and employee already exists."
-msgstr ""
+msgstr "met dezelfde categorie, datum, bedrag en werknemer bestaat al."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "met hetzelfde bewijs bestaat al."
-
-#~ msgid "Managers can inspect all expenses from here."
-#~ msgstr "Managers kunnen van hieruit alle onkosten inzien."

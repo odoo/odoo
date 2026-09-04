@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 13:18+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-07-21 20:44+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"master/account_peppol/pt_BR/>\n"
+"s19-4/account_peppol/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +46,7 @@ msgstr " (Demo)"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Missing %(eas)s)"
-msgstr ""
+msgstr " ( %(eas)s e ausente)"
 
 #. module: account_peppol
 #. odoo-python
@@ -78,6 +78,7 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgid ""
 "%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
 msgstr ""
+"%(processed)s documentos Peppol processados, %(deleted)s documentos excluídos"
 
 #. module: account_peppol
 #. odoo-python
@@ -88,7 +89,7 @@ msgstr "%s has requested electronic invoices reception on Peppol."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "<b>Authenticate</b>"
-msgstr ""
+msgstr "<b>Autenticar</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -120,7 +121,7 @@ msgstr "<span><strong>Desconectado do Peppol!</strong></span>"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "<span>This information will be sent with your response.</span>"
-msgstr ""
+msgstr "<span>Essas informações serão enviadas junto com sua resposta.</span>"
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -304,6 +305,8 @@ msgid ""
 "A Peppol response was sent to the Peppol Access Point declaring you %"
 "(status)s this document."
 msgstr ""
+"Uma resposta Peppol foi enviada ao Ponto de Acesso Peppol declarando que "
+"você %(status)s este documento."
 
 #. module: account_peppol
 #. odoo-python
@@ -332,7 +335,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "A connection to '%s' already exists."
-msgstr ""
+msgstr "Já existe uma conexão com '%s'."
 
 #. module: account_peppol
 #. odoo-python
@@ -442,12 +445,12 @@ msgstr "Conta usada pelo Peppol"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ab
 msgid "Acknowledgement"
-msgstr ""
+msgstr "Reconhecer"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Actions to suggest"
-msgstr ""
+msgstr "Ações a sugerir"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -595,6 +598,8 @@ msgid ""
 "An error occurred while responding to this invoice's expeditor.%(br)sStatus: "
 "%(status)s - %(error)s"
 msgstr ""
+"Ocorreu um erro ao responder ao remetente desta fatura.%(br)sStatus: %"
+"(status)s - %(error)s"
 
 #. module: account_peppol
 #. odoo-python
@@ -628,12 +633,12 @@ msgstr "Ocorreu um erro interno"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ap
 msgid "Approval"
-msgstr ""
+msgstr "Aprovação"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ap
 msgid "Approved"
-msgstr ""
+msgstr "Aprovado"
 
 #. module: account_peppol
 #. odoo-python
@@ -641,12 +646,13 @@ msgstr ""
 #: code:addons/account_peppol/wizard/peppol_rejection_wizard.py:0
 msgid "At least one reason must be given when rejecting a Peppol invoice."
 msgstr ""
+"É necessário indicar pelo menos um motivo ao rejeitar uma fatura Peppol."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Authentication canceled"
-msgstr ""
+msgstr "Autenticação cancelada"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -675,12 +681,12 @@ msgstr "Métodos de envio Peppol disponíveis"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_ubl
 msgid "Base helpers for UBL"
-msgstr ""
+msgstr "Ajudantes básicos para UBL"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_response
 msgid "Business Level Responses for Peppol"
-msgstr ""
+msgstr "Respostas de nível empresarial para Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -706,7 +712,7 @@ msgstr "Pode enviar. Registro pendente para receber."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -736,7 +742,7 @@ msgstr "Verificar parceiro(s)"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__code
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_common
@@ -760,7 +766,7 @@ msgstr "Nome da empresa"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ca
 msgid "Conditionally accepted"
-msgstr ""
+msgstr "Aceito condicionalmente"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_config_settings
@@ -836,7 +842,7 @@ msgstr "Demonstração"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__description
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -897,19 +903,19 @@ msgstr "Exibir Utilizar Seleção de conexão do principal"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Do you want to proceed?"
-msgstr ""
+msgstr "Quer continuar?"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document cancelled successfully"
-msgstr ""
+msgstr "Documento cancelado com sucesso"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Document reset to draft successfully"
-msgstr ""
+msgstr "Documento redefinido como rascunho com sucesso"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -919,6 +925,9 @@ msgid ""
 "\n"
 "Would you like to cancel this document instead?"
 msgstr ""
+"Documentos enviados/recebidos via Peppol não podem ser excluídos.\n"
+"\n"
+"Deseja cancelar este documento?"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -928,11 +937,14 @@ msgid ""
 "\n"
 "Would you like to reset this document to draft instead?"
 msgstr ""
+"Documentos enviados/recebidos via Peppol não podem ser excluídos.\n"
+"\n"
+"Quer redefinir este documento como rascunho?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Does not support Invoice Responses"
-msgstr ""
+msgstr "Não oferece suporte a respostas de faturas"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -965,7 +977,7 @@ msgstr "Usuário EDI"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "EDI user should be of one of the following types: %s"
-msgstr ""
+msgstr "O usuário EDI deve ser de um dos seguintes tipos: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -1013,7 +1025,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 msgid "France - E-Invoicing (Approved Platform)"
-msgstr ""
+msgstr "France - E-Invoicing (Approved Platform)"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1083,7 +1095,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
 msgid "In Process"
-msgstr ""
+msgstr "Em processamento"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1095,6 +1107,8 @@ msgstr "Diário contábil de entrada"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
+"O arquivo de fatura %s excede o limite de tamanho de 64 MB para envio via "
+"Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -1131,7 +1145,7 @@ msgstr "Última atualização em"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__list_identifier
 msgid "List identifier"
-msgstr ""
+msgstr "Identificador da lista"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__prod
@@ -1158,7 +1172,7 @@ msgstr "Chave de migração"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Miscellaneous:"
-msgstr ""
+msgstr "Diversos:"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__phone_number
@@ -1181,12 +1195,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__move_ids
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__move_id
 msgid "Move"
-msgstr ""
+msgstr "Movimentação"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_clarification__name
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: account_peppol
 #. odoo-python
@@ -1204,12 +1218,12 @@ msgstr "Nenhum ponto de extremidade válido de participante AS4 foi encontrado."
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "No, Keep It"
-msgstr ""
+msgstr "Não, manter"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__peppol_state__not_serviced
 msgid "Not Serviced"
-msgstr ""
+msgstr "Não atendido"
 
 #. module: account_peppol
 #. odoo-python
@@ -1234,12 +1248,12 @@ msgstr "E-mail de notificação para atualização do estado de registro do pepp
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_clarification__list_identifier__opstatusaction
 msgid "OPStatusAction"
-msgstr ""
+msgstr "OPStatusAction"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_clarification__list_identifier__opstatusreason
 msgid "OPStatusReason"
-msgstr ""
+msgstr "OPStatusReason"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1255,13 +1269,13 @@ msgstr "ID do domínio do Odoo"
 #. odoo-python
 #: code:addons/account_peppol/tools/peppol_iap_connector.py:0
 msgid "Odoo Peppol Proxy returned an invalid response."
-msgstr ""
+msgstr "O proxy Peppol do Odoo retornou uma resposta inválida."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.xml:0
 msgid "Odoo keeps you up to date with the new regulation."
-msgstr ""
+msgstr "O Odoo mantém tudo atualizado com a nova regulamentação."
 
 #. module: account_peppol
 #. odoo-python
@@ -1280,7 +1294,7 @@ msgstr "Status do Peppol"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__pd
 msgid "Paid"
-msgstr ""
+msgstr "Pago"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__parent_company_id
@@ -1345,7 +1359,7 @@ msgstr "Peppol Pode Enviar"
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_can_send_response
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_can_send_response
 msgid "Peppol Can Send Response"
-msgstr ""
+msgstr "O Peppol pode enviar uma resposta"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1362,18 +1376,18 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Peppol Documents Cannot Be Deleted"
-msgstr ""
+msgstr "Documentos Peppol não podem ser excluídos"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Peppol Documents: Cannot Delete Invoice"
-msgstr ""
+msgstr "Documentos Peppol: Não é possível excluir fatura"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
 msgid "Peppol Eas"
-msgstr ""
+msgstr "Peppol Eas"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1414,13 +1428,13 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_identifier
 msgid "Peppol Identifier"
-msgstr ""
+msgstr "Identificador Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_sent
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_is_sent
 msgid "Peppol Is Sent"
-msgstr ""
+msgstr "Peppol é enviado"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_metadata
@@ -1467,32 +1481,32 @@ msgstr "Registro do Peppol"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_rejection_wizard
 msgid "Peppol Rejection wizard"
-msgstr ""
+msgstr "Assistente de rejeição do Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_response_ids
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__peppol_response_ids
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_response_view_form
 msgid "Peppol Response"
-msgstr ""
+msgstr "Resposta do Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_response_support
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_response_support
 msgid "Peppol Response Service"
-msgstr ""
+msgstr "Serviço de Resposta Peppol"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_response_view_list
 msgid "Peppol Responses"
-msgstr ""
+msgstr "Respostas do Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__peppol_message_uuid
 msgid "Peppol UUID"
-msgstr ""
+msgstr "UUID do Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
@@ -1505,17 +1519,19 @@ msgstr "Peppol Utilização Empresa matriz"
 msgid ""
 "Peppol allows for complete automation of sending and receiving e-invoices."
 msgstr ""
+"O Peppol permite a automação completa do envio e recebimento de faturas "
+"eletrônicas."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Peppol business response error: %s"
-msgstr ""
+msgstr "Erro de resposta comercial do Peppol: %s"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_peppol_clarification
 msgid "Peppol clarifications used for rejection"
-msgstr ""
+msgstr "Esclarecimentos do Peppol usados para rejeição"
 
 #. module: account_peppol
 #. odoo-python
@@ -1531,7 +1547,7 @@ msgstr "Peppol e-address (EAS)"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "Peppol info"
-msgstr ""
+msgstr "Informações sobre Peppol"
 
 #. module: account_peppol
 #. odoo-python
@@ -1545,6 +1561,8 @@ msgstr "Fatura Peppol recebida"
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
+"Peppol é o padrão seguro para faturas eletrônicas utilizado na UE e em todo "
+"o mundo."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_message_uuid
@@ -1586,7 +1604,7 @@ msgstr "Peppol: Atualização do registro"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_auto_register_services_ir_actions_server
 msgid "Peppol: auto register services"
-msgstr ""
+msgstr "Peppol: serviços de registro automático"
 
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_new_documents_ir_actions_server
@@ -1627,7 +1645,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Please fill in the company's routing identification."
-msgstr ""
+msgstr "Preencha a identificação de roteamento da empresa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1698,18 +1716,18 @@ msgstr "Pronto para enviar"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Reasons"
-msgstr ""
+msgstr "Motivos"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Reasons:"
-msgstr ""
+msgstr "Motivos:"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__ab
 msgid "Received"
-msgstr ""
+msgstr "Recebido"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1737,7 +1755,7 @@ msgstr "Cadastro rejeitado."
 #: code:addons/account_peppol/models/account_move.py:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Reject Peppol Document"
-msgstr ""
+msgstr "Rejeitar documento Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__re
@@ -1748,44 +1766,44 @@ msgstr "Rejeitado"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__re
 msgid "Rejection"
-msgstr ""
+msgstr "Rejeição"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__action_ids
 msgid "Rejection actions"
-msgstr ""
+msgstr "Ações de rejeição"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_rejection_wizard__reason_ids
 msgid "Rejection reasons"
-msgstr ""
+msgstr "Motivos de rejeição"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Reset to draft"
-msgstr ""
+msgstr "Voltar para rascunho"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_response__response_code
 msgid "Response Code"
-msgstr ""
+msgstr "Código de resposta"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_endpoint
 msgid "Routing Endpoint"
-msgstr ""
+msgstr "Ponto final de roteamento"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__routing_scheme
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__routing_scheme
 msgid "Routing ID"
-msgstr ""
+msgstr "ID de roteamento"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__routing_scheme
 msgid "Routing Scheme"
-msgstr ""
+msgstr "Esquema de roteamento"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__selected_company_id
@@ -1817,7 +1835,7 @@ msgstr "Assistente para envio de faturas"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_rejection_wizard_view_form
 msgid "Send Rejection"
-msgstr ""
+msgstr "Enviar rejeição"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1872,18 +1890,18 @@ msgstr "Algo deu errado com sua solicitação"
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Suggested actions:"
-msgstr ""
+msgstr "Ações sugeridas:"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__peppol_supported_documents
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__peppol_supported_documents
 msgid "Supported Peppol Documents"
-msgstr ""
+msgstr "Documentos Peppol suportados"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid "Supports Invoice Responses"
-msgstr ""
+msgstr "Suporta respostas a faturas"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1969,18 +1987,20 @@ msgid ""
 "The Peppol receiver of this document has rejected it with the following "
 "information:%(br)s%(rejection_message)s"
 msgstr ""
+"O destinatário Peppol deste documento o rejeitou com as seguintes "
+"informações:%(br)s%(rejection_message)s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has accepted it."
-msgstr ""
+msgstr "O destinatário Peppol deste documento respondeu que o aceitou."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "The Peppol receiver of this document replied that he has received it."
-msgstr ""
+msgstr "O destinatário Peppol deste documento respondeu que o recebeu."
 
 #. module: account_peppol
 #. odoo-python
@@ -2029,6 +2049,9 @@ msgid ""
 "document to be accepted when sent again (eventually). These will be sent to "
 "the document's sender. Not mandatory."
 msgstr ""
+"As ações a serem sugeridas ao remetente do documento para que este seja "
+"aceito quando reenviado (eventualmente). Elas serão enviadas ao remetente do "
+"documento. Não é obrigatório."
 
 #. module: account_peppol
 #. odoo-python
@@ -2122,6 +2145,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Os seguintes documentos Peppol %s serão redefinidos como rascunho:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2131,6 +2157,9 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Os seguintes documentos preliminares Peppol %s serão cancelados:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -2184,12 +2213,14 @@ msgid ""
 "The reasons to reject the received PEPPOL document. These will be sent to "
 "the document's sender."
 msgstr ""
+"Os motivos para rejeitar o documento PEPPOL recebido. Serão enviados ao "
+"remetente do documento."
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "The remaining %s document(s) will be deleted."
-msgstr ""
+msgstr "Os demais documentos %s serão excluídos."
 
 #. module: account_peppol
 #. odoo-python
@@ -2358,6 +2389,8 @@ msgstr ""
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "To use the Approved Platform for French E-Invoicing, install the module"
 msgstr ""
+"Para utilizar a Plataforma Aprovada para Faturamento Eletrônico em francês, "
+"instale o módulo"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
@@ -2378,7 +2411,7 @@ msgstr "Sem verificação"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__uq
 msgid "Under query"
-msgstr ""
+msgstr "Sob consulta"
 
 #. module: account_peppol
 #. odoo-python
@@ -2412,7 +2445,7 @@ msgstr "Use a seleção de conexão da matriz"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/peppol_auth/peppol_auth_service.js:0
 msgid "Verification pending"
-msgstr ""
+msgstr "Verificação pendente"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -2455,7 +2488,7 @@ msgstr "O que é o Peppol e por que é incrível?"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Why should I use French E-Invoicing ?"
-msgstr ""
+msgstr "Por que devo usar o faturamento eletrônico em francês?"
 
 #. module: account_peppol
 #. odoo-python
@@ -2473,13 +2506,13 @@ msgstr "Por que usá-lo?"
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
 msgid "Yes, Cancel It"
-msgstr ""
+msgstr "Sim, cancelar"
 
 #. module: account_peppol
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Sim, continuar"
 
 #. module: account_peppol
 #. odoo-python
@@ -2617,6 +2650,8 @@ msgid ""
 "Your details are being verified. There is nothing else to do on your end: "
 "your Peppol registration will be finalized automatically."
 msgstr ""
+"Seus dados estão sendo verificados. Não há mais nada a ser feito da sua "
+"parte: seu cadastro no Peppol será finalizado automaticamente."
 
 #. module: account_peppol
 #. odoo-python
@@ -2667,7 +2702,7 @@ msgstr "Sua solicitação ainda está sendo processada."
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "accepted"
-msgstr ""
+msgstr "aceito"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2690,19 +2725,19 @@ msgstr "não pôde ser enviado via Peppol"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "received"
-msgstr ""
+msgstr "recebido"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "rejected"
-msgstr ""
+msgstr "rejeitado"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -2723,72 +2758,3 @@ msgstr "para enviar faturas, mas este"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
-
-#~ msgid "Verify Peppol"
-#~ msgstr "Verificar Peppol"
-
-#~ msgid "<b>Authentify with itsme</b>"
-#~ msgstr "<b>Autentique-se com o itsme</b>"
-
-#~ msgid "Activate Electronic Invoicing"
-#~ msgstr "Ativar o faturamento eletrônico"
-
-#~ msgid "Itsme"
-#~ msgstr "Itsme"
-
-#~ msgid " (no access)"
-#~ msgstr " (sem acesso)"
-
-#~ msgid ""
-#~ "Code used to identify the Endpoint for BIS Billing 3.0 and its "
-#~ "derivatives.\n"
-#~ "             List available at https://docs.peppol.eu/poacc/billing/3.0/"
-#~ "codelist/eas/"
-#~ msgstr ""
-#~ "Código usado para identificar o endpoint do BIS Billing 3.0 e seus "
-#~ "derivados.\n"
-#~ "             Lista disponível em https://docs.peppol.eu/poacc/billing/3.0/"
-#~ "codelist/eas/"
-
-#~ msgid "EDI user should be of type Peppol"
-#~ msgstr "O usuário de EDI deve ser do tipo Peppol"
-
-#~ msgid "Invoice %s is too big to send via peppol (64MB limit)"
-#~ msgstr ""
-#~ "A fatura %s é muito grande para ser enviada via Peppol (limite de 64 MB)."
-
-#~ msgid "Please fill in the EAS code and the Participant ID code."
-#~ msgstr "Preencha o código EAS e o código de identificação do participante."
-
-#~ msgid "The Peppol endpoint identification number is not correct."
-#~ msgstr "O número de identificação do endpoint Peppol não está correto."
-
-#~ msgid "UBL BIS Billing 3.0.12"
-#~ msgstr "UBL BIS Billing 3.0.12"
-
-#~ msgid ""
-#~ "Unique identifier used by the BIS Billing 3.0 and its derivatives, also "
-#~ "known as 'Endpoint ID'."
-#~ msgstr ""
-#~ "O identificador exclusivo usado pelo BIS Billing 3.0 e seus derivados, "
-#~ "também conhecido como \"ID do endpoint\"."
-
-#~ msgid "You are not allowed to send invoice on behalf of %s."
-#~ msgstr "Não é permitido enviar faturas em nome de %s."
-
-#~ msgid ""
-#~ "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
-#~ "customer '%s'."
-#~ msgstr ""
-#~ "[PEPPOL-EN16931-R010] Um endereço eletrônico (EAS) deve ser fornecido no "
-#~ "'%s' do cliente."
-
-#~ msgid ""
-#~ "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
-#~ "company '%s'."
-#~ msgstr ""
-#~ "[PEPPOL-EN16931-R020] Um endereço eletrônico (EAS) deve ser fornecido na "
-#~ "página '%s' da empresa."
-
-#~ msgid "UBL 2.0"
-#~ msgstr "UBL 2.0"

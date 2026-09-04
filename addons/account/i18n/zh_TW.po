@@ -15,10 +15,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 01:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-08-25 05:37+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-master/account/zh_Hant/>\n"
+"projects/odoo-s19-4/account/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1667,6 +1667,139 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value=\"','.join([str(i) for i in "
+"invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
+"<t t-set=\"MAX_INVOICES_TO_DISPLAY\" t-value=\"5\"/>\n"
+"\n"
+"<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
+"serif; color: #454748;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
+"        <tr>\n"
+"            <td align=\"center\">\n"
+"                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"background-color: white; border-collapse:separate;\">\n"
+"                    <!-- HEADER -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table width=\"100%\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"background-color: #875A7B; color: #FFFFFF; font-"
+"size: 14px; padding: 14px 0; border-radius: 3px;\">\n"
+"                                <tr>\n"
+"                                    <td align=\"left\" style=\"padding-left: "
+"16px;\">\n"
+"                                        收到<t t-if=\"invoice_count &gt; 1\">"
+"新電子發票</t><t t-else=\"\">新電子發票</t>\n"
+"                                    </td>\n"
+"                                    <td align=\"right\" style=\"padding-"
+"right: 16px;\">\n"
+"                                        <img alt=\"Odoo\" src=\"/web/static/"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <!-- BODY -->\n"
+"                    <tr>\n"
+"                        <td align=\"center\">\n"
+"                            <table width=\"590\" cellpadding=\"0\" "
+"cellspacing=\"0\" style=\"padding: 16px 32px; background-color: white; "
+"border-collapse:separate;\">\n"
+"                                <tr>\n"
+"                                    <td style=\"font-size: 14px;\">\n"
+"                                        <h3 style=\"font-size: 20px; margin-"
+"bottom: 20px;\">\n"
+"                                            <t t-"
+"if=\"object.company_id.name\">\n"
+"                                                你好 <t t-"
+"out=\"object.company_id.name\"/>！\n"
+"                                            </t>\n"
+"                                            <t t-else=\"\">\n"
+"                                                你好！\n"
+"                                            </t>\n"
+"                                        </h3>\n"
+"                                        <p style=\"margin-top: 12px;\">\n"
+"                                            你剛收到<t t-if=\"invoice_count "
+"&gt; 1\">新的電子發票</t><t t-else=\"\">一張新的電子發票</t>。\n"
+"                                        </p>\n"
+"                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
+"t-value=\"5\"/>\n"
+"                                        <t t-"
+"foreach=\"invoices[:MAX_INVOICES_TO_DISPLAY]\" t-as=\"inv\">\n"
+"                                            <t t-if=\"not inv_first\">\n"
+"                                                <div style=\"background-"
+"color:#EEEEEE; height:1px; width: 60%; margin: 16px auto; border:none;\"/>\n"
+"                                            </t>\n"
+"                                            <p style=\"line-height: 1.7em; "
+"padding-top: 16px;\">\n"
+"                                                <t t-if=\"inv.name or "
+"inv.ref\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">發票參考編號：</span><t t-out=\"inv.name or inv.ref\"/><br/>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"inv.partner_id.name\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">供應商：</span><t t-out=\"inv.partner_id.name\"/><br/>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"inv.amount_total\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">金額：</span><t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"object.company_id.currency_id}\"/><br/>\n"
+"                                                </t>\n"
+"                                                <t t-"
+"if=\"inv.invoice_date_due\">\n"
+"                                                    <span style=\"font-"
+"weight:bold;\">付款到期日：</span><t t-out=\"inv.invoice_date_due\"/>\n"
+"                                                </t>\n"
+"                                            </p>\n"
+"                                        </t>\n"
+"\n"
+"                                        <div style=\"text-align: center; "
+"padding-top: 24px;\">\n"
+"                                            <a t-if=\"invoice_count != 1\" t-"
+"attf-href=\"/odoo/accounting/action-"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\">\n"
+"                                               查閱發票\n"
+"                                            </a>\n"
+"                                            <a t-else=\"\" t-attf-href=\"/"
+"odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" "
+"target=\"_blank\" t-attf-style=\"padding: 12px 24px; font-size: 14px; font-"
+"weight: bold; color: #FFFFFF; text-decoration: none !important; background-"
+"color: #008384; border-radius:3px; display: inline-block;\">\n"
+"                                               查閱發票\n"
+"                                            </a>\n"
+"                                            <p style=\"font-size: 11px; "
+"margin-top: 8px; color: #777;\">請查閱及核對發票金額。</p>\n"
+"                                        </div>\n"
+"                                        <br/>\n"
+"                                        <p style=\"text-align: center; "
+"margin-top: 16px;\">\n"
+"                                            若想取消訂閱新收到發票通知電郵，"
+"請按 <a t-attf-href=\"/my/journal/{{ object.id }}/unsubscribe\">此處</a>。\n"
+"                                        </p>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td>\n"
+"        </tr>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_invoice_subscriber
@@ -4378,9 +4511,8 @@ msgstr "自動序列"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Automatically compute US and Canadian tax rates."
-msgstr "自動計算美國及加拿大的稅率。"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__autopost_bills
@@ -4414,9 +4546,8 @@ msgstr "自動過賬賬單精靈"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "AvaTax"
-msgstr "AvaTax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -6433,7 +6564,7 @@ msgstr "生產成本"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
 msgid "Cost of Revenue"
-msgstr "主營業務成本"
+msgstr "收入成本"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_equipment
@@ -11394,9 +11525,8 @@ msgstr "資訊"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Initial Setup"
-msgstr "初始設定"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -12585,8 +12715,8 @@ msgid ""
 "anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"保持此欄位為空，以使用產品類別的預設值. 如果設定有自動估價方法的盎格魯-撒克遜"
-"會計，則將使用產品類別上的費用科目."
+"留空此欄位，便可使用產品類別的預設值。若已設定使用英式 Anglo-Saxon 會計的自動"
+"估值方法，會使用產品類別的開支賬戶。"
 
 #. module: account
 #: model:account.account,description:account.24_l10n_id_12210430
@@ -16416,7 +16546,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid ""
 "Propose to validate bills automatically when AI accuracy is right 3 times in "
 "a row for a vendor."
@@ -21090,7 +21219,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "記項已從 %s 撤銷"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -22053,7 +22182,7 @@ msgstr "使用稅金單位"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__anglo_saxon_accounting
 msgid "Use anglo-saxon accounting"
-msgstr "使用盎格魯-撒克遜會計"
+msgstr "使用英式 (Anglo-Saxon) 會計"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
@@ -24109,124 +24238,3 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (副本)"
-
-#~ msgid "(copy)"
-#~ msgstr "（副本）"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-#~ msgstr "<span class=\"o_stat_text\">日記賬記項</span>"
-
-#~ msgid "<span title=\"Latest Statement\">Last Statement</span>"
-#~ msgstr "<span title=\"最新結單\">上期結單</span>"
-
-#~ msgid "<span>1</span>"
-#~ msgstr "<span>1</span>"
-
-#~ msgid "<span>=</span>"
-#~ msgstr "<span>=</span>"
-
-#~ msgid "Cash Rounding"
-#~ msgstr "現金捨入"
-
-#~ msgid "Cash Roundings"
-#~ msgstr "現金捨入"
-
-#~ msgid "Create the first cash rounding"
-#~ msgstr "建立第一個現金捨入"
-
-#~ msgid "Define the smallest coinage of the currency used to pay by cash"
-#~ msgstr "定義用於通過現金支付的幣別的最小硬幣"
-
-#~ msgid "Not Due"
-#~ msgstr "未到期"
-
-#~ msgid "Online Payments"
-#~ msgstr "網上支付"
-
-#~ msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
-#~ msgstr "代表非0的最小貨幣單位(例如:0.05)."
-
-#~ msgid "Rounding Precision"
-#~ msgstr "捨入精度"
-
-#~ msgid "Rounding Strategy"
-#~ msgstr "捨入政策"
-
-#~ msgid "Send invoices and payment follow-ups by post"
-#~ msgstr "以郵寄方式發送收付款憑單及追蹤"
-
-#~ msgid ""
-#~ "Specify which way will be used to round the invoice amount to the "
-#~ "rounding precision"
-#~ msgstr "指定使用哪一種方式用於應收憑單的四捨五入"
-
-#, fuzzy
-#~ msgid ""
-#~ "The IBAN does not seem to be correct. You should have entered something "
-#~ "like this %s\n"
-#~ "Where B = National bank code, S = Branch code, C = Account No, k = Check "
-#~ "digit"
-#~ msgstr ""
-#~ "國際銀行帳號號碼格式不符，請參考輸入以下格式%s\n"
-#~ "B=國家銀行代碼，S=分行代碼，C=帳戶號，K=檢驗位"
-
-#, fuzzy
-#~ msgid "The IBAN is invalid, it should begin with the country code"
-#~ msgstr "IBAN代碼不正確，應該以國家代碼開頭"
-
-#~ msgid "The running balance (%s) doesn't match the specified ending balance."
-#~ msgstr "運行餘額（%s）與指定的結束餘額不匹配。"
-
-#~ msgid ""
-#~ "The starting balance doesn't match the ending balance of the previous "
-#~ "statement, or an earlier statement is missing."
-#~ msgstr "起始餘額與上一份對帳單的結束餘額不匹配，或者缺少早期對帳單。"
-
-#~ msgid "The tie-breaking rule used for float rounding operations"
-#~ msgstr "用於浮點運算的搭配規則"
-
-#, fuzzy
-#~ msgid "There is no IBAN code."
-#~ msgstr "沒有IBAN代碼。"
-
-#, fuzzy
-#~ msgid "This IBAN does not pass the validation check, please verify it."
-#~ msgstr "IBAN國際銀行帳號號碼未通過驗證，請修正調整。"
-
-#~ msgid "This Week"
-#~ msgstr "本周"
-
-#, fuzzy
-#~ msgid "Units"
-#~ msgstr "單位"
-
-#~ msgid ""
-#~ "You can not archive a journal containing draft journal entries.\n"
-#~ "\n"
-#~ "To proceed:\n"
-#~ "1/ click on the top-right button 'Journal Entries' from this journal "
-#~ "form\n"
-#~ "2/ then filter on 'Draft' entries\n"
-#~ "3/ select them all and post or delete them through the action menu"
-#~ msgstr ""
-#~ "您不能存檔包含草稿日記帳分錄的日記帳.\n"
-#~ "\n"
-#~ "繼續:\n"
-#~ "1) 點選此日記帳表格右上角的\"日記帳分錄\"按鈕\n"
-#~ "2) 然後篩選\"草稿\"分錄\n"
-#~ "3) 全選並通過操作功能來過帳或刪除它們"
-
-#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
-#~ msgstr "不可修改已發佈分錄的以下唯讀欄位：%s"
-
-#~ msgid "You cannot reset to draft a tax cash basis journal entry."
-#~ msgstr "現金收付稅金的日記帳分錄您不能重置為草稿."
-
-#~ msgid ""
-#~ "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/"
-#~ "a' }})"
-#~ msgstr ""
-#~ "{{ object.company_id.name }} 付款收據(編號 {{ object.name 或 'n/a' }})"

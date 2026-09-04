@@ -3,15 +3,15 @@
 # * auth_timeout
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
-# Saara Hakanen <sahak@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-20 01:29+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-24 10:09+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "auth_timeout/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -127,7 +127,7 @@ msgstr "Epäaktiivisen aikakatkaisulukituksen viiveyksikkö"
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Lock screen"
-msgstr ""
+msgstr "Näytön lukitseminen"
 
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__without_2fa
@@ -138,7 +138,7 @@ msgstr "Kirjaudu ulos"
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_2fa_selection__with_2fa
 msgid "Logout with two-factor authentication"
-msgstr ""
+msgstr "Kirjaudu ulos kaksivaiheisella tunnistautumisella"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_inactivity_mfa
@@ -148,7 +148,7 @@ msgstr "Vaadi monivaiheinen tunnistautuminen epäaktiivisuuden aikakatkaisussa"
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout_mfa
 msgid "Require MFA on session timeout"
-msgstr ""
+msgstr "Vaadi monivaiheinen tunnistautuminen istunnon aikakatkaisussa"
 
 #. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__has_lock_timeout_inactivity
@@ -159,33 +159,35 @@ msgstr "Vaatii uudelleentunnistautumisen käyttäjän epäaktiivisuuden jälkeen
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__has_lock_timeout
 msgid "Requires re-authentication after the user's last connection"
 msgstr ""
+"Vaatii uudelleentunnistautumisen käyttäjän viimeisimmän yhteyden jälkeen"
 
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_2fa_selection__without_2fa
 msgid "Screen lock"
-msgstr ""
+msgstr "Näytön lukitus"
 
 #. module: auth_timeout
 #: model:ir.model.fields.selection,name:auth_timeout.selection__res_groups__lock_timeout_inactivity_2fa_selection__with_2fa
 msgid "Screen lock with two-factor authentication"
-msgstr ""
+msgstr "Näytön lukitus kaksivaiheisella tunnistautumisella"
 
 #. module: auth_timeout
 #: model:ir.model.fields,field_description:auth_timeout.field_res_groups__lock_timeout
 msgid "Session timeout"
-msgstr ""
+msgstr "Istunnon aikakatkaisu"
 
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid ""
 "The screen of the users in this group will be locked after a defined delay"
-msgstr ""
+msgstr "Tämän ryhmän käyttäjien näyttö lukitaan määritetyn viiveen jälkeen"
 
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid ""
 "The users in this group will be automatically logout at regular intervals"
 msgstr ""
+"Tämän ryhmän käyttäjät kirjataan ulos automaattisesti säännöllisin väliajoin"
 
 #. module: auth_timeout
 #: model:ir.model.fields,help:auth_timeout.field_res_groups__lock_timeout_inactivity
@@ -208,12 +210,12 @@ msgstr ""
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Timeouts"
-msgstr ""
+msgstr "Aikakatkaisut"
 
 #. module: auth_timeout
 #: model_terms:ir.ui.view,arch_db:auth_timeout.auth_passkey_groups_form
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "Kaksivaiheinen tunnistautuminen"
 
 #. module: auth_timeout
 #: model:ir.model,name:auth_timeout.model_res_users
@@ -258,8 +260,8 @@ msgstr "epäaktiivisuutta"
 msgid "websocket message handling"
 msgstr "websocket-viestien käsittely"
 
-#~ msgid "Inactivity"
-#~ msgstr "Epäaktiivisuus"
+msgid "Inactivity"
+msgstr "Epäaktiivisuus"
 
-#~ msgid "Session"
-#~ msgstr "Istunto"
+msgid "Session"
+msgstr "Istunto"

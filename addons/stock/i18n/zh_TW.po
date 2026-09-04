@@ -8,16 +8,16 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-19 04:29+0000\n"
+"PO-Revision-Date: 2026-07-21 00:35+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
-"projects/odoo-master/stock/zh_Hant/>\n"
+"projects/odoo-s19-4/stock/zh_Hant/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -684,8 +684,9 @@ msgstr "<span class=\"o_stat_text\">路由</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">廢料</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -1049,8 +1050,9 @@ msgstr "活動異常圖示"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "活動計劃"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
@@ -1270,6 +1272,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
+"啟用「按訂單補貨」，在產品售出時，自動產生採購訂單，同時在文件之間建立直接連"
+"結。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1452,7 +1456,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "盡快，並處理缺貨訂單"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__ask
@@ -1619,16 +1623,20 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"可用數量（計算方法：在庫數量 − 預留數量 − 待移除數量）\n"
+"若是單一庫存位置，此數量包括存放在此位置及其子位置的貨物。\n"
+"若是單一倉庫，此數量包括存放在此倉庫的庫存位置及其任何子位置的貨物。\n"
+"其他情況下，此數量包括存放在任何「內部」類型的庫存位置的貨物。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
-msgstr "欠單"
+msgstr "缺貨訂單："
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_ids
 msgid "Back Orders"
-msgstr "欠單"
+msgstr "缺貨訂單"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
@@ -2080,6 +2088,8 @@ msgid ""
 "start on replenishment and avoid delays, or trigger it just-in-time ('0 "
 "days') to avoid overstocking."
 msgstr ""
+"配置提早補貨的時間，以更早觸發重新訂購規則，預早補貨以避免延誤。可設定為實時"
+"觸發（「0 天」），避免庫存過多。"
 
 #. module: stock
 #: model:res.company,pay_later_label:stock.res_company_1
@@ -2096,13 +2106,14 @@ msgstr "確認"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "確認訂單"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Confirmation Email"
-msgstr ""
+msgstr "確認電郵"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2154,8 +2165,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
+#, fuzzy
 msgid "Container"
-msgstr ""
+msgstr "容器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_ids
@@ -3106,8 +3118,9 @@ msgstr "差異"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
+#, fuzzy
 msgid "Digest"
-msgstr ""
+msgstr "摘要"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3416,14 +3429,16 @@ msgstr "異常:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Exchange"
-msgstr ""
+msgstr "匯兌"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "預計"
 
 #. module: stock
 #. odoo-python
@@ -3560,6 +3575,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"預測數量（計算方法：在庫數量 − 出庫數量 + 入庫數量 − 待移除數量）\n"
+"若是單一庫存位置，此數量包括存放在此位置及其子位置的貨物。\n"
+"若是單一倉庫，此數量包括存放在此倉庫的庫存位置及其任何子位置的貨物。\n"
+"其他情況下，此數量包括存放在任何「內部」類型的庫存位置的貨物。"
 
 #. module: stock
 #. odoo-javascript
@@ -4191,8 +4210,9 @@ msgstr "立即調撥"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
+#, fuzzy
 msgid "Import"
-msgstr ""
+msgstr "匯入"
 
 #. module: stock
 #. odoo-javascript
@@ -5099,8 +5119,9 @@ msgstr "位置"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Lock"
-msgstr ""
+msgstr "鎖定"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_category_form_view_inherit
@@ -5196,8 +5217,9 @@ msgstr "已轉移位置批次/序號"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
+#, fuzzy
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "批次/序號"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -5557,8 +5579,9 @@ msgstr "多步路線"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+#, fuzzy
 msgid "Multiple"
-msgstr ""
+msgstr "倍數"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -5856,8 +5879,9 @@ msgstr "未找到調撥.讓我們建立一個!"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -5953,6 +5977,7 @@ msgstr "十月"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
 "print instantly,\n"
@@ -5961,6 +5986,11 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"Odoo 預設開啟 PDF 預覽。如果你（只限企業用戶）想立即列印，\n"
+"                                        請在與條碼操作員位於同一本地網絡的電"
+"腦上，\n"
+"                                        安裝物聯網（IoT）應用程式，並配置報表"
+"的路由。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5991,7 +6021,7 @@ msgstr "在庫數量"
 msgid ""
 "On hand quantity which hasn't been reserved on a transfer and is still "
 "fresh, in the default unit of measure of the product"
-msgstr ""
+msgstr "未在調撥時保留、仍屬新鮮狀態的在庫數量，以產品的預設計量單位表示"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
@@ -6646,8 +6676,9 @@ msgstr "合作夥伴特定指示"
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
+#, fuzzy
 msgid "Pay now"
-msgstr ""
+msgstr "立即付款"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
@@ -6721,8 +6752,9 @@ msgstr "揀貨操作"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
+#, fuzzy
 msgid "Picking Policy"
-msgstr ""
+msgstr "揀貨策略"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -6770,8 +6802,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "Preceding operations"
-msgstr ""
+msgstr "前面的操作"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -6786,8 +6819,9 @@ msgstr "最佳路線"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "序列記錄的前綴"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -7724,7 +7758,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__replenish_on_order
 #: model:stock.route,name:stock.route_warehouse0_mto
 msgid "Replenish on Order (MTO)"
-msgstr "訂單補給（特別訂製）"
+msgstr "按訂單補貨（特別訂製）"
 
 #. module: stock
 #. odoo-javascript
@@ -7761,7 +7795,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_company__horizon_days
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__horizon_days
 msgid "Replenishment Horizon"
-msgstr ""
+msgstr "補貨提早時間"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__replenishment_info_id
@@ -7850,8 +7884,9 @@ msgstr "預留方式"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "預留"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8001,8 +8036,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
+#, fuzzy
 msgid "Revert"
-msgstr ""
+msgstr "還原"
 
 #. module: stock
 #. odoo-python
@@ -8171,8 +8207,9 @@ msgstr "範例資料"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "儲存"
 
 #. module: stock
 #. odoo-python
@@ -8272,8 +8309,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, fuzzy
 msgid "Scrapped"
-msgstr ""
+msgstr "已報廢"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -8361,7 +8399,7 @@ msgstr "使用不同計量單位或包裝單位，去銷售及採購產品"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid ""
 "Send an automatic confirmation Text Message when Delivery Orders are done"
-msgstr ""
+msgstr "送貨單完成交貨後，自動傳送確認文字訊息"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8660,7 +8698,7 @@ msgstr "顯示數量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__show_return_picking_type
 msgid "Show Return Picking Type"
-msgstr ""
+msgstr "顯示退貨揀貨類型"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__show_supply_warning
@@ -9029,7 +9067,7 @@ msgstr "庫存規則報告"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_text_confirmation
 msgid "Stock Text Confirmation"
-msgstr ""
+msgstr "庫存文字訊息確認"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__stock_confirmation_type
@@ -9264,7 +9302,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Text Confirmation"
-msgstr ""
+msgstr "文字訊息確認"
 
 #. module: stock
 #. odoo-python
@@ -10267,8 +10305,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Unlock"
-msgstr ""
+msgstr "解鎖"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_form
@@ -10384,8 +10423,9 @@ msgstr "核實"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "驗證盤點"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -10576,8 +10616,9 @@ msgstr "倉庫的路線"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
+#, fuzzy
 msgid "Warehouse:"
-msgstr ""
+msgstr "倉庫:"
 
 #. module: stock
 #. odoo-javascript
@@ -10764,7 +10805,7 @@ msgstr "勾選時，如果取消此規則建立的移動，則下一步移動也
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "When to start shipping"
-msgstr ""
+msgstr "何時開始裝運"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -11404,8 +11445,9 @@ msgstr "的"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "planned on"
-msgstr ""
+msgstr "計劃於"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -11468,8 +11510,9 @@ msgstr "單位"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
@@ -11477,227 +11520,196 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} 送貨單 (參照 {{ object.name or 'n/a' }})"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d 天"
+msgid "Andrwep"
+msgstr "Andrwep"
 
-#~ msgid "Close"
-#~ msgstr "關閉"
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
 
-#~ msgid ""
-#~ "Creation date of this move line until updated due to: quantity being "
-#~ "increased, 'picked' status has updated, or move line is done."
-#~ msgstr ""
-#~ "此轉移資料行的建立日期，直到由於以下原因而更新：數量增加、「已揀貨」狀態已"
-#~ "更新，或轉移資料行已完成。"
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Font awesome 圖示，例如，fa-task"
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAME"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "庫存供應商補貨資訊"
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUCT_DISPLAY_NAME"
 
-#~ msgid "Choose your date"
-#~ msgstr "選擇您的日期"
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
 
-#~ msgid "Location Barcode"
-#~ msgstr "位置條碼"
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
-#~ msgid "Product Catalog Mixin"
-#~ msgstr "產品目錄混入程式"
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "庫存數量歷史"
+msgid "Demo Display Name"
+msgstr "模擬顯示名稱"
 
-#~ msgid "Andrwep"
-#~ msgstr "Andrwep"
+msgid "Dispatch Management System"
+msgstr "調派管理系統"
 
-#~ msgid "DEMO_DATE"
-#~ msgstr "DEMO_DATE"
+msgid "Expected Delivery:"
+msgstr "預計送貨："
 
-#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
-#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+msgid ""
+"If this checkbox is ticked, Odoo will automatically show the reception "
+"report (if there are moves to allocate to) when validating."
+msgstr ""
+"如果勾選此復選框，Odoo 將在驗證時自動顯示接收報表 (如果有要分配的移動)."
 
-#~ msgid "DEMO_PARTNER_NAME"
-#~ msgstr "DEMO_PARTNER_NAME"
+msgid "No %s selected or a delivery order selected"
+msgstr "沒有選擇 %s 或選擇送貨單"
 
-#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
-#~ msgstr "DEMO_PRODUCT_DISPLAY_NAME"
+msgid "Print Label"
+msgstr "列印標籤"
 
-#~ msgid "DEMO_QUANTITY"
-#~ msgstr "DEMO_QUANTITY"
+msgid "Reason"
+msgstr "原因"
 
-#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
-#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
+msgid "Show Reception Report at Validation"
+msgstr "在驗證時顯示接收報表"
 
-#~ msgid "DEMO_UOM"
-#~ msgstr "DEMO_UOM"
+msgid "Stock Reception Report"
+msgstr "入庫報告"
 
-#~ msgid "Demo Display Name"
-#~ msgstr "模擬顯示名稱"
+msgid "This report cannot be used for done and not done %s at the same time"
+msgstr "此報表不能同時用於 %s 已完成和未完成"
 
-#~ msgid "Dispatch Management System"
-#~ msgstr "調派管理系統"
+msgid "Transport management: organize packs in your fleet, or carriers."
+msgstr "運輸管理：安排你的車隊或外間承運商運送包裹。"
 
-#~ msgid "Expected Delivery:"
-#~ msgstr "預計送貨："
+msgid "Use Reception Report"
+msgstr "使用收貨報表"
 
-#~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically show the reception "
-#~ "report (if there are moves to allocate to) when validating."
-#~ msgstr ""
-#~ "如果勾選此復選框，Odoo 將在驗證時自動顯示接收報表 (如果有要分配的移動)."
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                無法預訂全部產品.點選“檢查可用性”按鈕嘗試預訂"
+"產品."
 
-#~ msgid "No %s selected or a delivery order selected"
-#~ msgstr "沒有選擇 %s 或選擇送貨單"
+msgid "Check Availability"
+msgstr "檢查可用性"
 
-#~ msgid "Print Label"
-#~ msgstr "列印標籤"
+msgid "Click or press enter to add a description"
+msgstr "按一下此處，或按輸入鍵，以加入描述"
 
-#~ msgid "Reason"
-#~ msgstr "原因"
+msgid "Compute shipping costs and ship with DHL"
+msgstr "計算運輸成本並用DHL裝運"
 
-#~ msgid "Show Reception Report at Validation"
-#~ msgstr "在驗證時顯示接收報表"
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "計算運輸成本並用Easypost裝運"
 
-#~ msgid "Stock Reception Report"
-#~ msgstr "入庫報告"
+msgid "Compute shipping costs and ship with Envia.com"
+msgstr "計算運費並使用 Envia.com 發貨"
 
-#~ msgid "This report cannot be used for done and not done %s at the same time"
-#~ msgstr "此報表不能同時用於 %s 已完成和未完成"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "計算運輸成本並用FedEx裝運"
 
-#~ msgid "Transport management: organize packs in your fleet, or carriers."
-#~ msgstr "運輸管理：安排你的車隊或外間承運商運送包裹。"
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "計算運輸成本並用Sendcloud裝運"
 
-#~ msgid "Use Reception Report"
-#~ msgstr "使用收貨報表"
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "使用Shiprocket計算運輸成本及發貨"
 
-#~ msgid ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                All products could not be reserved. Click "
-#~ "on the \"Check Availability\" button to try to reserve products."
-#~ msgstr ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                無法預訂全部產品.點選“檢查可用性”按鈕嘗試"
-#~ "預訂產品."
+msgid "Compute shipping costs and ship with Starshipit"
+msgstr "計算運送成本，並以 Starshipit 送貨"
 
-#~ msgid "Check Availability"
-#~ msgstr "檢查可用性"
+msgid "Compute shipping costs and ship with UPS"
+msgstr "計算運輸成本並用USPS裝運"
 
-#~ msgid "Click or press enter to add a description"
-#~ msgstr "按一下此處，或按輸入鍵，以加入描述"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "計算運輸成本並用USPS裝運"
 
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "計算運輸成本並用DHL裝運"
+msgid "Compute shipping costs and ship with bpost"
+msgstr "計算運輸成本並用bpost裝運"
 
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "計算運輸成本並用Easypost裝運"
+msgid "DHL Express Connector"
+msgstr "DHL 快遞連接器"
 
-#~ msgid "Compute shipping costs and ship with Envia.com"
-#~ msgstr "計算運費並使用 Envia.com 發貨"
+msgid "Default Return Name"
+msgstr "預設退貨名稱"
 
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "計算運輸成本並用FedEx裝運"
+msgid "Demo Address and Name"
+msgstr "模擬地址及名稱"
 
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "計算運輸成本並用Sendcloud裝運"
+msgid "Easypost Connector"
+msgstr "Easypost 連接器"
 
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "使用Shiprocket計算運輸成本及發貨"
+msgid "Envia.com Connector"
+msgstr "Envia.com 連接器"
 
-#~ msgid "Compute shipping costs and ship with Starshipit"
-#~ msgstr "計算運送成本，並以 Starshipit 送貨"
+msgid "FedEx Connector"
+msgstr "FedEx連接器"
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "計算運輸成本並用USPS裝運"
+msgid "Generate Serials/Lots"
+msgstr "產生序號/批次號碼"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "計算運輸成本並用USPS裝運"
+msgid "Import Serials/Lots"
+msgstr "匯入序號/批次"
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "計算運輸成本並用bpost裝運"
+msgid "Nothing to check the availability for."
+msgstr "沒有東西要檢查可用性."
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "DHL 快遞連接器"
+msgid ""
+"Please put this document inside your return parcel.<br/>\n"
+"                                Your parcel must be sent to this address:"
+msgstr ""
+"請將此文件放在退貨包裹內。<br/>\n"
+"                                退貨包裹必須寄往此地址："
 
-#~ msgid "Default Return Name"
-#~ msgstr "預設退貨名稱"
+msgid "Sendcloud Connector"
+msgstr "Sendcloud 連接器"
 
-#~ msgid "Demo Address and Name"
-#~ msgstr "模擬地址及名稱"
+msgid "Shipping Connectors"
+msgstr "貨運連接器"
 
-#~ msgid "Easypost Connector"
-#~ msgstr "Easypost 連接器"
+msgid "Shiprocket Connector"
+msgstr "Shiprocket連接器"
 
-#~ msgid "Envia.com Connector"
-#~ msgstr "Envia.com 連接器"
+msgid "Starshipit Connector"
+msgstr "Starshipit 連接器"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "FedEx連接器"
+msgid ""
+"Technical field used to compute whether the button \"Check Availability\" "
+"should be displayed."
+msgstr "用於計算是否應顯示“檢查可用性”按鈕的技術欄位."
 
-#~ msgid "Generate Serials/Lots"
-#~ msgstr "產生序號/批次號碼"
+msgid "UPS Connector"
+msgstr "UPS 連接器"
 
-#~ msgid "Import Serials/Lots"
-#~ msgstr "匯入序號/批次"
+msgid "USPS Connector"
+msgstr "USPS 連接器"
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "沒有東西要檢查可用性."
+msgid "Website Messages"
+msgstr "網站資訊"
 
-#~ msgid ""
-#~ "Please put this document inside your return parcel.<br/>\n"
-#~ "                                Your parcel must be sent to this address:"
-#~ msgstr ""
-#~ "請將此文件放在退貨包裹內。<br/>\n"
-#~ "                                退貨包裹必須寄往此地址："
+msgid "Website communication history"
+msgstr "網站溝通記錄"
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "Sendcloud 連接器"
+msgid "bpost Connector"
+msgstr "bpost 連接器"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "貨運連接器"
+msgid "Demo Lot/SN"
+msgstr "模擬批次/序號"
 
-#~ msgid "Shiprocket Connector"
-#~ msgstr "Shiprocket連接器"
+msgid "Demo Product"
+msgstr "模擬產品"
 
-#~ msgid "Starshipit Connector"
-#~ msgstr "Starshipit 連接器"
+msgid "Final Location"
+msgstr "最終位置"
 
-#~ msgid ""
-#~ "Technical field used to compute whether the button \"Check Availability\" "
-#~ "should be displayed."
-#~ msgstr "用於計算是否應顯示“檢查可用性”按鈕的技術欄位."
+msgid ""
+"The operation brings the products to the intermediate location.But this "
+"operation is part of a chain of operations targeting the final location."
+msgstr "該操作將產品帶到中期位置。但此操作是針對最終位置的操作鏈的一部份。"
 
-#~ msgid "UPS Connector"
-#~ msgstr "UPS 連接器"
+msgid "On hand:"
+msgstr "在庫："
 
-#~ msgid "USPS Connector"
-#~ msgstr "USPS 連接器"
-
-#~ msgid "Website Messages"
-#~ msgstr "網站資訊"
-
-#~ msgid "Website communication history"
-#~ msgstr "網站溝通記錄"
-
-#~ msgid "bpost Connector"
-#~ msgstr "bpost 連接器"
-
-#~ msgid "Demo Lot/SN"
-#~ msgstr "模擬批次/序號"
-
-#~ msgid "Demo Product"
-#~ msgstr "模擬產品"
-
-#~ msgid "Final Location"
-#~ msgstr "最終位置"
-
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr "該操作將產品帶到中期位置。但此操作是針對最終位置的操作鏈的一部份。"
-
-#~ msgid "On hand:"
-#~ msgstr "在庫："
-
-#~ msgid "Real Quantity"
-#~ msgstr "實際數量"
+msgid "Real Quantity"
+msgstr "實際數量"

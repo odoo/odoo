@@ -38,9 +38,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:41+0000\n"
-"PO-Revision-Date: 2026-06-18 16:28+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-07-20 13:18+0000\n"
+"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
+"Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s19-4/"
 "account/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -991,6 +991,9 @@ msgid ""
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\">\n"
+"                                        Para rever\n"
+"                                   </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1021,7 +1024,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"me-1\">The Bank Account could be a duplicate of</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">A conta bancária pode ser uma duplicata de</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4254,9 +4257,8 @@ msgstr "Assistente de lançamento automático de contas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "AvaTax"
-msgstr "AvaTax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__availability_condition
@@ -11362,9 +11364,8 @@ msgstr "Informação"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
-#, fuzzy
 msgid "Initial Setup"
-msgstr "Configuração inicial"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -21313,7 +21314,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Este lançamento foi revertido de %s"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -24490,144 +24491,3 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (cópia)"
-
-#~ msgid "(copy)"
-#~ msgstr "(cópia)"
-
-#~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-#~ msgstr "<span class=\"o_stat_text\">Lançamentos no diário</span>"
-
-#~ msgid "<span title=\"Latest Statement\">Last Statement</span>"
-#~ msgstr "<span title=\"Latest Statement\">Último extrato</span>"
-
-#~ msgid "<span>1</span>"
-#~ msgstr "<span>1</span>"
-
-#~ msgid "<span>=</span>"
-#~ msgstr "<span>=</span>"
-
-#~ msgid "Cash Rounding"
-#~ msgstr "Arredondamento de Numerário"
-
-#~ msgid "Cash Roundings"
-#~ msgstr "Arredondamentos de Numerário"
-
-#~ msgid "Create the first cash rounding"
-#~ msgstr "Criar o primeiro arredondamento de numerário"
-
-#~ msgid "Define the smallest coinage of the currency used to pay by cash"
-#~ msgstr ""
-#~ "Definir o valor da monetário mais baixo da moeda usada para pagamento em "
-#~ "numerário"
-
-#~ msgid "Not Due"
-#~ msgstr "Vencendo"
-
-#~ msgid "Online Payments"
-#~ msgstr "Pagamentos online"
-
-#~ msgid "Represent the non-zero value smallest coinage (for example, 0.05)."
-#~ msgstr ""
-#~ "Representa o valor mínimo diferente de zero da moeda mais pequena da "
-#~ "divisa (por exemplo, 0.05)"
-
-#~ msgid "Rounding Precision"
-#~ msgstr "Precisão do Arredondamento"
-
-#~ msgid "Rounding Strategy"
-#~ msgstr "Estratégia de Arredondamento"
-
-#~ msgid "Send invoices and payment follow-ups by post"
-#~ msgstr "Envie faturas e acompanhamento de pagamentos por correio"
-
-#~ msgid ""
-#~ "Specify which way will be used to round the invoice amount to the "
-#~ "rounding precision"
-#~ msgstr ""
-#~ "Especifique que maneira vai ser usada para arredondar o montante da "
-#~ "fatura com a precisão estabelecida"
-
-#, fuzzy
-#~ msgid ""
-#~ "The IBAN does not seem to be correct. You should have entered something "
-#~ "like this %s\n"
-#~ "Where B = National bank code, S = Branch code, C = Account No, k = Check "
-#~ "digit"
-#~ msgstr ""
-#~ "O IBAN não parece estar correto. Deveria ter inserido qualquer coisa como "
-#~ "isto %s\n"
-#~ "Onde B = código internacional de identificação do Banco, S = Código da "
-#~ "Agência, C = Nr. da Conta, K = Dígitos de Verificação"
-
-#, fuzzy
-#~ msgid "The IBAN is invalid, it should begin with the country code"
-#~ msgstr "O IBAN é inválido. Devia começar pelo código do país"
-
-#~ msgid "The running balance (%s) doesn't match the specified ending balance."
-#~ msgstr "O saldo atual (%s) não corresponde ao saldo final especificado."
-
-#~ msgid ""
-#~ "The starting balance doesn't match the ending balance of the previous "
-#~ "statement, or an earlier statement is missing."
-#~ msgstr ""
-#~ "O saldo inicial não corresponde com o saldo final do demonstrativo "
-#~ "anterior, ou está faltando um demonstrativo mais antigo."
-
-#~ msgid "The tie-breaking rule used for float rounding operations"
-#~ msgstr ""
-#~ "A regra de desempate usada para operações de arredondamento de floats"
-
-#, fuzzy
-#~ msgid "There is no IBAN code."
-#~ msgstr "Não há código IBAN."
-
-#, fuzzy
-#~ msgid "This IBAN does not pass the validation check, please verify it."
-#~ msgstr ""
-#~ "Este IBAN não passa na verificação de validade. Por favor, verifique-o."
-
-#~ msgid "This Week"
-#~ msgstr "Esta Semana"
-
-#, fuzzy
-#~ msgid "Units"
-#~ msgstr "Unidades"
-
-#~ msgid ""
-#~ "You can not archive a journal containing draft journal entries.\n"
-#~ "\n"
-#~ "To proceed:\n"
-#~ "1/ click on the top-right button 'Journal Entries' from this journal "
-#~ "form\n"
-#~ "2/ then filter on 'Draft' entries\n"
-#~ "3/ select them all and post or delete them through the action menu"
-#~ msgstr ""
-#~ "Você não pode arquivar um diário que contém lançamentos provisórios de "
-#~ "diário.\n"
-#~ "\n"
-#~ "Para proceder:\n"
-#~ "1/ clique no botão superior direito 'Lançamentos de diário' a partir "
-#~ "deste formulário\n"
-#~ "2/ filtre os lançamentos por 'Provisório'\n"
-#~ "3/ selecione todos eles e faça o lançamento ou exclua-os através do menu "
-#~ "de ação"
-
-#~ msgid "You cannot modify the following readonly fields on a posted move: %s"
-#~ msgstr ""
-#~ "Não é possível modificar os seguintes campos readonly em uma movimentação "
-#~ "lançada: %s"
-
-#~ msgid "You cannot reset to draft a tax cash basis journal entry."
-#~ msgstr ""
-#~ "Não é possível redefinir como provisório um lançamento de diário de "
-#~ "impostos em regime de caixa."
-
-#~ msgid ""
-#~ "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/"
-#~ "a' }})"
-#~ msgstr ""
-#~ "{{ object.company_id.name }} Recibo de Pagamento (Ref {{ object.name or "
-#~ "'n/a' }})"
