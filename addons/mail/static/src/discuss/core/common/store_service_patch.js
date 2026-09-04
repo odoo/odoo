@@ -2,9 +2,22 @@ import { Store } from "@mail/core/common/store_service";
 import { fields } from "@mail/model/misc";
 import { compareDatetime } from "@mail/utils/common/misc";
 
+import { router } from "@web/core/browser/router";
 import { localeCompare } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
+
+patch(router, {
+    stateToUrl(state) {
+        const url = super.stateToUrl(state);
+        if (state.invitation_token) {
+            const urlObj = new URL(url, window.location.origin);
+            urlObj.searchParams.set("invitation_token", state.invitation_token);
+            return urlObj.pathname + urlObj.search + urlObj.hash;
+        }
+        return url;
+    },
+});
 
 /** @type {import("models").Store} */
 const storeServicePatch = {
@@ -21,6 +34,17 @@ const storeServicePatch = {
         this.isChannelTokenSecret = undefined;
         /** @type {boolean|undefined} */
         this.is_welcome_page_displayed = undefined;
+        /** @type {import("models").DiscussChannel|undefined} */
+        this.channel_invitation_pending = fields.One("discuss.channel", {
+            onUpdate() {
+                if (this.is_welcome_page_displayed) {
+                    return;
+                }
+                router.pushState({
+                    invitation_token: this.channel_invitation_pending?.uuid,
+                });
+            },
+        });
         /**
          * Defines channel types that have the message seen indicator/info feature.
          * @see `discuss.channel`._types_allowing_seen_infos()

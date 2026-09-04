@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="mail.DiscussInvitationCard">
+    <div t-att-class="this.ui.isSmall ? 'd-flex flex-column gap-1' : ''" class="o-mail-DiscussInvitationCard">
+        <section class="card shadow-sm border-0 rounded-2 overflow-hidden">
+            <div class="card-body p-2">
+                <div class="d-flex flex-column gap-2">
+                    <t t-call="mail.DiscussInvitationCard.inviteHeader"/>
+                    <div class="bg-secondary-subtle rounded-2 p-2 d-flex flex-column gap-3">
+                        <t t-call="mail.DiscussInvitationCard.invitedBy"/>
+                        <t t-call="mail.DiscussInvitationCard.meetingDetails"/>
+                        <t t-call-slot="extraContent"/>
+                    </div>
+                    <t t-call="mail.DiscussInvitationCard.joinSection"/>
+                </div>
+            </div>
+        </section>
+    </div>
+</t>
+
+<t t-name="mail.DiscussInvitationCard.inviteHeader">
+    <div class="d-flex flex-column align-items-center text-center pt-2 rounded-2">
+        <div class="bg-primary text-white rounded-2 d-flex p-2">
+            <i class="oi fs-4" data-icon="group"/>
+        </div>
+        <div class="fs-3 o-fw-600 mb-1">
+            <t t-if="this.isMeeting">You've been invited to a meeting!</t>
+            <t t-else="">You've been invited to a chat!</t>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.DiscussInvitationCard.invitedBy">
+    <div class="o-mail-DiscussInvitationCard-invitation d-flex align-items-center gap-2 w-100 text-start">
+        <img class="rounded-3" t-att-src="this.channel.create_uid.avatarUrl" alt="User Avatar" width="32" height="32"/>
+        <div class="d-flex flex-column overflow-hidden">
+            <span class="o-fw-600 text-uppercase text-muted smaller opacity-75">Invited by</span>
+            <div class="d-flex gap-1">
+                <span class="o-fw-600 text-truncate" t-att-title="this.channel.create_uid.name" t-out="this.channel.create_uid.name"/>
+                <span t-if="this.store.companyName" class="text-truncate text-muted" t-att-title="this.store.companyName" t-out="this.store.companyName"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+<t t-name="mail.DiscussInvitationCard.joinSection">
+    <t t-call-slot="joinSection"/>
+    <button class="btn btn-primary btn-lg w-100 my-2" title="Join Channel" t-att-disabled="!this.props.canConfirm" t-on-click="this.props.onConfirm">
+        <t t-if="this.isMeeting">Join Call</t>
+        <t t-else="">Join Conversation</t>
+        <i class="oi ms-2" data-icon="east"/>
+    </button>
+</t>
+
+<t t-name="mail.DiscussInvitationCard.meetingDetails">
+    <div t-if="this.channel.description or this.channel.member_count > 0" class="o-mail-DiscussInvitationCard-details w-100 text-start">
+        <div class="d-flex align-items-center gap-2">
+            <div class="o-mail-DiscussInvitationCard-MeetingIcon d-flex justify-content-center">
+                <i class="oi fs-2" t-att-data-icon="this.isMeeting ? 'calendar_today' : 'forum'"/>
+            </div>
+            <span class="fw-medium fs-5 text-truncate min-w-0 flex-grow-1" t-att-title="this.channel.displayName" t-out="this.channel.displayName"/>
+            <AvatarStack personas="this.channel.sortedChannelMembers.map(m => m.persona).filter(p => p?.name)" total="this.channel.member_count"/>
+        </div>
+        <div t-if="this.channel.description" class="o-mail-DiscussInvitationCard-description mt-1">
+            <div t-if="!this.state.isDescriptionUnfolded" class="d-flex align-items-center gap-1 overflow-hidden">
+                <span t-ref="this.description" class="text-truncate text-muted flex-grow-1" t-out="this.channel.description"/>
+                <span t-if="this.shouldShowMoreDescription" t-on-click="this.unfoldDescription" class="text-primary fw-medium cursor-pointer">more</span>
+            </div>
+            <div t-else="" t-ref="this.description" class="o-mail-DiscussInvitationCard-IsDescriptionUnfolded text-muted text-break overflow-auto o-scrollbar-thin">
+                <span t-out="this.channel.description"/>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

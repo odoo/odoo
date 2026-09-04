@@ -245,3 +245,25 @@ registerStoreHandler(
     },
     { audience: "everyone", readonly: false }
 );
+
+registerStoreHandler(
+    "/discuss/channel/invitation",
+    function store_discuss_channel_invitation(store, params) {
+        /** @type {import("mock_models").DiscussChannel} */
+        const DiscussChannel = this.env["discuss.channel"];
+        const channels = DiscussChannel.browse(params.channel_id);
+        const channel = channels[0];
+
+        if (channel.uuid === params.invitation_token) {
+            store.add_global_values((res) => {
+                res.one("channel_invitation_pending", ["create_uid", "display_name", "uuid"], {
+                    value: channels,
+                });
+            });
+            store.resolve_data_request((res) =>
+                res.one("channel", "_store_channel_fields", { value: channels })
+            );
+        }
+    },
+    { audience: "everyone", readonly: true }
+);

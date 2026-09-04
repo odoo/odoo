@@ -102,12 +102,11 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         group_chat = (
             self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
         )
-        # Guest email is filled at create
+        # guest invited is not added to the channel members until they join the channel
         self.url_open(
             f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}"
         )
-        self.assertEqual(group_chat.channel_member_ids.guest_id.email, "alfred@test.com")
-        self.assertEqual(group_chat.channel_member_ids.guest_id.name, "alfred@test.com")
+        self.assertEqual(group_chat.channel_member_ids.guest_id, self.env["mail.guest"])
         # Guest email is updated if empty when invited from email
         guest = self.env["mail.guest"].create({"name": "Alice"})
         self.assertFalse(guest.email)
@@ -119,6 +118,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         )
         self.assertEqual(guest.email, "alice@test.com")
         self.assertEqual(guest.name, "Alice")
+        self.assertEqual(group_chat.channel_member_ids.guest_id, self.env["mail.guest"])
         # Guest email is not overwriten if already filled
         guest = self.env["mail.guest"].create({"name": "John", "email": "john@test.com"})
         self.url_open(
@@ -360,3 +360,20 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             )
         with self.mock_mail_gateway():
             self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")
+
+    def test_12_guest_invitation_adds_member_to_channel(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
+        group_chat = (
+            self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        )
+        self.start_tour(
+            f"{group_chat.invitation_url}?email_token={hash_sign(self.env, 'mail.invite_email', 'alfred@test.com')}",
+            "discuss.guest_accept_invitation",
+        )
+        guest = self.env["mail.guest"].search([("email", "=", "alfred@test.com")])
+        self.assertEqual(len(guest), 1)
+        self.assertIn(
+            guest,
+            group_chat.channel_member_ids.guest_id,
+        )
+        self.assertEqual(guest.name, "Alfredo Pasta")

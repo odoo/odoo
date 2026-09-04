@@ -1976,19 +1976,21 @@ export class Rtc extends Record {
         });
     }
 
-    async ping() {
+    static async pingChannel(channel, { sessionId } = {}) {
         const data = await rpc(
             "/discuss/channel/ping",
             {
-                channel_id: this.localChannel.id,
-                check_rtc_session_ids: this.localChannel.rtc_session_ids.map(
-                    (session) => session.id
-                ),
-                rtc_session_id: this.localSession.id,
+                channel_id: channel.id,
+                check_rtc_session_ids: channel.rtc_session_ids.map((session) => session.id),
+                rtc_session_id: sessionId,
             },
             { silent: true }
         );
         this.store.insert(data);
+    }
+
+    async ping() {
+        await this.constructor.pingChannel(this.localChannel, { sessionId: this.localSession?.id });
     }
 
     disconnect(session) {
