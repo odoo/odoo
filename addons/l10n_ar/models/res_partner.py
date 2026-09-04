@@ -140,3 +140,13 @@ class ResPartner(models.Model):
         else:
             res = re.sub(r'[^0-9a-zA-Z]', '', self.vat)
         return res
+
+    def write(self, vals):
+        if 'l10n_ar_afip_responsibility_type_id' in vals:
+            companies = self.filtered(
+                lambda p: p.l10n_ar_afip_responsibility_type_id.id != vals['l10n_ar_afip_responsibility_type_id']
+            ).sudo().ref_company_ids
+            if any(company._existing_accounting() for company in companies):
+                raise UserError(_('Could not change the ARCA Responsibility of this company because there are already accounting entries.'))
+
+        return super().write(vals)
