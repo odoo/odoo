@@ -145,6 +145,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         Test the source PO smart button both when the Resupply subcontractor rule is MTO and MTSO
         """
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
 
         # Create 2 subcontracted PO's, one to be resupplied in MTO the other in MTSO
@@ -675,15 +676,10 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
     def test_resupply_order_buy_mto(self):
         """ Test a subcontract component can has resupply on order + buy + mto route"""
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
-        mto_route.active = True
-        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        self.route_mto.active = True
         self.comp2.bom_ids.unlink()
-        (mto_route + resupply_sub_on_order_route).product_selectable = True
         (self.comp1 | self.comp2).write({
-             'route_ids': [
-                Command.link(resupply_sub_on_order_route.id),
-                Command.link(mto_route.id)],
+             'route_ids': [Command.link(self.route_mto.id)],
              'seller_ids': [Command.create({
                  'partner_id': self.vendor.id,
              })],
@@ -788,11 +784,8 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         """
         Test That we can update the quantity of a purchase order line with a subcontracted product
         """
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
-        mto_route.active = True
-        mto_route.product_selectable = True
         self.comp2.bom_ids.unlink()
-        self.finished.route_ids = mto_route.ids
+        self._use_route_mto(self.finished)
         self.env['product.supplierinfo'].create({
             'product_id': self.finished.id,
             'partner_id': self.vendor.id,
@@ -1184,7 +1177,6 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
     def test_replenish_with_subcontracting_bom(self):
         """ Checks that a subcontracting bom cannot trigger a 'Manufacture' replenish.
         """
-        self.warehouse.route_ids.filtered(lambda r: r.get_external_id()).product_selectable = False
         self.assertEqual(self.finished.bom_ids.type, 'subcontract')
         replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=self.finished.product_tmpl_id.id).create({
             'product_id': self.finished.id,
@@ -1200,6 +1192,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         """
         resupply_product = self.comp3
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')], limit=1)
+        resupply_sub_on_order_route.product_selectable = True
         resupply_product.route_ids = [Command.link(resupply_sub_on_order_route.id)]
         self.finished2.seller_ids = [Command.create({
             'partner_id': self.subcontractor_partner1.id,

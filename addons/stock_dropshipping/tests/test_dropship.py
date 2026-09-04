@@ -612,11 +612,6 @@ class TestDropshipPostInstall(common.TransactionCase):
         Check that the destination address is set on the purchase order when
         its picking type is manually changed to the dropshipping picking type.
         """
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
-        mto_route.action_unarchive()
-        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
-        (mto_route + buy_route).product_selectable = True
-        self.dropship_product.route_ids += buy_route
 
         so = self.env['sale.order'].create({
             'partner_id': self.customer.id,
@@ -628,7 +623,7 @@ class TestDropshipPostInstall(common.TransactionCase):
         })
         so.action_confirm()
         po = so.order_line.purchase_line_ids.order_id
-        po.picking_type_id = buy_route.rule_ids.picking_type_id[-1]
+        po.picking_type_id = po._default_picking_type()
         self.assertFalse(po.dest_address_id)
         po.picking_type_id = self.env['stock.picking.type'].search([('name', '=', 'Dropship'), ('company_id', '=', self.env.company.id)], limit=1)
         self.assertEqual(po.dest_address_id, self.customer)

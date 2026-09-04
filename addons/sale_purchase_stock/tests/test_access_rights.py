@@ -33,10 +33,8 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         This test ensures that an activity (warning) is added to the PO
         """
         mto_route = self.env.ref('stock.route_warehouse0_mto')
-        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
         mto_route.rule_ids.procure_method = "make_to_order"
         mto_route.active = True
-        (mto_route + buy_route).product_selectable = True
 
         vendor = self.env['res.partner'].create({'name': 'vendor'})
 
@@ -47,7 +45,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
                 'partner_id': vendor.id,
                 'price': 8,
             })],
-            'route_ids': [(6, 0, (mto_route + buy_route).ids)]
+            'route_ids': [Command.set([mto_route.id])],
         })
 
         so = self.env['sale.order'].with_user(self.user_salesperson).create({

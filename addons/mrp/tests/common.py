@@ -130,6 +130,7 @@ class TestMrpCommon(TestStockCommon):
         cls.picking_type_manu = cls.warehouse_1.manu_type_id
         cls.picking_type_manu.sequence = 5
         cls.route_manufacture = cls.warehouse_1.manufacture_pull_id.route_id
+        cls.route_manufacture.product_selectable = True
 
         cls.workcenter_1, cls.workcenter_2, cls.workcenter_3 = cls.env['mrp.workcenter'].create([
             {

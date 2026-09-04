@@ -578,6 +578,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         manu_route = self.warehouse.manufacture_pull_id.route_id
         buy_route = self.warehouse.buy_pull_id.route_id
+        (manu_route + buy_route).product_selectable = True
 
         # un-prioritize the buy rules
         self.env['stock.rule'].search([]).sequence = 1
@@ -661,7 +662,9 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         """Test to ensure json_popover data is correctly computed for BoM.
         """
         buy_route = self.warehouse.buy_pull_id.route_id
-        self.kit_1.route_ids = self.kit_3.route_ids = [Command.set([self.warehouse.manufacture_pull_id.route_id.id])]
+        manu_route = self.warehouse.manufacture_pull_id.route_id
+        (buy_route + manu_route).product_selectable = True
+        self.kit_1.route_ids = self.kit_3.route_ids = [Command.link(manu_route.id)]
         bom1, bom2 = self.kit_1.bom_ids, self.kit_3.bom_ids
         bom1.type = bom2.type = 'normal'
         self.component_f.is_storable = self.component_g.is_storable = False
@@ -1067,19 +1070,14 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
     def test_mo_overview_mto_purchase_with_backorders(self):
         self.warehouse.reception_steps = 'two_steps'
         # Enable MTO route for Component
-        self.env.ref('stock.route_warehouse0_mto').active = True
-        route_buy = self.warehouse.buy_pull_id.route_id
         route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.active = True
         route_mto.rule_ids.procure_method = "make_to_order"
-        (route_buy + route_mto).product_selectable = True
         self.component_a.write({
             'seller_ids': [
                 Command.create({'partner_id': self.partner_a.id},
             )],
-            'route_ids': [
-                Command.link(route_buy.id),
-                Command.link(route_mto.id),
-            ],
+            'route_ids': [Command.link(route_mto.id)],
         })
 
         bom = self.env['mrp.bom'].create({
@@ -1121,19 +1119,14 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
     def test_cancel_mo_with_mto_purchase_component(self):
         # Enable MTO route for Component
-        self.env.ref('stock.route_warehouse0_mto').active = True
-        route_buy = self.warehouse.buy_pull_id.route_id
         route_mto = self.warehouse.mto_pull_id.route_id
+        route_mto.active = True
         route_mto.rule_ids.procure_method = "make_to_order"
-        (route_buy + route_mto).product_selectable = True
         self.component_a.write({
             'seller_ids': [
                 Command.create({'partner_id': self.partner_a.id},
             )],
-            'route_ids': [
-                Command.link(route_buy.id),
-                Command.link(route_mto.id),
-            ],
+            'route_ids': [Command.link(route_mto.id)],
         })
 
         bom = self.env['mrp.bom'].create({
@@ -1186,6 +1179,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         warehouse = self.warehouse
         buy_route = warehouse.buy_pull_id.route_id
         manufacture_route = warehouse.manufacture_pull_id.route_id
+        (buy_route + manufacture_route).product_selectable = True
 
         avco_category = self.env['product.category'].create({
             'name': 'AVCO',
@@ -1453,7 +1447,6 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         Ensure that even after MO confirmation, reducing the component quantity
         reduces the quantity of the MTO purchase aswell.
         '''
-        route_buy = self.warehouse.buy_pull_id.route_id
         route_mto = self.warehouse.mto_pull_id.route_id
         route_mto.active = True
         route_mto.rule_ids.procure_method = "make_to_order"
@@ -1461,10 +1454,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             'seller_ids': [
                 Command.create({'partner_id': self.partner_a.id},
             )],
-            'route_ids': [
-                Command.link(route_buy.id),
-                Command.link(route_mto.id),
-            ],
+            'route_ids': [Command.link(route_mto.id)],
         })
         mo = self.env['mrp.production'].create({
             'product_id': self.component_b.id,

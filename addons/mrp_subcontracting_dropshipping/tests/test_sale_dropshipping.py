@@ -25,9 +25,8 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_ship'
-        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route = warehouse.mto_pull_id.route_id
         mto_route.active = True
-        mto_route.product_selectable = True
         routes = [self.dropship_route.ids, mto_route.ids, []]
         compo01, compo02, kit = self.env['product.product'].create([{
             'name': name,
@@ -364,10 +363,9 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
 
     def test_mixed_mto_manufacture_and_dropship_so_keeps_links_separate(self):
         warehouse = self.env.ref('stock.warehouse0')
-        manufacture_route = warehouse.manufacture_pull_id.route_id
         mto_route = warehouse.mto_pull_id.route_id
         mto_route.active = True
-        self.comp2.route_ids = [Command.set((manufacture_route | mto_route).ids)]
+        self.comp2.route_ids = [Command.link(mto_route.id)]
         self.comp1.write({
             'seller_ids': [Command.create({'partner_id': self.supplier.id})],
             'route_ids': [Command.set(self.dropship_route.ids)],

@@ -22,12 +22,10 @@ class TestReorderingRuleProjectPurchase(TransactionCase):
                 'partner_id': partner.id,
             })],
         })
-        # Enable MTO + Buy routes
+        # Enable MTO
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
-        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
-        (mto_route | route_buy).product_selectable = True
-        buy_product.route_ids |= mto_route | route_buy
+        buy_product.route_ids = [Command.link(mto_route.id)]
 
         ref = self.env["stock.reference"].create({'name': 'Test mto buy procurement'})
         # 1. First procurement → creates a PO with no project

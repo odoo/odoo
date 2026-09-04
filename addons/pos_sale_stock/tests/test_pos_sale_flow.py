@@ -338,11 +338,9 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
         warehouse.reception_steps = 'three_steps'
-        self.env.ref('stock.route_warehouse0_mto').active = True
-        route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
-        route_mto = self.env.ref('stock.route_warehouse0_mto')
+        route_mto = warehouse.mto_pull_id.route_id
+        route_mto.active = True
         route_mto.rule_ids.procure_method = 'mts_else_mto'
-        (route_buy + route_mto).product_selectable = True
         self.partner_test = self.env['res.partner'].create({
             'name': 'Partner Test A',
             'street': '77 Santa Barbara Rd',
@@ -364,7 +362,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
                 'min_qty': 1.0,
                 'price': 1.0,
             })],
-            'route_ids': [(6, 0, [route_buy.id, route_mto.id])],
+            'route_ids': [Command.set([route_mto.id])],
         })
 
         sale_order = self.env['sale.order'].sudo().create({
