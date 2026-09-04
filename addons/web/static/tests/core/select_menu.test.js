@@ -1535,3 +1535,40 @@ test("Ensure the Dropdown uses the correct 'position' value", async () => {
     // If a value is set, the position should be the one defined in the props
     expect(position).toBe("top-start");
 });
+
+test("id and name props properly set", async () => {
+    class DoubleSelectMenu extends Component {
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                id="'id-select-menu-input'"
+                name="'name-select-menu-input'"
+                choices="this.choices"
+            />
+            <SelectMenu
+                id="'id-select-menu-button'"
+                name="'name-select-menu-button'"
+                choices="this.choices"
+            >The other one</SelectMenu>
+        `;
+        setup() {
+            this.choices = [
+                { label: "Hello", value: "hello" },
+                { label: "World", value: "world" },
+            ];
+        }
+    }
+
+    await mountSingleApp(DoubleSelectMenu);
+
+    expect(".o_select_menu").toHaveCount(2);
+    expect(".o_select_menu_toggler").toHaveCount(2);
+
+    expect("input.o_select_menu_toggler").toHaveCount(1);
+    expect("input.o_select_menu_toggler").toHaveAttribute("id", "id-select-menu-input");
+    expect("input.o_select_menu_toggler").toHaveAttribute("name", "name-select-menu-input");
+
+    expect("button.o_select_menu_toggler").toHaveCount(1);
+    expect("button.o_select_menu_toggler").toHaveAttribute("id", "id-select-menu-button");
+    expect("button.o_select_menu_toggler").toHaveAttribute("name", "name-select-menu-button");
+});

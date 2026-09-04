@@ -118,6 +118,7 @@ export const resizablePanelProps = {
     minWidth: t.number().optional(400),
     class: t.string().optional(""),
     handleSide: t.selection(["start", "end"]).optional("end"),
+    ref: t.signal(t.ref()).optional(() => signal.ref()),
 };
 
 export class ResizablePanel extends Component {
@@ -126,7 +127,7 @@ export class ResizablePanel extends Component {
     static components = {};
     props = useProps(resizablePanelProps);
 
-    containerRef = signal.ref();
+    containerRef = this.props.ref;
     handleRef = signal.ref();
 
     setup() {
