@@ -8,7 +8,6 @@ const cogMenuRegistry = registry.category("cogMenu");
 export class DataRefreshCogMenu extends Component {
     static template = "data_recycle.DataRefreshCogMenu";
     static components = { DropdownItem };
-    static props = {};
 
     setup() {
         this.action = useService("action");
