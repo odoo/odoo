@@ -97,7 +97,7 @@ async function fetchInternalMetaData(url) {
     }
 
     const result = await keepLastPromise
-        .add(fetch(urlParsed))
+        .add(fetch(urlParsed, { credentials: "omit" }))
         .then((response) => response.text())
         .then(async (content) => {
             const html_parser = new window.DOMParser();
