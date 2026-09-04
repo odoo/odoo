@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_pk_edi_pos.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <td name="delete-column" position="before">
+            <td class="align-middle text-end">
+                <div name="fbr-status" t-att-class="this.getFbrStatusClass(order)" t-out="order.getFbrStatusLabel()"/>
+            </td>
+        </td>
+    </t>
+</templates>
