@@ -1,4 +1,4 @@
-import { computed, signal, types as t, useListener } from "@odoo/owl";
+import { computed, signal, useListener } from "@odoo/owl";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 /**
@@ -62,6 +62,18 @@ function getSummed(values) {
     return values.map((w) => (acc += w));
 }
 
+/**
+ * Sizes can be given either as a static array, or as a getter returning an array.
+ * In the latter case, the getter is called from inside a computed, so any reactive
+ * value it reads makes the sizes recompute on demand.
+ *
+ * @param {number[] | (() => number[]) | undefined} sizes
+ * @returns {number[]}
+ */
+function evaluateSizes(sizes) {
+    return (typeof sizes === "function" ? sizes() : sizes) || [];
+}
+
 const DEFAULT_BUFFER_COEFFICIENT = 1;
 
 /**
@@ -80,8 +92,12 @@ const DEFAULT_BUFFER_COEFFICIENT = 1;
  *
  * @param {Object} params
  * @param {import("@odoo/owl").ReactiveValue<HTMLElement>} params.scrollableRef signal
- * @param {number[]} [params.rowHeights] initial row heights
- * @param {number[]} [params.columnWidths] initial column widths
+ * @param {number[] | (() => number[])} [params.rowHeights] row heights, either a
+ *  static array or a getter. Prefer the getter form when the heights derive from
+ *  reactive values (props, signals, ...): they are then recomputed on demand,
+ *  which guarantees the visible window is in sync with the data during the very
+ *  render that changed it, instead of one render later.
+ * @param {number[] | (() => number[])} [params.columnWidths] column widths, same as above
  *  pointing to the scrollable element. It is optional, as this hook can spawn a
  *  new one if needed, that will be available in the return value.
  * @param {{ left?: number; top?: number }} [params.initialScroll] initial scroll
@@ -131,7 +147,10 @@ export function useVirtualGrid({
     });
     const firstColumn = computed(() => columnIndices().start);
     const lastColumn = computed(() => columnIndices().end);
-    const summedColumnWidths = signal.Array(getSummed(columnWidths || []), t.number());
+    const columnWidthsOverride = signal(null);
+    const summedColumnWidths = computed(() =>
+        getSummed(columnWidthsOverride() ?? evaluateSizes(columnWidths))
+    );
     let lastColumnStartIndex = 0;
 
     // Rows reactive values
@@ -148,7 +167,10 @@ export function useVirtualGrid({
     });
     const firstRow = computed(() => rowIndices().start);
     const lastRow = computed(() => rowIndices().end);
-    const summedRowHeights = signal.Array(getSummed(rowHeights || []), t.number());
+    const rowHeightsOverride = signal(null);
+    const summedRowHeights = computed(() =>
+        getSummed(rowHeightsOverride() ?? evaluateSizes(rowHeights))
+    );
     let lastRowStartIndex = 0;
 
     // "External" reactive values (i.e.: scroll position & window size)
@@ -169,19 +191,25 @@ export function useVirtualGrid({
          * Sets the width of each column.
          * Indexes should match the indexes of the columns.
          *
+         * Only useful when `columnWidths` was not given as a getter: it takes
+         * precedence over the `columnWidths` parameter from then on.
+         *
          * @param {number[]} widths
          */
         setColumnWidths(widths) {
-            summedColumnWidths.set(getSummed(widths));
+            columnWidthsOverride.set(widths);
         },
         /**
          * Sets the height of each row.
          * Indexes should match the indexes of the rows.
          *
+         * Only useful when `rowHeights` was not given as a getter: it takes
+         * precedence over the `rowHeights` parameter from then on.
+         *
          * @param {number[]} heights
          */
         setRowHeights(heights) {
-            summedRowHeights.set(getSummed(heights));
+            rowHeightsOverride.set(heights);
         },
     };
 }
