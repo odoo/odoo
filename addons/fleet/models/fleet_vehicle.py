@@ -203,7 +203,7 @@ class FleetVehicle(models.Model):
             total = 0
             name = ''
             state = ''
-            for element in record.log_contracts:
+            for element in record.sudo().log_contracts:
                 if element.state in ('open', 'expired') and element.expiration_date:
                     current_date_str = fields.Date.context_today(record)
                     due_time_str = element.expiration_date
@@ -217,7 +217,7 @@ class FleetVehicle(models.Model):
                         due_soon = True
                         total += 1
                     if overdue or due_soon:
-                        log_contract = self.env['fleet.vehicle.log.contract'].search([
+                        log_contract = self.env['fleet.vehicle.log.contract'].sudo().search([
                             ('vehicle_id', '=', record.id),
                             ('state', 'in', ('open', 'expired'))
                             ], limit=1, order='expiration_date asc')
