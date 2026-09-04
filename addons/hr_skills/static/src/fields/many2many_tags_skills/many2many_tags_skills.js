@@ -3,13 +3,21 @@ import {
     Many2ManyTagsField,
     many2ManyTagsField,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 class SkillsTag extends Component {
     static template = "hr_skills.SkillsTag";
     static components = { BadgeTag };
-    static props = ["color?", "defaultLevel", "onDelete?", "text", "tooltip", "onClick"];
+
+    props = useProps({
+        color: t.any().optional(),
+        defaultLevel: t.any(),
+        onClick: t.function(),
+        onDelete: t.function().optional(),
+        text: t.string().optional(),
+        tooltip: t.string().optional(),
+    });
 }
 
 class SkillsMany2ManyTags extends Many2ManyTagsField {

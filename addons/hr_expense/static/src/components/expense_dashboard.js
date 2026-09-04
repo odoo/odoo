@@ -6,7 +6,6 @@ import { formatMonetary } from "@web/views/fields/formatters";
 
 export class ExpenseDashboard extends Component {
     static template = "hr_expense.ExpenseDashboard";
-    static props = {};
 
     debugMode = usePlugin(DebugModePlugin);
 

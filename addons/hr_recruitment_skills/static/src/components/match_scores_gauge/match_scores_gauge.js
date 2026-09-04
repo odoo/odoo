@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useChart } from "@web/core/utils/chart_hook";
@@ -18,13 +18,13 @@ const CHART_COLORS = [
 
 export class GaugeChartWidget extends Component {
     static template = "hr_recruitment.GaugeChartWidget";
-    static props = {
+    props = useProps({
         ...standardWidgetProps,
-        scoreFields: { type: String, optional: true },
-        maxValue: { type: Number, optional: true },
-        maxValueField: { type: String, optional: true },
-        title: { type: String, optional: true },
-    };
+        scoreFields: t.string().optional(),
+        maxValue: t.number().optional(),
+        maxValueField: t.string().optional(),
+        title: t.string().optional(),
+    });
 
     chart = useChart(() => this.getChartConfig());
 

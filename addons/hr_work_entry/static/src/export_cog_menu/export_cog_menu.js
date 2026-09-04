@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 const cogMenuRegistry = registry.category("cogMenu");
@@ -9,9 +9,10 @@ export class ExportWorkEntriesCogMenu extends Component {
 
     static template = "hr_work_entry.ExportWorkEntriesCogMenu"
     static components = { DropdownItem };
-    static props = {
-        isActionMenu: { type: Boolean, optional: true },
-    };
+
+    props = useProps({
+        isActionMenu: t.boolean().optional(),
+    });
 
     setup() {
         this.actionService = useService("action");

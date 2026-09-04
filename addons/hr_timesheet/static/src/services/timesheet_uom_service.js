@@ -18,8 +18,8 @@ export const timesheetUOMService = {
                 }
                 return timesheet_widget;
             },
-            getTimesheetComponent(widgetName = this.timesheetWidget) {
-                return registry.category("fields").get(widgetName, { component: FloatFactorField })
+            getTimesheetComponent(fieldName) {
+                return registry.category("fields").get(fieldName, { component: FloatFactorField })
                     .component;
             },
             getTimesheetComponentProps(props) {
