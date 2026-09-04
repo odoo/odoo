@@ -523,9 +523,9 @@
                                         </div>
                                     </div>
                                 </setting>
-                                <setting string="Preparation Printers" help="Connect preparation printers to your PoS">
-                                    <field name="pos_preparation_devices"/>
-                                    <div class="content-group" invisible="not pos_preparation_devices">
+                                <setting string="Preparation Printers" help="Connect preparation printers to your PoS" id="use_order_printer">
+                                    <field name="pos_use_order_printer"/>
+                                    <div class="content-group" invisible="not pos_use_order_printer">
                                         <div class="row mb-2">
                                             <div class="col-lg-2 o_light_label">
                                                 <label string="Available" for="pos_preparation_printer_ids"/>
