@@ -1,21 +1,21 @@
 import { ActionHelper } from "@web/views/action_helper";
 import { user } from "@web/core/user";
-import { onWillStart, proxy, Component } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 class OnboardingIconCard extends Component {
     static template = "hr.OnboardingIconCard";
-    static props = {
-        label: { type: String },
-        iconPath: { type: String },
-    };
+
+    props = useProps({
+        label: t.string(),
+        iconPath: t.string(),
+    });
 }
 
 class OnboardingHelperBlocks extends Component {
     static template = "hr.OnboardingHelperBlocks";
     static components = { OnboardingIconCard };
-    static props = {};
 }
 
 export class HrEmployeeActionHelper extends ActionHelper {

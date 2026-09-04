@@ -1,14 +1,15 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class IconSelectionField extends Component {
     static template = "event.IconSelectionField";
-    static props = {
+
+    props = useProps({
         ...standardFieldProps,
-        icons: Object,
-    };
+        icons: t.object(),
+    });
 
     get icon() {
         return this.props.icons[this.props.record.data[this.props.name]][0];

@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
@@ -6,10 +6,11 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 export class ContractEndDialog extends Component {
     static template = "hr.ContractEndDialog";
     static components = { Dialog, Many2XAutocomplete };
-    static props = {
-        close: Function,
-        record: Object,
-    };
+
+    props = useProps({
+        close: t.function(),
+        record: t.object(),
+    });
 
     setup() {
         this.orm = useService("orm");

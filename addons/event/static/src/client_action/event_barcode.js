@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { BarcodeScanner } from "@barcodes/components/barcode_scanner";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useProps } from "@odoo/owl";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -13,7 +13,8 @@ import { standardActionServiceProps } from "@web/webclient/actions/action_servic
 export class EventScanView extends Component {
     static template = "event.EventScanView";
     static components = { BarcodeScanner };
-    static props = { ...standardActionServiceProps };
+
+    props = useProps(standardActionServiceProps);
 
     setup() {
         this.actionService = useService("action");

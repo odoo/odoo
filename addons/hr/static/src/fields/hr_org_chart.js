@@ -4,16 +4,18 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { onEmployeeSubRedirect } from "./hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 
 class HrOrgChartPopover extends Component {
     static template = "hr.hr_orgchart_emp_popover";
-    static props = {
-        employee: Object,
-        close: Function,
-    };
+
+    props = useProps({
+        employee: t.object(),
+        close: t.function(),
+    });
+
     async setup() {
         super.setup();
 
@@ -39,7 +41,8 @@ class HrOrgChartPopover extends Component {
 
 export class HrOrgChart extends Component {
     static template = "hr.hr_org_chart";
-    static props = { ...standardFieldProps };
+    props = useProps(standardFieldProps);
+
     async setup() {
         super.setup();
 
