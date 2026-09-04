@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form_inherit_pt" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.pt</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- Future Date Warning -->
+                <xpath expr="//div[hasclass('alert')]" position="after">
+                    <div class="alert alert-warning mb-0" role="alert"
+                         invisible="not l10n_pt_show_future_date_warning">
+                        Setting the invoice date in the future will prevent new documents with an invoice date before
+                        <field name="invoice_date" readonly="1"/> from being posted.
+                    </div>
+                </xpath>
+                <!-- Hide Cancel button for PT moves and instead show a Cancel button calling the cancellation wizard -->
+                <xpath expr="//button[@name='button_cancel'][@invisible=&quot;not id or state != &apos;draft&apos; or move_type == &apos;entry&apos;&quot;]" position="attributes">
+                    <attribute name="invisible">not id or state != 'draft' or move_type == 'entry' or (country_code == 'PT' and l10n_pt_document_number)</attribute>
+                </xpath>
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <button name="%(l10n_pt_certification.action_l10n_pt_cancel)d"
+                            string="Cancel"
+                            type="action"
+                            groups="account.group_account_invoice"
+                            data-hotkey="x"
+                            invisible="not id or state == 'cancel' or not l10n_pt_document_number or move_type == 'entry' or country_code != 'PT'"/>
+                </xpath>
+                <!-- PT requirement: not allow the creation of credit notes regarding already fully rectified docs -->
+                <xpath expr="//button[@name='action_reverse']" position="attributes">
+                    <attribute name="invisible">move_type not in ('out_invoice', 'in_invoice') or state != 'posted' or (country_code == 'PT' and payment_state == 'reversed')</attribute>
+                </xpath>
+                <!-- Add PT fields in header -->
+                <xpath expr="//group[@id='header_left_group']" position="inside">
+                    <field name="l10n_pt_document_number"
+                           string="Document Number"
+                           invisible="country_code != 'PT' or move_type in ('in_invoice', 'in_receipt', 'in_refund')"/>
+                </xpath>
+                <xpath expr="//group[@id='header_right_group']" position="inside">
+                    <field name="l10n_pt_global_discount"
+                           invisible="country_code != 'PT' or move_type not in ('out_invoice', 'out_receipt', 'out_refund')"
+                           readonly="state != 'draft'"/>
+                </xpath>
+                <!-- Add line discount in account move line -->
+                <xpath expr="//field[@name='discount']" position="attributes">
+                    <attribute name="column_invisible">parent.country_code == 'PT'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='discount']" position="after">
+                   <field name="l10n_pt_line_discount" string="Disc.%" optional="hide" column_invisible="parent.country_code != 'PT'"/>
+                </xpath>
+                <!-- Add PT info group inside Other Info tab -->
+                <xpath expr="//page[@id='other_tab']//group[@name='accounting_info_group']" position="after">
+                    <group string="Portugal"
+                           name="portuguese_info_group"
+                           invisible="country_code != 'PT' or move_type in ('in_invoice', 'in_receipt')">
+                        <field name="l10n_pt_at_series_id"
+                               readonly="state in ['cancel', 'posted']"
+                               required="move_type in ('out_invoice', 'out_refund') and country_code == 'PT'"
+                               domain="[('active', '=', True), ('sale_journal_id', '=', journal_id)]"/>
+                        <field name="l10n_pt_atcud"/>
+                        <field name="l10n_pt_cancel_reason"
+                               invisible="state != 'cancel'"
+                               required="state == 'cancel' and l10n_pt_document_number"/>
+                    </group>
+                </xpath>
+                <!-- Add PT Info tab in Receipts -->
+                <xpath expr="//page[@id='aml_tab']" position="after">
+                    <page id="other_tab"
+                          string="Portugal Info"
+                          name="portugal_info"
+                          invisible="move_type != 'out_receipt' or country_code != 'PT'">
+                        <group id="portuguese_info_group_receipt">
+                            <field name="l10n_pt_at_series_id"
+                                   readonly="state in ['cancel', 'posted']"
+                                   required="move_type == 'out_receipt' and country_code == 'PT'"
+                                   domain="[('active', '=', True), ('sale_journal_id', '=', journal_id)]"/>
+                            <field name="inalterable_hash" groups="base.group_no_one"/>
+                            <field name="l10n_pt_atcud"/>
+                            <field name="l10n_pt_cancel_reason"
+                                   invisible="state != 'cancel'"
+                                   required="state == 'cancel' and l10n_pt_document_number"/>
+                        </group>
+                    </page>
+                </xpath>
+                <!-- Credit note requirements -->
+                <xpath expr="//page[@id='other_tab']//field[@name='ref']" position="after">
+                    <field name="reversed_entry_id"
+                           required="move_type == 'out_refund' and country_code == 'PT' and payment_state != 'reversed'"
+                           readonly="False"
+                           options="{'no_quick_create':True,'no_create_edit':True}"
+                           domain="[('move_type', 'in', ('out_invoice', 'out_receipt')), ('state', '=', 'posted')]"/>
+                </xpath>
+                <xpath expr="//page[@id='other_tab']//field[@name='ref']" position="attributes">
+                    <attribute name="required">move_type == 'out_refund' and country_code == 'PT'</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_out_invoice_tree_inherit_pt" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit.pt</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                   <field name="l10n_pt_document_number" string="Document Number" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
