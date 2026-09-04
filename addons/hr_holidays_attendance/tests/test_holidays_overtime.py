@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime
 
 from odoo import Command
 from odoo.tests import new_test_user
@@ -177,12 +177,12 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
         leave.action_back_to_approval()
         self._check_deductible(8)
 
-        leave.date_to = datetime(2021, 1, 5)
+        leave.request_date_to = date(2021, 1, 5)
         self._check_deductible(0)
         with self.assertRaises(ValidationError):
-            leave.date_to = datetime(2021, 1, 6)
+            leave.request_date_to = date(2021, 1, 6)
 
-        leave.date_to = datetime(2021, 1, 4)
+        leave.request_date_to = date(2021, 1, 4)
         self._check_deductible(8)
 
     def test_allocation_check_overtime_write(self):
