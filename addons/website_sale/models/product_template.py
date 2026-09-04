@@ -1947,16 +1947,28 @@ class ProductTemplate(models.Model):
         If a product inventory is not tracked, or if it's allowed to be sold regardless
         of availabilities, the product is never considered sold out.
 
+<<<<<<< 0ea0e0a0daa0ddc4e92a7d519e2c95ff4fdf2a24
         Note: checks the availability of all variants of the template.
+||||||| 58d54ea594187110931d3517050d0b5c1e4dc384
+        Note: only checks the availability of the first variant of the template.
+=======
+        Note: the template is sold out only when all of its variants are.
+>>>>>>> 2198d2c7d7b9e6c2b4d1799f0b123c47679a963e
 
         :return: whether the product can still be sold
         :rtype: bool
         """
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
+<<<<<<< 0ea0e0a0daa0ddc4e92a7d519e2c95ff4fdf2a24
         return not self.product_variant_ids or all(
             variant._is_sold_out() for variant in self.product_variant_ids
         )
+||||||| 58d54ea594187110931d3517050d0b5c1e4dc384
+        return not self.product_variant_id or self.product_variant_id._is_sold_out()
+=======
+        return all(variant._is_sold_out() for variant in self.product_variant_ids)
+>>>>>>> 2198d2c7d7b9e6c2b4d1799f0b123c47679a963e
 
     @api.model
     def _get_additional_configurator_data(
