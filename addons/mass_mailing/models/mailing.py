@@ -1357,12 +1357,12 @@ class MailingMailing(models.Model):
                     match = image_re.match(node.attrib.get('src', ''))
                     if match:
                         image = match.group(2).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, None, int(node.attrib.get('data-original-id') or "0")))
+                        conversion_info.append((image, node, None, int(node.attrib.get('data-attachment-id') or "0")))
                 elif 'base64' in (node.attrib.get('style') or ''):
                     # Convert base64 images in inline styles to attachments.
                     for match in re.findall(r'data:image/[A-Za-z]+;base64,.+?(?=&\#34;|\"|\'|&quot;|\))', node.attrib.get('style')):
                         image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, match, int(node.attrib.get('data-original-id') or "0")))
+                        conversion_info.append((image, node, match, int(node.attrib.get('data-attachment-id') or "0")))
                 elif mso_re.match(node.text or ''):
                     # Convert base64 images (in img tags or inline styles) in mso comments to attachments.
                     base64_in_element_regex = re.compile(r"""
@@ -1370,7 +1370,7 @@ class MailingMailing(models.Model):
                     """, re.VERBOSE)
                     for match in re.findall(base64_in_element_regex, node.text):
                         image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, match, int(node.attrib.get('data-original-id') or "0")))
+                        conversion_info.append((image, node, match, int(node.attrib.get('data-attachment-id') or "0")))
                     # Crop VML images.
                     for match in re.findall(r'<v:image[^>]*>', node.text):
                         url = re.search(r'src=\s*\"([^\"]+)\"', match)[1]
@@ -1392,7 +1392,7 @@ class MailingMailing(models.Model):
                             else:
                                 image_processor = ImageProcess(image)
                                 image = image_processor.crop_resize(target_width, target_height, 0, 0)
-                                conversion_info.append((base64.b64encode(image.source), node, url, int(node.attrib.get('data-original-id') or "0")))
+                                conversion_info.append((base64.b64encode(image.source), node, url, int(node.attrib.get('data-attachment-id') or "0")))
 
         # Apply the changes.
         urls = self._create_attachments_from_inline_images([(image, original_id) for (image, _, _, original_id) in conversion_info])

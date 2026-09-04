@@ -243,10 +243,11 @@ export function convertCSSColorToRgba(cssColor = "") {
 
     if (/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(cssColor)) {
         return {
-            red: parseInt(cssColor.substr(1, 2), 16),
-            green: parseInt(cssColor.substr(3, 2), 16),
-            blue: parseInt(cssColor.substr(5, 2), 16),
-            opacity: (cssColor.length === 9 ? parseInt(cssColor.substr(7, 2), 16) / 255 : 1) * 100,
+            red: parseInt(cssColor.substring(1, 3), 16),
+            green: parseInt(cssColor.substring(3, 5), 16),
+            blue: parseInt(cssColor.substring(5, 7), 16),
+            opacity:
+                (cssColor.length === 9 ? parseInt(cssColor.substring(7, 9), 16) / 255 : 1) * 100,
         };
     }
 
@@ -345,6 +346,46 @@ export function standardizeGradient(gradient) {
         gradient = el.style.getPropertyValue("background-image");
     }
     return gradient;
+}
+
+export function extractGradientData(gradient) {
+    if (!gradient || !isColorGradient(gradient)) {
+        return;
+    }
+    gradient = standardizeGradient(gradient);
+    const data = { colors: [] };
+    const colors = [
+        ...gradient.matchAll(
+            /(#[0-9a-f]{6}|rgba?\(\s*[0-9]+\s*,\s*[0-9]+\s*,\s*[0-9]+\s*[,\s*[0-9.]*]?\s*\)|[a-z]+)\s*([[0-9]+%]?)/g
+        ),
+    ].filter((color) => rgbaToHex(color[1]) !== "#");
+
+    for (const color of colors) {
+        data.colors.push({ hex: rgbaToHex(color[1]), percentage: color[2].replace("%", "") });
+    }
+
+    const isLinear = gradient.includes("linear-gradient(");
+    const isRadial = gradient.includes("radial-gradient(");
+    const isConic = gradient.includes("conic-gradient(");
+
+    data.type = isLinear ? "linear" : isRadial ? "radial" : "conic";
+    data.repeating = gradient.startsWith("repeating-");
+
+    if (isRadial) {
+        const size = gradient.match(/(closest|farthest)-(side|corner)/);
+        data.size = size ? size[0] : "farthest-corner";
+    }
+    if (isLinear || isConic) {
+        const angle = gradient.match(/(-?[0-9]+)deg/);
+        data.angle = angle ? parseInt(angle[1]) : 0;
+    }
+    if (isRadial || isConic) {
+        data.position = {};
+        const position = gradient.match(/ at (-?[0-9]+)% (-?[0-9]+)%/) || ["", "50", "50"];
+        data.position.x = position[1];
+        data.position.y = position[2];
+    }
+    return data;
 }
 
 export const RGBA_REGEX = /[\d.]{1,5}/g;

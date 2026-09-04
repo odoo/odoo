@@ -17,12 +17,12 @@ import {
     usePlugin,
 } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
-import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { Operation } from "@html_builder/core/operation";
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -49,6 +49,11 @@ export class MassMailingHtmlField extends HtmlField {
     setup() {
         super.setup();
         this.converter = useEmailHtmlConverter({
+            Plugins: [
+                ...registry.category("mail-html-conversion-core-plugins").getAll(),
+                ...registry.category("mail-html-conversion-main-plugins").getAll(),
+                ...registry.category("mass-mailing-html-conversion-plugins").getAll(),
+            ],
             bundles: ["mass_mailing.assets_iframe_style"],
         });
         this.themeService = useService("mass_mailing.themes");
@@ -239,7 +244,7 @@ export class MassMailingHtmlField extends HtmlField {
         } else if (this.withBuilder) {
             return this.getBuilderConfig();
         } else {
-            return this.getSimpleEditorConfig();
+            return this.getBasicEditorConfig();
         }
     }
 
@@ -265,12 +270,12 @@ export class MassMailingHtmlField extends HtmlField {
             allowTextColumnResize: false,
             record: this.props.record,
             mobileBreakpoint: "md",
-            defaultImageMimetype: "image/png",
             onEditorReady: () => this.commitChanges(),
+            measureReference: this.converter.measureReference,
         };
     }
 
-    getSimpleEditorConfig() {
+    getBasicEditorConfig() {
         const config = super.getConfig();
         const codeViewCommand = [config.resources?.user_commands]
             .filter(Boolean)
@@ -282,9 +287,14 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
-            Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_FIELD_PLUGINS]
+            measureReference: this.converter.measureReference,
+            Plugins: [
+                ...MAIN_EDITOR_PLUGINS,
+                ...DYNAMIC_FIELD_PLUGINS,
+                ...registry.category("mail-core-plugins").getAll(),
+            ]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
-                .concat(registry.category("basic-editor-plugins").getAll()),
+                .concat(registry.category("mass_mailing-basic-editor-plugins").getAll()),
         };
     }
 
@@ -300,7 +310,7 @@ export class MassMailingHtmlField extends HtmlField {
                     }
                     // The inlineField can not be updated to its final value at
                     // this point since the editor is needed to process the
-                    // theme template. (i.e. applying the default style).
+                    // theme template (i.e. to insert the Design Tab style).
                     // It will be updated onEditorReady since it has become empty.
                     return record
                         .update({
@@ -364,7 +374,7 @@ export class MassMailingHtmlField extends HtmlField {
         if (isTargetOutsideActiveElement && !shouldIgnoreTarget) {
             this.activeElement = undefined;
             this.onBlur();
-        } else if (this.iframeWrapperRef().contains(ev.target)) {
+        } else if (this.iframeWrapperRef()?.contains(ev.target)) {
             this.activeElement = this.iframeWrapperRef();
         }
     }
@@ -389,6 +399,45 @@ export class MassMailingHtmlField extends HtmlField {
             });
         }
         return super.commitChanges(...arguments);
+    }
+
+    /**
+     * Ensure that every SVG and WEBP images are converted to PNG, and create
+     * an attachment for every b64 encoded image, to ensure every image src
+     * is not a data url.
+     * Prevent the user from making additional changes during the operation.
+     * @override
+     */
+    async savePendingImages(content) {
+        const operation = this.editor.shared.operation
+            ? this.editor.shared.operation
+            : new Operation(this.editor.document);
+        let result;
+        await operation.next(
+            async () => {
+                try {
+                    result = await this.editor.shared.emailImageFormat.sanitizeImages(content);
+                } finally {
+                    const lastChangeIdSnapshot = this.lastChangeId;
+                    if (
+                        this.editor.shared.history.commit() &&
+                        this.lastChangeId === lastChangeIdSnapshot + 1
+                    ) {
+                        // All pending image changes were done in both the content
+                        // clone and the editable, so if an editor commit was made
+                        // during this operation, it is reasonable to assume that
+                        // the changes it contains were also done in content, which
+                        // will be sent to the server. Therefore this commit
+                        // onChange should not have increased lastChangeId and the
+                        // snapshotted value is restored, allowing the field to
+                        // not be dirty after updateValue.
+                        this.lastChangeId = lastChangeIdSnapshot;
+                    }
+                }
+            },
+            { canTimeout: false, shouldInterceptClick: true }
+        );
+        return result;
     }
 
     /**
@@ -445,7 +494,7 @@ export class MassMailingHtmlField extends HtmlField {
         let inlineValue;
         try {
             inlineValue = await this.converter.convertToEmailHtml(valueFragment, {
-                preProcessCallbacks: [this.preprocessFilterDomains.bind(this)],
+                debug: this.env.debug,
             });
         } catch (error) {
             if (status(this) !== "destroyed") {
@@ -466,24 +515,6 @@ export class MassMailingHtmlField extends HtmlField {
             () => {}
         );
         record.model.bus.trigger("FIELD_IS_DIRTY", this.isDirty);
-    }
-    /**
-     * Processes the data-filter-domain to be converted to a t-if that will be interpreted on send
-     * by QWeb.
-     * TODO EGGMAIL: move in a convert_inline plugin when they are implemented.
-     * @param {HTMLElement} htmlEl
-     */
-    preprocessFilterDomains(htmlEl) {
-        htmlEl.querySelectorAll("[data-filter-domain]").forEach((el) => {
-            let domain;
-            try {
-                domain = new Domain(JSON.parse(el.dataset.filterDomain));
-            } catch {
-                el.setAttribute("t-if", "false");
-                return;
-            }
-            el.setAttribute("t-if", `object.filtered_domain(${domain.toString()})`);
-        });
     }
 }
 

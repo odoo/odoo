@@ -104,12 +104,9 @@
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
 
-            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-
             'html_builder/static/src/scss/background.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
             'mass_mailing/static/src/snippets/**/*.scss',
         ],
@@ -135,6 +132,13 @@
             ('include', 'mass_mailing.assets_iframe_style_base'),
             'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
+        'mass_mailing.assets_mail_clients': [
+            # style sheet added in _prepare_mail_values in the
+            # email sent, they are added here to create as many inline style
+            # rules as possible during html conversion.
+            # Files added here should also be handled in _prepare_mail_values
+            'mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css',
+        ],
         'mass_mailing.iframe_add_dialog': [
             ('include', 'html_builder.iframe_add_dialog'),
             'mass_mailing/static/src/builder/snippet_viewer/*.scss',
@@ -147,6 +151,10 @@
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
         'web.assets_backend': [
+            # Operation is needed when saving pending
+            # images using the basic editor (without the html_builder).
+            'html_builder/static/src/core/operation.js',
+
             'mass_mailing/static/src/action/**/*',
             'mass_mailing/static/src/components/**/*',
             'mass_mailing/static/src/views/mailing_preview_form_view.js',
