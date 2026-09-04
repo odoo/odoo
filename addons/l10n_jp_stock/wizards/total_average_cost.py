@@ -1,6 +1,6 @@
 from datetime import UTC, datetime, time, timedelta
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round
 
@@ -21,6 +21,15 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         required=True,
         default=fields.Date.context_today,
     )
+
+    @api.model
+    def default_get(self, fields):
+        if self.env.company.account_fiscal_country_id.code != 'JP':
+            raise UserError(self.env._(
+                'The total average cost (総平均法) is a Japanese accounting method, '
+                'so it can only be evaluated for a Japanese company.',
+            ))
+        return super().default_get(fields)
 
     def action_apply_total_average_cost(self):
         """
