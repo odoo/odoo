@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from unittest.mock import patch, PropertyMock
 
 from odoo import fields
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import new_test_user
@@ -39,6 +40,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "channel_id": self.livechat_channel.id,
                 },
             )["store_data"]
+        pop_store_version(data)
         channel_info = data["discuss.channel"][0]
         self.assertEqual(channel_info["name"], "Visitor Michel Operator")
         self.assertEqual(channel_info["country_id"], belgium.id)
@@ -103,6 +105,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             'previous_operator_id': operator.partner_id.id,
             'channel_id': self.livechat_channel.id,
         })["store_data"]
+        pop_store_version(data)
         channel_info = data["discuss.channel"][0]
         self.assertEqual(channel_info["name"], "Roger Michel Operator")
         self.assertEqual(channel_info["country_id"], belgium.id)
@@ -241,6 +244,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             'previous_operator_id': operator.partner_id.id,
             'channel_id': self.livechat_channel.id,
         })["store_data"]
+        pop_store_version(data)
         channel_info = data["discuss.channel"][0]
         operator_member_domain = [
             ('channel_id', '=', channel_info['id']),

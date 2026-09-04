@@ -6,6 +6,7 @@ from odoo.tools.misc import file_open
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.cloud_storage_google.tests.test_cloud_storage_google import TestCloudStorageGoogleCommon
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.bus.tests.common import pop_store_version
 
 
 @odoo.tests.tagged("-at_install", "post_install", "mail_controller")
@@ -38,7 +39,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                     res.content.decode("utf-8"),
                 )
             )
-            content["data"]["store_data"].pop("__store_version__")
+            pop_store_version(content["data"]["store_data"])
             self.assertEqual(
                 content,
                 {

@@ -9,7 +9,7 @@ from odoo import fields
 from odoo.tests.common import HttpCase, new_test_user, tagged, users
 from odoo.tools.misc import mute_logger
 
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import BusResult, pop_store_version
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 
@@ -171,6 +171,7 @@ class TestChannelRTC(MailCommon, HttpCase):
             self.member_of_employee_in_channel_internal.sudo()._rtc_join_call(store)
             res = store._build_result()
         rtc_session = self.member_of_employee_in_channel_internal.sudo().rtc_session_ids
+        pop_store_version(res)
         self.assertEqual(
             res,
             {
