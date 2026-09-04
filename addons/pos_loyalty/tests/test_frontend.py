@@ -3304,6 +3304,53 @@ class TestUi(TestPointOfSaleHttpCommon):
         )
         self.assertEqual(len(gift_card_program.coupon_ids), 2)
 
+    def test_physical_gift_card_multiple_programs(self):
+        """
+        Selling several physical gift cards while more than one gift card
+        program triggers on the same product must not duplicate the entered
+        codes across programs.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        # Both programs are created from the template, so they share the same
+        # gift card product, as when created from the UI.
+        programs = self.create_programs([('program_a', 'gift_card'), ('program_b', 'gift_card')])
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_physical_gift_card_multiple_programs",
+            login="pos_user",
+        )
+        codes = (programs['program_a'].coupon_ids | programs['program_b'].coupon_ids).mapped('code')
+        self.assertEqual(len(codes), len(set(codes)), "gift card codes must be unique")
+        self.assertIn('test-card-0001', codes)
+        self.assertIn('test-card-0002', codes)
+
+    def test_physical_gift_card_single_program_twice(self):
+        """
+        Selling twice the same physical gift card product with a single
+        program must not duplicate the entered code.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        program = self.create_programs([('program_a', 'gift_card')])['program_a']
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_physical_gift_card_single_program_twice",
+            login="pos_user",
+        )
+        codes = program.coupon_ids.mapped('code')
+        self.assertEqual(len(codes), len(set(codes)), "gift card codes must be unique")
+        self.assertIn('test-card-0001', codes)
+        self.assertIn('test-card-0002', codes)
+
     def test_ewallet_tax_included_invoice(self):
         LoyaltyProgram = self.env['loyalty.program']
         (LoyaltyProgram.search([])).write({'pos_ok': False})
