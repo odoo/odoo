@@ -84,6 +84,14 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete_by_field(self, fieldName, query, query_country_id, timeout=15):
+        if (
+            fieldName == 'name'
+            and query.isdigit()
+            and len(query) in (9, 14)
+            and self.env['ir.module.module']._get('l10n_fr').state == 'installed'
+        ):
+            return self.autocomplete_by_vat(query, self.env.ref('base.fr').id)
+
         match fieldName:
             case "name":
                 return self.autocomplete_by_name(query, query_country_id)
@@ -100,6 +108,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_name', {
             'query': query,
             'query_country_code': query_country_code,
+            'supported_enrichment_types': ['duns', 'vat'],
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -116,6 +125,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
+            'supported_enrichment_types': ['duns', 'vat'],
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -201,6 +211,13 @@ class ResPartner(models.Model):
     def enrich_by_duns(self, duns, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_duns', {
             'duns': duns,
+        }, timeout=timeout)
+        return self._process_enriched_response(response, error)
+
+    @api.model
+    def enrich_by_vat(self, vat, timeout=15):
+        response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_vat', {
+            'vat': vat,
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 

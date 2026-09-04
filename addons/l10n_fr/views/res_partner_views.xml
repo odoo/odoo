@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_l10n_fr" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.fr</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="French Company" name="l10n_fr_company" invisible="not l10n_fr_is_french">
+                    <group>
+                        <group>
+                            <field name="l10n_fr_trade_name"/>
+                            <field name="l10n_fr_ape"/>
+                            <field name="l10n_fr_insee_commune_code"/>
+                            <field name="l10n_fr_main_activity"/>
+                        </group>
+                        <group>
+                            <field name="l10n_fr_legal_form_code"/>
+                            <field name="l10n_fr_creation_date"/>
+                            <field name="l10n_fr_legal_representative_name"/>
+                            <field name="l10n_fr_legal_representative_role_code"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
