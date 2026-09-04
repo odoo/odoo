@@ -363,7 +363,7 @@ class L10nPhDiscountPrivilegeWizardLine(models.TransientModel):
     def _compute_name(self):
         for line in self:
             source = line._get_line_source()
-            line.name = source.translated_product_name or source.name
+            line.name = source.label
 
     @api.depends("invoice_line_id.product_id.categ_id")
     def _compute_category_id(self):

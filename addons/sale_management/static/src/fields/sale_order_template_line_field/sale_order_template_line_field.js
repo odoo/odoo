@@ -15,10 +15,20 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
+        this.productAndDescriptionColumn = "product_and_description";
         useSubEnv({
             adjustSectionQuantities: this.adjustSectionQuantities.bind(this),
             shouldCollapse: this.shouldCollapse.bind(this),
         });
+    }
+
+    focusToName(editRec) {
+        if (editRec && editRec.isNew && this.isSection(editRec)) {
+            // Don't always focus on `titleField` for sections since we are adding section_qty and
+            // section_uom_id fields in section row.
+            return;
+        }
+        super.focusToName(editRec);
     }
 
     get sectionColumns() {
@@ -75,7 +85,7 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
 
     getSectionColumns(columns) {
         const isSectionCol = (col) =>
-            [this.titleField, ...this.sectionColumns].includes(col.name) || col.widget === "handle";
+            this.sectionColumns.includes(col.name) || col.widget === "handle";
 
         let titleColspan = 1;
         let absorbingColumns = true;
@@ -84,7 +94,7 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
         const sectionCols = [];
 
         for (const col of columns) {
-            if (col.name === this.titleField) {
+            if (col.name === this.productAndDescriptionColumn) {
                 titleCol = col;
                 continue;
             }
@@ -167,6 +177,28 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
     add(params){
         params.context = this.getCreateContext(params);
         super.add(params);
+    }
+
+    isColumnGroupFieldVisible(fieldInfo, record) {
+        const isColumnVisible = super.isColumnGroupFieldVisible(fieldInfo, record);
+        if (!isColumnVisible) {
+            return false;
+        }
+
+        const isVariantFieldActive = this.optionalActiveFields["product_id"];
+        const isTemplateFieldActive = this.optionalActiveFields["product_template_id"];
+
+        if (fieldInfo.name === "product_template_id") {
+            return !isVariantFieldActive;
+        }
+        const isProductFieldActive = isVariantFieldActive || isTemplateFieldActive;
+        if (fieldInfo.name === "label") {
+            return !isProductFieldActive;
+        }
+        if (fieldInfo.name === "name") {
+            return isProductFieldActive;
+        }
+        return true;
     }
 
     getCreateContext(params) {

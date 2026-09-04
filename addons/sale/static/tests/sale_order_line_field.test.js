@@ -59,6 +59,7 @@ test("test combo move up/down", async () => {
                         </control>
                         <field name="sequence" widget="handle" invisible="combo_item_id"/>
                         <field name="name"/>
+                        <field name="label"/>
                         <field name="display_type" column_invisible="1"/>
                         <field name="linked_line_id" column_invisible="1"/>
                         <field name="product_type" column_invisible="1"/>
@@ -204,6 +205,7 @@ test("Test combo columns", async () => {
                         </control>
                         <field name="sequence" widget="handle" invisible="combo_item_id"/>
                         <field name="name"/>
+                        <field name="label"/>
                         <field name="price_unit"/>
                         <field name="product_uom_qty"/>
                         <field name="discount"/>

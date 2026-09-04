@@ -85,42 +85,42 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         line_vals = [
             {
                 'product_id': self.place_prdct.id,
-                'name': 'Placement',
+                'label': 'Placement',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
-                'name': 'Displacement',
+                'label': 'Displacement',
                 'product_uom_id': False,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
-                'name': 'Displacement',
+                'label': 'Displacement',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': self.displace_prdct.id,
-                'name': 'Displacement',
+                'label': 'Displacement',
                 'product_uom_id': self.uom_dozens.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id]
             }, {
                 'product_id': products[0].id,
-                'name': 'Awesome Product',
+                'label': '[1234] XYZ\nAwesome Product',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             }, {
                 'product_id': products[1].id,
-                'name': 'XYZ',
+                'label': '[5678] XYZ',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             }, {
                 'product_id': products[2].id,
-                'name': 'XXX',
+                'label': '[1111] XXX',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             }, {
                 'product_id': products[3].id,
-                'name': 'YYY',
+                'label': '[1111] YYY',
                 'product_uom_id': self.uom_units.id,
                 'tax_ids': [self.company_data_2['default_tax_sale'].id],
             },

@@ -1,9 +1,14 @@
 import { fields, models } from "@web/../tests/web_test_helpers";
 
-
 export class SaleOrderLine extends models.ServerModel {
     _name = "sale.order.line";
 
-    // Store the field for testing to be able to set the translation at the record creation.
-    translated_product_name = fields.Char({store: true});
+    label = fields.Text({ compute: "_computeLabel", readonly: false });
+
+    // directly set `name` to `label` to avoid complications with `display_name`
+    _computeLabel() {
+        for (const record of this) {
+            record.label = record.name;
+        }
+    }
 }

@@ -118,7 +118,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         new_sale_order = self.env["sale.order"].search([]) - old_sale_order
         new_order_line = new_sale_order.order_line
         self.assertEqual(
-            new_order_line.name,
+            new_order_line.label,
             "Short (TEST) (M always, M dynamic)"
             "\nNever attribute size: M never"
             "\nNever attribute size custom: Yes never custom: TEST",
@@ -490,7 +490,8 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         main_product.attribute_line_ids[1].product_template_value_ids[0].ptav_active = False
         with self.mock_request() as request:
             product_values = self.pc_controller._prepare_product_values(
-                main_product.with_context(request.env.context), **{str(attribute_single.id): str(attribute_single.value_ids.id)}
+                main_product.with_context(request.env.context),
+                **{str(attribute_single.id): str(attribute_single.value_ids.id)},
             )
         is_combination_possible = product_values["combination_info"]["is_combination_possible"]
         combination_product_id = product_values["combination_info"]["product_id"]
@@ -521,10 +522,14 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         # On website 1, the category from website 1 should be selected.
         with MockRequest(self.website.env, website=self.website) as request:
-            values = self.pc_controller._prepare_product_values(product_tmpl.with_context(request.env.context))
+            values = self.pc_controller._prepare_product_values(
+                product_tmpl.with_context(request.env.context)
+            )
         self.assertEqual(values["category"], categ_website_1)
 
         # On website 2, the category from website 2 should be selected.
         with MockRequest(self.website.env, website=second_website) as request:
-            values = self.pc_controller._prepare_product_values(product_tmpl.with_context(request.env.context))
+            values = self.pc_controller._prepare_product_values(
+                product_tmpl.with_context(request.env.context)
+            )
         self.assertEqual(values["category"], categ_website_2)

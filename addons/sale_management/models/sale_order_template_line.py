@@ -77,7 +77,7 @@ class SaleOrderTemplateLine(models.Model):
         readonly=False,
         precompute=True,
         ondelete="restrict",
-        init_storage=lambda model: None,
+        init_storage=lambda model: None,  # noqa: ARG005
     )
     is_configurable_product = fields.Boolean(
         string="Is the product configurable?",
@@ -92,6 +92,7 @@ class SaleOrderTemplateLine(models.Model):
         precompute=True,
         translate=True,
     )
+    label = fields.Text(string="Label", compute="_compute_label", inverse="_inverse_label")
 
     allowed_uom_ids = fields.Many2many("uom.uom", compute="_compute_allowed_uom_ids")
     product_uom_id = fields.Many2one(
@@ -186,13 +187,11 @@ class SaleOrderTemplateLine(models.Model):
         )
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
-        lines = []
         custom_ptavs = (
             self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         )
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == "multi").sorted()
-        for ptav in no_variant_ptavs - multi_ptavs - custom_ptavs:
-            lines.append(ptav.display_name)
+        lines = (no_variant_ptavs - multi_ptavs - custom_ptavs).mapped("display_name")
         for pta, ptavs in multi_ptavs.grouped("attribute_id").items():
             lines.append(
                 self.env._(
@@ -297,6 +296,27 @@ class SaleOrderTemplateLine(models.Model):
             else:
                 line.section_uom_id = False
 
+    @api.depends("product_id", "name")
+    def _compute_label(self):
+        for line in self:
+            if (
+                line.product_id
+                and line.name
+                and line.name.splitlines()[0] != line.product_id.display_name
+            ):
+                line.label = line.product_id.display_name + "\n" + line.name
+            elif line.product_id and not line.name:
+                line.label = line.product_id.display_name
+            else:
+                line.label = line.name
+
+    def _inverse_label(self):
+        for line in self:
+            if line.product_id and line.label:
+                line.name = line.label.removeprefix(line.product_id.display_name).removeprefix("\n")
+            else:
+                line.name = line.label
+
     # === CRUD METHODS ===#
 
     @api.model_create_multi
@@ -364,8 +384,6 @@ class SaleOrderTemplateLine(models.Model):
         }
         if self.name:
             vals["name"] = self.name
-            if self.product_id:
-                vals["name"] = f"{self.product_id.display_name}\n{self.name}"
 
         if not self.product_id:
             taxes = self.tax_ids._filter_taxes_by_company()

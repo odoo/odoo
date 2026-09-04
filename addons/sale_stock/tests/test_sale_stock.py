@@ -2267,7 +2267,10 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 'product_no_variant_attribute_value_ids': [Command.set(product_with_description.attribute_line_ids[1].product_template_value_ids[0].ids)],
             }
         )
-        self.assertEqual(so.order_line.name, 'Product with description (red)\nSale description\nNo variant: extra')
+        self.assertEqual(
+            so.order_line.label,
+            'Product with description (red)\nSale description\nNo variant: extra',
+        )
         so.order_line.name += '\nRandom sale notes'
         so.action_confirm()
         self.assertEqual(so.picking_ids.move_ids.description_picking, 'No variant: extra\nDeliver with care')

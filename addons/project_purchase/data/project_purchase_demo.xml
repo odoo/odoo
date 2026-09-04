@@ -47,7 +47,6 @@
 
         <record id="purchase_order_line_for_home_construction_1" model="purchase.order.line">
             <field name="order_id" ref="purchase_order_for_home_construction"/>
-            <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_cement').partner_ref"/>
             <field name="product_id" ref="project_purchase.product_product_cement"/>
             <field name="uom_id" ref="uom.product_uom_ton"/>
             <field name="price_unit">150</field>
@@ -58,7 +57,6 @@
 
         <record id="purchase_order_line_for_home_construction_2" model="purchase.order.line">
             <field name="order_id" ref="purchase_order_for_home_construction"/>
-            <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_sand').partner_ref"/>
             <field name="product_id" ref="project_purchase.product_product_sand"/>
             <field name="uom_id" ref="uom.product_uom_ton"/>
             <field name="price_unit">100</field>
@@ -69,7 +67,6 @@
 
         <record id="purchase_order_line_for_home_construction_3" model="purchase.order.line">
             <field name="order_id" ref="purchase_order_for_home_construction"/>
-            <field name="name" model="purchase.order.line" eval="obj().env.ref('project_purchase.product_product_bricks').partner_ref"/>
             <field name="product_id" ref="project_purchase.product_product_bricks"/>
             <field name="uom_id" ref="uom.product_uom_ton"/>
             <field name="price_unit">50</field>

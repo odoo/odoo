@@ -539,7 +539,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         if record and record.name:
             line_name = record.name and record.name.replace('\n', ' ')
         else:
-            line_name = vals['base_line']['line_name']
+            line_name = vals['base_line'].get('line_name', '')
         if line_name:
             line_node['cac:Item']['cbc:Description']['_text'] = line_name
             if not line_node['cac:Item']['cbc:Name']['_text']:

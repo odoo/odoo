@@ -13,17 +13,17 @@ from odoo.addons.sale_management.tests.common import SaleManagementCommon
 @tagged("-at_install", "post_install")
 class TestSaleOrder(SaleManagementCommon):
     _test_user_groups = (
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
         # FIXME: base.group_erp_manager is required because the discount wizard auto-creates the
         # company's discount product on first use (sale/wizard/sale_order_discount.py
         # _get_discount_product, requires company.has_access("write")). Business logic ->
         # test_optional_section_discount_line_not_editable_on_portal. Prefer the user-level group
         # 'base.group_user' once that flow no longer requires res.company write access.
-        'base.group_erp_manager',
+        "base.group_erp_manager",
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -369,7 +369,6 @@ class TestSaleOrder(SaleManagementCommon):
             Command.create({"name": "Note 1", "display_type": "line_note"}),
         ]
         # Remove product description to ease comparing before/after translations
-        self.product_1.description_sale = None
         self.quotation_template_no_discount.sale_order_template_line_ids.filtered(
             lambda line: line.product_id == self.product_1
         ).name = False
@@ -379,6 +378,11 @@ class TestSaleOrder(SaleManagementCommon):
         partner_NL = self.partner.copy({"lang": "nl_NL", "name": "Pieter-Jan Hollandman"})
         names_EN = ["Product 1", "Section 1", "Note 1", "Optional products", "Optional product"]
         names_NL = ["Artikel 1", "Sectie 1", "Nota 1", "Optionele producten", "Optioneel product"]
+
+        # Expected names differ from record names because product names are not expressed in the
+        # `name` field anymore.
+        expected_names_EN = ["This is a product description", *names_EN[1:-1], ""]
+        expected_names_NL = ["NL Description", *names_NL[1:-1], ""]
         trans_dict = dict(zip(names_EN, names_NL))
         for record in chain(
             self.quotation_template_no_discount.sale_order_template_line_ids,
@@ -388,14 +392,16 @@ class TestSaleOrder(SaleManagementCommon):
                 continue
             record.with_context(lang="nl_NL").name = trans_dict[record.name]
 
+        self.product_1.with_context(lang="nl_NL").description_sale = "NL Description"
+
         # Create sale order form (and a way to retrieve line names)
         def get_form_field_names(form):
             return [
-                form.order_line.edit(0).name,
-                form.order_line.edit(1).name,
-                form.order_line.edit(2).name,
-                form.order_line.edit(3).name,
-                form.order_line.edit(4).name,
+                form.order_line.edit(0).label,
+                form.order_line.edit(1).label,
+                form.order_line.edit(2).label,
+                form.order_line.edit(3).label,
+                form.order_line.edit(4).label,
             ]
 
         order_form = Form(self.sale_order.browse())
@@ -404,7 +410,7 @@ class TestSaleOrder(SaleManagementCommon):
         # Sanity check English names
         self.assertSequenceEqual(
             get_form_field_names(order_form),
-            names_EN,
+            expected_names_EN,
             "Lines should be displayed in English for an American partner",
         )
 
@@ -412,25 +418,32 @@ class TestSaleOrder(SaleManagementCommon):
         order_form.partner_id = partner_NL
         self.assertSequenceEqual(
             get_form_field_names(order_form),
-            names_NL,
+            expected_names_NL,
             "Lines should be displayed in Dutch for a Dutch partner",
         )
 
-        # Edit a line & change back to American partner
+        # # Edit a line & change back to American partner
         with order_form.order_line.edit(0) as order_line:
             order_line.product_uom_qty += 1
         order_form.partner_id = self.partner
         self.assertSequenceEqual(
-            get_form_field_names(order_form), names_NL, "Lines shouldn't change when edited"
+            get_form_field_names(order_form),
+            expected_names_NL,
+            "Lines shouldn't change when edited",
         )
+
+        order_form.partner_id = self.partner
 
         # Reload template manually
         order_form.sale_order_template_id = self.quotation_template_no_discount
         self.assertSequenceEqual(
             get_form_field_names(order_form),
-            names_EN,
+            expected_names_EN,
             "Lines should change after manual template reload",
         )
+
+        # This also doesn't makes sense anymore :D, i think since now we have computed non stored
+        # field we should translate the product name whenever possible
 
         order_form.partner_id = partner_NL
 
@@ -439,7 +452,7 @@ class TestSaleOrder(SaleManagementCommon):
         order_form.save()
         order_form.partner_id = self.partner
         self.assertSequenceEqual(
-            get_form_field_names(order_form), names_NL, "Lines shouldn't change once saved"
+            get_form_field_names(order_form), expected_names_NL, "Lines shouldn't change once saved"
         )
 
     def test_product_description_no_template_description(self):
@@ -456,7 +469,7 @@ class TestSaleOrder(SaleManagementCommon):
         sale_order._onchange_sale_order_template_id()
         self.assertEqual(
             sale_order.order_line[0].name,
-            f"{self.product_1.name}\n{self.product_1.description_sale}",
+            self.product_1.description_sale,
             "Sale order line should use product's description when no quotation template \
             description is set.",
         )
@@ -478,12 +491,9 @@ class TestSaleOrder(SaleManagementCommon):
         sale_order._onchange_sale_order_template_id()
         self.assertEqual(
             sale_order.order_line[0].name,
-            self.product_1.display_name
-            + "\n"
-            + quotation_template_with_description.sale_order_template_line_ids[0].name,
-            "The sale order line should use the quotation template's description "
-            "(with product display_name) when both product and the quotation template descriptions"
-            " are set.",
+            quotation_template_with_description.sale_order_template_line_ids[0].name,
+            "The sale order line should use the quotation template's description when both product "
+            "and the quotation template descriptions are set.",
         )
 
     def test_warning_quotation(self):
@@ -494,7 +504,9 @@ class TestSaleOrder(SaleManagementCommon):
         quotation_template.sale_order_template_line_ids = [
             Command.create({"product_id": self.product.id})
         ]
-        self.env["ir.default"].sudo().set("sale.order", "sale_order_template_id", quotation_template.id)
+        self.env["ir.default"].sudo().set(
+            "sale.order", "sale_order_template_id", quotation_template.id
+        )
         try:
             with self.assertLogs("odoo.tests.form.onchange") as log_catcher:
                 Form(self.env["sale.order"])
@@ -511,7 +523,9 @@ class TestSaleOrder(SaleManagementCommon):
             "name": "Test Quotation Template",
             "sale_order_template_line_ids": [Command.create({"product_id": self.product.id})],
         })
-        self.env["ir.default"].sudo().set("sale.order", "sale_order_template_id", quotation_template.id)
+        self.env["ir.default"].sudo().set(
+            "sale.order", "sale_order_template_id", quotation_template.id
+        )
         with Form(self.env["sale.order"]) as sale_order_form:
             self.assertTrue(sale_order_form.sale_order_template_id)
             self.assertTrue(sale_order_form.order_line)
@@ -636,7 +650,7 @@ class TestSaleOrder(SaleManagementCommon):
                     "is_optional": True,
                 }),
                 Command.create({"name": "Test line", "product_uom_qty": 1}),
-            ],
+            ]
         })
 
         line = self._get_optional_product_lines(self.sale_order)

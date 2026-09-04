@@ -77,7 +77,7 @@ class StockMove(models.Model):
             # add the description to related lines if it has a value and belongs to a repair order
             if move.repair_id and move.description_picking_manual:
                 if move.sale_line_id:
-                    move.sale_line_id.name = f"{move.sale_line_id.translated_product_name}\n{move.description_picking}"
+                    move.sale_line_id.name = move.description_picking
 
     def copy_data(self, default=None):
         default = dict(default or {})

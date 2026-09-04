@@ -901,7 +901,7 @@ class TestCreatePicking(ProductVariantsCommon):
                 }),
             ]
         })
-        self.assertEqual(po.order_line.name, '[123] ABC (red)\nPurchase description' + ('\nNo variant: extra' if product_matrix_installed else ''))
+        self.assertEqual(po.order_line.name, 'Purchase description' + ('\nNo variant: extra' if product_matrix_installed else ''))
         po.order_line.name += '\nRandom purchase notes'
         po.button_confirm()
         self.assertEqual(po.picking_ids.move_ids.description_picking, ('No variant: extra\n' if product_matrix_installed else '') + '[123] ABC\nReceive with care')
