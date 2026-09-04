@@ -347,6 +347,12 @@ class StockMoveLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            lot = self.env["stock.lot"].browse(vals.get("lot_id"))
+            product_id = vals.get("product_id")
+            product = self.env['product.product'].browse(product_id)
+            if vals.get("lot_id") and lot.product_id.id != product_id and not product.tracking:
+                vals['lot_id'] = False
+                vals['lot_note'] = False
             if vals.get('move_id'):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
             elif vals.get('picking_id'):
