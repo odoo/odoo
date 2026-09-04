@@ -213,7 +213,7 @@ class TestWebsocketCaryall(WebsocketCase):
 
     def test_no_cursor_when_no_callback_for_lifecycle_event(self):
         with patch.object(Websocket, '_Websocket__event_callbacks', defaultdict(set)):
-            with patch('odoo.addons.bus.websocket.db_connect') as mock:
+            with patch('odoo.addons.bus.websocket.Registry') as mock:
                 self.websocket_connect()
                 self.assertFalse(mock.called)
 

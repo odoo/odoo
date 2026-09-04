@@ -70,7 +70,7 @@ from odoo.http.session import (
 from odoo.http.session import Session as OdooHttpSession
 from odoo.orm.environments import CacheLayer
 from odoo.modules.registry import Registry
-from odoo.sql_db import Cursor
+from odoo.sql_db import Connection, Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.lru import LRU
@@ -1079,8 +1079,9 @@ class BaseCase(case.TestCase):
     def registry_test_mode(cls, *, cr: Cursor | None = None, registry: Registry | None = None):
         """ Entering registry test mode.
 
-        New cursors returned by the registry will be instances of `TestCursor`
-        which will wrap the current cursor.
+        New cursors returned by ``Connection.cursor`` (including
+        ``registry.cursor()``) will be instances of `TestCursor` which wrap
+        the current cursor. Connecting to another database is forbidden.
 
         Defined in BaseCase because used by upgrade for IntegrityCase.
         This should be used on TransactionCase only.
@@ -1098,41 +1099,14 @@ class BaseCase(case.TestCase):
                 cr, _registry_test_lock, readonly and cls._registry_readonly_enabled
             )
 
-        try:
-            from odoo.addons.bus import bus_dispatcher as bus_dispatcher_mod  # noqa: PLC0415
-            from odoo.addons.bus import websocket as bus_websocket  # noqa: PLC0415
-        except ImportError:
-            additional_patches = ()
-        else:
-            from odoo.sql_db import db_connect as og_db_connect  # noqa: PLC0415
-
-            def _patched_ws_db_connect(to, allow_uri=False, readonly=False):
-                # Websocket and bus dispatcher open a cursor via db_connect(db_name)
-                # instead of Registry(db_name).cursor(), bypassing the patch above.
-                # Redirect it to the test's cursor too.
-                if to == cr.dbname:
-
-                    class _TestConnection:
-                        def cursor(self):
-                            return _patched_cursor(readonly)
-
-                    return _TestConnection()
-                return og_db_connect(to, allow_uri=allow_uri, readonly=readonly)
-
-            additional_patches = (
-                patch.object(bus_websocket, 'db_connect', _patched_ws_db_connect),
-                patch.object(bus_dispatcher_mod, 'db_connect', _patched_ws_db_connect),
-            )
-
-        def get_sequences(cr):
-            return registry.registry_sequence, registry.cache_sequences.copy()
+        def _patched_conn_cursor(conn):
+            assert conn.dbname == cr.dbname, "Cannot connect to another database while testing"
+            return _patched_cursor(readonly=conn is registry._db_readonly)
 
         with ExitStack() as stack:
-            for additional_patch in additional_patches:
-                stack.enter_context(additional_patch)
             stack.enter_context(patch.object(cls, '_registry_patched', True))
             # New cursor should point to the test's cursor
-            stack.enter_context(patch.object(registry, 'cursor', _patched_cursor))
+            stack.enter_context(patch.object(Connection, 'cursor', _patched_conn_cursor))
             # Disable locking and signaling
             stack.enter_context(patch.object(Registry, '_lock', DummyRLock()))
             stack.enter_context(patch.object(registry, 'setup_signaling', return_value=None))  # noop
