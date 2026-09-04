@@ -289,6 +289,9 @@ class MrpWorkcenter(models.Model):
         if self.working_state != 'blocked':
             raise exceptions.UserError(_("It has already been unblocked."))
         times = self.env['mrp.workcenter.productivity'].search([('workcenter_id', '=', self.id), ('date_end', '=', False)])
+        self.sudo().message_post(
+            body=self.env._("Work Center Unblocked")
+        )
         times.write({'date_end': datetime.now()})
         return True
 
@@ -584,6 +587,9 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
+        self.workcenter_id.sudo().message_post(
+            body=self.env._("Work Center Blocked: %s", self.loss_id.display_name)
+        )
 
     def _loss_type_change(self):
         self.ensure_one()
