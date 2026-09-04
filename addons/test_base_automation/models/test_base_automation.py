@@ -122,10 +122,11 @@ class Test_Base_AutomationTask(models.Model):
             if not task.project_id:
                 task.project_id = task.parent_id.project_id
 
-    @api.depends('trigger_hours')
+    @api.depends('trigger_hours', 'project_id')
     def _compute_effective_hours(self):
         for task in self:
-            task.effective_hours = task.trigger_hours
+            # reading 'project_id' nests its computation inside this one
+            task.effective_hours = task.trigger_hours if task.project_id else 0.0
 
     @api.depends('effective_hours')
     def _compute_remaining_hours(self):
