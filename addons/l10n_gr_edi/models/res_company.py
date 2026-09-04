@@ -6,6 +6,8 @@ from lxml import etree
 from requests import RequestException
 
 from odoo import api, fields, models, Command
+from odoo.exceptions import UserError
+
 from odoo.addons.l10n_gr_edi.models.preferred_classification import INVOICE_TYPES_HAVE_EXPENSE, VAT_CATEGORY_TO_RATE
 
 NS_MYDATA = {"ns": "http://www.aade.gr/myDATA/invoice/v1.0"}
@@ -24,6 +26,66 @@ class ResCompany(models.Model):
         default=True,
         help="Enable test environments with credentials obtained from https://mydata-dev-register.azurewebsites.net/",
     )
+
+    def _l10n_gr_edi_request_documents(self, endpoint):
+        self.ensure_one()
+
+        params = {'mark': 0}
+        base_url = (
+            'https://mydataapidev.aade.gr'
+            if self.l10n_gr_edi_test_env
+            else 'https://mydatapi.aade.gr/myDATA'
+        )
+
+        roots = []
+        try:
+            with requests.Session() as session:
+                while True:
+                    response = session.get(
+                        url=f'{base_url}/{endpoint}',
+                        headers={
+                            'aade-user-id': self.l10n_gr_edi_aade_id,
+                            'ocp-apim-subscription-key': self.l10n_gr_edi_aade_key,
+                        },
+                        params=params,
+                        timeout=10,
+                    )
+                    response.raise_for_status()
+                    root = etree.fromstring(response.content)
+                    if etree.QName(root).localname != 'RequestedDoc':
+                        raise UserError(self.env._('Could not retrieve documents from myDATA.'))
+
+                    roots.append(root)
+                    next_partition_key = root.xpath(
+                        'string(//*[local-name()="continuationToken"]'
+                        '/*[local-name()="nextPartitionKey"])'
+                    )
+                    next_row_key = root.xpath(
+                        'string(//*[local-name()="continuationToken"]'
+                        '/*[local-name()="nextRowKey"])'
+                    )
+                    if not next_partition_key or not next_row_key:
+                        break
+                    params.update({
+                        'nextPartitionKey': next_partition_key,
+                        'nextRowKey': next_row_key,
+                    })
+        except (RequestException, etree.XMLSyntaxError) as error:
+            raise UserError(self.env._('Could not retrieve documents from myDATA.')) from error
+
+        return roots
+
+    def _l10n_gr_edi_sync_reconciliation(self):
+        self.ensure_one()
+
+        transmitted_roots = self._l10n_gr_edi_request_documents('RequestTransmittedDocs')
+        counterparty_roots = self._l10n_gr_edi_request_documents('RequestDocs')
+        self.env['l10n_gr_edi.reconciliation']._l10n_gr_edi_sync_documents(
+            self,
+            transmitted_roots,
+            counterparty_roots,
+            fields.Datetime.now(),
+        )
 
     @api.model
     def _cron_l10n_gr_edi_fetch_invoices(self):
