@@ -6,8 +6,8 @@
                 <button class="btn btn-primary o-calendar-button-new" t-on-click="this.onClickAddButton" data-hotkey="c">New</button>
             </t>
         </xpath>
-        <!-- Remove the ms-auto from the today button so that the synchronization buttons can be right-aligned -->
-        <xpath expr="//button[hasclass('o_calendar_button_today')]" position="attributes">
+        <!-- Remove the ms-auto from the sidebar section so that the synchronization buttons can be right-aligned -->
+        <xpath expr="//div[hasclass('o_calendar_sidebar_controller')]" position="attributes">
             <attribute name="class" remove="ms-auto" separator=" "/>
         </xpath>
         <!-- Add header div to be filled with synchronization buttons in synchronization modules. -->

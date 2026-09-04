@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="calendar_calendar_view_form" model="ir.ui.view">
+        <field name="name">calendar.calendar.view.form</field>
+        <field name="model">calendar.calendar</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" placeholder="Calendar name"/>
+                    <field name="calendar_default_privacy" readonly="user_access_role not in ['owner', 'writer']" string="Default visibility"/>
+                    <field name="color" widget="color_picker"/>
+                    <field name="share_user_ids" widget="many2many_avatar_user" invisible="user_access_role != 'owner'"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="calendar_calendar_view_list" model="ir.ui.view">
+        <field name="name">calendar.calendar.view.list</field>
+        <field name="model">calendar.calendar</field>
+        <field name="arch" type="xml">
+            <list string="Calendars" editable="bottom" delete="0">
+                <field name="name"/>
+                <field name="calendar_default_privacy" string="Default Privacy" widget="selection" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_calendar_calendar" model="ir.actions.act_window">
+        <field name="name">Calendars</field>
+        <field name="res_model">calendar.calendar</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="calendar_calendar_view_list"/>
+        <field name="domain">[('calendar_user_ids', 'any', [('user_id', '=', uid)])]</field>
+    </record>
+</odoo>

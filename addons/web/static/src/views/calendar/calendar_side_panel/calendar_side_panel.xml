@@ -8,7 +8,7 @@
             <div class="o_calendar_sidepanel" t-att-class="{ 'd-none': this.props.model.meta.canScheduleEvents and this.state.isDragging }">
                 <DatePicker t-if="this.showDatePicker" t-props="this.datePickerProps" />
                 <div class="o_calendar_sidepanel_content px-3">
-                    <t t-foreach="this.props.model.filterSections" t-as="section" t-key="section.fieldName">
+                    <t t-foreach="this.sortedFilterSections" t-as="section" t-key="section.fieldName">
                         <FilterSection model="this.props.model" section="section"/>
                     </t>
                     <ScheduleSection
