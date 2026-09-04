@@ -184,6 +184,8 @@ class AccountJournal(models.Model):
     def get_account_dashboard_kpis(self):
         if not self.env.user.has_group('account.group_account_basic'):
             raise AccessError(self.env._("You do not have access to the Accounting Dashboard."))
+        if self.env['ir.config_parameter'].sudo().get_bool('account.disable_dashboard_kpis'):
+            return []
 
         currency = self.env.company.currency_id
 
