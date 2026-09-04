@@ -19,8 +19,8 @@ import {
     isTextNode,
     isElement,
     isContentEditable,
-    getDeepestEditablePosition,
     isEmpty,
+    getDeepestEditablePosition,
 } from "../utils/dom_info";
 import {
     childNodes,
@@ -587,23 +587,34 @@ export class DomPlugin extends Plugin {
      * @param {Node[]} insertedNodes
      */
     moveSelectionAfterInsertion(insertedNodes) {
-        const lastNode = insertedNodes.at(-1);
-        const elementToEnter = lastNode && this.findElementToEnterAfterInsert(lastNode);
-        if (elementToEnter) {
-            this.dependencies.selection.setCursorEnd(elementToEnter);
-        } else if (lastNode) {
-            // Set the selection after the last inserted node.
-            let position = rightPos(lastNode);
-            position = normalizeCursorPosition(position[0], position[1], "right");
-            if (!this.config.allowInlineAtRoot && isEditionBoundary(position[0], this.editable)) {
-                // Correct the position if it happens to be in the editable root.
-                position = getDeepestEditablePosition(...position);
-            }
-            this.dependencies.selection.setSelection(
-                { anchorNode: position[0], anchorOffset: position[1] },
-                { normalize: false }
-            );
+        if (!insertedNodes.length) {
+            return;
         }
+        let target = insertedNodes.at(-1);
+        const systemNode = this.getResource("system_node_selectors").join(",");
+        // TODO AGE: this can probably be simplified further.
+        if (isBlock(target)) {
+            const leaf = lastLeaf(target, {
+                skipFunction: (child) => !isVisible(child) || child.matches?.(systemNode),
+            });
+            const parent = leaf.parentElement;
+            if (
+                isContentEditable(parent) &&
+                (this.checkPredicates("can_hold_selection_after_insertion_predicates", parent) ??
+                    isParagraphRelatedElement(parent))
+            ) {
+                target = leaf;
+            }
+        }
+        // Set the selection after or at the end of the last inserted node.
+        let position = normalizeCursorPosition(...rightPos(target), "right");
+        if (isEditionBoundary(position[0], this.editable)) {
+            position = getDeepestEditablePosition(...position);
+        }
+        this.dependencies.selection.setSelection(
+            { anchorNode: position[0], anchorOffset: position[1] },
+            { normalize: false }
+        );
     }
 
     /**
@@ -648,28 +659,6 @@ export class DomPlugin extends Plugin {
             fragment.replaceChildren(content);
         }
         return fragment;
-    }
-
-    /**
-     * Take the last node inserted using @see insert and return its child at the
-     * end of which to put the selection, if any.
-     *
-     * @param {Node} node
-     * @returns {Node | undefined}
-     */
-    findElementToEnterAfterInsert(node) {
-        const systemNode = this.getResource("system_node_selectors").join(",");
-        const candidate = lastLeaf(node, {
-            predicate: (child) => !isSelfClosingElement(child) && !isTextNode(child),
-            skipFunction: (child) => !isVisible(child) || child.matches?.(systemNode),
-        });
-        const predicates = "can_hold_selection_after_insertion_predicates";
-        if (
-            isContentEditable(candidate) &&
-            (this.checkPredicates(predicates, candidate) ?? isParagraphRelatedElement(candidate))
-        ) {
-            return candidate;
-        }
     }
 
     /**
