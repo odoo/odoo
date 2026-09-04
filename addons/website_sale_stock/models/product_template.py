@@ -23,14 +23,14 @@ class ProductTemplate(models.Model):
         If a product inventory is not tracked, or if it's allowed to be sold regardless
         of availabilities, the product is never considered sold out.
 
-        Note: only checks the availability of the first variant of the template.
+        Note: the template is sold out only when all of its variants are.
 
         :return: whether the product can still be sold
         :rtype: bool
         """
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
-        return not self.product_variant_id or self.product_variant_id._is_sold_out()
+        return all(variant._is_sold_out() for variant in self.product_variant_ids)
 
     def _website_show_quick_add(self):
         return (
