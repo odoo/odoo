@@ -12,7 +12,7 @@
         <template id="message_activity_done">
 <div>
     <p class="o_mail_activity_title mb-1">
-        <span t-attf-class="oi oi-fw oi-filled" t-att-data-icon="activity.activity_type_id.icon"/>
+        <span t-attf-class="oi oi-fw" t-att-data-icon="activity.activity_type_id.icon"/>
         <span t-if="activity.summary" t-field="activity.summary"/>
         <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
     </p>
