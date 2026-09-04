@@ -844,6 +844,10 @@ export const storeService = {
          */
         store.self_guest ??= { id: -1 };
         store.onStarted();
+        // TODO convert to a plugin and use onWillDestroy
+        registry
+            .category("services")
+            .addEventListener("CLEANUP", () => store._runDisposeFns(), { once: true });
         return store;
     },
 };
