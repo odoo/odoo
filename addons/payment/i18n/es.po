@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:37+0000\n"
-"PO-Revision-Date: 2026-08-26 18:42+0000\n"
+"PO-Revision-Date: 2026-08-31 16:09+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-2/"
 "payment/es/>\n"
@@ -621,7 +621,7 @@ msgstr "CMR"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "CONNECT"
-msgstr ""
+msgstr "CONECTAR"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_cabal
@@ -679,9 +679,10 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
-"Capture el importe de Odoo cuando la entrega se haya completado.\n"
-"Utilícelo si desea hacer el cargo a la tarjeta de sus clientes solo cuando\n"
-"esté seguro de que puede enviarles los artículos."
+"Captura el importe desde Odoo cuando se haya completado la entrega.\n"
+"Utiliza esta opción si quieres cargar el importe en la tarjeta de tus "
+"clientes solo cuando\n"
+"estés seguro de que puedes enviarles los artículos/productos."
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_card
@@ -1183,7 +1184,7 @@ msgstr "Contiene un importe restante"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr "¿Se ha posprocesado el pago?"
+msgstr "Se ha procesado el pago posteriormente"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
@@ -1549,7 +1550,7 @@ msgstr "Mensajes"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
 msgid "Minimum Amount"
-msgstr ""
+msgstr "Importe mínimo"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_momo
@@ -1638,7 +1639,7 @@ msgstr "No hay proveedor establecido"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "No payment methods found for your payment providers."
-msgstr "No se encontraron métodos de pago para sus proveedores de pago"
+msgstr "No se han encontrado métodos de pago para tus proveedores de pago."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -1830,12 +1831,12 @@ msgstr "Pagar después"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_later_label
 msgid "Pay Later Label"
-msgstr ""
+msgstr "Etiqueta «Pagar más tarde»"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__pay_now_label
 msgid "Pay Now Label"
-msgstr ""
+msgstr "Etiqueta «Pagar ahora»"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_paybright
@@ -1870,7 +1871,7 @@ msgstr "PaySafeCard"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "PayU"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -2111,7 +2112,7 @@ msgstr "Por favor espere..."
 #. module: payment
 #: model:ir.model,name:payment.model_portal_entry
 msgid "Portal Entry"
-msgstr ""
+msgstr "Entrada del portal"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2325,7 +2326,7 @@ msgstr "Samsung Pay"
 #. module: payment
 #: model:payment.method,name:payment.payment_method_satispay
 msgid "Satispay"
-msgstr ""
+msgstr "Satispay"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2684,6 +2685,8 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Later' payment "
 "methods."
 msgstr ""
+"La etiqueta que aparecerá en los botones de pago para los métodos de pago «"
+"Pagar más tarde»."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_res_company__pay_now_label
@@ -2691,6 +2694,8 @@ msgid ""
 "The label to be displayed on the payment buttons for 'Pay Now' payment "
 "methods."
 msgstr ""
+"La etiqueta que aparecerá en los botones de pago para los métodos de pago «"
+"Pagar ahora»."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__supported_country_ids
@@ -2773,6 +2778,8 @@ msgid ""
 "The minimum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"El importe mínimo de pago para el que está disponible este proveedor de "
+"pago. Déjalo vacío para permitir cualquier importe de pago."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -2940,12 +2947,12 @@ msgid ""
 "the\n"
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
-"Controla si los clientes pueden guardar sus métodos de pago como tokens de "
+"Determina si los clientes pueden guardar sus métodos de pago como tokens de "
 "pago.\n"
-"Un token de pago es un enlace anónimo a los detalles de pago guardados en "
-"la\n"
-"base de datos del proveedor de pago, lo que permite al cliente volver a "
-"usarlo en una futura compra."
+"Un token de pago es un enlace anónimo a los datos del método de pago "
+"almacenados en la\n"
+"base de datos del proveedor, que permite al cliente volver a usarlo en la "
+"próxima compra."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -3301,7 +3308,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment/models/payment_method.py:0
 msgid "You cannot delete a payment method linked to a provider."
-msgstr ""
+msgstr "No se puede eliminar un método de pago vinculado a un proveedor."
 
 #. module: payment
 #. odoo-python
@@ -3523,7 +3530,7 @@ msgstr "eNETS"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "express checkout not supported"
-msgstr "no se admite el pago exprés"
+msgstr "no se admite el pago rápido"
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ideal
@@ -3575,7 +3582,7 @@ msgstr "no se admite la captura manual"
 #. odoo-python
 #: code:addons/payment/const.py:0
 msgid "minimum or maximum amount exceeded"
-msgstr ""
+msgstr "se ha superado el importe mínimo o máximo"
 
 #. module: payment
 #. odoo-python
