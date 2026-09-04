@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urljoin, urlsplit
+
 from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
@@ -71,3 +73,11 @@ class SlideSlideResource(models.Model):
         for record in self:
             if record.resource_type != 'file' and record.data:
                 raise ValidationError(_("Resource %(resource_name)s is a link and should not contain a data file", resource_name=record.name))
+
+    def _get_absolute_link(self):
+        """Return the absolute URL of the resource."""
+        self.ensure_one()
+        if not self.link:
+            return False
+        url = urljoin(self.slide_id.website_absolute_url, self.link)
+        return urlsplit(url).scheme in ('http', 'https') and url
