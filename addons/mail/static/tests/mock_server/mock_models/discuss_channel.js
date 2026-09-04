@@ -12,6 +12,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime, serializeDateTime, today } from "@web/core/l10n/dates";
+import { formatList } from "@web/core/l10n/utils";
 import { ensureArray } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 
@@ -42,6 +43,7 @@ export class DiscussChannel extends models.ServerModel {
         relation: "discuss.category",
         string: "Discuss Category",
     });
+    display_name = fields.Generic({ compute: "_compute_display_name" });
     group_public_id = fields.Generic({
         default: () => serverState.groupId,
     });
@@ -79,6 +81,32 @@ export class DiscussChannel extends models.ServerModel {
             const members = channel.channel_member_ids ?? [];
             members.sort();
             channel.channel_name_member_ids = members.slice(0, 3);
+        }
+    }
+
+    _compute_display_name() {
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").MailGuest} */
+        const MailGuest = this.env["mail.guest"];
+        for (const channel of this) {
+            if (channel.name) {
+                channel.display_name = channel.name;
+                continue;
+            }
+            const parts = (channel.channel_name_member_ids ?? []).map((id) => {
+                const [member] = DiscussChannelMember.browse(id);
+                const [partner] = ResPartner.browse(member?.partner_id);
+                const [guest] = MailGuest.browse(member?.guest_id);
+                return partner?.name || guest?.name;
+            });
+            if (channel.member_count > 3) {
+                const remaining = channel.member_count - 3;
+                parts.push(remaining === 1 ? "1 other" : `${remaining} others`);
+            }
+            channel.display_name = formatList(parts);
         }
     }
 
@@ -601,6 +629,10 @@ export class DiscussChannel extends models.ServerModel {
         return ["channel", "group"];
     }
 
+    _types_notified_on_rename() {
+        return ["channel", "group"];
+    }
+
     /**
      * @param {number[]} ids
      * @param {string} name
@@ -613,14 +645,6 @@ export class DiscussChannel extends models.ServerModel {
 
         const [channel] = this.browse(ids);
         this.write([channel.id], { name });
-        this.message_post(
-            channel.id,
-            makeKwArgs({
-                body: `<div data-oe-type="channel_rename" class="o_mail_notification">${name}</div>`,
-                message_type: "notification",
-                subtype_xmlid: "mail.mt_comment",
-            })
-        );
     }
 
     /**
@@ -911,6 +935,21 @@ export class DiscussChannel extends models.ServerModel {
                     "mail.record/insert",
                     new Store().add(this.browse(channel.id), Object.fromEntries(changes)).as_dict(),
                 ]);
+            }
+            if (
+                "name" in values &&
+                channel.name !== previousBasicInfo.name &&
+                this._types_notified_on_rename().includes(channel.channel_type)
+            ) {
+                this.message_post(
+                    channel.id,
+                    makeKwArgs({
+                        body: `<div data-oe-type="channel_rename" class="o_mail_notification">${
+                            channel.name || channel.display_name
+                        }</div>`,
+                        subtype_xmlid: "mail.mt_comment",
+                    })
+                );
             }
         }
         if (notifications.length) {

@@ -929,9 +929,24 @@ class TestChannelInternals(MailCommon, HttpCase):
                     "mail.record/insert",
                     {"discuss.channel": [{"id": channel.id, "name": "test test"}]},
                 ),
+                BusResult(channel, "discuss.channel/new_message"),
             ],
         ):
             channel.name = "test test"
+        self.assertEqual(
+            channel._get_last_messages().body,
+            '<div data-oe-type="channel_rename" class="o_mail_notification">test test</div>',
+        )
+
+    def test_group_chat_name_reset_posts_rename_message_with_display_name(self):
+        group_chat = self.env["discuss.channel"]._create_group(
+            users_to=self.user_employee, name="Test Group"
+        )
+        group_chat.name = ""
+        self.assertEqual(
+            group_chat._get_last_messages().body,
+            '<div data-oe-type="channel_rename" class="o_mail_notification">Ernest Employee and OdooBot</div>',
+        )
 
     def test_channel_write_should_send_notification_if_image_128_changed(self):
         channel = self.env['discuss.channel'].create({'name': '', 'uuid': 'test-uuid'})
