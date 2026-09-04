@@ -3,6 +3,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from psycopg2.errors import UniqueViolation
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import fields, Command
 from odoo.addons.phone_validation.tools import phone_validation
@@ -669,6 +670,22 @@ class TestHrEmployee(TestHrCommon):
         with self.assertRaises(ValidationError):
             employee.user_id = employee._get_or_create_light_user()
         self.assertFalse(employee.user_id)
+
+    def test_resend_invitation_of_invited_user(self):
+        # "Resend Invitation" of an invited user (state new) sends the invitation e-mail again, while "Reset
+        # Password" of a confirmed user sends a reset password e-mail
+        employee = self.env['hr.employee'].create({'name': 'Invited Employee', 'work_email': 'invited@example.com'})
+        employee.action_send_invitation()
+        self.assertEqual(employee.user_id.state, 'new')
+        signup_types = []
+
+        def _action_reset_password(users, signup_type='reset'):
+            signup_types.append(signup_type)
+
+        with patch.object(type(self.env['res.users']), '_action_reset_password', _action_reset_password):
+            employee.action_send_invitation()
+            employee.action_reset_password()
+        self.assertEqual(signup_types, ['signup', 'reset'])
 
     def test_user_creation_from_employee_emails(self):
         # A new employee creates a lite user with that login.
