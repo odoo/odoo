@@ -8,7 +8,6 @@ import { Component, onWillStart } from "@odoo/owl";
 
 export class TeamSwitcher extends Component {
     static template = "crm.team_switcher";
-    static props = {};
     static components = { Dropdown, DropdownItem };
 
     /**
