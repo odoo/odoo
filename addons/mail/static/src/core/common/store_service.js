@@ -411,10 +411,14 @@ export class Store extends BaseStore {
         });
         await this.chatHub.initPromise;
         channel.chatWindow?.update({ autofocus: 0 });
-        await this.env.services["discuss.rtc"].toggleCall(channel, {
-            camera: true,
+        const rtc = this.env.services["discuss.rtc"];
+        await rtc.toggleCall(channel, {
+            camera: rtc.initialMeetingMedia === "camera",
             fullscreen: true,
         });
+        if (rtc.initialMeetingMedia === "microphone") {
+            rtc.showMediaPermissionDialog("microphone");
+        }
     }
 
     /**
