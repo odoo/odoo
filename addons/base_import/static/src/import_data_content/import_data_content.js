@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { ImportDataColumnError } from "../import_data_column_error/import_data_column_error";
 import { ImportDataOptions } from "../import_data_options/import_data_options";
@@ -12,17 +12,18 @@ export class ImportDataContent extends Component {
         ImportDataOptions,
         SelectMenu,
     };
-    static props = {
-        columns: { type: Array },
-        isFieldSet: { type: Function },
-        languagesInstalled: { type: Array },
-        onOptionChanged: { type: Function },
-        onFieldChanged: { type: Function },
-        onFieldLanguageChanged: { type: Function },
-        options: { type: Object },
-        importMessages: { type: Object },
-        previewError: { type: String, optional: true },
-    };
+
+    props = useProps({
+        columns: t.array(),
+        importMessages: t.array(t.object()),
+        isFieldSet: t.function(),
+        languagesInstalled: t.array(),
+        onFieldChanged: t.function(),
+        onFieldLanguageChanged: t.function(),
+        onOptionChanged: t.function(),
+        options: t.object(),
+        previewError: t.string().optional(),
+    });
 
     setup() {
         this.hasMultipleLanguages = this.props.languagesInstalled.length > 1;

@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy, signal } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useProps } from "@odoo/owl";
 import { useDropzone } from "@web/core/dropzone/dropzone_hook";
 import { FileInput } from "@web/core/file_input/file_input";
 import { _t } from "@web/core/l10n/translation";
@@ -24,7 +24,7 @@ export class ImportAction extends Component {
         Layout,
         DocumentationLink,
     };
-    static props = { ...standardActionServiceProps };
+    props = useProps(standardActionServiceProps);
     static path = "import";
     static displayName = _t("Import");
 

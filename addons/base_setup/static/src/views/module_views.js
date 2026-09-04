@@ -7,7 +7,6 @@ const cogMenuRegistry = registry.category("cogMenu");
 export class ResetModuleStateCogMenu extends Component {
     static template = "base_setup.ResetModuleStateCogMenu";
     static components = { DropdownItem };
-    static props = {};
 
     async resetModuleState() {
         await this.env.services.orm.call("ir.module.module", "button_reset_state", [], {});
