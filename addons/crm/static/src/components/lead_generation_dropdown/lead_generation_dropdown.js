@@ -20,7 +20,6 @@ export const MODULE_STATUS = {
 
 export class LeadGenerationDropdown extends Component {
     static template = "crm.lead_generation_dropdown";
-    static props = {};
     static components = { Dropdown, DropdownItem };
 
     setup() {
