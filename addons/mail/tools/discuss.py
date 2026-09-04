@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+
+from odoo.tools.misc import hmac
+
+
 def get_twilio_credentials(env) -> (str, str):
     """
     To be overridable if we need to obtain credentials from another source.
@@ -20,3 +25,8 @@ def get_sfu_url(env) -> str | None:
 
 def get_sfu_key(env) -> str | None:
     return env['ir.config_parameter'].sudo().get_param('mail.sfu_server_key')
+
+
+def get_derived_sfu_key(env, unique_id) -> str:
+    hex = hmac(env(su=True), "odoo_sfu", unique_id).encode()
+    return base64.b64encode(hex).decode()
