@@ -275,8 +275,6 @@ class TestAccountMergeWizard(TestAccountMergeCommon):
         self.assertRecordValues(wizard.wizard_line_ids, expected_wizard_line_vals)
 
     def test_merge_accounts_company_dependent_related(self):
-        # Other companies sharing generic_coa (e.g. base.test_company_be) also have their own
-        # "Accounts Payable" account, so scope the search to the 2 companies this test cares about.
         companies = self.company_1 + self.company_2
         payable_accounts = self.env['account.account'].search([('name', '=', 'Accounts Payable'), ('company_ids', 'in', companies.ids)])
         self.assertEqual(len(payable_accounts), 2)

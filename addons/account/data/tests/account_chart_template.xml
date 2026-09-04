@@ -2,12 +2,5 @@
 <data>
     <!-- Calls _load() directly instead of try_loading() to avoid the warning -->
     <function model="account.chart.template" name="_load" eval="(False, 'generic_coa', obj().env['res.company'].browse(ref('base.test_company')), False)"/>
-    <function model="account.chart.template" name="_load" eval="(False, 'generic_coa', obj().env['res.company'].browse(ref('base.test_company_be')), False)"/>
-    <!-- generic_coa's own res.company template data hardcodes account_fiscal_country_id
-         to base.us (see _get_generic_coa_res_company in template_generic_coa.py), which
-         _load() applies unconditionally, overwriting the Belgian fiscal country/currency
-         (base.us's currency, USD) that base.test_company_be was created with. Restore them. -->
-    <function model="res.company" name="write" eval="[[ref('base.test_company_be')], {'account_fiscal_country_id': ref('base.be'), 'currency_id': ref('base.EUR')}]"/>
     <function model="account.chart.template" name="_load" eval="(False, 'generic_coa', obj().env['res.company'].browse(ref('base.test_company_with_branch')), False)"/>
-
 </data>

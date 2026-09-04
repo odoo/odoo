@@ -47,7 +47,7 @@ class TestExpensesMailImport(TestExpenseCommon):
     def test_import_expense_from_email_several_employees(self):
         """When a user has several employees' profiles from different companies, the right record should be selected"""
         user = self.expense_user_employee
-        company_2 = self.add_company('base.test_company_be')
+        company_2 = self.add_company('base.test_company_template')
         user.company_ids += company_2
         user.company_id = company_2.id
 

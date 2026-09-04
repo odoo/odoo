@@ -628,6 +628,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         """Test that Factur-X uses the foreign VAT when available, else the company VAT."""
         germany = self.env.ref("base.de")
 
+        self.company.country_id = False
         self.company.vat = '931736581'
         self.partner_a.country_id = germany.id
         self.partner_a.invoice_edi_format = 'facturx'

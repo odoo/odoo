@@ -24,10 +24,12 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
     @classmethod
     def setup_independent_company(cls):
         cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
-        company = cls.env.ref('base.test_company_be')
-
-        company.account_fiscal_country_id = cls.env.ref('base.be')
-        company.currency_id = cls.env.ref('base.EUR')
+        company = cls.env.ref('base.test_company_template')
+        eur = cls.env.ref('base.EUR')
+        company.currency_id = eur
+        cls._use_chart_template(company, cls.chart_template)
+        # set currency again because _use_chart_template may have changed them back to USD when loading the generic coa
+        company.currency_id = eur
         company.tax_calculation_rounding_method = 'round_globally'
         company.name = "Secondary Test Company"  # backward compatibility with existing assertions
         company.terms_type = 'plain'
@@ -35,6 +37,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
             'name': 'Test tax group',
             'company_id': company.id,
         })
+        cls.env.user.company_ids = [Command.link(company.id)]
         return company
 
     @classmethod

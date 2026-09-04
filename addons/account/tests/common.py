@@ -233,12 +233,14 @@ class AccountTestInvoicingCommon(ProductCommon):
     def setup_other_company(cls, name='company_2', **kwargs):
         company = None
         if not kwargs:
-            for test_company_xmlid in 'base.test_company', 'base.test_company_with_branch', 'base.test_company_be':
+            for test_company_xmlid in 'base.test_company', 'base.test_company_with_branch', 'base.test_company_template':
                 # we may check it a specific country or chart template was requested before returning an existing company
                 candidate_company = cls.env.ref(test_company_xmlid)
                 if candidate_company not in cls.env.user.company_ids:
                     _logger.info('Selecting existing company %s as other company', test_company_xmlid)
                     company = candidate_company
+                    if not company.chart_template:
+                        cls._use_chart_template(company, cls.chart_template)
                     company.name = name  # maybe not the best idea but the easiest solution to avoid adapting multiple test for now.
                     cls.env.user.company_ids += company
                     cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
@@ -257,9 +259,6 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def setup_independent_company(cls):
         if cls.country_code or cls.chart_template:
-            # if cls.country_code.lower() == "be":
-            #    # already loaded with generic_coa by base.test_company_be's test_data fixture
-            #    company = cls.env.ref('base.test_company_be')
             # else:
             # A specific country/chart was requested: it needs a dedicated company created from
             # scratch, not the shared base.test_company (already loaded with generic_coa, with
