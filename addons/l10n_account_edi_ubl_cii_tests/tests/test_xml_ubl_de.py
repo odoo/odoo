@@ -259,6 +259,78 @@ class TestUBLDE(TestUBLCommon):
         self.assertEqual(attachment.name[-11:], "zugferd.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
+    def test_export_import_invoice_global_location_number(self):
+        """
+        ram:GlobalID (schemeID 0088) is exported on:
+        - SellerTradeParty/BuyerTradeParty when the partner's Peppol endpoint is a GLN (EAS 0088)
+        - ShipToTradeParty when a GLN is set on the delivery address
+        """
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
+        buyer_delivery = self.env['res.partner'].create({
+            'name': 'Buyer Delivery',
+            'parent_id': self.partner_2.id,
+            'type': 'delivery',
+            'country_id': self.env.ref('base.de').id,
+            'global_location_number': '4098765000006',
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            send=False,
+            move_type='out_invoice',
+            partner_shipping_id=buyer_delivery.id,
+            invoice_line_ids=[{
+                'product_id': self.product_a.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': [Command.set(self.tax_19.ids)],
+            }],
+        )
+        # Set after _generate_move, which writes the seller's VAT on the company: like a user setting
+        # the VAT first, as editing it resets the EAS (0088 isn't part of the DE EAS mapping).
+        self.partner_1.write({'peppol_eas': '0088', 'peppol_endpoint': '4012345000009'})
+        self.partner_2.write({'peppol_eas': '0088', 'peppol_endpoint': '4012345000016'})
+        invoice._generate_and_send(sending_methods=['manual'])
+        attachment = self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
+            xpaths=None,
+            expected_file_path='from_odoo/zugferd_out_invoice_gln.xml',
+        )
+        self._assert_imported_invoice_from_etree(invoice, attachment)
+
+    def test_export_vendor_bill_global_location_number_ship_to(self):
+        """ On a vendor bill, ShipToTradeParty is our own delivery address: its GLN must be ours, not the vendor's. """
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        our_delivery = self.env['res.partner'].create({
+            'name': 'Our Delivery',
+            'parent_id': self.partner_1.id,
+            'type': 'delivery',
+            'global_location_number': '4012345000009',
+        })
+        self.env['res.partner'].create({
+            'name': 'Vendor Delivery',
+            'parent_id': self.partner_2.id,
+            'type': 'delivery',
+            'global_location_number': '4098765000006',
+        })
+
+        bill = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            send=False,
+            move_type='in_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        xml_etree = self.get_xml_tree_from_string(self.env['account.edi.xml.cii']._export_invoice(bill)[0])
+        ship_to = xml_etree.find('.//{*}ShipToTradeParty')
+        self.assertEqual(ship_to.findtext('{*}Name'), our_delivery.name)
+        self.assertEqual(ship_to.findtext('{*}GlobalID'), '4012345000009')
+
     def test_export_import_refund_xrehnung(self):
         company = self.company_data['company']
         if "predict_bill_product" in company._fields:
