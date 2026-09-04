@@ -1427,6 +1427,27 @@ class TestCompute(common.TransactionCase):
             'remaining_hours': 95,
         }])
 
+    def test_computation_inside_computation(self):
+        """ An automation processed from a nested computation keeps the fields depending on the outer one to compute """
+        project = self.env['test_base_automation.project'].create({})
+        parent = self.env['test_base_automation.task'].create({'project_id': project.id})
+        task = self.env['test_base_automation.task'].create({'allocated_hours': 40})
+
+        # the post-filter computes 'effective_hours', which computes 'project_id' in turn
+        create_automation(
+            self,
+            model_id=self.env.ref('test_base_automation.model_test_base_automation_task').id,
+            trigger='on_create_or_write',
+            filter_domain="[('effective_hours', '>=', 0)]",
+            _actions={'state': 'code', 'code': 'record.remaining_hours'},
+        )
+
+        task.write({'parent_id': parent.id, 'trigger_hours': 8})
+        self.assertRecordValues(task, [{
+            'effective_hours': 8,
+            'remaining_hours': 32,
+        }])
+
     def test_recursion(self):
         project = self.env['test_base_automation.project'].create({})
 
