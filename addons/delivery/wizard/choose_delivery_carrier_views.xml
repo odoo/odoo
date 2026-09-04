@@ -11,7 +11,7 @@
                         <label name="carried_weight_label" for="total_weight" groups="uom.group_uom"/>
                         <div name="carried_weight" class="d-flex align-items-center" groups="uom.group_uom">
                             <div style="width: 33%;">
-                                <field name="total_weight" string="Total Weight" class="w-100"/>
+                                <field name="total_weight" string="Total Weight" class="w-100" readonly="is_loading_prices"/>
                             </div>
                             <div style="width: 33%;">
                                 <field name="weight_uom_name" class="w-100"/>
@@ -28,8 +28,9 @@
                                     'list_view_ref': 'delivery.view_delivery_carrier_so_list'
                                 }"
                                 options="{'no_open': True}"
+                                readonly="is_loading_prices"
                             />
-                            <widget name="delivery_carrier_rates_loader" class="w-100"/>
+                            <widget name="delivery_carrier_rates_loader" class="w-100" invisible="not show_delivery_rates_button"/>
                         </div>
                         <field name="carrier_prices" invisible="1"/>
                         <field name="delivery_type" invisible="1"/>

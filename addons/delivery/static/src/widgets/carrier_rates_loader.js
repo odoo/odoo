@@ -1,4 +1,4 @@
-import { Component, useEffect, useProps, signal, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, useEffect, useProps, signal } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
@@ -6,56 +6,30 @@ export class CarrierRatesLoader extends Component {
     static template = "delivery.carrier_rates_loader";
 
     props = useProps();
-    isLoadingPrices = signal(false);
-    carrierListOpen = signal(false);
-    reloadedPrices = signal(false);
+    showButton = signal(true);
 
     setup() {
         this.ormService = useService("orm");
         this.lastWeight = this.props.record.data.total_weight;
 
-        // save to get the resId for the wizard
-        if (!this.props.record.resId && this.props.record.save) {
-            (this.props.record.save()).then(() => this.loadCarrierRates());
-        }
-
-        // recalculate rates if the weight changes
+        // display the button if the weight changes
         useEffect(
             () => {
                 const currWeight = this.props.record.data.total_weight;
                 if (currWeight !== this.lastWeight) {
-                    this.loadCarrierRates();
+                    this.showButton.set(true);
                     this.lastWeight = currWeight;
                 }
             }
         )
-
-        onMounted(() => {
-            this.carrierInput = document.querySelector('div[name="carrier_id"] input');
-
-            // change signal values on input events
-            if (this.carrierInput) {
-                this.onCarrierFocus = () => {
-                    this.carrierListOpen.set(true);
-                    this.reloadedPrices.set(false);
-                };
-                this.carrierInput.addEventListener("focus", this.onCarrierFocus);
-
-                this.onCarrierBlur = () => { this.carrierListOpen.set(false); };
-                this.carrierInput.addEventListener("blur", this.onCarrierBlur);
-            }
-        })
-
-        onWillUnmount(() => {
-            // remove listeners when component is unmounted
-            if (this.carrierInput) {
-                this.carrierInput.removeEventListener("focus", this.onCarrierFocus);
-                this.carrierInput.removeEventListener("blur", this.onCarrierBlur);
-            }
-        });
     }
 
     async loadCarrierRates() {
+        // save to get the resId for the wizard
+        if (!this.props.record.resId && this.props.record.save) {
+            await this.props.record.save();
+        }
+
         const wizardId = this.props.record.resId;
         const carrierIds = this.props.record.data.available_carrier_ids._currentIds || [];
         if (!wizardId || !carrierIds.length) {
@@ -63,13 +37,10 @@ export class CarrierRatesLoader extends Component {
         }
 
         try {
-            this.isLoadingPrices.set(true);
+            await this.props.record.update({ is_loading_prices: true });
 
             // Make asynchronous calls to calculate the delivery rate for each carrier
-            const ratePromises = carrierIds.map(async (carrierId, index) => {
-                // Put a small timeout in between requests to not overload the request queue
-                await new Promise(resolve => setTimeout(resolve, index * 100));
-
+            const ratePromises = carrierIds.map(async (carrierId) => {
                 const result = await this.ormService.call(
                     "choose.delivery.carrier",
                     "get_wizard_carrier_rate",
@@ -89,16 +60,18 @@ export class CarrierRatesLoader extends Component {
                 carrier_prices_dumped: JSON.stringify(carrierPrices),
             });
         } finally {
-            this.isLoadingPrices.set(false);
-            this.reloadedPrices.set(true);
-        }
-    }
+            await this.props.record.update({ is_loading_prices: false });
+            this.showButton.set(false);
 
-    onSeeRates(_ev) {
-        if (this.carrierInput) {
-            this.carrierInput.click();
-            this.carrierInput.dispatchEvent(new InputEvent("change", { bubbles: true }));
-            this.carrierInput.focus();
+            // reopen the carrier list after a short delay
+            setTimeout(() => {
+                const carrierInput = document.querySelector('div[name="carrier_id"] input');
+                if (carrierInput) {
+                    carrierInput.click();
+                    carrierInput.dispatchEvent(new InputEvent("change", { bubbles: true }));
+                    carrierInput.focus();
+                }
+            }, 100);
         }
     }
 }

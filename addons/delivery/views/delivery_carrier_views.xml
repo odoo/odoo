@@ -26,7 +26,7 @@
             <list string="Delivery Method">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="delivery_cost"/>
+                <field name="delivery_cost" column_invisible="not context.get('carrier_prices_dumped', False)"/>
                 <field name="delivery_type"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="country_ids" widget="many2many_tags" optional="hide"/>
