@@ -93,3 +93,22 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
         self.assertEqual(leave_half.meeting_id.allday, False)
         self.assertEqual(leave_half.meeting_id.start, leave_half.date_from)
         self.assertEqual(leave_half.meeting_id.stop, leave_half.date_to)
+
+    def test_duration_calendar_event_all_day(self):
+        """
+        Ensure that calendar events created from multi-day leave requests
+        have their duration computed correctly
+        """
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'hr',
+            'create_calendar_meeting': True,
+        })
+
+        event = self._take_leave_and_validate(self.employee_emp, leave_type, date(2026, 8, 24), date(2026, 8, 28)).meeting_id
+
+        # Ensure that the length of the duration matches the start and stop times
+        self.assertTrue(event.allday)
+        self.assertEqual(event.duration, 120)
