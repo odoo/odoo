@@ -7,7 +7,7 @@ onRpc("res.lang", "get_installed", function getInstalled() {
 onRpc("/html_editor/icons_search", async (request) => {
     const { params } = await request.json();
     const needle = (params.needle || "").toLowerCase();
-    const icons = ["check", "diamond", "eco", "favorite", "home", "search", "mail", "local_bar", "close", "bug_report"];
+    const icons = ["check", "diamond", "eco", "favorite", "home", "search", "mail", "local_bar", "close", "bug_report", "oi_view-kanban"];
     return icons
         .filter((name) => !needle || name.includes(needle))
         .map((name) => ({ name, has_fill: true }));
