@@ -32,7 +32,7 @@ const threadPatch = {
             if (thread.firstUnreadMessage) {
                 const messageEl = this.messageRefs.get(thread.firstUnreadMessage.id)?.();
                 if (!messageEl) {
-                    return;
+                    return false;
                 }
                 const messageCenter =
                     messageEl.offsetTop -
@@ -50,8 +50,9 @@ const threadPatch = {
             if (this.shouldMarkAsReadOnScroll(thread)) {
                 thread.markAsRead();
             }
+            return true;
         } else {
-            super.applyScrollContextually(...arguments);
+            return super.applyScrollContextually(...arguments);
         }
     },
     /** @override */

@@ -415,7 +415,9 @@ export class Thread extends Component {
             this.reset();
             return;
         }
-        this.applyScrollContextually(this.props.thread);
+        if (!this.applyScrollContextually(this.props.thread)) {
+            return;
+        }
         this.snapshot = undefined;
         this.newestPersistentMessage = this.props.thread.newestPersistentMessage;
         this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage;
@@ -427,7 +429,11 @@ export class Thread extends Component {
         }
     }
 
-    /** @param {import("models").Thread} thread */
+    /**
+     * @param {import("models").Thread} thread
+     * @returns {Boolean} true when the scroll is applied, false when the newer
+     *  messages are not rendered yet.
+     */
     applyScrollContextually(thread) {
         const olderMessages = thread.oldestPersistentMessage?.id < this.oldestPersistentMessage?.id;
         const newerMessages = thread.newestPersistentMessage?.id > this.newestPersistentMessage?.id;
@@ -456,8 +462,16 @@ export class Thread extends Component {
             let value;
             if (typeof thread.scrollTop === "string" && thread.scrollTop?.includes("bottom")) {
                 if (newerMessages && this.channel) {
-                    if (this.applyScrollContextuallyNewerChannelMessages(thread)) {
-                        return;
+                    const firstNewerMessage = this.channel.getFirstNewerMessage({
+                        from_message_id: this.newestPersistentMessage.id + 1,
+                    });
+                    if (firstNewerMessage) {
+                        const messageEl = this.messageRefs.get(firstNewerMessage.id)?.();
+                        if (!messageEl) {
+                            return false;
+                        }
+                        this.applyScrollContextuallyNewerChannelMessages(thread, messageEl);
+                        return true;
                     }
                 }
                 value =
@@ -483,29 +497,19 @@ export class Thread extends Component {
                 });
             }
         }
+        return true;
     }
 
     /**
      * @param {import("models").Thread} thread
-     * @returns {Boolean} true when fully handled, false otherwise.
+     * @param {Element} messageEl element of the first newer message.
      */
-    applyScrollContextuallyNewerChannelMessages(thread) {
-        const firstNewerMessage = this.channel.getFirstNewerMessage({
-            from_message_id: this.newestPersistentMessage.id + 1,
-        });
-        if (!firstNewerMessage) {
-            return false;
-        }
-        const firstNewestMessageEl = this.messageRefs.get(firstNewerMessage.id)?.();
-        if (!firstNewestMessageEl) {
-            return false;
-        }
-        firstNewestMessageEl.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
+    applyScrollContextuallyNewerChannelMessages(thread, messageEl) {
+        messageEl.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
             behavior: "instant",
             block: this.props.order === "asc" ? "start" : "end",
         });
         thread.scrollTop = this.isAtBottom ? "bottom" : this.scrollableRef().scrollTop;
-        return true;
     }
 
     get messageFetchRouteParams() {
