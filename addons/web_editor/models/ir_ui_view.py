@@ -315,7 +315,11 @@ class IrUiView(models.Model):
         if not self._are_archs_equal(old_arch, new_arch):
             self._set_noupdate()
             self.write({'arch': etree.tostring(new_arch, encoding='unicode')})
-            self._copy_custom_snippet_translations(self, 'arch_db')
+            view = self if self.website_id else self.search([
+                ('key', '=', self.key),
+                ('website_id', '=', self.env['website'].get_current_website().id)
+            ], limit=1)
+            view._copy_custom_snippet_translations(view, 'arch_db')
 
     @api.model
     def _view_get_inherited_children(self, view):
