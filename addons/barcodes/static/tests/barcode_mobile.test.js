@@ -28,7 +28,6 @@ class Root extends Component {
             <option value="option2">Option 2</option>
         </select>
     </form>`;
-    static props = ["*"];
 }
 
 test.tags("mobile");
