@@ -1,4 +1,4 @@
-import { Component, proxy, signal, t, useEnv, useLayoutEffect, useProps } from "@odoo/owl";
+import { Component, proxy, signal, t, useEffect, useEnv, useProps } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
@@ -412,20 +412,22 @@ export class EmbeddedActionsPanel extends Component {
         });
 
         // Delay opening embedded actions dropdown to avoid flicker
-        useLayoutEffect(
-            (el, showEmbedded) => {
-                const timer = setTimeout(() => {
-                    if (
-                        showEmbedded &&
-                        this.props.state.embeddedInfos.visibleEmbeddedActions.length === 1
-                    ) {
-                        el?.querySelector(".btn[name='openEmbeddedActions']")?.click();
-                    }
-                }, 100);
-                return () => clearTimeout(timer);
-            },
-            () => [this.root(), this.props.state.embeddedInfos.showEmbedded]
-        );
+        useEffect(() => {
+            const el = this.root();
+            const showEmbedded = this.props.state.embeddedInfos.showEmbedded;
+            if (!el) {
+                return;
+            }
+            const timer = setTimeout(() => {
+                if (
+                    showEmbedded &&
+                    this.props.state.embeddedInfos.visibleEmbeddedActions.length === 1
+                ) {
+                    el.querySelector(".btn[name='openEmbeddedActions']")?.click();
+                }
+            }, 100);
+            return () => clearTimeout(timer);
+        });
     }
 
     isEmbeddedActionVisible(action) {
