@@ -20,11 +20,11 @@ class ProductComboItem(models.Model):
         index=True,
         check_company=True,
     )
-    currency_id = fields.Many2one(comodel_name='res.currency', related='product_id.currency_id')
+    currency_id = fields.Many2one(comodel_name='res.currency', compute='_compute_currency_id')
     lst_price = fields.Float(
         string="Original Price",
         min_display_digits='Product Price',
-        related='product_id.lst_price',
+        compute='_compute_lst_price',
     )
     extra_price = fields.Float(string="Extra Price", min_display_digits='Product Price', default=0.0)
 
@@ -32,3 +32,16 @@ class ProductComboItem(models.Model):
     def _check_product_id_no_combo(self):
         if any(combo_item.product_id.type == 'combo' for combo_item in self):
             raise ValidationError(_("A combo choice can't contain products of type \"combo\"."))
+
+    @api.depends('product_id.currency_id')
+    @api.depends_context('company')
+    def _compute_currency_id(self):
+        # a plain `related` field does not recompute correctly per company here
+        for combo_item in self:
+            combo_item.currency_id = combo_item.product_id.currency_id
+
+    @api.depends('product_id.lst_price')
+    @api.depends_context('company')
+    def _compute_lst_price(self):
+        for combo_item in self:
+            combo_item.lst_price = combo_item.product_id.lst_price

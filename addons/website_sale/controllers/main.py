@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.http.stream import content_disposition
-from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
+from odoo.tools import BinaryBytes, clean_context, float_round, lazy, str2bool
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -243,9 +243,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order=self._get_search_order(post),
             options=options,
         )
-        search_result = (
-            details[0].get("results", self.env["product.template"])
-        )
+        search_result = details[0].get("results", self.env["product.template"])
 
         return fuzzy_search_term, product_count, search_result
 
@@ -460,16 +458,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
         if filter_by_price_enabled:
-            # TODO Find an alternative way to obtain the domain through the search metadata.
-            # This is ~4 times more efficient than a search for the cheapest and most expensive
-            # products
-            sql = shop_query.select(
-                SQL(
-                    "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",  # noqa: E501
-                    conversion_rate=conversion_rate,
-                )
+            # list_price is company_dependent, so its min/max can't be read via raw SQL
+            [(min_price_raw, max_price_raw)] = request.env["product.template"]._read_group(
+                shop_domain, aggregates=["list_price:min", "list_price:max"]
             )
-            available_min_price, available_max_price = self.env.execute_query(sql)[0]
+            available_min_price = (min_price_raw or 0.0) * conversion_rate
+            available_max_price = (max_price_raw or 0.0) * conversion_rate
 
             if tax_display == "tax_included" and sale_tax:
                 available_min_price = sale_tax.with_context(force_price_include=False).compute_all(
@@ -1696,10 +1690,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def system_page_extra_info(env):  # noqa: N805
         if not env.website.is_view_active("website_sale.extra_info"):
             return []
-        return [{
+        return [
+            {
                 "route_title": _lt("Shop Checkout - Extra Information"),
                 "route_url": "/shop/extra_info",
-            }]
+            }
+        ]
 
     @route(
         ["/shop/extra_info"],
