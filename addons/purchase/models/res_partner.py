@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
+from odoo.exceptions import UserError
 
 
 class res_partner(models.Model):
@@ -44,3 +45,14 @@ class res_partner(models.Model):
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', default=1, company_dependent=True,
         help="Number of days to send reminder email before the promised receipt date")
     buyer_id = fields.Many2one('res.users', string='Buyer')
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_partner_in_account_move(self):
+        """ Prevent the deletion of a partner if it is used in a PO dropship address"""
+
+        po = self.sudo().env['purchase.order'].search_count([
+            ('dest_address_id', 'in', self.ids),
+            ('state', '!=', 'draft'),
+        ])
+        if po:
+            raise UserError(_("The partner cannot be deleted because it is used as a dropship address"))
