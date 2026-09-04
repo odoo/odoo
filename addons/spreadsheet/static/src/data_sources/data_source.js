@@ -34,6 +34,8 @@ export class LoadableDataSource {
          * Last time that this dataSource has been updated
          */
         this._lastUpdate = undefined;
+        this._startTime = undefined;
+        this._loadingTime = undefined;
 
         this._concurrency = new KeepLast();
         /**
@@ -93,6 +95,9 @@ export class LoadableDataSource {
                 })
                 .finally(() => {
                     this._lastUpdate = Date.now();
+                    this._loadingTime = this._startTime
+                        ? performance.now() - this._startTime
+                        : undefined;
                     this._isFullyLoaded = true;
                 });
             await this.odooDataProvider.notifyWhenPromiseResolves(this._loadPromise);
@@ -102,6 +107,10 @@ export class LoadableDataSource {
 
     get lastUpdate() {
         return this._lastUpdate;
+    }
+
+    get loadingTime() {
+        return this._loadingTime;
     }
 
     /**
