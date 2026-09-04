@@ -199,12 +199,18 @@ export class MessagingMenuTab extends Record {
         // The counter reflects the default filter (when any), so only count loaded
         // messages matching it. `init_counter_ids` is scoped to that domain.
         const defaultFilter = this.defaultFilter;
-        const countableMessages = defaultFilter?.includesMessage
-            ? this.messages.filter((m) => defaultFilter.includesMessage(m))
-            : this.messages;
-        const unloadedUnreadCount = this.init_counter_ids.filter(
-            (id) => !this.store["mail.message"].get(id)
-        ).length;
+        const isCountable = (message) =>
+            defaultFilter?.includesMessage ? defaultFilter.includesMessage(message) : true;
+        const countableMessages = this.messages.filter(isCountable);
+        const countedIds = new Set(countableMessages.map((m) => m.id));
+        const unloadedUnreadCount = this.init_counter_ids.filter((id) => {
+            if (countedIds.has(id)) {
+                return false;
+            }
+            const message = this.store["mail.message"].get(id);
+            // Count a loaded message until its own compute links it to this tab.
+            return !message || (this.includesMessage(message) && isCountable(message));
+        }).length;
         return countableMessages.length + unloadedUnreadCount + this.extraCounter;
     }
 
