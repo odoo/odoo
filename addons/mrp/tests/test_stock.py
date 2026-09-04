@@ -163,9 +163,11 @@ class TestWarehouseMrp(common.TestMrpCommon):
 
         self.route_mto.active = True
         # setup: creating a warehouse writes res.groups (implied_ids) via _check_multiwarehouse_group
+        dummy_partner = self.env['res.partner'].sudo().create({'name': 'Test WH2 Address'})
         warehouse_2 = self.env['stock.warehouse'].sudo().create({
             'name': 'Warehouse 2',
             'code': 'WH2',
+            'partner_id': dummy_partner.id,
         })
         # product 4 can only be manufacture in WH2
         self.bom_1.picking_type_id = warehouse_2.manu_type_id
