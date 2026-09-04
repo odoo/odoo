@@ -5,10 +5,10 @@ import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
 const StorePatch = {
-    _hasFullscreenUrlOnUpdate() {
+    hasFullscreenUrlOnUpdate(hasFullscreenUrl) {
         const channel = this.discuss?.thread?.channel;
         let base = browser.location.href;
-        if (this._hasFullscreenUrl && channel?.invitationLink) {
+        if (hasFullscreenUrl && channel?.invitationLink) {
             // Mirror the meeting link so that it can be copied from the address bar.
             base = channel.invitationLink;
         } else if (channel) {

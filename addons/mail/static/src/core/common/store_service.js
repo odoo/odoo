@@ -1,5 +1,5 @@
-import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dates";
+import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import {
     attClassObjectToString,
     generateEmojisOnHtml,
@@ -46,9 +46,6 @@ export class Store extends BaseStore {
     get self() {
         return this.self_user?.partner_id || this.self_guest;
     }
-    /** @type {boolean} */
-    hasCannedResponses;
-    hasGifPickerFeature = false;
     initialized = false;
     /**
      * Indicates whether the current user is using the application through the
@@ -69,25 +66,27 @@ export class Store extends BaseStore {
     mt_important_notification = fields.One("mail.message.subtype");
     mt_note = fields.One("mail.message.subtype");
     /** @type {boolean} */
+    hasCannedResponses;
+    /** @type {boolean} */
+    hasGifPickerFeature;
+    /** @type {boolean} */
     hasMessageTranslationFeature;
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
     chatHub = this.computed(() => this.ChatHub.insert({}));
     failures = fields.Many("Failure");
-    sortedFailures = fields.Many("Failure", {
-        compute() {
-            return [...this.failures].sort((f1, f2) => {
-                if (f1.lastMessage?.id && !f2.lastMessage?.id) {
-                    return -1;
-                }
-                if (!f1.lastMessage?.id && f2.lastMessage?.id) {
-                    return 1;
-                }
-                return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
-            });
-        },
-    });
+    get sortedFailures() {
+        return [...this.failures].sort((f1, f2) => {
+            if (f1.lastMessage?.id && !f2.lastMessage?.id) {
+                return -1;
+            }
+            if (!f1.lastMessage?.id && f2.lastMessage?.id) {
+                return 1;
+            }
+            return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
+        });
+    }
     /** local settings of the current device (not stored server side) */
     settings = this.computed(() => this.Settings.insert({}));
 
@@ -329,7 +328,7 @@ export class Store extends BaseStore {
         return r;
     }
 
-    _fetchStoreDataDebounced() {
+    _flushFetchStoreData() {
         const fetchParams = this.fetchParams;
         this._fetchStoreDataRpc(
             fetchParams.map(([name, params, dataRequest]) => {
@@ -507,7 +506,7 @@ export class Store extends BaseStore {
     setup() {
         super.setup();
         this._fetchStoreDataDebounced = debounce(
-            this._fetchStoreDataDebounced,
+            this._flushFetchStoreData,
             Store.FETCH_DATA_DEBOUNCE_DELAY
         );
     }

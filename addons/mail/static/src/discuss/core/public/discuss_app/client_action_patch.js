@@ -36,7 +36,8 @@ patch(DiscussClientAction.prototype, {
         }
         // The initial thread comes from the server store rather than a
         // `setAsDiscussThread()` call, so the sidebar tab should be setup explicitlty.
-        this.store.discuss.sidebarState.activeTab = channel.primaryMessagingMenuTab;
+        this.store.discuss.sidebarState.activeTab =
+            channel.primaryMessagingMenuTab ?? this.store.messagingMenu.channelTab;
         if (this.store.is_welcome_page_displayed && channel.invitationLink) {
             browser.history.replaceState(
                 browser.history.state,

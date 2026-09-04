@@ -15,13 +15,16 @@ const threadModelPatch = {
          */
         this.discussAppAsThread = fields.One("DiscussApp", {
             inverse: "thread",
-            /** @this {import("models").Thread} */
-            onUpdate() {
-                if (!this.discussAppAsThread && this.channel?.parent_channel_id) {
+        });
+        this.onChange(
+            () => [Boolean(this.discussAppAsThread), Boolean(this.channel?.parent_channel_id)],
+            function onChangeIsLocallyPinned(isDiscussThread, hasParent) {
+                if (!isDiscussThread && hasParent) {
                     this.channel.isLocallyPinned = false;
                 }
             },
-        });
+            { immediate: true }
+        );
     },
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {

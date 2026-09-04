@@ -11,7 +11,6 @@ import {
     onMounted,
     onPatched,
     onWillPatch,
-    onWillUnmount,
     proxy,
     signal,
     t,
@@ -41,6 +40,7 @@ export class Thread extends Component {
     static components = { Message, NotificationMessage, Transition, DateSection };
     static template = "mail.Thread";
 
+    isFocused = signal(false);
     /** @type {Promise|undefined} */
     smoothScrollingPromise;
     /** @type {number} */
@@ -58,8 +58,9 @@ export class Thread extends Component {
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
         this.startMessageAvatarRef = signal.ref(HTMLDivElement);
         this.messageRefs = useChildRefs();
+        const messageRefsCount = computed(() => this.messageRefs.size);
         useOnChange(
-            () => [this.messageRefs.size],
+            () => [messageRefsCount()],
             () => this.scrollToHighlighted()
         );
         this.store = useService("mail.store");
@@ -199,11 +200,15 @@ export class Thread extends Component {
                 this.fetchInitialMessages();
             }
         });
-        onWillUnmount(() => {
-            if (this.props.thread.isFocusedByThread) {
-                this.props.thread.isFocusedByThread = false;
+        useOnChange(
+            () => [this.props.thread, this.isFocused()],
+            function onChangeIsFocused(thread, isFocused) {
+                if (isFocused) {
+                    thread.isFocusedCounter++;
+                    return () => thread.isFocusedCounter--;
+                }
             }
-        });
+        );
         useLayoutEffect(
             (isLoaded) => {
                 this.state.mountedAndLoaded = isLoaded;
@@ -551,14 +556,14 @@ export class Thread extends Component {
     }
 
     onFocusin() {
-        this.props.thread.isFocusedByThread = true;
+        this.isFocused.set(true);
         if (this.props.thread.shouldMarkAsReadOnFocus) {
             this.props.thread.markAsRead();
         }
     }
 
     onFocusout() {
-        this.props.thread.isFocusedByThread = false;
+        this.isFocused.set(false);
     }
 
     /**

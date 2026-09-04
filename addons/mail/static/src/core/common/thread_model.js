@@ -1,4 +1,4 @@
-import { AND, fields, Record } from "@mail/model/export";
+import { AND, Record, fields } from "@mail/model/export";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 import { compareDatetime } from "@mail/utils/common/misc";
 
@@ -30,15 +30,6 @@ export class Thread extends Record {
     static id = AND("model", "id");
     static _name = "mail.thread";
 
-    setup() {
-        super.setup(...arguments);
-        this.onChange(
-            () => [this.composerDisabled],
-            () => this.composerDisabledonUpdate(),
-            { immediate: true, initialRun: false }
-        );
-    }
-
     /**
      * @param {string} localId
      * @returns {string}
@@ -66,22 +57,72 @@ export class Thread extends Record {
                 request_list: fieldNames,
             });
             thread = this.get(data);
-            if (!thread?.exists()) {
+            if (!thread) {
                 return;
             }
         }
         return thread;
     }
 
+    setup() {
+        super.setup();
+        this.onChange(
+            () => [this.close_chat_window],
+            function onChangeCloseChatWindow(close_chat_window) {
+                if (close_chat_window) {
+                    this.close_chat_window = undefined;
+                    this.closeChatWindow();
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.isLoaded],
+            function onChangeIsLoaded(isLoaded) {
+                if (isLoaded) {
+                    this._resolveIsLoaded();
+                } else {
+                    const { promise, resolve } = Promise.withResolvers();
+                    this.isLoadedPromise = promise;
+                    this.isLoadedPromise.then(this._resolveIsLoaded);
+                    this._resolveIsLoaded = resolve;
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onRelationChange(
+            () => this.activities,
+            ({ removed }) => removed.forEach((activity) => activity.remove())
+        );
+        this.onRelationChange(
+            () => this.followers,
+            ({ added, removed }) => {
+                added.forEach((follower) => (follower.thread = this));
+                removed.forEach((follower) => follower.delete());
+            }
+        );
+        this.onRelationChange(
+            () => this.selfFollower,
+            ({ added, removed }) => {
+                added.forEach((follower) => (follower.thread = this));
+                removed.forEach((follower) => follower.delete());
+            }
+        );
+        this.assignComputed("newestMessage", function computeNewestMessage() {
+            return this.messages.at(-1);
+        });
+        this.assignComputed("composer", function computeComposer() {
+            return this.store.Composer.insert({ thread: this });
+        });
+    }
+
     autofocus = 0;
-    activities = fields.Many("mail.activity", { onDelete: (r) => r?.remove() });
-    sortedActivities = fields.Many("mail.activity", {
-        compute() {
-            return [...this.activities].sort(
-                (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id
-            );
-        },
-    });
+    activities = fields.Many("mail.activity");
+    get sortedActivities() {
+        return [...this.activities].sort(
+            (a, b) => compareDatetime(a.date_deadline, b.date_deadline) || a.id - b.id
+        );
+    }
     create_uid = fields.One("res.users");
     /**
      * Server-side value used in chatter to determine if the thread has pinned messages without
@@ -101,26 +142,12 @@ export class Thread extends Record {
     areAttachmentsLoaded = false;
     group_public_id = fields.One("res.groups");
     attachments = fields.Many("ir.attachment");
-    sortedAttachments = fields.Many("ir.attachment", {
-        compute() {
-            return [...this.attachments].sort((a1, a2) => a2.id - a1.id);
-        },
-    });
+    get sortedAttachments() {
+        return [...this.attachments].sort((a1, a2) => a2.id - a1.id);
+    }
     can_react = true;
-    close_chat_window = fields.Attr(undefined, {
-        /** @this {import("models").Thread} */
-        onUpdate() {
-            if (this.close_chat_window) {
-                this.close_chat_window = undefined;
-                this.closeChatWindow();
-            }
-        },
-    });
-    composer = fields.One("Composer", {
-        compute: () => ({}),
-        inverse: "thread",
-        onDelete: (r) => r?.delete(),
-    });
+    close_chat_window;
+    composer = fields.One("Composer", { inverse: "thread" });
     counter = 0;
     counter_bus_id = 0;
     /** @type {string} */
@@ -129,59 +156,19 @@ export class Thread extends Record {
     description;
     /** @type {string} */
     display_name;
-    followers = fields.Many("mail.followers", {
-        /** @this {import("models").Thread} */
-        onAdd(r) {
-            r.thread = this;
-        },
-        onDelete: (r) => r?.delete(),
-    });
-    selfFollower = fields.One("mail.followers", {
-        /** @this {import("models").Thread} */
-        onAdd(r) {
-            r.thread = this;
-        },
-        onDelete: (r) => r?.delete(),
-    });
+    followers = fields.Many("mail.followers");
+    selfFollower = fields.One("mail.followers");
     /** @type {integer|undefined} */
     followersCount;
     loadOlder = false;
     loadNewer = false;
     get isFocused() {
-        return this.isFocusedCounter !== 0;
+        return this.isFocusedCounter > 0;
     }
-    isFocusedByThread = fields.Attr(false, {
-        onUpdate() {
-            if (this.isFocusedByThread) {
-                this.isFocusedCounter++;
-            } else {
-                this.isFocusedCounter--;
-            }
-        },
-    });
-    isFocusedCounter = fields.Attr(0, {
-        onUpdate() {
-            if (this.isFocusedCounter < 0) {
-                this.isFocusedCounter = 0;
-            }
-        },
-    });
+    isFocusedCounter = 0;
     isLoadingAttachments = false;
     isLoadedPromise = new Promise((resolve) => (this._resolveIsLoaded = resolve));
-    isLoaded = fields.Attr(false, {
-        /** @this {import("models").Thread} */
-        onUpdate() {
-            if (this.isLoaded) {
-                this._resolveIsLoaded();
-            } else {
-                const { promise, resolve } = Promise.withResolvers();
-                this.isLoadedPromise = promise;
-                // chain the current resolve before overwriting it
-                this.isLoadedPromise.then(this._resolveIsLoaded);
-                this._resolveIsLoaded = resolve;
-            }
-        },
-    });
+    isLoaded = false;
     /** @type {Boolean|undefined} */
     has_mail_thread;
     message_main_attachment_id = fields.One("ir.attachment");
@@ -219,11 +206,9 @@ export class Thread extends Record {
     /** @type {Array<[string,string]>} */
     priority_definition;
     needactionMessages = fields.Many("mail.message", { inverse: "threadAsNeedaction" });
-    sortedNeedactionMessages = fields.Many("mail.message", {
-        compute() {
-            return [...this.needactionMessages].sort((m1, m2) => m1.id - m2.id);
-        },
-    });
+    get sortedNeedactionMessages() {
+        return [...this.needactionMessages].sort((message1, message2) => message1.id - message2.id);
+    }
     // FIXME: should be in the portal/frontend bundle but live chat can be loaded
     // before portal resulting in the field not being properly initialized.
     portal_partner = fields.One("res.partner");
@@ -246,7 +231,7 @@ export class Thread extends Record {
     /* The suggested recipients are the recipients that are suggested by the
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
-    suggestedRecipients = fields.Attr([]);
+    suggestedRecipients = [];
     /** @type {Boolean|undefined} */
     showSubjectInSmallComposer;
     /**
@@ -280,16 +265,14 @@ export class Thread extends Record {
     pid;
     composerDisabled = this.computed(() => this.computeComposerDisabled());
     pinnedMessages = fields.Many("mail.message", { inverse: "threadAsPinned" });
-    sortedPinnedMessages = fields.Many("mail.message", {
-        compute() {
-            return [...this.pinnedMessages].sort((m1, m2) => {
-                if (m1.pinned_at === m2.pinned_at) {
-                    return m2.id - m1.id;
-                }
-                return m1.pinned_at < m2.pinned_at ? 1 : -1;
-            });
-        },
-    });
+    get sortedPinnedMessages() {
+        return [...this.pinnedMessages].sort((m1, m2) => {
+            if (m1.pinned_at === m2.pinned_at) {
+                return m2.id - m1.id;
+            }
+            return m1.pinned_at < m2.pinned_at ? 1 : -1;
+        });
+    }
 
     async fetchPinnedMessages() {
         await this.store.fetchStoreData("mail.thread", {
@@ -375,26 +358,19 @@ export class Thread extends Record {
         return this.message_needaction_counter;
     }
 
-    newestMessage = fields.One("mail.message", {
-        inverse: "threadAsNewest",
-        compute() {
-            return this.messages.at(-1);
-        },
-    });
+    newestMessage = fields.One("mail.message", { inverse: "threadAsNewest" });
 
     get newestPersistentMessage() {
         return this.messages.findLast((msg) => Number.isInteger(msg.id));
     }
 
-    newestPersistentAllMessages = fields.Many("mail.message", {
-        compute() {
-            const allPersistentMessages = this.allMessages.filter((message) =>
-                Number.isInteger(message.id)
-            );
-            allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
-            return allPersistentMessages;
-        },
-    });
+    get newestPersistentAllMessages() {
+        const allPersistentMessages = this.allMessages.filter((message) =>
+            Number.isInteger(message.id)
+        );
+        allPersistentMessages.sort((m1, m2) => m2.id - m1.id);
+        return allPersistentMessages;
+    }
 
     newestPersistentOfAllMessage = this.computed(() => this.newestPersistentAllMessages[0]);
 
@@ -403,8 +379,6 @@ export class Thread extends Record {
     }
 
     computeComposerDisabled() {}
-
-    composerDisabledonUpdate() {}
 
     get isEmpty() {
         return this.messages.length === 0;
@@ -443,7 +417,8 @@ export class Thread extends Record {
             const { messages } = await this.fetchMessagesData({ fetchParams, routeParams });
             this.hasLoadingFailedError = undefined;
             this.hasLoadingFailed = false;
-            return messages.reverse();
+            // messages is a record list: reverse a copy, not the relation
+            return messages.slice().reverse();
         } catch (e) {
             this.hasLoadingFailed = true;
             this.hasLoadingFailedError = e;

@@ -1,26 +1,26 @@
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 
 import { fields, Record } from "@mail/model/export";
+import { createElementFromContent, getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
 import {
     convertBrToLineBreak,
     decorateEmojis,
     EMOJI_REGEX,
     generateEmojisOnHtml,
     generateMentionElement,
+    htmlToTextContentInline,
     inlineElement,
     prepareBodyForEditing,
-    htmlToTextContentInline,
 } from "@mail/utils/common/format";
-import { createElementFromContent, getInnerHtml, getOuterHtml } from "@mail/utils/common/html";
 
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { createElementWithContent, htmlTrim } from "@web/core/utils/html";
-import { renderToElement } from "@web/core/utils/render";
 import { url } from "@web/core/utils/urls";
 
 import { markup } from "@odoo/owl";
@@ -30,6 +30,29 @@ import { discussComponentRegistry } from "./discuss_component_registry";
 const { DateTime } = luxon;
 export class Message extends Record {
     static _name = "mail.message";
+
+    setup() {
+        super.setup();
+        this.assignComputed(
+            "channelAsThreadCreationNotification",
+            function computeChannelAsThreadCreationNotification() {
+                if (this.notificationType !== "thread_creation") {
+                    return undefined;
+                }
+                const channelId = this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeId;
+                return channelId ? Number(channelId) : undefined;
+            }
+        );
+        this.assignComputed("threadAsNeedaction", function computeThreadAsNeedaction() {
+            return this.needaction ? this.thread : undefined;
+        });
+        this.assignComputed("threadAsInEdition", function computeThreadAsInEdition() {
+            return this.composer ? this.thread : undefined;
+        });
+        this.assignComputed("threadAsPinned", function computeThreadAsPinned() {
+            return this.pinned_at ? this.thread : undefined;
+        });
+    }
 
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
     author_id = fields.One("res.partner");
@@ -43,7 +66,7 @@ export class Message extends Record {
     call_history_ids = fields.Many("discuss.call.history");
     richBody = this.computed(() => {
         emojiLoader.load();
-        if (!this.bodyEl) {
+        if (!this.body) {
             return "";
         }
         return getInnerHtml(decorateEmojis(this.bodyEl.cloneNode(true)));
@@ -55,7 +78,7 @@ export class Message extends Record {
         }
         return getInnerHtml(decorateEmojis(createElementFromContent(this.translationValue)));
     });
-    composer = fields.One("Composer", { inverse: "message", onDelete: (r) => r?.delete() });
+    composer = fields.One("Composer", { inverse: "message" });
     composerAsReplyToMessage = fields.One("Composer", { inverse: "replyToMessage" });
     date = fields.Datetime();
     /** @type {string} */
@@ -117,11 +140,9 @@ export class Message extends Record {
      */
     postFailRedo = undefined;
     reactions = fields.Many("MessageReactions", { inverse: "message" });
-    sortedReactions = fields.Many("MessageReactions", {
-        compute() {
-            return [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence);
-        },
-    });
+    get sortedReactions() {
+        return [...this.reactions].sort((r1, r2) => r1.sequence - r2.sequence);
+    }
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
     self_notification = this.computed(() =>
         this.notification_ids.find((n) => n.res_partner_id?.eq(this.store.self_user?.partner_id))
@@ -132,27 +153,10 @@ export class Message extends Record {
     reply_to;
     subtype_id = fields.One("mail.message.subtype");
     thread = fields.One("mail.thread");
-    threadAsNeedaction = fields.One("mail.thread", {
-        compute() {
-            if (this.needaction) {
-                return this.thread;
-            }
-        },
-    });
-    threadAsNewest = fields.One("mail.thread");
-    threadAsInEdition = fields.One("mail.thread", {
-        compute() {
-            if (this.composer) {
-                return this.thread;
-            }
-        },
-    });
-    threadAsPinned = fields.One("mail.thread", {
-        compute() {
-            return this.pinned_at ? this.thread : undefined;
-        },
-        inverse: "pinnedMessages",
-    });
+    threadAsNeedaction = fields.One("mail.thread", { inverse: "needactionMessages" });
+    threadAsNewest = fields.One("mail.thread", { inverse: "newestMessage" });
+    threadAsInEdition = fields.One("mail.thread", { inverse: "messageInEdition" });
+    threadAsPinned = fields.One("mail.thread", { inverse: "pinnedMessages" });
     scheduledDatetime = fields.Datetime();
     onlyEmojis = this.computed(() => {
         const bodyWithoutTags = this.bodyEl?.textContent ?? "";
@@ -184,14 +188,6 @@ export class Message extends Record {
         return this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeType;
     });
     channelAsThreadCreationNotification = fields.One("discuss.channel", {
-        /** @this {import("models").Message} */
-        compute() {
-            if (this.notificationType !== "thread_creation") {
-                return;
-            }
-            const channelId = this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeId;
-            return channelId ? Number(channelId) : undefined;
-        },
         inverse: "threadCreationMessages",
     });
     /** @type {string} display name of the record the message is posted on */
@@ -528,24 +524,21 @@ export class Message extends Record {
         return markup`<i class="oi me-1" data-icon="${this.previewIcon}"></i>${messageBody}`;
     });
 
-    previewText = fields.Html("", {
-        /** @this {import("models").Message} */
-        compute() {
-            const messageBody = this.bodyPreview;
-            if (this.isSelfAuthored) {
-                return markup`<i class="oi me-1 opacity-75" data-icon="reply"></i>${_t(
-                    "You: %(message_content)s",
-                    { message_content: messageBody }
-                )}`;
-            }
-            if (!this.author || this.author.notEq(this.thread?.channel?.correspondent?.persona)) {
-                return _t("%(authorName)s: %(message_content)s", {
-                    authorName: this.authorName,
-                    message_content: messageBody,
-                });
-            }
-            return messageBody;
-        },
+    previewText = this.computed(() => {
+        const messageBody = this.bodyPreview;
+        if (this.isSelfAuthored) {
+            return markup`<i class="oi me-1 opacity-75" data-icon="reply"></i>${_t(
+                "You: %(message_content)s",
+                { message_content: messageBody }
+            )}`;
+        }
+        if (!this.author || this.author.notEq(this.thread?.channel?.correspondent?.persona)) {
+            return _t("%(authorName)s: %(message_content)s", {
+                authorName: this.authorName,
+                message_content: messageBody,
+            });
+        }
+        return messageBody;
     });
 
     get previewIcon() {

@@ -1,16 +1,20 @@
-import { fields } from "@mail/model/export";
 import { Store } from "@mail/core/common/store_service";
+import { fields } from "@mail/model/export";
+
+import { computed } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 
 import { patch } from "@web/core/utils/patch";
 
 /**
  * Shareable meeting link currently mirrored in the address bar, or `undefined` when not in the
- * full-screen meeting view. Kept in sync from the `_shareUrl` field below (which gates on the
- * full-screen state) and read back by the router patch below.
  * @type {string|undefined}
  */
 let callShareUrl;
+
+function routerOwnsAddressBar() {
+    return Array.isArray(router.current.actionStack);
+}
 
 // The web client's router owns the address bar and recomputes it from the action state on every
 // (debounced) push, so directly writing the meeting link with `history.replaceState` is
@@ -32,72 +36,62 @@ patch(router, {
 const StorePatch = {
     setup() {
         super.setup(...arguments);
-        this.rtc = fields.One("Rtc", {
-            compute() {
-                return {};
-            },
-        });
-        this.ringingChannels = fields.Many("discuss.channel", {
-            /** @this {import("models").Store} */
-            onUpdate() {
-                if (this.ringingChannels.length > 0) {
-                    this.env.services["mail.sound_effects"].play("call-invitation", {
-                        loop: true,
-                    });
-                } else {
-                    this.env.services["mail.sound_effects"].stop("call-invitation");
+        this.rtc = fields.One("Rtc");
+        this.ringingChannels = fields.Many("discuss.channel");
+        const hasRingingChannels = computed(() => this.ringingChannels.length > 0);
+        this.onChange(
+            () => [hasRingingChannels()],
+            function onChangeRingingChannels(shouldPlay) {
+                if (shouldPlay) {
+                    this.env.services["mail.sound_effects"].play("call-invitation", { loop: true });
+                    return () => this.env.services["mail.sound_effects"].stop("call-invitation");
                 }
-            },
-        });
+            }
+        );
         this.nextTalkingTime = 1;
         this.fullscreenChannel = fields.One("discuss.channel");
-        this._hasFullscreenUrl = fields.Attr(false, {
-            compute() {
-                return this.discuss?.thread?.channel?.eq(this.fullscreenChannel);
-            },
-            onUpdate() {
-                if (!this.discuss?.hasRestoredThread) {
+        this.meetingViewOpened = false;
+        this.onChange(
+            () => [this.hasFullscreenUrl],
+            function onChangeHasFullscreenUrl(hasFullscreenUrl) {
+                if (this.discuss?.hasRestoredThread) {
+                    this.hasFullscreenUrlOnUpdate(hasFullscreenUrl);
+                }
+            }
+        );
+        /**
+         *
+         */
+        this.onChange(
+            () => [
+                this.self_user && this.rtc?.isFullscreen
+                    ? this.rtc.localChannel?.invitationLink
+                    : undefined,
+            ],
+            function onChangeShareUrl(shareUrl) {
+                if (!routerOwnsAddressBar() || shareUrl === callShareUrl) {
                     return;
                 }
-                this._hasFullscreenUrlOnUpdate();
-            },
-            eager: true,
-        });
-        /**
-         * Shareable link of the full-screen call, mirrored in the address bar while its meeting
-         * view is open (and `undefined` otherwise). Depending on both the call and the full-screen
-         * state, this recomputes whenever either changes — including when the invitation link
-         * resolves (channel uuid loads) — so the address bar stays in sync no matter the order in
-         * which they settle as a meeting starts. The patched {@link router.stateToUrl} renders the
-         * mirrored value; the push here recomputes the address bar.
-         *
-         * Only for logged-in users: on the public meeting page the address bar already holds the
-         * invitation link, and rewriting it through the web-client router (which has no action
-         * state there) would clobber that link and lock the guest out on reload.
-         */
-        this._shareUrl = fields.Attr(undefined, {
-            compute() {
-                if (!this.self_user) {
-                    return undefined;
-                }
-                return this.rtc.isFullscreen ? this.rtc.localChannel?.invitationLink : undefined;
-            },
-            onUpdate() {
-                callShareUrl = this._shareUrl;
-                router.replaceState({ fullscreen: this._hasFullscreenUrl ? true : undefined });
-            },
-            eager: true,
-        });
-        this.meetingViewOpened = false;
+                callShareUrl = shareUrl;
+                router.replaceState({ fullscreen: this.hasFullscreenUrl ? true : undefined });
+            }
+        );
     },
-    _hasFullscreenUrlOnUpdate() {
-        if (callShareUrl) {
+    get hasFullscreenUrl() {
+        return this.discuss?.thread?.channel?.eq(this.fullscreenChannel);
+    },
+    /** @param {boolean} hasFullscreenUrl */
+    hasFullscreenUrlOnUpdate(hasFullscreenUrl) {
+        // the public page writes the address bar itself, so the router push is
+        // for the web client only
+        if (callShareUrl || !routerOwnsAddressBar()) {
             return;
         }
-        router.pushState({ fullscreen: this._hasFullscreenUrl ? true : undefined });
+        router.pushState({ fullscreen: hasFullscreenUrl ? true : undefined });
     },
     initialize() {
         super.initialize(...arguments);
+        this.rtc = {};
         this.rtc.start();
     },
     sortMembers(m1, m2) {

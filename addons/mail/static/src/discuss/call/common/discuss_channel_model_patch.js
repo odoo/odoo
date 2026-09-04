@@ -25,58 +25,52 @@ const DiscussChannelPatch = {
         this.lastSessionIds = new Set();
         /** @type {number|undefined} */
         this.cancelRtcInvitationTimeout = undefined;
-        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
-            onDelete: (r) => r?.delete(),
-            /** @this {import("models").Thread} */
-            async onUpdate() {
-                const hadSelfSession = this.hadSelfSession;
-                const lastSessionIds = this.lastSessionIds;
-                this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(this.rtc_session_ids));
-                this.lastSessionIds = new Set(this.rtc_session_ids.map((s) => s.id));
-                const shouldPlayJoinSound = [...this.lastSessionIds].some(
-                    (id) => !lastSessionIds.has(id)
-                );
-                const shouldPlayLeaveSound = [...lastSessionIds].some(
-                    (id) => !this.lastSessionIds.has(id)
-                );
-                if (
-                    !hadSelfSession || // sound for self-join is played instead
-                    !this.hadSelfSession || // sound for self-leave is played instead
-                    !(await this.store.env.services["multi_tab"].isOnMainTab()) // another tab playing sound
-                ) {
-                    return;
-                }
-                if (shouldPlayJoinSound) {
-                    this.store.env.services["mail.sound_effects"].play("call-join");
-                    this.store.rtc.call({ asFallback: true });
-                }
-                if (shouldPlayLeaveSound) {
-                    this.store.env.services["mail.sound_effects"].play("member-leave");
-                }
-            },
-        });
-        this.videoCountNotSelf = fields.Attr(0, {
-            compute() {
-                return this.rtc_session_ids.filter(
-                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession)
-                ).length;
-            },
-            onUpdate() {
+        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session");
+        this.onRelationChange(
+            () => this.rtc_session_ids,
+            ({ removed }) => removed.forEach((session) => session.delete())
+        );
+        this.focusStack = fields.Many("discuss.channel.rtc.session");
+        this.pinnedRtcSession = fields.One("discuss.channel.rtc.session");
+        this.onChange(
+            () => [
+                this.rtc_session_ids.filter(
+                    (s) => s.hasVideo && s.notEq(this.store.rtc?.selfSession)
+                ).length,
+            ],
+            function onChangeVideoCount(videoCountNotSelf) {
                 if (this.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.DISCARDED) {
                     return;
                 }
                 this.promoteFullscreen =
-                    this.videoCountNotSelf > 0 && this.chatWindow?.isOpen
+                    videoCountNotSelf > 0 && this.chatWindow?.isOpen
                         ? CALL_PROMOTE_FULLSCREEN.ACTIVE
                         : CALL_PROMOTE_FULLSCREEN.INACTIVE;
             },
-        });
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.useCameraByDefault],
+            function onChangeUseCameraByDefault(useCameraByDefault) {
+                if (useCameraByDefault !== null) {
+                    localStorage.setItem(
+                        `discuss_channel_camera_default_${this.id}`,
+                        JSON.stringify(useCameraByDefault)
+                    );
+                }
+            }
+        );
+        this.onChange(
+            () => [...this.rtc_session_ids],
+            function onChangeRtcSessionIds(...rtcSessions) {
+                this._playRtcSessionsSoundEffects(rtcSessions);
+            },
+            // the sounds compare against the previous sessions
+            { initialRun: false }
+        );
         this.videoCount = this.computed(
             () => this.rtc_session_ids.filter((s) => s.hasVideo).length
         );
-        this.focusStack = fields.Many("discuss.channel.rtc.session");
-        this.pinnedRtcSession = fields.One("discuss.channel.rtc.session");
-        /** @type {import("@mail/discuss/call/common/call").CardData[]} */
         this.visibleCards = this.computed(() => {
             const raisingHandCards = [];
             const sessionCards = [];
@@ -136,26 +130,35 @@ const DiscussChannelPatch = {
             });
             return raisingHandCards.concat(sessionCards, invitationCards);
         });
-        this.useCameraByDefault = fields.Attr(null, {
-            /** @this {import("models").Thread} */
-            compute() {
-                if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel?.eq(this)) {
-                    return this.store.rtc.selfSession.is_camera_on;
-                }
-                return JSON.parse(
-                    localStorage.getItem(`discuss_channel_camera_default_${this.id}`)
-                );
-            },
-            /** @this {import("models").Thread} */
-            onUpdate() {
-                if (this.useCameraByDefault !== null) {
-                    localStorage.setItem(
-                        `discuss_channel_camera_default_${this.id}`,
-                        JSON.stringify(this.useCameraByDefault)
-                    );
-                }
-            },
-        });
+    },
+    async _playRtcSessionsSoundEffects(rtcSessions) {
+        const hadSelfSession = this.hadSelfSession;
+        const lastSessionIds = this.lastSessionIds;
+        // no rtc yet on the public page, where the channel arrives before the call service starts
+        this.hadSelfSession = Boolean(this.store.rtc?.selfSession?.in(rtcSessions));
+        this.lastSessionIds = new Set(rtcSessions.map((s) => s.id));
+        const shouldPlayJoinSound = [...this.lastSessionIds].some((id) => !lastSessionIds.has(id));
+        const shouldPlayLeaveSound = [...lastSessionIds].some((id) => !this.lastSessionIds.has(id));
+        if (
+            !hadSelfSession || // sound for self-join is played instead
+            !this.hadSelfSession || // sound for self-leave is played instead
+            !(await this.store.env.services["multi_tab"].isOnMainTab()) // another tab playing sound
+        ) {
+            return;
+        }
+        if (shouldPlayJoinSound) {
+            this.store.env.services["mail.sound_effects"].play("call-join");
+            this.store.rtc.call({ asFallback: true });
+        }
+        if (shouldPlayLeaveSound) {
+            this.store.env.services["mail.sound_effects"].play("member-leave");
+        }
+    },
+    get useCameraByDefault() {
+        if (this.channel_type === "chat" && this.store.rtc?.selfSession?.channel?.eq(this)) {
+            return this.store.rtc.selfSession.is_camera_on;
+        }
+        return JSON.parse(localStorage.getItem(`discuss_channel_camera_default_${this.id}`));
     },
     /** ⚠️ {@link AwaitChatHubInit} */
     get isCallDisplayedInChatWindow() {

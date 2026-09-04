@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/model/export";
-import { markRaw } from "@odoo/owl";
+
+import { computed, markRaw } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -8,16 +9,22 @@ export class Failure extends Record {
 
     /** @type {number} */
     id;
-    notifications = fields.Many("mail.notification", {
-        /** @this {import("models").Failure} */
-        onUpdate() {
-            if (this.notifications.length === 0) {
-                this.delete();
-            } else {
-                this.store.failures.add(this);
-            }
-        },
-    });
+    setup() {
+        super.setup();
+        const hasNotifications = computed(() => this.notifications.length > 0);
+        this.onChange(
+            () => [hasNotifications()],
+            function onChangeNotifications(hasNotifications) {
+                if (hasNotifications) {
+                    this.store.failures.add(this);
+                } else {
+                    this.delete();
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+    }
+    notifications = fields.Many("mail.notification");
     get modelName() {
         return this.notifications?.[0]?.mail_message_id?.thread?.modelName;
     }

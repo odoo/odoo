@@ -103,7 +103,7 @@
             t-foreach="this.visibleTabs" t-key="tab.localId" t-as="tab"
             class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center w-100 flex-shrink-0 p-1 bg-transparent position-relative border-0"
             t-att-class="{
-                'active': this.activeTab().eq(tab),
+                'active': this.activeTab()?.eq(tab),
                 'pb-4': this.isIosPwa,
                 'pb-2': !this.isIosPwa,
             }"
@@ -112,7 +112,7 @@
             t-att-data-id="tab.id"
             data-available-offline=""
         >
-            <i t-attf-class="oi o-mail-MessagingMenu-tabIcon {{tab.iconClass}} rounded-pill mx-auto p-2 fs-5" t-att-data-icon="this.activeTab().eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon"/>
+            <i t-attf-class="oi o-mail-MessagingMenu-tabIcon {{tab.iconClass}} rounded-pill mx-auto p-2 fs-5" t-att-data-icon="this.activeTab()?.eq(tab) and tab.activeIcon ? tab.activeIcon : tab.icon"/>
             <span class="o-xsmaller text-center lh-1 opacity-75 mt-1" t-out="tab.label"/>
             <span t-if="this.getTabCounter(tab)" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-count' }}" t-out="this.getTabCounter(tab)"/>
         </button>
