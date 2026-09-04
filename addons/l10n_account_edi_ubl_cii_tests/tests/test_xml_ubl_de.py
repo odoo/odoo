@@ -265,6 +265,53 @@ class TestUBLDE(TestUBLCommon):
         self.assertEqual(attachment.name[-11:], "zugferd.xml")
         self._assert_imported_invoice_from_etree(refund, attachment)
 
+    def test_export_import_invoice_global_location_number(self):
+        """
+        ram:GlobalID must be exported on SellerTradeParty, BuyerTradeParty and ShipToTradeParty,
+        using the GLN of their 'delivery'-type address, only when that address is German.
+        """
+        self.env['ir.config_parameter'].sudo().set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', True)
+        company = self.company_data['company']
+        if "predict_bill_product" in company._fields:
+            company.predict_bill_product = True
+
+        # street/zip/city are omitted here: SellerTradeParty always uses partner_1's own name
+        # and address, this 'delivery' child only contributes its GLN, its own address is
+        # never rendered anywhere.
+        self.env['res.partner'].create({
+            'name': 'Seller Delivery',
+            'parent_id': self.partner_1.id,
+            'type': 'delivery',
+            'country_id': self.env.ref('base.de').id,
+            'global_location_number': '4012345000009',
+        })
+        buyer_delivery = self.env['res.partner'].create({
+            'name': 'Buyer Delivery',
+            'parent_id': self.partner_2.id,
+            'type': 'delivery',
+            'country_id': self.env.ref('base.de').id,
+            'global_location_number': '4098765000006',
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            partner_shipping_id=buyer_delivery.id,
+            invoice_line_ids=[{
+                'product_id': self.product_a.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+                'tax_ids': [Command.set(self.tax_19.ids)],
+            }],
+        )
+        attachment = self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
+            xpaths=None,
+            expected_file_path='from_odoo/zugferd_out_invoice_gln.xml',
+        )
+        self._assert_imported_invoice_from_etree(invoice, attachment)
+
     def test_export_import_refund_xrehnung(self):
         company = self.company_data['company']
         if "predict_bill_product" in company._fields:
