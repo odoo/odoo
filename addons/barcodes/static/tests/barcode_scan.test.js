@@ -21,7 +21,6 @@ test("Display notification for media device permission on barcode scanning", asy
             </div>
         `;
         static components = { BarcodeScanner };
-        static props = ["*"];
     }
 
     await mountWithCleanup(BarcodeScan);
