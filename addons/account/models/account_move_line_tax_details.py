@@ -80,6 +80,13 @@ class AccountMoveLine(models.Model):
                 LEFT JOIN account_tax child_tax ON child_tax.id = tax_filiation.child_tax
                 GROUP BY aml.id
             ),
+            base_line_direct_taxes AS (
+                SELECT DISTINCT
+                    base_line.id AS base_line_id,
+                    direct_tax.tax_id
+                FROM base_lines base_line
+                CROSS JOIN LATERAL UNNEST(base_line.direct_tax_ids) direct_tax(tax_id)
+            ),
             tax_lines AS (
                 SELECT
                     %(aml_fields_select)s,
@@ -128,31 +135,42 @@ class AccountMoveLine(models.Model):
                     ON tax_line.move_id = base_line.move_id
                     AND tax_line.currency_id = base_line.currency_id
                     AND tax_line.partner_id IS NOT DISTINCT FROM base_line.partner_id
-                    AND (
-                        (
-                            base_line.tax_repartition_line_id IS NULL
-                            AND tax_line.applied_tax_id = ANY(base_line.direct_tax_ids)
-                        )
-                        OR (
-                            base_line.tax_repartition_line_id IS NOT NULL
-                            AND tax_line.tax_line_id = ANY(base_line.direct_tax_ids)
-                            AND (
-                                tax_line.group_tax_id = base_line.group_tax_id
-                                OR (
-                                    NOT EXISTS (
-                                        SELECT 1
-                                        FROM account_tax_filiation_rel tax_filiation
-                                        WHERE tax_filiation.parent_tax IN (tax_line.group_tax_id, base_line.group_tax_id)
-                                        AND tax_filiation.child_tax = tax_line.tax_line_id
-                                    )
-                                )
-                            )
-                        )
-                    )
+                LEFT JOIN base_line_direct_taxes direct_tax
+                    ON direct_tax.base_line_id = base_line.id
+                    AND direct_tax.tax_id = tax_line.applied_tax_id
+                LEFT JOIN base_line_direct_taxes repartition_direct_tax
+                    ON repartition_direct_tax.base_line_id = base_line.id
+                    AND repartition_direct_tax.tax_id = tax_line.tax_line_id
                 JOIN account_tax tax ON tax_line.tax_line_id = tax.id
                 JOIN res_currency curr ON curr.id = tax_line.currency_id
                 JOIN res_currency comp_curr ON comp_curr.id = tax_line.company_currency_id
                 WHERE (
+                    (
+                        base_line.tax_repartition_line_id IS NULL
+                        AND direct_tax.tax_id IS NOT NULL
+                    )
+                    OR (
+                        base_line.tax_repartition_line_id IS NOT NULL
+                        AND repartition_direct_tax.tax_id IS NOT NULL
+                        AND (
+                            tax_line.group_tax_id = base_line.group_tax_id
+                            OR (
+                                NOT EXISTS (
+                                    SELECT 1
+                                    FROM account_tax_filiation_rel tax_filiation
+                                    WHERE tax_filiation.parent_tax = tax_line.group_tax_id
+                                    AND tax_filiation.child_tax = tax_line.tax_line_id
+                                )
+                                AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM account_tax_filiation_rel tax_filiation
+                                    WHERE tax_filiation.parent_tax = base_line.group_tax_id
+                                    AND tax_filiation.child_tax = tax_line.tax_line_id
+                                )
+                            )
+                        )
+                    )
+                ) AND (
                         move.move_type != 'entry'
                     OR (tax.tax_exigibility = 'on_payment' AND tax.cash_basis_transition_account_id IS NOT NULL)
                     OR sign(base_line.balance) = sign(tax_line.balance * tax.amount * tax_line.factor_percent)
@@ -160,7 +178,7 @@ class AccountMoveLine(models.Model):
                     NOT tax.include_base_amount
                     OR NOT tax.is_base_affected
                     OR base_line.applied_tax_ids[
-                        ARRAY_LENGTH(base_line.applied_tax_ids, 1) - COALESCE(ARRAY_LENGTH(tax_line.applied_tax_ids, 1), 0):ARRAY_LENGTH(base_line.applied_tax_ids, 1)
+                        ARRAY_LENGTH(base_line.applied_tax_ids, 1) - CARDINALITY(tax_line.applied_tax_ids):ARRAY_LENGTH(base_line.applied_tax_ids, 1)
                     ] = ARRAY[tax_line.tax_line_id] || tax_line.applied_tax_ids
                 ) AND (
                     tax_line.rep_account_id IS NOT NULL
