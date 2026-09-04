@@ -1,5 +1,5 @@
 import { animationFrame, before, click, expect, queryOne, test } from "@odoo/hoot";
-import { Component, proxy, useEffect, useProps, xml } from "@odoo/owl";
+import { Component, proxy, useOnChange, useProps, xml } from "@odoo/owl";
 import {
     assignTestEnv,
     defineModels,
@@ -1123,9 +1123,10 @@ test("react to prop 'domain' changes", async function () {
         props = useProps();
         static template = xml`<div/>`;
         setup() {
-            useEffect(() => {
-                expect(this.props.domain).toEqual([["type", "=", values[i++]]]);
-            });
+            useOnChange(
+                () => [this.props.domain],
+                (domain) => expect(domain).toEqual([["type", "=", values[i++]]])
+            );
         }
     }
     viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
