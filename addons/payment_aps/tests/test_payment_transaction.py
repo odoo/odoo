@@ -3,7 +3,6 @@
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_aps.controllers.main import APSController
 from odoo.addons.payment_aps.tests.common import APSCommon
 
@@ -23,7 +22,7 @@ class TestPaymentTransaction(APSCommon):
 
         tx = self._create_transaction(flow="redirect")
 
-        converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency)
+        converted_amount = self.provider._to_minor_currency_units(self.amount, self.currency)
         expected_values = {
             "api_url": self.provider._aps_get_api_url(),
             "url_params": {

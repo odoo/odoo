@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.tests.common import PaymentCommon
 
 
@@ -23,7 +22,7 @@ class WorldlineCommon(PaymentCommon):
         cls.provider = cls.worldline
         cls.currency = cls.currency_euro
         cls.notification_amount_and_currency = {
-            "amount": payment_utils.to_minor_currency_units(cls.amount, cls.currency),
+            "amount": cls.provider._to_minor_currency_units(cls.amount, cls.currency),
             "currencyCode": cls.currency.name,
         }
 
