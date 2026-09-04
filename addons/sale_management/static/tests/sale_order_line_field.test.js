@@ -142,8 +142,10 @@ class SaleOrder extends saleManagementModels.SaleOrder {
                             <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                         </control>
                         <field name="sequence" widget="handle"/>
-                        <field name="name"/>
-                        <field name="label"/>
+                        <column name="product_and_description">
+                            <field name="name"/>
+                            <field name="label"/>
+                        </column>
                         <column name="sol_qty">
                             <field name="product_uom_qty" invisible="display_type"/>
                             <field
