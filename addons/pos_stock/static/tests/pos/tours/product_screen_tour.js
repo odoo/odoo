@@ -22,9 +22,9 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoadingStock", {
 
             scan_barcode("0100202"),
             StockProductScreen.enterLotNumber("1", "lot"),
-            ProductScreen.selectedOrderlineHas("Test Product 2", "1", "170.0", "Red"),
+            ProductScreen.selectedOrderlineHas("Test Product 2", "1", "120.0", "Red"),
 
-            ProductScreen.totalAmountIs("350.0"),
+            ProductScreen.totalAmountIs("300.0"),
 
             refresh(),
             inLeftSide([
