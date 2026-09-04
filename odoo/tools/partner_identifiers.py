@@ -985,6 +985,7 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'display_optional': 'hide',
         'help': _lt('Global Location Number, used to identify parties and locations.'),
         'countries': False,
+        'synced': False,
     },
     'OTHER': {  # default non-structured identifier
         'sequence': 1000,
