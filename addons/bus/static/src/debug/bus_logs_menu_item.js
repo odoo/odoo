@@ -11,7 +11,6 @@ import { BusPlugin } from "@bus/services/bus_plugin";
 export class BusLogsMenuItem extends Component {
     static components = { DropdownItem };
     static template = "bus.BusLogsMenuItem";
-    static props = {};
 
     downloadButtonRef = signal.ref();
 
