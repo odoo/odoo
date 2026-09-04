@@ -152,7 +152,7 @@ class StockMove(models.Model):
                 continue
             company = move.company_id
             subcontracting_location = \
-                move.picking_id.partner_id.with_company(company).property_stock_subcontractor \
+                move._get_picking_partner().with_company(company).property_stock_subcontractor \
                 or company.subcontracting_location_id
             if not move.picking_id:
                 move._assign_picking()
@@ -180,7 +180,7 @@ class StockMove(models.Model):
             picking_type=self.picking_type_id,
             company_id=self.company_id.id,
             bom_type='subcontract',
-            subcontractor=self.env.context.get('move_picking_partner_id') or self.picking_id.partner_id,
+            subcontractor=self._get_picking_partner(),
         )
         return bom
 
