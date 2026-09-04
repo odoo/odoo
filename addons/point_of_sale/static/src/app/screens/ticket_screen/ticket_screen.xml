@@ -106,7 +106,7 @@
                                                 </button>
                                             </td>
                                             <td class="align-middle text-end delete-column" name="delete-column">
-                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
+                                                <button t-if="!this.shouldHideDeleteButton(order) and this.pos.accessRight.canDeleteOrder" t-on-click.stop="() => this.onDeleteOrder(order)" class="btn btn-link btn-lg text-danger">
                                                     <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                                 </button>
                                                 <div t-if="this.state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
@@ -140,7 +140,7 @@
                                     </div>
                                     <CenteredIcon icon="'info'" iconClass="'fs-2 oi-filled'" class="'info-column'" t-on-click="() => this._onInfoOrder(order)"/>
                                     <div class="mx-2" name="delete-column">
-                                        <div t-if="!this.shouldHideDeleteButton(order) and this.pos.cashier._role !== 'minimal'" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
+                                        <div t-if="!this.shouldHideDeleteButton(order)" class="d-flex align-items-center justify-content-center h-100" role="button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                             <div class="btn btn-danger btn-lg">
                                                 <i class="oi oi-filled" data-icon="delete" aria-hidden="true"/>
                                             </div>
@@ -199,7 +199,7 @@
                         </OrderDisplay>
                         <div class="pads" t-if="!this.isOrderCancelled(_selectedSyncedOrder)">
                             <t t-if="this.isOrderSynced">
-                                <div class="control-buttons d-flex gap-2 pb-2">
+                                <div t-if="this.pos.accessRight.canAccessButton" class="control-buttons d-flex gap-2 pb-2">
                                     <button class="edit-order-payment control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.pos.showOrderDetails(_selectedSyncedOrder)">
                                         <i class="oi me-1" data-icon="edit_square" /> Details
                                     </button>
@@ -214,7 +214,7 @@
                                         <i class="oi oi-filled me-1" data-icon="send" />Send
                                     </button>
                                 </div>
-                                <div t-if="this.showSubPads" class="subpads d-flex flex-column">
+                                <div t-if="this.pos.accessRight.canShowPads" class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="this.getNumpadButtons()"/>
                                         <ActionpadWidget
                                             order="this.getSelectedOrder()"

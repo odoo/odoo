@@ -1,4 +1,5 @@
-import { useCashierSelector } from "@pos_hr/app/utils/select_cashier_mixin";
+/* global Sha1 */
+
 import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
@@ -14,18 +15,21 @@ patch(LoginScreen.prototype, {
         });
 
         if (this.pos.config.module_pos_hr) {
-            this.cashierSelector = useCashierSelector({
-                onScan: (employee) => employee && this.selectOneCashier(employee),
-                exclusive: true,
-            });
-
             this.autofocusRef = signal.ref();
             useAutofocus({ ref: this.autofocusRef });
             useListener(window, "keypress", async (ev) => {
                 if (this.pos.login && ev.key === "Enter" && this.state.pin) {
-                    await this.selectCashier(this.state.pin, true);
+                    await this.pos.selectCashier(this.state.pin, true);
                 }
             });
+
+            this.pos.barcodeReader?.register(
+                {
+                    cashier: this.barcodeCashierAction.bind(this),
+                },
+                // exclusive
+                this.pos.router.currentScreen() === "LoginScreen"
+            );
         }
 
         onWillUnmount(() => {
@@ -33,8 +37,22 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         });
     },
-    async selectCashier(pin = false, login = false, list = false) {
-        return await this.cashierSelector(pin, login, list);
+    async barcodeCashierAction(code) {
+        if (!this.pos.config.module_pos_hr) {
+            return;
+        }
+        const employee = this.pos.models["hr.employee"].find(
+            (emp) => emp._barcode === Sha1.hash(code.code)
+        );
+        if (
+            employee &&
+            employee !== this.loggedCashier &&
+            (!employee._pin || (await this.pos.accessRight.checkPin(employee)))
+        ) {
+            this.pos.setCashier(employee);
+            this.cashierLogIn();
+        }
+        return employee;
     },
     openRegister() {
         if (this.pos.config.module_pos_hr) {
@@ -53,7 +71,7 @@ patch(LoginScreen.prototype, {
             this.state.pin = "";
             this.pos.login = false;
         } else {
-            const employee = await this.selectCashier();
+            const employee = await this.pos.selectCashier();
             if (employee && employee.user_id?.id === this.pos.user.id) {
                 super.clickBack();
                 return;

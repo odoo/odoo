@@ -41,7 +41,7 @@
             </div>
             <t t-set-slot="footer">
                 <button class="button btn btn-primary"
-                t-if="!(this.pos.cashier._role === 'minimal')"
+                    t-if="this.pos.accessRight.canOpenRegister"
                     t-on-click="this.confirm"
                     t-att-disabled="!this.pos.isValidFloat(this.state.openingCash)">
                     Open Register

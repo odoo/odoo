@@ -37,7 +37,7 @@ export class LoginScreen extends Component {
         const params =
             selectedScreen.page === "ProductScreen" ? { orderUuid: this.pos.getOrder().uuid } : {};
         this.pos.navigate(selectedScreen.page, params);
-        this.pos.hasLoggedIn = true;
+        this.pos.accessRight.hasLoggedIn.set(true);
     }
     selectOneCashier(cashier) {
         this.pos.setCashier(cashier);

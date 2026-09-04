@@ -28,13 +28,13 @@
                     t-if="_orderTotal == 0 or (_orderTotal gte 0 and _eWalletRewards lt 1)">
                 </t>
             </t>
-            <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))" t-call="point_of_sale.controlButton"
+            <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type)) and this.pos.accessRight.canApplyPromoCode" t-call="point_of_sale.controlButton"
                 icon="'percent'"
                 btnText.translate="Enter Code"
                 btnClasses="'btn-secondary '"
                 onClick="() => this.clickPromoCode()">
             </t>
-            <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
+            <t t-if="this.pos.models['loyalty.program'].length and this.pos.accessRight.canApplyRewards" t-call="point_of_sale.controlButton"
                 icon="'star'"
                 iconClasses="'oi-filled ' + (this.nbrRewards() ? 'o_reward-icon-active' : '')"
                 btnText.translate="Reward"

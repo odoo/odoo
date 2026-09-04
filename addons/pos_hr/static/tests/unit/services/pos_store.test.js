@@ -20,14 +20,14 @@ test("employeeIsAdmin", async () => {
 });
 test("_getConnectedCashier", async () => {
     const store = await setupPosEnv();
-    expect(store._getConnectedCashier().id).toBe(2);
+    expect(store.accessRight._getConnectedCashier().id).toBe(2);
 });
 test("shouldShowOpeningControl", async () => {
     const store = await setupPosEnv();
     store.models["pos.session"].getFirst().state = "opening_control";
     const emp = store.models["hr.employee"].get(2);
     store.setCashier(emp);
-    store.hasLoggedIn = true;
+    store.accessRight.hasLoggedIn.set(true);
     expect(store.shouldShowOpeningControl()).toBe(true);
 });
 test("hasProductCreationAccess", async () => {
@@ -37,6 +37,12 @@ test("hasProductCreationAccess", async () => {
     expect(await store.hasProductCreationAccess).toBe(true);
     const emp = store.models["hr.employee"].get(3);
     store.setCashier(emp);
+    expect(await store.hasProductCreationAccess).toBe(false);
+    const restrictive = store.models["hr.employee"].get(4);
+    store.setCashier(restrictive);
+    expect(await store.hasProductCreationAccess).toBe(false);
+    const supervised = store.models["hr.employee"].get(5);
+    store.setCashier(supervised);
     expect(await store.hasProductCreationAccess).toBe(false);
 });
 test("addLineToCurrentOrder", async () => {
@@ -56,8 +62,8 @@ test("handleUrlParams prevents unauthorized access when POS is locked with pos_h
     store.config.module_pos_hr = true;
     odoo.from_backend = false;
 
-    store.resetCashier();
-    expect(store.cashier).toBe(false);
+    store.accessRight.resetCashier();
+    expect(store.accessRight.cashier).toBe(false);
     expect(store.config.module_pos_hr).toBe(true);
     store.router.currentScreen.set("ProductScreen");
     store.router.currentScreenParams.set({});
@@ -95,6 +101,10 @@ test("keybordInputRights", async () => {
     const orderSummary = await mountWithCleanup(OrderSummary, { props: {} });
     orderSummary.numberBuffer._handleInput("-");
     expect(line.qty).toBe(3);
+    const cashier = store.models["hr.employee"].get(3);
+    store.setCashier(cashier);
+    orderSummary.numberBuffer._handleInput("-");
+    expect(line.qty).toBe(-3);
 });
 
 test("validateOrder", async () => {

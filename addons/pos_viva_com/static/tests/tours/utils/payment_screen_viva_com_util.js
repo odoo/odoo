@@ -7,8 +7,8 @@ export function simulateKioskNamelessCashier() {
             trigger: ".payment-screen",
             run: function () {
                 const pos = window.posmodel;
-                pos._vivaComTestOrigGetCashier = pos.getCashier.bind(pos);
-                pos.getCashier = () => ({
+                pos._vivaComTestOrigGetCashier = pos.accessRight.loggedCashier;
+                pos.accessRight.cashier = () => ({
                     name: "",
                     id: 1,
                     _role: "cashier",

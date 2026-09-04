@@ -2,14 +2,6 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//DropdownItem/i[@data-icon='chevron_left']/.." position="attributes">
-            <attribute name="t-if">this.showBackend</attribute>
-        </xpath>
-        <xpath expr="//DropdownItem/i[@data-icon='key']/.." position="attributes">
-            <attribute name="t-if">
-                !this.pos.config.module_pos_hr or this.pos.employeeIsAdmin or this.pos.getCashierUserId() === this.pos.session.user_id?.id
-            </attribute>
-        </xpath>
         <xpath expr="//CashierName" position="after">
             <button t-if="this.pos.config.module_pos_hr and !this.ui.isSmall" class="lock-screen btn btn-light btn-lg lh-lg" title="Lock" t-on-click="() => this.pos.showLoginScreen()">
                 <i class="oi oi-fw" data-icon="lock_open"/>

@@ -50,6 +50,7 @@ import { ComboSuggestion } from "../models/utils/combo_suggestion";
 import { PosRouterPlugin } from "@point_of_sale/app/plugins/pos_router_plugin";
 import { CustomerDisplayTerminalPlugin } from "@point_of_sale/app/plugins/customer_display_terminal_plugin";
 import { SIZES } from "@web/core/ui/ui_utils";
+import { PosAccessRightPlugin } from "@point_of_sale/app/plugins/access_right_plugin";
 import { SnoozeDialog } from "@point_of_sale/app/components/popups/product_info_popup/snooze_dialog/snooze_dialog";
 import { formatCurrency } from "@web/core/currency";
 import { parseFloat } from "@web/views/fields/parsers";
@@ -71,6 +72,7 @@ export class PosStore extends WithLazyGetterTrap {
     feedbackScreenAutoSkipDelay = 1500;
     router = usePlugin(PosRouterPlugin);
     customerDisplay = usePlugin(CustomerDisplayTerminalPlugin);
+    accessRight = usePlugin(PosAccessRightPlugin);
 
     static excludedLazyGetters = [
         "defaultPage",
@@ -125,6 +127,11 @@ export class PosStore extends WithLazyGetterTrap {
         this.pushOrderMutex = new Mutex();
         this.router.popStateCallback = this.handleUrlParams.bind(this);
         this.searchProductDBState = null;
+
+        // TODO: remove it with the full OWL3 migration
+        this.router.init({
+            config: this.config,
+        });
 
         // Object mapping the order's name (which contains the uuid) to it's server_id after
         // validation (order paid then sent to the backend).
@@ -397,10 +404,10 @@ export class PosStore extends WithLazyGetterTrap {
                 this.setCashier(this.user);
             }
         } else {
-            this.resetCashier();
+            this.accessRight.resetCashier();
         }
 
-        return !this.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
+        return !this.accessRight.cashier ? { page: "LoginScreen", params: {} } : this.defaultPage;
     }
 
     get idleTimeout() {
@@ -460,46 +467,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async showLoginScreen() {
-        this.resetCashier();
+        this.accessRight.resetCashier();
         this.navigate("LoginScreen");
         this.dialog.closeAll();
-    }
-
-    resetCashier() {
-        this.cashier = false;
-        this._resetConnectedCashier();
-    }
-
-    checkPreviousLoggedCashier() {
-        const savedCashier = this._getConnectedCashier();
-        if (savedCashier) {
-            this.setCashier(savedCashier);
-        }
-    }
-
-    setCashier(user) {
-        if (!user) {
-            return;
-        }
-
-        this.cashier = user;
-        this._storeConnectedCashier(user);
-    }
-
-    _getConnectedCashier() {
-        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
-        if (cashier_id && this.models["res.users"].get(cashier_id)) {
-            return this.models["res.users"].get(cashier_id);
-        }
-        return false;
-    }
-
-    _storeConnectedCashier(user) {
-        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
-    }
-
-    _resetConnectedCashier() {
-        sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
     }
 
     async initServerData() {
@@ -564,6 +534,22 @@ export class PosStore extends WithLazyGetterTrap {
         setTimeout(() => {
             window.location.reload();
         }, 3000);
+    }
+
+    checkPreviousLoggedCashier() {
+        const savedCashier = this.accessRight._getConnectedCashier();
+        if (savedCashier) {
+            this.setCashier(savedCashier);
+        }
+    }
+
+    setCashier(user) {
+        if (!user) {
+            return;
+        }
+
+        this.accessRight.cashier = user;
+        sessionStorage.setItem(`connected_cashier_${this.config.id}`, user.id);
     }
 
     get session() {
@@ -1517,20 +1503,6 @@ export class PosStore extends WithLazyGetterTrap {
         this.device.saveUnusedNumber([order]);
         return this.data.localDeleteCascade(order);
     }
-
-    /**
-     * Return the current cashier (in this case, the user)
-     * @returns {name: string, id: int, role: string}
-     */
-    getCashier() {
-        return this.user;
-    }
-    getCashierUserId() {
-        return this.user?.id;
-    }
-    cashierHasPriceControlRights() {
-        return !this.config.restrict_price_control || this.getCashier()._role == "manager";
-    }
     get showCashMoveButton() {
         return Boolean(this.config.cash_control && this.config._has_cash_move_perm);
     }
@@ -2230,7 +2202,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     async closePos() {
-        this._resetConnectedCashier();
+        this.accessRight.resetCashier();
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {

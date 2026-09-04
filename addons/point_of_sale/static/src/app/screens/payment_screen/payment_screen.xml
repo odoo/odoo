@@ -83,6 +83,7 @@
 
     <t t-name="point_of_sale.PaymentScreenValidate">
         <button class="validation-button next btn btn-primary btn-lg py-3 lh-lg"
+            t-att-disabled="!this.pos.accessRight.disableValidateOrder"
             t-on-click="() => this.onClickValidate()"
             t-attf-class="
                 {{ this.ui.isSmall ? 'btn-switchpane flex-fill' : 'button next w-50' }}

@@ -58,14 +58,11 @@ export class ProductInfoPopup extends Component {
         if (!this.pos.config.is_margins_costs_accessible_to_every_user) {
             return false;
         }
-        return ["manager", "cashier"].includes(this.pos.getCashier()._role);
+        return ["manager", "cashier"].includes(this.pos.accessRight.loggedCashier._role);
     }
     editProduct() {
         this.pos.editProduct(this.props.productTemplate);
         this.props.close();
-    }
-    get allowProductEdition() {
-        return true; // Overrided in pos_hr
     }
     toggleFavorite() {
         this.pos.data.write("product.template", [this.props.productTemplate.id], {

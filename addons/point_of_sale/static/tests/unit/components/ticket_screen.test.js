@@ -1,6 +1,6 @@
 import { test, expect, describe, waitFor, waitForNone } from "@odoo/hoot";
 import { mountWithCleanup, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { click } from "@odoo/hoot-dom";
+import { click, animationFrame } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { session } from "@web/session";
 import { barcodeService } from "@barcodes/barcode_service";
@@ -424,9 +424,12 @@ test("showSubPads", async () => {
     const order = await getFilledOrder(store);
     const ticketScreen = await mountWithCleanup(TicketScreen);
     ticketScreen.onClickOrder(order);
-    expect(ticketScreen.showSubPads).toBe(false);
+    await animationFrame();
+    expect(document.querySelectorAll(".subpads").length).toBe(0);
     order.state = "paid";
-    expect(ticketScreen.showSubPads).toBe(true);
+    ticketScreen.onClickOrder(order);
+    await animationFrame();
+    expect(store.accessRight.canShowPads).toBe(true);
 });
 
 test("showInvoiceButton", async () => {

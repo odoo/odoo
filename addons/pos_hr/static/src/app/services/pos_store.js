@@ -1,6 +1,11 @@
+/* global Sha1 */
+
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/services/pos_store";
+import { _t } from "@web/core/l10n/translation";
+import { makeAwaitable, ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { browser } from "@web/core/browser/browser";
+import { CashierSelectionPopup } from "@pos_hr/app/components/popups/cashier_selection_popup/cashier_selection_popup";
 
 patch(PosStore.prototype, {
     async setup() {
@@ -8,7 +13,7 @@ patch(PosStore.prototype, {
         await super.setup(...arguments);
         if (this.config.module_pos_hr) {
             this.login = Boolean(odoo.from_backend) && !this.config.module_pos_hr;
-            if (!this.hasLoggedIn) {
+            if (!this.accessRight.hasLoggedIn()) {
                 this.navigate("LoginScreen");
             }
         }
@@ -24,33 +29,21 @@ patch(PosStore.prototype, {
         });
     },
     get employeeIsAdmin() {
-        const cashier = this.getCashier();
+        const cashier = this.accessRight.loggedCashier;
         return cashier._role === "manager";
-    },
-    checkPreviousLoggedCashier() {
-        if (this.config.module_pos_hr) {
-            const savedCashier = this._getConnectedCashier();
-            if (savedCashier) {
-                this.setCashier(savedCashier);
-            } else {
-                this.resetCashier();
-            }
-        } else {
-            super.checkPreviousLoggedCashier(...arguments);
-        }
     },
     async afterProcessServerData() {
         await super.afterProcessServerData(...arguments);
         if (this.config.module_pos_hr) {
-            const saved_cashier = this._getConnectedCashier();
-            this.hasLoggedIn = saved_cashier ? true : false;
+            const saved_cashier = this.accessRight._getConnectedCashier();
+            this.accessRight.hasLoggedIn.set(saved_cashier ? true : false);
         }
     },
     createNewOrder() {
         const order = super.createNewOrder(...arguments);
 
         if (this.config.module_pos_hr) {
-            order.employee_id = this.getCashier();
+            order.employee_id = this.accessRight.loggedCashier;
         }
 
         return order;
@@ -72,20 +65,105 @@ patch(PosStore.prototype, {
                 // We set the cashier on that order to the currently set employee.
                 o.employee_id = employee;
             }
-            if (!this.cashierHasPriceControlRights() && this.numpadMode === "price") {
+            if (this.accessRight.disablePriceButton && this.numpadMode === "price") {
                 this.numpadMode = "quantity";
             }
         }
+    },
+    checkPreviousLoggedCashier() {
+        if (this.config.module_pos_hr) {
+            const savedCashier = this.accessRight._getConnectedCashier();
+            if (savedCashier) {
+                this.setCashier(savedCashier);
+            } else {
+                this.accessRight.resetCashier();
+            }
+        } else {
+            super.checkPreviousLoggedCashier(...arguments);
+        }
+    },
+    async selectCashier(pin = false, login = false, list = false) {
+        if (!this.config.module_pos_hr) {
+            return;
+        }
+
+        const wrongPinNotification = () => {
+            this.notification.add(_t("PIN not found"), {
+                type: "warning",
+                title: _t(`Wrong PIN`),
+            });
+        };
+
+        let employee = false;
+        const allEmployees = this.models["hr.employee"].filter(
+            (employee) => employee.id !== this.accessRight.loggedCashier?.id
+        );
+        const pinMatchEmployees = allEmployees.filter(
+            (employee) => !pin || Sha1.hash(pin) === employee._pin
+        );
+
+        if (!pinMatchEmployees.length && !pin) {
+            await ask(this.dialog, {
+                title: _t("No Cashiers"),
+                body: _t("There is no cashier available."),
+            });
+            return;
+        } else if (pin && !pinMatchEmployees.length) {
+            wrongPinNotification();
+            return;
+        }
+
+        if (pinMatchEmployees.length > 1 || list) {
+            employee = await makeAwaitable(this.dialog, CashierSelectionPopup, {
+                currentCashier: this.accessRight.loggedCashier || undefined,
+                employees: this.accessRight.getCashierSelectionList(allEmployees),
+            });
+
+            if (!employee) {
+                return;
+            }
+
+            if (pin && Sha1.hash(pin) !== employee._pin) {
+                wrongPinNotification();
+                return;
+            }
+        } else if (pinMatchEmployees.length === 1) {
+            employee = pinMatchEmployees[0];
+        }
+
+        if (!pin && employee && employee._pin) {
+            const result = await this.accessRight.checkPin(employee);
+
+            if (!result) {
+                return false;
+            }
+        }
+
+        if (login && employee) {
+            this.accessRight.hasLoggedIn.set(true);
+            this.setCashier(employee);
+        }
+
+        const currentScreen = this.router.currentScreen();
+        if (currentScreen === "LoginScreen" && login && employee) {
+            const selectedScreen = this.defaultPage;
+            const props = {
+                ...selectedScreen?.params,
+            };
+            this.router.navigate(selectedScreen.page, props);
+        }
+
+        return employee;
     },
     addLineToCurrentOrder(vals, opt = {}, configure = true) {
         vals.employee_id = false;
 
         if (this.config.module_pos_hr) {
-            const cashier = this.getCashier();
+            const cashier = this.accessRight.loggedCashier;
 
             if (cashier && cashier.model.name === "hr.employee") {
                 const order = this.getOrder();
-                order.employee_id = this.getCashier();
+                order.employee_id = this.accessRight.loggedCashier;
             }
         }
 
@@ -97,23 +175,11 @@ patch(PosStore.prototype, {
      */
     getSyncAllOrdersContext(orders, options = {}) {
         const context = super.getSyncAllOrdersContext(orders, options);
-        const cashier = this.getCashier();
+        const cashier = this.accessRight.loggedCashier;
         if (cashier?.id) {
             context.current_cashier_id = cashier.id;
         }
         return context;
-    },
-    getCashier() {
-        if (this.config.module_pos_hr) {
-            return this.cashier;
-        }
-        return super.getCashier(...arguments);
-    },
-    getCashierUserId() {
-        if (this.config.module_pos_hr) {
-            return this.cashier.user_id ? this.cashier.user_id : null;
-        }
-        return super.getCashierUserId(...arguments);
     },
     async logEmployeeMessage(action, message) {
         if (!this.config.module_pos_hr) {
@@ -122,28 +188,17 @@ patch(PosStore.prototype, {
         }
         await this.data.call("pos.session", "log_partner_message", [
             this.session.id,
-            this.cashier.work_contact_id?.id,
+            this.accessRight.cashier.work_contact_id?.id,
             action,
             message,
         ]);
     },
-    _getConnectedCashier() {
-        if (!this.config.module_pos_hr) {
-            return super._getConnectedCashier(...arguments);
-        }
-        const cashier_id = Number(sessionStorage.getItem(`connected_cashier_${this.config.id}`));
-        if (cashier_id && this.models["hr.employee"].get(cashier_id)) {
-            return this.models["hr.employee"].get(cashier_id);
-        }
-        return false;
-    },
-
     /**
      * @override
      */
     shouldShowOpeningControl() {
         if (this.config.module_pos_hr) {
-            return super.shouldShowOpeningControl(...arguments) && this.hasLoggedIn;
+            return super.shouldShowOpeningControl(...arguments) && this.accessRight.hasLoggedIn();
         }
         return super.shouldShowOpeningControl(...arguments);
     },
@@ -156,7 +211,7 @@ patch(PosStore.prototype, {
         return super.canEditPayment(order) && (!this.config.module_pos_hr || this.employeeIsAdmin);
     },
     async handleUrlParams() {
-        if (this.config.module_pos_hr && !this.cashier) {
+        if (this.config.module_pos_hr && !this.accessRight.cashier) {
             if (this.router.currentScreen() !== "LoginScreen") {
                 this.router.navigate("LoginScreen", {});
             }

@@ -298,6 +298,9 @@ export class TicketScreen extends Component {
         this.setSelectedOrder(order);
     }
     onClickOrderline(orderline) {
+        if (!this.pos.accessRight.canClickOrderLine) {
+            return;
+        }
         const order = this.getSelectedOrder();
         if (this.isOrderSynced) {
             // A refund line (one that already refunds another line) must not
@@ -532,10 +535,6 @@ export class TicketScreen extends Component {
             this.isOrderDoneOrPaid(order) &&
             (order.getScreenData().name === "" || this.state.filter === "SYNCED")
         );
-    }
-    // Used to override inside `pos_hr`
-    get showSubPads() {
-        return this.isOrderSynced;
     }
 
     // Used to override inside `l10n_cl_edi_pos`

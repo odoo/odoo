@@ -58,7 +58,8 @@
                         <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
                 </t>
-                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                <t t-call="point_of_sale.controlButton"
+                    t-if="this.pos.accessRight.canAccessPricelist"
                     name="o_pricelist_button"
                     icon="'view_list'"
                     btnText.translate="Pricelist"
@@ -72,7 +73,7 @@
                         <small t-out="this.currentOrder.fiscal_position_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
                 </t>
-                <t t-if="this.pos.config.fiscal_position_ids.length and this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                <t t-if="this.pos.config.fiscal_position_ids.length and this.pos.accessRight.canAccessFiscalPosition" t-call="point_of_sale.controlButton"
                     icon="'book'"
                     btnText.translate="Tax"
                     btnClasses="'o_fiscal_position_button btn-secondary '"
@@ -94,7 +95,8 @@
                     onClick="() => this.breakSelectedCombo()">
                 </t>
                 <!-- Cancel Order Button -->
-                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                <t t-call="point_of_sale.controlButton"
+                    t-if="this.pos.accessRight.canCancelOrder"
                     icon="'delete'"
                     iconClasses="'oi-filled'"
                     btnText.translate="Cancel Order"

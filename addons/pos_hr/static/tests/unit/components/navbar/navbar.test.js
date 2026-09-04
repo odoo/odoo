@@ -16,8 +16,14 @@ test("showCreateProductButtonWithAdmin", async () => {
 
 test("showCreateProductButtonWithNonAdmin", async () => {
     const store = await setupPosEnv();
-    const emp = store.models["hr.employee"].get(3);
-    store.setCashier(emp);
+    const cashier = store.models["hr.employee"].get(3);
+    store.setCashier(cashier);
     const comp = await mountWithCleanup(Navbar, {});
+    expect(comp.showCreateProductButton).toBe(false);
+    const restrictive = store.models["hr.employee"].get(4);
+    store.setCashier(restrictive);
+    expect(comp.showCreateProductButton).toBe(false);
+    const supervised = store.models["hr.employee"].get(4);
+    store.setCashier(supervised);
     expect(comp.showCreateProductButton).toBe(false);
 });

@@ -3,7 +3,8 @@ import { services } from "@web/core/services";
 import { browser } from "@web/core/browser/browser";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
-import { signal, Plugin, computed } from "@odoo/owl";
+import { signal, Plugin, computed, usePlugin } from "@odoo/owl";
+import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 
 const parseParams = (matches, paramSpecs) =>
     Object.fromEntries(
@@ -24,6 +25,7 @@ export class PosRouterPlugin extends Plugin {
     registeredScreens = signal.Map(new Map());
     currentScreen = signal(null);
     currentScreenParams = signal({});
+    data = usePlugin(PosDataPlugin);
     historyPage = signal(null);
     page = computed(() => {
         const posPage = registry.category("pos_pages").get(this.currentScreen());
@@ -43,6 +45,10 @@ export class PosRouterPlugin extends Plugin {
 
         this.initRegisteredRoutes();
         this.matchURL();
+    }
+
+    init({ config }) {
+        this.config = config;
     }
 
     initRegisteredRoutes() {
