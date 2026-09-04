@@ -1628,13 +1628,10 @@ class ProjectTask(models.Model):
             })
         return res
 
-    def _creation_subtype(self):
-        return self.env.ref('project.mt_task_new')
-
     def _creation_message(self):
         self.ensure_one()
         if self.project_id:
-            return _('This new task has been created in the "%(project_name)s" project.',
+            return self.env._('Task Created in the "%(project_name)s" project.',
                      project_name=self.project_id.display_name)
         return _('This new task is not part of any project.')
 
@@ -1796,7 +1793,7 @@ class ProjectTask(models.Model):
         # use the sanitized body of the email from the message thread to populate the task's description
         if (
            not self.description
-           and message.subtype_id == self._creation_subtype()
+           and message.subtype_id == self.env.ref('project.mt_task_new')
            and self.partner_id == message.author_id
            and msg_vals['message_type'] == 'email'
            and msg_vals.get('body')
