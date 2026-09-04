@@ -260,7 +260,8 @@ class PosController(PortalAccount):
         # If the user is connected, then we can update if needed its fields with the additional localized fields if any, then proceed.
         else:
             partner = pos_order.partner_id or (not request.env.user._is_public() and request.env.user.partner_id)
-            partner.write(partner_values)  # In this case, partner_values only contains the additional fields that can be updated.
+            if not request.env.user._is_public() and self._user_can_edit_partner(partner, request.env.user.partner_id):
+                partner.write(partner_values)  # In this case, partner_values only contains the additional fields that can be updated.
 
         pos_order.partner_id = partner
         # Get the required fields for the invoice and add them to the context as default values.
