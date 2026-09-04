@@ -17,7 +17,7 @@ respectively. UBL Bis 3 is only available for companies which country is present
     'depends': ['account'],
     'data': [
         'data/uom_data.xml',
-        'data/cii_22_templates.xml',
+        'data/pdfa_3_facturx_data.xml',
         'data/ir_config_parameter_data.xml',
         'views/account_tax_views.xml',
         'views/account_move_views.xml',
