@@ -939,6 +939,18 @@ class ProductTemplate(models.Model):
         price_context = product_or_template._get_product_price_context(combination)
         product_or_template = product_or_template.with_context(**price_context)
 
+        quantity = add_qty or 1.0
+        if (
+            self.env.context.get("website_sale_product_page")
+            and product
+            and not combination.filtered("is_custom")
+        ):
+            # Only consider the lines the added quantity would be merged with
+            mergeable_lines = request.cart._get_common_product_lines(product.id).filtered(
+                lambda sol: sol.product_uom_id == uom and not sol.product_custom_attribute_value_ids
+            )
+            quantity += sum(mergeable_lines.mapped("product_uom_qty"))
+
         combination_info = {
             "combination": combination,
             "product_id": product.id,
@@ -947,7 +959,7 @@ class ProductTemplate(models.Model):
             "is_combination_possible": self._is_combination_possible(combination=combination),
             **self.with_context(**price_context)._get_additional_combination_info(
                 product_or_template=product_or_template,
-                quantity=add_qty or 1.0,
+                quantity=quantity,
                 uom=uom,
                 website=website,
                 pricelist=pricelist if pricelist is not None else request.pricelist,
