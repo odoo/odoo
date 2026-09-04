@@ -6,13 +6,19 @@ import { formatFloat } from "@web/core/utils/numbers";
 import { parseFloat } from "@web/views/fields/parsers";
 
 patch(ControlButtons.prototype, {
+    get lastDiscountTypeUsed() {
+        return localStorage.getItem("pos_discount_last_type_used") || "percent";
+    },
+    set lastDiscountTypeUsed(type) {
+        localStorage.setItem("pos_discount_last_type_used", type);
+    },
     async clickDiscount() {
         const discountPc = this.pos.config.discount_pc || 0;
         const startingValue = formatFloat(discountPc, { trailingZeros: false });
         this.dialog.add(NumberPopup, {
             title: _t("Discount"),
             startingValue,
-            startingType: "percent",
+            startingType: this.lastDiscountTypeUsed,
             types: [
                 { name: "fixed", symbol: this.pos.currency.symbol },
                 { name: "percent", symbol: "%" },
@@ -23,6 +29,7 @@ patch(ControlButtons.prototype, {
                     value = Math.max(0, Math.min(100, value));
                 }
                 this.applyDiscount(value, type);
+                this.lastDiscountTypeUsed = type;
             },
             formatDisplayedValue: (value, type) => {
                 if (type === "fixed") {
