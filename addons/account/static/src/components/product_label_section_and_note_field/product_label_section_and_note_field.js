@@ -21,7 +21,7 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
         };
     }
 
-    get sectionAndNoteIsReadonly() {
+    get labelIsReadonly() {
         return (
             this.props.readonly
             && this.isProductClickable
