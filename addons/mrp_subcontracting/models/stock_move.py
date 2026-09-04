@@ -151,8 +151,9 @@ class StockMove(models.Model):
             if not bom:
                 continue
             company = move.company_id
+            subcontractor = move.env.context.get('move_picking_partner_id') or move.picking_id.partner_id
             subcontracting_location = \
-                move.picking_id.partner_id.with_company(company).property_stock_subcontractor \
+                subcontractor.with_company(company).property_stock_subcontractor \
                 or company.subcontracting_location_id
             if not move.picking_id:
                 move._assign_picking()

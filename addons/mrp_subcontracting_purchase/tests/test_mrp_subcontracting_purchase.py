@@ -258,6 +258,35 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertEqual(self.finished2.qty_available, 7.0)
         self.assertEqual(po.order_line.qty_received, 10.0)
 
+    def test_purchase_receipt_uses_partner_subcontracting_location(self):
+        """
+        When the subcontractor partner has its own subcontracting location,
+        the receipt move for a subcontracted product bought through a PO should
+        take that location as its source.
+        """
+        partner_subcontract_location = self.env['stock.location'].create({
+            'name': 'Specific partner location',
+            'location_id': self.env.company.subcontracting_location_id.id,
+            'usage': 'internal',
+            'company_id': self.env.company.id,
+        })
+        self.subcontractor_partner1.property_stock_subcontractor = partner_subcontract_location.id
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_uom_qty': 10,
+                'uom_id': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        self.assertEqual(receipt.move_ids.location_id, partner_subcontract_location)
+
     def test_subcontracting_purchase_bill(self):
         (self.comp1 | self.comp2 | self.finished).categ_id = self.category_fifo_auto
         self.finished.purchase_method = 'purchase'
