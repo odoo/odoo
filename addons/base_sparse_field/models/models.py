@@ -100,3 +100,5 @@ class Sparse_FieldsTest(models.TransientModel):
     char = fields.Char(sparse='data')
     selection = fields.Selection([('one', 'One'), ('two', 'Two')], sparse='data')
     partner = fields.Many2one('res.partner', sparse='data')
+
+    char_default = fields.Char(sparse='data', default='one')
