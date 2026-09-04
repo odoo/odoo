@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
     out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
 
     def _is_sold_out(self):
+<<<<<<< cd992ceebbaf343c03e1941d39cfe423d35ba6c6
         """Return whether the product is sold out (no available quantity).
 
         If a product inventory is not tracked, or if it's allowed to be sold regardless
@@ -31,6 +32,13 @@ class ProductTemplate(models.Model):
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
         return not self.product_variant_id or self.product_variant_id._is_sold_out()
+||||||| 2fe4af4b3e03405e2aea243fd9aa6c8f5904be32
+        return self.is_storable and self.product_variant_id._is_sold_out()
+=======
+        return self.is_storable and all(
+            variant._is_sold_out() for variant in self.product_variant_ids
+        )
+>>>>>>> 95c6205b5e0ccafe1dc8aa4f520c72ff332bccb1
 
     def _website_show_quick_add(self):
         return (
