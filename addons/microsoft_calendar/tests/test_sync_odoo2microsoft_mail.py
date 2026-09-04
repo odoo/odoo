@@ -58,7 +58,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
         for create_user, organizer, mail_notified_partners, attendee in [
             (user_root, self.users[0], partner + self.users[0].partner_id, partner),  # emulates online appointment with user 0
             (user_root, None, partner, partner),  # emulates online resource appointment
-            (self.users[0], None, False, partner),
+            (self.users[0], None, partner, partner),
             (self.users[0], self.users[0], False, partner),
             (self.users[0], self.users[1], False, partner),
             # create user has paused sync and organizer can sync -> will not sync because of bug
