@@ -526,8 +526,12 @@ class HrExpense(models.Model):
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
         for expense in self:
-            expense.department_id = expense.employee_id.department_id
-            expense.manager_id = expense._get_default_responsible_for_approval()
+            if expense.state != 'draft':
+                expense.department_id = expense.department_id
+                expense.manager_id = expense.manager_id
+            else:
+                expense.department_id = expense.employee_id.department_id
+                expense.manager_id = expense._get_default_responsible_for_approval()
 
     @api.depends('quantity', 'price_unit', 'tax_ids')
     def _compute_total_amount_currency(self):
