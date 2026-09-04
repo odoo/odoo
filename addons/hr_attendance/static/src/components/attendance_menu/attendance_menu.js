@@ -38,6 +38,11 @@ export class ActivityMenu extends Component {
         });
     }
 
+    async searchReadEmployee() {
+        this.employee = await rpc("/hr_attendance/attendance_user_data");
+        this._searchReadEmployeeFill();
+    }
+
     _searchReadEmployeeFill() {
         if (!this.employee?.id) {
             this.state.isDisplayed = false;
