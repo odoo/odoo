@@ -214,6 +214,7 @@ export class TourInteractive {
             consumeEvents: this.getConsumeEventType(this.anchorEl, this.currentAction.event),
             onConsume: () => {
                 this.currentActionIndex++;
+                tourState.setCurrentIndex(this.currentActionIndex);
                 this.play();
             },
             onError: () => {

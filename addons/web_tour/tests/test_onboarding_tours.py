@@ -2,6 +2,8 @@
 
 import contextlib
 
+from requests import Session, PreparedRequest, Response
+
 from odoo.tests import HttpCase, tagged
 
 
@@ -13,8 +15,19 @@ class TestOnboardingTours(HttpCase):
         'sale_tour', 'purchase_tour', 'mass_mailing_tour',
         'frontdesk_tour', 'hr_expense_extract_tour', 'appointment_tour',
         'sale_subscription_tour', 'project_tour', 'helpdesk_tour',
+        'rental_tour', 'web_studio_new_app_tour', 'question_tour',
         'crm_tour', 'account_tour', 'point_of_sale_tour',
     ]
+
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+        # account_tour opens the accounting dashboard, which fetches bank institutions from odoofin
+        if 'proxy/v2/get_dashboard_institutions' in r.url:
+            r = Response()
+            r.status_code = 200
+            r.json = list
+            return r
+        return super()._request_handler(s, r, **kw)
 
     def setUp(self):
         super().setUp()
