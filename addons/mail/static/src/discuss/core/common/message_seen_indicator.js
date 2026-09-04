@@ -1,14 +1,16 @@
-import { Component, signal, t, useListener, useProps } from "@odoo/owl";
+import { useDialogCloseOnClickAway } from "@mail/utils/common/hooks";
+
+import { Component, signal, t, useProps } from "@odoo/owl";
+
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useBackButton, useService } from "@web/core/utils/hooks";
-import { browser } from "@web/core/browser/browser";
 
 class MessageSeenIndicatorDialog extends Component {
     static components = { Dialog };
     static template = "mail.MessageSeenIndicatorDialog";
 
-    contentRef = signal.ref();
+    modalRef = signal.ref();
 
     setup() {
         super.setup();
@@ -17,16 +19,7 @@ class MessageSeenIndicatorDialog extends Component {
             close: t.function([]).optional(),
             message: t.instanceOf(this.store["mail.message"]),
         });
-        useListener(
-            browser,
-            "click",
-            (ev) => {
-                if (!this.contentRef()?.contains(ev.target)) {
-                    this.props.close();
-                }
-            },
-            true
-        );
+        useDialogCloseOnClickAway(this.modalRef, () => this.props.close());
         useBackButton(() => this.props.close());
     }
 }

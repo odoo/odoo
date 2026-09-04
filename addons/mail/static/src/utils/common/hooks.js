@@ -1,3 +1,6 @@
+import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
+import { monitorAudio } from "@mail/utils/common/media_monitoring";
+
 import {
     computed,
     onMounted,
@@ -15,11 +18,10 @@ import {
 } from "@odoo/owl";
 
 import { Reactive } from "@web/core/utils/reactive";
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useEnv, useLayoutEffect } from "@web/owl2/utils";
 
-import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
-import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
+import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -954,4 +956,39 @@ export function propComputed(name, shape) {
 export function propSignal(name, shape, { optional = false } = {}) {
     const type = t.signal(shape);
     return useProps.static(name, optional ? type.optional() : type);
+}
+
+/**
+ * Hook to add a click away feature on a custom Dialog.
+ *
+ * @param {import("@odoo/owl").Signal<HTMLElement>} modalRef the signal passed to Dialog.props.modalRef.
+ * @param {() => void} closeFn a function that triggers the close of the dialog.
+ */
+export function useDialogCloseOnClickAway(modalRef, closeFn) {
+    if (!closeFn) {
+        throw new Error("Should provide an 'closeFn' to useDialogCloseOnClickAway()");
+    }
+    const env = useEnv();
+    useListener(
+        window,
+        "mousedown",
+        (ev) => {
+            if (!env.dialogData.isActive) {
+                return;
+            }
+            const modalContent = modalRef()?.querySelector(".modal-content");
+            if (!modalContent) {
+                return;
+            }
+            const target = ev.composedPath()[0];
+            if (
+                target &&
+                !modalContent.contains(target) &&
+                (!env[OVERLAY_SYMBOL]?.contains(target) || modalRef() === target)
+            ) {
+                closeFn();
+            }
+        },
+        true
+    );
 }

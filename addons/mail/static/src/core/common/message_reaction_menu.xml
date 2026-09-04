@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageReactionMenu">
-        <Dialog size="'md'" header="false" footer="false" contentClass="this.contentClass">
-            <Tabs ref="this.tabsRef" initialTabId="this.props.initialReaction?.content"  direction="this.store.useMobileView ? 'h' : 'v'">
+        <Dialog size="'md'" title.translate="Message Reactions" footer="false" contentClass="this.contentClass" modalRef="this.modalRef">
+            <Tabs initialTabId="this.props.initialReaction?.content"  direction="this.store.useMobileView ? 'h' : 'v'">
                 <t t-set-slot="headers">
                     <TabHeader t-foreach="this.props.message.sortedReactions" t-as="reaction" t-key="reaction.content" id="reaction.content" title="this.getEmojiShortcode(reaction)">
                         <span class="mx-1 fs-2" t-out="reaction.content"/>
