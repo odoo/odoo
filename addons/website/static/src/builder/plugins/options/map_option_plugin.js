@@ -11,12 +11,6 @@ export class MapOptionPlugin extends Plugin {
         builder_actions: {
             MapUpdateSrcAction,
         },
-        // TODO remove when the snippet will have a "Height" option.
-        should_keep_overlay_options_predicates: (el) => {
-            if (el.matches(".s_map")) {
-                return true;
-            }
-        },
     };
 
     setup() {
@@ -32,6 +26,19 @@ export class MapOptionPlugin extends Plugin {
             mapSnippetEl.classList.remove("o_not_editable");
             mapSnippetEl.dataset.vxml = "001";
             mapSnippetEl.querySelector(".map_container").classList.remove("o_not_editable");
+            if (!mapSnippetEl.style.getPropertyValue("--GoogleMap-height")) {
+                // Old map snippets used padding classes for the height. This
+                // condition converts them into the CSS variable.
+                const paddingClasses = [...mapSnippetEl.classList].filter((cls) =>
+                    /^p(b|t)\d+$/.test(cls)
+                );
+                let mapHeight = 0;
+                for (const cls of paddingClasses) {
+                    mapHeight += parseInt(/\d+$/.exec(cls)[0]);
+                    mapSnippetEl.classList.remove(cls);
+                }
+                mapSnippetEl.style.setProperty("--GoogleMap-height", `${mapHeight}px`);
+            }
         });
     }
 }
