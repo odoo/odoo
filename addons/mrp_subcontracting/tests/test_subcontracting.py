@@ -7,6 +7,7 @@ from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
 
 from odoo.tests import tagged
@@ -1288,17 +1289,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'name': 'lot_comp2',
             'product_id': self.comp2.id,
         })
-        serials_finished = []
-        serials_comp1 = []
-        for i in range(todo_nb):
-            serials_finished.append(self.env['stock.lot'].create({
-                'name': 'serial_fin_%s' % i,
-                'product_id': self.finished.id,
-            }))
-            serials_comp1.append(self.env['stock.lot'].create({
-                'name': 'serials_comp1_%s' % i,
-                'product_id': self.comp1.id,
-            }))
+        serials_finished = list(self.env['stock.lot'].create([
+            {'name': 'serial_fin_%s' % i, 'product_id': self.finished.id}
+            for i in range(todo_nb)
+        ]))
+        serials_comp1 = list(self.env['stock.lot'].create([
+            {'name': 'serials_comp1_%s' % i, 'product_id': self.comp1.id}
+            for i in range(todo_nb)
+        ]))
 
         # Final product
         action = picking_receipt.move_ids.action_show_details()
@@ -1521,6 +1519,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        self.env = self.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         self.subcontractor = self.env['res.partner'].create({
             'name': 'Subcontractor',
         })

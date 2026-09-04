@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import Form, TransactionCase
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 
 
 class TestMrpSubcontractingCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.env.ref('base.group_user').write({'implied_ids': [(4, cls.env.ref('stock.group_production_lot').id)]})
         # 1: Create a subcontracting partner
         main_partner = cls.env['res.partner'].create({'name': 'main_partner'})

@@ -31,11 +31,11 @@ class TestTourManualConsumption(HttpCase):
             ],
         })
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_finish
-        mo_form.bom_id = bom
-        mo_form.product_qty = 10
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product_finish.id,
+            'bom_id': bom.id,
+            'product_qty': 10,
+        })
         mo.action_confirm()
 
         self.assertEqual(mo.state, 'confirmed')
@@ -95,8 +95,8 @@ class TestManualConsumption(TestMrpCommon):
         mo.move_raw_ids.picked = True
         self.assertEqual(mo.state, 'progress')
         action = mo.button_mark_done()
-        consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
-        action = consumption_warning.save().action_confirm()
+        consumption_warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
+        action = consumption_warning.action_confirm()
         self.assertEqual(len(mo.move_raw_ids), 1)
         self.assertEqual(mo.move_raw_ids.quantity, 2)
 
@@ -135,11 +135,11 @@ class TestManualConsumption(TestMrpCommon):
             move_manual = mo.move_raw_ids.filtered(lambda m: m.product_id == product_manual_consumption)
             return move_auto, move_manual
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_finish
-        mo_form.bom_id = bom
-        mo_form.product_qty = 10
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': product_finish.id,
+            'bom_id': bom.id,
+            'product_qty': 10,
+        })
         mo.action_confirm()
         mo.action_assign()
 
@@ -169,11 +169,9 @@ class TestManualConsumption(TestMrpCommon):
 
         # Bypass consumption issues wizard and create backorders
         action = mo.button_mark_done()
-        warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context']))
-        consumption = warning.save()
+        consumption = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         action = consumption.action_set_qty()
-        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder_form.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         backorder = mo.production_group_id.production_ids - mo
 
         # Check that backorder moves are not picked (not yet consumed)
@@ -188,10 +186,10 @@ class TestManualConsumption(TestMrpCommon):
         bom = self.bom_1
         components = bom.bom_line_ids.product_id
         self.env['stock.quant']._update_available_quantity(components[0], self.stock_location, 10)
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.product_qty = 4
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 4,
+        })
         mo.action_confirm()
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 2.0)
         with Form(mo) as fmo:
@@ -210,10 +208,10 @@ class TestManualConsumption(TestMrpCommon):
         bom = self.bom_1
         components = bom.bom_line_ids.product_id
         self.env['stock.quant']._update_available_quantity(components[0], self.stock_location, 10)
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.product_qty = 4
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 4,
+        })
         mo.action_confirm()
         self.assertEqual(components[0].stock_quant_ids.reserved_quantity, 2.0)
         with Form(mo) as fmo:
@@ -276,10 +274,10 @@ class TestManualConsumption(TestMrpCommon):
             )
 
         # Create and confirm a Manufacturing Order.
-        mo_form = Form(self.env["mrp.production"])
-        mo_form.bom_id = bom
-        mo_form.product_qty = 1
-        mo = mo_form.save()
+        mo = self.env["mrp.production"].create({
+            'bom_id': bom.id,
+            'product_qty': 1,
+        })
         mo.action_confirm()
 
         # Initially: not consumed.

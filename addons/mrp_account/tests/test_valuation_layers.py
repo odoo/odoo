@@ -46,8 +46,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 20)
         self.assertEqual(self.dining_table.total_value, PRICE + 10)
@@ -86,9 +85,9 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         # ---------------------------------------------------
         #       Unbuild
         # ---------------------------------------------------
-        unbuild_form = Form(self.env['mrp.unbuild'])
-        unbuild_form.mo_id = mo
-        unbuild_form.save().action_unbuild()
+        self.env['mrp.unbuild'].create({
+            'mo_id': mo.id,
+        }).action_unbuild()
         self.assertEqual(self.glass.total_value, 30)
 
     def test_fifo_produce_deliver_return_unbuild(self):
@@ -102,9 +101,9 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         out_move = self._make_out_move(self.dining_table, 1.0, create_picking=True)
         self._make_return(out_move, 1.0)
 
-        unbuild_form = Form(self.env['mrp.unbuild'])
-        unbuild_form.mo_id = mo
-        unbuild_form.save().action_unbuild()
+        self.env['mrp.unbuild'].create({
+            'mo_id': mo.id,
+        }).action_unbuild()
 
         moves = self.env['stock.move'].search([('product_id', '=', self.dining_table.id)])
         self.assertRecordValues(moves, [
@@ -123,8 +122,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 20)
         self.assertEqual(self.dining_table.total_value, PRICE + 10)
@@ -159,8 +157,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 20)
         self.assertEqual(self.dining_table.total_value, 8.8)
@@ -192,8 +189,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 100)
         self.assertEqual(self.dining_table.total_value, PRICE + 100)
@@ -237,8 +233,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 100)
         self.assertEqual(self.dining_table.total_value, 1000)
@@ -270,8 +265,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 15)
         self.assertEqual(self.dining_table.total_value, PRICE + 15)

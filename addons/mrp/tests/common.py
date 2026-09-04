@@ -155,14 +155,13 @@ class TestMrpCommon(TestStockCommon):
                 'resource_calendar_id': cls.env.company.resource_calendar_id.id,
             }
         ])
-        for (workcenter, default_capacity) in [(cls.workcenter_1, 2), (cls.workcenter_2, 1), (cls.workcenter_3, 2)]:
-            cls.env['mrp.workcenter.capacity'].create({
-                'workcenter_id': workcenter.id,
-                'uom_id': cls.uom_unit.id,
-                'capacity': default_capacity,
-                'time_start': workcenter.time_start,
-                'time_stop': workcenter.time_stop,
-            })
+        cls.env['mrp.workcenter.capacity'].create([{
+            'workcenter_id': wc.id,
+            'uom_id': cls.uom_unit.id,
+            'capacity': cap,
+            'time_start': wc.time_start,
+            'time_stop': wc.time_stop,
+        } for wc, cap in [(cls.workcenter_1, 2), (cls.workcenter_2, 1), (cls.workcenter_3, 2)]])
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,

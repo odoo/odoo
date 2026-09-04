@@ -68,11 +68,11 @@ class TestWarehouseMrp(common.TestMrpCommon):
         })
 
     def new_mo_laptop(self):
-        form = Form(self.env['mrp.production'])
-        form.product_id = self.laptop
-        form.product_qty = 1
-        form.bom_id = self.bom_laptop
-        p = form.save()
+        p = self.env['mrp.production'].create({
+            'product_id': self.laptop.id,
+            'product_qty': 1,
+            'bom_id': self.bom_laptop.id,
+        })
         p.action_confirm()
         p.action_assign()
         return p
@@ -234,12 +234,12 @@ class TestWarehouseMrp(common.TestMrpCommon):
         }).action_apply_inventory()
 
         #Create Manufacturing order.
-        production_form = Form(self.env['mrp.production'])
-        production_form.product_id = self.product_6
-        production_form.bom_id = self.bom_3
-        production_form.product_qty = 12
-        production_form.uom_id = self.product_6.uom_id
-        production_3 = production_form.save()
+        production_3 = self.env['mrp.production'].create({
+            'product_id': self.product_6.id,
+            'bom_id': self.bom_3.id,
+            'product_qty': 12,
+            'uom_id': self.product_6.uom_id.id,
+        })
         production_3.action_confirm()
         production_3.action_assign()
 
@@ -309,10 +309,10 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.product_1.tracking = 'none'
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = self.bom_4
-        mo_form.product_qty = 100
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+            'product_qty': 100,
+        })
         mo.action_confirm()
 
         package = self.env['stock.package'].create({})

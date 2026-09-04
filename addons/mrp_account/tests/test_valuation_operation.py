@@ -2,7 +2,6 @@
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
 from odoo.addons.mrp_account.tests.common import TestBomPriceOperationCommon
-from odoo.tests import Form
 
 PRICE = 718.75 + 2 * 321.25 - 100  # component price + operations - glass cost
 
@@ -31,8 +30,7 @@ class TestMrpValuationOperationStandard(TestBomPriceOperationCommon):
         mo = self._create_mo(self.bom_1, 2)
         self._produce(mo, 1)
         action = mo.button_mark_done()
-        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder.save().action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
         mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.glass.total_value, 20)
         self.assertEqual(self.dining_table.total_value, self.company.currency_id.round((PRICE + 10) * (1 - byproduct_cost_share)))

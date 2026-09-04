@@ -4,7 +4,6 @@ from freezegun import freeze_time
 
 from . import common
 from odoo import Command
-from odoo.tests import Form
 
 
 class TestWorkcenterOverview(common.TestMrpCommon):
@@ -43,18 +42,18 @@ class TestWorkcenterOverview(common.TestMrpCommon):
         self.assertEqual(date_stop.strftime('%Y-%m-%d'), '2020-04-07')
         self.assertEqual(list(week_range.items())[2][1], '18 - 24 Mar')
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_2
-        mo_form.bom_id = fake_bom
-        mo_form.product_qty = 20
-        mo_form.save().action_confirm()
+        self.env['mrp.production'].create({
+            'product_id': self.product_2.id,
+            'bom_id': fake_bom.id,
+            'product_qty': 20,
+        }).action_confirm()
 
-        mo_form_2 = Form(self.env['mrp.production'])
-        mo_form_2.product_id = self.product_2
-        mo_form_2.bom_id = fake_bom
-        mo_form_2.product_qty = 60
-        mo_form_2.date_start = datetime.today() + timedelta(weeks=1)
-        mo_form_2.save().action_confirm()
+        self.env['mrp.production'].create({
+            'product_id': self.product_2.id,
+            'bom_id': fake_bom.id,
+            'product_qty': 60,
+            'date_start': datetime.today() + timedelta(weeks=1),
+        }).action_confirm()
 
         wc_load_data = self.workcenter_2._get_workcenter_load_per_week(week_range, date_start, date_stop)
         self.assertListEqual(list(wc_load_data[self.workcenter_2].values()), [20.0, 60.0])

@@ -36,11 +36,11 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
         }])
         quants.action_apply_inventory()
 
-        production_table_form = Form(self.env['mrp.production'])
-        production_table_form.product_id = self.dining_table
-        production_table_form.bom_id = self.bom_1
-        production_table_form.product_qty = 1
-        production_table = production_table_form.save()
+        production_table = self.env['mrp.production'].create({
+            'product_id': self.dining_table.id,
+            'bom_id': self.bom_1.id,
+            'product_qty': 1,
+        })
 
         production_table.extra_cost = 20
         production_table.action_confirm()
@@ -95,12 +95,12 @@ class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
                 {'remaining_qty': 1.0, 'value': 918.75},
             ],
         )
-        unbuild_form = Form(self.env['mrp.unbuild'])
-        unbuild_form.product_id = self.dining_table
-        unbuild_form.bom_id = self.bom_1
-        unbuild_form.product_qty = 1
-        unbuild_form.mo_id = mo_2
-        unbuild_order = unbuild_form.save()
+        unbuild_order = self.env['mrp.unbuild'].create({
+            'product_id': self.dining_table.id,
+            'bom_id': self.bom_1.id,
+            'product_qty': 1,
+            'mo_id': mo_2.id,
+        })
         unbuild_order.action_unbuild()
         self.assertRecordValues(
             self.env['stock.move'].search([('product_id', '=', self.dining_table.id)]),
@@ -372,8 +372,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         mo.move_raw_ids.workorder_id = mo.workorder_ids[0]
 
         # post a WIP for an invalid MO, i.e. draft/cancelled/done results in a "Manual Entry"
-        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
-        wizard.save().confirm()
+        self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}).create({}).confirm()
         wip_manual_entry1 = self.env['account.move'].search([('ref', 'ilike', 'WIP - Manual Entry')])
         self.assertEqual(len(wip_manual_entry1), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
         self.assertEqual(wip_manual_entry1[0].wip_production_count, 0, "Non-WIP MOs shouldn't be linked to manual entry")
@@ -389,8 +388,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
         # post a WIP for a valid MO - no WO time completed or components consumed => nothing to debit/credit
         mo.action_confirm()
-        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
-        wizard.save().confirm()
+        self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}).create({}).confirm()
         wip_empty_entries = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name)])
         self.assertEqual(len(wip_empty_entries), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
         self.assertEqual(wip_empty_entries[0].wip_production_count, 1, "WIP MOs should be linked to entries even if no 'done' work")
@@ -418,8 +416,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
             'loss_id': self.env.ref('mrp.block_reason7').id,
         })
         workorder.button_finish()
-        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
-        wizard.save().confirm()
+        self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}).create({}).confirm()
         wip_entries1 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', wip_empty_entries.ids)])
         self.assertEqual(len(wip_entries1), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
         self.assertEqual(wip_entries1[0].wip_production_count, 1, "WIP MOs should be linked to entry")
@@ -440,8 +437,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         mos = (mo | mo_2)
 
         # Draft MOs should be ignored when selecting multiple MOs
-        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}))
-        wizard.save().confirm()
+        self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}).create({}).confirm()
         wip_entries2 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
         self.assertEqual(len(wip_entries2), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal, for 1 MO")
         self.assertTrue(mo_2.name not in wip_entries2[0].ref, "Draft MO should be completely disregarded by wizard")
@@ -460,8 +456,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         # MOs' WIP amounts should be aggregated
         mo_2.action_confirm()
         mo_2.qty_producing = mo_2.product_qty
-        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}))
-        wizard.save().confirm()
+        self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}).create({}).confirm()
         wip_entries3 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
         self.assertEqual(len(wip_entries3), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal, for both MOs")
         self.assertTrue(mo_2.name in wip_entries3[0].ref, "Both MOs should have been considered")
@@ -481,8 +476,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         # Done MO should be ignored
         mo_2.move_raw_ids.picked = True
         mo_2.button_mark_done()
-        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}))
-        wizard.save().confirm()
+        self.env['mrp.account.wip.accounting'].with_context({'active_ids': mos.ids}).create({}).confirm()
         wip_entries4 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
         self.assertEqual(len(wip_entries4), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal, for 1 MO")
         self.assertTrue(mo_2.name not in wip_entries4[0].ref, "Done MO should be completely disregarded by wizard")
@@ -500,9 +494,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
         previous_wip_ids += wip_entries4.ids
 
         # WO time completed + components consumed, but WIP date is for before they were done => nothing to debit/credit
-        wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
-        wizard.date = now - timedelta(days=2)
-        wizard.save().confirm()
+        self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}).create({'date': now - timedelta(days=2)}).confirm()
         wip_entries5 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', previous_wip_ids)])
         self.assertEqual(len(wip_entries5), 2, "Should be 2 journal entries: 1 for the WIP accounting + 1 for its reversal")
         self.assertEqual(wip_entries5[0].wip_production_count, 1, "WIP MOs should be linked to entry")
@@ -563,7 +555,7 @@ class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
 
         production.move_raw_ids.picked = True
         action = production.button_mark_done()
-        consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        consumption_warning = self.env['mrp.consumption.warning'].with_context(**action['context']).create({})
         consumption_warning.action_confirm()
 
         mo_aml = self.env['account.move.line'].search([('name', 'like', production.name)])

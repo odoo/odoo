@@ -54,16 +54,16 @@ class TestMrpStockReports(TestReportsCommon):
         })
 
         # Creates two MO: one for each BOM.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_chococake
-        mo_form.bom_id = bom_chococake
-        mo_form.product_qty = 10
-        mo_1 = mo_form.save()
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_double_chococake
-        mo_form.bom_id = bom_double_chococake
-        mo_form.product_qty = 2
-        mo_2 = mo_form.save()
+        mo_1 = self.env['mrp.production'].create({
+            'product_id': product_chococake.id,
+            'bom_id': bom_chococake.id,
+            'product_qty': 10,
+        })
+        mo_2 = self.env['mrp.production'].create({
+            'product_id': product_double_chococake.id,
+            'bom_id': bom_double_chococake.id,
+            'product_qty': 2,
+        })
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_chococake.product_tmpl_id.ids)
         draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
@@ -140,11 +140,11 @@ class TestMrpStockReports(TestReportsCommon):
             ],
         })
         # Creates a MO and validates the pick components.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = product_apple_pie
-        mo_form.bom_id = bom
-        mo_form.product_qty = 4
-        mo_1 = mo_form.save()
+        mo_1 = self.env['mrp.production'].create({
+            'product_id': product_apple_pie.id,
+            'bom_id': bom.id,
+            'product_qty': 4,
+        })
         mo_1.picking_type_id.create_backorder = 'ask'
         mo_1.action_confirm()
         pick = mo_1.move_raw_ids.move_orig_ids.picking_id
@@ -159,9 +159,7 @@ class TestMrpStockReports(TestReportsCommon):
         mo_form.qty_producing = 3
         mo_1 = mo_form.save()
         action = mo_1.button_mark_done()
-        backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
-        backorder = backorder_form.save()
-        backorder.action_backorder()
+        self.env['mrp.production.backorder'].with_context(**action['context']).create({}).action_backorder()
 
         mo_2 = (mo_1.production_group_id.production_ids - mo_1)
         # Checks the forecast report.
@@ -435,10 +433,10 @@ class TestMrpStockReports(TestReportsCommon):
             ],
         })
         # Creates a MO without any component in stock
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.product_qty = 2
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': 2,
+        })
         mo.action_confirm()
         self.assertEqual(mo.components_availability, 'Not Available')
         self.assertEqual(mo.move_raw_ids.forecast_availability, -20.0)

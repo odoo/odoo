@@ -102,11 +102,11 @@ class TestConsumptionWarning(common.TransactionCase):
         })
 
     def _make_mo(self, bom, qty, uom):
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.bom_id = bom
-        mo_form.product_qty = qty
-        mo_form.uom_id = uom
-        return mo_form.save()
+        return self.env['mrp.production'].create({
+            'bom_id': bom.id,
+            'product_qty': qty,
+            'uom_id': uom.id,
+        })
 
     def test_consumption_warning_with_uom_and_kits(self):
         """Check that the consumption warning wizard does not trigger on false positives."""

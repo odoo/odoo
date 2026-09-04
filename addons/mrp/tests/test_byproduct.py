@@ -63,11 +63,11 @@ class TestMrpByProduct(common.TransactionCase):
         # Create production order for product A
         # -------------------------------------
 
-        mnf_product_a_form = Form(self.env['mrp.production'])
-        mnf_product_a_form.product_id = self.product_a
-        mnf_product_a_form.bom_id = self.bom_byproduct
-        mnf_product_a_form.product_qty = 2.0
-        mnf_product_a = mnf_product_a_form.save()
+        mnf_product_a = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'bom_id': self.bom_byproduct.id,
+            'product_qty': 2.0,
+        })
         mnf_product_a.action_confirm()
 
         # I confirm the production order.
@@ -109,11 +109,11 @@ class TestMrpByProduct(common.TransactionCase):
             'uom_id': self.uom_unit_id,
             'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'uom_id': self.uom_unit_id, 'product_qty': 2})]
             })
-        mnf_product_a_form = Form(self.env['mrp.production'])
-        mnf_product_a_form.product_id = self.product_a
-        mnf_product_a_form.bom_id = bom_product_a
-        mnf_product_a_form.product_qty = 2.0
-        mnf_product_a = mnf_product_a_form.save()
+        mnf_product_a = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'bom_id': bom_product_a.id,
+            'product_qty': 2.0,
+        })
         mnf_product_a.action_confirm()
         self.assertEqual(mnf_product_a.state, "confirmed")
         mnf_product_a.move_raw_ids._action_assign()
@@ -147,11 +147,11 @@ class TestMrpByProduct(common.TransactionCase):
         # Create production order for product A
         # -------------------------------------
 
-        mnf_product_a_form = Form(self.env['mrp.production'])
-        mnf_product_a_form.product_id = self.product_a
-        mnf_product_a_form.bom_id = bom_product_a
-        mnf_product_a_form.product_qty = 1.0
-        mnf_product_a = mnf_product_a_form.save()
+        mnf_product_a = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'bom_id': bom_product_a.id,
+            'product_qty': 1.0,
+        })
         mnf_product_a_form = Form(mnf_product_a)
         mnf_product_a_form.bom_id = bom_product_a_2
         mnf_product_a = mnf_product_a_form.save()
@@ -341,11 +341,11 @@ class TestMrpByProduct(common.TransactionCase):
 
         self.env['stock.quant']._update_available_quantity(self.product_b, shelf1_location, 1)
 
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_a
-        mo_form.bom_id = self.bom_byproduct
-        mo_form.product_qty = 2.0
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'bom_id': self.bom_byproduct.id,
+            'product_qty': 2.0,
+        })
         mo.action_confirm()
         mo_form = Form(mo)
         mo_form.qty_producing = 2.00
@@ -377,10 +377,10 @@ class TestMrpByProduct(common.TransactionCase):
         will throw a ValidationError
         """
         # Create new MO
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_a
-        mo_form.product_qty = 2.0
-        mo = mo_form.save()
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_a.id,
+            'product_qty': 2.0,
+        })
 
         # Create product
         self.product_d = self.env['product.product'].create({
