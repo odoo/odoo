@@ -4,9 +4,12 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
+import pytz
+
 from odoo import fields
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+from odoo.addons.website_event_track.controllers.event_track import EventTrackController
 from odoo.tests.common import users
 
 class TestTrackData(TestEventOnlineCommon):
@@ -94,6 +97,29 @@ class TestTrackData(TestEventOnlineCommon):
         self.assertEqual(
             new_track.contact_phone, customer.phone,
             'Track customer should take over existing contact phone value')
+
+    def test_split_track_by_days_long_duration(self):
+        """ A track running past the next midnight is clamped to it. """
+        local_tz = pytz.timezone('Europe/Brussels')
+        track = self.env['event.track'].create({
+            'name': 'Marathon Track',
+            'event_id': self.event_0.id,
+            'date': datetime(2020, 7, 6, 20, 0, 0),
+            'duration': 50.0,
+        })
+
+        time_slots = EventTrackController()._split_track_by_days(track, local_tz)
+
+        self.assertEqual(
+            len(time_slots), 1,
+            'A track longer than the remaining day should not roll over to another day')
+        start_datetime = next(iter(time_slots))
+        self.assertEqual(
+            start_datetime.hour, 22,
+            'Track should start at 22:00 local time (20:00 UTC in summer)')
+        self.assertEqual(
+            time_slots[start_datetime], 8,
+            '22:00 to midnight is 8 quarter-hour slots')
 
 class TestTrackSuggestions(TestEventOnlineCommon):
 
