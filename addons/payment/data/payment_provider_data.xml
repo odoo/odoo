@@ -97,6 +97,12 @@
         <field name="module_id" ref="base.module_payment_custom"/>
     </record>
 
+    <record id="payment_provider_payfast" model="payment.provider">
+        <field name="name">Payfast</field>
+        <field name="image_128" type="bytes" file="payment_payfast/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_payfast"/>
+    </record>
+
     <record id="payment_provider_paymob" model="payment.provider">
         <field name="name">Paymob</field>
         <field name="image_128" type="bytes" file="payment_paymob/static/description/icon.png"/>

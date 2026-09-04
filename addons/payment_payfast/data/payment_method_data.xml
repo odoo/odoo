@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://developers.payfast.co.za/docs#step_1_form_fields (payment_method options) -->
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_eft" model="payment.method">
+        <field name="name">EFT</field>
+        <field name="code">eft</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+        <field name="support_manual_capture">partial</field>
+        <field name="support_refund">partial</field>
+        <field name="support_tokenization">True</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_mobicred" model="payment.method">
+        <field name="name">Mobicred</field>
+        <field name="code">mobicred</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/mobicred.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_scode" model="payment.method">
+        <field name="name">SCode</field>
+        <field name="code">scode</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/scode.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_snapscan" model="payment.method">
+        <field name="name">SnapScan</field>
+        <field name="code">snapscan</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/snapscan.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_zapper" model="payment.method">
+        <field name="name">Zapper</field>
+        <field name="code">zapper</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/zapper.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_moretyme" model="payment.method">
+        <field name="name">MoreTyme</field>
+        <field name="code">moretyme</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/moretyme.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_mukuru" model="payment.method">
+        <field name="name">Mukuru</field>
+        <field name="code">mukuru</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/mukuru.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_apple_pay" model="payment.method">
+        <field name="name">Apple Pay</field>
+        <field name="code">apple_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/apple_pay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_samsung_pay" model="payment.method">
+        <field name="name">Samsung Pay</field>
+        <field name="code">samsung_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/samsung_pay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_capitec_pay" model="payment.method">
+        <field name="name">Capitec Pay</field>
+        <field name="code">capitec_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/capitecpay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_absa_pay" model="payment.method">
+        <field name="name">Absa Pay</field>
+        <field name="code">absa_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/absapay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_google_pay" model="payment.method">
+        <field name="name">Google Pay</field>
+        <field name="code">google_pay</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/google_pay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_nedbank_eft" model="payment.method">
+        <field name="name">Nedbank Direct EFT</field>
+        <field name="code">nedbank_eft</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/nedbank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <record id="payment_method_payflex" model="payment.method">
+        <field name="name">Payflex</field>
+        <field name="code">payflex</field>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/payflex.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.za')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.ZAR')])]"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS (for the generic "Card" method) === -->
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_payfast.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field name="primary_payment_method_id" eval="ref('payment_payfast.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_payfast"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+</odoo>
