@@ -1,16 +1,5 @@
 <odoo>
     <data>
-        <record id="action_sign_invoices" model="ir.actions.server">
-            <field name="name">Sign invoices</field>
-            <field name="state">code</field>
-            <field name="model_id" ref="account.model_account_move"/>
-            <field name="binding_model_id" ref="account.model_account_move"/>
-            <field name="code">
-                action = records.action_post_sign_invoices()
-            </field>
-        </record>
-
-
         <record id="view_move_form_inherit" model="ir.ui.view">
             <field name="name">view_move_form_inherit</field>
             <field name="model">account.move</field>
@@ -19,34 +8,121 @@
             <field name="arch" type="xml">
                 <xpath expr="//header/button[@name='action_post']" position="after">
                     <button name="action_post_sign_invoices" type="object"
-                            class="oe_highlight"
-                            groups="account.group_account_manager"
-                            string="Sign Invoice"
-                            invisible="country_code != 'EG' or l10n_eg_is_signed or state != 'posted'"/>
+                        class="oe_highlight"
+                        groups="account.group_account_manager"
+                        string="Sign (ETA)"
+                        invisible="country_code != 'EG' or state != 'posted' or l10n_eg_is_signed or not display_send_button"/>
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button name="action_l10n_eg_cancel_invoice" type="object"
+                        groups="account.group_account_manager"
+                        string="Cancel (ETA)"
+                        invisible="country_code != 'EG' or l10n_eg_edi_submission_state not in ['test', 'accepted']"/>
+                </xpath>
+                <group name="sale_info_group" position="inside">
+                    <field name="l10n_eg_cancel_reason" readonly="1" invisible="l10n_eg_edi_submission_state != 'cancel'"/>
+                </group>
+                <xpath expr="//group[@name='sale_info_group']/field[@name='ref']" position="attributes">
+                    <attribute name="readonly" separator="or" add="(country_code == 'EG' and state != 'draft')"/>
                 </xpath>
                 <notebook position="inside">
-                    <page string="ETA E-Invoice" name="page_eta_e_invoice" invisible="country_code != 'EG'">
-                        <group>
-                            <group>
-                                <field name="l10n_eg_uuid" readonly="1"/>
-                                <field name="l10n_eg_submission_number" readonly="1"/>
-                            </group>
-                            <group>
-                                <field name="l10n_eg_eta_json_doc_file" widget="binary" readonly="1" invisible="1"/>
-                                <field name="l10n_eg_is_signed" invisible="1"/>
-                            </group>
-                            <group>
-                                <button name="action_get_eta_invoice_pdf" type="object"
-                                        groups="account.group_account_invoice"
-                                        class="oe_link"
-                                        icon="content_copy"
-                                        string="Get ETA Invoice PDF"
-                                        invisible="edi_state != 'sent'"/>
-                            </group>
-                        </group>
+                    <page string="ETA" name="page_eta_e_invoice" invisible="not l10n_eg_eta_submission_ids">
+                        <field name="l10n_eg_eta_submission_ids">
+                            <list name="l10n_eg_edi_eta_submissions" string="ETA Submissions" default_order="create_date desc" create="0" delete="0" edit="0" no_open="1">
+                                <field name="create_date" string="Submission Date"/>
+                                <field name="message" column_invisible="1"/>
+                                <field name="state" widget="account_document_state"/>
+                                <field name="eta_json_filename" optional="hide"/>
+                                <field name="eta_document_uuid" optional="hide"/>
+                                <field name="eta_submission_id" optional="hide"/>
+                                <button name="action_retry" string="Retry" type="object" invisible="state != 'rejected' or not parent.l10n_eg_is_signed"/>
+                                <button name="action_resign" string="Re-Sign" type="object" invisible="state != 'rejected' or parent.l10n_eg_is_signed"/>
+                            </list>
+                        </field>
                     </page>
                 </notebook>
             </field>
+        </record>
+
+        <record id="l10n_eg_edi_view_out_invoice_tree_inherit" model="ir.ui.view">
+            <field name="name">l10n_eg_edi.view.out.invoice.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_send_and_print']" position="after">
+                    <button name="action_l10n_eg_cancel_invoice" type="object" string="Cancel (ETA)" groups="account.group_account_basic"/>
+                </xpath>
+                <field name="status_in_payment" position="after">
+                    <field
+                        name="l10n_eg_edi_submission_state"
+                        widget="badge"
+                        optional="hide"
+                        decoration-info="l10n_eg_edi_submission_state == 'to_send'"
+                        decoration-success="l10n_eg_edi_submission_state in ['sent', 'test']"
+                        decoration-warning="l10n_eg_edi_submission_state == 'rejected'"
+                        decoration-danger="l10n_eg_edi_submission_state == 'cancelled'"
+                    />
+                    <field name="l10n_eg_edi_message" optional="hide" width="200px"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="l10n_eg_edi_view_out_credit_note_tree_inherit" model="ir.ui.view">
+            <field name="name">l10n_eg_edi.view.out.credit.note.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_credit_note_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_send_and_print']" position="after">
+                    <button name="action_l10n_eg_cancel_invoice" type="object" string="Cancel (ETA)" groups="account.group_account_basic"/>
+                </xpath>
+                <field name="status_in_payment" position="after">
+                    <field
+                        name="l10n_eg_edi_submission_state"
+                        widget="badge"
+                        optional="hide"
+                        decoration-info="l10n_eg_edi_submission_state == 'to_send'"
+                        decoration-success="l10n_eg_edi_submission_state in ['sent', 'test']"
+                        decoration-warning="l10n_eg_edi_submission_state == 'rejected'"
+                        decoration-danger="l10n_eg_edi_submission_state == 'cancelled'"
+                    />
+                    <field name="l10n_eg_edi_message" optional="hide" width="200px"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="l10n_eg_edi_view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">l10n_eg_edi.view.account.invoice.filter</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='group_by_company']" position="after">
+                    <filter name="eg_submission_state" string="ETA State" context="{'group_by': 'l10n_eg_edi_submission_state'}" />
+                </xpath>
+                <filter name="late" position="after">
+                    <separator />
+                    <filter name="l10n_eg_edi_test" string="ETA Test" domain="[('l10n_eg_edi_submission_state', '=', 'test')]"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="action_l10n_eg_get_invoice_pdf" model="ir.actions.server">
+            <field name="name">Fetch PDF (ETA)</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_get_eta_invoice_pdf()</field>
+        </record>
+
+        <record id="action_l10n_eg_sign_invoices" model="ir.actions.server">
+            <field name="name">Sign Invoice (ETA)</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_post_sign_invoices()</field>
         </record>
     </data>
 </odoo>

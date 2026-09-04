@@ -1,16 +1,17 @@
 from datetime import datetime, UTC
 
 from odoo.fields import Command
-from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
+from odoo.tools import BinaryBytes
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 
 
-class TestEGEdiCommon(AccountEdiTestCommon):
+class TestEGEdiCommon(TestAccountMoveSendCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    @AccountEdiTestCommon.setup_edi_format('l10n_eg_edi_eta.edi_eg_eta')
-    @AccountEdiTestCommon.setup_country('eg')
+    @AccountTestInvoicingCommon.setup_country('eg')
     def setUpClass(cls):
         super().setUpClass()
 
@@ -25,6 +26,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'l10n_eg_client_identifier': 'ahuh1pojnbakKK',
             'l10n_eg_client_secret': '1ashiqwhejmasn197',
             'vat': '123-456-789',
+            'l10n_eg_edi_api_mode': 'production',
         })
 
         # ==== Business ====
@@ -36,6 +38,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_eg_c').id,
             'l10n_eg_building_no': '12',
             'street': '12th dec. street',
+            'zip': '33445',
         })
         cls.partner_b.write({
             'vat': 'ESF35999705',
@@ -44,6 +47,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_us_27').id,
             'l10n_eg_building_no': '12',
             'street': '5th avenue street',
+            'zip': '54321',
         })
         cls.partner_c = cls.env['res.partner'].create({
             'name': 'عميل 1',
@@ -53,6 +57,7 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_eg_c').id,
             'l10n_eg_building_no': '12',
             'street': '12th dec. street',
+            'zip': '98765',
         })
 
         cls.product_a.write({'barcode': '1KGS1TEST', })
@@ -68,11 +73,18 @@ class TestEGEdiCommon(AccountEdiTestCommon):
             'state_id': cls.env.ref('base.state_eg_c').id,
             'l10n_eg_building_no': '10',
             'street': '12th dec. street',
+            'zip': '12345',
         })
         cls.company_data['default_journal_sale'].write({
             'l10n_eg_branch_id': cls.company_branch.id,
             'l10n_eg_branch_identifier': '0',
             'l10n_eg_activity_type_id': cls.env.ref('l10n_eg_edi_eta.l10n_eg_activity_type_8121').id,
+        })
+        cls.env['l10n_eg_edi.thumb.drive'].create({
+            'company_id': cls.company.id,
+            'pin': '12345678',
+            'access_token': 'abcd-1234-defg-5678',
+            'certificate': BinaryBytes(b'randomcertificatebytes')
         })
 
     @classmethod

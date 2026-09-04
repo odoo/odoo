@@ -7,25 +7,35 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//app[@name='account']/block" position="after">
-                <block title="ETA E-Invoicing Settings" name="egyption_eta_edi" invisible="country_code != 'EG'">
+                <block title="Egypt E-Invoicing (ETA)" name="egyption_eta_edi" invisible="country_code != 'EG'">
                     <field name="country_code" invisible="1"/>
-                    <setting string="ETA API Integration" help="Enter your API credentials to enable ETA E-Invoicing." company_dependent="1">
-                        <div class="content-group">
-                            <div class="row mt16">
-                                <label for="l10n_eg_production_env" class="col-lg-6 o_light_label"/>
-                                <field name="l10n_eg_production_env" help="Check to start sending invoices to your e-invoicing production environment"/>
+                    <setting class="col-lg-12" string="API Modes" company_dependent="1" documentation="/applications/finance/fiscal_localizations/egypt.html">
+                        <div class="text-muted">
+                            <div>1. There are three modes available:</div>
+                            <ul class="mb8">
+                                <li><span class="o_form_label">Demo</span> - Internal Odoo validations only (No credentials or ETA connection required)</li>
+                                <li><span class="o_form_label">Pre-production (Testing)</span> - Pre-production credentials needed to connect to ETA testing environment</li>
+                                <li><span class="o_form_label">Production (Live)</span> - Production credentials needed to connect to the live ETA environment</li>
+                            </ul>
+                            <div>
+                                2. After selecting the mode, please go to <span class="o_form_label">Accounting &gt; Configuration &gt; Journals &gt; Type=Sales </span>
+                                set your ETA Branch, ETA Branch ID, and ETA Activity Code.
                             </div>
+                        </div>
+                        <div class="content-group col-lg-6">
+                            <div class="row mt16">
+                                <label for="l10n_eg_edi_api_mode" string="API Mode" class="col-lg-4 o_light_label"/>
+                                <field name="l10n_eg_edi_api_mode" help="Select the ETA Invoice sending mode"/>
+                            </div>
+                        </div>
+                        <div class="content-group col-lg-6 mt8" invisible="l10n_eg_edi_api_mode == 'demo'">
                             <div class="row">
                                 <label for="l10n_eg_client_identifier" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_eg_client_identifier" help="The client ID retrieved from the ETA e-invoicing portal"/>
+                                <field name="l10n_eg_client_identifier" string="Client ID" help="The client ID retrieved from the ETA e-invoicing portal"/>
                             </div>
                             <div class="row">
                                 <label for="l10n_eg_client_secret" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_eg_client_secret" password="True" help="The secret key provided by the ETA. You can input client secret 1 or 2"/>
-                            </div>
-                            <div class="row">
-                                <label for="l10n_eg_invoicing_threshold" class="col-lg-4 o_light_label"/>
-                                <field name="l10n_eg_invoicing_threshold" help="Set the threshold amount for invoices that won't require the VAT ID of individuals when invoicing"/>
+                                <field name="l10n_eg_client_secret" string="Secret Key" password="True" help="The secret key provided by the ETA. You can input client secret 1 or 2"/>
                             </div>
                         </div>
                     </setting>
