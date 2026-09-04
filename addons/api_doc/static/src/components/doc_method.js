@@ -1,4 +1,4 @@
-import { Component, markup, proxy } from "@odoo/owl";
+import { Component, markup, proxy, t, useProps } from "@odoo/owl";
 import { DocRequest } from "@api_doc/components/doc_request";
 import { DocTable, TABLE_TYPES } from "@api_doc/components/doc_table";
 import { getParameterDefaultValue } from "@api_doc/utils/doc_model_utils";
@@ -10,10 +10,10 @@ export class DocMethod extends Component {
         DocRequest,
         DocTable,
     };
-    static props = {
-        method: Object,
-        class: String,
-    };
+    props = useProps({
+        method: t.object(),
+        class: t.string(),
+    });
 
     setup() {
         this.ui = useDocUI();

@@ -50,7 +50,6 @@ export class DocModel extends Component {
         DocLoadingIndicator,
         DocErrorDialog,
     };
-    static props = {};
 
     setup() {
         this.state = proxy({

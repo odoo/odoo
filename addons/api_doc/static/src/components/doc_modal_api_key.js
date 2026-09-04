@@ -4,7 +4,6 @@ export class ApiKeyModal extends Component {
     static template = "web.DocApiKeyModal";
 
     static components = {};
-    static props = {};
 
     modalRef = signal.ref();
 

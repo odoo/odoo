@@ -5,7 +5,6 @@ export class DocSidebar extends Component {
     static template = "web.DocSidebar";
 
     static components = {};
-    static props = {};
 
     containerRef = signal.ref();
 

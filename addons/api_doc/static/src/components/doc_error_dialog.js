@@ -1,4 +1,4 @@
-import { Component, signal, xml, proxy } from "@odoo/owl";
+import { Component, signal, t, useProps, xml, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 export class DocErrorDialog extends Component {
@@ -27,11 +27,11 @@ export class DocErrorDialog extends Component {
             </t>
         </div>
     `;
-    static props = {
-        name: { type: String },
-        status: { type: Number, optional: true },
-        traceback: { type: String, optional: true },
-    };
+    props = useProps({
+        name: t.string(),
+        status: t.number().optional(),
+        traceback: t.string().optional(),
+    });
 
     copyButtonRef = signal.ref();
 
