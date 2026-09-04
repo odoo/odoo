@@ -96,8 +96,9 @@ class CalendarRecurrence(models.Model):
 
     name = fields.Char(compute='_compute_name', store=True)
     base_event_id = fields.Many2one(
-        'calendar.event', ondelete='set null', copy=False)  # store=False ?
+        'calendar.event', ondelete='set null', index='btree', copy=False)  # store=False ?
     calendar_event_ids = fields.One2many('calendar.event', 'recurrence_id')
+    calendar_id = fields.Many2one(related='base_event_id.calendar_id', string='Calendar')
     event_tz = fields.Selection(
         _tz_get, string='Timezone',
         default=lambda self: self.env.context.get('tz') or self.env.user.tz)
@@ -643,3 +644,7 @@ class CalendarRecurrence(models.Model):
             (event.stop_date < today if event.allday else event.stop < now)
             for event in self.calendar_event_ids
         )
+
+    def _before_calendar_cascade_unlink(self):
+        """Override this method to perform actions before the cascade unlink of the recurrence when deleting a calendar."""
+        return

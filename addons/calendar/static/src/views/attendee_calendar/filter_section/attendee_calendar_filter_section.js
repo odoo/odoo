@@ -1,9 +1,9 @@
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { getColor } from "@web/views/calendar/utils";
 import { MultiRecordSelector, multiRecordSelectorProps } from "@web/core/record_selectors/multi_record_selector";
-import { user } from "@web/core/user";
-import { _t } from "@web/core/l10n/translation";
 import { t, useProps } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 export class AttendeeCalendarFilterMultiRecordSelector extends MultiRecordSelector {
     props = useProps({
@@ -26,6 +26,9 @@ export class AttendeeCalendarFilterMultiRecordSelector extends MultiRecordSelect
     }
 }
 
+/**
+ * Filter by event attendees. e.g.: 'Marc Demo' or 'Wood Corner'
+ */
 export class AttendeeCalendarFilterSection extends CalendarFilterSection {
     static template = "calendar.AttendeeCalendarFilterSection";
     static components = {
