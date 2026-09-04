@@ -11,4 +11,5 @@ class ResGroups(models.Model):
             'mrp.group_mrp_routings',
             'mrp.group_mrp_byproducts',
             'mrp.group_unlocked_by_default',
+            'mrp.group_mrp_user',
         )
