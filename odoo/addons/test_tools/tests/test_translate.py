@@ -234,6 +234,19 @@ class TranslationToolsTestCase(BaseCase):
         self.assertItemsEqual(terms,
             ['stuff before', 'stuff after'])
 
+    def test_translate_xml_dollar0(self):
+        """ Test xml_translate() with $0 placeholder. """
+        terms = []
+        source = """<t t-name="stuff">
+                        stuff before
+                        <span title="Hello">$0</span>
+                        other stuff <span>$0<span>Hello</span></span> stuff after
+                    </t>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['Hello', 'stuff before', 'other stuff <span>$0<span>Hello</span></span> stuff after'])
+
     def test_translate_xml_t(self):
         """ Test xml_translate() with t-* attributes. """
         terms = []
