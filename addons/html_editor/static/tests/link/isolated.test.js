@@ -1,14 +1,14 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { click, describe, expect, test } from "@odoo/hoot";
 import { deleteBackward, insertText } from "../_helpers/user_actions";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
 import { getContent, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
-import { animationFrame, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
 import { dispatchNormalize } from "../_helpers/dispatch";
-import { nodeSize } from "@html_editor/utils/position";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { animationFrame } from "@odoo/hoot-dom";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 test("should pad a link with ZWNBSPs and add visual indication", async () => {
     await testEditor({
@@ -73,122 +73,6 @@ test("should delete the content from the link when popover is active", async () 
         '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]abc\ufeff</a>\ufeff</p>'
     );
     expect(cleanLinkArtifacts(content)).toBe('<p><a href="#/">[]abc</a></p>');
-});
-
-describe.tags("desktop");
-describe("should position the cursor outside the link", () => {
-    test("clicking at the start of the link", async () => {
-        const { el } = await setupEditor('<p><a href="#/">test</a></p>');
-        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</p>');
-
-        const aElement = queryOne("p a");
-        await pointerDown(el);
-        // Simulate the selection with mousedown
-        setSelection({ anchorNode: aElement.childNodes[0], anchorOffset: 0 });
-        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">[]\ufefftest\ufeff</a>\ufeff</p>');
-        await animationFrame(); // selection change
-        await pointerUp(el);
-        expect(getContent(el)).toBe('<p>[]\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</p>');
-    });
-
-    test("clicking at the start of the link when format is applied on link", async () => {
-        const { el } = await setupEditor('<p><strong><a href="#/">test</a></strong></p>');
-        expect(getContent(el)).toBe('<p><strong>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</strong></p>');
-
-        const aElement = queryOne("p a");
-        await pointerDown(el);
-        // Simulate the selection with mousedown
-        setSelection({ anchorNode: aElement.childNodes[0], anchorOffset: 0 });
-        expect(getContent(el)).toBe('<p><strong>\ufeff<a href="#/">[]\ufefftest\ufeff</a>\ufeff</strong></p>');
-        await animationFrame(); // selection change
-        await pointerUp(el);
-        expect(getContent(el)).toBe('<p><strong>[]\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</strong></p>');
-    });
-
-    test("clicking at the end of the link", async () => {
-        const { el } = await setupEditor('<p><a href="#/">test</a></p>');
-        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</p>');
-
-        const aElement = queryOne("p a");
-        await pointerDown(el);
-        // Simulate the selection with mousedown
-        setSelection({
-            anchorNode: aElement.childNodes[2],
-            anchorOffset: nodeSize(aElement.childNodes[2]),
-        });
-        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff[]</a>\ufeff</p>');
-        await animationFrame(); // selectionChange
-        await pointerUp(el);
-        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff[]</p>');
-    });
-
-    test("clicking before the link's text content", async () => {
-        const { el, editor } = await setupEditor('<p><a href="#/">te[]st</a></p>');
-        expect(getContent(el)).toBe(
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeffte[]st\ufeff</a>\ufeff</p>'
-        );
-
-        const aElement = queryOne("p a");
-        await pointerDown(el);
-        // Simulate the selection with mousedown
-        setSelection({ anchorNode: aElement.childNodes[1], anchorOffset: 0 });
-        expect(getContent(el)).toBe(
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]test\ufeff</a>\ufeff</p>'
-        );
-        await animationFrame(); // selection change
-        await pointerUp(el);
-        expect(getContent(el)).toBe('<p>[]\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</p>');
-
-        await insertText(editor, "link");
-        expect(getContent(el)).toBe('<p>link[]\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff</p>');
-
-        setSelection({ anchorNode: aElement.childNodes[1], anchorOffset: 0 });
-        await animationFrame(); // selectionChange
-        expect(getContent(el)).toBe(
-            '<p>link\ufeff<a href="#/" class="o_link_in_selection">\ufeff[]test\ufeff</a>\ufeff</p>'
-        );
-        await insertText(editor, "content");
-        expect(getContent(el)).toBe(
-            '<p>link\ufeff<a href="#/" class="o_link_in_selection">\ufeffcontent[]test\ufeff</a>\ufeff</p>'
-        );
-    });
-
-    test(" clicking after the link's text content", async () => {
-        const { el, editor } = await setupEditor('<p><a href="#/">t[]est</a></p>');
-        expect(getContent(el)).toBe(
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufefft[]est\ufeff</a>\ufeff</p>'
-        );
-
-        const aElement = queryOne("p a");
-        await pointerDown(el);
-        // Simulate the selection with mousedown
-        setSelection({
-            anchorNode: aElement.childNodes[1],
-            anchorOffset: nodeSize(aElement.childNodes[1]),
-        });
-        expect(getContent(el)).toBe(
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufefftest[]\ufeff</a>\ufeff</p>'
-        );
-        await animationFrame(); // selection change
-        await pointerUp(el);
-        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff[]</p>');
-
-        await insertText(editor, "link");
-        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufefflink[]</p>');
-
-        setSelection({
-            anchorNode: aElement.childNodes[1],
-            anchorOffset: nodeSize(aElement.childNodes[1]),
-        });
-        await animationFrame(); // selectionChange
-        expect(getContent(el)).toBe(
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufefftest[]\ufeff</a>\ufefflink</p>'
-        );
-        await insertText(editor, "content");
-        expect(getContent(el)).toBe(
-            '<p>\ufeff<a href="#/" class="o_link_in_selection">\ufefftestcontent[]\ufeff</a>\ufefflink</p>'
-        );
-    });
 });
 
 describe("should zwnbsp-pad simple text link", () => {
@@ -402,6 +286,99 @@ describe("button", () => {
         deleteBackward(editor);
         expect(getContent(el)).toBe(
             '<p>befor[]\ufeff<a class="btn" href="#/">\ufeffin\ufeff</a>\ufeffafter</p>'
+        );
+    });
+});
+
+describe.tags("desktop");
+describe("should position the cursor outside the link", () => {
+    test("clicking at the end of block after a link", async () => {
+        const { el } = await setupEditor('<p><a href="#/">test</a></p>');
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.right + 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: a.firstChild.nextSibling, offset: 4 }),
+        });
+        await click(el, { clientX, clientY });
+        await animationFrame();
+        expect(getContent(el)).toBe('<p>\ufeff<a href="#/">\ufefftest\ufeff</a>\ufeff[]</p>');
+    });
+
+    test("clicking at the end of a link", async () => {
+        const { el, editor } = await setupEditor('<p><a href="#/">test</a></p>');
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.right - 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: a.firstChild.nextSibling, offset: 4 }),
+        });
+        let called = false;
+        await click(a, { clientX, clientY });
+        await animationFrame();
+        // We should let the browser set the selection for this case
+        const original = editor.shared.selection.setSelection.bind(editor.shared.selection);
+        editor.shared.selection.setSelection = (...args) => {
+            called = true;
+            original(...args);
+        };
+        expect(called).toBe(false);
+    });
+
+    test("clicking at the end padding of the button", async () => {
+        const { el, editor } = await setupEditor(
+            '<p><a class="btn btn-primary" href="#/">test</a></p>'
+        );
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.right - 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: a.firstChild.nextSibling, offset: 4 }),
+        });
+        let called = false;
+        await click(a, { clientX, clientY });
+        await animationFrame();
+        // We should let the browser set the selection for this case
+        const original = editor.shared.selection.setSelection.bind(editor.shared.selection);
+        editor.shared.selection.setSelection = (...args) => {
+            called = true;
+            original(...args);
+        };
+        expect(called).toBe(false);
+    });
+
+    test("clicking at the start padding of the button", async () => {
+        const { el } = await setupEditor('<p><a class="btn btn-primary" href="#/">test</a></p>');
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.left + 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: a.firstChild, offset: 0 }),
+        });
+        await click(a, { clientX, clientY });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>\ufeff<a class="btn btn-primary" href="#/">\ufeff[]test\ufeff</a>\ufeff</p>'
+        );
+    });
+
+    test("clicking at the end after the button", async () => {
+        const { el } = await setupEditor('<p><a class="btn btn-primary" href="#/">test</a></p>');
+        const a = el.querySelector("a");
+        const rect = a.getBoundingClientRect();
+        const clientX = rect.right + 1;
+        const clientY = rect.top + rect.height / 2;
+        patchWithCleanup(document, {
+            caretPositionFromPoint: () => ({ offsetNode: a, offset: 3 }),
+        });
+        await click(a.parentElement, { clientX, clientY });
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            '<p>\ufeff<a class="btn btn-primary" href="#/">\ufefftest\ufeff</a>\ufeff[]</p>'
         );
     });
 });

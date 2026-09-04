@@ -1,11 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { cleanTrailingBR, mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
-import {
-    childNodes,
-    closestElement,
-    descendants,
-    selectElements,
-} from "@html_editor/utils/dom_traversal";
+import { childNodes, closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -267,11 +262,44 @@ export class LinkPlugin extends Plugin {
                 this.toggleLinkTools({ link: target });
             }
         });
-        this.addDomListener(this.editable, "mousedown", () => {
-            this._isNavigatingByMouse = true;
-        });
-        this.addDomListener(this.editable, "keydown", () => {
-            delete this._isNavigatingByMouse;
+        this.addDomListener(this.editable, "pointerdown", (ev) => {
+            const clickedEl = this.document.elementFromPoint(ev.clientX, ev.clientY);
+            if (!clickedEl) {
+                return;
+            }
+            let caretPosition = {};
+            if (this.document.caretPositionFromPoint) {
+                // Firefox API
+                const pos = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+                caretPosition = pos;
+            } else if (this.document.caretRangeFromPoint) {
+                // Chrome / Safari API
+                const range = document.caretRangeFromPoint(ev.clientX, ev.clientY);
+                caretPosition.offsetNode = range?.startContainer;
+                caretPosition.offset = range?.startOffset;
+            }
+            const link = caretPosition?.offsetNode && closestElement(caretPosition.offsetNode, "A");
+            if (clickedEl.nodeName === "A" && isZwnbsp(caretPosition.offsetNode)) {
+                // In case we clicked at the start of the button, the case of clicking at
+                // the end if natively handled
+                const isFirstFeff = !caretPosition.offsetNode.previousSibling;
+                if (isFirstFeff && caretPosition.offset === 0) {
+                    ev.preventDefault();
+                    this.dependencies.selection.setSelection({
+                        anchorNode: clickedEl,
+                        anchorOffset: 1,
+                    });
+                }
+            } else if (clickedEl.nodeName !== "A" && link) {
+                ev.preventDefault();
+                const anchorNode =
+                    nodeSize(caretPosition.offsetNode) === caretPosition.offset
+                        ? link.nextSibling
+                        : link.previousSibling;
+                if (anchorNode) {
+                    this.dependencies.selection.setSelection({ anchorNode, anchorOffset: 1 });
+                }
+            }
         });
         // link creation is added to the command service because of a shortcut conflict,
         // as ctrl+k is used for invoking the command palette
@@ -424,48 +452,6 @@ export class LinkPlugin extends Plugin {
             type: this.type || "",
             LinkPopoverState: this.LinkPopoverState,
         };
-        if (
-            this._isNavigatingByMouse &&
-            selection.isCollapsed &&
-            selectionData.documentSelectionIsInEditable
-        ) {
-            delete this._isNavigatingByMouse;
-            const { startContainer, startOffset, endContainer, endOffset } = selection;
-            const linkElement = closestElement(startContainer, "a");
-            if (
-                linkElement &&
-                linkElement.textContent.startsWith("\uFEFF") &&
-                linkElement.textContent.endsWith("\uFEFF")
-            ) {
-                const linkDescendants = descendants(linkElement);
-
-                // Check if the cursor is positioned at the begining of link.
-                const isCursorAtStartOfLink = isZwnbsp(startContainer)
-                    ? linkDescendants.indexOf(startContainer) === 0
-                    : startContainer.nodeType === Node.TEXT_NODE &&
-                      linkDescendants.indexOf(startContainer) === 1 &&
-                      startOffset === 0;
-
-                // Check if the cursor is positioned at the end of link.
-                const isCursorAtEndOfLink = isZwnbsp(endContainer)
-                    ? linkDescendants.indexOf(endContainer) === linkDescendants.length - 1
-                    : endContainer.nodeType === Node.TEXT_NODE &&
-                      linkDescendants.indexOf(endContainer) === linkDescendants.length - 2 &&
-                      endOffset === nodeSize(endContainer);
-
-                // Handle selection movement.
-                if (isCursorAtStartOfLink || isCursorAtEndOfLink) {
-                    const [targetNode, targetOffset] = isCursorAtStartOfLink
-                        ? leftPos(linkElement)
-                        : rightPos(linkElement);
-                    this.dependencies.selection.setSelection({
-                        anchorNode: targetNode,
-                        anchorOffset: isCursorAtStartOfLink ? targetOffset - 1 : targetOffset + 1,
-                    });
-                    return;
-                }
-            }
-        }
         if (!selectionData.documentSelectionIsInEditable) {
             // note that data-prevent-closing-overlay also used in color picker but link popover
             // and color picker don't open at the same time so it's ok to query like this
@@ -961,7 +947,9 @@ export class LinkPlugin extends Plugin {
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
             // In case of multiple matches, only the last one will be converted.
-            const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g"))].pop();
+            const match = [
+                ...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g")),
+            ].pop();
 
             if (match) {
                 const nodeForSelectionRestore = selection.anchorNode.splitText(
