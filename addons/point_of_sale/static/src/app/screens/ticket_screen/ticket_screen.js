@@ -821,7 +821,9 @@ export class TicketScreen extends Component {
             .map((info) => info[0]);
 
         if (idsNotInCacheOrOutdated.length > 0) {
-            await this.pos.data.read("pos.order", Array.from(new Set(idsNotInCacheOrOutdated)));
+            await this.pos.data.callRelated("pos.order", "get_ticket_screen_order_data", [
+                Array.from(new Set(idsNotInCacheOrOutdated)),
+            ]);
         }
     }
     //#endregion

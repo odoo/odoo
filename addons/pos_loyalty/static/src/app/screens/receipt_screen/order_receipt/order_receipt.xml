@@ -33,9 +33,10 @@
                     <span t-out="order.partner_id.name" class="ms-auto fw-bolder"/>
                 </div>
             </t>
-            <t t-if="order.new_coupon_info and order.new_coupon_info.length !== 0">
+            <t t-set="all_coupon_info" t-value="order.new_coupon_info or order.raw.new_coupon_info"/>
+            <t t-if="all_coupon_info and all_coupon_info.length !== 0">
                 <div class="pos-coupon-rewards pt-3">
-                    <t t-foreach="order.new_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
+                    <t t-foreach="all_coupon_info" t-as="coupon_info" t-key="coupon_info.code">
                         <div class="coupon-container">
                             <div class="row g-2">
                                 <div class="col-4">
