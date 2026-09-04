@@ -429,16 +429,13 @@ class StockWarehouseOrderpoint(models.Model):
 
         return replenish report ir.actions.act_window
         """
-        def is_parent_path_in(resupply_loc, path_dict, record_loc):
-            return record_loc and resupply_loc.parent_path in path_dict.get(record_loc, '')
-
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint_replenish")
         action['context'] = self.env.context
         # Search also with archived ones to avoid to trigger product_location_check SQL constraints later
         # It means that when there will be a archived orderpoint on a location + product, the replenishment
         # report won't take in account this location + product and it won't create any manual orderpoint
         # In master: the active field should be remove
-        orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search([])
+        orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search([], order='id')
         # Remove previous automatically created orderpoint that has been refilled.
         orderpoints_removed = orderpoints._unlink_processed_orderpoints()
         orderpoints = orderpoints - orderpoints_removed
@@ -459,26 +456,30 @@ class StockWarehouseOrderpoint(models.Model):
         domain_move_in = expression.AND([domain_product, domain_state, domain_move_in_loc])
         domain_move_out = expression.AND([domain_product, domain_state, domain_move_out_loc])
 
-        moves_in = defaultdict(list)
-        for item in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'location_final_id'], ['product_qty:sum']):
-            moves_in[item[0]].append((item[1], item[2], item[3]))
+        # Map location -> all locations it resupplies,
+        # i.e. its ancestors (itself included) among `all_replenish_location_ids`.
+        replenish_loc_ids = set(all_replenish_location_ids.ids)
+        resupplied_loc_ids = defaultdict(set)
+        for loc in self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', replenish_loc_ids)]):
+            resupplied_loc_ids[loc.id] = {int(id_) for id_ in loc.parent_path.split('/')[:-1]} & replenish_loc_ids
 
-        moves_out = defaultdict(list)
-        for item in Move._read_group(domain_move_out, ['product_id', 'location_id'], ['product_qty:sum']):
-            moves_out[item[0]].append((item[1], item[2]))
-
-        quants = defaultdict(list)
-        for item in Quant._read_group(domain_quant, ['product_id', 'location_id'], ['quantity:sum']):
-            quants[item[0]].append((item[1], item[2]))
+        # Nested mapping of location, product -> forecasted qty
+        qty_per_loc_product = defaultdict(lambda: defaultdict(float))
+        for product, location, quantity in Quant._read_group(domain_quant, ['product_id', 'location_id'], ['quantity:sum']):
+            for loc_id in resupplied_loc_ids[location.id]:
+                qty_per_loc_product[loc_id][product.id] += quantity
+        for product, location_dest, location_final, product_qty in Move._read_group(domain_move_in, ['product_id', 'location_dest_id', 'location_final_id'], ['product_qty:sum']):
+            for loc_id in resupplied_loc_ids[location_dest.id] | resupplied_loc_ids[location_final.id]:
+                qty_per_loc_product[loc_id][product.id] += product_qty
+        for product, location, product_qty in Move._read_group(domain_move_out, ['product_id', 'location_id'], ['product_qty:sum']):
+            for loc_id in resupplied_loc_ids[location.id]:
+                qty_per_loc_product[loc_id][product.id] -= product_qty
 
         rounding = {product.id: product.uom_id.rounding for product in all_product_ids}
-        path = {loc: loc.parent_path for loc in self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', all_replenish_location_ids.ids)])}
         for loc in all_replenish_location_ids:
-            for product in all_product_ids:
-                qty_available = sum(q[1] for q in quants.get(product, [(0, 0)]) if is_parent_path_in(loc, path, q[0]))
-                incoming_qty = sum(m[2] for m in moves_in.get(product, [(0, 0, 0)]) if is_parent_path_in(loc, path, m[0]) or is_parent_path_in(loc, path, m[1]))
-                outgoing_qty = sum(m[1] for m in moves_out.get(product, [(0, 0)]) if is_parent_path_in(loc, path, m[0]))
-                if float_compare(qty_available + incoming_qty - outgoing_qty, 0, precision_rounding=rounding[product.id]) < 0:
+            qty_per_product = qty_per_loc_product[loc.id]
+            for product in all_product_ids.browse(qty_per_product).with_prefetch(all_product_ids.ids):
+                if float_compare(qty_per_product[product.id], 0, precision_rounding=rounding[product.id]) < 0:
                     # group product by lead_days and location in order to read virtual_available
                     # in batch
                     rules = product._get_rules_from_location(loc)
@@ -510,33 +511,36 @@ class StockWarehouseOrderpoint(models.Model):
         qty_by_product_loc = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(location_ids=location_ids)[0]
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-location
-        orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
-            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
-            ['product_id', 'location_id'],
-            ['id:recordset'])
-        orderpoint_by_product_location = {
-            (product.id, location.id): orderpoint.qty_to_order
-            for product, location, orderpoint in orderpoint_by_product_location
-        }
-        for (product, location), product_qty in to_refill.items():
-            qty_in_progress = qty_by_product_loc.get((product, location)) or 0.0
-            qty_in_progress += orderpoint_by_product_location.get((product, location), 0.0)
-            # Add qty to order for other orderpoint under this location.
-            if not qty_in_progress:
-                continue
-            to_refill[(product, location)] = product_qty + qty_in_progress
-        to_refill = {k: v for k, v in to_refill.items() if float_compare(
-            v, 0.0, precision_digits=rounding) < 0.0}
-
-        # With archived ones to avoid `product_location_check` SQL constraints
+        # With archived ones to avoid`product_location_check` SQL constraints when creating the missing ones below
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
-            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
+            [('product_id', 'in', product_ids), ('location_id', 'in', location_ids)],
             ['product_id', 'location_id'],
             ['id:recordset'])
         orderpoint_by_product_location = {
             (product.id, location.id): orderpoint
             for product, location, orderpoint in orderpoint_by_product_location
         }
+        # Only the pairs in `to_refill` are ever read: narrow the prefetch to those.
+        orderpoints_to_prefetch = {
+            id_
+            for key in to_refill
+            for id_ in orderpoint_by_product_location.get(key, self.browse()).ids
+        }
+        orderpoint_by_product_location = {
+            key: orderpoint.with_prefetch(orderpoints_to_prefetch)
+            for key, orderpoint in orderpoint_by_product_location.items()
+        }
+        for (product, location), product_qty in to_refill.items():
+            qty_in_progress = qty_by_product_loc.get((product, location)) or 0.0
+            # Add qty to order for other orderpoint under this location.
+            orderpoint = orderpoint_by_product_location.get((product, location))
+            if orderpoint and orderpoint.active:
+                qty_in_progress += orderpoint.qty_to_order
+            if not qty_in_progress:
+                continue
+            to_refill[(product, location)] = product_qty + qty_in_progress
+        to_refill = {k: v for k, v in to_refill.items() if float_compare(
+            v, 0.0, precision_digits=rounding) < 0.0}
 
         orderpoint_values_list = []
         for (product, location_id), product_qty in to_refill.items():
@@ -610,7 +614,7 @@ class StockWarehouseOrderpoint(models.Model):
         ]
         if self.ids:
             domain = expression.AND([domain, [('id', 'in', self.ids)]])
-        manual_orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain)
+        manual_orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain, order='id')
         orderpoints_to_remove = manual_orderpoints.filtered(lambda o: o.qty_to_order <= 0.0)
         # Remove previous automatically created orderpoint that has been refilled.
         orderpoints_to_remove.unlink()
