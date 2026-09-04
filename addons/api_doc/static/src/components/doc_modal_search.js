@@ -1,4 +1,4 @@
-import { Component, onMounted, proxy, signal, useListener } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { search } from "@api_doc/utils/doc_model_search";
 
@@ -6,9 +6,10 @@ export class SearchModal extends Component {
     static template = "web.DocSearchModal";
 
     static components = {};
-    static props = {
-        close: { type: Function },
-    };
+
+    props = useProps({
+        close: t.function(),
+    });
 
     seachRef = signal.ref();
     modalRef = signal.ref();

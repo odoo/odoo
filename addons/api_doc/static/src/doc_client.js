@@ -18,7 +18,6 @@ export class DocClient extends Component {
         SearchModal,
         DocErrorDialog,
     };
-    static props = {};
 
     setup() {
         this.setTheme(localStorage.getItem("theme") || "odoo-dark");

@@ -1,4 +1,4 @@
-import { Component, computed, proxy, signal, useListener } from "@odoo/owl";
+import { Component, computed, proxy, signal, t, useListener, useProps } from "@odoo/owl";
 import { localeCompare } from "@web/core/l10n/utils";
 
 export const TABLE_TYPES = {
@@ -11,9 +11,9 @@ export class DocTable extends Component {
     static components = { DocTable };
     static template = "web.DocTable";
 
-    static props = {
-        data: true,
-    };
+    props = useProps({
+        data: t.any(),
+    });
 
     items = computed(() => this.computeItems());
     subTableRef = signal.ref();
