@@ -135,33 +135,37 @@
     </table>
 </template>
 
-<template id="label_production_view_pdf">
-    <t t-call="web.basic_layout">
-        <div class="oe_structure"></div>
-        <div t-foreach="label_pages" t-as="page_rows" class="o_label_sheet" t-att-style="'padding: 20mm 8mm'">
-            <div class="oe_structure"></div>
-            <table class="my-0 table table-sm table-borderless">
-                <t t-foreach="page_rows" t-as="label_row">
-                    <tr>
-                        <t t-foreach="label_row" t-as="label">
-                            <t t-call="mrp.report_simple_label4x12"/>
-                        </t>
-                    </tr>
-                </t>
-            </table>
-            <div class="oe_structure"></div>
+<template id="finished_product_4x12_label">
+    <td t-att-style="label['invisible'] and 'visibility:hidden;'">
+        <div class="o_label_full o_label_4x12">
+            <t t-if="not label.get('invisible')">
+                <t t-call="product.report_label_contour_marks"/>
+                <div class="o_label_centering_table">
+                    <div class="o_label_centered_content">
+                        <div class="o_label_table o_label_header">
+                            <div class="o_label_name_block">
+                                <div class="o_label_name" t-out="label['name']"/>
+                            </div>
+                            <div class="o_label_meta_block">
+                                <div class="o_label_meta_line" t-out="label['secondary_text']"/>
+                            </div>
+                        </div>
+                        <div class="o_label_content">
+                            <div class="o_label_barcode_block">
+                                <t t-call="product.report_label_barcode"
+                                   barcode_size="'width:100%;height:6mm'"/>
+                            </div>
+                            <div class="o_label_table o_label_footer">
+                                <div class="o_label_barcode_text" t-out="label['barcode_text']"/>
+                                <div class="o_label_reference_block">
+                                    <div class="o_label_reference" t-out="label['reference']"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
         </div>
-    </t>
-</template>
-
-<template id="report_simple_label4x12" inherit_id="product.report_simple_label4x12" primary="True">
-    <xpath expr="//div[hasclass('o_label_centered_content')]/div[hasclass('o_label_table')][1]/div[hasclass('o_label_meta_block')]" position="replace">
-        <div t-if="label.get('uom_name')" class="o_label_meta_block">
-            <div class="o_label_meta_line">
-                <span t-out="label['label_quantity']">1</span>
-                <span t-out="label['uom_name']">Units</span>
-            </div>
-        </div>
-    </xpath>
+    </td>
 </template>
 </odoo>

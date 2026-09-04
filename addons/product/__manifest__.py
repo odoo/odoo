@@ -54,7 +54,6 @@ Print product labels with barcode.
         'report/product_reports.xml',
         'report/product_product_templates.xml',
         'report/product_template_templates.xml',
-        'report/product_packaging.xml',
         'report/product_pricelist_report_templates.xml',
         'security/ir.access.csv',
     ],

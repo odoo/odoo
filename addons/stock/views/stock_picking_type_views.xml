@@ -197,13 +197,11 @@
                                     <label for="auto_print_product_labels" string="Product Labels"/>
                                     <div class="o_row">
                                         <field name="auto_print_product_labels" string="Product Labels"/>
-                                        <label for="product_label_format" string="Print label as:" invisible="not auto_print_product_labels" class="fw-bold"/>
                                         <field name="product_label_format" invisible="not auto_print_product_labels"/>
                                     </div>
                                     <label for="auto_print_lot_labels" string="Lot/SN Labels" groups="stock.group_production_lot"/>
                                     <div class="o_row" groups="stock.group_production_lot">
                                         <field name="auto_print_lot_labels" string="Lot/SN Labels"/>
-                                        <label for="lot_label_format" string="Print label as:" invisible="not auto_print_lot_labels" class="fw-bold"/>
                                         <field name="lot_label_format" invisible="not auto_print_lot_labels"/>
                                     </div>
                                     <field name="auto_print_reception_report" string="Reception Report" invisible="not auto_show_allocation_report"/>
@@ -357,5 +355,24 @@
                 </templates>
             </kanban>
         </field>
+    </record>
+    <record id="action_print_picking_type_label_pdf" model="ir.actions.server">
+        <field name="name">Operation type (PDF)</field>
+        <field name="model_id" ref="stock.model_stock_picking_type"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
+        <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['stock.picking.type.label.layout']._process_picking_type_labels(records, '4x7')</field>
+    </record>
+
+    <record id="action_print_picking_type_label_zpl" model="ir.actions.server">
+        <field name="name">Operation type (ZPL)</field>
+        <field name="model_id" ref="stock.model_stock_picking_type"/>
+        <field name="binding_model_id" ref="stock.model_stock_picking_type"/>
+        <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_type">report</field>
+        <field name="state">code</field>
+        <field name="code">action = env['stock.picking.type.label.layout']._process_picking_type_labels(records, 'zpl')</field>
     </record>
 </odoo>

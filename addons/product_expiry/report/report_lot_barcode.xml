@@ -1,66 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="report_lot_label_expiry" inherit_id="stock.report_lot_label_meta_block">
-        <xpath expr="//div[hasclass('o_label_meta_block')]" position="replace">
+    <template id="report_lot_label_expiry" inherit_id="stock.lot_barcode_4x12_label">
+        <xpath expr="//div[hasclass('o_label_name_block')]" position="after">
             <div class="o_label_meta_block">
                 <div t-if="label.get('use_date')" class="o_label_meta_line">
-                    B.b. <t t-out="label['use_date']" t-options='{"widget": "date"}'/>
+                    B.b. <t t-out="label['use_date']"/>
                 </div>
                 <div t-if="label.get('expiration_date')" class="o_label_meta_line">
-                    Exp. <t t-out="label['expiration_date']" t-options='{"widget": "date"}'/>
+                    Exp. <t t-out="label['expiration_date']"/>
                 </div>
             </div>
         </xpath>
     </template>
 
-<template id="label_lot_template_view_expiry" inherit_id="stock.label_lot_template_view">
-    <xpath expr="//t[@name='datamatrix_lot']" position="before">
-        <t t-if="lot['lot_record'].use_expiration_date">
-            <t t-if="lot['lot_record'].use_date">
-                <t t-set="final_barcode" t-value="(final_barcode or '') + '15' + lot['lot_record'].use_date.strftime('%y%m%d')"/>
-^FO100,150
-^A0N,44,33^FDBest before: <t t-out="lot['lot_record'].use_date" t-options='{"widget": "date"}'/>^FS
-            </t>
-            <t t-if="lot['lot_record'].expiration_date">
-                <t t-set="final_barcode" t-value="(final_barcode or '') + '17' + lot['lot_record'].expiration_date.strftime('%y%m%d')"/>
-                    <t t-if="not lot['lot_record'].use_date">
-^FO100,150
+    <template id="report_lot_qr_label_expiry" inherit_id="stock.lot_qr_4x12_label">
+        <xpath expr="//div[hasclass('o_label_info_bottom')]/div[hasclass('o_label_barcode_text')]" position="after">
+            <div class="o_label_meta_block">
+                <div t-if="label.get('use_date')" class="o_label_meta_line">
+                    B.b. <t t-out="label['use_date']"/>
+                </div>
+                <div t-if="label.get('expiration_date')" class="o_label_meta_line">
+                    Exp. <t t-out="label['expiration_date']"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_lot_label_zpl_expiry" inherit_id="stock.lot_barcode_alternative_label">
+        <xpath expr="//t[@t-if='barcode_value']" position="before">
+            <t t-if="label.get('use_date') or label.get('expiration_date')">
+                <t t-if="label.get('use_date')">
+^FO222,22^A0N,21,16^FB170,1,0,R^FDB.b. <t t-out="label['use_date']"/>^FS
+                </t>
+                <t t-if="label.get('expiration_date')">
+                    <t t-if="label.get('use_date')">
+^FO222,44
                     </t>
                     <t t-else="">
-^FO100,200
+^FO222,22
                     </t>
-^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
-            </t>
-        </t>
-    </xpath>
-    <xpath expr="//t[@name='code128_barcode']" position="before">
-        <t t-elif="lot['lot_record'].use_expiration_date and (lot['lot_record'].use_date or lot['lot_record'].expiration_date)">
-^FO100,50
-^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
-^FO100,100
-^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
-            <t t-if="lot['lot_record'].use_date">
-^FO100,150
-^A0N,44,33^FDBest before: <t t-out="lot['lot_record'].use_date" t-options='{"widget": "date"}'/>^FS
-                <t t-if="lot['lot_record'].expiration_date">
-^FO100,200
-^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
-^FO100,250^BY3
+^A0N,21,16^FB170,1,0,R^FDExp. <t t-out="label['expiration_date']"/>^FS
                 </t>
-                <t t-else="">
-^FO100,200^BY3
+            </t>
+        </xpath>
+    </template>
+
+    <template id="alternative_zpl_lot_label_qr_expiry" inherit_id="stock.lot_qr_alternative_label">
+        <xpath expr="//t[@t-if='reference']" position="after">
+            <t t-if="label.get('use_date') or label.get('expiration_date')">
+                <t t-if="label.get('use_date')">
+^FO155,64,0^A0N,16,13^TBN,246,17^FDB.b. <t t-out="label['use_date']"/>^FS
                 </t>
-^BCN,100,Y,N,N
-^FD<t t-out="lot['name']"/>^FS
+                <t t-if="label.get('expiration_date')">
+                    <t t-set="expiration_y" t-value="84 if label.get('use_date') else 64"/>
+^FO155,<t t-out="expiration_y"/>,0^A0N,16,13^TBN,246,17^FDExp. <t t-out="label['expiration_date']"/>^FS
+                </t>
             </t>
-            <t t-elif="lot['lot_record'].expiration_date">
-^FO100,150
-^A0N,44,33^FDUse by: <t t-out="lot['lot_record'].expiration_date" t-options='{"widget": "date"}'/>^FS
-^FO100,200^BY3
-^BCN,100,Y,N,N
-^FD<t t-out="lot['name']"/>^FS
-            </t>
-        </t>
-    </xpath>
-</template>
+        </xpath>
+    </template>
 </odoo>

@@ -9,6 +9,39 @@ from odoo.tools import SQL
 from odoo.tools.translate import mark_as_copy
 
 
+PRODUCT_LABEL_BARCODE_FORMATS = [
+    ('barcode', 'Barcode'),
+    ('qr', 'QR'),
+]
+
+PRODUCT_LABEL_SHEET_FORMATS = [
+    ('dymo', 'Dymo'),
+    ('2x7', '2 x 7'),
+    ('4x7', '4 x 7'),
+    ('4x12', '4 x 12'),
+]
+
+PRODUCT_LABEL_ZPL_TEMPLATES = [
+    ('normal', 'ZPL Labels - Normal'),
+    ('small', 'ZPL Labels - Small'),
+    ('alternative', 'ZPL Labels - Alternative'),
+    ('jewelry', 'ZPL Labels - Jewelry'),
+]
+
+PRODUCT_LABEL_FORMAT_VARIANTS = [
+    ('', ''),
+    ('_price', ', with price'),
+    ('_price_packaging', ', with price, with packaging'),
+]
+
+LOT_LABEL_FORMATS = [
+    ('4x12_lots', '4 x 12 - One per lot/SN'),
+    ('4x12_units', '4 x 12 - One per unit'),
+    ('zpl_lots', 'ZPL Labels - One per lot/SN'),
+    ('zpl_units', 'ZPL Labels - One per unit'),
+]
+
+
 class StockPickingType(models.Model):
     _name = 'stock.picking.type'
     _description = "Picking Type"
@@ -81,21 +114,16 @@ class StockPickingType(models.Model):
     auto_print_product_labels = fields.Boolean(
         "Auto Print Product Labels",
         help="If this checkbox is ticked, Odoo will automatically print the product labels of a picking when it is validated.")
-    product_label_format = fields.Selection([
-        ('dymo', 'Dymo'),
-        ('2x7', '2 x 7'),
-        ('4x7', '4 x 7'),
-        ('4x12', '4 x 12'),
-        ('zpl', 'ZPL Labels'),
-    ], string="Product Label Format to auto-print", default='2x7')
+    product_label_format = fields.Selection(
+        selection='_get_product_label_format_selection',
+        string="Product Label Format to auto-print",
+        default='barcode_2x7_price',
+    )
     auto_print_lot_labels = fields.Boolean(
         "Auto Print Lot/SN Labels",
         help="If this checkbox is ticked, Odoo will automatically print the lot/SN labels of a picking when it is validated.")
-    lot_label_format = fields.Selection([
-        ('4x12_lots', '4 x 12 - One per lot/SN'),
-        ('4x12_units', '4 x 12 - One per unit'),
-        ('zpl_lots', 'ZPL Labels - One per lot/SN'),
-        ('zpl_units', 'ZPL Labels - One per unit')],
+    lot_label_format = fields.Selection(
+        selection='_get_lot_label_format_selection',
         string="Lot Label Format to auto-print", default='4x12_lots')
     auto_print_reception_report = fields.Boolean(
         "Auto Print Reception Report",
@@ -113,6 +141,43 @@ class StockPickingType(models.Model):
     package_label_to_print = fields.Selection(
         [('pdf', 'PDF'), ('zpl', 'ZPL')],
         "Package Label to Print", default='pdf')
+
+    @api.model
+    def _get_product_label_format_selection(self):
+        selection = []
+        for barcode_format, barcode_label in PRODUCT_LABEL_BARCODE_FORMATS:
+            for print_format, print_label in PRODUCT_LABEL_SHEET_FORMATS:
+                for value_suffix, label_suffix in PRODUCT_LABEL_FORMAT_VARIANTS:
+                    selection.append((
+                        f'{barcode_format}_{print_format}{value_suffix}',
+                        f'{barcode_label} {print_label}{label_suffix}',
+                    ))
+            for zpl_template, zpl_label in PRODUCT_LABEL_ZPL_TEMPLATES:
+                for value_suffix, label_suffix in PRODUCT_LABEL_FORMAT_VARIANTS:
+                    selection.append((
+                        f'{barcode_format}_zpl_{zpl_template}{value_suffix}',
+                        f'{barcode_label} {zpl_label}{label_suffix}',
+                    ))
+        return selection
+
+    @api.model
+    def _get_lot_label_format_selection(self):
+        return LOT_LABEL_FORMATS
+
+    @api.model
+    def _get_product_label_format_options(self, product_label_format):
+        product_label_format = product_label_format or 'barcode_2x7_price'
+        barcode_format, print_format, *options = product_label_format.split('_')
+        zpl_template = 'normal'
+        if print_format == 'zpl':
+            zpl_template, *options = options
+        return {
+            'print_format': print_format,
+            'barcode_format': barcode_format,
+            'zpl_template': zpl_template,
+            'with_price': 'price' in options,
+            'print_packaging': 'packaging' in options,
+        }
 
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
     count_picking_ready = fields.Integer(compute='_compute_picking_count')

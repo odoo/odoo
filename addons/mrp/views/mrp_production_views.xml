@@ -160,6 +160,32 @@
             </field>
         </record>
 
+        <record id="action_print_finished_product_pdf" model="ir.actions.server">
+            <field name="name">Finished Product Label (PDF)</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">list,kanban,form</field>
+            <field name="binding_type">report</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                action = env['mrp.finished.product.label.layout']._process_finished_product_labels(records, 'pdf')
+            </field>
+        </record>
+
+        <record id="action_print_finished_product_zpl" model="ir.actions.server">
+            <field name="name">Finished Product Label (ZPL)</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">list,kanban,form</field>
+            <field name="binding_type">report</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                action = env['mrp.finished.product.label.layout']._process_finished_product_labels(records, 'zpl')
+            </field>
+        </record>
+
         <record id="action_production_order_lock_unlock" model="ir.actions.server">
             <field name="name">Lock/Unlock</field>
             <field name="model_id" ref="mrp.model_mrp_production"/>

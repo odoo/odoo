@@ -3055,14 +3055,20 @@ class MrpProduction(models.Model):
         productions_by_print_formats = productions_to_print.grouped(lambda p: p.picking_type_id.mrp_product_label_to_print)
         for print_format in productions_to_print.picking_type_id.mapped('mrp_product_label_to_print'):
             labels_to_print = productions_by_print_formats.get(print_format)
-            if print_format == 'pdf':
-                action = self.env.ref("mrp.action_report_finished_product").report_action(labels_to_print.ids, config=False)
-                clean_action(action, self.env)
-                report_actions.append(action)
-            elif print_format == 'zpl':
-                action = self.env.ref("mrp.label_manufacture_template").report_action(labels_to_print.ids, config=False)
-                clean_action(action, self.env)
-                report_actions.append(action)
+            action = False
+            if print_format in ('pdf', 'zpl'):
+                action = self.env['mrp.finished.product.label.layout']._process_finished_product_labels(labels_to_print, print_format)
+            else:
+                label_options = self.env['stock.picking.type']._get_product_label_format_options(print_format)
+                wizard = self.env['product.label.layout'].create({
+                    'product_ids': labels_to_print.move_finished_ids.product_id.ids,
+                    'move_ids': labels_to_print.move_finished_ids.ids,
+                    'move_quantity': 'move',
+                    **label_options,
+                })
+                action = wizard.process()
+            if action:
+                report_actions.append(clean_action(action, self.env))
 
         # Filters MOs and their dest. moves to print reception report and labels.
         orders_for_reception_report = self.env['mrp.production']
@@ -3086,28 +3092,29 @@ class MrpProduction(models.Model):
             productions_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_done_mrp_lot and p.move_finished_ids.move_line_ids.lot_id)
             productions_by_print_formats = productions_to_print.grouped(lambda p: p.picking_type_id.done_mrp_lot_label_to_print)
             for print_format in productions_to_print.picking_type_id.mapped('done_mrp_lot_label_to_print'):
-                lots_to_print = productions_by_print_formats.get(print_format)
-                lots_to_print = lots_to_print.move_finished_ids.move_line_ids.mapped('lot_id')
-                if print_format == 'pdf':
-                    action = self.env.ref("stock.action_report_lot_label").report_action(lots_to_print.ids, config=False)
-                    clean_action(action, self.env)
-                    report_actions.append(action)
-                elif print_format == 'zpl':
-                    action = self.env.ref("stock.label_lot_template").report_action(lots_to_print.ids, config=False)
-                    clean_action(action, self.env)
-                    report_actions.append(action)
+                productions = productions_by_print_formats.get(print_format)
+                wizard = self.env['lot.label.layout'].create({
+                    'move_line_ids': productions.move_finished_ids.move_line_ids.ids,
+                    'label_quantity': 'lots' if '_lots' in print_format else 'units',
+                    'print_format': 'zpl' if print_format.startswith('zpl_') else '4x12',
+                })
+                action = wizard.process()
+                report_actions.append(clean_action(action, self.env))
         return report_actions
 
     def _autoprint_generated_lots(self, lot_ids):
         self.ensure_one()
-        if self.picking_type_id.generated_mrp_lot_label_to_print == 'pdf':
-            action = self.env.ref("stock.action_report_lot_label").report_action(lot_ids, config=False)
-            clean_action(action, self.env)
-            return action
-        elif self.picking_type_id.generated_mrp_lot_label_to_print == 'zpl':
-            action = self.env.ref("stock.label_lot_template").report_action(lot_ids, config=False)
-            clean_action(action, self.env)
-            return action
+        print_format = self.picking_type_id.generated_mrp_lot_label_to_print
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        quantity = self.qty_producing or self.product_qty
+        can_print_per_unit = self.product_tracking != 'serial' and self.uom_id._has_common_reference(uom_unit)
+        copies = int(quantity) if print_format.endswith('_units') and can_print_per_unit else 1
+        action = self.env['lot.label.layout']._process_lot_labels(
+            lot_ids,
+            'zpl' if print_format.startswith('zpl_') else '4x12',
+            custom_quantity=copies,
+        )
+        return clean_action(action, self.env)
 
     def _prepare_finished_extra_vals(self):
         self.ensure_one()
