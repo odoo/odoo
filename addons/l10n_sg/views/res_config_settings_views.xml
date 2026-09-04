@@ -16,6 +16,9 @@
                     <field name="qr_code" class="oe_inline"/>
                 </setting>
             </xpath>
+            <xpath expr="//div[@id='peppol_participation_role_config']" position="attributes">
+                <attribute name="invisible">country_code == 'SG'</attribute>
+            </xpath>
         </field>
     </record>
 
