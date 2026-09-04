@@ -1,12 +1,13 @@
-import { Component, proxy, useEffect } from "@odoo/owl";
+import { Component, proxy, t, useEffect, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class AttendanceCalendarOverview extends Component {
     static template = "hr_attendance.AttendanceCalendarOverview";
-    static props = {
-        dateRange: Object,
-    };
+
+    props = useProps({
+        dateRange: t.object(),
+    });
 
     setup() {
         this.orm = useService("orm");

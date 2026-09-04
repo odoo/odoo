@@ -18,7 +18,6 @@ const { DateTime } = luxon;
 
 export class ActivityMenu extends Component {
     static components = { Dropdown, Record, AttendanceInlineForm, AttendanceVideoStream };
-    static props = [];
     static template = "hr_attendance.attendance_menu";
 
     setup() {

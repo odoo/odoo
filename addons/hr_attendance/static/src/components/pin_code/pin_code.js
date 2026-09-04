@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onWillStart, onWillDestroy, proxy, t, useProps } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { range } from "@web/core/utils/numbers";
 
@@ -6,13 +6,14 @@ import { AttendanceVideoStream } from "@hr_attendance/components/attendance_vide
 
 export class KioskPinCode extends Component {
     static template = "hr_attendance.KioskPinConfirm";
-    static props = {
-        employeeData: { type: Object },
-        onClickBack: { type: Function },
-        onPinConfirm: { type: Function },
-        captureCheckInImage: { type: Boolean },
-        exposeCameraCapture: { type: Function },
-    };
+
+    props = useProps({
+        employeeData: t.object(),
+        onClickBack: t.function(),
+        onPinConfirm: t.function(),
+        captureCheckInImage: t.boolean(),
+        exposeCameraCapture: t.function(),
+    });
     static components = {
         AttendanceVideoStream,
     };

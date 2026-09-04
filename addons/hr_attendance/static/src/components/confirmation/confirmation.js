@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 
@@ -7,13 +7,14 @@ export class KioskConfirmation extends Component {
     static components = {
         AttendanceVideoStream,
     };
-    static props = {
-        employeeData: { type: Object },
-        kioskConfirm: { type: Function },
-        backToManualSelection: { type: Function },
-        captureCheckInImage: { type: Boolean },
-        exposeCameraCapture: { type: Function },
-    };
+
+    props = useProps({
+        employeeData: t.object(),
+        kioskConfirm: t.function(),
+        backToManualSelection: t.function(),
+        captureCheckInImage: t.boolean(),
+        exposeCameraCapture: t.function(),
+    });
 
     setup() {
         this.formatFloatTime = registry.category("formatters").get("float_time");

@@ -1,16 +1,17 @@
 import { rpc } from "@web/core/network/rpc";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import {_t} from "@web/core/l10n/translation";
 
 export class Many2One extends Component {
     static template = "hr_attendance.Many2One";
     static components = { AutoComplete };
-    static props = {
-        token: String,
-        update: Function,
-        value: String,
-    };
+
+    props = useProps({
+        token: t.string(),
+        update: t.function(),
+        value: t.string(),
+    });
 
     get sources() {
         return [
