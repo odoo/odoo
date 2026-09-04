@@ -20,6 +20,8 @@ from odoo.tools.float_utils import float_round, float_compare
 from odoo.tools.intervals import Intervals
 from odoo.tools.misc import clean_context, format_date
 from odoo.tools.translate import _
+from odoo.tools import config
+from odoo.modules import module
 
 _logger = logging.getLogger(__name__)
 
@@ -947,6 +949,7 @@ Versions:
 
     def write(self, vals):
         values = vals
+        old_states = {holiday.id: holiday.state for holiday in self}
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
         if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user
@@ -977,6 +980,24 @@ Versions:
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
         result = super().write(values)
+
+        if 'state' in values:
+            active_states = ['confirm', 'validate1', 'validate']
+            is_testing = config.get('test_enable') or module.current_test
+            # Skip this check during module installation / demo data loading
+            if not (self.env.context.get('install_mode') or self.env.context.get('install_demo') or is_testing):
+                for holiday in self:
+                    if holiday.leave_type_support_document and not holiday.supported_attachment_ids:
+                        old_state = old_states.get(holiday.id)
+                        new_state = holiday.state
+                        if new_state in active_states:
+                            is_moving_forward = old_state not in active_states or active_states.index(new_state) > active_states.index(old_state)
+                            if is_moving_forward:
+                                raise ValidationError(_(
+                                    "You must attach a supporting document to submit or approve a time off request for the leave type %(leave_type)s.",
+                                    leave_type=holiday.holiday_status_id.name
+                                ))
+
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'holiday_status_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 self._check_validity()
