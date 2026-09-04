@@ -191,7 +191,7 @@ class SaleOrderTemplateLine(models.Model):
             self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         )
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == "multi").sorted()
-        lines = [ptav.display_name for ptav in no_variant_ptavs - multi_ptavs - custom_ptavs]
+        lines = (no_variant_ptavs - multi_ptavs - custom_ptavs).mapped("display_name")
         for pta, ptavs in multi_ptavs.grouped("attribute_id").items():
             lines.append(
                 self.env._(

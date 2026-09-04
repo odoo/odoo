@@ -18,11 +18,11 @@ class ProductProduct(models.Model):
             ('website_published', '=', True),
         ], limit=1))
 
-    def get_product_multiline_description_sale(self, with_display_name=True):
+    def get_product_multiline_description_sale(self, *args, **kwargs):
         payment_channels = self.channel_ids.filtered(lambda course: course.enroll == 'payment')
 
         if not payment_channels:
-            return super().get_product_multiline_description_sale(with_display_name=with_display_name)
+            return super().get_product_multiline_description_sale(*args, **kwargs)
 
         new_line = '' if len(payment_channels) == 1 else '\n'
         return _('Access to: %(new_line)s%(channel_list)s', new_line=new_line, channel_list='\n'.join(payment_channels.mapped('name')))
