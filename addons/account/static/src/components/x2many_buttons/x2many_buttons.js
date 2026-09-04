@@ -2,15 +2,16 @@ import { _t } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 class X2ManyButtons extends Component {
     static template = "account.X2ManyButtons";
-    static props = {
+
+    props = useProps({
         ...standardFieldProps,
-        treeLabel: { type: String },
-        nbRecordsShown: { type: Number, optional: true },
-    };
+        treeLabel: t.string(),
+        nbRecordsShown: t.number().optional(),
+    });
 
     setup() {
         this.orm = useService("orm");

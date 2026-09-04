@@ -1,22 +1,28 @@
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class ListItem extends Component {
     static template = "account.GroupedItemTemplate";
-    static props = ["item_vals", "options"];
+    props = useProps({
+        item_vals: t.any(),
+        options: t.any(),
+    });
 }
 
 class ListGroup extends Component {
     static template = "account.GroupedItemsTemplate";
     static components = { ListItem };
-    static props = ["group_vals", "options"];
+    props = useProps({
+        group_vals: t.any(),
+        options: t.any(),
+    });
 }
 
 class ShowGroupedList extends Component {
     static template = "account.GroupedListTemplate";
     static components = { ListGroup };
-    static props = {...standardFieldProps};
+    props = useProps(standardFieldProps);
     getValue() {
         const value = this.props.record.data[this.props.name];
         return value

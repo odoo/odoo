@@ -1,4 +1,4 @@
-import { Component } from '@odoo/owl';
+import { Component, t, useProps } from '@odoo/owl';
 import { registry } from '@web/core/registry';
 import { standardWidgetProps } from '@web/views/widgets/standard_widget_props';
 
@@ -9,10 +9,11 @@ export const COLLAPSE_ICONS = {
 
 export class SectionStateIcon extends Component {
     static template = 'account.SectionStateIcon';
-    static props = {
+
+    props = useProps({
         ...standardWidgetProps,
-        iconMapping: Object,
-    };
+        iconMapping: t.object(),
+    });
 
     get icon() {
         for (const [field, icon] of Object.entries(this.props.iconMapping)) {

@@ -1,15 +1,16 @@
+import { t, useProps } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { DocumentFileUploader } from "../document_file_uploader/document_file_uploader";
 
 export class AccountFileUploader extends DocumentFileUploader {
     static template = "account.AccountFileUploader";
-    static props = {
-        ...DocumentFileUploader.props,
-        btnClass: { type: String, optional: true },
-        linkText: { type: String, optional: true },
-        togglerTemplate: { type: String, optional: true },
-    };
+
+    accountProps = useProps({
+        btnClass: t.string().optional(),
+        linkText: t.string().optional(),
+        togglerTemplate: t.string().optional(),
+    });
 
     getExtraContext() {
         const extraContext = super.getExtraContext();

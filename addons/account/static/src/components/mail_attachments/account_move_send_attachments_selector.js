@@ -1,5 +1,5 @@
 import { dataUrlToBlob } from "@mail/core/common/attachment_uploader_hook";
-import { onWillStart, Component, signal } from "@odoo/owl";
+import { onWillStart, Component, signal, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -15,7 +15,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class AccountMoveSendAttachmentsSelector extends Component {
     static template = "account.AccountMoveSendAttachmentsSelector";
     static components = { Dropdown, DropdownItem, FileUploader };
-    static props = { ...standardFieldProps };
+    props = useProps(standardFieldProps);
 
     fileUploadTriggerRef = signal.ref();
 

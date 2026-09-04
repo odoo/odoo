@@ -4,16 +4,17 @@ import { useService } from "@web/core/utils/hooks";
 
 import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class DocumentStatePopover extends Component {
     static template = "account.DocumentStatePopover";
-    static props = {
-        close: Function,
-        onClose: Function,
-        copyText: Function,
-        message: String,
-    };
+
+    props = useProps({
+        close: t.function(),
+        onClose: t.function(),
+        copyText: t.function(),
+        message: t.string(),
+    });
 }
 
 export class DocumentState extends SelectionField {

@@ -16,9 +16,11 @@ import {
     onPatched,
     onWillStart,
     signal,
+    t,
     toRaw,
     proxy,
     useEffect,
+    useProps,
 } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
@@ -26,16 +28,17 @@ import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
  A line of some TaxTotalsComponent, giving the values of a tax group.
  **/
 class TaxGroupComponent extends Component {
-    static props = {
-        totals: { optional: true },
-        subtotal: { optional: true },
-        taxGroup: { optional: true },
-        onChangeTaxGroup: { optional: true },
-        isReadonly: Boolean,
-        invalidate: Function,
-        removeCashRounding: { type: Function, optional: true },
-    };
     static template = "account.TaxGroupComponent";
+
+    props = useProps({
+        totals: t.any().optional(),
+        subtotal: t.any().optional(),
+        taxGroup: t.any().optional(),
+        onChangeTaxGroup: t.any().optional(),
+        isReadonly: t.boolean(),
+        invalidate: t.function(),
+        removeCashRounding: t.function().optional(),
+    });
 
     inputTaxRef = signal.ref();
     numpadDecimalRef = signal.ref();
@@ -143,9 +146,8 @@ class TaxGroupComponent extends Component {
 export class TaxTotalsComponent extends Component {
     static template = "account.TaxTotalsField";
     static components = { TaxGroupComponent };
-    static props = {
-        ...standardFieldProps,
-    };
+
+    props = useProps(standardFieldProps);
 
     totals = computed(() => this.formatData(this.props));
 
