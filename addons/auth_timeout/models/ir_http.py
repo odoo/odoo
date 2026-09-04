@@ -7,6 +7,9 @@ from odoo.exceptions import AccessDenied
 from odoo.http import request, root, SessionExpiredException
 
 
+_logger = logging.getLogger(__name__)
+
+
 class CheckIdentityException(SessionExpiredException):
     """Exception raised when a user is requested to re-authenticate."""
 
@@ -69,6 +72,16 @@ class IrHttp(models.AbstractModel):
                             timestamp_1fa, auth_method_1fa = first_fa
                             if timestamp_1fa > threshold:
                                 res["1fa"] = auth_method_1fa
+                    if reauth_type == 'logout':
+                        _logger.info(
+                            "User %r (uid: %s) automatically logged out after %s seconds of inactivity.",
+                            request.session.login, request.session.uid, timeout,
+                        )
+                    else:
+                        _logger.info(
+                            "User %r (uid: %s) session locked after %s seconds of inactivity.",
+                            request.session.login, request.session.uid, timeout,
+                        )
                     return res
 
     @classmethod
