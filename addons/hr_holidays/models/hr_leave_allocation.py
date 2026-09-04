@@ -488,7 +488,7 @@ class HrLeaveAllocation(models.Model):
                 # Accrual plan is not configured properly or has not started
                 if date_to < first_level_start_date:
                     continue
-                allocation.lastcall = max(allocation.lastcall, first_level_start_date)
+                allocation.lastcall = max(allocation.lastcall, first_level_start_date) if allocation.lastcall else first_level_start_date
                 allocation.actual_lastcall = allocation.lastcall
                 allocation.nextcall = first_level._get_next_date(allocation.lastcall)
                 # adjust nextcall for carryover
