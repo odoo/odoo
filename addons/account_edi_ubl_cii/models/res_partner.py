@@ -138,6 +138,11 @@ class ResPartner(models.Model):
         compute='_compute_routing_identifier',
         inverse='_inverse_routing_identifier',
     )
+    routing_identifier_override = fields.Char(
+        string="Peppol Endpoint Override",
+        help="Manually override the routing scheme and endpoint.",
+        tracking=True,
+    )
     available_routing_schemes = fields.Json(compute='_compute_available_routing_schemes')
 
     @api.depends_context('company')
@@ -146,12 +151,19 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_ubl_format = partner.invoice_edi_format in self._get_ubl_cii_formats()
 
-    @api.depends('vat', 'additional_identifiers', 'country_id')
+    @api.depends('vat', 'additional_identifiers', 'country_id', 'routing_identifier_override')
     def _compute_routing_scheme_endpoint(self):
         for partner in self:
-            identifier_vals = partner._get_preferred_routing_identifier_vals(force_recompute=True)
-            partner.routing_scheme = identifier_vals.get('scheme') or False
-            partner.routing_endpoint = identifier_vals.get('value') or False
+            if override := partner.routing_identifier_override:
+                scheme, endpoint = partner._parse_routing_identifier_override(override)
+            elif partner.vat or partner.additional_identifiers:
+                identifier_vals = partner._get_preferred_routing_identifier_vals(force_recompute=True)
+                scheme = identifier_vals.get('scheme') or False
+                endpoint = identifier_vals.get('value') or False
+            else:
+                scheme = endpoint = False
+            partner.routing_scheme = scheme
+            partner.routing_endpoint = endpoint
 
     @api.depends('routing_scheme', 'routing_endpoint')
     def _compute_routing_identifier(self):
@@ -164,10 +176,7 @@ class ResPartner(models.Model):
 
     def _inverse_routing_identifier(self):
         for partner in self:
-            routing_identifier = partner.routing_identifier or ''
-            scheme, sep, endpoint = routing_identifier.partition(':')
-            if routing_identifier and not sep:
-                raise UserError(self.env._("Routing identifier should be in the format 'SCHEME:ENDPOINT'."))
+            scheme, endpoint = partner._split_routing_identifier(partner.routing_identifier)
             if scheme and endpoint:  # validated through '_clean_routing_endpoint'.
                 partner.write({'routing_scheme': scheme, 'routing_endpoint': endpoint})
             else:
@@ -191,7 +200,28 @@ class ResPartner(models.Model):
 
     def write(self, vals):
         self._clean_routing_endpoint(vals, partners=self)
+        if vals.keys() & {'routing_scheme', 'routing_endpoint'}:
+            for partner in self:
+                if partner.routing_identifier_override:
+                    scheme = vals.get('routing_scheme', partner.routing_scheme)
+                    endpoint = vals.get('routing_endpoint', partner.routing_endpoint)
+                    partner.routing_identifier_override = f"{scheme}:{endpoint}" if scheme and endpoint else False
         return super().write(vals)
+
+    def _parse_routing_identifier_override(self, identifier):
+        scheme, endpoint = self._split_routing_identifier(identifier)
+        if scheme not in self.available_routing_schemes:
+            raise UserError(self.env._("Unsupported Routing Scheme '%s'. Please enter a valid EAS code.", scheme))
+        result = self._validate_identifier_by_scheme(scheme, endpoint, validation='error')
+        return scheme, result['value']
+
+    def _split_routing_identifier(self, identifier):
+        if not identifier:
+            return False, False
+        scheme, sep, endpoint = identifier.partition(':')
+        if not sep or not scheme or not endpoint:
+            raise UserError(self.env._("Routing identifier should be in the format 'SCHEME:ENDPOINT'."))
+        return scheme, endpoint
 
     def _get_all_identifiers_metadata(self):
         # EXTENDS 'base' - add corner case metadata
@@ -207,6 +237,10 @@ class ResPartner(models.Model):
         if (scheme := vals.get('routing_scheme')) and (endpoint := vals.get('routing_endpoint')):
             result = self.env['res.partner']._validate_identifier_by_scheme(scheme, endpoint, validation='error')
             vals['routing_endpoint'] = result['value']
+        if override := vals.get('routing_identifier_override'):
+            scheme, endpoint = self._parse_routing_identifier_override(override)
+            if scheme and endpoint:
+                vals['routing_identifier_override'] = f"{scheme}:{endpoint}"
 
     def _validate_identifier_by_scheme(self, scheme, value, validation=False):
         # EXTENDS 'base' - add basic Peppol validation for EAS schemes

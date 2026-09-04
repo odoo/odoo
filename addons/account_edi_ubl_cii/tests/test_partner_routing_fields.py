@@ -49,13 +49,14 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         # Create a partner, fill the peppol fields, then set the country
         partner_1 = self.env['res.partner'].create({
             'name': "A new partner",
-            'routing_scheme': '0184',
-            'routing_endpoint': '12345674'
+            'vat': 'BA12345674',
+            'routing_scheme': '9924',
+            'routing_endpoint': 'BA12345674'
         })
         partner_1.country_id = self.env.ref('base.ba').id
         self.assertEqual(
             (partner_1.routing_scheme, partner_1.routing_endpoint),
-            ('0184', '12345674'),
+            ('9924', 'BA12345674'),
         )
 
         # Create a partner, set the country, then fill the peppol fields
@@ -64,19 +65,20 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
             'country_id': self.env.ref('base.ba').id,
         })
         partner_2.write({
-            'routing_scheme': '0184',
-            'routing_endpoint': '12345674',
+            'vat': 'BA12345674',
+            'routing_scheme': '9924',
+            'routing_endpoint': 'BA12345674',
         })
         self.assertEqual(
             (partner_2.routing_scheme, partner_2.routing_endpoint),
-            ('0184', '12345674'),
+            ('9924', 'BA12345674'),
         )
 
         # Change the country, the value is not changed since there is no better value so far
         partner_2.country_id = self.env.ref('base.be')
         self.assertEqual(
             (partner_2.routing_scheme, partner_2.routing_endpoint),
-            ('0184', '12345674'),
+            ('9924', 'BA12345674'),
         )
         # Change the country and add a new additional identifier, endpoint is recomputed
         partner_2.additional_identifiers = {'BE_EN': '0477.472.701'}
@@ -151,3 +153,63 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         # An invalid France VAT is rejected with a VAT validation error.
         with self.assertRaisesRegex(ValidationError, "for partner does not seem to be valid"):
             partner.routing_identifier = '9957:FR00000000000'
+
+    def test_routing_identifier_override(self):
+        """ Test that the routing identifier override updates the routing scheme and endpoint
+        and falls back to the default behavior when the routing identifier override is cleared.
+        """
+        partner = self.env['res.partner'].create({
+            'name': "Route Partner",
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+        original_identifier = partner.routing_identifier
+
+        # Without routing_identifier_override, the routing_identifier is computed from the VAT.
+        self.assertTrue(partner.routing_identifier)
+
+        # 1. Setting the routing_identifier_override updates the routing scheme, endpoint and identifier.
+        partner.routing_identifier_override = '9925:BE0505665156'
+        self.assertEqual(
+            (partner.routing_scheme, partner.routing_endpoint, partner.routing_identifier),
+            ('9925', 'BE0505665156', '9925:BE0505665156')
+        )
+
+        # 2. Changing the routing scheme and endpoint updates the routing_identifier_override.
+        partner.write({'routing_scheme': '0208', 'routing_endpoint': '0477472701'})
+        self.assertEqual(partner.routing_identifier_override, '0208:0477472701')
+
+        # Clearing the routing_identifier_override computes the routing identifier from the VAT.
+        partner.routing_identifier_override = False
+        self.assertEqual(partner.routing_identifier, original_identifier)
+
+    def test_clear_vat_and_additional_identifiers_clears_routing_fields(self):
+        """ Test that clearing VAT and additional identifiers also clears the routing fields when
+        routing_identifier_override is not set, but keeps the routing fields when routing_identifier_override is set.
+        """
+        partner_1 = self.env['res.partner'].create({
+            'name': "Route Partner 1",
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+        partner_2 = partner_1.copy({'name': "Route Partner 2"})
+
+        self.assertEqual(partner_1.routing_identifier, '0208:0477472701')
+
+        # Removing VAT and additional_identifiers clears scheme, endpoint
+        partner_1.write({'vat': False, 'additional_identifiers': False})
+        self.assertFalse(partner_1.routing_scheme)
+        self.assertFalse(partner_1.routing_endpoint)
+
+        # Clearing VAT and additional identifiers does not clear the routing fields as routing_identifier_override is set.
+        partner_2.routing_identifier_override = '9925:BE0505665156'
+        partner_2.write({'vat': False, 'additional_identifiers': False})
+        self.assertEqual(
+            (partner_2.routing_scheme, partner_2.routing_endpoint),
+            ('9925', 'BE0505665156')
+        )
+
+        # Clearing the override on a partner with no VAT/additional_identifiers clears scheme, endpoint
+        partner_2.routing_identifier_override = False
+        self.assertFalse(partner_2.routing_scheme)
+        self.assertFalse(partner_2.routing_endpoint)

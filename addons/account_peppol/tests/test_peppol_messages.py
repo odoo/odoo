@@ -485,7 +485,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         with mock_lookup_success('0208:0428759497'):
             wizard = self.create_send_and_print(moves, default=True)
         self.assertEqual(wizard.summary_data, {
-            'email': {'count': 2, 'label': 'by Email'},
             'peppol': {'count': 2, 'label': 'by Peppol'},
         })
         wizard.action_send_and_print()
@@ -619,6 +618,25 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         partners._compute_available_routing_schemes()
         for partner in partners:
             self.assertFalse('odemo' in partner.available_routing_schemes)
+
+    def test_peppol_fallback_routing_identifier_lookup(self):
+        """Verify fallback from 0208 to 9925 and vice versa when the primary lookup fails."""
+        partner = self.env['res.partner'].create({
+            'name': "Belgian Partner",
+            'city': "Ghent",
+            'country_id': self.env.ref('base.be').id,
+            'routing_identifier': '0208:0477472701',
+        })
+        with (
+            mock_lookup_not_found('0208:0477472701'),
+            mock_lookup_success('9925:be0477472701'),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+
+        self.assertRecordValues(partner, [{
+            'peppol_verification_state': 'valid',
+            'routing_identifier': '9925:BE0477472701',
+        }])
 
     def test_send_self_billed_invoice_via_peppol(self):
         """Test sending a self-billed invoice (vendor bill) via Peppol.
