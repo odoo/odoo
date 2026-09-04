@@ -610,13 +610,11 @@ export class RenderPlugin extends Plugin {
     }
 
     renderEmailHtml(template) {
-        let fragment;
+        let fragments = [];
         if (this.renderTree) {
-            fragment = this.renderTree.render();
+            fragments = this.renderTree.render();
         }
-        if (fragment) {
-            template.content.appendChild(fragment);
-        }
+        template.content.append(...fragments);
         this.ensureTemplateContent(template);
         return template;
     }

@@ -24,6 +24,10 @@ export class NodePositionManager extends Array {
         }
     }
 
+    /**
+     * @param {Object} context { renderPositionedNodes }
+     * @returns {Object} context { nodeIds }
+     */
     renderContext(context = {}) {
         let nodes = [];
         const { renderPositionedNodes } = context;
@@ -163,10 +167,17 @@ export class LayoutModel {
         return renderAttributes(this.getRef(ref));
     }
 
+    /**
+     * @param {Object} context { renderPositionedNodes }
+     * @returns {Object} context { renderPositionedNodes, model }
+     */
     renderContext(context = {}) {
         return { ...context, model: this };
     }
 
+    /**
+     * @param {Object} context { renderPositionedNodes }
+     */
     renderToFragment(context = {}) {
         const nodePositionManager = new NodePositionManager();
         const fragment = renderToFragment(
@@ -395,43 +406,35 @@ export class EmailNode {
     }
 
     render(context = {}) {
-        // Small optimization: if "this" would be rendered as a div with no
-        // style instruction, it does not need to be rendered and we can
-        // keep only the padding and/or the margin, if there is one.
-        // TODO EGGMAIL: missing optimization: spacing wrapper can absorb
-        // a non-neutral div ?
         const isNeutral = this.layout.isNeutral();
-        const render = (layoutContainer, renderContext = {}, extraPositionContext = {}) => {
-            let renderChildren;
-            if (layoutContainer === this.marginNode) {
-                if (!isNeutral) {
-                    renderChildren = [this];
-                }
-            } else if (layoutContainer === this && this.paddingNode) {
-                renderChildren = [this.paddingNode];
+        const stack = [
+            { nodes: [this.marginNode], shouldRender: () => this.marginNode },
+            {
+                nodes: [this],
+                // Small optimization: if "this" would be rendered as a div with no
+                // style instruction, it does not need to be rendered and we can
+                // keep only the padding and/or the margin, if there is one.
+                // TODO EGGMAIL: missing optimization: spacing wrapper can absorb
+                // a non-neutral div ?
+                shouldRender: () => !isNeutral || (!this.marginNode && !this.paddingNode),
+            },
+            { nodes: [this.paddingNode], shouldRender: () => this.paddingNode },
+        ];
+        const render = (index, renderContext) => {
+            const { nodes, shouldRender } = stack.at(index);
+            if (index === stack.length) {
+                return this.children.flatMap((child) => child.render(renderContext));
             }
-            let renderPositionedNodes = (positionContext = {}) =>
-                renderChildren.map((child) =>
-                    render(child, renderChildren, {
-                        ...extraPositionContext,
-                        ...positionContext,
-                    })
-                );
-            if (!renderChildren) {
-                renderPositionedNodes = (positionContext = {}) =>
-                    this.children.map((child) => child.render(positionContext));
+            if (!shouldRender()) {
+                return render(index + 1, renderContext);
             }
-            return layoutContainer.layout.renderToFragment({
-                ...renderContext,
-                renderPositionedNodes,
-            });
+            return nodes.map((node) =>
+                node.layout.renderToFragment({
+                    ...renderContext,
+                    renderPositionedNodes: (nodesContext) => render(index + 1, nodesContext),
+                })
+            );
         };
-        if (this.marginNode) {
-            return render(this.marginNode, {}, context);
-        } else if (this.paddingNode) {
-            return render(isNeutral ? this.paddingNode : this, context);
-        } else {
-            return render(this, context);
-        }
+        return render(0, context);
     }
 }

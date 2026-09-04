@@ -103,6 +103,10 @@ export class UniqueArray {
         return this.array.map(callbackFn, thisArg);
     }
 
+    flatMap(callbackFn, thisArg) {
+        return this.array.flatMap(callbackFn, thisArg);
+    }
+
     [Symbol.iterator]() {
         return this.array[Symbol.iterator]();
     }
