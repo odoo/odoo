@@ -85,11 +85,9 @@ class TestTotalAverageCostMrp(TestTotalAverageCostCommon):
             'workcenter_id': workcenter.id, 'time_cycle_manual': 60,
         })
         self._finish_mo(mo)
-        work_center_cost = sum(mo.workorder_ids.mapped('duration_expected')) / 60 * 60
-        self.assertGreater(work_center_cost, 0)
         self._run_category_wizard()
         # 労務費 belongs in the cost of what was produced
-        self.assertAlmostEqual(self.product.standard_price, (120 + work_center_cost) / 3, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (120 + 3 * 60) / 3, places=2)
 
     def test_byproduct_share_does_not_depend_on_the_selection(self):
         mo, _byproduct = self._create_mo(byproduct_cost_share=25)
