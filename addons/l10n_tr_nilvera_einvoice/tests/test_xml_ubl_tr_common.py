@@ -106,3 +106,15 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
         credit_note = invoice._reverse_moves()
         credit_note.action_post()
         return self.env['account.edi.xml.ubl.tr']._export_invoice(credit_note)[0]
+
+    def _create_invoice_from_xml(self, xml_bytes, filename='import.xml'):
+        journal = (self.env['account.move']
+                   .with_company(self.company_data['company'])
+                   ._l10n_tr_get_nilvera_invoice_journal('purchase'))
+        attachment = self.env['ir.attachment'].create({
+            'name': filename,
+            'raw': xml_bytes,
+            'type': 'binary',
+            'mimetype': 'application/xml',
+        })
+        return journal.with_context(default_move_type='in_invoice')._create_document_from_attachment(attachment.id)
