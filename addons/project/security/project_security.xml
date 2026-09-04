@@ -245,6 +245,22 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="project_task_rule_portal_project_sharing_create_access" model="ir.rule">
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="active" model="ir.rule"
+            eval="obj().env.ref('project.project_task_rule_portal_project_sharing').active"/>
+        <field name="domain_force">[
+            ('project_id.privacy_visibility', '=', 'portal'),
+            ('active', '=', True),
+            ('project_id.collaborator_ids.partner_id', '=', user.partner_id.id),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record model="ir.rule" id="update_comp_rule">
         <field name="name">Project/Updates: multi-company</field>
         <field name="model_id" ref="model_project_update"/>

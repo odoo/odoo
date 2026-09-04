@@ -55,4 +55,6 @@ class ProjectCollaborator(models.Model):
 
         task_portal_ir_rule = self.env.ref('project.project_task_rule_portal_project_sharing').sudo()
         if task_portal_ir_rule.active != active:
-            task_portal_ir_rule.write({'active': active})
+            (task_portal_ir_rule
+                + self.env.ref('project.project_task_rule_portal_project_sharing_create_access').sudo()
+            ).write({'active': active})
