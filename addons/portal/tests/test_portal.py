@@ -52,7 +52,7 @@ class TestUsersHttp(BaseCommon, HttpCase):
         portal_user = self.portal_user.partner_id
 
         bank_account = self.env['res.partner.bank'].create({
-            'account_number': '123456789',
+            'formatted_account_number': '123456789',
             'partner_id': portal_user.id,
             'holder_name': 'Partner A Holder',
         })

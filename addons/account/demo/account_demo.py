@@ -109,7 +109,7 @@ class AccountChartTemplate(models.AbstractModel):
             return {}
         return {
             'demo_bank_1': {
-                'account_number': f'BANK{company.id}34567890',
+                'formatted_account_number': f'BANK{company.id}34567890',
                 'partner_id': company.root_id.partner_id.id,
                 'journal_id': 'bank',
                 'allow_out_payment': True,

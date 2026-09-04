@@ -230,7 +230,7 @@ class AccountChartTemplate(models.AbstractModel):
             if partner:
                 self.env['res.partner.bank'].create({
                     'partner_id': partner.id,
-                    'account_number': account_number,
+                    'formatted_account_number': account_number,
                     'company_id': self.env.company.id,
                 })
 

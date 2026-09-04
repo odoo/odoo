@@ -961,7 +961,7 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
     def test_payment_bank_account_from_commercial(self):
         """ Outbound bank list for a payment on a child contact comes from the commercial partner. """
         bank = self.env['res.partner.bank'].create({
-            'account_number': 'NL00COMM0000000001',
+            'formatted_account_number': 'NL00COMM0000000001',
             'partner_id': self.commercial_partner.id,
         })
         payment = self.init_payment(-100.0, partner=self.invoice_contact)

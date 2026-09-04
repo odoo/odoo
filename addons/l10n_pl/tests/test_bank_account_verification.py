@@ -73,7 +73,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
         bank_account = self.env['res.partner.bank']
         if account_number:
             bank_account = self.env['res.partner.bank'].create({
-                'account_number': account_number,
+                'formatted_account_number': account_number,
                 'partner_id': supplier.id,
             })
         move = self.env['account.move'].create({
@@ -114,7 +114,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         }])
@@ -148,7 +148,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_request_id': 'AZERTYUIOP-99',
             'verification_timestamp': datetime(2026, 1, 30, 10, 0, 0),
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         })
@@ -159,7 +159,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_request_id': 'AZERTYUIOP-01',
             'verification_timestamp': self.date,
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         }])
@@ -177,7 +177,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
 
         # assign a bank account number
         bank_account = self.pl_supplier_bank_account = self.env['res.partner.bank'].create({
-            'account_number': '61109010140000071219812870',
+            'formatted_account_number': '61109010140000071219812870',
             'partner_id': supplier.id,
         })
         self._check_form_fields(move, not_found_partners=supplier)
@@ -188,7 +188,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-15',
             'partner_bank_id': bank_account.id,
-            'partner_bank_account_number': bank_account.sanitized_account_number,
+            'partner_bank_account_number': bank_account.account_number,
             'partner_id': supplier.id,
             'partner_vat': supplier.vat,
         }])
@@ -203,7 +203,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-04',
             'partner_bank_id': supplier_bank.id,
-            'partner_bank_account_number': supplier_bank.sanitized_account_number,
+            'partner_bank_account_number': supplier_bank.account_number,
             'partner_id': supplier.id,
             'partner_vat': supplier.vat,
         }])
@@ -221,7 +221,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-02',
                 'partner_bank_id': supplier_bank.id,
-                'partner_bank_account_number': supplier_bank.sanitized_account_number,
+                'partner_bank_account_number': supplier_bank.account_number,
                 'partner_id': supplier.id,
                 'partner_vat': supplier.vat,
             },
@@ -230,7 +230,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-02',
                 'partner_bank_id': self.pl_supplier_bank_account.id,
-                'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+                'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
                 'partner_id': self.pl_supplier.id,
                 'partner_vat': self.pl_supplier.vat,
             },
@@ -249,7 +249,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-03',
                 'partner_bank_id': supplier_bank.id,
-                'partner_bank_account_number': supplier_bank.sanitized_account_number,
+                'partner_bank_account_number': supplier_bank.account_number,
                 'partner_id': supplier.id,
                 'partner_vat': supplier.vat,
             },
@@ -258,7 +258,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_timestamp': self.date,
                 'verification_request_id': 'AZERTYUIOP-03',
                 'partner_bank_id': self.pl_supplier_bank_account.id,
-                'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+                'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
                 'partner_id': self.pl_supplier.id,
                 'partner_vat': self.pl_supplier.vat,
             },
@@ -277,7 +277,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_request_id': 'AZERTYUIOP-03',
                 'verification_timestamp': self.date,
                 'partner_bank_id': bank_account.id,
-                'partner_bank_account_number': bank_account.sanitized_account_number,
+                'partner_bank_account_number': bank_account.account_number,
                 'partner_id': supplier.id,
                 'partner_vat': supplier.vat,
             },
@@ -286,7 +286,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_request_id': 'AZERTYUIOP-03',
                 'verification_timestamp': self.date,
                 'partner_bank_id': self.pl_supplier_bank_account.id,
-                'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+                'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
                 'partner_id': self.pl_supplier.id,
                 'partner_vat': self.pl_supplier.vat,
             },
@@ -305,7 +305,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_request_id': 'AZERTYUIOP-05',
                 'verification_timestamp': self.date,
                 'partner_bank_id': bank_account.id,
-                'partner_bank_account_number': bank_account.sanitized_account_number,
+                'partner_bank_account_number': bank_account.account_number,
                 'partner_id': supplier.id,
                 'partner_vat': supplier.vat,
             },
@@ -314,7 +314,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
                 'verification_request_id': 'AZERTYUIOP-05',
                 'verification_timestamp': self.date,
                 'partner_bank_id': self.pl_supplier_bank_account.id,
-                'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+                'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
                 'partner_id': self.pl_supplier.id,
                 'partner_vat': self.pl_supplier.vat,
             },
@@ -328,7 +328,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_request_id': 'AZERTYUIOP-99',
             'verification_timestamp': self.date,
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         })
@@ -381,7 +381,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         }])
@@ -412,7 +412,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         }])
@@ -426,7 +426,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_timestamp': self.date,
             'verification_request_id': 'AZERTYUIOP-01',
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         }])
@@ -438,7 +438,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
             'verification_request_id': 'AZERTYUIOP-99',
             'verification_timestamp': self.date,
             'partner_bank_id': self.pl_supplier_bank_account.id,
-            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_account_number,
+            'partner_bank_account_number': self.pl_supplier_bank_account.account_number,
             'partner_id': self.pl_supplier.id,
             'partner_vat': self.pl_supplier.vat,
         })
@@ -460,7 +460,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
     def test_create_single_payment_for_partner_with_2_bank_accounts(self):
         # Partner has 2 bank accounts: 1 valid and 1 invalid
         self.env['res.partner.bank'].create({
-            'account_number': 'PL61109010140000071219812000',  # invalid
+            'formatted_account_number': 'PL61109010140000071219812000',  # invalid
             'partner_id': self.pl_supplier.id,
         })
         # A verification will be created for both bank account, but the payment register wizard should not display
@@ -476,7 +476,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
 
         # Create a second bank account and trigger the verification creation
         second_bank_account = self.env['res.partner.bank'].create({
-            'account_number': 'PL61109010140000071219812000',  # invalid
+            'formatted_account_number': 'PL61109010140000071219812000',  # invalid
             'partner_id': self.pl_supplier.id,
         })
         move = self.env['account.move'].create({

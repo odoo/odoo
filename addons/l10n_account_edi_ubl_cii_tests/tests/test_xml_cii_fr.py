@@ -20,7 +20,7 @@ class TestCIIFR(TestUBLCommon):
             'city': "Paris",
             'vat': 'FR05677404089',
             'country_id': cls.env.ref('base.fr').id,
-            'bank_ids': [(0, 0, {'account_number': 'FR15001559627230', 'allow_out_payment': True})],
+            'bank_ids': [(0, 0, {'formatted_account_number': 'FR15001559627230', 'allow_out_payment': True})],
             'phone': '+1 (650) 555-0111',
             'email': "partner1@yourcompany.com",
             'ref': 'ref_partner_1',
@@ -34,7 +34,7 @@ class TestCIIFR(TestUBLCommon):
             'city': "Colombey-les-Deux-Églises",
             'vat': 'FR35562153452',
             'country_id': cls.env.ref('base.fr').id,
-            'bank_ids': [(0, 0, {'account_number': 'FR90735788866632', 'allow_out_payment': True})],
+            'bank_ids': [(0, 0, {'formatted_account_number': 'FR90735788866632', 'allow_out_payment': True})],
             'ref': 'ref_partner_2',
             'invoice_edi_format': 'facturx',
         })
@@ -117,7 +117,7 @@ class TestCIIFR(TestUBLCommon):
 
     def test_export_pdf(self):
         acc_bank = self.env['res.partner.bank'].create({
-            'account_number': 'FR15001559627231',
+            'formatted_account_number': 'FR15001559627231',
             'partner_id': self.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })
@@ -381,7 +381,7 @@ class TestCIIFR(TestUBLCommon):
         """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
         """
         self.env['res.partner.bank'].sudo().create({
-            'account_number': 'FR15001559627230',
+            'formatted_account_number': 'FR15001559627230',
             'partner_id': self.company_data['company'].partner_id.id,
         })
         partner_vals = {
@@ -451,7 +451,7 @@ class TestCIIFR(TestUBLCommon):
 
     def test_import_fnfe_examples(self):
         self.env['res.partner.bank'].sudo().create({
-            'account_number': 'FR76 1254 2547 2569 8542 5874 698',
+            'formatted_account_number': 'FR76 1254 2547 2569 8542 5874 698',
             'partner_id': self.company_data['company'].partner_id.id,
         })
         # Source: official documentation of the FNFE (subdirectory: "5. FACTUR-X 1.0.06 - Examples")
@@ -500,7 +500,7 @@ class TestCIIFR(TestUBLCommon):
         NB: use move_type = 'out_invoice' s.t. we can retrieve the taxes used to create the invoices.
         """
         self.env['res.partner.bank'].sudo().create({
-            'account_number': 'FR15001559627230',
+            'formatted_account_number': 'FR15001559627230',
             'partner_id': self.company_data['company'].partner_id.id,
         })
         subfolder = "tests/test_files/from_odoo"
