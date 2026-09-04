@@ -3,7 +3,7 @@
 
 {
     'name' : 'Analytic Accounting',
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Accounting/Accounting',
     'depends' : ['base', 'mail', 'uom'],
     'description': """
