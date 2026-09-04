@@ -163,7 +163,7 @@ class MailScheduledMessage(models.Model):
             'target': 'new',
             'res_id': self.id,
             'context': {
-                'is_thread_composer': True,
+                'sync_attachments_to_thread_composer': True,
             }
         }
 
