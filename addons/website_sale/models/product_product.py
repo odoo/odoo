@@ -226,7 +226,7 @@ class ProductProduct(models.Model):
         return [
             self.env['website'].image_url(extra_image, 'image_1920')
             for extra_image in self.product_variant_image_ids + self.product_template_image_ids
-            if extra_image.image_128  # only images, no video urls
+            if not extra_image.video_url  # only images, no video thumbnails
         ]
 
     def write(self, vals):
