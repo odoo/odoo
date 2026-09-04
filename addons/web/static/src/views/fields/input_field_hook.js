@@ -1,7 +1,14 @@
-import { onMounted, onPatched, untrack, useListener, useProps } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    untrack,
+    useEffect,
+    useListener,
+    useProps,
+    useScope,
+} from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { useBus } from "@web/core/utils/hooks";
-import { onWillRender } from "@web/owl2/utils";
 
 /**
  * This hook is meant to be used by field components that use an input or
@@ -20,6 +27,7 @@ import { onWillRender } from "@web/owl2/utils";
  */
 export function useInputField(params) {
     const inputRef = params.ref;
+    const scope = useScope();
     const getEl = () => (inputRef ? untrack(inputRef) : null);
     const props = useProps();
     const fieldName = params.fieldName || props.name;
@@ -109,11 +117,6 @@ export function useInputField(params) {
     useListener(inputRef, "change", onChange);
     useListener(inputRef, "keydown", onKeydown);
 
-    // We need to call getValue to always observe
-    // the corresponding value in the record. Otherwise, in some cases,
-    // if the value in the record change the component isn't patched.
-    onWillRender(() => params.getValue());
-
     /**
      * Sometimes, a patch can happen with possible a new value for the field
      * If the user was typing a new value (isDirty) or the field is still invalid,
@@ -136,6 +139,20 @@ export function useInputField(params) {
     };
     onMounted(syncInputWithRecord);
     onPatched(syncInputWithRecord);
+
+    // Observe the displayed value once the input exists. Later changes request a
+    // render so `onPatched` synchronizes the final DOM and ref.
+    let isValueObserved = false;
+    useEffect(() => {
+        if (inputRef?.()) {
+            params.getValue();
+            if (isValueObserved) {
+                scope.render();
+            } else {
+                isValueObserved = true;
+            }
+        }
+    });
 
     const { model } = props.record;
     useBus(model.bus, "WILL_SAVE_URGENTLY", () => commitChanges(true));
