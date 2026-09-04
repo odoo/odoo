@@ -230,7 +230,7 @@
                     <button name="button_plan" type="object" string="Plan" class="oe_highlight" invisible="state in ('cancel', 'done') or is_planned" data-hotkey="z"/>
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state in ['cancel', 'done']" data-hotkey="z"/>
                     <button name="action_start"  type="object" string="Start" invisible="state != 'confirmed'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
+                    <field name="state" widget="mrp_production_locked_statusbar" statusbar_visible="draft,confirmed,done"/>
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="x"
                             invisible="not id or state in ('done', 'cancel')"
                             confirm="Are you sure you want to cancel this manufacturing order?&#10;This action cannot be undone."
