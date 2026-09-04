@@ -106,6 +106,7 @@
             'point_of_sale/static/src/app/utils/init_lna.js',
             'point_of_sale/static/src/app/utils/scale/*.js',
             'point_of_sale/static/src/backend/pos_open_ui_button/*',
+            'point_of_sale/static/src/backend/product_field/*',
         ],
         'web.assets_backend_lazy': [
             'point_of_sale/static/src/backend/views/pivot/*',
