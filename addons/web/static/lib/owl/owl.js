@@ -4564,7 +4564,7 @@ ${issueStrings}`);
         if (error) {
           return promise;
         }
-        _App.validateTarget(target);
+        // _App.validateTarget(target);
         prepare();
         fiber.commit(target, options);
         return promise;
@@ -4844,7 +4844,7 @@ ${issueStrings}`);
           root = null;
         }
       };
-      useEffect(() => {
+      const disposeEffect = immediateEffect(() => {
         const target = resolveTarget(this.props.target);
         if (!target) {
           return;
@@ -4868,7 +4868,7 @@ ${issueStrings}`);
         root.mount(target);
         return tearDown;
       });
-      onWillDestroy(tearDown);
+      onWillDestroy(disposeEffect);
     }
   };
   function resolveTarget(target) {
