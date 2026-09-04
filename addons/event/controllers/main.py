@@ -12,10 +12,11 @@ from odoo.tools import consteq
 class EventController(Controller):
 
     @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
-    def event_ics_file(self, event, **kwargs):
-        lang = request.context.get('lang', request.env.user.lang)
-        if request.env.user._is_public():
-            lang = request.cookies.get('frontend_lang')
+    def event_ics_file(self, event, lang=None, **kwargs):
+        if lang not in dict(request.env['res.lang'].get_installed()):
+            lang = request.context.get('lang', request.env.user.lang)
+            if request.env.user._is_public():
+                lang = request.cookies.get('frontend_lang')
         event = event.with_context(lang=lang)
         files = event._get_ics_file()
         if not event.id in files:
