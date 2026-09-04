@@ -1,7 +1,6 @@
 import {
     animationFrame,
     click,
-    edit,
     expect,
     mockDate,
     mockTimeZone,
@@ -13,11 +12,7 @@ import {
     test,
     waitFor,
 } from "@odoo/hoot";
-import {
-    assertDateTimePicker,
-    getPickerCell,
-    zoomOut,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
+import { getPickerCell, zoomOut } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickSave,
     contains,
@@ -129,50 +124,19 @@ test("Ensure only one datepicker is open", async () => {
 });
 
 test.tags("desktop");
-test("open datepicker on Control+Enter", async () => {
-    defineParams({
-        lang_parameters: {
-            date_format: "%d/%m/%Y",
-            time_format: "%H:%M:%S",
-        },
-    });
-    await mountView({
-        resModel: "res.partner",
-        type: "form",
-        arch: `
-            <form>
-                <field name="date"/>
-            </form>
-        `,
-    });
+test("pressing Escape discards the edited value", async () => {
+    await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 
-    expect(".o_field_date input").toHaveCount(1);
+    await contains(".o_field_widget[name='date'] button").click();
+    expect(".o_field_widget[name='date'] input").toHaveValue("02/03/2017");
 
-    await press(["ctrl", "enter"]);
+    await fieldInput("date").edit("09/01/1997", { confirm: false });
+    await press("Escape");
     await animationFrame();
-    expect(".o_datetime_picker").toHaveCount(1);
 
-    //edit the input and open the datepicker again with ctrl+enter
-    await contains(".o_field_date .o_input").click();
-    await edit("09/01/1997");
-    await press(["ctrl", "enter"]);
-    await animationFrame();
-    assertDateTimePicker({
-        title: "Jan 1997",
-        date: [
-            {
-                cells: [
-                    [29, 30, 31, 1, 2, 3, 4],
-                    [5, 6, 7, 8, [9], 10, 11],
-                    [12, 13, 14, 15, 16, 17, 18],
-                    [19, 20, 21, 22, 23, 24, 25],
-                    [26, 27, 28, 29, 30, 31, 1],
-                    [2, 3, 4, 5, 6, 7, 8],
-                ],
-                daysOfWeek: ["", "S", "M", "T", "W", "T", "F", "S"],
-                weekNumbers: [1, 2, 3, 4, 5, 6],
-            },
-        ],
+    expect(".o_datetime_picker").toHaveCount(0);
+    expect(".o_field_date button").toHaveText("Feb 3, 2017", {
+        message: "Should have discarded the edited value",
     });
 });
 

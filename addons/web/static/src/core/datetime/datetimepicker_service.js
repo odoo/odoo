@@ -249,22 +249,16 @@ export const datetimePickerService = {
                  * @param {KeyboardEvent} ev
                  */
                 function onInputKeydown(ev) {
-                    if (ev.key == "Enter" && ev.ctrlKey) {
-                        ev.preventDefault();
-                        const abort = updateValueFromInputs();
-                        if (abort) {
-                            return;
-                        }
-                        return open(ev.target === getInput(1) ? 1 : 0);
-                    }
                     switch (ev.key) {
-                        case "Enter":
-                        case "Escape": {
+                        case "Enter": {
                             const abort = updateValueFromInputs();
                             if (abort) {
                                 return;
                             }
                             return saveAndClose();
+                        }
+                        case "Escape": {
+                            return updateInputsFromValue();
                         }
                         case "Tab": {
                             if (
