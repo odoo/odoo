@@ -101,7 +101,8 @@ export const CLIPBOARD_WHITELISTS = {
     styledTags: ["SPAN", "B", "STRONG", "I", "S", "U", "FONT", "TD"],
 };
 
-const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
+const ONLY_LINK_REGEX =
+    /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$|^(mailto:)?[\w-.]+@(?:[\w-]+\.)+[\w-]{2,4}$/i;
 
 /**
  * @typedef {Object} ClipboardShared
