@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-31 06:53+0000\n"
+"PO-Revision-Date: 2026-09-02 05:11+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
 "website_sale/ja/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -438,7 +438,7 @@ msgid ""
 "<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"Add to "
 "wishlist\"/>"
 msgstr ""
-"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"ウィッシュ"
+"<i class=\"fa fa-heart-o me-2 me-lg-0\" role=\"img\" aria-label=\"ほしい物"
 "リストに追加\"/>"
 
 #. module: website_sale
@@ -837,7 +837,7 @@ msgstr "<span><b>Good job!</b> このツアーの全ステップを終了しま�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
-msgstr "<span>オーダ</span>"
+msgstr "<span>ご注文</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
@@ -1565,8 +1565,8 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"顧客に見せたい製品の説明。この説明は販売注文、配送注文、顧客請求書/クレジット"
-"ノートにコピーされます。"
+"顧客に表示するプロダクトの説明。この説明は販売オーダ、出荷オーダ、顧客請求書/"
+"クレジットノートにコピーされます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -1781,7 +1781,7 @@ msgstr "「カートに入れる」ボタン"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/checkout_page_option.xml:0
 msgid "Add to Wishlist"
-msgstr "ウィッシュリストに追加"
+msgstr "ほしい物リストに追加"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1800,7 +1800,7 @@ msgstr "追加して比較"
 #: model_terms:ir.ui.view,arch_db:website_sale.add_to_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale.product_add_to_wishlist
 msgid "Add to wishlist"
-msgstr "ウィッシュリストに追加"
+msgstr "ほしい物リストに追加"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_delivery
@@ -2230,7 +2230,7 @@ msgstr "ショップ商品のデザイン用CSSクラス"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__wishlist_opt_products_design_classes
 msgid "CSS class for wishlist page design"
-msgstr "ウィッシュリストページのデザイン用CSSクラス"
+msgstr "ほしい物リストページのデザイン用CSSクラス"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
@@ -4185,7 +4185,7 @@ msgstr ""
 msgid ""
 "It seems that there is already a transaction for your order; you can't "
 "change the delivery method anymore."
-msgstr "ご注文にはすでに取引が存在するため、配送方法はこれ以上変更できません。"
+msgstr "このご注文はすでに決済手続きが行われているため、配送方法を変更できません。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4396,7 +4396,7 @@ msgstr "明細小計税表示"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Link Color"
-msgstr "リンクカラー"
+msgstr "リンク色"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__contact_us_link_url
@@ -4424,7 +4424,7 @@ msgstr "ログイン済ユーザ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "Login to reorder"
-msgstr "ログインして再オーダ"
+msgstr "再注文するにはログインしてください"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -4712,7 +4712,7 @@ msgstr "配送方法が選択されていません。"
 #: code:addons/website_sale/static/src/js/website_sale_utils.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
 msgid "No previous products available for reorder."
-msgstr "再注文可能な過去のプロダクトはありません。"
+msgstr "再注文可能な購入履歴はありません。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -4781,7 +4781,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/reorder.py:0
 msgid "Nothing can be reordered in this order"
-msgstr "このオーダでは再注文できるプロダクトがありません"
+msgstr "この注文には再注文できる商品が含まれていません。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_order_list_view_ecommerce
@@ -5323,7 +5323,7 @@ msgstr "プライバシーポリシー"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 msgid "Process the order once the payment is received."
-msgstr "支払いを受け取り次第、オーダを処理します。"
+msgstr "入金を確認次第、オーダ処理を進めてください。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5925,7 +5925,7 @@ msgstr "特定のウェブサイトに制限する。"
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "Resume Order"
-msgstr "オーダを続ける"
+msgstr "注文を再開"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -6334,7 +6334,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop, products, cart and wishlist visibility"
-msgstr "ショップ、プロダクト、カート、ウィッシュリストの表示設定"
+msgstr "ショップ、プロダクト、カート、ほしい物リストの表示設定"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6426,7 +6426,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/website_sale_show_empty_option.xml:0
 msgid "Show the button even if the Cart/Wishlist is empty"
-msgstr "カートやウィッシュリストが空でもボタンを表示"
+msgstr "カートやほしい物リストが空でもボタンを表示"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6929,7 +6929,7 @@ msgstr "テーマデフォルト"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "There is no confirmed order from the website"
-msgstr "サイトから確認したオーダがありません"
+msgstr "ウェブサイトからの確定オーダはありません"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
