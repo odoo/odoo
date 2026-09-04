@@ -439,8 +439,9 @@ export class Record {
      * @param {(this: this, ...deps: T) => (() => void)|void} callback may return
      *  a cleanup function, invoked before the next callback and on dispose
      * @param {Object} [options]
-     * @param {boolean} [options.immediate=false] use owl's synchronous
-     *  `immediateEffect` instead of the default batched `effect`
+     * @param {boolean} [options.immediate=false] run synchronously, once the
+     *  write that changed a dependency is applied, instead of in the default
+     *  batched `effect`
      * @param {boolean} [options.initialRun=true] pass false to skip the first run
      */
     onChange(dependencies, callback, { immediate = false, initialRun = true } = {}) {
@@ -454,6 +455,7 @@ export class Record {
         );
         const boundCallback = (...values) => callback.apply(record._proxy, values);
         let firstRun = true;
+        let firstValues;
         let cleanup;
         record._registerDisposeFn(
             immediateEffect(function onChangeAfterConstructing() {
@@ -463,12 +465,23 @@ export class Record {
                     return;
                 }
                 const effectFn = immediate ? immediateEffect : effect;
+                const { isUpdateInProgress } = record._rawStore._;
                 const disposeFn = untrack(() =>
                     effectFn(function runOnChange() {
                         const values = deps() ?? [];
+                        if (immediate && untrack(isUpdateInProgress)) {
+                            // Wait for the applied write, subscribed only meanwhile.
+                            void isUpdateInProgress();
+                            firstValues ??= values;
+                            return;
+                        }
                         if (firstRun) {
                             firstRun = false;
-                            if (!initialRun) {
+                            // A write of the insert counts as a change, the default does not.
+                            if (
+                                !initialRun &&
+                                (!firstValues || shallowEqual(values, firstValues))
+                            ) {
                                 return;
                             }
                         }

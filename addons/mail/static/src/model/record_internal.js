@@ -141,13 +141,6 @@ export class RecordInternal {
      */
     fieldsComputed = new Map();
     /**
-     * Fields that have an `onUpdate` defined. Key is fieldName, Value is function of ongoing `onChange` that can be disposed.
-     * Useful to prevent any ongoing onChange and restart if need be.
-     *
-     * @type {Map<string, Function>}
-     */
-    fieldsOnUpdateStop = new Map();
-    /**
      * Value of each attr field of this record, declared or not, one signal per
      * field: the sole storage, and the only thing a read of that field observes.
      *
@@ -226,8 +219,8 @@ export class RecordInternal {
             }
             if (untrack(isUpdateInProgress)) {
                 // Hold while a write is being applied: the relations this
-                // reads are written one by one. onAdd, onDelete and onUpdate
-                // run between writes, at depth 0, so they read fresh values.
+                // reads are written one by one. onAdd and onDelete run
+                // between writes, at depth 0, so they read fresh values.
                 // Subscribe only while held, so the release computes once.
                 void isUpdateInProgress();
                 return heldValue;
@@ -309,24 +302,6 @@ export class RecordInternal {
                 this.fieldsComputeInNeed.delete(fieldName);
             }
         }
-        if (Model._.fieldsOnUpdate.get(fieldName)) {
-            this.prepareFieldOnUpdate(fieldName);
-        }
-    }
-
-    /** @param {string} fieldName */
-    prepareFieldOnUpdate(fieldName) {
-        const record = this.record;
-        const Model = record.Model;
-        const store = Model.store;
-        const fn = store._onChange(record._proxy, fieldName, (obs) => {
-            if (store._.UPDATE !== 0) {
-                untrack(() => store._.ADD_QUEUE("onUpdate", record, fieldName));
-            } else {
-                this.onUpdate(fieldName);
-            }
-        });
-        this.fieldsOnUpdateStop.set(fieldName, fn);
     }
 
     /** @param {string} name */
@@ -554,26 +529,6 @@ export class RecordInternal {
             this.fieldsComputeInNeed.set(fieldName, true);
         }
         triggered = true;
-    }
-    onUpdate(fieldName) {
-        const record = this.record;
-        const store = record._rawStore;
-        const Model = record.Model;
-        if (!Model._.fieldsOnUpdate.get(fieldName)) {
-            return;
-        }
-        this.fieldsOnUpdateStop.get(fieldName)?.();
-        const recordProxy = record._proxy;
-        untrack(() => {
-            try {
-                Model._.fieldsOnUpdate
-                    .get(fieldName)
-                    .forEach((fn) => fn.call(recordProxy, recordProxy[fieldName]));
-            } catch (err) {
-                store.handleError(err);
-            }
-        });
-        this.prepareFieldOnUpdate(fieldName);
     }
 }
 

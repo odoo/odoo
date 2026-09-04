@@ -32,8 +32,6 @@ export class ModelInternal {
     fieldsOnAdd = new Map();
     /** @type {Map<string, () => void>} */
     fieldsOnDelete = new Map();
-    /** @type {Map<string, Array<() => void>>} */
-    fieldsOnUpdate = new Map();
     /** @type {Map<string, string>} */
     fieldsType = new Map();
     /**
@@ -113,10 +111,6 @@ export class ModelInternal {
                     this.fieldsOnDelete.set(fieldName, value);
                     break;
                 }
-                case "onUpdate": {
-                    this.registerOnUpdate(fieldName, value);
-                    break;
-                }
                 case "asProxy": {
                     if (!value) {
                         break;
@@ -130,13 +124,5 @@ export class ModelInternal {
                 }
             }
         }
-    }
-    registerOnUpdate(fieldName, onUpdate) {
-        let onUpdateList = this.fieldsOnUpdate.get(fieldName);
-        if (!onUpdateList) {
-            onUpdateList = [];
-            this.fieldsOnUpdate.set(fieldName, onUpdateList);
-        }
-        onUpdateList.push(onUpdate);
     }
 }

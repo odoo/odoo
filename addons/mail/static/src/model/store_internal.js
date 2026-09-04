@@ -21,8 +21,6 @@ export class StoreInternal extends RecordInternal {
     FA_QUEUE = new Map(); // field-onadds
     /** @type {Map<import("./record").Record, Map<string, Map<import("./record").Record, true>>>} */
     FD_QUEUE = new Map(); // field-ondeletes
-    /** @type {Map<import("./record").Record, Map<string, true>>} */
-    FU_QUEUE = new Map(); // field-onupdates
     /** @type {Map<Record, true>} */
     RD_QUEUE = new Map(); // record-deletes
     ERRORS = [];
@@ -37,8 +35,8 @@ export class StoreInternal extends RecordInternal {
     /**
      * Number of update functions currently running, nested included. An owl
      * computed() field holds its last value while one runs, as the relations
-     * it reads are written one by one. onAdd, onDelete and onUpdate run
-     * outside of them, at depth 0, so they read fresh values.
+     * it reads are written one by one. onAdd and onDelete run outside of
+     * them, at depth 0, so they read fresh values.
      */
     updateDepth = signal(0);
     raiseUpdateDepth = incrementFn(this.updateDepth);
@@ -67,7 +65,7 @@ export class StoreInternal extends RecordInternal {
     }
 
     /**
-     * @param {"compute"|"onAdd"|"onDelete"|"onUpdate"} type
+     * @param {"compute"|"onAdd"|"onDelete"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -129,17 +127,6 @@ export class StoreInternal extends RecordInternal {
                     recMap.set(fieldName, fieldMap);
                 }
                 fieldMap.set(removedRec, true);
-                break;
-            }
-            case "onUpdate": {
-                /** @type {[import("./record").Record, string]} */
-                const [record, fieldName] = params;
-                let recMap = this.FU_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FU_QUEUE.set(record, recMap);
-                }
-                recMap.set(fieldName, true);
                 break;
             }
         }

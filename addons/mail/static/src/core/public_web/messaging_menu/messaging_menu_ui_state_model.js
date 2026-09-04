@@ -2,6 +2,29 @@ import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
 export class MessagingMenuUIState extends Record {
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.activeTab],
+            function onChangeActiveTab(activeTab) {
+                // No tab to show while the menu is still being filled up.
+                this.selectedFilter = activeTab?.defaultFilter;
+                this.pluginFilters = {};
+                this.searchTerm = "";
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.initialLoadKey],
+            function onChangeInitialLoadKey(initialLoadKey) {
+                if (initialLoadKey) {
+                    this._ensureTabOrFilterInitialLoad();
+                }
+            },
+            { immediate: true }
+        );
+    }
+
     static id = "id";
 
     activeTab = fields.One("MessagingMenuTab", {
@@ -10,13 +33,6 @@ export class MessagingMenuUIState extends Record {
                 return this.activeTab;
             }
             return this.store.messagingMenu?.sortedVisibleTabs[0];
-        },
-        eager: true,
-        onUpdate() {
-            // No tab to show while the menu is still being filled up.
-            this.selectedFilter = this.activeTab?.defaultFilter;
-            this.pluginFilters = {};
-            this.searchTerm = "";
         },
     });
     /**
@@ -38,30 +54,17 @@ export class MessagingMenuUIState extends Record {
     /** @type {string} */
     id;
     searchTerm = "";
-    /**
-     * Trigger for the initial tab content load. It recomputes whenever the tab/filter to
-     * show changes, or when this state becomes ready to load (see `_isReadyForInitialLoad`).
-     */
-    _initialLoadTrigger = fields.Attr(null, {
-        compute() {
-            if (!this._isReadyForInitialLoad() || !this.activeTab) {
-                return null;
-            }
-            const filterKey = this.activeTab._filterKey(
-                this.selectedFilter,
-                this.activePluginFilters
-            );
-            return `${this.activeTab.id}__${filterKey}`;
-        },
-        eager: true,
-        onUpdate() {
-            this._ensureTabOrFilterInitialLoad();
-        },
-    });
-
     /** Currently active plugin filters, as an array. */
     get activePluginFilters() {
         return Object.values(this.pluginFilters).filter(Boolean);
+    }
+
+    get initialLoadKey() {
+        if (!this._isReadyForInitialLoad() || !this.activeTab) {
+            return null;
+        }
+        const filterKey = this.activeTab._filterKey(this.selectedFilter, this.activePluginFilters);
+        return `${this.activeTab.id}__${filterKey}`;
     }
 
     /**
@@ -84,8 +87,8 @@ export class MessagingMenuUIState extends Record {
      * Handles an explicit tab selection by the user.
      *
      * Unlike setting `activeTab` programmatically, selecting a tab clears the selected
-     * thread. This is separate from `activeTab.onUpdate` to avoid clearing threads during
-     * programmatic thread-to-tab synchronization.
+     * thread. This is separate from the `activeTab` observer to avoid clearing threads
+     * during programmatic thread-to-tab synchronization.
      *
      * @param {import("models").MessagingMenuTab} tab
      */

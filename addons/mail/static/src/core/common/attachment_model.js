@@ -20,6 +20,22 @@ export class Attachment extends FileModelMixin(Record) {
             },
             { immediate: true }
         );
+        this.onChange(
+            () => [this.has_thumbnail],
+            function onChangeHasThumbnail(hasThumbnail) {
+                if (
+                    (this.isPdf || this.isVideo) &&
+                    !hasThumbnail &&
+                    (this.ownership_token ||
+                        // If related to a record, must have write access to it
+                        ((!this.thread || this.thread.hasWriteAccess) &&
+                            this.store.self_user?.share === false))
+                ) {
+                    this.setThumbnail();
+                }
+            },
+            { immediate: true }
+        );
     }
 
     composer = fields.One("Composer", { inverse: "attachments" });
@@ -37,20 +53,8 @@ export class Attachment extends FileModelMixin(Record) {
     /** @type {string} */
     ownership_token;
     create_date = fields.Datetime();
-    has_thumbnail = fields.Attr(undefined, {
-        onUpdate() {
-            if (
-                (this.isPdf || this.isVideo) &&
-                !this.has_thumbnail &&
-                (this.ownership_token ||
-                    // If related to a record, must have write access to it
-                    ((!this.thread || this.thread.hasWriteAccess) &&
-                        this.store.self_user?.share === false))
-            ) {
-                this.setThumbnail();
-            }
-        },
-    });
+    /** @type {boolean} */
+    has_thumbnail;
     get thumbnailUrl() {
         const params = assignDefined(
             {},

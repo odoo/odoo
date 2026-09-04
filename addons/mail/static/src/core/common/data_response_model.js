@@ -25,6 +25,27 @@ export class DataResponse extends Record {
         return this.insert({ id: ++this._lastId });
     }
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this._resolve],
+            function onChangeResolve(_resolve) {
+                if (!_resolve) {
+                    return;
+                }
+                const result = { ...this };
+                for (const [name, value] of Object.entries(result)) {
+                    if (Array.isArray(value)) {
+                        result[name] = [...value];
+                    }
+                }
+                this._resultResolvers.resolve(result);
+                this.delete();
+            },
+            { immediate: true }
+        );
+    }
+
     /** @type {number} */
     id;
     /**
@@ -39,21 +60,7 @@ export class DataResponse extends Record {
      *
      * @type {boolean}
      */
-    _resolve = fields.Attr(undefined, {
-        /** @this {import("models").DataResponse} */
-        onUpdate() {
-            if (this._resolve) {
-                const result = { ...this };
-                for (const [name, value] of Object.entries(result)) {
-                    if (Array.isArray(value)) {
-                        result[name] = [...value];
-                    }
-                }
-                this._resultResolvers.resolve(result);
-                this.delete();
-            }
-        },
-    });
+    _resolve;
     /**
      * Promise that is resolved with the data when the data request is complete.
      * @type {PromiseWithResolvers<InstanceFields<DataResponse>>}

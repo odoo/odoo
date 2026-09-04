@@ -54,35 +54,41 @@ export class ImStatusMixin extends Record {
                 }
             }
         );
+        this.onChange(
+            () => [this.im_status],
+            function onChangeImStatus(imStatus) {
+                // Flickering occurs during im_status correction when switching from
+                // away/offline to online. If we don't know the status, or if the status is
+                // already "online", flickering cannot occur, so it's better to update the
+                // field immediately.
+                if (this.imStatusUI === undefined || imStatus === "online") {
+                    this.forceImStatus(imStatus);
+                } else {
+                    this.setImStatusDebounced(imStatus);
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.imStatusUI === "offline"],
+            function onChangeImStatusUI(isOffline) {
+                this.offline_since = isOffline ? DateTime.now() : null;
+            },
+            { immediate: true }
+        );
     }
     /** @type {(status) => void} */
     setImStatusDebounced;
     /** @type {() => void} */
     cancelSetImStatusDebounced;
     /** @type {ImStatus} */
-    im_status = fields.Attr(undefined, {
-        onUpdate() {
-            // Flickering occurs during im_status correction when switching from
-            // away/offline to online. If we don't know the status, or if the status is
-            // already "online", flickering cannot occur, so it's better to update the
-            // field immediately.
-            if (this.imStatusUI === undefined || this.im_status === "online") {
-                this.forceImStatus(this.im_status);
-            } else {
-                this.setImStatusDebounced(this.im_status);
-            }
-        },
-    });
+    im_status;
     /**
      * Debounced im_status, to avoid flickering. Should be used whenever the im_status has
      * an impact on the UI.
      * @type {ImStatus}
      */
-    imStatusUI = fields.Attr(undefined, {
-        onUpdate() {
-            this.offline_since = this.imStatusUI === "offline" ? DateTime.now() : null;
-        },
-    });
+    imStatusUI;
     /** @type {string|undefined} */
     im_status_access_token;
     monitorPresence = this.computed(() => this._computeMonitorPresence());

@@ -58,6 +58,55 @@ export class RtcSession extends Record {
         return record;
     }
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.is_screen_sharing_on],
+            function onChangeIsScreenSharingOn(is_screen_sharing_on) {
+                if (
+                    this.eq(this.channel?.activeRtcSession) &&
+                    this.mainVideoStreamType === "screen" &&
+                    !is_screen_sharing_on
+                ) {
+                    this.channel.activeRtcSession = undefined;
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.isLocallyMuted],
+            function onChangeIsLocallyMuted(isLocallyMuted) {
+                if (this.audioElement) {
+                    this.audioElement.muted = isLocallyMuted || this.store.rtc.selfSession?.is_deaf;
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.isTalking],
+            function onChangeIsTalking(isTalking) {
+                if (isTalking && !this.isMute) {
+                    this.talkingTime = this.store.nextTalkingTime++;
+                }
+                this.channel?.updateCallFocusStack(this);
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.isVideoStreaming],
+            function onChangeIsVideoStreaming(isVideoStreaming) {
+                if (
+                    isVideoStreaming &&
+                    this.channel?.channel_type === "chat" &&
+                    this.store.rtc.selfSession?.in(this.channel.rtc_session_ids)
+                ) {
+                    this.channel.focusAvailableVideo();
+                }
+            },
+            { immediate: true }
+        );
+    }
+
     delete() {
         if (this.eq(this.store.rtc.localSession)) {
             this.store.rtc.notifyServerDisconnect();
@@ -85,17 +134,7 @@ export class RtcSession extends Record {
     /** @type {boolean} */
     is_camera_on;
     /** @type {boolean} */
-    is_screen_sharing_on = fields.Attr(undefined, {
-        onUpdate() {
-            if (
-                this.eq(this.channel?.activeRtcSession) &&
-                this.mainVideoStreamType === "screen" &&
-                !this.is_screen_sharing_on
-            ) {
-                this.channel.activeRtcSession = undefined;
-            }
-        },
-    });
+    is_screen_sharing_on;
     /** @type {number} */
     id;
     /** @type {boolean} */
@@ -103,15 +142,7 @@ export class RtcSession extends Record {
     /** @type {boolean} */
     is_muted;
     // Client data
-    isLocallyMuted = fields.Attr(false, {
-        /** @this {import("models").RtcSession} */
-        onUpdate() {
-            if (this.audioElement) {
-                this.audioElement.muted =
-                    this.isLocallyMuted || this.store.rtc.selfSession?.is_deaf;
-            }
-        },
-    });
+    isLocallyMuted = false;
     /** @type {HTMLAudioElement} */
     audioElement;
     /** @type {MediaStream} */
@@ -122,30 +153,12 @@ export class RtcSession extends Record {
     videoError;
     /** @type {number} value between 0 and 1 that represents volume in % */
     talkingVolume = 0;
-    isTalking = fields.Attr(false, {
-        /** @this {import("models").RtcSession} */
-        onUpdate() {
-            if (this.isTalking && !this.isMute) {
-                this.talkingTime = this.store.nextTalkingTime++;
-            }
-            this.channel?.updateCallFocusStack(this);
-        },
-    });
+    isTalking = false;
     isActuallyTalking = this.computed(() => this.isTalking && !this.isMute);
     isVideoStreaming = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         compute() {
             return this.is_screen_sharing_on || this.is_camera_on;
-        },
-        /** @this {import("models").RtcSession} */
-        onUpdate() {
-            if (
-                this.isVideoStreaming &&
-                this.channel?.channel_type === "chat" &&
-                this.store.rtc.selfSession?.in(this.channel.rtc_session_ids)
-            ) {
-                this.channel.focusAvailableVideo();
-            }
         },
     });
     shortStatus = this.computed(() => {

@@ -24,6 +24,56 @@ export class ChannelMember extends Record {
             },
             { immediate: true, initialRun: false }
         );
+        this.onChange(
+            () => [this.message_unread_counter, this.channel_id?.isDisplayed],
+            function onChangeMessageUnreadCounter(messageUnreadCounter, isDisplayed) {
+                if (
+                    messageUnreadCounter === 0 ||
+                    !isDisplayed ||
+                    this.channel_id?.scrollTop !== "bottom" ||
+                    this.channel_id.markedAsUnread ||
+                    !this.channel_id.isFocused
+                ) {
+                    this.message_unread_counter_ui = messageUnreadCounter;
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.new_message_separator, this.channel_id?.isDisplayed],
+            function onChangeNewMessageSeparator(newMessageSeparator, isDisplayed) {
+                if (!isDisplayed) {
+                    this.new_message_separator_ui = newMessageSeparator;
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.isTyping],
+            function onChangeIsTyping(isTyping) {
+                browser.clearTimeout(this.typingTimeoutId);
+                if (isTyping) {
+                    this.registerTypingTimeout();
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.is_typing_dt],
+            function onChangeIsTypingDt(isTypingDt) {
+                browser.clearTimeout(this.typingTimeoutId);
+                if (
+                    !isTypingDt ||
+                    DateTime.now().diff(isTypingDt).milliseconds > Store.OTHER_LONG_TYPING
+                ) {
+                    this.isTyping = false;
+                }
+                if (this.isTyping) {
+                    this.registerTypingTimeout();
+                }
+            },
+            { immediate: true }
+        );
     }
 
     /** @type {string} */
@@ -68,60 +118,20 @@ export class ChannelMember extends Record {
     });
     seen_message_id = fields.One("mail.message");
     hideUnreadBanner = false;
-    message_unread_counter = fields.Attr(0, {
-        /** @this {import("models").ChannelMember} */
-        onUpdate() {
-            if (
-                this.message_unread_counter === 0 ||
-                !this.channel_id?.isDisplayed ||
-                this.channel_id?.scrollTop !== "bottom" ||
-                this.channel_id.markedAsUnread ||
-                !this.channel_id.isFocused
-            ) {
-                this.message_unread_counter_ui = this.message_unread_counter;
-            }
-        },
-    });
+    message_unread_counter = 0;
     message_unread_counter_ui = 0;
     message_unread_counter_bus_id = 0;
     mute_until_dt = fields.Datetime();
-    new_message_separator = fields.Attr(null, {
-        /** @this {import("models").ChannelMember} */
-        onUpdate() {
-            if (!this.channel_id?.isDisplayed) {
-                this.new_message_separator_ui = this.new_message_separator;
-            }
-        },
-    });
+    new_message_separator = null;
     new_message_separator_ui = null;
-    isTyping = fields.Attr(false, {
-        onUpdate() {
-            browser.clearTimeout(this.typingTimeoutId);
-            if (this.isTyping) {
-                this.registerTypingTimeout();
-            }
-        },
-    });
+    isTyping = false;
     get isTypingUi() {
         if (this.channel_id.self_member_id?.mute_until_dt) {
             return false;
         }
         return this.isTyping;
     }
-    is_typing_dt = fields.Datetime({
-        onUpdate() {
-            browser.clearTimeout(this.typingTimeoutId);
-            if (
-                !this.is_typing_dt ||
-                DateTime.now().diff(this.is_typing_dt).milliseconds > Store.OTHER_LONG_TYPING
-            ) {
-                this.isTyping = false;
-            }
-            if (this.isTyping) {
-                this.registerTypingTimeout();
-            }
-        },
-    });
+    is_typing_dt = fields.Datetime();
     /** To be patched in test, to detect when this timeout is registered. */
     registerTypingTimeout() {
         this.typingTimeoutId = browser.setTimeout(

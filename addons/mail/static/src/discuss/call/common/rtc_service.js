@@ -427,12 +427,6 @@ export class Rtc extends Record {
             }
             return this._remotelyHostedChannelId;
         },
-        onUpdate() {
-            if (!this.channel) {
-                return;
-            }
-            this.store["discuss.channel"].getOrFetch(this.channel.id);
-        },
     });
     /**
      * Html element embedding the rtc service. Used to scope the dialog to the correct
@@ -513,31 +507,6 @@ export class Rtc extends Record {
             }
             return transformedActions;
         },
-        /** @this {import("models").Rtc} */
-        onUpdate() {
-            for (const action of this.callActions) {
-                if (action.isActive === this.lastActions[action.id]) {
-                    continue;
-                }
-                if (!action.tags.includes(ACTION_TAGS.CALL_ACTION_TRACKED)) {
-                    continue;
-                }
-                if (action.isActive) {
-                    if (!this.actionsStack.includes(action.id)) {
-                        this.actionsStack.unshift(action.id);
-                    }
-                } else {
-                    const index = this.actionsStack.indexOf(action.id);
-                    if (index !== -1) {
-                        this.actionsStack.splice(index, 1);
-                    }
-                }
-            }
-            this.lastSelfCallAction = this.actionsStack[0];
-            this.lastActions = Object.fromEntries(
-                this.callActions.map((action) => [action.id, action.isActive])
-            );
-        },
     });
 
     setup() {
@@ -577,6 +546,43 @@ export class Rtc extends Record {
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
         }
         this.p2pService = services["discuss.p2p"];
+        this.onChange(
+            () => [this.channel],
+            function onChangeChannel(channel) {
+                if (channel) {
+                    this.store["discuss.channel"].getOrFetch(channel.id);
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.callActions],
+            function onChangeCallActions(callActions) {
+                for (const action of callActions) {
+                    if (action.isActive === this.lastActions[action.id]) {
+                        continue;
+                    }
+                    if (!action.tags.includes(ACTION_TAGS.CALL_ACTION_TRACKED)) {
+                        continue;
+                    }
+                    if (action.isActive) {
+                        if (!this.actionsStack.includes(action.id)) {
+                            this.actionsStack.unshift(action.id);
+                        }
+                    } else {
+                        const index = this.actionsStack.indexOf(action.id);
+                        if (index !== -1) {
+                            this.actionsStack.splice(index, 1);
+                        }
+                    }
+                }
+                this.lastSelfCallAction = this.actionsStack[0];
+                this.lastActions = Object.fromEntries(
+                    callActions.map((action) => [action.id, action.isActive])
+                );
+            },
+            { immediate: true }
+        );
         this.onChange(
             () => [this.store.settings.useBlur],
             function onChangeUseBlur(useBlur) {

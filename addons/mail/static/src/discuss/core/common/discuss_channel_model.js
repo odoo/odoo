@@ -38,6 +38,52 @@ export class DiscussChannel extends Record {
                 }
             }
         );
+        let lastSubscription = "not_member";
+        this.onChange(
+            () => [this.memberBusSubscription],
+            function onChangeMemberBusSubscription(subscription) {
+                const wasMember = lastSubscription !== "not_member";
+                lastSubscription = subscription;
+                if (
+                    subscription === "member_after_start" ||
+                    (wasMember && subscription === "not_member")
+                ) {
+                    this.store.updateBusSubscription();
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.isDisplayed, this.self_member_id],
+            function onChangeIsDisplayed(isDisplayed, selfMember) {
+                if (!selfMember || isDisplayed) {
+                    return;
+                }
+                selfMember.new_message_separator_ui = selfMember.new_message_separator;
+                this.markedAsUnread = false;
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.open_chat_window],
+            function onChangeOpenChatWindow(openChatWindow) {
+                if (openChatWindow) {
+                    this.open_chat_window = undefined;
+                    this.openChatWindow({ focus: true, highlight: this.chatWindow?.isOpen });
+                }
+            },
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.id],
+            function onChangeId() {
+                const busService = this.store.env.services.bus_service;
+                if (!busService.isActive && !this.isTransient) {
+                    busService.start();
+                }
+            },
+            { immediate: true }
+        );
     }
 
     /**
@@ -136,6 +182,14 @@ export class DiscussChannel extends Record {
             (!this.avatar_cache_key || this.avatar_cache_key === "no-avatar") &&
             Boolean(this.correspondent)
         );
+    }
+    get memberBusSubscription() {
+        const member = this.self_member_id;
+        if (!member) {
+            return "not_member";
+        }
+        const { startedAt } = this.store.env.services.bus_service;
+        return member.memberSince >= startedAt ? "member_after_start" : "member_before_start";
     }
     get avatarUrl() {
         if (!this.hasCorrespondentAvatar) {
@@ -341,14 +395,7 @@ export class DiscussChannel extends Record {
         this.store.channel_types_with_seen_infos.includes(this.channel_type)
     );
     /** @type {number} */
-    id = fields.Attr(undefined, {
-        onUpdate() {
-            const busService = this.store.env.services.bus_service;
-            if (!busService.isActive && !this.isTransient) {
-                busService.start();
-            }
-        },
-    });
+    id;
     get importantCounter() {
         if (
             this.isChatChannel &&
@@ -382,16 +429,6 @@ export class DiscussChannel extends Record {
     isDisplayed = fields.Attr(false, {
         compute() {
             return this.computeIsDisplayed();
-        },
-        onUpdate() {
-            if (!this.self_member_id) {
-                return;
-            }
-            if (!this.isDisplayed) {
-                this.self_member_id.new_message_separator_ui =
-                    this.self_member_id.new_message_separator;
-                this.markedAsUnread = false;
-            }
         },
     });
     lastMessageSeenByAllId = this.computed(() => {
@@ -478,15 +515,7 @@ export class DiscussChannel extends Record {
         },
     });
     /** @type {true|undefined} */
-    open_chat_window = fields.Attr(undefined, {
-        /** @this {import("models").Thread} */
-        onUpdate() {
-            if (this.open_chat_window) {
-                this.open_chat_window = undefined;
-                this.openChatWindow({ focus: true, highlight: this.chatWindow?.isOpen });
-            }
-        },
-    });
+    open_chat_window;
     parent_channel_id = fields.One("discuss.channel", {
         inverse: "sub_channel_ids",
         onDelete() {
@@ -550,23 +579,6 @@ export class DiscussChannel extends Record {
     });
     // Start with `not_member` not to trigger a subscription if the user is not a member
     // initially, only when switching from `member_xxx` to `not_member` following a leave.
-    memberBusSubscription = fields.Attr("not_member", {
-        /** @this {import("models").Thread} */
-        compute() {
-            if (!this.self_member_id) {
-                return "not_member";
-            }
-            return this.self_member_id.memberSince >= this.store.env.services.bus_service.startedAt
-                ? "member_after_start"
-                : "member_before_start";
-        },
-        onUpdate() {
-            if (this.memberBusSubscription !== "member_before_start") {
-                this.store.updateBusSubscription();
-            }
-        },
-    });
-
     typingMembers = fields.Many("discuss.channel.member", { inverse: "channelAsTyping" });
     get unknownMembersCount() {
         return (this.member_count ?? 0) - (this.channel_member_ids.length ?? 0);

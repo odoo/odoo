@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 
 /**
  * Shareable meeting link currently mirrored in the address bar, or `undefined` when not in the
- * full-screen meeting view. Kept in sync from the `_shareUrl` field below (which gates on the
+ * full-screen meeting view. Kept in sync from the share url observer below (which gates on the
  * full-screen state) and read back by the router patch below.
  * @type {string|undefined}
  */
@@ -37,32 +37,33 @@ const StorePatch = {
                 return {};
             },
         });
-        this.ringingChannels = fields.Many("discuss.channel", {
-            /** @this {import("models").Store} */
-            onUpdate() {
-                if (this.ringingChannels.length > 0) {
-                    this.env.services["mail.sound_effects"].play("call-invitation", {
-                        loop: true,
-                    });
-                } else {
-                    this.env.services["mail.sound_effects"].stop("call-invitation");
+        this.ringingChannels = fields.Many("discuss.channel");
+        this.onChange(
+            () => [this.ringingChannels.length > 0],
+            function onChangeRingingChannels(hasRingingChannels) {
+                if (hasRingingChannels) {
+                    const soundEffects = this.env.services["mail.sound_effects"];
+                    soundEffects.play("call-invitation", { loop: true });
+                    return () => soundEffects.stop("call-invitation");
                 }
             },
-        });
+            { immediate: true }
+        );
         this.nextTalkingTime = 1;
         this.fullscreenChannel = fields.One("discuss.channel");
-        this._hasFullscreenUrl = fields.Attr(false, {
-            compute() {
-                return this.discuss?.thread?.channel?.eq(this.fullscreenChannel);
-            },
-            onUpdate() {
+        this._hasFullscreenUrl = this.computed(() =>
+            this.discuss?.thread?.channel?.eq(this.fullscreenChannel)
+        );
+        this.onChange(
+            () => [this._hasFullscreenUrl],
+            function onChangeHasFullscreenUrl() {
                 if (!this.discuss?.hasRestoredThread) {
                     return;
                 }
                 this._hasFullscreenUrlOnUpdate();
             },
-            eager: true,
-        });
+            { immediate: true }
+        );
         /**
          * Shareable link of the full-screen call, mirrored in the address bar while its meeting
          * view is open (and `undefined` otherwise). Depending on both the call and the full-screen
@@ -75,20 +76,23 @@ const StorePatch = {
          * invitation link, and rewriting it through the web-client router (which has no action
          * state there) would clobber that link and lock the guest out on reload.
          */
-        this._shareUrl = fields.Attr(undefined, {
-            compute() {
-                if (!this.self_user) {
-                    return undefined;
+        this.onChange(
+            () => [this.shareUrl],
+            function onChangeShareUrl(shareUrl) {
+                if (!this.discuss?.hasRestoredThread) {
+                    return;
                 }
-                return this.rtc.isFullscreen ? this.rtc.localChannel?.invitationLink : undefined;
-            },
-            onUpdate() {
-                callShareUrl = this._shareUrl;
+                callShareUrl = shareUrl;
                 router.replaceState({ fullscreen: this._hasFullscreenUrl ? true : undefined });
             },
-            eager: true,
-        });
+            { immediate: true }
+        );
         this.meetingViewOpened = false;
+    },
+    get shareUrl() {
+        return this.self_user && this.rtc.isFullscreen
+            ? this.rtc.localChannel?.invitationLink
+            : undefined;
     },
     _hasFullscreenUrlOnUpdate() {
         if (callShareUrl) {

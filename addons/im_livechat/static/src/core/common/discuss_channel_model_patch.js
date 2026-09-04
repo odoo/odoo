@@ -12,14 +12,17 @@ const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
         this.chatbot = fields.One("Chatbot", { inverse: "channel_id" });
-        this.chatbot_current_step_id = fields.One("chatbot.script.step", {
-            onUpdate() {
-                if (this.chatbot && !this.chatbot_current_step_id) {
+        this.chatbot_current_step_id = fields.One("chatbot.script.step");
+        this.onChange(
+            () => [this.chatbot_current_step_id],
+            function onChangeChatbotCurrentStep(chatbotCurrentStep) {
+                if (this.chatbot && !chatbotCurrentStep) {
                     this.chatbotTriggerFailedError = null;
                     this.chatbot.stop();
                 }
             },
-        });
+            { immediate: true }
+        );
         this.country_id = fields.One("res.country");
         this.livechat_agent_history_ids = fields.Many("im_livechat.channel.member.history", {
             inverse: "channelAsAgentHistory",
