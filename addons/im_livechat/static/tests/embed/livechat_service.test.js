@@ -1,4 +1,4 @@
-import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { waitForChannels, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
     defineLivechatModels,
@@ -6,6 +6,7 @@ import {
     postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
+import { GUEST_TOKEN_STORAGE_KEY } from "@im_livechat/embed/common/store_service_patch";
 import {
     click,
     contains,
@@ -21,7 +22,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
+import { Command, destroyApp, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -190,4 +191,14 @@ test("Only create one channel when posting multiple messages", async () => {
         "/mail/message/post - 2",
         "/mail/message/post - 3",
     ]);
+});
+
+test("guest token channel is subscribed at start and unsubscribed at destroy", async () => {
+    await startServer();
+    await loadDefaultEmbedConfig();
+    expirableStorage.setItem(GUEST_TOKEN_STORAGE_KEY, "abc");
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
+    await waitForChannels(["mail.guest_abc"]);
+    destroyApp();
+    await waitForChannels(["mail.guest_abc"], { operation: "delete" });
 });

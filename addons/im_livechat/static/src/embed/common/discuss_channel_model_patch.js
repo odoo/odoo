@@ -35,26 +35,17 @@ const discussChannelPatch = {
             },
             inverse: "activeVisitorLivechats",
         });
-        this._toggleChatbot = fields.Attr(false, {
-            compute() {
-                return Boolean(
-                    this.channel?.chatbot &&
-                        !this.channel.chatbot.completed &&
-                        !this.channel.livechat_end_dt
-                );
+        this.onChange(
+            () => [this.hasActiveChatbot],
+            function onChangeHasActiveChatbot(hasActiveChatbot) {
+                if (!hasActiveChatbot) {
+                    return;
+                }
+                this.isLoadedPromise.then(() => this.channel.chatbot.start());
+                return () => this.isLoadedPromise.then(() => this.channel?.chatbot?.stop());
             },
-            onUpdate() {
-                const shouldToggle = this._toggleChatbot;
-                this.isLoadedPromise.then(() => {
-                    if (shouldToggle) {
-                        this.channel.chatbot.start();
-                    } else {
-                        this.channel?.chatbot?.stop();
-                    }
-                });
-            },
-            eager: true,
-        });
+            { immediate: true }
+        );
     },
     get avatarUrl() {
         if (this.channel_type !== "livechat") {
@@ -78,6 +69,13 @@ const discussChannelPatch = {
             }
         }
         return bestMemberHistory?.partner_id?.avatarUrl || super.avatarUrl;
+    },
+    get hasActiveChatbot() {
+        return Boolean(
+            this.channel?.chatbot &&
+                !this.channel.chatbot.completed &&
+                !this.channel.livechat_end_dt
+        );
     },
     get hasAttachmentPanel() {
         return this.channel_type !== "livechat" && super.hasAttachmentPanel;

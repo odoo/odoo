@@ -8,11 +8,14 @@ import { patch } from "@web/core/utils/patch";
 const discussChannelPatch = {
     setup() {
         super.setup(...arguments);
-        this.isLocallyPinned = fields.Attr(false, {
-            onUpdate() {
+        this.isLocallyPinned = false;
+        this.onChange(
+            () => [this.isLocallyPinned],
+            function onChangeIsLocallyPinned() {
                 this.onPinStateUpdated();
             },
-        });
+            { immediate: true }
+        );
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
         this.messagingMenuTabs = fields.Many("MessagingMenuTab", {

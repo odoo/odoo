@@ -780,11 +780,16 @@ test("record list assign should update inverse fields", async () => {
 test("datetime type record", async () => {
     (class Thread extends Record {
         static id = "name";
+        setup() {
+            super.setup(...arguments);
+            this.onChange(
+                () => [this.date],
+                () => expect.step("DATE_UPDATED"),
+                { immediate: true, initialRun: false }
+            );
+        }
         name;
-        date = fields.Attr(undefined, {
-            type: "datetime",
-            onUpdate: () => expect.step("DATE_UPDATED"),
-        });
+        date = fields.Attr(undefined, { type: "datetime" });
     }).register(localRegistry);
     const store = await start();
     await expect.waitForSteps([]);
@@ -811,6 +816,31 @@ test("datetime type record", async () => {
     store.Thread.insert({ name: "General", date: "2024-02-22 14:42:00" });
     await expect.waitForSteps(["DATE_UPDATED"]);
     expect(general.date.day).toBe(22);
+});
+
+test("immediate onChange runs once the write is applied", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        setup() {
+            super.setup(...arguments);
+            this.onChange(
+                () => [this.name, this.count],
+                (name, count) => expect.step(`${name}:${count}`),
+                { immediate: true }
+            );
+        }
+        name;
+        count = 0;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Thread.insert({ name: "General", count: 1 });
+    expect.verifySteps(["General:1"]);
+    store.MAKE_UPDATE(() => {
+        general.count = 2;
+        expect.verifySteps([]);
+        general.count = 3;
+    });
+    expect.verifySteps(["General:3"]);
 });
 
 test("attr that are default [] should be isolated per record", async () => {
@@ -1798,6 +1828,38 @@ test("an onChange registered in setup runs on the proxy and cleans up", async ()
     await expect.waitForSteps(["cleanup", "1 hello"]);
     thread.delete();
     await expect.waitForSteps(["cleanup"]);
+});
+
+test("an onChange of a deleted record cleans up on the whole record and stops", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        static _name = "Thread";
+        name;
+        messages = fields.Many("Message", { inverse: "thread" });
+        setup() {
+            super.setup(...arguments);
+            this.onChange(
+                () => [this.messages.length],
+                function onChangeMessages(count) {
+                    expect.step(`run ${count}`);
+                    return () => expect.step(`cleanup ${this.messages.length}`);
+                },
+                { immediate: true }
+            );
+        }
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "body";
+        static _name = "Message";
+        body;
+        thread = fields.One("Thread", { inverse: "messages" });
+    }).register(localRegistry);
+    const store = await start();
+    const thread = store.Thread.insert({ name: "general", messages: ["hello"] });
+    expect.verifySteps(["run 1"]);
+    thread.delete();
+    expect.verifySteps(["cleanup 1"]);
+    expect(thread.messages).toHaveLength(0);
 });
 
 test("a computed is left out of toData()", async () => {

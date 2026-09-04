@@ -13,15 +13,16 @@ const threadModelPatch = {
          * Inverse of discuss.thread, useful to efficiently check whether this thread is the one
          * currently displayed in discuss app.
          */
-        this.discussAppAsThread = fields.One("DiscussApp", {
-            inverse: "thread",
-            /** @this {import("models").Thread} */
-            onUpdate() {
-                if (!this.discussAppAsThread && this.channel?.parent_channel_id) {
+        this.discussAppAsThread = fields.One("DiscussApp", { inverse: "thread" });
+        this.onChange(
+            () => [this.discussAppAsThread, this.channel?.parent_channel_id],
+            function onChangeDiscussAppAsThread(discussAppAsThread, parentChannelId) {
+                if (!discussAppAsThread && parentChannelId) {
                     this.channel.isLocallyPinned = false;
                 }
             },
-        });
+            { immediate: true }
+        );
     },
     /** @param {boolean} pushState */
     setAsDiscussThread(pushState) {

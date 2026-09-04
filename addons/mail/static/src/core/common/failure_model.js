@@ -6,18 +6,24 @@ import { _t } from "@web/core/l10n/translation";
 export class Failure extends Record {
     static nextId = markRaw({ value: 1 });
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.notifications.length > 0],
+            function onChangeNotifications(hasNotifications) {
+                if (hasNotifications) {
+                    this.store.failures.add(this);
+                } else {
+                    this.delete();
+                }
+            },
+            { immediate: true }
+        );
+    }
+
     /** @type {number} */
     id;
-    notifications = fields.Many("mail.notification", {
-        /** @this {import("models").Failure} */
-        onUpdate() {
-            if (this.notifications.length === 0) {
-                this.delete();
-            } else {
-                this.store.failures.add(this);
-            }
-        },
-    });
+    notifications = fields.Many("mail.notification");
     get modelName() {
         return this.notifications?.[0]?.mail_message_id?.thread?.modelName;
     }

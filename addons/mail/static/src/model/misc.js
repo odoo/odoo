@@ -117,8 +117,6 @@ export const fields = {
      *   in the relation.
      * @param {(this: Record, r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
-     * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
-     *   This is called at least once at record creation.
      * @returns {import("models").Models[M]}
      */
     One(targetModel, param1) {
@@ -141,8 +139,6 @@ export const fields = {
      *   in the relation.
      * @param {(this: Record, r: import("models").Models[M]) => void} [param1.onDelete] function that is called when a record is removed
      *   from the relation.
-     * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
-     *   This is called at least once at record creation.
      * @returns {import("models").Models[M][]}
      */
     Many(targetModel, param1) {
@@ -160,8 +156,6 @@ export const fields = {
      *   they are computed when dependencies change AND when this field is being used. In eager mode,
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
-     * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
-     *   This is called at least once at record creation.
      * @param {boolean} [param1.asProxy=false] a read returns the value as a proxy, so that
      *   mutating its content is observed too. Only for an object, an array, a Map or a Set.
      * @param {'datetime'|'date'} [param1.type] if defined, automatically transform to a
@@ -184,8 +178,6 @@ export const fields = {
      *   they are computed when dependencies change AND when this field is being used. In eager mode,
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
-     * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
-     *   This is called at least once at record creation.
      * @returns {string|markup }
      */
     Html(def, param1) {
@@ -208,8 +200,6 @@ export const fields = {
      *   they are computed when dependencies change AND when this field is being used. In eager mode,
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
-     * @param {(this: Record) => void} [param0.onUpdate] function that is called when the field value is updated.
-     *   This is called at least once at record creation.
      * @returns {luxon.DateTime}
      */
     Date(param0) {
@@ -230,8 +220,6 @@ export const fields = {
      *   they are computed when dependencies change AND when this field is being used. In eager mode,
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
-     * @param {(this: Record) => void} [param0.onUpdate] function that is called when the field value is updated.
-     *   This is called at least once at record creation.
      * @returns {luxon.DateTime}
      */
     Datetime(param0) {

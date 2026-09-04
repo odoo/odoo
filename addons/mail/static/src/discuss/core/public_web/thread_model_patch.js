@@ -14,6 +14,12 @@ const threadPatch = {
             this.channel.isLocallyPinned = true;
         }
         super.setAsDiscussThread(...arguments);
+        const menu = this.store.messagingMenu;
+        const sidebarState = this.store.discuss.sidebarState;
+        if (sidebarState.activeTab?.notEq(menu.bookmarkTab)) {
+            const fallback = this.store.inPublicPage ? menu.channelTab : menu.chatTab;
+            sidebarState.activeTab = this.channel?.primaryMessagingMenuTab ?? fallback;
+        }
     },
 };
 patch(Thread.prototype, threadPatch);

@@ -1,4 +1,5 @@
 import { makeRecordFieldLocalId } from "@mail/model/misc";
+import { untrack } from "@odoo/owl";
 
 import {
     LocalStorageEntry,
@@ -20,10 +21,12 @@ export function localStorageField(record, defaultValue) {
     let ls;
     let fieldName;
     let applyingStorageEvent = false;
+    const findFieldName = () =>
+        [...record._.fieldsAttrSignal].find(([, sig]) => sig() === marker)?.[0];
     record.onChange(
         () => [], // one-shot at construction release: the localId is assigned
         () => {
-            fieldName = [...record._.fieldsAttrSignal].find(([, sig]) => sig() === marker)?.[0];
+            fieldName ??= untrack(findFieldName);
             if (!fieldName) {
                 throw new Error("localStorage() return value must be assigned to the field");
             }
@@ -48,7 +51,10 @@ export function localStorageField(record, defaultValue) {
         { immediate: true }
     );
     record.onChange(
-        () => [fieldName && record[fieldName]],
+        () => {
+            fieldName ??= untrack(findFieldName);
+            return [fieldName && record[fieldName]];
+        },
         (value) => {
             if (applyingStorageEvent || !ls) {
                 return;

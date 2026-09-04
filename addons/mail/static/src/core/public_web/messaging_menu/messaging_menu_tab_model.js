@@ -57,6 +57,28 @@ import { _t } from "@web/core/l10n/translation";
  * Tabs or filters without matching server-side cases raise a `BadRequest.
  */
 export class MessagingMenuTab extends Record {
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.messagingMenuAsTab],
+            function onChangeMessagingMenuAsTab(messagingMenuAsTab) {
+                if (
+                    !messagingMenuAsTab ||
+                    messagingMenuAsTab.initializeCountersFetcher.status === "not_fetched"
+                ) {
+                    return;
+                }
+                // Dynamic tab missed `initializeCountersFetcher`, catch-up now.
+                this.store.fetchStoreData("/mail/messaging_menu/initialize_counters", {
+                    filter_id_by_tab_id_by_record_type: {
+                        [this.recordType]: { [this.id]: this.defaultFilter?.id ?? null },
+                    },
+                });
+            },
+            { immediate: true }
+        );
+    }
+
     static id = "id";
     static LOAD_MORE_LIMIT = 20;
 
@@ -149,18 +171,6 @@ export class MessagingMenuTab extends Record {
         inverse: "allTabs",
         compute() {
             return this.store.messagingMenu;
-        },
-        eager: true,
-        onUpdate() {
-            if (this.messagingMenuAsTab?.initializeCountersFetcher.status === "not_fetched") {
-                return;
-            }
-            // Dynamic tab missed `initializeCountersFetcher`, catch-up now.
-            this.store.fetchStoreData("/mail/messaging_menu/initialize_counters", {
-                filter_id_by_tab_id_by_record_type: {
-                    [this.recordType]: { [this.id]: this.defaultFilter?.id ?? null },
-                },
-            });
         },
     });
     messagingMenuAsVisibleTabs = fields.One("MessagingMenu", {

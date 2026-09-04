@@ -13,6 +13,61 @@ import { nbsp } from "@web/core/utils/strings";
 export class Composer extends Record {
     static id = OR("thread", "message");
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            () => [this.composerText],
+            function onChangeComposerText(composerText) {
+                if (this.updateFrom === "html") {
+                    this.updateFrom = undefined;
+                    return;
+                }
+                const validMentions = this.store.getMentionsFromText(composerText, {
+                    mentionedPartners: this.mentionedPartners,
+                    mentionedRoles: this.mentionedRoles,
+                    thread: this.targetThread,
+                });
+                const prettifiedHtml = prettifyMessageText(composerText, {
+                    validMentions,
+                    thread: this.targetThread,
+                    trim: false,
+                });
+                if (this.composerHtml.toString() !== prettifiedHtml.toString()) {
+                    this.updateFrom = "text";
+                    this.composerHtml = prettifiedHtml;
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.composerHtml],
+            function onChangeComposerHtml(composerHtml) {
+                if (this.updateFrom === "text") {
+                    this.updateFrom = undefined;
+                    return;
+                }
+                const prettifiedText = isHtmlEmpty(composerHtml)
+                    ? ""
+                    : convertBrToLineBreak(composerHtml, { trim: false });
+                if (this.composerText !== prettifiedText) {
+                    this.updateFrom = "html";
+                    this.composerText = prettifiedText;
+                }
+            },
+            { immediate: true, initialRun: false }
+        );
+        this.onChange(
+            () => [this.isFocused, this.thread],
+            function onChangeIsFocused(isFocused, thread) {
+                if (thread && isFocused) {
+                    thread.isFocusedCounter++;
+                    return () => thread.isFocusedCounter--;
+                }
+            },
+            { immediate: true }
+        );
+    }
+
     clear() {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
@@ -56,28 +111,7 @@ export class Composer extends Record {
     mentionedRoles = fields.Many("res.role");
     cannedResponses = fields.Many("mail.canned.response");
     isDirty = false;
-    composerText = fields.Attr("", {
-        onUpdate() {
-            if (this.updateFrom === "html") {
-                this.updateFrom = undefined;
-                return;
-            }
-            const validMentions = this.store.getMentionsFromText(this.composerText, {
-                mentionedPartners: this.mentionedPartners,
-                mentionedRoles: this.mentionedRoles,
-                thread: this.targetThread,
-            });
-            const prettifiedHtml = prettifyMessageText(this.composerText, {
-                validMentions,
-                thread: this.targetThread,
-                trim: false,
-            });
-            if (this.composerHtml.toString() !== prettifiedHtml.toString()) {
-                this.updateFrom = "text";
-                this.composerHtml = prettifiedHtml;
-            }
-        },
-    });
+    composerText = "";
     composerHtml = fields.Html(markup("<div class='o-paragraph'><br></div>"), {
         compute() {
             if (this.syncHtmlWithMessage) {
@@ -87,19 +121,6 @@ export class Composer extends Record {
                 );
             }
             return this.composerHtml;
-        },
-        onUpdate() {
-            if (this.updateFrom === "text") {
-                this.updateFrom = undefined;
-                return;
-            }
-            const prettifiedText = isHtmlEmpty(this.composerHtml)
-                ? ""
-                : convertBrToLineBreak(this.composerHtml, { trim: false });
-            if (this.composerText !== prettifiedText) {
-                this.updateFrom = "html";
-                this.composerText = prettifiedText;
-            }
         },
     });
     thread = fields.One("mail.thread");
@@ -114,18 +135,7 @@ export class Composer extends Record {
     );
     /** @type {boolean} */
     forceCursorMove;
-    isFocused = fields.Attr(false, {
-        /** @this {import("models").Composer} */
-        onUpdate() {
-            if (this.thread) {
-                if (this.isFocused) {
-                    this.thread.isFocusedCounter++;
-                } else {
-                    this.thread.isFocusedCounter--;
-                }
-            }
-        },
-    });
+    isFocused = false;
     autofocus = 0;
     /** When set, this means the composer content was restored from local storage, and content was saved from full composer */
     restoredFromFullComposer = false;
