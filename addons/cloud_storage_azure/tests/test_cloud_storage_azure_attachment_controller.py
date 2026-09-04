@@ -8,6 +8,7 @@ from odoo.tools.misc import file_open
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.cloud_storage.tests.tools import filter_by_expected
 from odoo.addons.cloud_storage_azure.tests.test_cloud_storage_azure import TestCloudStorageAzureCommon
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tests.common import MailCommon
 
 
@@ -54,6 +55,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                         res.content.decode("utf-8"),
                     )
                 )
+                pop_store_version(content["data"]["store_data"])
                 content_expected = {
                     "data": {
                         "attachment_id": attachment.id,

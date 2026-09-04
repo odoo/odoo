@@ -8,6 +8,7 @@ from unittest.mock import patch, PropertyMock
 from odoo import Command, fields
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
 
@@ -81,8 +82,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - fetch res_partner (image_128, _compute_avatar_128 reads the chat correspondent)
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
-    #           - select the current db snapshot
-    _query_count_init_messaging = 34
+    _query_count_init_messaging = 33
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
@@ -157,8 +157,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (author)
     #       - fetch user (author)
     #       - fetch discuss_call_history
-    #       - select the current db snapshot
-    _query_count_discuss_channels = 64
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
@@ -366,7 +365,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     res = fn()
             else:
                 res = fn()
-        res.pop("__store_version__", False)
+        pop_store_version(res)
         self.assertEqual(res, results)
 
     @freeze_time("2025-04-22 21:18:33")

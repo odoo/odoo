@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 from markupsafe import Markup
 
 from odoo import Command
+from odoo.addons.bus.tests.common import pop_store_version
 from odoo.addons.mail.models.mail_mail import _UNFOLLOW_REGEX
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
@@ -1019,6 +1020,7 @@ class UnfollowLinkTest(MailCommon, HttpCase):
             lambda follower: follower.partner_id == self.env.user.partner_id
         )
         data = self.make_jsonrpc_request("/mail/store", {"fetch_params": [["/mail/messaging_menu/mail.message/load_more", {"tab_id": "notification", "filter_id": "notification_unread", "limit": 20}]]})
+        pop_store_version(data)
         self.assertEqual(data["mail.followers"], [
             {
                 "id": follower.id,
