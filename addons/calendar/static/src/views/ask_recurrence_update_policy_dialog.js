@@ -1,16 +1,17 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class AskRecurrenceUpdatePolicyDialog extends Component {
     static template = "calendar.AskRecurrenceUpdatePolicyDialog";
     static components = {
         Dialog,
     };
-    static props = {
-        confirm: Function,
-        close: Function,
-    };
+
+    props = useProps({
+        confirm: t.function(),
+        close: t.function(),
+    });
 
     setup() {
         this.possibleValues = {

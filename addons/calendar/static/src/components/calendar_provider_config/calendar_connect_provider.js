@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 
 const providerData = {
     google: {
@@ -17,10 +17,9 @@ const providerData = {
 };
 
 export class CalendarConnectProvider extends Component {
-    static props = {
-        ...standardWidgetProps,
-    };
     static template = "calendar.CalendarConnectProvider";
+
+    props = useProps(standardWidgetProps);
 
     setup() {
         super.setup();
