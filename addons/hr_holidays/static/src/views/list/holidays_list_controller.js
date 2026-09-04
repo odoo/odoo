@@ -71,7 +71,10 @@ export class HolidaysListController extends ListController {
         const filter = this.actionFilters[actionName];
         if (filter) {
             const eligibleRecords = this.model.root.selection.filter(filter);
-            if (eligibleRecords.length) {
+            if (actionName === "action_adjust_corresponding_payslip") {
+                return this.onClickViewButton(params);
+            }
+            else if (eligibleRecords.length) {
                 this.executeAction(actionName, eligibleRecords);
             } else {
                 this.onClickViewButton(params);
