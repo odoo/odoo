@@ -108,28 +108,31 @@
 
 <template id="website_sale.product_image_and_ribbon" name="Products Images and Ribbons">
     <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
-        <!-- Fetch Images Data -->
-        <t
-            t-if="product_variant and product_variant.image_128"
-            t-set="all_images_list"
-            t-value="product_variant._get_images()"
-        />
-        <t
-            t-else=""
-            t-set="all_images_list"
-            t-value="product._get_images()"
-        />
         <!--
             Image holders are records of different types (`product.template`, `product.product`
             or `product.image`) and are returned as a list.
             -->
+        <!-- Videos can't be played on the product card: prefer a plain image, and only fall back
+             on a video's thumbnail if the product has no other image. `_get_non_video_images`
+             stops looking as soon as it has enough images, instead of scanning through (and
+             fetching) every single one, which matters since most products have no video at all. -->
+        <t
+            t-if="product_variant and product_variant.image_128"
+            t-set="non_video_images_list"
+            t-value="product_variant._get_non_video_images(2) or product_variant._get_images()"
+        />
+        <t
+            t-else=""
+            t-set="non_video_images_list"
+            t-value="product._get_non_video_images(2) or product._get_images()"
+        />
         <t
             t-set="primary_image_holder"
-            t-value="(all_images_list[:1]+[product])[0]"
+            t-value="(non_video_images_list[:1]+[product])[0]"
         />
         <t
             t-set="secondary_image_holder"
-            t-value="(all_images_list[1:2]+[False])[0]"
+            t-value="(non_video_images_list[1:2]+[False])[0]"
         />
 
         <a

@@ -14,8 +14,17 @@
     <xpath expr="//image_pop_up_option" position="attributes">
         <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
     </xpath>
+    <xpath expr="//image_pop_up_option" position="attributes">
+        <!-- The product carousel already has its own click/zoom behavior. -->
+        <attribute name="t-attf-exclude" add=".o_wsale_product_images img" separator=", "/>
+    </xpath>
     <xpath expr="//replace_media_option" position="attributes">
         <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
+    </xpath>
+    <xpath expr="//video_size_option" position="attributes">
+        <!-- The showcase video has a fixed position/ratio in the carousel: the
+             generic resize slider doesn't apply (and doesn't work) there. -->
+        <attribute name="exclude" add=".o_wsale_product_images .media_iframe_video" separator=", "/>
     </xpath>
 
     <xpath expr="//t[@id='page_options_hook']" position="after">

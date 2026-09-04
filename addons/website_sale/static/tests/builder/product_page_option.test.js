@@ -123,7 +123,7 @@ test("Product page options", async () => {
     });
 
     await contains(":iframe .product_detail_img", { visible: false }).click();
-    await contains("[data-action-id=replaceMedia]").click();
+    await contains("[data-action-id=chooseMedia]").click();
     await contains(".o_select_media_dialog .o_existing_attachment_cell button").click();
     await expect.waitForSteps(["get_image_info"]);
     await waitForNone(".o_select_media_dialog");

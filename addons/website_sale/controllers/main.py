@@ -3,7 +3,7 @@
 import itertools
 from collections import defaultdict
 from datetime import datetime
-from urllib.parse import parse_qs, urlencode, urlparse
+from urllib.parse import parse_qs, urlencode, urlparse, urlsplit
 
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
@@ -963,10 +963,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if main_image_idx != 0:
             main_image = product_images[main_image_idx]
             additional_image = product_images[0]
-            if additional_image.video_url:
-                raise ValidationError(
-                    self.env._("You can't use a video as the product's main image.")
-                )
             # Swap records.
             product_images[main_image_idx], product_images[0] = additional_image, main_image
             # Swap image data. The contents are read eagerly before writing: the images are
@@ -976,12 +972,62 @@ class WebsiteSale(payment_portal.PaymentPortal):
             additional_image_data = additional_image.image_1920.content
             main_image.image_1920 = BinaryBytes(additional_image_data)
             additional_image.image_1920 = BinaryBytes(main_image_data)
+            # Swap the showcase video, if any: the main image holder can now also be a video.
+            main_image.video_url, additional_image.video_url = (
+                additional_image.video_url,
+                main_image.video_url,
+            )
             additional_image.name = main_image.name  # Update image name but not product name.
 
         # Resequence additional images according to the new ordering.
         for idx, product_image in enumerate(product_images):
             if product_image._name == "product.image":
                 product_image.sequence = idx
+
+    @route(["/shop/product/replace-image-media"], type="jsonrpc", auth="user", website=True)
+    def replace_product_image_media(
+        self, image_res_model, image_res_id, video_url, image_1920=None, attachment_id=None
+    ):
+        """
+        Turn an existing product image (main or additional) into a video, turn it back
+        into a plain image, or clear its showcase video (if ``video_url`` is falsy and no
+        ``attachment_id`` is given).
+
+        :param str image_res_model: The model of the image. It can be 'product.template',
+                                    'product.product', or 'product.image'.
+        :param str image_res_id: The record ID of the image to update.
+        :param str video_url: URL of the video to showcase, or a falsy value to remove it.
+        :param str image_1920: Base64-encoded thumbnail to display for the video.
+        :param int attachment_id: When turning the video back into a plain image, the id of
+                                  the "ir.attachment" to use as the new image.
+        :raises NotFound: If the user does not have the required permissions, or if the
+                          model of the image is not allowed.
+        :raise ValidationError: If the provided video URL is invalid.
+        """
+        if not self.env.user.has_group(
+            "website.group_website_restricted_editor"
+        ) or image_res_model not in {"product.product", "product.template", "product.image"}:
+            raise NotFound
+
+        vals = {"video_url": video_url}
+        if video_url:
+            url = urlsplit(video_url)
+            if not url.netloc:
+                raise ValidationError(self.env._("Invalid video URL provided."))
+            if image_1920:
+                vals["image_1920"] = image_1920
+        elif attachment_id:
+            attachment = self.env["ir.attachment"].browse(int(attachment_id))
+            vals["image_1920"] = attachment.raw or self.env["ir.qweb.field.image"].load_remote_url(
+                attachment.url
+            )
+        else:
+            # The video is being removed with no replacement: also clear its thumbnail,
+            # so the record falls back to the generic "no image" placeholder.
+            vals["image_1920"] = False
+
+        image = self.env[image_res_model].browse(int(image_res_id))
+        image.write(vals)
 
     @route(
         ["/shop/product/is_add_to_cart_allowed"],

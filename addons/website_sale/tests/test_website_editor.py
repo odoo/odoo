@@ -213,32 +213,35 @@ class TestProductPictureController(HttpCase):
             self.assertListEqual(self._get_product_image_data(), [i1, i3, i2, i4, i5, i6])
 
     def test_resequence_video_first(self):
-        """A video can't be resequenced to first position."""
+        """A video can be resequenced to the first (main image) position."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
             images[2].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
-            with self.assertRaises(ValidationError):
-                self.WebsiteSaleController.resequence_product_image(
-                    images[2]._name, images[2].id, "first"
-                )
+            self.WebsiteSaleController.resequence_product_image(
+                images[2]._name, images[2].id, "first"
+            )
             self.env["product.image"].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
+            self.product.invalidate_recordset()
+            self.assertListEqual(self._get_product_image_data(), [i3, i1, i2, i4, i5, i6])
+            self.assertEqual(self.product.video_url, i3)
 
     def test_resequence_video_replace_first(self):
-        """A video can't replace an image that was resequenced away from first position."""
+        """Resequencing the main image away from the first position promotes a video
+        into the main image position."""
         self._create_product_images()
         with MockRequest(self.product.env, website=self.website):
             images = self.product._get_images()
             images[1].video_url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             i1, i2, i3, i4, i5, i6 = self._get_product_image_data()
-            with self.assertRaises(ValidationError):
-                self.WebsiteSaleController.resequence_product_image(
-                    images[0]._name, images[0].id, "right"
-                )
+            self.WebsiteSaleController.resequence_product_image(
+                images[0]._name, images[0].id, "right"
+            )
             self.env["product.image"].invalidate_model()
-            self.assertListEqual(self._get_product_image_data(), [i1, i2, i3, i4, i5, i6])
+            self.product.invalidate_recordset()
+            self.assertListEqual(self._get_product_image_data(), [i2, i1, i3, i4, i5, i6])
+            self.assertEqual(self.product.video_url, i2)
 
 
 @tagged("post_install", "-at_install")

@@ -378,10 +378,13 @@ export class ProductPage extends Interaction {
             // Re-query the latest images.
             images = productContainer.querySelector(this._getProductImageContainerSelector());
             this.services["public.interactions"].startInteractions(images);
-            // Update the sharable image (only works for Pinterest).
-            const shareImageSrc = images.querySelector('img').src;
-            document.querySelector('meta[property="og:image"]')
-                .setAttribute('content', shareImageSrc);
+            // Update the sharable image (only works for Pinterest). There may be none,
+            // e.g. if the product's main image is a showcase video.
+            const shareImageEl = images.querySelector('img');
+            if (shareImageEl) {
+                document.querySelector('meta[property="og:image"]')
+                    ?.setAttribute('content', shareImageEl.src);
+            }
 
             if (images.id === 'o-carousel-product') {
                 this.bootstrap.getOrCreateInstance(window.Carousel, images).to(0);
