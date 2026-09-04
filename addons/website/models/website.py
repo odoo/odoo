@@ -1621,9 +1621,9 @@ class Website(models.CachedModel):
             try:
                 main_object = values['main_object'].with_user(user.id)
                 self._check_user_can_modify(main_object)
-                editable = True
+                values['force_branding_on_main_object'] = True
             except AccessError:
-                pass
+                values['force_branding_on_main_object'] = False
         translatable = has_group_restricted_editor and self.env.context.get('lang') != IrHttp._get_default_lang().code
         editable = editable and not (translatable and self.env.context.get('edit_translations'))
 
