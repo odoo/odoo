@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-21 17:40+0000\n"
-"PO-Revision-Date: 2026-08-10 07:01+0000\n"
+"PO-Revision-Date: 2026-09-04 08:44+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/fi/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -3012,7 +3012,7 @@ msgstr "Mahdollistaa Stornon kirjanpidon käytön."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Allows you to use the analytic accounting."
-msgstr "Mahdollistaa analyyttisen kirjanpidon käytön."
+msgstr "Mahdollistaa laskentakohteiden käytön."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -3225,34 +3225,34 @@ msgstr "Analyyttinen"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analyyttinen tili"
+msgstr "Laskentakohde"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
 msgid "Analytic Accounting"
-msgstr "Analyyttinen kirjanpito"
+msgstr "Laskentakohteet"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
-msgstr "Analyyttiset tilit"
+msgstr "Laskentakohteet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analyyttinen jakauma"
+msgstr "Laskentakohteiden kohdistus"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr "Analytiikan jakaumamalli"
+msgstr "Laskentakohteiden kohdistus"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr "Analytiikan jakaumamallit"
+msgstr "Laskentakohteiden kohdistusmallit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -3272,17 +3272,17 @@ msgstr "Analyyttinen rivi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Analytic Lines"
-msgstr "Analyyttiset rivit"
+msgstr "Laskentakohderivit"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Analyyttisen suunnitelman sovellettavuus"
+msgstr "Laskentakohderyhmän sovellettavuus"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "Analyyttiset suunnitelmat"
+msgstr "Laskentakohderyhmät"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -3303,7 +3303,7 @@ msgstr "Analyyttinen raportointi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Analyyttiset rivit"
+msgstr "Laskentakohderivit"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6901,7 +6901,7 @@ msgstr "Jako"
 #: model:ir.model.fields,field_description:account.field_account_move_line__distribution_analytic_account_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr "Analyyttisen tilin jakaminen"
+msgstr "Laskentakohteen kohdistus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -8825,8 +8825,8 @@ msgid ""
 "If set, the amount computed by this tax will be assigned to the same "
 "analytic account as the invoice line (if any)"
 msgstr ""
-"Jos valittu, tämän veron laskema määrä kohdistetaan samalle analyyttiselle "
-"tilille kuin laskurivi (jos olemassa)"
+"Jos valittu, tämän veron laskennallinen määrä kohdistetaan samalle "
+"laskentakohteelle kuin laskurivi (jos olemassa)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9959,7 +9959,7 @@ msgstr "Oli aiemmin '%(previous)s' ja on nyt '%(current)s'."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr "Tuotteet, ilman analyyttistä jakoa"
+msgstr "Tuotteet ilman laskentakohteen kohdistusta"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -11319,7 +11319,7 @@ msgstr "Uudet arvot"
 #. module: account
 #: model:mail.template,name:account.mail_template_einvoice_notification
 msgid "New eInvoices Notification"
-msgstr "Uusi sähköisten lakujen ilmoitus"
+msgstr "Uusi sähköisten laskujen ilmoitus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
@@ -11836,7 +11836,7 @@ msgstr "Yhtä tai useampaa laskua ei voitu käsitellä."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "One or more lines require a 100% analytic distribution."
-msgstr "Yksi tai useampi rivi tarvitsee 100% analyyttisen jaon."
+msgstr "Yksi tai useampi rivi tarvitsee 100% laskentakohteen kohdistuksen."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -14312,10 +14312,9 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
-"Valitse tuoteryhmä, joka käyttää analyyttisessä oletusarvossa määritettyä "
-"analyyttistä tiliä (esim. luo uusi asiakaslasku tai myyntitilaus "
-"valitessamme tämän tuotteen, ottaa automaattisesti tämän analyyttiseksi "
-"tiliksi)"
+"Valitse tuoteryhmä, joka käyttää laskennan oletusarvossa määritettyä "
+"laskentakohdetta (esim. luo uusi asiakaslasku tai myyntitilaus valitessamme "
+"tämän tuotteen, ottaa automaattisesti tämän laskentakohteeksi)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_id
@@ -14324,9 +14323,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this product, it "
 "will automatically take this as an analytic account)"
 msgstr ""
-"Valitse tuote, jolle analyyttistä jakoa käytetään (esim. luo uusi "
-"asiakaslasku tai myyntitilaus valitessamme tämän tuotteen, kyseinen "
-"analyyttinen tili valitaan automaattisesti)"
+"Valitse tuote, jolle laskentakohteen kohdistusta käytetään (esim. laskua tai "
+"tilausta luotaessa tämän tuotteen käyttö valitsee automaattisesti kyseisen "
+"laskentakohteen)"
 
 #. module: account
 #. odoo-python
@@ -16916,9 +16915,9 @@ msgid ""
 "master budgets and the budgets are defined, the project managers can set the "
 "planned amount on each analytic account."
 msgstr ""
-"Näin tilintarkastajat voivat hallita analyyttisiä ja risteäviä budjetteja. "
-"Kun pää- ja muut budjetit on määritetty, projektipäälliköt voivat asettaa "
-"suunnitellun määrän jokaiselle analyyttiselle tilille."
+"Näin tilintarkastajat voivat hallita laskennallisia ja risteäviä budjetteja. "
+"Kun kokonaisbudjetti on määritetty, projektipäälliköt voivat asettaa "
+"erillisen budjetin jokaiselle laskentakohteelle."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__module_account_batch_payment
@@ -19077,7 +19076,7 @@ msgstr "Et voi tehdä kirjausta arkistoituun päiväkirjaan (%(journal)s)"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr "Et voi tehdä kirjausta arkistoidulla anlyyttisellä tilillä: %s"
+msgstr "Et voi tehdä kirjausta arkistoidulla laskentakohtella: %s"
 
 #. module: account
 #. odoo-python
