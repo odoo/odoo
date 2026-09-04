@@ -235,7 +235,13 @@ export class SplitPlugin extends Plugin {
             if (isProtecting(node) || isProtected(node)) {
                 // TODO ABD: add test
                 return;
-            } else if (node.nodeType === Node.TEXT_NODE && !isVisible(node)) {
+            } else if (
+                node.nodeType === Node.TEXT_NODE &&
+                !isVisible(node) &&
+                !this.dependencies.delete.isUnremovable(node)
+            ) {
+                const parent = node.parentElement;
+                node.remove();
                 fillEmptyElement(parent);
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 if (node.hasAttribute("data-oe-zws-empty-inline")) {

@@ -310,6 +310,7 @@ test("add table inside empty list", async () => {
         el,
         `<ul>
             <li>
+                <p data-selection-placeholder=""><br></p>
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
@@ -362,7 +363,7 @@ test("add table inside non-empty list", async () => {
         el,
         `<ul>
             <li>
-                abc
+                <p>abc</p>
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
