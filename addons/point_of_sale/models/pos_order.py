@@ -728,6 +728,10 @@ class PosOrder(models.Model):
         return currency.round(amount) if currency else amount
 
     def _get_partner_bank_id(self):
+        """
+        `group_pos_user` doesn't have access to `res.partner.bank` so we must add `sudo()`
+        whenever we want to access it.
+        """
         partner_bank_id = False
         amount_total = sum(order.amount_total for order in self)
 
@@ -735,18 +739,20 @@ class PosOrder(models.Model):
             return bank_ids.filtered(lambda b: b.allow_out_payment)[:1]
 
         # Case 1: refund / negative amount → customer bank
-        if amount_total <= 0 and self.partner_id.bank_ids:
-            partner_bank_id = _first_allowed(self.partner_id.bank_ids)
+        partner_bank_ids = self.partner_id.sudo().bank_ids
+        if amount_total <= 0 and partner_bank_ids:
+            partner_bank_id = _first_allowed(partner_bank_ids)
 
         # Case 2: positive amount → payment journal bank
         elif amount_total >= 0 and self.payment_ids:
-            journal_bank = self.payment_ids[0].payment_method_id.journal_id.bank_account_id
+            journal_bank = self.payment_ids[0].payment_method_id.journal_id.sudo().bank_account_id
             if journal_bank and journal_bank.allow_out_payment:
                 partner_bank_id = journal_bank
 
         # Case 3: fallback → company bank
-        if not partner_bank_id and amount_total >= 0 and self.company_id.partner_id.bank_ids:
-            partner_bank_id = _first_allowed(self.company_id.partner_id.bank_ids)
+        company_bank_ids = self.company_id.partner_id.sudo().bank_ids
+        if not partner_bank_id and amount_total >= 0 and company_bank_ids:
+            partner_bank_id = _first_allowed(company_bank_ids)
 
         return partner_bank_id.id if partner_bank_id else False
 
@@ -1093,7 +1099,7 @@ class PosOrder(models.Model):
             attachments += [(4, basic_receipt.id)]
 
         if self.mapped('account_move'):
-            report = self.env['ir.actions.report']._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
+            report = self.env['ir.actions.report'].sudo()._render_qweb_pdf("account.account_invoices", self.account_move.ids[0])
             invoice = self.env['ir.attachment'].create({
                 'name': name + '.pdf',
                 'type': 'binary',

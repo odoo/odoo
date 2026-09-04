@@ -343,11 +343,11 @@ class PosPaymentMethod(models.Model):
     def _check_payment_method(self):
         for rec in self:
             if rec.payment_method_type == "bank_qr_code":
-                if (rec.journal_id.type != 'bank' or not rec.journal_id.bank_account_id):
+                if (rec.journal_id.type != 'bank' or not rec.journal_id.sudo().bank_account_id):
                     raise ValidationError(_("At least one bank account must be defined on the journal to allow registering QR code payments with Bank apps."))
                 if not rec.qr_code_method:
                     raise ValidationError(_("You must select a QR-code method to generate QR-codes for this payment method."))
-                error_msg = self.journal_id.bank_account_id._get_error_messages_for_qr(self.qr_code_method, False, rec.company_id.currency_id)
+                error_msg = rec.journal_id.sudo().bank_account_id._get_error_messages_for_qr(rec.qr_code_method, False, rec.company_id.currency_id)
                 if error_msg:
                     raise ValidationError(error_msg)
 
@@ -403,7 +403,7 @@ class PosPaymentMethod(models.Model):
         self.ensure_one()
         if self.payment_method_type != "bank_qr_code" or not self.qr_code_method:
             raise UserError(_("This payment method is not configured to generate QR codes."))
-        payment_bank = self.journal_id.bank_account_id
+        payment_bank = self.journal_id.sudo().bank_account_id
         debtor_partner = self.env['res.partner'].browse(debtor_partner)
         currency = self.env['res.currency'].browse(currency)
 
