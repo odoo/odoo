@@ -77,6 +77,7 @@ LineItem = {
 
 PartnerParty = {
     'ram:ID': {},
+    'ram:GlobalID': {},
     'ram:Name': {},
     'ram:SpecifiedLegalOrganization': {
         'ram:ID': {},
