@@ -299,9 +299,13 @@ class SaleOrderTemplateLine(models.Model):
     @api.depends("product_id", "name")
     def _compute_label(self):
         for line in self:
-            if line.product_id and line.name:
+            if (
+                line.product_id
+                and line.name
+                and line.name.splitlines()[0] != line.product_id.display_name
+            ):
                 line.label = line.product_id.display_name + "\n" + line.name
-            elif line.product_id:
+            elif line.product_id and not line.name:
                 line.label = line.product_id.display_name
             else:
                 line.label = line.name

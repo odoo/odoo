@@ -624,7 +624,11 @@ class SaleOrderLine(models.Model):
     def _compute_label(self):
         for line in self:
             lang_line = line.with_context(lang=line.order_id._get_lang())
-            if lang_line.product_id and lang_line.name:
+            if (
+                lang_line.product_id
+                and lang_line.name
+                and line.name.splitlines()[0] != lang_line.product_id.display_name
+            ):
                 lang_line.label = lang_line.product_id.display_name + "\n" + lang_line.name
             elif lang_line.product_id and not lang_line.name:
                 lang_line.label = lang_line.product_id.display_name

@@ -551,9 +551,9 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             display_name = line._get_product_display_name()
 
-            if display_name and line.name:
+            if display_name and line.name and line.name.splitlines()[0] != display_name:
                 line.label = f"{display_name}\n{line.name}"
-            elif display_name:
+            elif line.product_id and not line.name:
                 line.label = display_name
             else:
                 line.label = line.name

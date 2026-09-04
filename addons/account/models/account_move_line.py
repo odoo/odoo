@@ -687,7 +687,11 @@ class AccountMoveLine(models.Model):
                 lang=line.move_id._get_lang(),
                 display_default_code=self.env.context.get("display_default_code", True),
             )
-            if lang_line.product_id and lang_line.name:
+            if (
+                lang_line.product_id
+                and lang_line.name
+                and line.name.splitlines()[0] != lang_line.product_id.display_name
+            ):
                 line.label = lang_line.product_id.display_name + "\n" + lang_line.name
             elif lang_line.product_id and not lang_line.name:
                 line.label = lang_line.product_id.display_name
