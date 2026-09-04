@@ -55,3 +55,14 @@ test("Drop Whatsapp snippet and verify snippet options", async () => {
     await contains("[data-class-action='no_icon_color'] input").click();
     expect(":iframe .s_whatsapp .s_whatsapp_fab").toHaveClass("no_icon_color");
 });
+
+test("whatsapp snippet shouldn't create extra dropzones", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilderWithSnippet("s_whatsapp", {
+        loadIframeBundles: true,
+    });
+    await waitSidebarUpdated();
+    const { moveTo } = await contains(".o-snippets-menu .o_snippet_thumbnail").drag();
+    await moveTo(":iframe #wrap");
+    // Whatsapp snippet shouldn't create an extra dropzone.
+    expect(":iframe .oe_drop_zone").toHaveCount(1);
+});

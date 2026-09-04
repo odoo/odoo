@@ -42,6 +42,7 @@ export class DropZonePlugin extends Plugin {
     ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
+        ignored_dropzone_selectors: ".o_we_no_overlay",
         /**
          * @param {import("@html_editor/core/dom_observer_plugin").NativeMutation} mutation
          * @returns {boolean | undefined}
@@ -80,6 +81,7 @@ export class DropZonePlugin extends Plugin {
         this.snippetModel = this.config.snippetModel;
         this.dropzoneSelectors = this.getResource("dropzone_selectors");
         this.iframe = this.document.defaultView.frameElement;
+        this.ignoredDropzoneSelectors = this.getResource("ignored_dropzone_selectors").join(",");
     }
 
     /**
@@ -487,7 +489,7 @@ export class DropZonePlugin extends Plugin {
         { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
-        const isIgnored = (el) => el.matches(".o_we_no_overlay") || !isVisible(el);
+        const isIgnored = (el) => el.matches(this.ignoredDropzoneSelectors) || !isVisible(el);
         let hookEls = [];
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
