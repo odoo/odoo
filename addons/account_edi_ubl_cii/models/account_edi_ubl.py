@@ -2558,6 +2558,34 @@ class AccountEdiUBL(models.AbstractModel):
     def _export_document_node_constraints(self, vals):
         return {}
 
+    def _add_invoice_config_vals(self, vals):
+        # Bridges account_move_send.py's _postprocess_invoice_ubl_xml, which builds its own
+        # minimal {'invoice': invoice} vals and expects this method (only ever defined on the
+        # sibling account.edi.xml.ubl_20 branch, and bridged onto the modern vals shape by
+        # account.edi.xml.ubl_bis3's own override) to populate it - reuse the same
+        # _init_invoice_export_values this hierarchy already uses for its own normal export, so
+        # _get_document_nsmap below (and _get_document_type_code_node) have what they need.
+        vals.update(self._init_invoice_export_values(vals['invoice']))
+
+    def _get_document_nsmap(self, vals):
+        # Needed by account_move_send.py's _postprocess_invoice_ubl_xml.
+        return {
+            None: {
+                'invoice': "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+                'self_invoice': "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+                'credit_note': "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2",
+                'self_credit_note': "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2",
+            }[self._get_document_type(vals)],
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'ext': "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2",
+        }
+
+    def _get_document_type_code_node(self, invoice, invoice_data):
+        """Returns the `DocumentTypeCode` node tag"""
+        # To be overriden by custom format if required
+        pass
+
     def _export_document(self, vals):
         vals['document_node'] = {
             '_nsmap': {},
