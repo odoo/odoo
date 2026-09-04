@@ -51,7 +51,7 @@ export class EmployeeUserStatus extends Component {
         switch (this.state) {
             case "new":
                 return [
-                    { key: "send", label: _t("Resend Invitation"), icon: "send", method: "action_reset_password" },
+                    { key: "send", label: _t("Resend Invitation"), icon: "send", method: "action_send_invitation" },
                     { key: "copy", label: _t("Copy Invitation Link"), icon: "content_copy", method: "action_copy_invitation_link" },
                     { key: "deactivate", label: _t("Deactivate"), icon: "block", method: "action_toggle_user_active" },
                 ];
