@@ -22,8 +22,7 @@
                         t-att-tabindex="this.props.lines ? 0 : -1">
                     <i t-if="this.hasSublines"
                         class="oi"
-                        t-att-class="{'oi-filled': this.state.displaySubline}"
-                        t-att-data-icon="this.state.displaySubline ? 'folder_open' : 'folder'"/>
+                        t-att-data-icon="this.state.displaySublines ? 'folder_open' : 'folder'"/>
                 </button>
             </td>
         </tr>
