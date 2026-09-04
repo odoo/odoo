@@ -54,10 +54,15 @@ class GoogleEvent(GoogleApiResource):
         # Let userA, userB be two new users (never synced to Google before).
         # UserA creates an event in Odoo (they are the owner) but userB syncs first.
         # There is no way to insert the event into userA's calendar since we don't have
-        # any authentication access. The event is therefore inserted into userB's calendar
-        # (they are the organizer in Google). The "real" owner (in Odoo) is stored as an
-        # extended property. There is currently no support to "transfert" ownership when
+        # any authentication access. In this case, we don't allow the event to be inserted
+        # until the odoo owner syncs.
+        # In the past, however, we used to store the real owner in the extended properties:
+        # The event was inserted into userB's calendar (they are the organizer in Google).
+        # The "real" owner (in Odoo) was stored as an extended property.
+        # There is currently no support to "transfer" ownership when
         # userA syncs their calendar the first time.
+        # Some events may have been created with this old approach, so we should still support it here.
+
         real_owner_id = self.extendedProperties and self.extendedProperties.get('shared', {}).get('%s_owner_id' % env.cr.dbname)
         try:
             # If we create an event without user_id, the event properties will be 'false'
@@ -68,11 +73,11 @@ class GoogleEvent(GoogleApiResource):
         real_owner = real_owner_id and env['res.users'].browse(real_owner_id) or env['res.users']
         if real_owner_id and real_owner.exists():
             return real_owner
-        elif self.organizer and self.organizer.get('self'):
+        elif self.creator and self.creator.get('self'):
             return env.user
-        elif self.organizer and self.organizer.get('email'):
+        elif self.creator and self.creator.get('email'):
             # In Google: 1 email = 1 user; but in Odoo several users might have the same email :/
-            org_email = email_normalize(self.organizer.get('email'))
+            org_email = email_normalize(self.creator.get('email'))
             return env['res.users'].search([('email_normalized', '=', org_email)], limit=1)
         else:
             return env['res.users']

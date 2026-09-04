@@ -3,6 +3,9 @@ import { patch } from "@web/core/utils/patch";
 
 patch(AttendeeCalendarCommonPopover.prototype, {
     get isEventArchivable() {
-        return super.isEventArchivable || (this.isCurrentUserOrganizer && this.props.record.rawRecord.google_id);
+        console.log(this.props.record.isInUserCalendars)
+        return super.isEventArchivable || (
+            (this.isCurrentUserOrganizer || this.props.record.isInUserCalendars) && this.props.record.rawRecord.google_id
+        );
     },
 });

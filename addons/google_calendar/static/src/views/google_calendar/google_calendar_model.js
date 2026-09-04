@@ -2,6 +2,7 @@ import { proxy } from "@odoo/owl";
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
+import { _t } from "@web/core/l10n/translation";
 
 patch(AttendeeCalendarModel.prototype, {
     setup(params) {
@@ -19,10 +20,12 @@ patch(AttendeeCalendarModel.prototype, {
     /**
      * @override
      */
-    async updateData() {
+    async updateData(data) {
+        this.meta.loadReason = undefined;
         this.googleSyncTimedOut = false;
         if (this.state.googlePendingSync) {
-            return super.updateData(...arguments);
+            await super.updateData(...arguments);
+            return this.updateCalendarData(data);
         }
         try {
             this.googleSyncTimedOut = await Promise.race([
@@ -37,9 +40,16 @@ patch(AttendeeCalendarModel.prototype, {
             this.state.googlePendingSync = false;
         }
         if (this.isAlive()) {
-            return super.updateData(...arguments);
+            await super.updateData(...arguments);
+            return this.updateCalendarData(data);
         }
         return new Promise(() => {});
+    },
+
+    async updateCalendarData(data) {
+        for (const event of Object.values(data.records)) {
+            event.isInUserCalendars = this.calendarIds?.includes(event.rawRecord.calendar_id[0]);
+        }
     },
 
     async syncGoogleCalendar(silent = false) {
@@ -75,6 +85,18 @@ patch(AttendeeCalendarModel.prototype, {
             await this.keepLast.add(super.updateData(data));
             this.data = data;
             this.notify();
+        }
+        if (result.new_calendars) {
+            this.notification.add(
+                _t("New Google calendars detected"),
+                {
+                    type: "info",
+                    buttons: [{
+                        name: _t("Choose which ones to synchronize"),
+                        onClick: () => this.action.doAction('calendar.action_calendar_calendar'),
+                    }],
+                },
+            );
         }
         return result;
     },

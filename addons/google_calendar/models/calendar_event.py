@@ -45,7 +45,7 @@ class CalendarEvent(models.Model):
 
     @api.model
     def _get_google_synced_fields(self):
-        return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
+        return {'name', 'description', 'allday', 'start', 'date_end', 'stop', 'calendar_id',
                 'attendee_ids', 'alarm_ids', 'location', 'privacy', 'active', 'show_as', 'videocall_location'}
 
     @api.model
@@ -108,7 +108,9 @@ class CalendarEvent(models.Model):
         skip_event_permission = self.env.context.get('skip_event_permission', False)
         # Edge case 3: check if event is synchronizable in order to make sure the error is worth it.
         is_synchronizable = self._check_values_to_sync(values)
-        if google_sync_restart or skip_event_permission or not is_synchronizable:
+        # Edge case 4: archiving an event should always be allowed.
+        archiving = 'active' in values and not values['active']
+        if google_sync_restart or skip_event_permission or not is_synchronizable or archiving:
             return
         if any(event.guests_readonly and self.env.user.id != event.user_id.id for event in self):
             raise ValidationError(
@@ -130,7 +132,9 @@ class CalendarEvent(models.Model):
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
         return Domain([
-            ('partner_ids.user_ids', 'in', self.env.user.id),
+            '|',
+                ('partner_ids.user_ids', 'in', self.env.user.id),
+                ('calendar_id', 'in', self.env.user.writable_calendar_ids.ids),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation
@@ -138,16 +142,18 @@ class CalendarEvent(models.Model):
         ])
 
     @api.model
-    def _odoo_values(self, google_event, default_reminders=()):
+    def _odoo_values(self, google_event, calendar, default_reminders=()):
         if google_event.is_cancelled():
             return {'active': False}
 
         # default_reminders is never () it is set to google's default reminder (30 min before)
         # we need to check 'useDefault' for the event to determine if we have to use google's
         # default reminder or not
-        reminder_command = google_event.reminders.get('overrides')
+        # google_event.reminders can be None in non-primary calendars such as country specific holidays
+        reminders = google_event.reminders or {}
+        reminder_command = reminders.get('overrides')
         if not reminder_command:
-            reminder_command = google_event.reminders.get('useDefault') and default_reminders or ()
+            reminder_command = reminders.get('useDefault') and default_reminders or ()
         alarm_commands = self._odoo_reminders_commands(reminder_command)
         attendee_commands, partner_commands = self._odoo_attendee_commands(google_event)
         related_event = self.search([('google_id', '=', google_event.id)], limit=1)
@@ -156,15 +162,31 @@ class CalendarEvent(models.Model):
             'name': name,
             'description': google_event.description and tools.html_sanitize(google_event.description),
             'location': google_event.location,
-            'user_id': google_event.owner(self.env).id,
             'privacy': google_event.visibility or False,
             'attendee_ids': attendee_commands,
+            'partner_ids': [],  # prevent default partner_ids assignment
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
             'videocall_location': google_event.get_meeting_url(),
             'show_as': 'free' if google_event.is_available() else 'busy',
             'guests_readonly': not bool(google_event.guestsCanModify)
         }
+        if owner := google_event.owner(self.env):
+            values['user_id'] = owner.id
+        elif not calendar.calendar_user_ids.filtered(lambda u: u.is_primary) and calendar.owner_id:
+            # If the calendar is secondary, assign the event to the calendar owner.
+            values['user_id'] = calendar.owner_id.id
+        elif not related_event and not google_event.is_recurrent():
+            # If the event doesn't exist in Odoo yet, explicitly set the user to prevent default env.user assignment
+            # If it exists, do not override the user
+            values['user_id'] = False
+
+        # Do not set the calendar_id of events imported into the primary calendar, if the user is not the owner.
+        # In Google, any event you are invited to is added to your primary calendar (as your own copy). If we added
+        # these to the calendar and the actual owner would sync later, we would end up with an inconsistent state.
+        if not calendar.is_primary or self.env.user.id == google_event.owner(self.env).id:
+            values['calendar_id'] = calendar.id
+            values['last_google_calendar_sync_path'] = calendar.get_google_path()
         # Remove 'videocall_location' when not sent by Google, otherwise the local videocall will be discarded.
         if not values.get('videocall_location'):
             values.pop('videocall_location', False)
@@ -203,12 +225,6 @@ class CalendarEvent(models.Model):
         attendee_commands = []
         partner_commands = []
         google_attendees = google_event.attendees or []
-        if len(google_attendees) == 0 and google_event.organizer and google_event.organizer.get('self', False):
-            user = google_event.owner(self.env)
-            google_attendees += [{
-                'email': user.partner_id.email,
-                'responseStatus': 'accepted',
-            }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
@@ -260,7 +276,7 @@ class CalendarEvent(models.Model):
             if alarm:
                 commands += [(4, alarm.id)]
             else:
-                if minutes % (60*24) == 0:
+                if minutes % (60 * 24) == 0:
                     interval = 'days'
                     duration = minutes / 60 / 24
                     name = _(
@@ -293,7 +309,7 @@ class CalendarEvent(models.Model):
         google_service = GoogleCalendarService(self.env['google.service'])
         archive_future_events = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
         if recurrence_update_setting == 'all_events' or archive_future_events:
-            self.recurrence_id.with_context(is_recurrence=True)._google_delete(google_service, self.recurrence_id.google_id)
+            self.recurrence_id.with_context(is_recurrence=True)._google_delete(google_service, self.calendar_id.get_google_path(), self.recurrence_id.google_id)
             # Increase performance handling 'future_events' edge case as it was an 'all_events' update.
             if archive_future_events:
                 recurrence_update_setting = 'all_events'
@@ -396,7 +412,23 @@ class CalendarEvent(models.Model):
             return self.user_id
         return self.env.user
 
-    def _is_google_insertion_blocked(self, sender_user):
+    def _get_event_owner(self):
         self.ensure_one()
-        has_different_owner = self.user_id and self.user_id != sender_user
-        return has_different_owner
+        return self.calendar_id.owner_id if self.calendar_id else self.user_id
+
+    def _should_be_synced(self):
+        self.ensure_one()
+        if self.calendar_id:
+            # Only sync if the current user or the calendar owner has sync enabled
+            user_calendar_sync_enabled = self.calendar_id.has_access('read') and self.calendar_id.calendar_user_id.google_sync_enabled
+            owner_calendar_sync_enabled = self.calendar_id.sudo().calendar_user_ids.filtered(lambda u: u.access_role == 'owner' and u.google_sync_enabled)
+            if not (user_calendar_sync_enabled or owner_calendar_sync_enabled):
+                return False
+        return self.need_sync
+
+    def _check_private_event_conditions(self):
+        if self.effective_privacy == 'members_only':
+            user_is_reader = self.calendar_id and self.calendar_id.user_access_role == 'reader'
+            if user_is_reader:
+                return False
+        return super()._check_private_event_conditions()

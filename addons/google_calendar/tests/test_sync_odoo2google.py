@@ -21,6 +21,7 @@ class TestSyncOdoo2GoogleCommon(TestSyncGoogle):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.user.partner_id.tz = "Europe/Brussels"
+        cls.env.user.primary_calendar_id.google_id = "primary_calendar_id"
         cls.google_service = GoogleCalendarService(cls.env['google.service'])
         cls.partner_jean_luc = cls.env["res.partner"].create({
             "name": "Jean-Luc",
@@ -108,7 +109,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
 
             events._sync_odoo2google(self.google_service)
 
-        with self.assertQueryCount(__system__=24):
+        with self.assertQueryCount(__system__=27):
             events.unlink()
 
     @patch_api
@@ -139,7 +140,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
                 'res_id': self.partner_jean_luc.id,
             })
 
-        with self.assertQueryCount(__system__=29):
+        with self.assertQueryCount(__system__=35):
             event.unlink()
 
     def test_event_without_user(self):
@@ -367,7 +368,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
     def test_stop_synchronization(self):
         self.env.user.stop_google_synchronization()
         self.assertTrue(self.env.user.google_synchronization_stopped, "The google synchronization flag should be switched on")
-        self.assertFalse(self.env.user._sync_google_calendar(self.google_service), "The google synchronization should be stopped")
+        self.assertFalse(self.env.user._sync_google_events(self.google_service), "The google synchronization should be stopped")
 
         # If synchronization stopped, creating a new event should not call _google_insert.
         self.env['calendar.event'].create({
@@ -830,7 +831,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         }
 
         # With the synchronization paused, manually call the synchronization to simulate the page refresh.
-        self.organizer_user.sudo()._sync_google_calendar(self.google_service)
+        self.organizer_user.sudo()._sync_google_events(self.google_service)
         self.assertFalse(self.organizer_user.google_synchronization_stopped, "Synchronization should not be stopped, only paused.")
         self.assertEqual(self.organizer_user._get_google_sync_status(), "sync_paused", "Synchronization must be paused since it wasn't resumed yet.")
         self.assertTrue(record.need_sync, "Record must have its 'need_sync' variable as true for it to be synchronized when the synchronization is resumed.")
@@ -838,7 +839,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
 
         # Unpause the synchronization and call the calendar synchronization. Ensure the event was inserted in Google side.
         self.organizer_user.sudo().unpause_google_synchronization()
-        self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_calendar(self.google_service)
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_events(self.google_service)
         self.assertGoogleEventInserted({
             'id': False,
             'start': {'dateTime': '2023-01-15T08:00:00+00:00', 'date': None},
@@ -928,12 +929,12 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             }
 
             # Synchronize the attendee, and ensure that the event was not inserted after it.
-            self.attendee_user.with_user(self.attendee_user).sudo()._sync_google_calendar(self.google_service)
+            self.attendee_user.with_user(self.attendee_user).sudo()._sync_google_events(self.google_service)
             self.assertGoogleAPINotCalled()
 
             # Now, we synchronize the organizer and make sure the event got inserted by him.
             self.organizer_user.with_user(self.organizer_user).restart_google_synchronization()
-            self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_calendar(self.google_service)
+            self.organizer_user.with_user(self.organizer_user).sudo()._sync_google_events(self.google_service)
             self.assertGoogleEventInserted({
                 'id': False,
                 'start': {'dateTime': '2023-01-15T08:00:00+00:00', 'date': None},
@@ -976,16 +977,17 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'location': '',
             'guestsCanModify': True,
             'organizer': {'email': self.organizer_user.email, 'self': True},
-            'attendees': [
-                            {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
-                            {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
-                         ],
+
             'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'transparency': 'opaque',
         }
         self.assertGoogleEventInsertedMultiTime({
             **event_response_data,
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
+            'attendees': [
+                {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
+                {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
+            ],
         })
 
         event2 = event.copy()
@@ -994,7 +996,8 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         self.assertGoogleEventInsertedMultiTime({
             **event_response_data,
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event2.id}},
-        })
+            'attendees': [],  # Attendees are added on an update, not on creation.
+        }, timeout=3)
 
     def test_event_over_send_updates(self):
         """Test that events that are over don't sent updates to attendees."""
@@ -1123,7 +1126,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': 'a.a@example.com', 'responseStatus': 'accepted'}, {'email': 'o.o@example.com', 'responseStatus': 'needsAction'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'transparency': 'opaque',
-        }, timeout=3)
+        })
 
 
 @patch.object(ResUsers, '_get_google_calendar_token', lambda user: 'dummy-token')
