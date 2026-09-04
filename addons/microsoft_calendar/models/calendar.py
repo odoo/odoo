@@ -85,6 +85,8 @@ class CalendarEvent(models.Model):
 
     def _skip_send_mail_status_update(self):
         """If microsoft calendar is not syncing, don't send a mail."""
+        if self.env.context.get('calendar_alarm_reminder'):
+            return False
         user_id = self._get_event_user_m()
         if self.with_user(user_id)._check_microsoft_sync_status() and user_id._get_microsoft_sync_status() == "sync_active":
             return self.microsoft_id or self.need_sync_m

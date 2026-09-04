@@ -1442,8 +1442,12 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             },
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
-        events_by_alarm = self.env['calendar.alarm_manager']._get_events_by_alarm_to_notify('email')
-        self.assertFalse(events_by_alarm, "Events with google_id should not trigger reminders")
+        events_by_alarm = self.env['calendar.alarm_manager'].with_context(fetch_all_synced_reminders=True)._get_events_by_alarm_to_notify('email')
+        self.assertTrue(events_by_alarm, "Events with google_id should trigger reminders")
+        event = self.env['calendar.event'].search([('google_id', '=', google_id)])
+        self.env['calendar.alarm_manager']._send_reminder()
+        mail = self.env['mail.mail'].search([('model', '=', 'calendar.event'), ('res_id', '=', event.id)])
+        self.assertTrue(mail, "Email reminder should be created for synced events")
 
     @patch_api
     def test_attendee_state(self):
