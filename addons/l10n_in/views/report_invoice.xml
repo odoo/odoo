@@ -73,25 +73,6 @@
             </t>
         </xpath>
 
-        <t name="invoice_title" position="replace">
-            <t name="invoice_title">
-                <span t-out="o._get_l10n_in_invoice_label()"/>
-            </t>
-        </t>
-
-        <t name="vendor_bill_title" position="replace">
-            <t name="vendor_bill_title">
-                <span t-if="o.l10n_in_is_self_invoice">Tax Invoice</span>
-                <span t-else="">Vendor Bill</span>
-            </t>
-        </t>
-
-        <t name="proforma_invoice_title" position="replace">
-            <t name="proforma_invoice_title">
-                Proforma <span t-out="o._get_l10n_in_invoice_label()"/>
-            </t>
-        </t>
-
         <xpath expr="//t[@t-call='account.document_tax_totals']" position="attributes">
             <attribute name="tax_totals">
                 o._l10n_in_get_invoice_totals_for_self_invoice() if o.l10n_in_is_self_invoice else o.tax_totals

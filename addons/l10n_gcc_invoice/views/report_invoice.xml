@@ -10,71 +10,11 @@
                     <t t-set="display_in_lang_sec" t-value="o.company_id.l10n_gcc_country_is_gcc and o.company_id.l10n_gcc_dual_language_invoice"/>
                     <t t-set="display_in_ar" t-value="display_in_lang_sec and lang_sec == 'ar_001'"/>
                     <t t-set="display_in_en" t-value="display_in_lang_sec and lang_sec == 'en_US'"/>
-                    <t t-set="invoice_gcc_title" t-value="o.with_context(lang=lang)._l10n_gcc_get_invoice_title()"/>
-                    <t t-set="invoice_gcc_title_sec" t-value="o_sec._l10n_gcc_get_invoice_title()"/>
                 </t>
             </xpath>
-            <!-- Arabic & English titles -->
-            <t name="invoice_title" position="attributes">
-                <attribute name="t-if">not invoice_gcc_title</attribute>
-            </t>
-            <t name="invoice_title" position="after">
-                <t t-else="" name="invoice_gcc_title" t-out="invoice_gcc_title"/>
-            </t>
             <span t-field='o.name' position="after">
-                <t t-if="display_in_ar and not proforma" t-translation="off">
-                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">
-                        <t t-if="not invoice_gcc_title_sec" name="invoice_title_ar">فاتورة</t>
-                        <t t-else="" name="invoice_gcc_title_ar" t-out="invoice_gcc_title_sec"/>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">
-                        <t name="draft_invoice_title_ar">مسودة فاتورة</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">
-                        <t name="cancelled_invoice_title_ar">فاتورة ملغاة</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'">
-                        <t name="credit_note_title_ar">إشعار دائن</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'">
-                        <t name="draft_credit_note_title_ar">مسودة إشعار دائن</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'">
-                        <t name="cancelled_credit_note_title_ar">إشعار دائن ملغاة</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_refund'">
-                        <t name="vendor_credit_note_title_ar">إشعار المورد الدائن</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_invoice'">
-                        <t name="vendor_bill_title_ar">فاتورة المورد</t>
-                    </span>
-                </t>
-                <t t-elif="display_in_en and not proforma" t-translation="off">
-                    <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'" dir="rtl">
-                        <t t-if="not invoice_gcc_title_sec" name="invoice_title_en">Invoice</t>
-                        <t t-else="" name="invoice_gcc_title_en" t-out="invoice_gcc_title_sec"/>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'" dir="rtl">
-                        <t name="draft_invoice_title_en">Draft Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'" dir="rtl">
-                        <t name="cancelled_invoice_title_en">Cancelled Invoice</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'posted'" dir="rtl">
-                        <t name="credit_note_title_en">Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'draft'" dir="rtl">
-                        <t name="draft_credit_note_title_en">Draft Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'out_refund' and o.state == 'cancel'" dir="rtl">
-                        <t name="cancelled_credit_note_title_en">Cancelled Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_refund'" dir="rtl">
-                        <t name="vendor_credit_note_title_en">Vendor Credit Note</t>
-                    </span>
-                    <span t-elif="o.move_type == 'in_invoice'" dir="rtl">
-                        <t name="vendor_bill_title_en">Vendor Bill</t>
-                    </span>
+                <t t-if="display_in_lang_sec and not proforma">
+                    <t t-out="o_sec._get_document_title(proforma=proforma)"/>
                 </t>
             </span>
             <!-- End Arabic & English titles -->

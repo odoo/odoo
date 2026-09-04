@@ -6355,6 +6355,33 @@ class AccountMove(models.Model):
             'target': 'new',
         }
 
+    def _get_document_title(self, proforma=False, is_debit_note=False):
+        self.ensure_one()
+
+        if is_debit_note:
+            doc_name = self.env._("Debit Note")
+        elif self.move_type == 'out_invoice':
+            doc_name = self.env._("Invoice")
+        elif self.move_type == 'out_refund':
+            doc_name = self.env._("Credit Note")
+        elif self.move_type == 'in_refund':
+            doc_name = self.env._("Self Billing Credit Note") if self.journal_id.is_self_billing else self.env._("Vendor Credit Note")
+        elif self.move_type == 'in_invoice':
+            doc_name = self.env._("Self Billing") if self.journal_id.is_self_billing else self.env._("Vendor Bill")
+        else:
+            doc_name = ""
+
+        if proforma:
+            doc_name = self.env._("Proforma %(doc_name)s", doc_name=doc_name)
+
+        if self.is_sale_document():
+            if self.state == 'draft':
+                doc_name = self.env._("Draft %(doc_name)s", doc_name=doc_name)
+            elif self.state == 'cancel':
+                doc_name = self.env._("Cancelled %(doc_name)s", doc_name=doc_name)
+
+        return doc_name
+
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
     # -------------------------------------------------------------------------

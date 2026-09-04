@@ -21,7 +21,7 @@ class TestInvoiceLabel(L10nInTestInvoicingCommon):
             taxes=self.igst_sale_18,
             line_vals={'price_unit': 1000, 'quantity': 1},
         )
-        invoice_label = regular_taxable_invoice._get_l10n_in_invoice_label()
+        invoice_label = regular_taxable_invoice._get_document_title()
         self.assertEqual(invoice_label, 'Tax Invoice')
 
         # Regular with exempt items
@@ -30,7 +30,7 @@ class TestInvoiceLabel(L10nInTestInvoicingCommon):
             taxes=self.exempt,
             line_vals={'price_unit': 1000, 'quantity': 1},
         )
-        invoice_label = regular_exempt_invoice._get_l10n_in_invoice_label()
+        invoice_label = regular_exempt_invoice._get_document_title()
         self.assertEqual(invoice_label, 'Bill of Supply')
 
         # Regular with taxable and exempt items
@@ -50,7 +50,7 @@ class TestInvoiceLabel(L10nInTestInvoicingCommon):
             })],
         })
         regular_mix_invoice.action_post()
-        invoice_label = regular_mix_invoice._get_l10n_in_invoice_label()
+        invoice_label = regular_mix_invoice._get_document_title()
         self.assertEqual(invoice_label, 'Invoice')
 
         # unregistered with taxable and exempt items
@@ -70,5 +70,5 @@ class TestInvoiceLabel(L10nInTestInvoicingCommon):
             })],
         })
         unregistered_invoice.action_post()
-        invoice_label = unregistered_invoice._get_l10n_in_invoice_label()
+        invoice_label = unregistered_invoice._get_document_title()
         self.assertEqual(invoice_label, 'Invoice-cum-Bill of Supply')
