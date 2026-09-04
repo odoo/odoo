@@ -221,8 +221,9 @@ class MyInvoisDocumentPoS(models.Model):
         lines_per_config = {}
         # We start by gathering the sessions involved in this process, and loop on their orders.
         sorted_orders_to_consolidated = pos_order_ids.sorted(reverse=True)
-        sorted_session_orders = (
-            sorted_orders_to_consolidated.session_id.order_ids.sorted(reverse=True)
+        sorted_session_orders = sorted(
+            sorted_orders_to_consolidated.session_id.order_ids.sorted(reverse=True),
+            key=lambda o: o.config_id.id,
         )
         # During the loop, we want to gather "lines".
         # One line can be comprised of any number of orders as long as they are continuous.
