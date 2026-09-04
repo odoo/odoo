@@ -93,6 +93,7 @@ export class ColorPicker extends Component {
             activeTab: this.props.state.selectedTab || this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
             currentColorPreview: undefined,
+            isHoverPreviewActive: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
         useLayoutEffect(
@@ -187,6 +188,7 @@ export class ColorPicker extends Component {
     }
 
     applyColorResetPreview() {
+        this.state.isHoverPreviewActive = false;
         this.props.applyColorResetPreview();
         this.state.currentColorPreview = undefined;
         this.onPreviewRevertCallback();
@@ -203,6 +205,7 @@ export class ColorPicker extends Component {
         if (!this.isColorButton(target) || target.contains(ev.relatedTarget)) {
             return;
         }
+        this.state.isHoverPreviewActive = true;
         this.onColorPreview(ev);
     }
 
@@ -251,7 +254,7 @@ export class ColorPicker extends Component {
     }
 
     getDefaultColorSet() {
-        const colorToMatch = this.state.currentColorPreview
+        const colorToMatch = this.state.currentColorPreview || this.state.isHoverPreviewActive
             ? this.state.currentCustomColor
             : this.props.state.selectedColor;
         if (!colorToMatch) {
