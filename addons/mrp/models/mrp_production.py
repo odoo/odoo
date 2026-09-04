@@ -2073,6 +2073,8 @@ class MrpProduction(models.Model):
         def _default_amounts(production):
             return [production.qty_producing, production._get_quantity_to_backorder()]
 
+        is_manual_split = bool(amounts)
+
         if not amounts:
             amounts = {}
         has_backorder_to_ignore = defaultdict(lambda: False)
@@ -2091,9 +2093,11 @@ class MrpProduction(models.Model):
 
         backorder_vals_list = []
         initial_qty_by_production = {}
+        original_mo_names = {}
 
         # Create the backorders.
         for production in self.sudo():
+            original_mo_names[production.id] = production.name
             initial_qty_by_production[production] = production.product_qty
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
@@ -2111,7 +2115,8 @@ class MrpProduction(models.Model):
                     backorder_vals,
                     product_qty=qty_to_backorder,
                     name=production._get_name_backorder(production.name, next_seq),
-                    backorder_sequence=next_seq
+                    backorder_sequence=next_seq,
+                    note=production.note,
                 ))
 
         backorders = self.env['mrp.production'].with_context(skip_confirm=True).sudo().create(backorder_vals_list)
@@ -2282,6 +2287,14 @@ class MrpProduction(models.Model):
                     workorders_to_cancel += workorder
         workorders_to_cancel.action_cancel()
         backorders._action_confirm_mo_backorders()
+
+        if is_manual_split:
+            for production in self:
+                original_name = original_mo_names.get(production.id)
+                msg_body = _("Split from %s", original_name)
+                production.message_post(body=msg_body)
+                for backorder in production_to_backorders.get(production, []):
+                    backorder.message_post(body=msg_body)
 
         return self.env['mrp.production'].browse(production_ids)
 

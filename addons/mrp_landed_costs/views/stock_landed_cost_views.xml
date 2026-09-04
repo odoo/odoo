@@ -11,11 +11,12 @@
             </field>
             <field name="picking_ids" position="after">
                 <field name="target_model" invisible="1" readonly="state == 'done'"/>
-                <field name="mrp_production_ids" 
+                <field name="mrp_production_ids"
                     widget="many2many_tags" options="{'no_create_edit': True}"
                     invisible="target_model != 'manufacturing'"
                     readonly="state == 'done'"
-                    domain="[('company_id', '=', company_id), ('move_finished_ids.is_in', '!=', False)]"/>
+                    domain="[('company_id', '=', company_id), ('move_finished_ids.is_in', '!=', False)]"
+                    context="{'hide_check_availability': True}"/>
             </field>
             <button name="action_view_pickings" position="after">
                 <button class="oe_stat_button" name="action_view_mrp_productions" icon="build"

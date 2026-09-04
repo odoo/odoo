@@ -43,11 +43,12 @@
             <field name="arch" type="xml">
                 <list string="Manufacturing Orders" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                     <header>
-                        <button name="button_plan" type="object" string="Plan"/>
-                        <button name="action_assign" type="object" string="Reserve"/>
+                        <button name="button_plan" type="object" string="Plan" invisible="context.get('hide_check_availability')"/>
+                        <button name="action_assign" type="object" string="Reserve" invisible="context.get('hide_check_availability')"/>
                         <button name="action_cancel" type="object" string="Cancel"
                             confirm="Are you sure you want to cancel these manufacturing orders?&#10;This action cannot be undone."
-                            confirm-title="Cancel Manufacturing Orders" confirm-label="Cancel these Orders"/>
+                            confirm-title="Cancel Manufacturing Orders" confirm-label="Cancel these Orders"
+                            invisible="context.get('hide_check_availability')"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
