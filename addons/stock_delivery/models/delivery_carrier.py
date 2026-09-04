@@ -3,7 +3,7 @@
 from odoo import _, fields, models
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_div
 from odoo.tools.misc import groupby
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
@@ -116,10 +116,12 @@ class DeliveryCarrier(models.Model):
         # more in the max weight than in the total weight, so that it only
         # creates ONE package with everything.
         max_weight = default_package_type.max_weight or total_weight + 1
-        total_full_packages = int(total_weight / max_weight)
-        last_package_weight = total_weight % max_weight
+        precision = self.env['decimal.precision'].precision_get('Stock Weight')
+        total_full_packages, last_package_weight = float_div(total_weight, max_weight, precision_digits=precision)
 
         package_weights = [max_weight] * total_full_packages + ([last_package_weight] if last_package_weight else [])
+        if not package_weights:
+            package_weights = [total_weight]
         partial_cost = total_cost / len(package_weights)  # separate the cost uniformly
         order_commodities = self._get_commodities_from_order(order)
 
