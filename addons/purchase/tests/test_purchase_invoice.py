@@ -224,6 +224,23 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             self.assertEqual(line.qty_to_invoice, 0.0)
             self.assertEqual(line.qty_invoiced, 10)
 
+    def test_forecasted_without_stock_uses_unbilled_qty(self):
+        product = self.product_order
+        product.is_storable = True
+        purchase_order = self.init_purchase(confirm=True, partner=self.partner_a, products=[product])
+        purchase_order.order_line.product_qty = 5
+
+        self.assertEqual(product.incoming_qty, 5.0)
+        self.assertEqual(product.virtual_available, 5.0)
+
+        bill = self.env['account.move'].browse(purchase_order.action_create_invoice()['res_id'])
+        bill.invoice_line_ids.quantity = 3
+        product.invalidate_recordset(['incoming_qty', 'virtual_available'])
+
+        self.assertEqual(purchase_order.order_line.qty_invoiced, 3.0)
+        self.assertEqual(product.incoming_qty, 2.0)
+        self.assertEqual(product.virtual_available, 2.0)
+
     def test_vendor_bill_delivered_return(self):
         """Test when return product, a order of product invoiced by delivered
         quantity can be correctly invoiced."""

@@ -1059,6 +1059,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         })
 
         self.product_a.is_storable = True
+        self.product_a.categ_id.property_valuation = 'real_time'
         self.product_a.categ_id.property_cost_method = 'standard'
         self.product_a.categ_id.property_price_difference_account_id = self.company_data['default_account_revenue'].id
 

@@ -16,7 +16,7 @@ class AccountMoveLine(models.Model):
             elif line.stock_move_id.repair_id and line.stock_move_id.description_picking_manual:
                 line.name = line.translated_product_name + '\n' + line.stock_move_id.description_picking
 
-    def _eligible_for_stock_account(self):
+    def _use_inventory_valuation(self):
         moves = self.cogs_move_ids
         already_accounted = any(m.repair_id and m.account_move_id for m in moves.filtered(lambda m: m.repair_line_type == 'add'))
-        return super()._eligible_for_stock_account() and not already_accounted
+        return super()._use_inventory_valuation() and not already_accounted

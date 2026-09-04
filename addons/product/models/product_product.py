@@ -460,6 +460,20 @@ class ProductProduct(models.Model):
             forecast[product.id]['outgoing_qty'] = 0
         return forecast
 
+    def _update_standard_price(self, extra_value=None, extra_quantity=None):
+        """ Simple moving average update, overriden by Stock._update_standard_price """
+        if extra_value is None or extra_quantity is None:
+            return
+        for product in self:
+            if product.uom_id.is_zero(extra_quantity):
+                continue
+            old_qty, old_cost = product.qty_available, product.standard_price
+            new_qty = old_qty + extra_quantity
+            if product.uom_id.compare(old_qty, 0.0) <= 0:
+                product.sudo().standard_price = extra_value / extra_quantity
+            elif not product.uom_id.is_zero(new_qty):
+                product.sudo().standard_price = (old_qty * old_cost + extra_value) / new_qty
+
     def _search_virtual_available(self, operator, value):
         return self._search_product_quantity(operator, value, 'virtual_available')
 

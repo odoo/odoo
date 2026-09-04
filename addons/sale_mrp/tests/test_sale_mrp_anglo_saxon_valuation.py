@@ -440,8 +440,20 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
 
         (compo01 + compo02 + kit).invoice_policy = 'delivery'
 
-        self.env['stock.quant']._update_available_quantity(compo01, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
-        self.env['stock.quant']._update_available_quantity(compo02, self.company_data['default_warehouse'].lot_stock_id, 1, owner_id=self.partner_b)
+        self.env['stock.quant'].create([
+            {
+                'product_id': compo01.id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+                'owner_id': self.partner_b.id,
+                'inventory_quantity': 1,
+            },
+            {
+                'product_id': compo02.id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+                'owner_id': self.partner_b.id,
+                'inventory_quantity': 1,
+            },
+        ]).action_apply_inventory()
 
         self.env['mrp.bom'].create({
             'product_id': kit.id,
@@ -478,8 +490,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             # pylint: disable=bad-whitespace
             {'account_id': self.company_data['default_account_revenue'].id,          'debit': 0,     'credit': 5},
             {'account_id': self.company_data['default_account_receivable'].id,       'debit': 5,     'credit': 0},
-            {'account_id': self.company_data['default_account_stock_valuation'].id,  'debit': 0,     'credit': 0},
-            {'account_id': self.company_data['default_account_expense'].id,          'debit': 0,     'credit': 0},
         ])
 
     def test_kit_avco_partially_owned_and_delivered_invoice_post_delivery(self):

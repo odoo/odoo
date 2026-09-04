@@ -12,37 +12,6 @@
             </field>
         </record>
 
-        <record id="view_category_property_form_stock" model="ir.ui.view">
-            <field name="name">product.category.stock.property.form.inherit.stock</field>
-            <field name="model">product.category</field>
-            <field name="inherit_id" ref="stock.product_category_form_view_inherit"/>
-            <field name="arch" type="xml">
-                <page name="stock" position="after">
-                    <page name="stock_valuation" string="Inventory Valuation">
-                        <group>
-                            <group>
-                                <field name="property_cost_method" required="True"/>
-                                <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
-                            </group>
-                        </group>
-                    </page>
-                </page>
-            </field>
-        </record>
-
-        <record id="view_category_property_form" model="ir.ui.view">
-            <field name="name">product.category.stock.property.form.inherit</field>
-            <field name="model">product.category</field>
-            <field name="inherit_id" ref="account.view_category_property_form"/>
-            <field name="arch" type="xml">
-                <field name="property_account_expense_categ_id" position="after">
-                    <field name="property_stock_valuation_account_id" string="Stock Account" options="{'no_create': True}" decoration-muted="not property_stock_valuation_account_active"/>
-                    <field name="account_stock_variation_id" string="Stock Variation" options="{'no_create': True}" decoration-muted="not account_stock_variation_active"/>
-                    <field name="property_price_difference_account_id" options="{'no_create': True}" invisible="not (property_cost_method == 'standard' and property_valuation == 'real_time')" decoration-muted="not property_price_difference_account_active"/>
-                </field>
-            </field>
-        </record>
-
         <!-- Stock Report View -->
         <record model="ir.ui.view" id="product_template_form_view_stock_account">
             <field name="name">view.template.property.form.stock.account</field>

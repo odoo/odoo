@@ -71,6 +71,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/account_move_send_wizard.xml',
         'wizard/account_move_send_batch_wizard.xml',
         'report/account_hash_integrity_templates.xml',
+        'report/account_stock_valuation_report.xml',
         'views/res_currency.xml',
         'views/res_country_group_view.xml',
         'views/account_menuitem.xml',

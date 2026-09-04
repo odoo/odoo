@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 
-import { StockValuationReportController } from "@stock_account/stock_valuation/controller";
+import { StockValuationReportController } from "@account/components/stock_valuation/controller";
 
 patch(StockValuationReportController.prototype, {
     async loadReportData() {

@@ -890,6 +890,7 @@ class TestChartTemplate(AccountTestInvoicingCommon):
             ],
         }])
 
+        self.env.cr.cache.pop('account_product_accounts', None)
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=True)
         self.assertEqual(self.company.chart_template, 'test')

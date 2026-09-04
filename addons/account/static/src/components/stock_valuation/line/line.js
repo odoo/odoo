@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 
 
 export class StockValuationReportLine extends Component {
-    static template = "stock_account.StockValuationReport.InventoryValuationLine";
+    static template = "account.StockValuationReport.InventoryValuationLine";
     props = useProps({
         class: t.string().optional(),
         displayDebitCredit: t.boolean().optional(),

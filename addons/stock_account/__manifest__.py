@@ -24,7 +24,6 @@ Dashboard / Reports for Warehouse Management includes:
     'data': [
         'security/stock_account_security.xml',
         'data/stock_account_data.xml',
-        'views/account_account_views.xml',
         'views/res_config_settings_views.xml',
         'views/report_invoice.xml',
         'views/stock_quant_views.xml',
@@ -36,7 +35,6 @@ Dashboard / Reports for Warehouse Management includes:
         'wizard/stock_inventory_adjustment_name_views.xml',
         'report/account_invoice_report_view.xml',
         'report/stock_avco_audit_report_views.xml',
-        'report/stock_valuation_report.xml',
         'security/ir.access.csv',
     ],
     'auto_install': True,

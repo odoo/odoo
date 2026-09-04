@@ -78,23 +78,43 @@ class ProductProduct(models.Model):
 
     @api.depends_context("to_date")
     def _compute_forecasted_without_stock(self):
-        """ Adds orders not received to forecasted stock tally, """
+        """Add unbilled purchase lines to forecasted stock tally."""
         res = super()._compute_forecasted_without_stock()
+        to_date = self.env.context.get("to_date")
         domain = Domain.AND([
             Domain('order_id.state', '=', 'purchase'),
             Domain('product_id', 'in', self.ids),
             Domain("company_id", "in", self.env.companies.ids),
         ])
-        if self.env.context.get("to_date"):
+        if to_date:
+            to_date = fields.Datetime.to_datetime(to_date)
             domain = Domain.AND([
                 domain,
-                Domain('order_id.date_planned', '<=', self.env.context.get("to_date").date())
+                Domain('order_id.date_planned', '<=', to_date.date()),
             ])
-        order_lines = self.env['purchase.order.line'].sudo()._read_group(domain, ['product_id', 'uom_id'], ['product_uom_qty:sum', 'qty_received:sum'])
-        for product, line_uom, qty_ordered, qty_received in order_lines:
-            to_receive = (qty_ordered - qty_received) * line_uom.factor / product.uom_id.factor
-            res[product.id]['incoming_qty'] += to_receive
-            res[product.id]['virtual_available'] += to_receive
+        order_line_model = self.env['purchase.order.line'].sudo()
+        if to_date and to_date.date() < fields.Date.context_today(self):
+            order_lines = order_line_model.search(domain).with_context(
+                accrual_entry_date=to_date.date()
+            )
+            for line in order_lines:
+                unbilled_qty = line.product_qty - line.qty_invoiced_at_date
+                to_bill = line.uom_id._compute_quantity(unbilled_qty, line.product_id.uom_id)
+                res[line.product_id.id]['incoming_qty'] += to_bill
+                res[line.product_id.id]['virtual_available'] += to_bill
+            return res
+
+        order_lines = order_line_model._read_group(
+            domain,
+            ['product_id', 'uom_id'],
+            ['product_qty:sum', 'qty_invoiced:sum'],
+        )
+        for product, line_uom, qty_ordered, qty_invoiced in order_lines:
+            to_bill = line_uom._compute_quantity(
+                (qty_ordered or 0.0) - (qty_invoiced or 0.0), product.uom_id
+            )
+            res[product.id]['incoming_qty'] += to_bill
+            res[product.id]['virtual_available'] += to_bill
         return res
 
     def action_view_po(self):
