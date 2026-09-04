@@ -206,8 +206,8 @@ class AccountMove(models.Model):
             x.company_id.account_fiscal_country_id.code == "AR"
             and x.state == 'draft'
             and x.move_type in ['in_invoice', 'in_refund']
-            and x.l10n_latam_document_type_id
-            and x.partner_id.l10n_ar_afip_responsibility_type_id.code == '8'))
+            and (x.l10n_latam_document_type_id or x.l10n_latam_use_documents)
+            and x.partner_id.l10n_ar_afip_responsibility_type_id.code in ['8', '9']))
         doctype_fa_exterior = self.env.ref('l10n_ar.fa_exterior', raise_if_not_found=False)
         if doctype_fa_exterior:
             foreign_vendor_bills.l10n_latam_document_type_id = doctype_fa_exterior
