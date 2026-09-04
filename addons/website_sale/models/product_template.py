@@ -347,6 +347,8 @@ class ProductTemplate(models.Model):
 
     def _is_donation(self):
         """Return whether this product is the donation product used by the donation snippet."""
+        if not self:
+            return False
         self.ensure_one()
         return self.id == self.env["ir.model.data"]._xmlid_to_res_id(
             "website_sale.product_donation"
@@ -721,7 +723,7 @@ class ProductTemplate(models.Model):
 
             if uom_price_enabled:
                 template_price_vals["base_unit_price"] = (
-                    template.product_variant_id._get_base_unit_price(
+                    (template.product_variant_id or template)._get_base_unit_price(
                         template_price_vals["price_reduce"]
                     )
                 )

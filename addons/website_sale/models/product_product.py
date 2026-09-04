@@ -297,6 +297,8 @@ class ProductProduct(models.Model):
 
     def _is_donation(self):
         """Return whether this product is the donation product used by the donation snippet."""
+        if not self:
+            return False
         self.ensure_one()
         # Unpublished, sudo to allow public users to read it
         return self.sudo().product_tmpl_id._is_donation()
