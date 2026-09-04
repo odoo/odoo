@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="website_sale_collect.ClickAndCollectAvailability">
-        <div class="border rounded p-3 w-100">
+        <div t-if="this.state.active" class="border rounded p-3 w-100">
             <t t-set="inStoreAvailable" t-value="this.state.inStoreStockData?.in_stock"/>
             <div
                 name="click_and_collect_availability"

@@ -66,7 +66,9 @@ class ProductRibbon(models.Model):
                     raise ValidationError(
                         ribbon.env._(
                             "Only one ribbon with the assign %s is allowed.",
-                            dict(self._fields["assign"]._description_selection(self.env)).get(ribbon.assign),
+                            dict(self._fields["assign"]._description_selection(self.env)).get(
+                                ribbon.assign
+                            ),
                         )
                     )
 
@@ -90,10 +92,12 @@ class ProductRibbon(models.Model):
                 css_classes += " o_right"
         return css_classes
 
-    def _is_applicable_for(self, product, price_data):
+    def _is_applicable_for(self, product_or_template, price_data):
         """Return whether the product matches the criteria of the ribbon automatic assignment.
 
-        :param product.product product: the displayed product
+        :param product.product|product.template product_or_template: what the ribbon describes:
+            the displayed variant on the product page, the whole template on the shop page,
+            where a tile stands for the product and not for one of its combinations.
         :param dict price_data: price information for the given product
             (sales price for shop page, combination information for product page)
 
@@ -125,16 +129,19 @@ class ProductRibbon(models.Model):
         # Check if the product is published within the ribbon's new period.
         if (  # noqa: SIM103
             self.assign == "new"
-            and (pub_date := product.publish_date)
+            and (pub_date := product_or_template.publish_date)
             and self.new_period >= (fields.Datetime.today() - pub_date).days
         ):
             return True
-        # Check if the product is out of stock
+        # Check if the product is out of stock; `_is_sold_out` scopes itself to what it is
+        # called on: one variant, or every variant of the template
         if (  # noqa: SIM103
-            product
+            product_or_template
             and self.assign == "out_of_stock"
-            and not product.product_tmpl_id.allow_out_of_stock_order
-            and product._is_sold_out()
+            # An impossible combination is unavailable, not out of stock: it resolves to an
+            # archived or excluded variant, which says nothing about what can be bought.
+            and (price_data or {}).get("is_combination_possible", True)
+            and product_or_template._is_sold_out()
         ):
             return True
         return False

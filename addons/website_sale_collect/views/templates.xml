@@ -28,6 +28,14 @@
 
     <template id="product_page_click_and_collect" inherit_id="website_sale.cta_wrapper">
         <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="before">
+            <div
+                t-if="combination_info.get('show_click_and_collect_availability')
+                    and combination_info.get('is_combination_possible')"
+                name="click_and_collect_placeholder"
+                t-attf-class="d-flex o_not_editable mb-4 #{'w-100' if not is_50_pc else 'w-100 w-sm-75'}"
+            >
+                <t t-call="website_sale_collect.click_and_collect_availability"/>
+            </div>
             <owl-component
                 t-if="combination_info.get('show_click_and_collect_availability')"
                 name="website_sale_collect.ClickAndCollectAvailability"
@@ -42,10 +50,100 @@
                     'deliveryMethodId': delivery_method.id,
                     'deliveryMethodType': delivery_method.delivery_type,
                     'deliveryMethodName': delivery_method.name,
+                    'active': combination_info.get('is_combination_possible', True),
+                    'hasOutOfStockMessage': combination_info.get('has_out_of_stock_message', False),
+                    'outOfStockMessage': combination_info.get('out_of_stock_message') or '',
                 })"
                 t-attf-class="d-flex o_not_editable mb-4 #{'w-100' if not is_50_pc else 'w-100 w-sm-75'}"
             />
         </xpath>
+    </template>
+
+    <!-- Mirrors `website_sale_collect.ClickAndCollectAvailability`. The two must stay identical,
+         or the swap on mount is visible (flickering). -->
+    <template id="click_and_collect_availability" name="Click and Collect Availability">
+        <t t-set="selected_location" t-value="selected_location_data or {}"/>
+        <t t-set="in_store_stock_data" t-value="combination_info.get('in_store_stock_data') or {}"/>
+        <t t-set="delivery_stock_data" t-value="combination_info.get('delivery_stock_data') or {}"/>
+        <t t-set="in_store_available" t-value="in_store_stock_data.get('in_stock')"/>
+        <div class="border rounded p-3 w-100">
+            <!-- The `name` attributes of the component are left out on purpose: they are how the
+                tours find the box, and they must match only the mounted component -->
+            <div t-att-class="'cursor-pointer' if in_store_available else ''">
+                <div class="h6">
+                    <i class="oi oi-fw text-muted" data-icon="location_on"/>
+                    <t t-if="selected_location.get('id')" t-out="selected_location['name']"/>
+                    <t t-else="" t-out="delivery_method.name"/>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <t
+                        t-call="website_sale_collect.stock_availability_message"
+                        available="in_store_available"
+                        stock_data="in_store_stock_data"
+                        has_message="combination_info.get('has_out_of_stock_message')"
+                        message="combination_info.get('out_of_stock_message')"
+                    />
+                    <a
+                        t-if="show_select_store_button and in_store_available"
+                        role="button"
+                        href="#"
+                    >
+                        <t t-if="selected_location.get('id')">Change store</t>
+                        <t t-else="">Select store</t>
+                    </a>
+                </div>
+            </div>
+            <div t-if="delivery_stock_data" class="flex-row">
+                <hr/>
+                <div class="h6">
+                    <i class="oi oi-fw text-muted" data-icon="local_shipping"/>
+                    Delivery
+                    <i
+                        class="oi cursor-pointer ms-1"
+                        data-icon="info"
+                        data-tooltip="Restrictions may apply"
+                        data-tooltip-delay="0"
+                    />
+                </div>
+                <t
+                    t-call="website_sale_collect.stock_availability_message"
+                    available="delivery_stock_data.get('in_stock')"
+                    stock_data="delivery_stock_data"
+                    has_message="combination_info.get('has_out_of_stock_message')"
+                    message="combination_info.get('out_of_stock_message')"
+                />
+            </div>
+        </div>
+    </template>
+
+    <template id="stock_availability_message" name="Stock Availability Message">
+        <t t-set="quantity" t-value="stock_data.get('quantity') or 0"/>
+        <div
+            t-if="available and quantity > 0 and stock_data.get('show_quantity')"
+            class="text-muted"
+        >
+            <i class="oi oi-fw oi-filled text-warning me-1" data-icon="circle"/>
+            <t t-out="quantity"/> <t t-out="stock_data.get('uom_name')"/>
+            in stock
+        </div>
+        <div
+            t-elif="has_message and (not available or quantity &lt;= 0)"
+            class="d-flex align-items-baseline text-wrap gap-1 text-muted"
+        >
+            <i
+                t-att-class="
+                    'oi oi-fw oi-filled ' + ('text-success' if available else 'text-danger')
+                "
+                data-icon="circle"
+            />
+            <t t-out="message"/>
+        </div>
+        <div t-elif="available" class="text-muted">
+            <i class="oi oi-fw oi-filled text-success" data-icon="circle"/> Available
+        </div>
+        <div t-else="" class="text-muted">
+            <i class="oi oi-fw oi-filled text-danger" data-icon="circle"/> Not available
+        </div>
     </template>
 
 </odoo>

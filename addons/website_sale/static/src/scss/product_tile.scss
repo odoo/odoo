@@ -232,6 +232,22 @@
             }
         }
 
+        .o_wsale_ptav_unavailable {
+            .o_wsale_product_ptav_pill {
+                opacity: .5;
+                text-decoration: line-through;
+            }
+
+            .css_attribute_preview_thumbnail, .css_attribute_image {
+                filter: grayscale(1);
+                opacity: .45;
+            }
+
+            .css_attribute_color {
+                opacity: .5;
+            }
+        }
+
         @include media-breakpoint-down(sm) {
             .css_attribute_color {
                 --o-wsale-css-attribute-color__size: 1.6rem;

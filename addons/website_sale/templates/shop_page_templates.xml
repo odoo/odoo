@@ -23,10 +23,18 @@
                 <t t-set="ptav" t-value="previewed_ptav['ptav']"/>
                 <t t-set="selected_attribute_value" t-value="ptav.product_attribute_value_id.id"/>
                 <a
-                    class="o_product_variant_preview d-none z-2"
+                    t-attf-class="o_product_variant_preview d-none z-2 {{
+                        'o_wsale_ptav_unavailable' if previewed_ptav['unavailable'] else ''
+                    }}"
                     t-att-data-variant-image="previewed_ptav['variant_image_url']"
                     t-att-href="previewed_ptav['variant_url']"
                 >
+                    <span
+                        t-if="previewed_ptav['unavailable']"
+                        class="visually-hidden"
+                    >
+                        Currently unavailable
+                    </span>
                     <div
                         t-if="ptav.attribute_id.is_thumbnail_visible"
                         class="d-flex"
@@ -473,6 +481,7 @@
                                                         price_vals=template_price_vals,
                                                         auto_assign_ribbons=auto_assign_ribbons,
                                                         variant=product_variants[product],
+                                                        for_template=True,
                                                     )"
                                                 />
                                                 <div

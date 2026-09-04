@@ -536,11 +536,19 @@
     </template>
 
     <template id="website_sale.cta_wrapper" name="CTA Wrapper">
+        <t
+            t-set="is_landing_sold_out"
+            t-value="combination_info.get('is_storable')
+                and not combination_info.get('allow_out_of_stock_order')
+                and not combination_info.get('prevent_sale')
+                and combination_info.get('free_qty', 0) - combination_info.get('cart_qty', 0) &lt; 1"
+        />
         <div class="availability_messages o_not_editable"/>
         <input id="wsale_user_email" type="hidden" t-att-value="user_email"/>
         <div
             id="o_wsale_cta_wrapper"
-            t-att-class="'d-flex flex-wrap align-items-center gap-2 mb-4' +
+            t-att-class="('d-none out_of_stock' if is_landing_sold_out else 'd-flex') +
+                ' flex-wrap align-items-center gap-2 mb-4' +
                 (' w-100 w-lg-auto' if is_50_pc else ' w-100') +
                 (' ' if not is_fullwidth_content and not is_view_active('website_sale.cta_wrapper_boxed') else ' ')"
         >
@@ -1312,6 +1320,33 @@
         name="Wishlist Button"
         priority="20"
     >
+        <!-- Rendered server-side in its landing state, so it doesn't pop in a round trip
+            later and push the availability block below it down. `product_page.js` renders
+            the same markup only when this element isn't already there. -->
+        <xpath expr="//div[hasclass('availability_messages')]" position="inside">
+            <div
+                t-if="is_landing_sold_out"
+                id="stock_wishlist_message"
+                class="d-flex align-items-center flex-column flex-md-row mb-2"
+            >
+                <button
+                    id="wsale_save_for_later_button"
+                    t-attf-class="btn btn-outline-primary text-nowrap o_add_wishlist_dyn#{' d-none' if combination_info.get('is_in_wishlist') else ''}"
+                    t-att-data-product-id="product_variant.id"
+                    t-att-data-product-template-id="product.id"
+                >
+                    <i class="oi me-2" data-icon="favorite"/>Add to wishlist
+                </button>
+                <div
+                    id="wsale_added_to_your_wishlist_alert"
+                    t-att-class="'' if combination_info.get('is_in_wishlist') else 'd-none'"
+                >
+                    <div class="btn btn-outline-primary disabled">
+                        <i class="oi oi-filled me-2" data-icon="favorite"/>Added to your wishlist
+                    </div>
+                </div>
+            </div>
+        </xpath>
         <xpath expr="//div[@id='product_option_block']" position="inside">
             <t t-set="product_variant" t-value="product_variant or product._create_first_product_variant()"/>
             <t

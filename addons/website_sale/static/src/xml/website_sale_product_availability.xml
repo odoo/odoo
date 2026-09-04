@@ -86,11 +86,10 @@
             t-attf-class="availability_message_#{this.product_template} d-flex align-items-center flex-column flex-md-row mb-2"
         >
             <button
-                t-if="!this.is_in_wishlist"
                 id="wsale_save_for_later_button"
-                class="btn btn-outline-primary text-nowrap o_add_wishlist_dyn"
+                t-attf-class="btn btn-outline-primary text-nowrap o_add_wishlist_dyn#{this.is_in_wishlist ? ' d-none' : ''}"
                 t-att-data-product-id="this.product_id"
-                t-att-data-product-template-id="this.product_id"
+                t-att-data-product-template-id="this.product_template"
             >
                 <i class="oi me-2" data-icon="favorite"/>Add to wishlist
             </button>

@@ -36,19 +36,7 @@ export class AddToWishlist extends Interaction {
         await this.waitFor(rpc('/shop/wishlist/add', { product_id: productId }));
         wishlistUtils.addWishlistProduct(productId);
         wishlistUtils.updateWishlistNavBar();
-        button.disabled = true;
-        if (button.classList.contains('o_add_wishlist')) {
-            const iconEl = button.querySelector('.oi');
-            if (iconEl) {
-                iconEl.classList.add('oi-filled');
-            }
-        }
-        const saveForLaterButton = document.querySelector('#wsale_save_for_later_button');
-        const addedToWishListAlert = document.querySelector('#wsale_added_to_your_wishlist_alert');
-        if (saveForLaterButton) {
-            saveForLaterButton.classList.add('d-none');
-            addedToWishListAlert.classList.remove('d-none');
-        }
+        this._updateButton(true);
 
         const trackingEl = this.el.closest("[data-product-tracking-info]")
             || document.querySelector("#product_detail[data-product-tracking-info]");
@@ -62,14 +50,37 @@ export class AddToWishlist extends Interaction {
     /**
      * Update the "add to wishlist" button based on the selected variant.
      *
+     * Each button updates itself rather than the first one of the product: the product page
+     * shows two of them, the one in the CTA wrapper and the "save for later" one rendered next
+     * to the out-of-stock message, and the latter comes first in the DOM.
+     *
      * @param {CustomEvent} event
      */
     onProductChanged(event) {
-        const button = event.currentTarget.querySelector('.o_add_wishlist_dyn');
-        if (button) {
-            const { productId } = event.detail;
-            button.disabled = wishlistUtils.getWishlistProductIds().includes(parseInt(productId));
-            button.dataset.productId = productId;
+        if (!this.el.classList.contains('o_add_wishlist_dyn')) return;
+
+        const productId = parseInt(event.detail.productId);
+        this.el.dataset.productId = productId;
+        this._updateButton(wishlistUtils.getWishlistProductIds().includes(productId));
+    }
+
+    /**
+     * Reflect on the button whether its product is in the wishlist.
+     *
+     * @param {boolean} isInWishlist
+     */
+    _updateButton(isInWishlist) {
+        this.el.disabled = isInWishlist;
+        if (this.el.classList.contains('o_add_wishlist')) {
+            this.el.querySelector('.oi')?.classList.toggle('oi-filled', isInWishlist);
+        }
+        // The "save for later" button isn't shown disabled, it's swapped with an "Added to your
+        // wishlist" placeholder
+        const wishlistMessageEl = this.el.closest('#stock_wishlist_message');
+        if (wishlistMessageEl) {
+            this.el.classList.toggle('d-none', isInWishlist);
+            wishlistMessageEl.querySelector('#wsale_added_to_your_wishlist_alert')
+                ?.classList.toggle('d-none', !isInWishlist);
         }
     }
 }

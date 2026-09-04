@@ -1,4 +1,4 @@
-import { Component, useProps, proxy, t } from '@odoo/owl';
+import { Component, markup, onMounted, useProps, proxy, t } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { useBus, useService } from '@web/core/utils/hooks';
@@ -21,6 +21,8 @@ export class ClickAndCollectAvailability extends Component {
         deliveryMethodId: t.number(),
         deliveryMethodType: t.string(),
         deliveryMethodName: t.string(),
+        hasOutOfStockMessage: t.boolean().optional(),
+        outOfStockMessage: t.string().optional(),
     });
     setup() {
         super.setup();
@@ -31,7 +33,13 @@ export class ClickAndCollectAvailability extends Component {
             inStoreStockData: this.props.inStoreStockData,
             deliveryStockData: this.props.deliveryStockData,
             active: this.props.active,
+            hasOutOfStockMessage: this.props.hasOutOfStockMessage,
+            outOfStockMessage: markup(this.props.outOfStockMessage || ''),
         });
+
+        onMounted(
+            () => document.querySelector('[name="click_and_collect_placeholder"]')?.remove()
+        );
         useBus(
             this.env.bus,
             'updateCombinationInfo',

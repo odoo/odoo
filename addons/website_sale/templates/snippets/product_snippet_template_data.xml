@@ -56,6 +56,7 @@
                         t-value="product_template._get_ribbon(
                             price_vals=data,
                             variant=product_variant,
+                            for_template=not product.is_product_variant,
                         )"
                     />
                     <t

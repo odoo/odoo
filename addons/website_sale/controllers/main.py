@@ -246,9 +246,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             order=self._get_search_order(post),
             options=options,
         )
-        search_result = (
-            details[0].get("results", self.env["product.template"])
-        )
+        search_result = details[0].get("results", self.env["product.template"])
 
         return fuzzy_search_term, product_count, search_result
 
@@ -1041,15 +1039,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     or ptal.product_template_value_ids.filtered("ptav_active")[:1]
                 )
             )
-            combination_info = product._get_combination_info(
-                combination=combination.with_env(self.env)
-            )
-            attribute_value_images = product._get_dynamic_attribute_images(
-                combination.ids, website.id
+            necessary_values = combination.filtered(
+                lambda ptav: ptav.product_attribute_value_id.id in attribute_value_ids
             )
         else:
-            combination_info = product._get_combination_info()
-            attribute_value_images = product._get_dynamic_attribute_images([], website.id)
+            # Opened without picking a value: nothing has to be preserved, so any buyable
+            # combination will do
+            combination = product._get_first_possible_combination()
+            necessary_values = self.env["product.template.attribute.value"]
+        combination = product._get_available_combination(combination, necessary_values)
+        combination_info = product._get_combination_info(combination=combination.with_env(self.env))
+        attribute_value_images = product._get_dynamic_attribute_images(combination.ids, website.id)
 
         # Needed to trigger the recently viewed product rpc
         view_track = website.viewref("website_sale.product").track
@@ -1699,10 +1699,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def system_page_extra_info(env):  # noqa: N805
         if not env.website.is_view_active("website_sale.extra_info"):
             return []
-        return [{
+        return [
+            {
                 "route_title": _lt("Shop Checkout - Extra Information"),
                 "route_url": "/shop/extra_info",
-            }]
+            }
+        ]
 
     @route(
         ["/shop/extra_info"],
