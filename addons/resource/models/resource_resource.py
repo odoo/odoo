@@ -120,7 +120,11 @@ class ResourceResource(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id(self):
         if self.company_id:
-            self.calendar_id = self.company_id.resource_calendar_id.id
+            default_calendar = self.env.context.get('default_calendar_id')
+            if default_calendar:
+                self.calendar_id = default_calendar
+            else:
+                self.calendar_id = self.company_id.resource_calendar_id.id
 
     @api.onchange('user_id')
     def _onchange_user_id(self):
