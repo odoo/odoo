@@ -10,7 +10,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.models.mail_track_mixin import MailTrackMixin
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests import Form, tagged, users
-from odoo.tools import mute_logger
+from odoo.tools import formatLang, mute_logger
 from odoo.tools.mail import formataddr
 
 
@@ -1416,7 +1416,7 @@ class TestTrackingInternals(TestTrackingCommon):
                     'field_label': 'CustomInt',
                     'new_value_integer': self.env.uid,
                     'old_value_integer': False,
-                    'new_value': self.env.uid,
+                    'new_value': formatLang(self.env, self.env.uid, rounding_unit='units'),
                     'old_value': '0',
                 },
                 {
