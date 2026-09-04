@@ -231,11 +231,165 @@
         </field>
     </record>
 
+    <record id="loyalty_program_discount_action" model="ir.actions.act_window">
+        <field name="name">Promotions</field>
+        <field name="res_model">loyalty.program</field>
+        <field name="path">promotions</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'menu_type': 'promotions', 'default_program_type': 'promotion'}</field>
+        <field name="domain">
+            [('program_type', 'in', ('promotion', 'promo_code', 'buy_x_get_y', 'next_order_coupons', 'coupons'))]
+        </field>
+        <field name="help" type="html">
+            <div class="o_loyalty_not_found">
+                <h1>No program found.</h1>
+                <p class="lead">Create one from scratch, or use one of the templates below:</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="loyalty_program_rewards_action" model="ir.actions.act_window">
+        <field name="name">Rewards</field>
+        <field name="res_model">loyalty.program</field>
+        <field name="path">rewards</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'menu_type': 'rewards', 'default_program_type': 'loyalty'}</field>
+        <field name="domain">[('program_type', '=', 'loyalty')]</field>
+        <field name="help" type="html">
+            <div class="o_loyalty_not_found">
+                <h1>No program found.</h1>
+                <p class="lead">Create one from scratch, or use one of the templates below:</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="action_loyalty_program_tree_discount" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="sequence">1</field>
+        <field name="view_id" ref="loyalty_program_view_tree"/>
+        <field name="act_window_id" ref="loyalty_program_discount_action"/>
+    </record>
+
+    <record id="action_loyalty_program_tree_rewards" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="sequence">1</field>
+        <field name="view_id" ref="loyalty_program_view_tree"/>
+        <field name="act_window_id" ref="loyalty_program_rewards_action"/>
+    </record>
+
+    <record id="action_loyalty_program_form_discount" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="sequence">2</field>
+        <field name="view_id" ref="loyalty_program_view_form"/>
+        <field name="act_window_id" ref="loyalty_program_discount_action"/>
+    </record>
+
+    <record id="action_loyalty_program_form_rewards" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="sequence">2</field>
+        <field name="view_id" ref="loyalty_program_view_form"/>
+        <field name="act_window_id" ref="loyalty_program_rewards_action"/>
+    </record>
+
+    <!-- GIFT & EWALLET -->
+    <record id="loyalty_program_gift_view_form" model="ir.ui.view">
+        <field name="name">loyalty.program.gift.view.form</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty_program_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="string">Gift Cards</attribute>
+            </form>
+            <field name="program_type" position="attributes">
+                <attribute name="options">{'whitelisted_values': ['gift_card']}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="loyalty_program_ewallet_view_form" model="ir.ui.view">
+        <field name="name">loyalty.program.ewallet.view.form</field>
+        <field name="model">loyalty.program</field>
+        <field name="inherit_id" ref="loyalty_program_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="string">Ewallet</attribute>
+            </form>
+            <field name="program_type" position="attributes">
+                <attribute name="options">{'whitelisted_values': ['ewallet']}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="loyalty_program_gift_action" model="ir.actions.act_window">
+        <field name="name">Gift Cards</field>
+        <field name="res_model">loyalty.program</field>
+        <field name="path">gift-cards</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'menu_type': 'gift_cards', 'default_program_type': 'gift_card'}</field>
+        <field name="domain">[('program_type', '=', 'gift_card')]</field>
+        <field name="help" type="html">
+            <div class="o_loyalty_not_found">
+                <h1>No loyalty program found.</h1>
+                <p class="lead">Create one from scratch, or use a template below.</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="loyalty_program_ewallet_action" model="ir.actions.act_window">
+        <field name="name">eWallets</field>
+        <field name="res_model">loyalty.program</field>
+        <field name="path">ewallets</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'menu_type': 'ewallets', 'default_program_type': 'ewallet'}</field>
+        <field name="domain">[('program_type', '=', 'ewallet')]</field>
+        <field name="help" type="html">
+            <div class="o_loyalty_not_found">
+                <h1>No loyalty program found.</h1>
+                <p class="lead">Create one from scratch, or use a template below.</p>
+            </div>
+        </field>
+    </record>
+
+    <record id="action_loyalty_program_tree_gift_card" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="sequence">1</field>
+        <field name="view_id" ref="loyalty_program_view_tree"/>
+        <field name="act_window_id" ref="loyalty_program_gift_action"/>
+    </record>
+
+    <record id="action_loyalty_program_tree_ewallet" model="ir.actions.act_window.view">
+        <field name="view_mode">list</field>
+        <field name="sequence">1</field>
+        <field name="view_id" ref="loyalty_program_view_tree"/>
+        <field name="act_window_id" ref="loyalty_program_ewallet_action"/>
+    </record>
+
+    <record id="action_loyalty_program_form_gift_card" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="sequence">2</field>
+        <field name="view_id" ref="loyalty_program_gift_view_form"/>
+        <field name="act_window_id" ref="loyalty_program_gift_action"/>
+    </record>
+
+    <record id="action_loyalty_program_form_ewallet" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="sequence">2</field>
+        <field name="view_id" ref="loyalty_program_ewallet_view_form"/>
+        <field name="act_window_id" ref="loyalty_program_ewallet_action"/>
+    </record>
+
+    <!-- pos_loyalty still exposes one combined Discount/Loyalty menu and one combined
+         Gift-cards/eWallet menu, so the actions those menus point to are kept alive
+         here next to the split ones above.
+    -->
     <record id="loyalty_program_discount_loyalty_action" model="ir.actions.act_window">
         <field name="name">Discount &amp; Loyalty</field>
         <field name="res_model">loyalty.program</field>
         <field name="path">discount-loyalty</field>
         <field name="view_mode">list,form</field>
+        <field name="context">{'menu_type': 'discount_loyalty'}</field>
         <field name="domain">[('program_type', 'not in', ('gift_card', 'ewallet'))]</field>
         <field name="help" type="html">
             <div class="o_loyalty_not_found">
@@ -259,7 +413,6 @@
         <field name="act_window_id" ref="loyalty_program_discount_loyalty_action"/>
     </record>
 
-    <!-- GIFT & EWALLET -->
     <record id="loyalty_program_gift_ewallet_view_form" model="ir.ui.view">
         <field name="name">loyalty.program.gift.ewallet.view.form</field>
         <field name="model">loyalty.program</field>
@@ -303,4 +456,5 @@
         <field name="view_id" ref="loyalty_program_gift_ewallet_view_form"/>
         <field name="act_window_id" ref="loyalty_program_gift_ewallet_action"/>
     </record>
+
 </odoo>

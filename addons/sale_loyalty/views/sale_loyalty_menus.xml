@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-    <menuitem id="menu_discount_loyalty_type_config"
-        action="loyalty.loyalty_program_discount_loyalty_action"
-        parent="sale.product_menu_catalog"
+    <menuitem id="menu_discount_type_config"
+        action="loyalty.loyalty_program_discount_action"
+        parent="sale.menu_sale_promotions"
         groups="sales_team.group_sale_manager"
         sequence="40"/>
 
-    <menuitem id="menu_gift_ewallet_type_config"
-        action="loyalty.loyalty_program_gift_ewallet_action"
-        parent="sale.product_menu_catalog"
+    <menuitem id="menu_rewards_type_config"
+        action="loyalty.loyalty_program_rewards_action"
+        parent="sale.menu_sale_promotions"
         groups="sales_team.group_sale_manager"
         sequence="50"/>
+
+    <menuitem id="menu_gift_type_config"
+        action="loyalty.loyalty_program_gift_action"
+        parent="sale.menu_sale_promotions"
+        groups="sales_team.group_sale_manager"
+        sequence="60"/>
+
+    <menuitem id="menu_gift_ewallet_type_config"
+        action="loyalty.loyalty_program_ewallet_action"
+        parent="sale.menu_sale_promotions"
+        groups="sales_team.group_sale_manager"
+        sequence="70"/>
 
 </odoo>

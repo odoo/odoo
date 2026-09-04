@@ -6,7 +6,7 @@ from uuid import uuid4
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
-from odoo.tools.translate import LazyTranslate
+from odoo.tools.translate import LazyTranslate, mark_as_copy
 
 _lt = LazyTranslate(__name__)
 
@@ -27,7 +27,10 @@ class LoyaltyProgram(models.Model):
                 default_values = program_default_values[program_type]
                 defaults.update({k: v for k, v in default_values.items() if k in fields})
         return defaults
-    name = fields.Char(string="Program Name", translate=True, required=True)
+
+    name = fields.Char(
+        string="Program Name", translate=True, required=True, copy=mark_as_copy("name")
+    )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(copy=False)
     company_id = fields.Many2one(
@@ -593,26 +596,81 @@ class LoyaltyProgram(models.Model):
         return res
 
     @api.model
+    def _get_menu_buckets(self):
+        """Map each program menu onto the ``program_type`` values it is responsible for.
+
+        This is the single source of truth for the menu split: both the templates
+        offered on an empty list and the action a program created from a template is
+        opened in are derived from it. The action domains defined in
+        `loyalty_program_views.xml` mirror it.
+        """
+        return {
+            "promotions": {
+                "program_types": (
+                    "promotion",
+                    "promo_code",
+                    "buy_x_get_y",
+                    "next_order_coupons",
+                    "coupons",
+                ),
+                "action": "loyalty.loyalty_program_discount_action",
+            },
+            "rewards": {
+                "program_types": ("loyalty",),
+                "action": "loyalty.loyalty_program_rewards_action",
+            },
+            "gift_cards": {
+                "program_types": ("gift_card",),
+                "action": "loyalty.loyalty_program_gift_action",
+            },
+            "ewallets": {
+                "program_types": ("ewallet",),
+                "action": "loyalty.loyalty_program_ewallet_action",
+            },
+            "discount_loyalty": {
+                "program_types": (
+                    "promotion",
+                    "promo_code",
+                    "buy_x_get_y",
+                    "next_order_coupons",
+                    "coupons",
+                    "loyalty",
+                ),
+                "action": "loyalty.loyalty_program_discount_loyalty_action",
+            },
+            "gift_ewallet": {
+                "program_types": ("gift_card", "ewallet"),
+                "action": "loyalty.loyalty_program_gift_ewallet_action",
+            },
+        }
+
+    @api.model
+    def _get_current_menu_bucket(self):
+        """Return the bucket for the menu currently being browsed, if any."""
+        return self._get_menu_buckets().get(self.env.context.get("menu_type"))
+
+    @api.model
     def get_program_templates(self):
-        """Return the templates to be used for promotional programs."""
-        ctx_menu_type = self.env.context.get("menu_type")
-        if ctx_menu_type == "gift_ewallet":
-            return {
-                "gift_card": {
-                    "title": self.env._("Gift Card"),
-                    "description": self.env._(
-                        "Sell gift cards that people can use to buy products."
-                    ),
-                    "icon": "gift_card",
-                },
-                "ewallet": {
-                    "title": self.env._("eWallet"),
-                    "description": self.env._(
-                        "Add money to your eWallet to pay for future orders."
-                    ),
-                    "icon": "ewallet",
-                },
-            }
+        """Return the templates to be used for promotional programs.
+
+        Only the templates belonging to the menu being browsed are returned, so that a
+        program created from a template always lands inside the list it was created
+        from.
+        """
+        templates = self._get_program_template_descriptions()
+        bucket = self._get_current_menu_bucket()
+        if not bucket:
+            return templates
+        template_values = self._get_template_values()
+        return {
+            template_id: description
+            for template_id, description in templates.items()
+            if template_values[template_id]["program_type"] in bucket["program_types"]
+        }
+
+    @api.model
+    def _get_program_template_descriptions(self):
+        """Return how every template is presented in the empty list placeholder."""
         return {
             "promotion": {
                 "title": self.env._("Promotional Program"),
@@ -649,6 +707,16 @@ class LoyaltyProgram(models.Model):
                 "description": self.env._("Buy 10 products to get 10$ off on the 11th one"),
                 "icon": "fidelity_cards",
             },
+            "gift_card": {
+                "title": self.env._("Gift Card"),
+                "description": self.env._("Sell gift cards that people can use to buy products."),
+                "icon": "gift_card",
+            },
+            "ewallet": {
+                "title": self.env._("eWallet"),
+                "description": self.env._("Add money to your eWallet to pay for future orders."),
+                "icon": "ewallet",
+            },
         }
 
     @api.model
@@ -661,18 +729,13 @@ class LoyaltyProgram(models.Model):
         if template_id not in template_values:
             return False
         program = self.create(template_values[template_id])
-        action = {}
-        if self.env.context.get("menu_type") == "gift_ewallet":
-            action = self.env["ir.actions.act_window"]._for_xml_id(
-                "loyalty.loyalty_program_gift_ewallet_action"
-            )
-            action["views"] = [[False, "form"]]
-        else:
-            action = self.env["ir.actions.act_window"]._for_xml_id(
-                "loyalty.loyalty_program_discount_loyalty_action"
-            )
-            view_id = self.env.ref("loyalty.loyalty_program_view_form").id
-            action["views"] = [[view_id, "form"]]
+        bucket = self._get_current_menu_bucket() or self._get_menu_buckets()["promotions"]
+        action = self.env["ir.actions.act_window"]._for_xml_id(bucket["action"])
+        # Keep the form view the menu is configured with -- gift cards and eWallets use
+        # their own primary view -- rather than falling back to the default one.
+        action["views"] = [views for views in action["views"] if views[1] == "form"] or [
+            [False, "form"]
+        ]
         action["view_mode"] = "form"
         action["res_id"] = program.id
         return action
