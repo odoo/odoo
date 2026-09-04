@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import subprocess
+import sys
 import threading
 from unittest.mock import patch
 
 from odoo.http import Controller, request, route
-from odoo.tests.common import ChromeBrowser, HttpCase, tagged
+from odoo.tests.common import ChromeBrowser, HttpCase, _process_status, tagged
 from odoo.tools import config, logging
 
 _logger = logging.getLogger(__name__)
@@ -55,6 +57,13 @@ class TestHttpCase(HttpCase):
                 self.assertEqual(text, "Object(custom=Object, value=1, description='dummy')")
                 console_log_count += 1
         self.assertEqual(console_log_count, 1)
+
+    def test_process_status(self):
+        process = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)'])
+        self.assertEqual(_process_status(process.pid, timeout=0), 'still running')
+        process.kill()
+        self.assertEqual(_process_status(process.pid), 'killed by signal 9')
+        self.assertEqual(process.wait(1), -9)
 
 
 @tagged('-at_install', 'post_install')
