@@ -107,7 +107,7 @@ class ResPartner(models.Model):
         self.ensure_one()
         # We suggest the SIREN (even if the SIRET is filled in).
         # "Everyone" will probably have registered the SIREN on annuaire. (Even if they have a SIRET.)
-        return self._l10n_fr_pdp_get_siren()
+        return (self.additional_identifiers and self.additional_identifiers.get('FR_CTC')) or self._l10n_fr_pdp_get_siren()
 
     def _get_peppol_endpoint_value(self, country_code, field, eas):
         self.ensure_one()
@@ -254,3 +254,15 @@ class ResPartner(models.Model):
             # The CPRO_INVOICE_IDENTIFIER acts as a general placeholder and does not indicate the actually
             # supported documents (i.e. credit notes and CDAR lifecycles are possible too ofc.).
             partner.peppol_supported_documents = [CPRO_INVOICE_IDENTIFIER]
+
+    def _compute_peppol_eas(self):
+        partners_to_compute = self
+
+        if self.env.company._get_peppol_proxy_type() == 'pdp':
+            fr_partners = self.filtered(lambda p: p.country_code == 'FR')
+            partners_to_compute -= fr_partners
+            for partner in fr_partners:
+                if partner._get_suggested_pdp_identifier():
+                    partner.peppol_eas = '0225'
+
+        super(ResPartner, partners_to_compute)._compute_peppol_eas()
