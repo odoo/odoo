@@ -24,7 +24,7 @@
     }
 
     .nav-item {
-        white-space: nowrap;
+        white-space: var(--Notebook-white-space, nowrap);
         margin: 0 -1px 0 0;
 
         &.disabled {
@@ -69,12 +69,22 @@
     }
 
     &.vertical {
+        --Notebook-white-space : normal;
+
+        li {
+            word-wrap: break-word;
+
+            button {
+                text-align: left;
+            }
+        }
+
         .o_notebook_headers {
             overflow-x: visible;
         }
 
         .nav {
-            width: max-content;
+            max-width: 250px;
             border-bottom-color: transparent; // removing the width has weird side effect due to the negative margin
         }
 
