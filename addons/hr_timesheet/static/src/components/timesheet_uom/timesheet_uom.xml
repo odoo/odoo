@@ -2,7 +2,10 @@
 <templates>
 
     <t t-name="hr_timesheet.TimesheetUOM">
-        <t t-component="this.timesheetComponent" t-props="this.timesheetComponentProps"/>
+        <t
+            t-component="this.getTimesheetComponent(this.timesheetUOMService.timesheetWidget)"
+            t-props="this.timesheetUOMService.getTimesheetComponentProps(this.props)"
+        />
     </t>
 
 </templates>

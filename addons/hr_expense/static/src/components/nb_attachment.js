@@ -1,10 +1,10 @@
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
+import { Component, useProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 class AttachmentNumber extends Component {
     static template = "hr_expense.AttachmentNumber";
-    static props = {...standardFieldProps};
+    props = useProps(standardFieldProps);
 
     setup() {
         super.setup();

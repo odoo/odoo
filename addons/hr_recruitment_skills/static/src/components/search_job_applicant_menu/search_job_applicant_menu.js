@@ -16,7 +16,6 @@ const cogMenuRegistry = registry.category("cogMenu");
 export class SearchJobApplicant extends Component {
     static template = "hr_recruitment_skills.SearchJobApplicant";
     static components = { DropdownItem };
-    static props = {};
 
     setup() {
         this.action = useService("action");

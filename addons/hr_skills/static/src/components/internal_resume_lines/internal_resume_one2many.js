@@ -1,4 +1,4 @@
-import { Component, asyncComputed } from "@odoo/owl";
+import { Component, asyncComputed, useProps } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -6,7 +6,7 @@ import { formatDate } from "@web/core/l10n/dates";
 
 export class InternalResumeLineComponent extends Component {
     static template = "hr_skills.InternalResumeLineComponent";
-    static props = { ...standardWidgetProps };
+    props = useProps(standardWidgetProps);
 
     setup(){
         super.setup();

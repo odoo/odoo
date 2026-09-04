@@ -2,29 +2,30 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { formatNumber } from "@hr_holidays/views/hooks";
 import { useService } from "@web/core/utils/hooks";
-import { Component, computed } from "@odoo/owl";
+import { Component, computed, t, useProps } from "@odoo/owl";
 export class TimeOffCardPopover extends Component {
     static template = "hr_holidays.TimeOffCardPopover";
-    static props = [
-        "allocated",
-        "accrual_bonus",
-        "approved",
-        "planned",
-        "left",
-        "warning",
-        "closest",
-        "unit_of_measure",
-        "exceeding_duration",
-        "close?",
-        "allows_negative",
-        "max_allowed_negative",
-        "errorLeaves",
-        "accrualExcess",
-        "timeOffType",
-        "employeeId",
-        "employeeCompany",
-        "employeeCountry",
-    ];
+
+    props = useProps({
+        allocated: t.any(),
+        accrual_bonus: t.any(),
+        approved: t.any(),
+        planned: t.any(),
+        left: t.any(),
+        warning: t.any(),
+        closest: t.any(),
+        unit_of_measure: t.any(),
+        exceeding_duration: t.any(),
+        close: t.any().optional(),
+        allows_negative: t.any(),
+        max_allowed_negative: t.any(),
+        errorLeaves: t.any(),
+        accrualExcess: t.any(),
+        timeOffType: t.any(),
+        employeeId: t.any(),
+        employeeCompany: t.any(),
+        employeeCountry: t.any(),
+    });
 
     setup() {
         this.actionService = useService("action");
@@ -98,7 +99,14 @@ export class TimeOffCardPopover extends Component {
 
 export class TimeOffCard extends Component {
     static template = "hr_holidays.TimeOffCard";
-    static props = ["name", "data", "requires_allocation", "employeeId", "holidayStatusId"];
+
+    props = useProps({
+        name: t.any(),
+        data: t.any(),
+        requires_allocation: t.any(),
+        employeeId: t.any(),
+        holidayStatusId: t.any(),
+    });
 
     setup() {
         this.popover = usePopover(TimeOffCardPopover, {
