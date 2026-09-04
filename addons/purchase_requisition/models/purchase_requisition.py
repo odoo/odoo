@@ -361,13 +361,21 @@ class PurchaseRequisitionLine(models.Model):
                 'name': self.name,
                 'sequence': self.sequence,
             }
+
+        # Initialized with empty string to act as a newline prefix during .join()
+        description = ['']
+        if self.name:
+            description += self.name.split('\n')[1:]
         if self.product_description_variants:
-            name += '\n' + self.product_description_variants
+            description.append(self.product_description_variants)
+        name += '\n'.join(description)
+
         date_planned = fields.Datetime.now()
         if self.requisition_id.date_start:
             date_planned = max(date_planned, fields.Datetime.to_datetime(self.requisition_id.date_start))
         return {
             'name': name,
+            'requisition_line_ids': self.id,
             'product_id': self.product_id.id,
             'uom_id': self.uom_id.id,
             'product_qty': product_qty,
