@@ -20,6 +20,10 @@ class TestViesIAP(HttpCase):
 
     def setUp(self):
         super().setUp()
+        # Test methods in this class share one cursor/transaction (savepoint
+        # rollback doesn't clear it), so isolate the per-transaction VIES
+        # cache between tests.
+        self.env.cr.cache.pop('base_vat_vies_status', None)
         self.partner = self.env['res.partner'].create({
             'name': 'GAGA',
         })
@@ -128,6 +132,51 @@ class TestViesIAP(HttpCase):
             },
         )
         self.assertTrue(self.partner.vies_valid)
+
+    def test_vies_valid_computed_on_create(self):
+        """create() must compute vies_valid too, not only write(): the web
+        form relies on this (its onchange already sends vies_valid inside
+        the create() vals, so it never depended on the recompute queue),
+        but any create() coming from code (API, connectors, controllers)
+        has no onchange step and only sets vat/country_id.
+        """
+        self.mock_return_status = "valid"
+        partner = self.env['res.partner'].create({
+            'name': 'Created with vat',
+            'country_id': self.env.ref('base.be').id,
+            'vat': self.RANDOM_VAT,
+        })
+        self.assertTrue(partner.vies_valid)
+
+    def test_vies_valid_skipped_on_create_import_file(self):
+        """Bulk CSV/Excel imports (import_file context) keep skipping it,
+        same as write() already does.
+        """
+        self.mock_return_status = "valid"
+        partner = self.env['res.partner'].with_context(import_file=True).create({
+            'name': 'Created with vat via import',
+            'country_id': self.env.ref('base.be').id,
+            'vat': self.RANDOM_VAT,
+        })
+        self.assertFalse(partner.vies_valid)
+        self.mock_post.assert_not_called()
+
+    def test_vies_valid_no_duplicate_iap_call_on_create_company(self):
+        """create_company() copies the contact's already-validated VAT to
+        the new parent company; restoring the recompute on create() must
+        not query IAP a second time for that same VAT number (the exact
+        scenario a18b23e7e1 fixed by disabling create()'s recompute
+        entirely - this cache achieves the same result without doing so).
+        """
+        self.mock_return_status = "valid"
+        self.partner.write({'company_name': 'My Company'})
+        self.partner.vat = self.RANDOM_VAT
+        self.assertTrue(self.partner.vies_valid)
+        self.mock_post.assert_called_once()
+
+        self.partner.create_company()
+        self.assertTrue(self.partner.parent_id.vies_valid)
+        self.mock_post.assert_called_once()
 
     def test_vies_iap_cron(self):
         """
