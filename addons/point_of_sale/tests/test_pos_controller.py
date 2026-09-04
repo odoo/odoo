@@ -151,6 +151,75 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.start_tour('/pos/ticket', 'invoicePoSOrderWithSelfInvocing', login=None)
         self.assertTrue(self.pos_order.account_move, "The pos order should have an invoice after self invoicing")
 
+    def test_qr_code_receipt_anonymous_cannot_modify_partner_with_user(self):
+        """An anonymous user must not be able to modify a partner that is linked to a user, but still gets the invoice."""
+        self.authenticate(None, None)
+        self.new_partner_user = mail_new_test_user(
+            self.env,
+            name='My Partner',
+            login='my_partner',
+            email='original@test.com',
+            groups='base.group_portal',
+        )
+        self.new_partner = self.new_partner_user.partner_id
+        self.new_partner.write({
+            'street': 'Original street',
+            'city': 'Original City',
+            'zip': '12345',
+            'phone': '000000000',
+            'state_id': self.env.ref('base.state_us_1').id,
+            'country_id': self.env.ref('base.us').id,
+        })
+        self.product1 = self.env['product.product'].create({
+            'name': 'Test Product 1',
+            'is_storable': True,
+            'list_price': 10.0,
+            'taxes_id': False,
+        })
+        self.main_pos_config.open_ui()
+        self.pos_order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'partner_id': self.new_partner.id,
+            'access_token': '1234567890',
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 10,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': False,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_tax': 10,
+            'amount_total': 10,
+            'amount_paid': 10.0,
+            'amount_return': 10.0,
+        })
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        form_data = {
+            'access_token': self.pos_order.access_token,
+            'name': 'new name',
+            'email': 'newemail@test.com',
+            'street': 'new street',
+            'city': 'new City',
+            'zipcode': '99999',
+            'country_id': self.env.ref('base.us').id,
+            'state_id': self.env.ref('base.state_us_1').id,
+            'phone': '999999999',
+            'csrf_token': odoo.http.Request.csrf_token(self)
+        }
+        res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', data=form_data)
+        self.assertEqual(self.new_partner.name, 'My Partner')
+        self.assertEqual(self.new_partner.email, 'original@test.com')
+        self.assertEqual(self.new_partner.street, 'Original street')
+        self.assertEqual(self.new_partner.city, 'Original City')
+        self.assertEqual(self.new_partner.zip, '12345')
+        self.assertEqual(self.new_partner.phone, '000000000')
+        self.assertTrue(self.pos_order.is_invoiced, "The pos order should have an invoice")
+        self.assertTrue("my/invoices" in res.url)
+
     def test_qr_code_receipt_user_updated(self):
         """This test make sure that when the user is already connected he correctly gets redirected to the invoice."""
         self.authenticate(None, None)
