@@ -90,4 +90,20 @@
     </xpath>
 </template>
 
+<template id="event_submenu_extend" inherit_id="website_event.navbar">
+    <xpath expr="//div[@id='o_wevent_submenu_desktop']//t[@t-foreach][@t-as='submenu']" position="after">
+        <t t-set="track_count" t-value="len(event.track_ids.filtered(lambda t: t.is_reminder_on and t.is_published))"/>
+        <li id="event_wishlist_counter" t-att-class="'d-none' if not track_count else ''">
+            <a t-attf-href="/event/#{slug(event)}/track?search_wishlist=1"
+                class="d-inline-block text-decoration-none">
+                <i class="fa fa-star text-primary"/>
+                <span class="badge bg-secondary position-relative track_count"
+                    style="top: -10px;left: -10px;font-size: 0.7em;padding: 2px 3px;">
+                    <t t-out="track_count"/>
+                </span>
+            </a>
+        </li>
+    </xpath>
+</template>
+
 </odoo>

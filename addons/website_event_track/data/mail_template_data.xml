@@ -73,7 +73,7 @@
                                 <div>
                                     Hello<t t-if="not user_id.is_public" t-out="' ' + user_id.name"/>,
                                     <br/><br/>
-                                    You recently show interest for the talk
+                                    You recently showed interest for the talk
                                     <a t-if="object.description or object.partner_biography" t-attf-href="{{ object.get_base_url() }}{{ object.website_url }}" style="font-weight:bold;color:#875A7B;text-decoration:none;" t-out="object.name or ''">OpenWood Collection Online Reveal</a>
                                     <span t-else="" style="font-weight:bold;" t-out="object.name or ''">OpenWood Collection Online Reveal</span>.
                                 </div>

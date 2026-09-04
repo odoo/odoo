@@ -4,17 +4,20 @@
 <!-- Options
     * reminder_light: no text displayed
     * reminder_small: text displayed as small
-    * light_theme: bell is white/gold if set; otherwse bell is gray / white
  -->
 <template id="track_widget_reminder">
-    <t t-set="_btn_style" t-value="'btn-link' if reminder_light else (track.is_reminder_on and '') or ''"/>
+    <t t-set="_btn_style" t-value="'btn' if not reminder_light else ''"/>
     <t t-set="_btn_size" t-value="'btn-sm' if reminder_small else ''"/>
-    <div t-att-class="'o_wetrack_js_reminder %s %s' % (_btn_style, _btn_size)" role="button"
+    <div t-att-class="'o_wetrack_js_reminder reminder_%s m-2' % ('on' if track.is_reminder_on else 'off')" role="button"
          t-att-data-track-id="track.id"
-         t-att-data-reminder-on="bool(track.is_reminder_on)">
-        <i t-att-class="'o_wetrack_js_reminder_bell fa fa-bell%s %s' % ('' if track.is_reminder_on else '-o', 'text-white' if reminder_light and not light_theme else 'text-dark')"
-           t-att-title="'Favorite On' if track.is_reminder_on else 'Set Favorite'"
-           t-att-data-is-reminder-light="reminder_light"></i>
+         t-att-data-reminder-on="bool(track.is_reminder_on)"
+         t-if="not track.is_track_done or track.event_id.is_finished">
+         <span t-attf-class="o_wetrack_js_reminder_on {{_btn_style}} {{_btn_size}} btn-secondary">
+            <i class='fa fa-star' title="Favorite On"/> Favorited
+         </span>
+         <span t-attf-class="o_wetrack_js_reminder_off {{_btn_style}} {{_btn_size}} btn-outline-secondary">
+            <i class='fa fa-star-o' title="Set Favorite"/> Add to favorite
+         </span>
     </div>
 </template>
 

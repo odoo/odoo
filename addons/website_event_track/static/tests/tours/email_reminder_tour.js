@@ -23,8 +23,8 @@ registry.category("web_tour.tours").add("email_reminder_tour", {
             }]);
         }
         steps = steps.concat([{
-            content: "Check if the notification is displayed.",
-            trigger: "div.o_send_email_reminder_success",
+            content: `Check Favorite is now on`,
+            trigger: "div.o_wetrack_js_reminder span.o_wetrack_js_reminder_on",
         }]);
         return steps;
     })()

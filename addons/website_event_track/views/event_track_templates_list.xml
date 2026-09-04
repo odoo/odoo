@@ -220,8 +220,7 @@
 
 <!-- Tracks: List-based display -->
 <template id="tracks_display_list" name="Tracks: List Display">
-    <div t-if="tracks" class="pt24">
-        <h5>Book your talks</h5>
+    <div t-if="tracks and not search_wishlist" class="pt-1 plan_your_xp">
         <p>Plan your experience by adding your favorites talks to your wishlist</p>
     </div>
     <div t-if="tracks" class="o_wesession_list mb-3">
@@ -296,13 +295,13 @@
             <header class="overflow-hidden bg-secondary col-12">
                 <div t-if="track.website_image_url" class="card-img-top"
                     t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
-                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2 text-white" style="right: 0; top: 0;">
+                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute text-white" style="right: 0; top: 0;">
                         <t t-call="website_event_track.track_widget_reminder" reminder_light="True"/>
                     </span>
                 </div>
                 <div t-else="" class="o_wesession_gradient card-img-top position-relative"
                     style="padding-top: 50%;">
-                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute h3 mt-2 me-2" style="right: 0; top: 0;">
+                    <span t-if="option_track_wishlist and (track.is_track_upcoming or track.is_reminder_on or (not track.date and not track.event_id.is_finished))" class="position-absolute" style="right: 0; top: 0;">
                         <t t-call="website_event_track.track_widget_reminder" reminder_light="True"/>
                     </span>
                     <i class="fa fa-glass fa-2x mx-2 mb-3 position-absolute text-white-75" style="right:0; bottom: 0;"/>
@@ -415,7 +414,7 @@
     <div t-if="search_wishlist or search_tags" class="d-flex flex-wrap align-items-center my-3 gap-2">
         <span t-if="search_wishlist"
             class="align-items-baseline border d-inline-flex rounded">
-            <i class="fa fa-bell mx-2 text-muted"/> Favorite Talks
+            <i class="fa fa-star mx-2 text-muted"/> Favorite Talks
             <a t-att-href="'/event/%s/track?%s' % (slug(event), keep_query('*', search_wishlist=''))"
                 class="btn border-0 py-1">
                 ×
