@@ -499,7 +499,6 @@ class TestFrontend(TestFrontendCommon):
             'receipt_printer_ids': [Command.set([receipt_printer.id])],
             'iface_print_auto': True,
             'other_devices': True,
-            'preparation_devices': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_fast_payment_validation_from_restaurant_product_screen_with_automatic_receipt_printing')

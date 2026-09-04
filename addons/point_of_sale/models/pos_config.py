@@ -177,7 +177,6 @@ class PosConfig(models.Model):
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
     other_devices = fields.Boolean(string="Other Devices", help="Connect printers to your PoS.")
-    preparation_devices = fields.Boolean(string="Preparation devices", help="Connect preparation printers to print to the bar, kitchen,...")
     rounding_method = fields.Many2one('account.cash.rounding', string="Rounding Method")
     cash_rounding = fields.Boolean(string="Total Rounding")
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
@@ -691,7 +690,6 @@ class PosConfig(models.Model):
         pos_configs._create_sequences()
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
-        pos_configs._update_preparation_printers_menuitem_visibility()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
 
@@ -744,11 +742,6 @@ class PosConfig(models.Model):
             else:
                 raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
 
-    def _update_preparation_printers_menuitem_visibility(self):
-        prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
-        if prepa_printers_menuitem:
-            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('use_order_printer', '=', True)], limit=1) > 0
-
     def _can_use_cash_payment_method(self, cash_method):
         self.ensure_one()
         return not cash_method.config_ids.filtered(lambda config: config != self)
@@ -774,13 +767,13 @@ class PosConfig(models.Model):
 
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
-        if ('use_order_printer' in vals and not vals['use_order_printer']):
-            vals['preparation_printer_ids'] = [fields.Command.clear()]
 
         bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
 
         self._preprocess_x2many_vals_from_settings_view(vals)
         vals = self._keep_new_vals(vals)
+        if 'use_order_printer' in vals and not vals['use_order_printer']:
+            vals['preparation_printer_ids'] = [fields.Command.clear()]
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
             forbidden_fields = []
@@ -809,8 +802,6 @@ class PosConfig(models.Model):
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
-        if 'use_order_printer' in vals:
-            self._update_preparation_printers_menuitem_visibility()
         return result
 
     def link_category_form_pos(self, category):
