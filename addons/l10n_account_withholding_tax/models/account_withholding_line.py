@@ -18,7 +18,7 @@ class AccountWithholdingLine(models.AbstractModel):
     # Fields declaration
     # ------------------
 
-    name = fields.Char(string="Sequence Number")
+    name = fields.Char(string="Sequence Number", copy=True)
     placeholder_value = fields.Char(help="Populated by the comodel during edition of the line.")
     placeholder_type = fields.Selection(
         selection=[
