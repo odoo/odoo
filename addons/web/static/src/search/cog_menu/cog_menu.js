@@ -71,7 +71,7 @@ export class CogMenu extends ActionMenus {
     }
 
     get cogItems() {
-        return [...this.registryItems(), ...this.actionItems].sort(
+        return [...this.registryItems(), ...this.actionItems()].sort(
             (item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0)
         );
     }
