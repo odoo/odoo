@@ -65,6 +65,32 @@ kbd {
   color: $o-black;
 }
 
+//== Input group
+.input-group {
+  // Bring input group elements to the front when hovered or active
+  // so they properly overlay the borders like the focus state
+  .btn, .form-control, .form-select, .form-floating {
+    // Allow the value to be updated using a CSS variable, with the
+    // default value as a fallback.
+    z-index: var(--InputGroupEl-z-index, 2);
+
+    &:hover {
+      // This arbitrary value matches the z-index used for the focus
+      // state, minus 1 (see _input-group.scss).
+      // This keeps the border correct when the user clicks or focuses
+      // an element and then drags to an adjacent one.
+      // This value should be updated if the default z-index changes.
+      --InputGroupEl-z-index: 4;
+    }
+
+    &:active {
+      // This arbitrary value matches the z-index used for the focus
+      // state (see _input-group.scss)
+      --InputGroupEl-z-index: 5;
+    }
+  }
+}
+
 // == Boostrap Dropdown
 // ----------------------------------------------------------------------------
 :not(.dropstart) > .dropdown-item {
