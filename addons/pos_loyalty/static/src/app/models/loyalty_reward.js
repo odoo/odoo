@@ -50,10 +50,6 @@ export class LoyaltyReward extends Base {
                 ? points
                 : Math.ceil(qty / this.reward_product_qty) * this.required_points;
 
-            const sameProductLine = order
-                .getOrderlines()
-                .find((line) => !line.is_reward_line && line.product_id?.id === product.id);
-
             return [
                 {
                     product_id: product,
@@ -62,7 +58,23 @@ export class LoyaltyReward extends Base {
                     price_type: "manual",
                     tax_ids: linkTaxes(mapTaxes(product.taxes_id)),
                     attribute_value_ids:
-                        sameProductLine?.attribute_value_ids.map((attr) => ["link", attr]) || [],
+                        opts?.attribute_value_ids.map((attr) => ["link", attr]) || [],
+                    custom_attribute_value_ids: Object.entries(
+                        opts?.attribute_custom_values || {}
+                    ).reduce((acc, [id, cus]) => {
+                        if (cus === null || cus === undefined) {
+                            return acc;
+                        }
+                        acc.push([
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    this.models["product.template.attribute.value"].get(id),
+                                custom_value: cus,
+                            },
+                        ]);
+                        return acc;
+                    }, []),
                     is_reward_line: true,
                     reward_id: this,
                     points_cost: pointsCost,
