@@ -1,5 +1,4 @@
 from datetime import UTC, datetime, time, timedelta
-from zoneinfo import ZoneInfo
 
 from odoo import fields, models
 from odoo.exceptions import UserError
@@ -56,7 +55,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         revalued = self.env['product.product']
         price_precision = self.env['decimal.precision'].precision_get('Product Price')
         unchanged_count = 0
-        tz = ZoneInfo(self.env.context.get('tz') or self.env.user.tz or 'UTC')
+        tz = self.env.tz
         period_start = datetime.combine(self.date_from, time.min, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
         period_end = datetime.combine(self.date_to, time.max, tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
         # sudo: a product manager does not read the closing entries
