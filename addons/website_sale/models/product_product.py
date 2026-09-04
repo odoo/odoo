@@ -262,7 +262,7 @@ class ProductProduct(models.Model):
         return [
             self.env["website"].image_url(extra_image, "image_1920")
             for extra_image in self._get_all_extra_images_to_display()
-            if extra_image.image_128  # only images, no video urls
+            if not extra_image.video_url  # only images, no video urls
         ]
 
     def _get_all_extra_images_to_display(self):
