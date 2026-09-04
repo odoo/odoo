@@ -18,6 +18,7 @@ import {
     previousLeaf,
     isEmptyBlock,
     isSelfClosingElement,
+    isElement,
 } from "../utils/dom_info";
 import { getState, isFakeLineBreak, observeMutations, prepareUpdate } from "../utils/dom_state";
 import {
@@ -44,6 +45,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
 import { hasTouch, isBrowserChrome, isMacOS } from "@web/core/browser/feature_detection";
 import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils/selection";
+import { formatsSpecs } from "@html_editor/utils/formatting";
 
 /**
  * @typedef {Object} RangeLike
@@ -100,7 +102,14 @@ export const unremovableNodePredicates = [
 export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
     static id = "delete";
-    static shared = ["deleteBackward", "deleteForward", "deleteRange", "deleteSelection", "delete"];
+    static shared = [
+        "deleteBackward",
+        "deleteForward",
+        "deleteRange",
+        "deleteSelection",
+        "delete",
+        "setCursorFromRange",
+    ];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -1453,10 +1462,60 @@ export class DeletePlugin extends Plugin {
      */
     setCursorFromRange(range, { collapseToEnd = false } = {}) {
         range = this.collapseRange(range, { toEnd: collapseToEnd });
-        const [anchorNode, anchorOffset] = this.normalizeEnterBlock(
+        let [anchorNode, anchorOffset] = this.normalizeEnterBlock(
             range.startContainer,
             range.startOffset
         );
+        const nextElement = anchorNode.childNodes[anchorOffset];
+        const previousElement = anchorNode.childNodes[anchorOffset - 1];
+        const isAtEdge = anchorOffset === 0 || anchorOffset === childNodes(anchorNode).length;
+
+        const isTextSibling = (node) => node && isTextNode(node);
+        const isInlineElement = (node) => node && ["FONT", "SPAN"].includes(node.nodeName);
+        const hasAnyFormat = (node) => {
+            const el = closestElement(node);
+            return (
+                Object.keys(formatsSpecs).some((format) => formatsSpecs[format].hasStyle?.(el)) ||
+                this.getResource("has_format_predicates").some((p) => p(node))
+            );
+        };
+
+        const makePlaceholder = () => {
+            const span = this.document.createElement("span");
+            span.classList.add("o_cursor_placeholder");
+            span.appendChild(this.document.createTextNode("\ufeff"));
+            return span;
+        };
+
+        const neighboursAreNotText = !isTextSibling(nextElement) && !isTextSibling(previousElement);
+        const hasSiblings = previousElement || nextElement;
+
+        if (neighboursAreNotText && hasSiblings) {
+            // Place placeholder next to an adjacent inline element
+            const placeholder = makePlaceholder();
+            if (isInlineElement(previousElement)) {
+                previousElement.after(placeholder);
+            } else if (isInlineElement(nextElement)) {
+                nextElement.before(placeholder);
+            }
+            if (placeholder.isConnected) {
+                anchorNode = placeholder.firstChild;
+                anchorOffset = 0;
+            }
+        } else if (
+            isAtEdge &&
+            isElement(anchorNode) &&
+            hasAnyFormat(anchorNode) &&
+            isInlineElement(anchorNode) &&
+            !anchorNode.hasAttribute("data-oe-zws-empty-inline")
+        ) {
+            // Place placeholder outside a formatted inline element at its boundary
+            const placeholder = makePlaceholder();
+            anchorNode[anchorOffset ? "after" : "before"](placeholder);
+            anchorNode = placeholder;
+            anchorOffset = 1;
+        }
+
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
     }
 
