@@ -24,6 +24,17 @@ class PosOrder(models.Model):
         order_payments = self.env['pos.payment'].search(['&', ('pos_order_id', '=', self.id), ('online_account_payment_id', '=', False), ('payment_method_id.is_online_payment', '=', True)])
         order_payments.unlink()
 
+    def _clean_non_online_payment_lines(self):
+        self.ensure_one()
+        if self.state != 'draft':
+            return
+        non_online_payments = self.env['pos.payment'].search([
+            ('pos_order_id', '=', self.id),
+            ('payment_method_id.is_online_payment', '=', False),
+        ])
+        non_online_payments.unlink()
+        self.amount_paid = sum(self.payment_ids.mapped('amount'))
+
     def get_and_set_online_payments_data(self, next_online_payment_amount=False):
         """ Allows to update the amount to pay for the next online payment and
             get online payments already made and how much remains to be paid.
@@ -55,6 +66,16 @@ class PosOrder(models.Model):
                 return_data['deleted'] = True
             elif self._check_next_online_payment_amount(next_online_payment_amount):
                 self.next_online_payment_amount = next_online_payment_amount
+            elif (
+                tools.float_compare(next_online_payment_amount, 0.0, precision_rounding=self.currency_id.rounding) > 0
+                and tools.float_is_zero(self.get_amount_unpaid(), precision_rounding=self.currency_id.rounding)
+                and tools.float_compare(next_online_payment_amount, self._get_rounded_amount(self.amount_total), precision_rounding=self.currency_id.rounding) == 0
+                and not online_payments
+            ):  # There is a positive payment equal to the total order amount, the order has no unpaid balance, and no online payment record exists yet.
+                self.sudo()._clean_non_online_payment_lines()
+                return_data['amount_unpaid'] = self.get_amount_unpaid()
+                if self._check_next_online_payment_amount(next_online_payment_amount):
+                    self.next_online_payment_amount = next_online_payment_amount
 
         return return_data
 
