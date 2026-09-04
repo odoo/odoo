@@ -408,7 +408,9 @@ export class Thread extends Component {
         }
         // Use toRaw() to prevent scroll check from triggering renders.
         const thread = toRaw(this.props.thread);
-        this.applyScrollContextually(thread);
+        if (!this.applyScrollContextually(thread)) {
+            return;
+        }
         this.snapshot = undefined;
         this.newestPersistentMessage = thread.newestPersistentMessage;
         this.oldestPersistentMessage = thread.oldestPersistentMessage;
@@ -420,7 +422,11 @@ export class Thread extends Component {
         }
     }
 
-    /** @param {import("models").Thread} thread */
+    /**
+     * @param {import("models").Thread} thread
+     * @returns {Boolean} true when the scroll is applied, false when the newer
+     *  messages are not rendered yet.
+     */
     applyScrollContextually(thread) {
         const olderMessages = thread.oldestPersistentMessage?.id < this.oldestPersistentMessage?.id;
         const newerMessages = thread.newestPersistentMessage?.id > this.newestPersistentMessage?.id;
@@ -449,8 +455,16 @@ export class Thread extends Component {
             let value;
             if (typeof thread.scrollTop === "string" && thread.scrollTop?.includes("bottom")) {
                 if (newerMessages && this.channel) {
-                    if (this.applyScrollContextuallyNewerChannelMessages(thread)) {
-                        return;
+                    const firstNewerMessage = this.channel.getFirstNewerMessage({
+                        from_message_id: this.newestPersistentMessage.id + 1,
+                    });
+                    if (firstNewerMessage) {
+                        const messageRef = this.messageRefs.get(firstNewerMessage.id);
+                        if (!messageRef) {
+                            return false;
+                        }
+                        this.applyScrollContextuallyNewerChannelMessages(thread, messageRef);
+                        return true;
                     }
                 }
                 value =
@@ -476,29 +490,20 @@ export class Thread extends Component {
                 });
             }
         }
+        return true;
     }
 
     /**
      * @param {import("models").Thread} thread
-     * @returns {Boolean} true when fully handled, false otherwise.
+     * @param {import("@web/core/utils/hooks").Ref} messageRef ref of the first
+     *  newer message.
      */
-    applyScrollContextuallyNewerChannelMessages(thread) {
-        const firstNewerMessage = this.channel.getFirstNewerMessage({
-            from_message_id: this.newestPersistentMessage.id + 1,
-        });
-        if (!firstNewerMessage) {
-            return false;
-        }
-        const firstNewestMessageRef = this.messageRefs.get(firstNewerMessage.id);
-        if (!firstNewestMessageRef) {
-            return false;
-        }
-        firstNewestMessageRef.el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
+    applyScrollContextuallyNewerChannelMessages(thread, messageRef) {
+        messageRef.el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
             behavior: "instant",
             block: this.props.order === "asc" ? "start" : "end",
         });
         thread.scrollTop = this.isAtBottom ? "bottom" : this.scrollableRef.el.scrollTop;
-        return true;
     }
 
     get messageFetchRouteParams() {
