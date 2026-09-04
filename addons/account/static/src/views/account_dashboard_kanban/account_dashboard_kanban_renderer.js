@@ -21,6 +21,26 @@ export class DashboardKanbanRenderer extends KanbanRenderer {
         });
     }
 
+    get coaState() {
+        const banner = this.props.list.records[0];
+        if (banner) {
+            const bannerData = JSON.parse(banner.data.kanban_dashboard);
+            return {
+                showBanner: bannerData.show_coa_banner,
+                coaName: bannerData.coa_name,
+            };
+        }
+        return { showBanner: false, coaName: "" };
+    }
+
+    async reloadCoa() {
+        const first = this.props.list.records[0];
+        if (first) {
+            await first.model.orm.call("account.journal", "action_reload_coa", [[first.resId]]);
+            await this.props.list.load();
+        }
+    }
+
     kanbanDragEnter(e) {
         this.setDragging(e.dataTransfer.types.includes("Files"));
     }
