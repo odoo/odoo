@@ -451,6 +451,39 @@ class TestRecruitment(MailCase, TransactionCase):
         res = A1.action_open_applications()
         self.assertEqual(len(res['domain'][0][2]), 3, "The list view should display 3 applications")
 
+    def test_applicant_sync_from_meeting_linked_record(self):
+        """ Test applicant_id is synchronized when the linked document is
+        added, changed or removed from a calendar event. """
+        applicant_1 = self.env['hr.applicant'].create({'partner_name': 'Applicant 1'})
+        applicant_2 = self.env['hr.applicant'].create({'partner_name': 'Applicant 2'})
+        partner = self.env['res.partner'].create({'name': 'Partner'})
+
+        meeting = self.env['calendar.event'].create({
+            'name': 'Meeting 1',
+            'start': '2026-07-01 08:00:00',
+            'stop': '2026-07-01 10:00:00',
+        })
+
+        self.assertFalse(meeting.applicant_id)
+        self.assertFalse(applicant_1.meeting_ids)
+        self.assertFalse(applicant_2.meeting_ids)
+
+        meeting.write({'res_record': f'hr.applicant,{applicant_1.id}'})
+        self.assertEqual(meeting.applicant_id, applicant_1)
+        self.assertEqual(applicant_1.meeting_ids, meeting)
+
+        meeting.write({'res_record': f'hr.applicant,{applicant_2.id}'})
+        self.assertEqual(meeting.applicant_id, applicant_2)
+        self.assertFalse(applicant_1.meeting_ids)
+        self.assertEqual(applicant_2.meeting_ids, meeting)
+
+        meeting.write({'res_record': f'res.partner,{partner.id}'})
+        self.assertFalse(meeting.applicant_id)
+        self.assertFalse(applicant_2.meeting_ids)
+
+        meeting.write({'res_record': False})
+        self.assertFalse(meeting.applicant_id)
+
     def test_applicant_modify_email_number(self):
         applicant = self.env['hr.applicant'].create({
             'partner_name': 'Mary Applicant',

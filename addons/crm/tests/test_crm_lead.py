@@ -638,7 +638,7 @@ class TestCRMLead(TestCrmCommon):
                 'stop': '2022-07-13 10:00:00',
             }
         ])
-        self.assertEqual(len(lead.calendar_event_ids), 1)
+        self.assertEqual(len(lead.calendar_event_ids), 2)
         self.assertEqual(meetings.opportunity_id, lead)
         self.assertEqual(meetings.mapped('res_id'), [lead.id, lead.id])
         self.assertEqual(meetings.mapped('res_model'), ['crm.lead', 'crm.lead'])
@@ -647,6 +647,36 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(meetings.opportunity_id)
         self.assertEqual(set(meetings.mapped('res_id')), set([0]))
         self.assertEqual(set(meetings.mapped('res_model')), set([False]))
+
+    @users('user_sales_manager')
+    def test_crm_lead_sync_opportunity_from_meeting_linked_record(self):
+        """ Test opportunity_id is synchronized when the linked document is
+        added, changed or removed from a calendar event. """
+        lead_1 = self.env['crm.lead'].create({'name': 'Lead 1'})
+        lead_2 = self.env['crm.lead'].create({'name': 'Lead 2'})
+        meeting = self.env['calendar.event'].create({
+            'name': 'Meeting 1',
+            'start': '2026-07-01 08:00:00',
+            'stop': '2026-07-01 10:00:00',
+        })
+        self.assertFalse(meeting.opportunity_id)
+
+        meeting.write({'res_record': f'crm.lead,{lead_1.id}'})
+        self.assertEqual(meeting.opportunity_id, lead_1)
+        self.assertEqual(lead_1.calendar_event_ids, meeting)
+
+        meeting.write({'res_record': f'crm.lead,{lead_2.id}'})
+        self.assertEqual(meeting.opportunity_id, lead_2)
+        self.assertFalse(lead_1.calendar_event_ids)
+        self.assertEqual(lead_2.calendar_event_ids, meeting)
+
+        partner = self.env['res.partner'].create({'name': 'Partner'})
+        meeting.write({'res_record': f'res.partner,{partner.id}'})
+        self.assertFalse(meeting.opportunity_id)
+        self.assertFalse(lead_2.calendar_event_ids)
+
+        meeting.write({'res_record': False})
+        self.assertFalse(meeting.opportunity_id)
 
     @users('user_sales_leads')
     def test_crm_lead_update_contact(self):

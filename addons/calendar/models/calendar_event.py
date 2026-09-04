@@ -450,6 +450,17 @@ class CalendarEvent(models.Model):
             event.res_model_id = self.env['ir.model']._get_id(event.res_record._name)
             event.res_id = event.res_record.id
 
+    def _sync_linked_document(self):
+        """Method for modules that need to synchronize data when the linked document changes."""
+        return
+
+    def _sync_linked_model_field(self, model_name, field_name):
+        for event in self:
+            for event in self:
+                value = event.res_id if event.res_model == model_name else False
+                if event[field_name].id != value:
+                    event[field_name] = value
+
     @api.depends('start', 'duration')
     def _compute_stop(self):
         # stop and duration fields both depends on the start field.
@@ -945,6 +956,9 @@ class CalendarEvent(models.Model):
         else:
             super().write(values)
             self._sync_activities(fields=values.keys())
+
+            if {'res_record'} & values.keys():
+                self._sync_linked_document()
 
         # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
         if recurrence_update_setting not in ['self_only', 'all_events'] and not future_edge_case and not break_recurrence:

@@ -35,6 +35,10 @@ class CalendarEvent(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         events = super().create(vals_list)
+        for event in events:
+            if not event.applicant_id and event.res_id and event.res_model == 'hr.applicant':
+                event.applicant_id = event.res_id
+
         if not self.env['hr.applicant'].has_access('read'):
             return events
 
@@ -59,3 +63,8 @@ class CalendarEvent(models.Model):
             for event in self:
                 if event.applicant_id.id == applicant_id:
                     event.is_highlighted = True
+
+    def _sync_linked_document(self):
+        super()._sync_linked_document()
+
+        self._sync_linked_model_field('hr.applicant', 'applicant_id')
