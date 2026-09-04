@@ -30,6 +30,7 @@ class Cart(PaymentPortal):
             return request.redirect("/web/login")
 
         order_sudo = request.cart
+        cart_revived = False
 
         values = {}
         if id and access_token:
@@ -44,9 +45,11 @@ class Cart(PaymentPortal):
                 request.session["sale_order_id"] = abandoned_order.id
                 request.cart = abandoned_order
                 order_sudo = abandoned_order
+                cart_revived = True
             elif abandoned_order.id != request.session.get("sale_order_id"):
                 abandoned_order.order_line.write({"order_id": request.session["sale_order_id"]})
                 abandoned_order.action_cancel()
+                cart_revived = True
 
         values.update({
             "website_sale_order": order_sudo,
@@ -54,9 +57,7 @@ class Cart(PaymentPortal):
             "suggested_products": [],
         })
         if order_sudo:
-            order_sudo.order_line.filtered(
-                lambda sol: sol.product_id and not sol.product_id.active
-            ).unlink()
+            order_sudo._verify_cart(force_update_checks=cart_revived)
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
             if self.env.website.google_analytics_key:

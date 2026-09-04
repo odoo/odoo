@@ -30,3 +30,11 @@ class SaleOrderLine(models.Model):
             self.product_id.service_tracking != 'event' and
             self.linked_line_id.product_id.service_tracking != 'event'
         )
+
+    def _must_drop_from_cart(self):
+        """Override of `website_sale` to keep ticket lines and their additional products, as
+        event products are never published on the shop.
+        """
+        return super()._must_drop_from_cart() and not (
+            self.event_ticket_id or self.linked_line_id.event_ticket_id
+        )
