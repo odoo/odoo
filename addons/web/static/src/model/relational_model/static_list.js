@@ -828,6 +828,7 @@ export class StaticList extends DataPoint {
             virtualId: getId("virtual"),
             activeFields: params.activeFields,
             manuallyAdded: params.manuallyAdded,
+            context: Object.assign({}, this.context, params.context),
         });
     }
 
@@ -838,7 +839,7 @@ export class StaticList extends DataPoint {
         }
         const id = resId || params.virtualId;
         const config = {
-            context: this.context,
+            context: params.context || this.context,
             activeFields: Object.assign({}, params.activeFields || this.activeFields),
             resModel: this.resModel,
             fields: params.fields || this.fields,
@@ -933,16 +934,22 @@ export class StaticList extends DataPoint {
             records.map(async () =>
                 this._createNewRecordDatapoint({
                     mode: "readonly",
+                    context: { ...this.config.context, ...(options.context || {}) },
                 })
             )
         );
         await Promise.all(
-            records.map((record, index) =>
-                newRecords[index]._update({
+            records.map(async (record, index) => {
+                await newRecords[index]._update({
                     ...copyRecordData(record, copyFields),
                     [this.handleField]: sequence++,
-                })
-            )
+                });
+                if (options.context) {
+                    for (const key in options.context) {
+                        delete newRecords[index].config.context[key];
+                    }
+                }
+            })
         );
 
         const localIncreaseLimit = this.records.length + records.length - this.limit;

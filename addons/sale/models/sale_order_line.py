@@ -1317,6 +1317,8 @@ class SaleOrderLine(models.Model):
     def _onchange_product_id(self):
         if not self.product_id:
             return
+        if self.env.context.get('is_duplicating_line'):
+            return
         self._reset_price_unit()
 
     #=== CRUD METHODS ===#

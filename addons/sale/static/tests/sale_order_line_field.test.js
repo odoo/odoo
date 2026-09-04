@@ -7,6 +7,7 @@ import {
     defineModels,
     fields,
     mountView,
+    onRpc,
 } from '@web/../tests/web_test_helpers';
 import { defineComboModels } from '@product/../tests/product_combo_test_helpers';
 import { saleModels } from './sale_test_helpers';
@@ -73,11 +74,11 @@ test("test combo move up/down", async () => {
         "Non Combo Line1",
         "Non Combo Line2",
         "Test Combo1",
-            "Combo1 Item 1",
-            "Combo1 Item 2",
+        "Combo1 Item 1",
+        "Combo1 Item 2",
         "Test Combo2",
-            "Combo2 Item 1",
-            "Combo2 Item 2",
+        "Combo2 Item 1",
+        "Combo2 Item 2",
         "Non Combo Line3",
     ]);
 
@@ -115,14 +116,14 @@ test("test combo move up/down", async () => {
 
     expect(queryAllTexts('.o_data_row')).toEqual([
         "Test Combo1",
-            "Combo1 Item 1",
-            "Combo1 Item 2",
+        "Combo1 Item 1",
+        "Combo1 Item 2",
         "Non Combo Line1",
         "Non Combo Line2",
         "Non Combo Line3",
         "Test Combo2",
-            "Combo2 Item 1",
-            "Combo2 Item 2",
+        "Combo2 Item 1",
+        "Combo2 Item 2",
     ], {
         message: 'Test combo1 line should be moved up two lines and Test combo2 line should be moved down one line'
     });
@@ -133,11 +134,11 @@ test("test combo move up/down", async () => {
         "Non Combo Line1",
         "Non Combo Line2",
         "Test Combo1",
-            "Combo1 Item 1",
-            "Combo1 Item 2",
+        "Combo1 Item 1",
+        "Combo1 Item 2",
         "Test Combo2",
-            "Combo2 Item 1",
-            "Combo2 Item 2",
+        "Combo2 Item 1",
+        "Combo2 Item 2",
         "Non Combo Line3",
     ]);
 
@@ -148,11 +149,11 @@ test("test combo move up/down", async () => {
         "Non Combo Line1",
         "Non Combo Line2",
         "Test Combo2",
-            "Combo2 Item 1",
-            "Combo2 Item 2",
+        "Combo2 Item 1",
+        "Combo2 Item 2",
         "Test Combo1",
-            "Combo1 Item 1",
-            "Combo1 Item 2",
+        "Combo1 Item 1",
+        "Combo1 Item 2",
         "Non Combo Line3",
     ], {
         message: 'Test combo1 and Test combo2 should be swapped when moving Test combo1 down'
@@ -167,11 +168,11 @@ test("test combo move up/down", async () => {
         "Non Combo Line1",
         "Non Combo Line2",
         "Test Combo2",
-            "Combo2 Item 1",
-            "Combo2 Item 2",
+        "Combo2 Item 1",
+        "Combo2 Item 2",
         "Test Combo1",
-            "Combo1 Item 1",
-            "Combo1 Item 2",
+        "Combo1 Item 1",
+        "Combo1 Item 2",
         "Non Combo Line3",
     ], {
         message: 'Test combo1 and Test combo2 should be swapped when moving Test combo2 up'
@@ -222,11 +223,11 @@ test("Test combo columns", async () => {
         "Non Combo Line1",
         "Non Combo Line2",
         "Test Combo1",
-            "Combo1 Item 1",
-            "Combo1 Item 2",
+        "Combo1 Item 1",
+        "Combo1 Item 2",
         "Test Combo2",
-            "Combo2 Item 1",
-            "Combo2 Item 2",
+        "Combo2 Item 1",
+        "Combo2 Item 2",
         "Non Combo Line3",
     ]);
 
@@ -249,3 +250,66 @@ test("Test combo columns", async () => {
         message: 'Non-combo line should have all columns'
     });
 })
+
+test("Test duplicate section with modified price", async () => {
+    SaleOrderLine._fields.price_unit = fields.Float({ default: 10.00 });
+    SaleOrderLine._records = [
+        { id: 1, name: "Section A", display_type: "line_section", sequence: 1 },
+        { id: 2, name: "Product Line", product_id: 1, price_unit: 99.00, sequence: 2 },
+    ];
+
+    const onchangeContexts = [];
+    onRpc("onchange", ({ model, kwargs }) => {
+        if (model === "sale.order.line") {
+            onchangeContexts.push(kwargs.context);
+        }
+    });
+
+    await mountView({
+        type: 'form',
+        resModel: 'sale.order',
+        resId: 1,
+        arch: `
+            <form>
+                <field
+                    name="order_line"
+                    widget="sol_o2m"
+                    options="{'subsections': True}"
+                >
+                    <list editable="bottom">
+                        <control>
+                            <create name="add_line_control" string="Add a line"/>
+                            <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                        </control>
+                        <field name="sequence" widget="handle"/>
+                        <field name="name"/>
+                        <field name="price_unit"/>
+                        <field name="display_type" column_invisible="1"/>
+                        <field name="product_id" column_invisible="1"/>
+                        <field name="product_type" column_invisible="1"/>
+                        <field name="combo_item_id" column_invisible="1"/>
+                        <field name="linked_line_id" column_invisible="1"/>
+                    </list>
+                </field>
+            </form>
+        `,
+    });
+
+    expect(queryAllTexts('.o_data_row')).toEqual(["Section A", "Product Line 99.00"]);
+
+    await contains('.o_data_row:contains(Section A) .o_list_section_options button').click();
+    await contains('.o-dropdown-item:contains(Duplicate)').click();
+
+    expect(queryAllTexts('.o_data_row')).toEqual([
+        "Section A",
+        "Product Line 99.00",
+        "Section A",
+        "Product Line 99.00",
+    ], { message: 'Section and its line should both be duplicated' });
+
+
+    const duplicationContexts = onchangeContexts.filter(ctx => ctx?.is_duplicating_line);
+    expect(duplicationContexts.length).toBeGreaterThan(0, {
+        message: 'is_duplicating_line should be present in sale.order.line onchange context during duplication'
+    });
+});
