@@ -28,11 +28,12 @@ class StockPicking(models.Model):
         default=lambda self: str(uuid.uuid4()),
     )
     l10n_tr_nilvera_dispatch_type = fields.Selection(
-        string="Dispatch Type",
-        help="Used to populate the type of dispatch.",
+        string="Dispatch Handling",
+        help="Used to populate the type of dispatch. 'Invoice Serves as e-Dispatch' is only applicable for e-Archive Customers.",
         selection=[
             ('SEVK', "Online"),
             ('MATBUDAN', "Pre-printed"),
+            ('IS_DESPATCH', "Invoice Serves as e-Dispatch"),
         ],
         default='SEVK',
         tracking=True,
@@ -270,27 +271,28 @@ class StockPicking(models.Model):
                 'level': 'danger',
             }
 
-        if (
-            not self.l10n_tr_nilvera_carrier_id
-            and not self.l10n_tr_nilvera_driver_ids
-            and not self.l10n_tr_vehicle_plate
-        ):
-            error_messages['required_carrier_details'] = {
-                'message': _("Carrier is required (optional when both the Driver and Vehicle Plate are filled)."),
-                'level': 'danger',
-            }
+        if self.l10n_tr_nilvera_dispatch_type != 'IS_DESPATCH':
+            if (
+                not self.l10n_tr_nilvera_carrier_id
+                and not self.l10n_tr_nilvera_driver_ids
+                and not self.l10n_tr_vehicle_plate
+            ):
+                error_messages['required_carrier_details'] = {
+                    'message': _("Carrier is required (optional when both the Driver and Vehicle Plate are filled)."),
+                    'level': 'danger',
+                }
 
-        elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_nilvera_driver_ids:
-            error_messages['required_driver_details'] = {
-                'message': _("At least one Driver is required."),
-                'level': 'danger',
-            }
+            elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_nilvera_driver_ids:
+                error_messages['required_driver_details'] = {
+                    'message': _("At least one Driver is required."),
+                    'level': 'danger',
+                }
 
-        elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_vehicle_plate:
-            error_messages['required_vehicle_details'] = {
-                'message': _("Vehicle Plate is required."),
-                'level': 'danger',
-            }
+            elif not self.l10n_tr_nilvera_carrier_id and not self.l10n_tr_vehicle_plate:
+                error_messages['required_vehicle_details'] = {
+                    'message': _("Vehicle Plate is required."),
+                    'level': 'danger',
+                }
 
         return error_messages or False
 
