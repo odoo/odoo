@@ -249,16 +249,15 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         })
         self._create_move(10, 100, self.today, self.supplier_loc, self.stock_loc)
         self._run_category_wizard()
-        first_cost = self.product.standard_price
-        self.assertAlmostEqual(first_cost, (100 * 80 + 10 * 100) / 110, places=2)
-        # the second period opens on the cost the first one produced; if that
+        self.assertAlmostEqual(self.product.standard_price, (100 * 80 + 10 * 100) / 110, places=2)
+        # the second period opens on the 81.82 the first one produced; if that
         # cost were dated at the run time instead, the stale 80 would win
         self._create_move(10, 200, self.today + timedelta(days=1), self.supplier_loc, self.stock_loc)
         self._run_category_wizard(
             date_from=self.today + timedelta(days=1),
             date_to=self.today + timedelta(days=2),
         )
-        self.assertAlmostEqual(self.product.standard_price, (110 * first_cost + 10 * 200) / 120, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (110 * 81.82 + 10 * 200) / 120, places=2)
 
     def test_inventory_adjustments_ignored(self):
         self._add_opening_stock()
@@ -340,14 +339,12 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self.assertNotEqual(foreign_currency, company_currency)
         self.env['res.currency.rate'].create({'name': self.today - timedelta(days=1), 'rate': 2, 'currency_id': foreign_currency.id})
         self.env['res.currency.rate'].create({'name': self.today + timedelta(days=1), 'rate': 4, 'currency_id': foreign_currency.id})
-        line = self._create_po_line(foreign_currency, 10, 125)
-        self._create_move(10, 125, self.today + timedelta(days=2), self.supplier_loc, self.stock_loc, line.id)
         receipt_date = self.today + timedelta(days=2)
-        expected_purchase_val = foreign_currency._convert(10 * 125, company_currency, self.env.company, receipt_date)
-        self.assertNotAlmostEqual(expected_purchase_val, foreign_currency._convert(10 * 125, company_currency, self.env.company, self.today))
+        line = self._create_po_line(foreign_currency, 10, 125)
+        self._create_move(10, 125, receipt_date, self.supplier_loc, self.stock_loc, line.id)
         self._add_opening_stock()
         self._run_category_wizard(date_to=receipt_date)
-        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + expected_purchase_val) / 110, places=2)
+        self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 125 / 4) / 110, places=2)
 
     def test_supplier_return_period_start(self):
         purchase = self._create_move(10, 150, self.today - timedelta(days=2), self.supplier_loc, self.stock_loc)
