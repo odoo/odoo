@@ -408,6 +408,30 @@ class TestEventData(TestEventInternalsCommon):
         )
 
     @users('user_eventmanager')
+    def test_event_configuration_ticket_translations_from_type(self):
+        self.env['res.lang'].sudo()._activate_lang('fr_FR')
+        event_type = self.env['event.type'].create({
+            'name': 'Type Tickets',
+            'event_type_ticket_ids': [Command.create({
+                'name': 'Default Ticket',
+            })],
+        })
+        template_ticket = event_type.event_type_ticket_ids
+        template_ticket.with_context(lang='fr_FR').name = 'French name'
+        event_create = self.env['event.event'].create({
+            'name': 'Event',
+            'event_type_id': event_type.id,
+        })
+        self.event_0.write({'event_type_id': event_type.id})
+
+        # Ensure ticket translations are copied from the template on both create and write.
+        for event in (event_create, self.event_0):
+            self.assertEqual(
+                event.event_ticket_ids._fields['name']._get_stored_translations(event.event_ticket_ids),
+                template_ticket._fields['name']._get_stored_translations(template_ticket),
+            )
+
+    @users('user_eventmanager')
     def test_event_mail_default_config(self):
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
