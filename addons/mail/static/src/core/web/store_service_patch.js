@@ -58,7 +58,7 @@ const StorePatch = {
         this.messagingMenuSystrayState = this.computed(
             () =>
                 this.MessagingMenuUIState.get("mail.systray") ??
-                this.MessagingMenuUIState.insert({ id: "mail.systray", activeTab: MENU_TABS.CHATS })
+                this.MessagingMenuUIState.insert({ id: "mail.systray", activeTab: MENU_TABS.CHAT })
         );
     },
     initialize() {
