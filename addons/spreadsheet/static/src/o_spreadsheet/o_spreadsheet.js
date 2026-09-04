@@ -53936,7 +53936,7 @@ var CompilationParametersBuilder = class {
 		if (rangeError) return [[rangeError]];
 		const sheetId = range.sheetId;
 		const zone = range.zone;
-		const _zone = intersection(zone, this.getters.getSheetZone(sheetId));
+		const _zone = this.getters.clipRangeToSheet(range)?.zone;
 		if (!_zone) return [[]];
 		const { top, left, bottom, right } = zone;
 		const cacheKey = `${sheetId}-${top}-${left}-${bottom}-${right}`;
@@ -54903,10 +54903,10 @@ var Evaluator = class {
 	updateDependencies(position) {
 		this.formulaDependencies().removeAllDependencies(position);
 		const dependencies = this.getDirectDependencies(position);
-		this.formulaDependencies().addDependencies(position, dependencies);
+		this.formulaDependencies().addDependencies(position, this.getters.clipRangesToSheet(dependencies));
 	}
 	addDependencies(position, dependencies) {
-		this.formulaDependencies().addDependencies(position, dependencies);
+		this.formulaDependencies().addDependencies(position, this.getters.clipRangesToSheet(dependencies));
 		this.computeDependencies(dependencies);
 	}
 	computeDependencies(dependencies) {
@@ -54968,7 +54968,8 @@ var Evaluator = class {
 			const graph = new FormulaDependencyGraph();
 			for (const sheetId of this.getters.getSheetIds()) for (const cell of this.getters.getCells(sheetId)) if (cell.isFormula) {
 				const cellPosition = this.getters.getCellPosition(cell.id);
-				graph.addDependencies(cellPosition, cell.compiledFormula.rangeDependencies);
+				const dependencies = this.getters.clipRangesToSheet(cell.compiledFormula.rangeDependencies);
+				graph.addDependencies(cellPosition, dependencies);
 			}
 			return graph;
 		});
@@ -70656,6 +70657,8 @@ var RangeAdapterPlugin = class {
 		"extendRange",
 		"getRangeString",
 		"getRangeFromSheetXC",
+		"clipRangesToSheet",
+		"clipRangeToSheet",
 		"createAdaptedRanges",
 		"getRangeData",
 		"getRangeDataFromXc",
@@ -70693,6 +70696,22 @@ var RangeAdapterPlugin = class {
 	*/
 	addRangeProvider(provider) {
 		this.providers.push(provider);
+	}
+	clipRangeToSheet(range) {
+		if (range.invalidXc) return range;
+		const sheetZone = this.getters.getSheetZone(range.sheetId);
+		if (isZoneInside(range.zone, sheetZone)) return range;
+		const newZone = intersection(range.zone, sheetZone);
+		if (!newZone) return;
+		return this.getters.getRangeFromZone(range.sheetId, newZone);
+	}
+	clipRangesToSheet(ranges) {
+		const clippedRanges = [];
+		for (const range of ranges) {
+			const clippedRange = this.clipRangeToSheet(range);
+			if (clippedRange) clippedRanges.push(clippedRange);
+		}
+		return clippedRanges;
 	}
 	createAdaptedRanges(ranges, offsetX, offsetY, sheetId) {
 		return ranges.map((range) => {
@@ -73877,6 +73896,8 @@ var Model = class Model extends EventBus {
 		this.range = new RangeAdapterPlugin(this.coreGetters);
 		this.coreGetters.getRangeString = this.range.getRangeString.bind(this.range);
 		this.coreGetters.getRangeFromSheetXC = this.range.getRangeFromSheetXC.bind(this.range);
+		this.coreGetters.clipRangesToSheet = this.range.clipRangesToSheet.bind(this.range);
+		this.coreGetters.clipRangeToSheet = this.range.clipRangeToSheet.bind(this.range);
 		this.coreGetters.createAdaptedRanges = this.range.createAdaptedRanges.bind(this.range);
 		this.coreGetters.getRangeData = this.range.getRangeData.bind(this.range);
 		this.coreGetters.getRangeDataFromXc = this.range.getRangeDataFromXc.bind(this.range);
