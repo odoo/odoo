@@ -260,9 +260,19 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return [
+<<<<<<< 589d1ea28ffee3ef80430776f5d65e0580cb88c6
             self.env["website"].image_url(extra_image, "image_1920")
             for extra_image in self._get_all_extra_images_to_display()
             if extra_image.image_128  # only images, no video urls
+||||||| d6e8d01d82c772676be8da48df9ca5fa7b21bca8
+            self.env['website'].image_url(extra_image, 'image_1920')
+            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            if extra_image.image_128  # only images, no video urls
+=======
+            self.env['website'].image_url(extra_image, 'image_1920')
+            for extra_image in self.product_variant_image_ids + self.product_template_image_ids
+            if not extra_image.video_url  # only images, no video thumbnails
+>>>>>>> 4348454f18ccdf98fd5e88c8c2d72e426216cb3b
         ]
 
     def _get_all_extra_images_to_display(self):
