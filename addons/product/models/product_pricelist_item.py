@@ -565,6 +565,22 @@ class ProductPricelistItem(models.Model):
         uom = uom or product._get_main_uom()
         uom.ensure_one()
 
+        if self.compute_price == 'fixed':
+            price = product.uom_id._compute_price(self.fixed_price, uom)
+
+            if self.applied_on == '0_product_variant':
+                # If a fixed price was defined for a specific variant, only extra prices from
+                # no variant attributes have to be considered.
+                extra_price = self.env.context.get('no_variant_attributes_price_extra', 0)
+            else:
+                # Variant -> add variant extra price + no_variant attributes extra price
+                # Template -> add extra prices from selected combination (if any)
+                extra_price = product._get_attributes_extra_price()
+            extra_price = product.uom_id._compute_price(extra_price, uom)
+            extra_price = self._convert_price(extra_price, product.currency_id, **kwargs)
+
+            return price + extra_price
+
         base_price = self._compute_base_price(product, quantity, uom, **kwargs)
         if self.compute_price in ('discount', 'markup'):
             product_uom = product.uom_id
@@ -590,7 +606,7 @@ class ProductPricelistItem(models.Model):
         return price
 
     def _compute_base_price(
-        self, product, quantity, uom, *, currency=None, date=False, depth=0, base_prices=None, **kwargs
+        self, product, quantity, uom, *, currency=None, depth=0, base_prices=None, **kwargs
     ):
         """Compute the base price for a given rule.
 
@@ -604,25 +620,6 @@ class ProductPricelistItem(models.Model):
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
-        if self.compute_price == 'fixed':
-            price = product.uom_id._compute_price(self.fixed_price, uom)
-            if product.is_product_variant and self.applied_on == '0_product_variant':
-                # If a fixed price was defined for a specific variant, only extra prices from
-                # no variant attributes have to be considered.
-                attrs_extra_price = self.env.context.get('no_variant_attributes_price_extra', 0)
-            else:
-                # Product is a variant -> add variant extra price + no_variant attributes extra price
-                # Product is a template -> add extra prices from selected combination (if any)
-                attrs_extra_price = product._get_attributes_extra_price()
-
-            extra_price = product.uom_id._compute_price(attrs_extra_price, uom)
-            currency = kwargs.get('currency') or self.currency_id or self.env.company.currency_id
-            if product.currency_id != currency:
-                extra_price = product.currency_id._convert(
-                    extra_price, currency, date=kwargs.get('date', False), round=False,
-                )
-            return price + extra_price
-
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
             if base_prices:
@@ -633,7 +630,6 @@ class ProductPricelistItem(models.Model):
                     quantity,
                     currency=self.base_pricelist_id.currency_id,
                     uom=uom,
-                    date=date,
                     depth=depth + 1,
                     **kwargs,
                 )
@@ -645,11 +641,13 @@ class ProductPricelistItem(models.Model):
             src_currency = product.currency_id
             price = product._price_compute(rule_base, uom=uom)[product.id]
 
+        return self._convert_price(price, src_currency, currency=currency, **kwargs)
+
+    def _convert_price(self, price, src_currency, *, currency=None, date=False, **_):
         currency = currency or self.currency_id or self.env.company.currency_id
         currency.ensure_one()
         if src_currency != currency:
             price = src_currency._convert(price, currency, date=date, round=False)
-
         return price
 
     def _compute_price_before_discount(self, *args, **kwargs):

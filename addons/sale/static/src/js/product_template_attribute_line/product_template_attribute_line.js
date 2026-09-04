@@ -26,6 +26,7 @@ export class ProductTemplateAttributeLine extends Component {
                 image: t.or([t.boolean(), t.string()]), // backend sends 'false' when there is no image set
                 is_custom: t.boolean(),
                 price_extra: t.number(),
+                show_extra_price: t.boolean(),
                 excluded: t.boolean().optional(),
             })
         ),

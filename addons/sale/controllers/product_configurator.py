@@ -371,6 +371,13 @@ class SaleProductConfiguratorController(Controller):
                                 if show_price
                                 else 0.0
                             ),
+                            show_extra_price=(
+                                product_template._get_ptav_show_extra_price(
+                                    ptav, combination, pricelist, quantity, so_date
+                                )
+                                if show_price
+                                else True
+                            ),
                         )
                         for ptav in ptal.product_template_value_ids
                         if ptav.ptav_active or (combination and ptav.id in combination.ids)

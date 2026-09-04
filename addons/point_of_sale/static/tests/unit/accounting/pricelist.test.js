@@ -276,6 +276,32 @@ test("Pricelist: fixed price rule still adds attribute extra price", async () =>
     expect(product.getPrice(pricelist, 1, 15, false, product)).toBe(105);
 });
 
+test("Pricelist: fixed price rule targeting a specific variant only adds no_variant extra price", async () => {
+    const store = await setupPosEnv();
+    const pricelist = store.models["product.pricelist"].create({
+        name: "Fixed Price Pricelist",
+    });
+
+    const productTemplate = store.models["product.template"].create({
+        name: "Test Template",
+        list_price: 100,
+    });
+    const product = store.models["product.product"].create({
+        product_tmpl_id: productTemplate,
+        lst_price: 150, // 100 (list_price) + 50 (variant's own attribute extra)
+    });
+
+    const rule = store.models["product.pricelist.item"].create({
+        pricelist_id: pricelist,
+        product_id: product,
+        compute_price: "fixed",
+        fixed_price: 90,
+    });
+    pricelist.update({ item_ids: [rule] });
+
+    expect(product.getPrice(pricelist, 1, 15, false, product)).toBe(105);
+});
+
 test("Pricelist: fixed price with currency conversion still adds attribute extra price", async () => {
     const store = await setupPosEnv();
 
