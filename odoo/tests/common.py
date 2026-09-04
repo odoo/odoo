@@ -1505,22 +1505,23 @@ class ChromeBrowser:
         try:
             yield proc, devtools_port
         finally:
-            self._logger.info("Terminating chrome headless with pid %s", proc.pid)
-            main = psutil.Process(proc.pid)
-            procs = [main] + main.children(recursive=True)
-            proc.terminate()
-            _, alive = psutil.wait_procs(procs, 5)
-            if alive:  # can't early exit, it suppresses the finally'd exception if any
-                self._logger.warning(
-                    "Killing chrome descendants-or-self of %s: %d remaining%s",
-                    proc.pid,
-                    len(alive),
-                    "".join(f"\n- {p.name()} ({p.status()})" for p in alive),
-                )
-                for p in alive:
-                    p.kill()
-                psutil.wait_procs(alive, 1)
-                self.chrome_log_level = logging.RUNBOT
+            if proc.poll() is None:
+                self._logger.info("Terminating chrome headless with pid %s", proc.pid)
+                main = psutil.Process(proc.pid)
+                procs = [main] + main.children(recursive=True)
+                proc.terminate()
+                _, alive = psutil.wait_procs(procs, 5)
+                if alive:  # can't early exit, it suppresses the finally'd exception if any
+                    self._logger.warning(
+                        "Killing chrome descendants-or-self of %s: %d remaining%s",
+                        proc.pid,
+                        len(alive),
+                        "".join(f"\n- {p.name()} ({p.status()})" for p in alive),
+                    )
+                    for p in alive:
+                        p.kill()
+                    psutil.wait_procs(alive, 1)
+                    self.chrome_log_level = logging.RUNBOT
 
     def read_log(self) -> bytes:
         try:
@@ -1626,10 +1627,16 @@ class ChromeBrowser:
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
-            except websocket.WebSocketConnectionClosedException as e:
+            except (websocket.WebSocketConnectionClosedException, ConnectionResetError):
                 if not self._result.done():
                     del self.ws
-                    self._result.set_exception(e)
+                    try:
+                        status = "exit status %s" % self.chrome.wait(5)
+                    except subprocess.TimeoutExpired:
+                        status = "still running"
+                    self._result.set_exception(
+                        ChromeBrowserException("Lost connection to browser: %s" % status),
+                    )
                     while True:
                         try:
                             _, f = self._responses.popitem()
@@ -1639,8 +1646,6 @@ class ChromeBrowser:
                             f.cancel()
                 return
             except Exception as e:
-                if isinstance(e, ConnectionResetError) and self._result.done():
-                    return
                 # if the socket is still connected something bad happened,
                 # otherwise the client was just shut down
                 if self.ws.connected:
@@ -1909,10 +1914,16 @@ which leads to stray network requests and inconsistencies."""
         self.error_checker = error_checker
         self._logger.info('Evaluate test code "%s"', code)
         start = time.time()
-        res = self._websocket_request('Runtime.evaluate', params={
-            'expression': code,
-            'awaitPromise': True,
-        }, timeout=timeout)['result']
+        try:
+            res = self._websocket_request('Runtime.evaluate', params={
+                'expression': code,
+                'awaitPromise': True,
+            }, timeout=timeout)['result']
+        except CancelledError:
+            exc = self._result.done() and self._result.exception()
+            if exc:
+                raise exc from None
+            raise
         if res.get('subtype') == 'error':
             raise ChromeBrowserException("Running code returned an error: %s" % res)
 
@@ -1938,7 +1949,7 @@ which leads to stray network requests and inconsistencies."""
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
-        raise ChromeBrowserException("Unknown error") from err
+        raise ChromeBrowserException("Unknown error: %r" % err) from err
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
