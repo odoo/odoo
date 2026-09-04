@@ -284,6 +284,13 @@ describe('Format', () => {
                 });
             });
         });
+        it('should not format selection', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1 id="o_wblog_post_name" class="o_editable_no_shadow o_editable" data-oe-expression="blog_post.name" placeholder="Blog Post Title" data-blog-id="3" data-oe-model="blog.post" data-oe-id="3" data-oe-field="name" data-oe-type="char" contenteditable="true">How to choose the [right] hotel</h1>',
+                stepFunction: bold,
+                contentAfter: '<h1 id="o_wblog_post_name" class="o_editable_no_shadow o_editable" data-oe-expression="blog_post.name" placeholder="Blog Post Title" data-blog-id="3" data-oe-model="blog.post" data-oe-id="3" data-oe-field="name" data-oe-type="char" contenteditable="true">How to choose the [right] hotel</h1>',
+            });
+        });
     });
     describe('bold and italic inside container already bold', () => {
         it('should remove the redundant strong style and add span with a bolder font-weight', async () => {
