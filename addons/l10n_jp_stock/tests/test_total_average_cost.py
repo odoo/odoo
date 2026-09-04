@@ -101,6 +101,7 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
                 'quantity': 10,
                 'price_unit': 150,
                 'purchase_line_id': line.id,
+                'tax_ids': [],
             })],
         })
         bill.action_post()

@@ -14,6 +14,7 @@ class TestTotalAverageCostCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.account_fiscal_country_id = cls.env.ref('base.jp')
         cls.today = fields.Date.from_string('2026-01-15')
         cls.category = cls.env['product.category'].create({'name': 'JP Test Category', 'property_cost_method': 'standard'})
         cls.product = cls.env['product.product'].create({'name': 'JP Test Product', 'categ_id': cls.category.id, 'standard_price': 100, 'is_storable': True})
