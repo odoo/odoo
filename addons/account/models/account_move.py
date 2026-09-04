@@ -4116,6 +4116,20 @@ class AccountMove(models.Model):
                     invoice_line[2] = dict(sorted(invoice_line[2].items(), key=lambda item: item[0] != 'product_id'))
         return super().onchange(values, field_names, fields_spec)
 
+    @api.model
+    def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None):
+        if order:
+            order_items = order.split(',')
+            new_order_items = []
+            for item in order_items:
+                if 'amount_total_in_currency_signed' in item:
+                    item = item.replace('amount_total_in_currency_signed', 'amount_total_signed')
+                elif 'amount_untaxed_in_currency_signed' in item:
+                    item = item.replace('amount_untaxed_in_currency_signed', 'amount_untaxed_signed')
+                new_order_items.append(item)
+            order = ','.join(new_order_items)
+        return super()._read_group(domain, groupby, aggregates, having, offset, limit, order)
+
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
