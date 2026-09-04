@@ -4,6 +4,7 @@ import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 import { animationFrame } from "@odoo/hoot-dom";
+import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
 
 definePosSelfModels();
 
@@ -79,4 +80,19 @@ test("getPrice", async () => {
     // For combo parent line
     const parentLine = await addComboProduct(store);
     expect(comp.getPrice(parentLine)).toBe(2125);
+});
+
+test("slots at capacity are unavailable in self order", async () => {
+    const store = await setupSelfPosEnv();
+    store.config.company_id.country_id.state_ids = [];
+    const preset = store.models["pos.preset"].get(2);
+    preset.slots_per_interval = 1;
+
+    const order = await getFilledSelfOrder(store);
+    order.preset_id = preset;
+    order.partner_id = false;
+
+    await mountWithCleanup(CartPage, {});
+    await Utils.clickCartButton("Order");
+    await Utils.checkSlotDisabled("12:00");
 });
