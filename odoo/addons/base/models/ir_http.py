@@ -86,6 +86,9 @@ class AuthRequirements(typing.TypedDict, total=False):
     using the device fingerprint alone.
     """
 
+    log_reason: str
+    """Message to be logged if ``logout`` or ``check_identity`` is ``True``."""
+
 
 class CheckIdentityResult(typing.TypedDict, total=False):
     auth_methods: list[str]
@@ -405,9 +408,14 @@ class IrHttp(models.AbstractModel):
             and request.session.uid is not None
             and (must_check_identity := cls._must_check_identity())
         ):
+            log_reason = must_check_identity.get('log_reason')
             if must_check_identity.get('logout'):
+                if log_reason:
+                    _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                 raise SessionExpiredException(f'User {request.session.uid} needs to login again')
             if must_check_identity.get('check_identity') and routing.get('check_identity', True):
+                if log_reason:
+                    _logger.info("User %r (uid: %s): %s", request.session.login, request.session.uid, log_reason)
                 raise CheckIdentityException(f'User {request.session.uid} needs to confirm his identity')
 
     @classmethod
