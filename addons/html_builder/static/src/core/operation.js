@@ -51,6 +51,8 @@ export class Operation {
     constructor(editableDocument = document) {
         this.mutex = new OperationMutex();
         this.editableDocument = editableDocument;
+        this.loadingScreenCount = 0;
+        this.loadingScreenBlockStatuses = [];
     }
 
     /**
@@ -165,15 +167,34 @@ export class Operation {
      * @returns {Function}
      */
     addLoadingElement(withLoadingEffect, loadingEffectDelay, shouldInterceptClick) {
-        this.loadingScreenEl = document.createElement("div");
-        this.loadingScreenEl.classList.add(
-            ...["o_loading_screen", "d-flex", "justify-content-center", "align-items-center"]
-        );
-        const spinnerEl = document.createElement("img");
-        spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
-        this.loadingScreenEl.appendChild(spinnerEl);
+        if (this.loadingScreenCount === 0) {
+            this.loadingScreenEl = document.createElement("div");
+            this.loadingScreenEl.classList.add(
+                "o_loading_screen",
+                "d-flex",
+                "justify-content-center",
+                "align-items-center"
+            );
+            const spinnerEl = document.createElement("img");
+            spinnerEl.setAttribute("src", "/web/static/img/spin.svg");
+            this.loadingScreenEl.appendChild(spinnerEl);
+        }
+
+        const block = {
+            withLoadingEffect,
+            loadingEffectActive: false,
+        };
+        this.loadingScreenBlockStatuses.push(block);
+        this.loadingScreenCount++;
+
+        this.updateLoadingScreen();
+
+        if (this.loadingScreenCount === 1) {
+            this.editableDocument.body.appendChild(this.loadingScreenEl);
+        }
 
         let removeClickListener = () => {};
+
         if (shouldInterceptClick) {
             const onClick = (ev) => {
                 const trueTargetEls = this.editableDocument.elementsFromPoint(
@@ -190,30 +211,56 @@ export class Operation {
                 });
             };
             this.editableDocument.addEventListener("click", onClick);
-            removeClickListener = () => this.editableDocument.removeEventListener("click", onClick);
-        }
-        if (this.isUIBlocked) {
-            this.loadingScreenEl.classList.add("d-none");
+            removeClickListener = () => {
+                this.editableDocument.removeEventListener("click", onClick);
+            };
         }
 
-        this.editableDocument.body.appendChild(this.loadingScreenEl);
-
-        // If specified, add a loading effect on that element after a delay.
         let loadingTimeout;
+
         if (withLoadingEffect) {
-            loadingTimeout = setTimeout(
-                () => this.loadingScreenEl?.classList.add("o_we_ui_loading"),
-                loadingEffectDelay
-            );
+            loadingTimeout = setTimeout(() => {
+                // The request may have completed while waiting for the delay.
+                if (!this.loadingScreenBlockStatuses.includes(block)) {
+                    return;
+                }
+
+                block.loadingEffectActive = true;
+                this.updateLoadingScreen();
+            }, loadingEffectDelay);
         }
+
         return () => {
             if (loadingTimeout) {
                 clearTimeout(loadingTimeout);
             }
+
             removeClickListener();
-            this.loadingScreenEl.remove();
-            this.loadingScreenEl = null;
+
+            const index = this.loadingScreenBlockStatuses.indexOf(block);
+            if (index !== -1) {
+                this.loadingScreenBlockStatuses.splice(index, 1);
+                this.loadingScreenCount--;
+            }
+            if (this.loadingScreenCount === 0) {
+                this.loadingScreenEl?.remove();
+                this.loadingScreenEl = null;
+                return;
+            }
+
+            this.updateLoadingScreen();
         };
+    }
+
+    updateLoadingScreen() {
+        if (!this.loadingScreenEl) {
+            return;
+        }
+        const hasLoadingEffect = this.loadingScreenBlockStatuses.some(
+            (block) => block.loadingEffectActive
+        );
+        this.loadingScreenEl.classList.toggle("o_we_ui_loading", hasLoadingEffect);
+        this.loadingScreenEl.classList.toggle("d-none", !hasLoadingEffect);
     }
 
     /**
