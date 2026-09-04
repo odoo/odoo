@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_move_line
+from . import ir_ui_menu
 from . import repair
 from . import stock_move
 from . import stock_move_line
