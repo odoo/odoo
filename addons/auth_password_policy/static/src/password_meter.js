@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { computeScore } from "./password_policy";
-import { Component, xml } from "@odoo/owl";
+import { Component, t, useProps, xml } from "@odoo/owl";
 
 export class Meter extends Component {
     static template = xml`
@@ -12,11 +12,11 @@ export class Meter extends Component {
                 t-att-title="this.title" t-att-value="this.value"/>
         </div>
     `;
-    static props = {
-        password: { type: String },
-        required: Object,
-        recommended: Object,
-    };
+    props = useProps({
+        password: t.string(),
+        required: t.object(),
+        recommended: t.object(),
+    });
 
     get passwordStrengthParams() {
         const strengthRanges = [

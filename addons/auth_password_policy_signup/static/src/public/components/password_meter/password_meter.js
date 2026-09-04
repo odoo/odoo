@@ -1,14 +1,15 @@
 import { Meter } from "@auth_password_policy/password_meter";
 import { ConcretePolicy, recommendations } from "@auth_password_policy/password_policy";
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, proxy, t, useListener, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class PasswordMeter extends Component {
     static template = "auth_password_policy_signup.PasswordMeter";
     static components = { Meter };
-    static props = {
-        selector: String,
-    };
+
+    props = useProps({
+        selector: t.string(),
+    });
 
     setup() {
         const inputEl = document.querySelector(this.props.selector);
