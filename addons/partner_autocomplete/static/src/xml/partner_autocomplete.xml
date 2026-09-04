@@ -92,6 +92,7 @@
                 sources="this.getSources(identifierType)"
                 input="this.inputRef"
                 placeholder="meta ? meta.placeholder : ''"
+                t-on-change="(ev) => this.onUpdateValue(identifierType, ev)"
             >
                 <t t-set-slot="partnerOption" t-slot-scope="partnerOptionScope">
                     <t t-call="partner_autocomplete.DropdownOption" option="partnerOptionScope"/>

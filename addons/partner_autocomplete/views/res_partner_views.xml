@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_partner_autocomplete" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.web.partner.autocomplete</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='additional_identifiers' and @widget='additional_identifiers_list']" position="attributes">
+                <attribute name="widget">additional_identifiers_list_partner_autocomplete</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -5,13 +5,13 @@ import { _t } from "@web/core/l10n/translation";
 import { AdditionalIdentifiersList, additionalIdentifiersList } from "@web/views/fields/additional_identifiers/additional_identifiers";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
 
 export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIdentifiersList {
     static template = "partner_autocomplete.PartnerAutoCompleteAdditionalIdentifiersList";
     static components = {
         ...AdditionalIdentifiersList.components,
-        AutoComplete,
+        PartnerAutoComplete,
     };
     setup() {
         super.setup();
