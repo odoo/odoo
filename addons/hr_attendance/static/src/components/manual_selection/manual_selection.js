@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 
 import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -16,13 +16,13 @@ export class KioskManualSelection extends Component {
         DropdownItem,
         Pager,
     };
-    static props = {
-        displayBackButton: { type: Boolean },
-        token: { type: String },
-        departments: { type: Array },
-        onSelectEmployee: { type: Function },
-        onClickBack: { type: Function },
-    };
+    props = useProps({
+        displayBackButton: t.boolean(),
+        token: t.string(),
+        departments: t.array(),
+        onSelectEmployee: t.function(),
+        onClickBack: t.function(),
+    });
 
     setup() {
         this.orm = useService("orm");

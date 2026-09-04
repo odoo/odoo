@@ -6,7 +6,7 @@ import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kio
 import { KioskManualSelection } from "@hr_attendance/components/manual_selection/manual_selection";
 import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog/new_employee_dialog";
 import { KioskPinCode } from "@hr_attendance/components/pin_code/pin_code";
-import { Component, proxy, whenReady } from "@odoo/owl";
+import { Component, proxy, t, useProps, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -19,17 +19,18 @@ import { DocumentationLink } from "@web/views/widgets/documentation_link/documen
 
 class kioskAttendanceApp extends Component {
     static template = "hr_attendance.public_kiosk_app";
-    static props = {
-        token: { type: String },
-        companyId: { type: Number },
-        companyName: { type: String },
-        departments: { type: Array },
-        kioskMode: { type: String },
-        barcodeSource: { type: String },
-        fromTrialMode: { type: Boolean },
-        deviceTrackingEnabled: { type: Boolean },
-        captureCheckInImage: { type: Boolean },
-    };
+
+    props = useProps({
+        token: t.string(),
+        companyId: t.number(),
+        companyName: t.string(),
+        departments: t.array(),
+        kioskMode: t.string(),
+        barcodeSource: t.string(),
+        fromTrialMode: t.boolean(),
+        deviceTrackingEnabled: t.boolean(),
+        captureCheckInImage: t.boolean(),
+    });
     static components = {
         KioskBarcodeScanner,
         CardLayout,
