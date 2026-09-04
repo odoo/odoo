@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <field name="vat" position="after">
-                <field name="l10n_ar_afip_responsibility_type_id" string="AFIP Responsibility" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                <field name="l10n_ar_afip_responsibility_type_id" string="AFIP Responsibility" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('is_company','=',False),('parent_id','!=',False)]}"/>
             </field>
         </field>
     </record>
