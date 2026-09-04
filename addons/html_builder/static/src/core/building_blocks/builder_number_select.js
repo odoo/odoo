@@ -15,14 +15,10 @@ export class BuilderNumberSelect extends Component {
 
     props = useProps({
         ...builderSelectProps,
-        default: t.or([t.number(), t.literal(null)]).optional(0),
-        unit: t.string().optional(),
-        saveUnit: t.string().optional(),
-        step: t.number().optional(),
-        min: t.number().optional(),
-        max: t.number().optional(),
-        composable: t.boolean().optional(false),
-        applyWithUnit: t.boolean().optional(true),
+        numAction: t.string().optional(),
+        numActionParam: t.any().optional(),
+        numUnit: t.string().optional(),
+        numComposable: t.boolean().optional(false),
     });
 
     setup() {

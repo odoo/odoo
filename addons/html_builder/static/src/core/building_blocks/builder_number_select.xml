@@ -6,7 +6,7 @@
         <attribute name="position">'bottom-end'</attribute>
     </xpath>
     <xpath expr="//button" position="replace">
-        <BuilderNumberInput t-if="this.showNumberInput" action="this.props.action" unit="this.props.unit" min="this.props.min" composable="this.props.composable"/>
+        <BuilderNumberInput t-if="this.showNumberInput" action="this.props.numAction" actionParam="this.props.numActionParam" unit="this.props.numUnit" min="this.props.numMin" composable="this.props.numComposable"/>
         <button
             t-else=""
             class="o-hb-number-select o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret"

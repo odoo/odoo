@@ -18,16 +18,16 @@
 
     <!-- TODO: handle the dependency with border_width_opt bg_color_opt-->
     <BuilderRow t-if="this.props.withRoundCorner" label.translate="Round Corners" level="this.props.level">
-         <BuilderNumberSelect action="this.props.action" actionParam="{ mainParam: this.getStyleActionParam('radius'), extraClass: this.props.withBSClass and 'rounded' }" unit="'px'" min="0" composable="true">
-            <BuilderSelectItem title.translate="Small" actionValue="'solid'">
+         <BuilderNumberSelect numAction="this.props.action" numActionParam="{ mainParam: this.getStyleActionParam('radius'), extraClass: this.props.withBSClass and 'rounded' }" numUnit="'px'" numMin="0" numComposable="true">
+            <BuilderSelectItem title.translate="Small" classAction="'bg-primary-subtle'">
                 <t t-set="onClick" t-value="this.getOnClick('border-radius-sm')"/>
                 <t t-call="html_builder.EditInThemeOptionItem">Small</t>
             </BuilderSelectItem>
-            <BuilderSelectItem title.translate="Normal" actionValue="'solid'">
+            <BuilderSelectItem title.translate="Normal" classAction="'bg-success-subtle'">
                 <t t-set="onClick" t-value="this.getOnClick('border-radius')"/>
                 <t t-call="html_builder.EditInThemeOptionItem">Normal</t>
             </BuilderSelectItem>
-            <BuilderSelectItem title.translate="Large" actionValue="'solid'">
+            <BuilderSelectItem title.translate="Large" classAction="'bg-danger-subtle'">
                 <t t-set="onClick" t-value="this.getOnClick('border-radius-lg')"/>
                 <t t-call="html_builder.EditInThemeOptionItem">Large</t>
             </BuilderSelectItem>
