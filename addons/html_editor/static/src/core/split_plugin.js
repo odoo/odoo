@@ -242,6 +242,7 @@ export class SplitPlugin extends Plugin {
         cursor.update(callbacksForCursorUpdate.after(element, secondPart));
         element.after(secondPart);
         this.dispatchTo("after_split_element_handlers", { element, secondPart });
+        cursor.restore();
         return [element, secondPart];
     }
 
