@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
@@ -46,6 +48,14 @@ class DeliveryCarrier(models.Model):
                     self.env._("The delivery method and a warehouse must share the same company")
                 )
 
+    @api.onchange("delivery_type")
+    def _onchange_delivery_type(self):
+        """Let the customer choose their pickup date in the next 20 open days by default."""
+        if self.delivery_type == "in_store":
+            self.enable_delivery_estimate = "user_choice"
+            self.delivery_estimate_lead_days = 1
+            self.delivery_estimate_end_days = 20
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -77,6 +87,7 @@ class DeliveryCarrier(models.Model):
         return {
             "integration_level": "rate",
             "allow_cash_on_delivery": False,
+            "delivery_calendar_id": False,  # In-store estimates use the hours of the store.
             "country_ids": False,
             "state_ids": False,
             "zip_prefix_ids": False,
@@ -152,6 +163,28 @@ class DeliveryCarrier(models.Model):
             "country_data": country_values,
             "pickup_location_data": sorted(pickup_locations, key=lambda k: k["distance"]),
         }
+
+    def _get_deliverable_days(self, last_day, order=None):
+        """Override of `website_sale` to return the days on which the store can be collected from.
+
+        The store is the one that the customer selected, or the store of the delivery method when
+        it has only one. A store without opening hours is open every day.
+        """
+        self.ensure_one()
+        if self.delivery_type != "in_store":
+            return super()._get_deliverable_days(last_day, order=order)
+
+        warehouse = self.env["stock.warehouse"]
+        if order and order.carrier_id == self and order.partner_shipping_id.pickup_location_data:
+            warehouse = order.warehouse_id  # The store that the customer selected
+        elif len(self.warehouse_ids) == 1:
+            warehouse = self.warehouse_ids  # The store selected by default
+        if not warehouse:  # The customer must select a store to know when to collect the order.
+            return []
+        if warehouse.opening_hours:
+            return self._get_calendar_days(warehouse.opening_hours, last_day)
+        today = fields.Datetime.now().date()  # The days of the calendars are computed in UTC too.
+        return [(today + timedelta(days=day)).isoformat() for day in range(last_day + 1)]
 
     def in_store_rate_shipment(self, *_args):
         return {

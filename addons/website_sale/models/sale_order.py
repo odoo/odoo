@@ -1174,14 +1174,18 @@ class SaleOrder(models.Model):
         rate = rate or delivery_method.rate_shipment(self)
         if rate.get("success"):
             self.set_delivery_line(delivery_method, rate["price"])
+            self._set_estimated_commitment_date()
 
-            if delivery_method.enable_delivery_estimate and (
-                estimated_delivery_date := delivery_method._get_estimate_delivery_days()
-            ):
-                self.commitment_date = estimated_delivery_date[0]
-            else:
-                # reset `commitment_date` if it doesn't have an estimated delivery date set
-                self.commitment_date = None
+    def _set_estimated_commitment_date(self):
+        """Set the commitment date to the first date that the delivery method can deliver on.
+
+        The commitment date is reset when the delivery method gives no estimation.
+
+        :return: None
+        """
+        self.ensure_one()
+        estimated_delivery_days = self.carrier_id._get_estimate_delivery_days(self)
+        self.commitment_date = estimated_delivery_days[0] if estimated_delivery_days else None
 
     def _get_delivery_methods(self):
         # searching on website_published will also search for available website (_search method on
@@ -1373,7 +1377,7 @@ class SaleOrder(models.Model):
         """Whether the commitment date is still up to date with the carrier constraints."""
         self.ensure_one()
         allowed_commitment_dates = (
-            self.commitment_date and self.carrier_id._get_estimate_delivery_days()
+            self.commitment_date and self.carrier_id._get_estimate_delivery_days(self)
         ) or []
         if (
             not allowed_commitment_dates  # No allowed date means any date is acceptable.
