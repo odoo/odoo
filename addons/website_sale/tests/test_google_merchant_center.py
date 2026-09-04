@@ -340,7 +340,7 @@ class TestWebsiteSaleGMC(WebsiteSaleGMCCommon, HttpCase):
 
         # enable "Product Reference Price" setting
         self.env = self.env(user=self.env.ref('base.user_root'))  # FIXME: remove this line
-        self.env.user.group_ids |= self.env.ref("product.group_show_uom_price")
+        self.website.show_product_reference_price = True
         self.update_items()
 
         self.assertEqual("6.0l", self.items[six_pack]["unit_pricing_measure"], "$12 / 6l")

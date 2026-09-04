@@ -64,6 +64,9 @@ class ResConfigSettings(models.TransientModel):
     )
     restricted_uom_ids = fields.Many2many(related="website_id.restricted_uom_ids", readonly=False)
     journal_id = fields.Many2one(related="website_id.journal_id", readonly=False)
+    website_show_reference_price = fields.Boolean(
+        related="website_id.show_product_reference_price", readonly=False
+    )
 
     # Additional settings
     account_on_checkout = fields.Selection(
@@ -104,6 +107,22 @@ class ResConfigSettings(models.TransientModel):
                     record.website_id.auth_signup_uninvited = "b2b"
             record.website_id.account_on_checkout = record.account_on_checkout
 
+    # === ONCHANGE METHODS === #
+
+    @api.onchange("website_show_reference_price")
+    def _onchange_website_show_reference_price(self):
+        if self.website_show_reference_price:
+            # Enabling this website-specific setting requires the (global)
+            # product reference price setting
+            self.group_show_uom_price = True
+
+    @api.onchange("group_show_uom_price")
+    def _onchange_group_show_uom_price(self):
+        if not self.group_show_uom_price:
+            # Disabling the global product reference price setting disables
+            # the website-specific setting.
+            self.website_show_reference_price = False
+
     # === CRUD METHODS === #
 
     def set_values(self):
@@ -111,6 +130,10 @@ class ResConfigSettings(models.TransientModel):
             "group_automate_suggested_products"
         ]
         super().set_values()
+        if not self.group_show_uom_price:
+            # Disabling the global product reference price setting disables the website-specific
+            # setting for every website.
+            self.env["website"].sudo().search([]).show_product_reference_price = False
         if self.website_id:
             website = self.with_context(website_id=self.website_id.id).website_id
 
