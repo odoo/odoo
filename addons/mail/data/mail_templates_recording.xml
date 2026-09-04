@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_discuss_call_recording_available" model="mail.template">
+            <field name="name">Discuss: Call Recording Available</field>
+            <field name="model_id" ref="mail.model_mail_call_artifact"/>
+            <field name="subject">Meeting recording from “{{ object.discuss_call_history_id.channel_id.display_name }}”</field>
+            <field name="email_from">{{ object.env.company.email_formatted or user.email_formatted }}</field>
+            <field name="partner_to">{{ object.recording_started_by_id.id }}</field>
+            <field name="use_default_to" eval="False"/>
+            <field name="description">Sent to the person who started a call recording once it is available</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light</field>
+            <field name="body_html" type="html">
+                <div>
+                    <h2>Meeting recording from<br/>“<t t-out="object.discuss_call_history_id.channel_id.display_name or ''">Meeting, Aug 12</t>”</h2>
+                    <p>Your meeting recording is available in Odoo.</p>
+                    <p>
+                        <a t-attf-href="{{ object.get_base_url() }}/odoo/discuss.call.history/{{ object.discuss_call_history_id.id }}">View recording</a>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.recording_started_by_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

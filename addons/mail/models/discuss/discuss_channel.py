@@ -133,6 +133,7 @@ class DiscussChannel(models.Model):
     sfu_server_url = fields.Char(groups="base.group_system")
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
     call_history_ids = fields.One2many("discuss.call.history", "channel_id")
+    recording_count = fields.Integer(compute="_compute_recording_count", compute_sudo=True)
     is_member = fields.Boolean("Is Member", compute="_compute_is_member", search="_search_is_member", compute_sudo=True)
     # sudo: discuss.channel - sudo for performance, self member can be accessed on accessible channel
     self_member_id = fields.Many2one("discuss.channel.member", compute="_compute_self_member_id", search="_search_self_member_id", compute_sudo=True)
@@ -476,6 +477,16 @@ class DiscussChannel(models.Model):
         message_count_by_channel_id = dict(read_group_res)
         for channel in self:
             channel.message_count = message_count_by_channel_id.get(channel.id, 0)
+
+    @api.depends("call_history_ids.artifact_ids")
+    def _compute_recording_count(self):
+        counts_by_channel = dict(self.env["discuss.call.history"].sudo()._read_group(
+            [("channel_id", "in", self.ids), ("artifact_ids", "!=", False)],
+            ["channel_id"],
+            ["__count"],
+        ))
+        for channel in self:
+            channel.recording_count = counts_by_channel.get(channel, 0)
 
     @api.depends("channel_type", "parent_channel_id.group_public_id")
     def _compute_group_public_id(self):
@@ -1651,6 +1662,7 @@ class DiscussChannel(models.Model):
         res.attr("member_count")
         res.attr("message_count", predicate=lambda c: c.parent_channel_id)
         res.attr("name")
+        res.attr("recording_count")
         res.many(
             "channel_name_member_ids",
             "_store_member_fields",
@@ -1684,6 +1696,25 @@ class DiscussChannel(models.Model):
             )
 
     # User methods
+
+    def action_view_recordings(self):
+        self.ensure_one()
+        domain = [
+            ("channel_id", "=", self.id),
+            ("artifact_ids", "!=", False),
+        ]
+        call_histories = self.env["discuss.call.history"].search(domain, limit=2)
+        if not call_histories:
+            return False
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "mail.discuss_call_history_action",
+        )
+        action["domain"] = domain
+        if len(call_histories) == 1:
+            action["res_id"] = call_histories.id
+            action["view_mode"] = "form"
+            action["views"] = [view for view in action["views"] if view[1] == "form"]
+        return action
 
     @api.model
     def _get_or_create_chat(self, partners_to):

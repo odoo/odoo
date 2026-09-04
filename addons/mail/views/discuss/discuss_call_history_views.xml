@@ -8,8 +8,18 @@
                 <list string="Call History" sample="1">
                     <field name="channel_id" string="Conversation"/>
                     <field name="start_dt" string="Date" widget="daterange" options="{'end_date_field': 'end_dt'}"/>
-                    <field name="duration_hour" string="Duration" widget="float_time" options="{'show_seconds': true}"/>
+                    <field name="duration_hour" string="Duration" widget="discuss_call_history_duration"/>
+                    <field name="has_recording" nolabel="True" widget="discuss_call_history_indicators"/>
                 </list>
+            </field>
+        </record>
+        <record id="discuss_call_history_view_search" model="ir.ui.view">
+            <field name="name">discuss.call.history.view.search</field>
+            <field name="model">discuss.call.history</field>
+            <field name="arch" type="xml">
+                <search string="Call History">
+                    <field name="channel_id" string="Conversation"/>
+                </search>
             </field>
         </record>
         <record id="discuss_call_history_view_form" model="ir.ui.view">
@@ -18,11 +28,15 @@
             <field name="arch" type="xml">
                 <form string="Call History">
                     <sheet>
-                        <group class="oe_form_field">
-                            <field name="channel_id"/>
-                            <field name="start_dt"/>
-                            <field name="end_dt"/>
-                            <field name="duration_hour" widget="float_time" options="{'show_seconds': true}"/>
+                        <group>
+                            <group>
+                                <field name="channel_id"/>
+                                <field name="start_dt"/>
+                            </group>
+                            <group>
+                                <field name="end_dt"/>
+                                <field name="duration_hour" widget="discuss_call_history_duration"/>
+                            </group>
                         </group>
                         <notebook invisible="not artifact_ids">
                             <page name="Call Debrief">
@@ -40,14 +54,15 @@
             <field name="name">Call History</field>
             <field name="res_model">discuss.call.history</field>
             <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="discuss_call_history_view_search"/>
             <field name="context">{"create": False}</field>
         </record>
         <menuitem
             action="discuss_call_history_action"
             id="discuss_call_history_menu"
             name="Call History"
-            parent="discuss_technical"
-            sequence="15"
+            parent="mail.menu_configuration"
+            sequence="30"
         />
     </data>
 </odoo>

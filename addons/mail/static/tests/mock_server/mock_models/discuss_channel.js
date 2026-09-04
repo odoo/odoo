@@ -50,6 +50,7 @@ export class DiscussChannel extends models.ServerModel {
         compute: "_compute_invited_member_ids",
     });
     is_readonly = fields.Boolean({ string: "Read-only" });
+    recording_count = fields.Integer();
     self_member_id = fields.Many2one({
         relation: "discuss.channel.member",
         compute: "_compute_self_member_id",
@@ -489,6 +490,7 @@ export class DiscussChannel extends models.ServerModel {
             { predicate: (channel) => channel.parent_channel_id }
         );
         res.attr("name");
+        res.attr("recording_count");
         res.many("channel_name_member_ids", "_store_member_fields", {
             sort: "id",
             predicate: (channel) =>

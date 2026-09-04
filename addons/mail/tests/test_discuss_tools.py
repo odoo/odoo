@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import Store, derive_sfu_channel_key
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests.common import new_test_user
@@ -9,6 +9,25 @@ from odoo.addons.bus.tests.common import BusResult
 
 class TestDiscussTools(MailCase):
     """Test class for discuss tools."""
+
+    def test_sfu_channel_key_derivation(self):
+        sfu_key = "u6bsUQEWrHdKIuYplirRnbBmLbrKV5PxKG7DtA71mng="
+        channel_seed = (
+            "MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWYwMTIzNDU2Nzg5YWJjZGVmMDEyMzQ1Njc4OWFiY2RlZg=="
+        )
+
+        self.assertEqual(
+            derive_sfu_channel_key(sfu_key, channel_seed),
+            "HENUokImFacg/rZ/mJ7kQZxMVsffKHTdI2x1MqdMjI8=",
+        )
+
+        self.assertEqual(
+            derive_sfu_channel_key(
+                "-__7__v_-__7__v_-__7__v_-__7__v_-__7__v_-_8",
+                "__7__v_-__7__v_-__7__v_-__7__v_-__7__v_-__4",
+            ),
+            "rO7BLYI5td5yDmpFtuL3EEJkipz1UM3rC2OJYrJpvTk=",
+        )
 
     # 0xx generic tests (key not in ids_by_model)
 

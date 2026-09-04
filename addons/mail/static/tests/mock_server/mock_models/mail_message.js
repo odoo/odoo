@@ -212,7 +212,7 @@ export class MailMessage extends models.ServerModel {
         this._store_extra_fields(res, { format_reply });
 
         // discuss override: call history and parent message (format_reply)
-        res.many("call_history_ids", ["duration_hour", "end_dt"], {
+        res.many("call_history_ids", ["duration_hour", "end_dt", "has_recording"], {
             predicate: (m) => m.body && m.body.includes('data-oe-type="call"'),
         });
     }

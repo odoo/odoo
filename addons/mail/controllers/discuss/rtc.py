@@ -1,15 +1,52 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
+import logging
 
-from werkzeug.exceptions import NotFound
+from collections import defaultdict
+from datetime import UTC
+
+from werkzeug.exceptions import NotFound, BadRequest
 
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 from odoo.http.stream import STATIC_CACHE
 from odoo.tools import file_open
 
-from odoo.addons.mail.tools.discuss import add_guest_to_context, mail_route, Store
+from odoo.addons.mail.tools.discuss import Store, add_guest_to_context, get_sfu_channel_key, mail_route
+from odoo.addons.mail.tools.jwt import Algorithm, verify
+
+_logger = logging.getLogger(__name__)
+
+
+def _check_jwt(request, channel):
+    if not channel:
+        raise NotFound()
+    auth_header = request.httprequest.headers.get("Authorization")
+    if not auth_header:
+        raise NotFound()
+    try:
+        jwt = auth_header.split(" ")[1]
+    except IndexError:
+        raise NotFound()
+    if not jwt:
+        raise NotFound()
+    channel_key = get_sfu_channel_key(request.env, channel.id)
+    if not channel_key:
+        raise NotFound()
+    try:
+        claims = verify(jwt, channel_key, algorithm=Algorithm.HS256)
+    except ValueError:
+        raise NotFound()
+    if not {"exp", "iat"} <= set(claims) <= {"exp", "iat", "partner_id"}:
+        raise NotFound()
+    partner_id = claims.get("partner_id")
+    if "partner_id" in claims and (
+        isinstance(partner_id, bool)
+        or not isinstance(partner_id, int)
+        or partner_id <= 0
+    ):
+        raise NotFound()
+    return claims
 
 
 class RtcController(Controller):
@@ -164,4 +201,51 @@ class RtcController(Controller):
             member.channel_id,
             "_store_rtc_update_fields",
             fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
+        )
+
+    ##########
+    # Recording / Transcription
+    ##########
+
+    def _get_recording_destination(
+        self,
+        call_history,
+        start_ms,
+        end_ms,
+        mimetype="application/octet-stream",
+        partner_id=None,
+    ):
+        """Return the recording upload contract."""
+        pass
+
+    def _get_recording_offsets(self, call_history, start_ms, end_ms):
+        """Return recording timestamps as millisecond offsets from the call start."""
+        try:
+            start_ms = int(start_ms)
+            end_ms = int(end_ms)
+        except (TypeError, ValueError):
+            raise BadRequest() from None
+        call_start_ms = int(call_history.start_dt.replace(tzinfo=UTC).timestamp() * 1000)
+        return start_ms - call_start_ms, end_ms - call_start_ms
+
+    @route(
+        "/mail/rtc/recording/<int:call_history_id>/routing",
+        type="http",
+        auth="public",
+        cors="*",
+    )
+    def get_routing(
+        self, call_history_id, start_ms, end_ms, mimetype="application/octet-stream",
+    ):
+        call_history_sudo = request.env["discuss.call.history"].sudo().browse(call_history_id).exists()
+        claims = _check_jwt(request, call_history_sudo.channel_id)
+        return request.make_json_response(
+            self._get_recording_destination(
+                call_history_sudo,
+                start_ms,
+                end_ms,
+                mimetype,
+                claims.get("partner_id"),
+            ),
+            status=200,
         )

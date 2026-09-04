@@ -16,6 +16,9 @@ class MailCallArtifact(models.Model):
         "discuss.call.history", string="Discuss Call History",
         ondelete="cascade", required=False, index=True,
     )
+    recording_started_by_id = fields.Many2one(
+        "res.partner", string="Recording Started By", readonly=True, ondelete="set null",
+    )
     media_id = fields.Many2one(
         "ir.attachment", string="Media Attachment", compute="_compute_media_id",
     )
@@ -88,6 +91,30 @@ class MailCallArtifact(models.Model):
         """Return the parent call record (discuss.call.history, voip.call, etc.)"""
         self.ensure_one()
         return self.discuss_call_history_id
+
+    def _is_recording_media(self):
+        self.ensure_one()
+        return bool(
+            self.media_id
+            and self.media_id.mimetype
+            and self.media_id.mimetype.startswith(("audio/", "video/"))
+        )
+
+    def _is_recording_available(self):
+        self.ensure_one()
+        return self._is_recording_media()
+
+    def _send_recording_available_email(self):
+        template = self.env.ref(
+            "mail.mail_template_discuss_call_recording_available",
+            raise_if_not_found=False,
+        )
+        if not template:
+            return
+        for artifact in self:
+            if not artifact.recording_started_by_id or not artifact._is_recording_available():
+                continue
+            template.send_mail(artifact.id, force_send=False)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_cleanup_media_attachment(self):

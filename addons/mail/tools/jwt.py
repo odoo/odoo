@@ -8,6 +8,7 @@ import time
 import enum
 import hmac
 
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, utils
@@ -99,3 +100,64 @@ def sign(claims: dict, key: str, ttl: int, algorithm: Algorithm) -> str:
     assert ttl
     claims["exp"] = int(time.time()) + ttl
     return _generate_jwt(claims, non_padded_key, algorithm=algorithm)
+
+
+def verify(token: str, key: str, algorithm: Algorithm) -> dict:
+    """
+    Verify a JSON Web Token.
+    Trows an exception if the token is invalid.
+
+    :param token: the token to verify
+    :param key: the key to use to verify the token
+    :param algoritm: the algorithm to use to verify the token
+    :raise ValueError: if the token is invalid
+    :return: the payload of the token (claims)
+    """
+    parts = token.split(".")
+    if len(parts) != 3:
+        raise ValueError("Invalid token format")
+    header_part, payload_part, signature_part = parts
+
+    header = json.loads(base64_decode_with_padding(header_part))
+    payload = json.loads(base64_decode_with_padding(payload_part))
+
+    if header.get("alg") != algorithm.value:
+        raise ValueError(
+            f"Invalid algorithm. Expected {algorithm.value}, got {header.get('alg')}",
+        )
+
+    unsigned_token = f"{header_part}.{payload_part}"
+    key_decoded = base64_decode_with_padding(key)
+    signature_decoded = base64_decode_with_padding(signature_part)
+
+    match algorithm:
+        case Algorithm.HS256:
+            expected_signature = hmac.new(
+                key_decoded, unsigned_token.encode(), hashlib.sha256,
+            ).digest()
+            if not hmac.compare_digest(expected_signature, signature_decoded):
+                raise ValueError("Invalid signature")
+        case Algorithm.ES256:
+            if len(signature_decoded) != 64:
+                raise ValueError("Invalid signature length")
+            try:
+                public_key = ec.EllipticCurvePublicKey.from_encoded_point(
+                    ec.SECP256R1(), key_decoded,
+                )
+                r = int.from_bytes(signature_decoded[:32], "big")
+                s = int.from_bytes(signature_decoded[32:], "big")
+                der_signature = utils.encode_dss_signature(r, s)
+
+                public_key.verify(
+                    der_signature, unsigned_token.encode(), ec.ECDSA(hashes.SHA256()),
+                )
+            except (ValueError, InvalidSignature):
+                raise ValueError("Invalid signature")
+        case _:
+            raise ValueError(f"Unsupported algorithm: {algorithm}")
+
+    if "exp" in payload:
+        if payload["exp"] < time.time():
+            raise ValueError("Token expired")
+
+    return payload

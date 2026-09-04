@@ -439,6 +439,7 @@ export class DiscussChannel extends Record {
     message_count;
     /** @type {string} */
     name;
+    recording_count = 0;
     threadCreationMessages = fields.Many("mail.message", {
         inverse: "channelAsThreadCreationNotification",
     });

@@ -41,8 +41,12 @@ export class NotificationMessage extends Component {
         return this.props.message;
     }
 
+    get callHistory() {
+        return this.message.call_history_ids[0];
+    }
+
     get callInformation() {
-        const history = this.message.call_history_ids[0];
+        const history = this.callHistory;
         if (history?.duration_hour === undefined || !history?.end_dt) {
             return _t("%(author)s started a call.", { author: this.message.authorName });
         }

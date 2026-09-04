@@ -45,6 +45,7 @@ import {
     test,
 } from "@odoo/hoot";
 import { press, waitUntil } from "@odoo/hoot-dom";
+import { markup } from "@odoo/owl";
 import {
     Command,
     getService,
@@ -89,6 +90,110 @@ test("basic rendering", async () => {
     await contains("[name='fullscreen']");
     await contains("[name='change-layout']");
     await contains("[name='picture-in-picture']");
+});
+
+test("show the recording indicator to all and the stop control to recorders", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    const rtc = getService("discuss.rtc");
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    rtc.recordingState = {
+        recording: true,
+        audio: true,
+        transcription: false,
+        video: false,
+    };
+    await contains(".o-discuss-CallRecordingIndicator");
+    await hover(".o-discuss-CallRecordingIndicator");
+    await contains(".o-discuss-CallRecordingIndicator button:text('Stop recording')", { count: 0 });
+    rtc.canRecordAudio = true;
+    await contains(".o-discuss-CallRecordingIndicator button:text('Stop recording')");
+});
+
+test("recording is in the extended action menu", async () => {
+    const pyEnv = await startServer();
+    onRpc("/mail/rtc/channel/upgrade_connection", () => {});
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+        }),
+        channel_id: channelId,
+    });
+    await start();
+    const rtc = getService("discuss.rtc");
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
+    rtc.canRecordAudio = true;
+    rtc.canRecordVideo = true;
+
+    await contains(".o-discuss-CallActionList [name='record-call']", { count: 0 });
+    await click(".o-discuss-CallActionList [name='more-action:call-layout']");
+    await click(".o-dropdown-item[name='record-call']");
+    await contains(".o-discuss-RecordingDialog");
+});
+
+test("keep failed start and stop recording notifications distinct", async () => {
+    await start();
+    const rtc = getService("discuss.rtc");
+    patchWithCleanup(rtc, {
+        SFU_CLIENT_STATE: { CONNECTED: "connected" },
+        sfuClient: {
+            state: "connected",
+            startRecording: () => false,
+            stopRecording: () => false,
+        },
+    });
+    await rtc._startRecording({ audio: true });
+    await rtc.stopRecording();
+    expect([...rtc.notifications.keys()]).toEqual([
+        "recording_not_allowed",
+        "stop_recording_not_allowed",
+    ]);
+    expect(rtc.notifications.get("stop_recording_not_allowed").text).toBe(
+        "You are not allowed to stop the recording"
+    );
+});
+
+test("show a failure notification when stopping a recording request rejects", async () => {
+    await start();
+    const rtc = getService("discuss.rtc");
+    patchWithCleanup(rtc, {
+        SFU_CLIENT_STATE: { CONNECTED: "connected" },
+        sfuClient: {
+            state: "connected",
+            stopRecording: () => Promise.reject(new Error("transport failure")),
+        },
+    });
+
+    await rtc.stopRecording();
+
+    expect([...rtc.notifications.keys()]).toEqual(["stop_recording_failed"]);
+    expect(rtc.notifications.get("stop_recording_failed").text).toBe(
+        "Could not stop the recording"
+    );
+});
+
+test("show a failure notification when starting a recording request rejects", async () => {
+    await start();
+    const rtc = getService("discuss.rtc");
+    patchWithCleanup(rtc, {
+        sfuClient: {
+            startRecording: () => Promise.reject(new Error("transport failure")),
+        },
+    });
+
+    await rtc._startRecording({ audio: true });
+
+    expect([...rtc.notifications.keys()]).toEqual(["recording_failed"]);
+    expect(rtc.notifications.get("recording_failed").text).toBe(
+        "Could not start the recording"
+    );
 });
 
 test("mobile UI", async () => {
@@ -1674,6 +1779,55 @@ test("Meeting chat panel excludes call notifications for 'New Meeting' channels"
     await contains(`.o-mail-NotificationMessage:text('Mitchell Admin started a call.${time}')`, {
         count: 0,
     });
+});
+
+test("active call with a recording shows a processing link", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, channel_role: "owner" }),
+        ],
+        channel_type: "channel",
+        name: "General",
+    });
+    const callHistoryId = 42;
+    mockService("action", {
+        doAction(action) {
+            if (action.res_model !== "discuss.call.history") {
+                return super.doAction(...arguments);
+            }
+            expect(action).toEqual({
+                type: "ir.actions.act_window",
+                res_model: "discuss.call.history",
+                views: [[false, "form"]],
+                res_id: callHistoryId,
+            });
+            expect.step("open recording");
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    const store = getService("mail.store");
+    const channel = await store["discuss.channel"].getOrFetch(channelId);
+    const thread = channel.thread;
+    thread.setAsDiscussThread(false);
+    const activeCallMessage = store["mail.message"].insert({
+        body: markup`<div data-oe-type="call" class="o_mail_notification"></div>`,
+        call_history_ids: [{ id: callHistoryId, has_recording: true }],
+        date: deserializeDateTime("2026-01-01 10:00:00"),
+        id: 42,
+        message_type: "notification",
+        model: "discuss.channel",
+        res_id: channelId,
+        thread,
+    });
+    thread.addOrReplaceMessage(activeCallMessage);
+    await contains(
+        ".o-mail-NotificationMessage div:text('A recording is being processed and will be available here.')",
+        { count: 1 }
+    );
+    await click(".o-mail-NotificationMessage a[data-oe-model='discuss.call.history']:text('here')");
+    await expect.waitForSteps(["open recording"]);
 });
 
 test("shows a presenter bar when screen-sharing in discuss calls and meetings", async () => {

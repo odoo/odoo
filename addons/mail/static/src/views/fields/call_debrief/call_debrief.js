@@ -18,6 +18,8 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 
+const { DateTime } = luxon;
+
 export class CallDebrief extends Component {
     static template = "mail.CallDebrief";
     static components = { CallDebriefTimeline, CallDebriefMediaControls };
@@ -56,7 +58,12 @@ export class CallDebrief extends Component {
         this._pendingSeek = null;
 
         useOnChange(
-            () => [this.props.record.resId, this.props.record.data[this.props.name]],
+            () => [
+                this.props.record.resId,
+                this.props.record.data[this.props.name],
+                this.props.record.data[this.props.callStartDateField],
+                this.props.record.data[this.props.callEndDateField],
+            ],
             (resId) => {
                 // Tracks active record ID to bypass this.props update lag during async paging
                 this.activeResId = resId;
@@ -195,12 +202,16 @@ export class CallDebrief extends Component {
     }
 
     _initCallTiming(start, end) {
-        if (!start || !end) {
+        if (!start) {
             this._resetState();
             return false;
         }
         const callStartDate = typeof start === "string" ? deserializeDateTime(start) : start;
-        const callEndDate = typeof end === "string" ? deserializeDateTime(end) : end;
+        const callEndDate = !end
+            ? DateTime.now()
+            : typeof end === "string"
+            ? deserializeDateTime(end)
+            : end;
 
         const duration = callEndDate.diff(callStartDate, "seconds").seconds;
         if (duration < 0) {
