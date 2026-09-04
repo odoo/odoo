@@ -159,18 +159,18 @@ test("Support placeholder", async () => {
 
 test.tags("desktop");
 test("Support virtual record in props and custom quickCreate", async () => {
-    let virtualRecord;
+    const holder = proxy({ virtualRecord: undefined });
     await mountRecordSelector({
         resModel: "res.partner",
         resId: false,
         get virtualRecord() {
-            return virtualRecord;
+            return holder.virtualRecord;
         },
         buildQuickCreate: ({ request }) => ({
             cssClass: "o_m2o_dropdown_option",
             label: `Create ${request}`,
             onSelect: () => {
-                virtualRecord = {
+                holder.virtualRecord = {
                     id: false,
                     display_name: request,
                 };
@@ -182,7 +182,7 @@ test("Support virtual record in props and custom quickCreate", async () => {
 
     await contains(".o_m2o_dropdown_option a:contains(Create I do not exist yet)").click();
     await waitFor(".o-autocomplete--input:value(I do not exist yet)");
-    expect(virtualRecord).toEqual({
+    expect(holder.virtualRecord).toEqual({
         id: false,
         display_name: "I do not exist yet",
     });
