@@ -360,6 +360,12 @@ export class DiscussChannel extends Record {
     get hasAttachmentPanel() {
         return true;
     }
+    /**
+     * Retrieve the first message of the channel at or after `from_message_id`
+     * (the unread separator by default). The result is always a message the
+     * thread renders, as every caller needs its element, so a hidden
+     * notification is skipped.
+     */
     getFirstNewerMessage({ from_message_id = this.self_member_id?.new_message_separator_ui } = {}) {
         if (!this.self_member_id) {
             return null;
@@ -375,7 +381,13 @@ export class DiscussChannel extends Record {
         }
         // try to find a perfect match according to the member's separator
         let message = this.store["mail.message"].get({ id: separator });
+<<<<<<< a7520106452337ea1b153e6ac8e738d49100a4c6
         if (!message || message.is_transient || this.notEq(message.channel_id)) {
+||||||| 92600d5248ff291b038f6bb4c74a06298fed58fe
+        if (!message || this.notEq(message.channel_id)) {
+=======
+        if (!message || this.notEq(message.channel_id) || message.notificationHidden) {
+>>>>>>> 45d0c156c5571cf5fbc40f90d53920b017b5a284
             message = nearestGreaterThanOrEqual(messages, separator, (msg) => msg.id);
         }
         return message;
