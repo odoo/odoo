@@ -399,14 +399,15 @@ class StockRule(models.Model):
             :rtype: product.supplierinfo
         """
         p = product.with_company(company)
+        any_vendor = params and params.get('any_vendor')
         supplier = p._select_seller(partner_id=partner, quantity=qty, date=date, uom_id=uom, params=params) or \
                    p._select_seller(partner_id=partner, quantity=None, date=date, uom_id=uom, params=params) or \
                    p._select_seller(partner_id=partner, quantity=None, uom_id=uom, params=params) or \
                    p._select_seller(partner_id=partner, quantity=None, params=params) or \
-                   p._select_seller(partner_id=partner, quantity=None)
+                   p._select_seller(partner_id=partner, quantity=None, params={'any_vendor': any_vendor})
 
         if not supplier and not partner:  # Last fallback, also matching expired pricelists
-            supplier = p._select_seller(quantity=None) or p._prepare_sellers()[:1]
+            supplier = p._select_seller(quantity=None, params={'any_vendor': any_vendor}) or p._prepare_sellers()[:1]
         return supplier
 
 
