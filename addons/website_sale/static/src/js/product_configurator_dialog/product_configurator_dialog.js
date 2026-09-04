@@ -65,10 +65,27 @@ patch(ProductConfiguratorDialog.prototype, {
         return this.websiteSaleProps.isFrontend && !this.props.edit;
     },
 
+    async _updateCombination(product, quantity, uomId) {
+        const combination = await super._updateCombination(...arguments);
+        if (this.websiteSaleProps.isFrontend) {
+            combination.strikethrough_price = combination.strikethrough_price
+                ? parseFloat(combination.strikethrough_price)
+                : undefined;
+        }
+        return combination;
+    },
+
+    _handleQuantityUpdate(product, combination) {
+        super._handleQuantityUpdate(...arguments);
+        if (this.websiteSaleProps.isFrontend) {
+            product.strikethrough_price = combination.strikethrough_price;
+        }
+    },
+
     _handleUnitOfMeasureUpdate(product, combination, uomId) {
         super._handleUnitOfMeasureUpdate(...arguments);
-        if (this.websiteSaleProps.isFrontend && combination.strikethrough_price) {
-            product.strikethrough_price = parseFloat(combination.strikethrough_price);
+        if (this.websiteSaleProps.isFrontend) {
+            product.strikethrough_price = combination.strikethrough_price;
         }
     },
 

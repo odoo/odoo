@@ -1514,6 +1514,25 @@ class SaleOrder(models.Model):
         """Get all the lines of the current order with the given product."""
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
+    def _get_mergeable_line_qty(self, product, uom, combination):
+        """Return the quantity of the cart line that adding `product` would be merged with.
+
+        :param product.product product: The product being added.
+        :param uom.uom uom: The unit of measure of the product being added.
+        :param product.template.attribute.value combination: The selected combination, including
+            the no_variant and custom attribute values.
+        :return: The quantity of the matching line, in `uom`, or 0 if there is none.
+        :rtype: float
+        """
+        if not self or combination.filtered("is_custom"):
+            return 0.0
+        no_variant_ptavs = combination.filtered(
+            lambda ptav: ptav.attribute_id.create_variant == "no_variant"
+        )
+        return self._cart_find_product_line(
+            product.id, uom.id, no_variant_attribute_value_ids=no_variant_ptavs.sorted().ids
+        )[:1].product_uom_qty
+
     def _get_cart_and_free_qty(self, product):
         """Get cart quantity and free quantity for given product.
 

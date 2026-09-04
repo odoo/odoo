@@ -225,10 +225,20 @@ export class ProductConfiguratorDialog extends Component {
             return false;
         }
         product.quantity = quantity;
-        const { price } = await this._updateCombination(product, quantity, product.uom.id);
-        product.price = parseFloat(price);
+        const combination = await this._updateCombination(product, quantity, product.uom.id);
+        this._handleQuantityUpdate(product, combination);
 
         return true;
+    }
+
+    /**
+     * Apply the update after changing the product quantity.
+     *
+     * @param {Object} product - The product for which the quantity was changed.
+     * @param {Object} combination - The result of the `_updateCombination`.
+     */
+    _handleQuantityUpdate(product, combination) {
+        product.price = parseFloat(combination.price);
     }
 
     /**
