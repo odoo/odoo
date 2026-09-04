@@ -99,8 +99,8 @@ const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NO
  * @typedef {((element: HTMLElement, isFirst: boolean) => Element)[]} edge_block_to_unwrap_processors
  * @typedef {((insertedNodes: Node[]) => void)[]} inserted_content_processors
  *
- * @typedef {((parent: HTMLElement) => boolean | void)[]} is_parent_compatible_for_insertion_predicates
  * @typedef {((element: HTMLElement) => boolean | void)[]} can_hold_selection_after_insertion_predicates
+ * @typedef {((block: HTMLElement, parent: HTMLElement) => boolean | void)[]} can_insert_block_in_parent_predicates
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -161,6 +161,11 @@ export class DomPlugin extends Plugin {
                 mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST &&
                 [...mutation.addedNodes, ...mutation.removedNodes].every((node) => node[IS_MARKER])
             ) {
+                return false;
+            }
+        },
+        is_node_removable_predicates: (node) => {
+            if (node[IS_MARKER]) {
                 return false;
             }
         },
@@ -301,13 +306,10 @@ export class DomPlugin extends Plugin {
         }
 
         // Insert
-        const targetNode = this.dependencies.selection.getEditableSelection().focusNode;
-        const preserveInlineContext = !isBlock(closestElement(targetNode));
         const children = nodes.flatMap((item) => (isFragment(item) ? childNodes(item) : item));
         this.trigger("on_will_insert_handlers", children);
         const { focusNode, focusOffset } = this.dependencies.selection.getEditableSelection();
-        const position = [focusNode, focusOffset];
-        let insertedContent = this.insertNodesAt(nodes, ...position, { preserveInlineContext });
+        let insertedContent = this.insertNodesAt(nodes, focusNode, focusOffset);
         insertedContent = this.processThrough("inserted_content_processors", insertedContent);
 
         // Move selection
@@ -480,18 +482,23 @@ export class DomPlugin extends Plugin {
                     const next = marker.nextSibling;
                     const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
                     let parent = marker.parentElement;
-                    if (isBlock(node) && !this.canInsertBlockAt(parent)) {
+                    if (isBlock(node) && !this.canInsertBlockAt(node, parent)) {
                         if (this.isAtBlockEdge(marker, "start")) {
                             // TODO AGE: should probably not check block
                             // edge but just whether edge of parent. Would
                             // likely involve loop to insert before parent while
                             // checking if can insert.
-                            closestBlock(marker).before(node);
+                            const target = closestBlock(marker);
+                            target.before(node);
+                            if (isEmptyBlock(target)) {
+                                target.before(marker);
+                                target.remove();
+                            }
                         } else {
                             let target = marker;
                             let offset = childNodeIndex(marker);
                             let shouldSkip = false;
-                            while (parent && !shouldSkip && !this.canInsertBlockAt(parent)) {
+                            while (parent && !shouldSkip && !this.canInsertBlockAt(node, parent)) {
                                 if (this.dependencies.split.isUnsplittable(parent)) {
                                     // We can't insert the node but we also
                                     // can't split.
@@ -518,6 +525,10 @@ export class DomPlugin extends Plugin {
                             }
                             if (!shouldSkip) {
                                 target.before(node);
+                                if (isEmptyBlock(target)) {
+                                    target.before(marker);
+                                    target.remove();
+                                }
                             }
                         }
                     } else {
@@ -571,12 +582,10 @@ export class DomPlugin extends Plugin {
         return [];
     }
 
-    canInsertBlockAt(parent) {
-        if (!isBlock(parent) || isParagraphRelatedElement(parent)) {
-            return false;
-        }
+    canInsertBlockAt(block, parent) {
         return (
-            this.checkPredicates("is_parent_compatible_for_insertion_predicates", parent) ?? true
+            this.checkPredicates("can_insert_block_in_parent_predicates", block, parent) ??
+            (isBlock(parent) && !isParagraphRelatedElement(parent))
         );
     }
 

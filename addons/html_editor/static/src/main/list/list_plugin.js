@@ -222,11 +222,7 @@ export class ListPlugin extends Plugin {
                 }
             }
         },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (isListItemElement(container)) {
-                return true;
-            }
-        },
+        can_contain_selection_placeholder_predicates: isListPredicate,
         is_node_in_same_block_segment_predicates: (node, blockNode) => {
             const listAncestor = closestElement(node, "ul, ol");
             if (listAncestor && blockNode.contains(listAncestor)) {
@@ -234,8 +230,8 @@ export class ListPlugin extends Plugin {
             }
         },
         can_hold_selection_after_insertion_predicates: isListPredicate,
-        is_parent_compatible_for_insertion_predicates: (parent) => {
-            if (isListItemElement(parent)) {
+        can_insert_block_in_parent_predicates: (block, parent) => {
+            if (isListItemElement(block) && isListItemElement(parent)) {
                 return false;
             }
         },

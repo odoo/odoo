@@ -1,7 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { unwrapContents } from "@html_editor/utils/dom";
+import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import {
     isParagraphRelatedElement,
     isRedundantElement,
@@ -380,14 +380,16 @@ export class FontTypePlugin extends Plugin {
                 !descendants(splitResult.after).some(isVisibleTextNode)
             ) {
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer({
-                    children: [...splitResult.after.childNodes],
+                    children: descendants(splitResult.after).filter((node) =>
+                        this.dependencies.delete.isUnremovable(node)
+                    ),
                 });
                 const dir = splitResult.after.getAttribute("dir");
                 if (dir) {
                     baseContainer.setAttribute("dir", dir);
                 }
                 splitResult.after.replaceWith(baseContainer);
-                baseContainer.append(this.document.createElement("br"));
+                fillEmpty(baseContainer);
                 this.dependencies.selection.setCursorStart(baseContainer);
                 return { ...splitResult, after: baseContainer };
             }
