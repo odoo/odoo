@@ -176,10 +176,16 @@ class BaseCommon(TransactionCase):
 
     @classmethod
     def _create_company(cls, **create_values):
-        company = cls.env['res.company'].create({
-            'name': "Secondary Test Company",
-            **create_values,
-        })
+        template_company = cls.env.ref('base.test_company_template')
+        if template_company in cls.env.user.company_ids:
+            company = cls.env['res.company'].create({
+                'name': "Secondary Test Company",
+                **create_values,
+            })
+        else:
+            cls.registry._assertion_report.custom_test_stats['res.company.create'].add_avoided()
+            template_company.write(create_values)
+            company = template_company
         cls.env.user.company_ids = [Command.link(company.id)]
         # cls.env.context['allowed_company_ids'].append(company.id)
         return company
