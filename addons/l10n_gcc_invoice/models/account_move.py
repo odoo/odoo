@@ -14,7 +14,14 @@ except ImportError:
     _logger.warning("The num2words python library is not installed, amount-to-text features won't be fully available.")
     num2words = None
 
+<<<<<<< 679ebe800a22cbcdb644cde0da2a4a8cf7677d6e
 
+||||||| cc7b8068441ca804e3e185fffa45c3d01ae694c6
+=======
+EXCLUDE_IF_NOT_REGISTERED = {'AE', 'SA'}
+
+
+>>>>>>> 66a45096d13a090e32da8b2bda1e13f8409584ac
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
@@ -22,7 +29,14 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         self.ensure_one()
+<<<<<<< 679ebe800a22cbcdb644cde0da2a4a8cf7677d6e
         if self.company_id.country_id and 'GCC' in self.company_id.country_id.country_group_codes:
+||||||| cc7b8068441ca804e3e185fffa45c3d01ae694c6
+        if self.company_id.country_id in self.env.ref('base.gulf_cooperation_council').country_ids:
+=======
+        if (self.company_id.vat or self.company_id.country_id.code not in EXCLUDE_IF_NOT_REGISTERED) \
+         and self.company_id.country_id in self.env.ref('base.gulf_cooperation_council').country_ids:
+>>>>>>> 66a45096d13a090e32da8b2bda1e13f8409584ac
             return 'l10n_gcc_invoice.arabic_english_invoice'
         return super()._get_name_invoice_report()
 
