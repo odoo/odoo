@@ -141,7 +141,7 @@ class UomUom(models.Model):
         qty: float,
         to_unit: Self,
         round: bool = True,
-        rounding_method: RoundingMethod = 'UP',
+        rounding_method: RoundingMethod = 'HALF-UP',
         raise_if_failure: bool = True,
     ) -> float:
         """ Convert the given quantity from the current UoM `self` into a given one
