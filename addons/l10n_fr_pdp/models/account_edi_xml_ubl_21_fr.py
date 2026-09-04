@@ -96,15 +96,25 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             # After downpayment
             profile_number = "4"
 
+        profile_id = f"{profile_scope}{profile_number}"
         vals['vals'].update({
             'customization_id': CPRO_CUSTOMIZATION_ID if b2g else PDP_CUSTOMIZATION_ID,
-            'profile_id': f"{profile_scope}{profile_number}",
+            'profile_id': profile_id,
             # Règles de gestion G1.31
             'billing_reference_vals': {
                'id': invoice.reversed_entry_id.name,
                'issue_date': invoice.reversed_entry_id.invoice_date,
             },
         })
+
+        # [BR-FR-CO-09/BT-23] : Si le cadre de facturation (BT-23) est B2, S2 ou M2, alors la date d'échéance (BT-9) doit être renseignée et correspondre à la date de paiement.
+        if profile_id in ('B2', 'S2', 'M2'):
+            payment_date = invoice._pdp_get_payment_date() or invoice.invoice_date
+            if vals['document_type'] == 'credit_note':
+                for payment_means_vals in vals['vals']['payment_means_vals_list']:
+                    payment_means_vals['payment_due_date'] = payment_date
+            else:
+                vals['vals']['due_date'] = payment_date
 
         # B2G
         if not b2g:
