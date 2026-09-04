@@ -453,7 +453,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         invoice = self.pos_order_pos0._generate_pos_order_invoice()
         self.assertTrue('Price discount from 100.00 to 95.00' in invoice.invoice_line_ids.filtered(lambda l: l.display_type == "line_note").display_name)
         product_line = invoice.invoice_line_ids.filtered(
-            lambda line: line.display_type == "product" and line.name == self.product.name,
+            lambda line: line.product_id == self.product,
         )
         self.assertEqual(product_line.price_unit, 95)  # Only pricelist applies
         self.assertEqual(product_line.discount, 5)  # Disount is reflected

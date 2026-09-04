@@ -384,8 +384,8 @@ class AccountEdiUBL(models.AbstractModel):
         line_name = name = base_line.get('name', '')  # Regular business line.
         description = None
         if product := base_line['product_id']:
-            name = product.display_name
-            description = line_name.replace(name, '').strip()  # Remove the redundant product's name from the description.
+            name = product.name
+            description = line_name
         elif base_line.get('_removed_tax_data'):
             # Emptying tax extra line.
             name = base_line['_removed_tax_data']['tax'].name
@@ -2291,23 +2291,20 @@ class AccountEdiUBL(models.AbstractModel):
         An item may contain multiple Description elements
         """
         line_tree = collected_values['line_tree']
-        item_ref = line_tree.findtext('.//{*}Item/{*}SellersItemIdentification/{*}ID')
-        name = line_tree.findtext('.//{*}Item/{*}Name')
-        if item_ref and name and f'[{item_ref}]' not in name:
-            name = f"[{item_ref}] {name}"
-        collected_values['name'] = name
+        collected_values['name'] = name = line_tree.findtext('.//{*}Item/{*}Name')
+        description_parts = [
+            description_elem.text
+            for description_elem in line_tree.iterfind('.//{*}Item/{*}Description')
+            if description_elem.text
+        ]
+        description = '\n'.join(description_parts)
+        # Preserve both the item name and descriptions in case when no matching product is found,
+        # so that importing the UBL document does not result in any information loss.
+        # If a matching product is found, the product name part will be removed.
+        # See _import_ubl_invoice_retrieve_products.
+        name_to_write = '\n'.join(filter(None, [name, description]))
 
-        description = ''
-        for description_elem in line_tree.iterfind('.//{*}Item/{*}Description'):
-            if description_elem.text:
-                description += description_elem.text + '\n'
-
-        if name and description:
-            collected_values['to_write']['name'] = f'{name}\n{description.strip()}'
-        elif name:
-            collected_values['to_write']['name'] = name
-        elif description:
-            collected_values['to_write']['name'] = description.strip()
+        collected_values['to_write']['name'] = name_to_write
 
     def _import_ubl_invoice_line_add_allowance_charges_values(self, collected_values):
         line_tree = collected_values['line_tree']

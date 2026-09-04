@@ -270,16 +270,19 @@
                                     <field name="technical_price_unit" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
                                     <!-- optional="show" allows name (description) to be editable -->
-                                    <field
-                                        name="product_id"
-                                        widget="product_label_section_and_note_field"
-                                        readonly="state in ('purchase', 'to approve', 'cancel') or is_downpayment"
-                                        required="not display_type and not is_downpayment"
-                                        optional="show"
-                                        context="{'partner_id':partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
-                                        options="{'show_label_warning': True}"
-                                        force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
-                                    <field name="name" optional="show"/>
+                                    <column name="product_and_description">
+                                        <field
+                                            name="product_id"
+                                            widget="account_product_field"
+                                            readonly="state in ('purchase', 'to approve', 'cancel') or is_downpayment"
+                                            required="not display_type and not is_downpayment"
+                                            optional="show"
+                                            context="{'partner_id':partner_id, 'quantity':product_qty, 'company_id': parent.company_id}"
+                                            options="{'show_label_warning': True}"
+                                            force_save="1" domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', 'parent_of', parent.company_id)]"/>
+                                        <field name="name" optional="show"/>
+                                        <field name="label"/>
+                                    </column>
                                     <field name="date_planned" optional="hide" required="not display_type and not is_downpayment" force_save="1" readonly="is_downpayment"/>
                                     <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"

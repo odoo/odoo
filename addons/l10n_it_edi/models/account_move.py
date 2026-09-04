@@ -497,7 +497,7 @@ class AccountMove(models.Model):
             # Down payment lines:
             # If there was a down paid amount that has been deducted from this move,
             # we need to put a reference to the down payment invoice in the DatiFattureCollegate tag
-            description = line.name
+            description = (line.with_context(display_default_code=False).label or "").replace("\n", " ")
             if not is_downpayment and price_subtotal < 0:
                 downpayment_moves = line._get_downpayment_lines().move_id
                 if downpayment_moves:
@@ -506,7 +506,7 @@ class AccountMove(models.Model):
                     description = f"{description}{sep}{downpayment_moves_description}"
             # Workaround: remove line breaks due to Tax Agency portal bug.
             # This deviates from Odoo's standard behavior and must be reviewed if the issue gets fixed.
-            description = description and description.replace('\n', ' ').strip() or "NO NAME"
+            description = (description and description.strip()) or "NO NAME"
 
             # Price unit.
             if quantity:
@@ -1884,9 +1884,6 @@ class AccountMove(models.Model):
         if line_elements:
             move_line.sequence = int(line_elements[0].text)
 
-        # Name.
-        move_line.name = " ".join(get_text(element, './/Descrizione').split())
-
         # Product.
         company_domain = self.env['res.company']._check_company_domain(company)
         if elements_code := element.xpath('.//CodiceArticolo'):
@@ -1914,8 +1911,11 @@ class AccountMove(models.Model):
                         move_line.product_id = product
                         break
 
+        # Extract description for prediction.
+        description = get_text(element, './/Descrizione')
+
         # If no product is found, try to find a product that may be fitting
-        predicted_values = self.env['account.move.line']._get_predicted_values(move_line.name, self) if predict_enabled else {}
+        predicted_values = self.env['account.move.line']._get_predicted_values(description, self) if predict_enabled else {}
         if predict_enabled and not move_line.product_id:
             fitting_product = predicted_values.get('product_id')
             if fitting_product:
@@ -1928,6 +1928,19 @@ class AccountMove(models.Model):
             fitting_account = predicted_values.get('account_id')
             if fitting_account:
                 move_line.account_id = fitting_account
+
+        # Name.
+        if not move_line.name:
+            description = get_text(element, './/Descrizione')
+            prefix = (
+                f'{move_line.product_id.with_context(display_default_code=False).display_name} '
+                if move_line.product_id
+                else None
+            )
+            if prefix and description.startswith(prefix):
+                move_line.name = description.removeprefix(prefix)
+            else:
+                move_line.name = description
 
         # Quantity.
         move_line.quantity = float(get_text(element, './/Quantita') or '1')

@@ -873,7 +873,7 @@ class TestSaleToInvoice(TestSaleCommon):
             invoice.invoice_line_ids,
             [
                 {
-                    "name": "Meal Menu x 3",
+                    "label": "Meal Menu x 3",
                     "display_type": "line_section",
                     "product_id": False,
                     "quantity": 3,
@@ -881,7 +881,7 @@ class TestSaleToInvoice(TestSaleCommon):
                     "sequence": 0,
                 },
                 {
-                    "name": "Horse-meat burger",
+                    "label": "Horse-meat burger",
                     "display_type": "product",
                     "product_id": product_a.id,
                     "quantity": 3,
@@ -889,7 +889,7 @@ class TestSaleToInvoice(TestSaleCommon):
                     "sequence": 1,
                 },
                 {
-                    "name": "French fries",
+                    "label": "French fries",
                     "display_type": "product",
                     "product_id": product_b.id,
                     "quantity": 3,
@@ -1573,20 +1573,12 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.assertEqual(so.amount_to_invoice, 180.0, "The amount to invoice should be 180.0")
 
-    def test_invoice_line_name_has_product_name(self):
-        """Testing that when invoicing a sales order, the invoice line name ALWAYS contains the
-        product name."""
+    def test_invoice_line_copies_description(self):
+        """Testing that when invoicing a sales order, the invoice line name copies the description."""
         so = self.sale_order
 
-        # Use only invoicable on order products
-        so.order_line[1].product_id = so.order_line[0].product_id
-        so.order_line[3].product_id = so.order_line[2].product_id
-
         # Adapt the SOL names to test the different cases
-        so.order_line[0].name = "just a description"
-        so.order_line[1].name = so.order_line[1].product_id.display_name
-        so.order_line[2].name = f"{so.order_line[2].product_id.display_name} with more description"
-        so.order_line[3].name = "product"
+        so.order_line[0].name = "A description"
 
         # Invoice the sale order
         so.action_confirm()
@@ -1595,23 +1587,8 @@ class TestSaleToInvoice(TestSaleCommon):
         # Check the invoice line names
         self.assertEqual(
             inv.invoice_line_ids[0].name,
-            f"{so.order_line[0].product_id.display_name}\n{so.order_line[0].name}",
-            "When the description doesn't contain the product name, it should be added to the invoice line name",
-        )
-        self.assertEqual(
-            inv.invoice_line_ids[1].name,
-            f"{so.order_line[1].name}",
-            "When the description is the product name, the invoice line name should only be the description",
-        )
-        self.assertEqual(
-            inv.invoice_line_ids[2].name,
-            f"{so.order_line[2].name}",
-            "When description contains the product name, the invoice line name should only be the description",
-        )
-        self.assertEqual(
-            inv.invoice_line_ids[3].name,
-            f"{so.order_line[3].product_id.display_name}\n{so.order_line[3].name}",
-            "When the product name contains the description, the invoice line name should contain the product name and the description",
+            so.order_line[0].name,
+            "Description should be added to the invoice line name",
         )
 
     def test_credit_note_automatic_matching(self):

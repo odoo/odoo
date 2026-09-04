@@ -220,7 +220,7 @@ class TestCiiImportFacturXFRInvoiceLine(CiiImportFacturXFR):
         imported_invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_discount_on_price_zero')
         self.assertRecordValues(imported_invoice, [{'amount_total': 1.73}])
         self.assertRecordValues(imported_invoice.invoice_line_ids, [{
-            'name': self.product_a.name,
+            'label': self.product_a.name,
             'price_subtotal': 1.5,
             'price_unit': 2.0,
             'discount': 25.0,

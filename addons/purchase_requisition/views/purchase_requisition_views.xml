@@ -89,11 +89,14 @@
                                 <field name="display_type" column_invisible="True"/>
                                 <field name="currency_id" column_invisible="True"/>
                                 <field name="sequence" widget="handle"/>
-                                <field name="product_id"
-                                       widget="product_label_section_and_note_field"
-                                       required="not display_type"
-                                       domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
-                                <field name="name" optional="show"/>
+                                <column name="product_and_description">
+                                    <field name="product_id"
+                                           widget="account_product_field"
+                                           required="not display_type"
+                                           domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                    <field name="name" optional="show"/>
+                                    <field name="label"/>
+                                </column>
                                 <field name="product_description_variants" invisible="product_description_variants == ''"/>
                                 <field name="product_qty" required="not display_type"/>
                                 <field name="qty_ordered" optional="show" column_invisible="parent.requisition_type == 'purchase_template'"/>

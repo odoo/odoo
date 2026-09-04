@@ -334,7 +334,7 @@ class ProductProduct(models.Model):
     def _get_description(self, picking_type_id):
         """ Hook function meant to be overridden. """
         self.ensure_one()
-        return self.display_name
+        return ''
 
     def _get_picking_description(self, picking_type_id):
         """

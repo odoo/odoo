@@ -3,14 +3,13 @@ import {
     sectionAndNoteFieldOne2Many,
     SectionAndNoteListRenderer,
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { ProductNameAndDescriptionListRendererMixin } from "@product/product_name_and_description/product_name_and_description";
 import { registry } from "@web/core/registry";
-import { patch } from "@web/core/utils/patch";
 
 export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRenderer {
     setup() {
         super.setup();
         this.descriptionColumn = "name";
+        this.labelColumn = "label";
         // product_template_id is added for purchase_product_matrix's PO view and sale's SO view
         this.productColumns = ["product_id", "product_template_id"];
     }
@@ -21,16 +20,54 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         }
         // The isCellReadonly method from the ListRenderer is used to determine the classes to apply to the cell.
         // We need this override to make sure some readonly classes are not applied to the cell if it is still editable.
-        let isReadonly = super.isCellReadonly(column, record);
+        const isReadonly = super.isCellReadonly(column, record);
         return (
             isReadonly
             && (["cancel", "posted"].includes(record.evalContext.parent.state)
             || record.evalContext.parent.locked)
         )
     }
-}
 
-patch(ProductLabelSectionAndNoteListRender.prototype, ProductNameAndDescriptionListRendererMixin);
+    getActiveColumns() {
+        let activeColumns = super.getActiveColumns();
+        const productColActive = this.isProductFieldActive();
+        const descriptionFieldActive =
+            this.optionalActiveFields["name"] || !("name" in this.optionalActiveFields);
+
+        // Hide the stacked product_and_description column if neither the product nor the
+        // description field is active.
+        if (!productColActive && !descriptionFieldActive) {
+            activeColumns = activeColumns.filter((col) => col.name != "product_and_description");
+        }
+
+        return activeColumns;
+    }
+
+    isColumnGroupFieldVisible(fieldInfo, record) {
+        // Always show name field for section and note.
+        if (this.isSectionOrNote(record)) {
+            return fieldInfo.name === "name";
+        }
+
+        if (!super.isColumnGroupFieldVisible(fieldInfo, record)) {
+            return false;
+        }
+
+        const isProductFieldActive = this.isProductFieldActive();
+
+        if (fieldInfo.name === "label") {
+            return !isProductFieldActive;
+        }
+        if (fieldInfo.name === "name") {
+            return isProductFieldActive;
+        }
+        return true;
+    }
+
+    isProductFieldActive() {
+        return this.optionalActiveFields["product_id"];
+    }
+}
 
 export class ProductLabelSectionAndNoteOne2Many extends SectionAndNoteFieldOne2Many {
     static components = {
