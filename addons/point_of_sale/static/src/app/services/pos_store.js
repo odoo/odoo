@@ -14,6 +14,7 @@ import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/components/popups/opening_control_popup/opening_control_popup";
 import { SelectLotPopup } from "@point_of_sale/app/components/popups/select_lot_popup/select_lot_popup";
 import { OrderDetailsDialog } from "@point_of_sale/app/screens/ticket_screen/order_details_dialog/order_details_dialog";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
 import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
 import {
@@ -2116,6 +2117,15 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     showOrderDetails(order, props = {}) {
+        if (this.useBackendOrderView()) {
+            this.dialog.add(FormViewDialog, {
+                resModel: "pos.order",
+                resId: order.id,
+                onRecordSaved: () => this.data.loadServerOrders([["id", "=", order.id]]),
+            });
+            return;
+        }
+
         this.dialog.add(OrderDetailsDialog, {
             order: order,
             editPayment: () => {
@@ -2125,6 +2135,11 @@ export class PosStore extends WithLazyGetterTrap {
             ...props,
         });
     }
+
+    useBackendOrderView() {
+        return false;
+    }
+
     canEditPayment(order) {
         return !this.config.autoPrint && order.nb_print === 0 && order.state === "paid";
     }
