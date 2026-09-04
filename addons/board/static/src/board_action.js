@@ -3,17 +3,18 @@ import { useService } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 import { makeContext } from "@web/core/context";
 import { user } from "@web/core/user";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, t, useProps } from "@odoo/owl";
 
 export class BoardAction extends Component {
     static template = "board.BoardAction";
     static components = { View };
-    static props = {
-        action: Object,
-        actionId: { type: Number, optional: true },
-        className: { type: String, optional: true },
-    };
     static cache = {};
+
+    props = useProps({
+        action: t.object(),
+        actionId: t.number().optional(),
+        className: t.string().optional(),
+    });
     setup() {
         this.actionService = useService("action");
         const action = this.props.action;
