@@ -23,6 +23,8 @@ class HrEmployeeSkill(models.Model):
             filtered_emp_skill = emp_skills.filtered(
                 lambda employee_skill: not employee_skill.valid_to or employee_skill.valid_to >= today,
             )
+            if skill.skill_type_id.company_id and skill.skill_type_id.company_id != employee.company_id:
+                continue
             if skill.skill_type_id.is_certification and not filtered_emp_skill:
                 expired_skills = (emp_skills - filtered_emp_skill)
                 expired_skills_group_by_valid_to = expired_skills.grouped('valid_to')

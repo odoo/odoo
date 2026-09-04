@@ -38,7 +38,9 @@ class HrEmployee(models.Model):
     @api.depends('employee_skill_ids')
     def _compute_certification_ids(self):
         for employee in self:
-            employee.certification_ids = employee.employee_skill_ids.filtered('is_certification')
+            employee.certification_ids = employee.employee_skill_ids.filtered(
+                lambda skill: skill.is_certification and (not skill.skill_type_id.company_id or skill.skill_type_id.company_id == employee.company_id),
+            )
 
     def _compute_display_certification_page(self):
         self.display_certification_page = bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1))
