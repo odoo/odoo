@@ -305,10 +305,18 @@
                    <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
                    <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
                    <filter string="Overdue Invoices"
                         name="overdue"
                         domain="[('invoice_ids.invoice_date_due', '&lt;', context_today().strftime('%Y-%m-%d'))]" />
                    <separator/>
+||||||| 7cfeb57c7bebe9486549ccb843e0d3cb9e2eae31
+=======
+                    <filter string="Overdue Invoices"
+                        name="overdue"
+                        domain="[('invoice_ids.invoice_date_due', '&lt;', context_today().strftime('%Y-%m-%d'))]" />
+                   <separator/>
+>>>>>>> 3d0e634ee89ceab24e127b4b1c3f190cb03e5064
                 </xpath>
             </field>
         </record>
