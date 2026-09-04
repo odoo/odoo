@@ -67,7 +67,7 @@ class StripeController(http.Controller):
             return request.redirect("/payment/status")
 
     @http.route("/payment/stripe/client_secret", type="jsonrpc", auth="public")
-    def stripe_client_secret_route(
+    def stripe_acss_client_secret_route(
         self,
         provider_id,
         access_token,
@@ -84,7 +84,7 @@ class StripeController(http.Controller):
             raise Forbidden
 
         provider_sudo = self.env["payment.provider"].sudo().browse(int(provider_id))
-        return provider_sudo.stripe_get_client_secret({
+        return provider_sudo._stripe_acss_get_client_secret({
             "partner_id": partner_id,
             "payment_method_id": payment_method_id,
             "currency_id": currency_id,

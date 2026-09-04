@@ -5,14 +5,12 @@ import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
-import { useService } from '@web/core/utils/hooks';
 import { rpc } from '@web/core/network/rpc';
 
 patch(PaymentForm.prototype, {
 
     setup() {
         super.setup();
-        this.orm = useService("orm");
         this.stripeElements = {}; // Store the element of each instantiated payment method.
     },
 
@@ -73,7 +71,8 @@ patch(PaymentForm.prototype, {
                 currency_id: this.paymentContext['currencyId'],
                 payment_method_id: paymentOptionId,
             });
-            this._initiatePaymentElement(paymentOptionId, { clientSecret }, inlineForm);
+            const appearance = { theme: 'stripe' };
+            this._initiatePaymentElement(paymentOptionId, { appearance, clientSecret }, inlineForm);
             return;
         }
 

@@ -275,17 +275,20 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
-    def stripe_get_client_secret(self, values):
-        """Create a ('virtual') payment.transaction and return the client_secret of
-        the SetupIntent Stripe creates for it.
+    def _stripe_acss_get_client_secret(self, values):
+        """ Return the `client_secret` of a SetupIntent, created solely to satisfy ACSS's need for
+        one upfront.
 
-        This is used to obtain a client_secret ahead of the standard checkout flow, since ACSS's
-        Stripe Elements needs one to mount the Payment Element before the customer confirms the
-        order. The transaction is built with `.new()` so
-        that no DB row is left behind.
+        Our Stripe integration follows Stripe's deferred flow: the Payment Element is shown
+        before any Intent exists. ACSS doesn't support this flow and requires a `client_secret`
+        upfront, which itself requires the Intent to already be created on Stripe's side with the
+        transaction's values (amount, currency, partner). We derive those values from a virtual,
+        non-persisted transaction, just to create the Intent on Stripe's side.
 
-        Note: `self.ensure_one()
+        Note: self.ensure_one()
 
+        :param dict values: The transaction values used to determine the SetupIntent's parameters.
+        :return: The client secret of the SetupIntent, if any.
         :rtype: str
         """
         self.ensure_one()

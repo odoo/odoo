@@ -417,16 +417,10 @@
         <field name="support_manual_capture">none</field>
         <field name="support_refund">partial</field>
         <field name="supported_country_ids"
-               eval="[Command.set([
-                         ref('base.ca'),
-                         ref('base.us'),
-                     ])]"
+               eval="[Command.set([ref('base.ca')])]"
         />
         <field name="supported_currency_ids"
-               eval="[Command.set([
-                         ref('base.CAD'),
-                         ref('base.USD'),
-                     ])]"
+               eval="[Command.set([ref('base.CAD'), ref('base.mai')])]"
         />
     </record>
 
