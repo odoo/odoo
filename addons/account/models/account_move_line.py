@@ -886,7 +886,7 @@ class AccountMoveLine(models.Model):
             conversion_table = SQL(
                 """(
                     SELECT CASE WHEN %(base_line_account_type)s = 'equity' THEN (%(historical)s->>(%(base_line_company)s::text))::jsonb->>(%(base_line_date)s::text)
-                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected']) THEN %(average)s->>(%(base_line_company)s::text)
+                                WHEN %(base_line_account_type)s LIKE ANY (ARRAY['income%%', 'expense%%', 'equity_unaffected', 'equity_retained']) THEN %(average)s->>(%(base_line_company)s::text)
                                 ELSE %(current)s->>(%(base_line_company)s::text)
                            END::numeric AS rate
                 )""",
