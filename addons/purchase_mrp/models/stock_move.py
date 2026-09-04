@@ -16,6 +16,15 @@ class StockMove(models.Model):
             if move.bom_line_id and move.bom_line_id.bom_id.type == 'phantom':
                 move.packaging_uom_id = move.uom_id
 
+    def _get_old_demand_qty(self):
+        qty = super()._get_old_demand_qty()
+        po_lines = self._get_active_created_purchase_lines()
+        qty += sum(line.uom_id._compute_quantity(line.product_qty, self.uom_id) for line in po_lines)
+        return qty
+
+    def _get_active_created_purchase_lines(self):
+        return self.created_purchase_line_ids.filtered(lambda l: l.state not in ('cancel', 'purchase'))
+
     def _get_cost_ratio(self, quantity):
         self.ensure_one()
         if self.bom_line_id.bom_id.type == "phantom":

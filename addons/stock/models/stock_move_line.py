@@ -742,6 +742,21 @@ class StockMoveLine(models.Model):
             self.env['stock.quant']._update_available_quantity(self.product_id, location, taken_from_untracked_qty, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
         return available_qty, in_date
 
+    def _action_reset_to_draft(self):
+        for ml in self:
+            if not ml.product_id.is_storable or ml.uom_id.is_zero(ml.quantity_product_uom):
+                continue
+            if ml.location_dest_id.usage != 'production':
+                # avoid availability check for components, it's normal they are all consumed in MOs
+                available_at_dest = self.env['stock.quant']._get_available_quantity(
+                    ml.product_id, ml.location_dest_id, lot_id=ml.lot_id,
+                    package_id=ml.result_package_id, owner_id=ml.owner_id, strict=True)
+                if ml.product_id.uom_id.compare(available_at_dest, ml.quantity_product_uom) < 0:
+                    raise UserError(_("Cannot reset move to draft.\nQuantity not enough, product might have been used in some transfer."))
+            in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_dest_id, lot=ml.lot_id, package=ml.result_package_id)[1]
+            ml._synchronize_quant(ml.quantity_product_uom, ml.location_id, lot=ml.lot_id, in_date=in_date, package=ml.result_package_id)
+            ml._synchronize_quant(ml.quantity_product_uom, ml.location_id, action="reserved", lot=ml.lot_id, package=ml.result_package_id)
+
     def _get_similar_move_lines(self):
         self.ensure_one()
         lines = self.env['stock.move.line']

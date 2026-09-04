@@ -54,6 +54,19 @@ class MrpWorkorder(models.Model):
             if wc_analytic_line_vals:
                 self.sudo().wc_analytic_account_line_ids += self.env['account.analytic.line'].sudo().create(wc_analytic_line_vals)
 
+    def _clear_journal_entries(self):
+        account_moves = self.sudo().time_ids.account_move_line_id.move_id
+        account_moves.button_draft()
+        account_moves.unlink()
+
+    def _action_reset_to_assigned(self):
+        self._clear_journal_entries()
+        super()._action_reset_to_assigned()
+
+    def _action_reset_to_draft(self):
+        self._clear_journal_entries()
+        super()._action_reset_to_draft()
+
     def unlink(self):
         sudo_self = self.sudo()
         (sudo_self.mo_analytic_account_line_ids | sudo_self.wc_analytic_account_line_ids).unlink()
