@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from psycopg2 import IntegrityError
 from werkzeug.urls import url_unquote_plus
 
@@ -88,3 +90,30 @@ class TestResources(common.SlidesCase, HttpCase):
                 filename_star = content_disposition.split('; ')[-1]
                 filename_star = filename_star.removeprefix("""filename*=UTF-8''""")
                 self.assertEqual(url_unquote_plus(filename_star), expected_download_name)
+
+    def test_quiz_resource_link(self):
+        """Test that the resource links sent with the quiz are absolute http(s) URLs."""
+        self.channel._action_add_members(self.user_emp.partner_id)
+        links = {
+            'https://www.example.com': 'https://www.example.com',
+            # URLs starting with "/" are built from the base URL
+            '/from/root/url': f'{self.slide_3.get_base_url()}/from/root/url',
+            '#anchor': f'{self.slide_3.website_absolute_url}#anchor',
+            # relative URLs replace the slug of the slide
+            'local_url/test': f'{self.slide_3.get_base_url()}/slides/slide/local_url/test',
+            'ftp://test': False,
+        }
+        self.env['slide.slide.resource'].create([{
+            'link': link,
+            'resource_type': 'url',
+            'slide_id': self.slide_3.id,
+        } for link in links])
+
+        self.authenticate(self.user_emp.login, self.user_emp.login)
+        response = self.url_open(
+            '/slides/slide/quiz/get',
+            data=json.dumps({'params': {'slide_id': self.slide_3.id}}),
+            headers={'Content-Type': 'application/json'},
+        )
+        resources = response.json()['result']['slide_resource_ids']
+        self.assertEqual([resource['link'] for resource in resources], list(links.values()))
