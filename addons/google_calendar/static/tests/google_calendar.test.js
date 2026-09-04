@@ -26,6 +26,8 @@ class CalendarEvent extends models.Model {
             <calendar js_class="attendee_calendar" date_start="start" date_stop="stop" attendee="partner_ids" mode="month" color="partner_ids">
                 <field name="name"/>
                 <field name="partner_ids" write_model="calendar.filters" write_field="partner_id" filter_field="active"/>
+                <field name="calendar_id" write_model="calendar.user" write_field="calendar_id" filters="1" filter_field="is_filter_checked"/>
+                <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
             </calendar>
         `,
         list: `<list sample="1"/>`
@@ -33,6 +35,7 @@ class CalendarEvent extends models.Model {
 
     user_id = fields.Many2one({ relation: "res.users" });
     partner_id = fields.Many2one({ relation: "res.partner" });
+    calendar_id = fields.Many2one({ relation: "calendar" });
     name = fields.Char();
     start = fields.Datetime();
     stop = fields.Datetime();
@@ -40,7 +43,32 @@ class CalendarEvent extends models.Model {
     partner_ids = fields.One2many({ relation: "res.partner" });
 }
 
-defineModels([CalendarEvent, CalendarFilters]);
+class Calendar extends models.Model {
+    _records = [
+        { id: 1, name: "Primary Calendar", user_id: serverState.userId, is_primary: true },
+    ];
+
+    name = fields.Char();
+    user_id = fields.Many2one({ relation: "res.users" });
+    is_primary = fields.Boolean();
+}
+
+class CalendarUser extends models.Model {
+    _records = [
+        { id: 1, user_id: serverState.userId, calendar_id: 1, is_filter_checked: true, is_filter_active: true, access_role: 'owner', is_primary: true },
+    ];
+
+    user_id = fields.Many2one({ relation: "res.users" });
+    calendar_id = fields.Many2one({ relation: "calendar" });
+    access_role = fields.Selection({
+        selection: [["owner", "owner"], ["writer", "write"], ['writerWithoutPrivateAccess', 'writerWithoutPrivateAccess'], ["reader", "read"], ["freeBusyReader", "freeBusyReader"], ["none", "none"]]
+    });
+    is_filter_checked = fields.Boolean();
+    is_filter_active = fields.Boolean();
+    is_primary = fields.Boolean();
+}
+
+defineModels([Calendar, CalendarUser, CalendarEvent, CalendarFilters]);
 defineMailModels();
 
 onRpc("/google_calendar/sync_data", () => ({ status: "no_new_event_from_google" }));
@@ -62,6 +90,7 @@ beforeEach(async () => {
         {
             user_id: serverState.userId,
             partner_id: serverState.partnerId,
+            calendar_id: 1,
             name: "event 1",
             start: "2016-12-13 15:55:05",
             stop: "2016-12-15 18:55:05",
@@ -71,6 +100,7 @@ beforeEach(async () => {
         {
             user_id: serverState.userId,
             partner_id: serverState.partnerId,
+            calendar_id: 1,
             name: "event 2",
             start: "2016-12-18 08:00:00",
             stop: "2016-12-18 09:00:00",
@@ -113,7 +143,7 @@ test(`sync google calendar`, async () => {
     // select the partner filter
     await togglePartnerFilter("partner_ids", "Partner 4");
     // sync_data was called a first time without filter, event from google calendar was created twice
-    expect(`.fc-event`).toHaveCount(4, { message: "should display 4 events on the month" });
+    expect(`.fc-event`).toHaveCount(4, { message: "should display 3 events on the month" });
     expect.verifySteps(["sync_data", "search_read"]);
 
     await contains(`.o_datetime_picker_header .o_next`).click();
@@ -125,7 +155,7 @@ test(`sync google calendar`, async () => {
 
     await contains(`.o_calendar_button_today`).click();
     expect.verifySteps(["sync_data", "search_read"]);
-    expect(`.fc-event`).toHaveCount(7, { message: "should now display 7 events on the month" });
+    expect(`.fc-event`).toHaveCount(7, { message: "should now display 6 events on the month" });
 });
 
 test(`component is destroyed while sync google calendar`, async () => {
