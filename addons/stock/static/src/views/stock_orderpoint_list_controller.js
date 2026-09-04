@@ -30,7 +30,7 @@ export class StockOrderpointListController extends ListController {
         const resIds = await this.model.root.getResIds(true);
         return this.actionService.doAction('stock.action_orderpoint_snooze', {
             additionalContext: { default_orderpoint_ids: resIds },
-            onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'}); },
+            onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'soft_reload'}); },
         });
     }
 
@@ -38,7 +38,7 @@ export class StockOrderpointListController extends ListController {
         const resIds = await this.model.root.getResIds(true);
         return this.actionService.doAction('stock.action_orderpoint_suggest', {
             additionalContext: { default_orderpoint_ids: resIds },
-            onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'reload'}); },
+            onClose: () => { this.actionService.doAction({type: 'ir.actions.client', tag: 'soft_reload'}); },
         });
     }
 
