@@ -38,6 +38,7 @@ import { rpc } from "@web/core/network/rpc";
 import {
     Command,
     getService,
+    makeServerError,
     mockService,
     onRpc,
     patchWithCleanup,
@@ -1058,6 +1059,21 @@ test("post several messages with failures", async () => {
     expect(".o-mail-Message-content:eq(0)").toHaveStyle({ opacity: "1" });
     expect(".o-mail-Message-content:eq(1)").toHaveStyle({ opacity: "1" });
     expect(".o-mail-Message-content:eq(2)").toHaveStyle({ opacity: "1" });
+});
+
+test("failed message tooltip includes the server error", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    onRpcBefore("/mail/message/post", () => {
+        throw makeServerError({ message: "Error message" });
+    });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Test");
+    await press("Enter");
+    await contains(
+        ".o-mail-Message button[title='Failed to post the message (Error message). Click to retry']"
+    );
 });
 
 test("bookmarked: unbookmark all", async () => {

@@ -174,17 +174,17 @@ class TestLivechatChatbotUI(TestLivechatChatbotUICommon):
             message_author = operator or visitor_partner
             if previous_message_author != message_author:
                 if parts:
-                    parts.append(Markup("<br/>"))
+                    parts.append(Markup(""))
                 parts.append(
-                    Markup("<strong>%s:</strong><br/>")
+                    Markup("<strong>%s:</strong>")
                     % (
                         (message_author.user_livechat_username if message_author._name == "res.partner" else None)
                         or message_author.name
                     ),
                 )
-            parts.append(Markup("%s<br/>") % html2plaintext(body))
+            parts.append(Markup("%s") % html2plaintext(body))
             previous_message_author = message_author
-        expected_history = Markup("").join(parts)
+        expected_history = Markup("<br/>").join(parts)
         self.assertEqual(history, expected_history)
 
     def test_complete_chatbot_flow_ui(self):
