@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
-from odoo.exceptions import UserError
+from odoo import Command, api, models
 from odoo.tools import float_compare
 
 
@@ -67,3 +66,23 @@ class StockMove(models.Model):
             if kit_bom:
                 return line._compute_kit_quantities_from_moves(line.move_ids - self, kit_bom)
         return super()._get_qty_received_without_self()
+
+    def _get_upstream_documents_and_responsibles(self, visited):
+        docs = super()._get_upstream_documents_and_responsibles(visited)
+        for po_line in self.created_purchase_line_ids:
+            if po_line.state not in ('done', 'cancel'):
+                docs.extend(po_line._get_upstream_documents_and_responsibles(visited))
+        return docs
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft_or_cancel(self):
+        for move in self.filtered(lambda m: m.raw_material_production_id):
+            purchase_moves = move.move_orig_ids.filtered(lambda m: m.purchase_line_id)
+            if purchase_moves:
+                move.move_orig_ids = [Command.unlink(m.id) for m in purchase_moves]
+            purchase_lines = (move | move.move_orig_ids).created_purchase_line_ids
+            for po_line in purchase_lines:
+                po = po_line.order_id
+                documents = {(po, po.user_id): [({po_line: (move, (move.product_uom_qty, 0))}, [])]}
+                move.raw_material_production_id.with_context(is_child_mo_unlink=True)._log_manufacture_exception(documents)
+        return super()._unlink_if_draft_or_cancel()
