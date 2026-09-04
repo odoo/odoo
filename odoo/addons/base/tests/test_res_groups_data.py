@@ -486,7 +486,11 @@ class TestGroupsOdoo(common.TransactionCase):
             for xid in Groups._get_light_group_xmlids()
             if (group := self.env.ref(xid, raise_if_not_found=False))
         ])
-        excluded = light_groups | regular | Groups._get_user_type_groups()
+        # ``base.default_user_group`` is a container of default groups, not a
+        # functional access group, so it is exempt from carrying the marker (see
+        # ``_apply_group_regular``).
+        default_user_group = self.env.ref('base.default_user_group', raise_if_not_found=False)
+        excluded = light_groups | regular | Groups._get_user_type_groups() | default_user_group
         for group in Groups.search([]):
             if group in excluded:
                 continue

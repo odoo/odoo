@@ -404,7 +404,6 @@ class ResGroups(models.Model):
             'base.group_everyone',
             'base.group_no_one',
             'base.group_multi_currency',
-            'base.default_user_group',
         )
 
     def _apply_group_regular(self):
@@ -417,7 +416,11 @@ class ResGroups(models.Model):
 
         light_group_ids = {gid for xid in self._get_light_group_xmlids() if (gid := group_definitions.get_id(xid))}
         all_group_ids = group_definitions.get_all_ids()
-        regular_group_ids = set(all_group_ids) - light_group_ids - {group_user_regular_id} - set(self._get_user_type_groups())
+        regular_group_ids = set(all_group_ids) - light_group_ids - {group_user_regular_id} - {default_user_id} - set(self._get_user_type_groups())
+        # ``base.default_user_group`` is a container of the groups granted to new
+        # users, not a functional access group held for its own rights.
+        if default_user_group_id := group_definitions.get_id('base.default_user_group'):
+            regular_group_ids.remove(default_user_group_id)
 
         # The group is only applied to groups with the fewest rights for each privilege.
 
