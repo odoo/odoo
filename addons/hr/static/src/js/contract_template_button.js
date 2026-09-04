@@ -1,4 +1,4 @@
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
@@ -9,12 +9,13 @@ import { useService } from "@web/core/utils/hooks";
 class TemplateSelectionPopover extends Component {
     static template = "hr.TemplateSelectionPopover";
     static components = { Many2One };
-    static props = {
-        close: Function,
-        onSelect: Function,
-        record: Object,
-        fieldProps: Object,
-    };
+
+    props = useProps({
+        close: t.function(),
+        onSelect: t.function(),
+        record: t.object(),
+        fieldProps: t.object(),
+    });
 
     setup() {
         this.state = proxy({
@@ -70,7 +71,7 @@ class TemplateSelectionPopover extends Component {
 
 export class ContractTemplateField extends Component {
     static template = "hr.ContractTemplateField";
-    static props = standardFieldProps;
+    props = useProps(standardFieldProps);
 
     templateButtonRef = signal.ref();
 

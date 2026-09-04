@@ -2,14 +2,15 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
-import { Component } from "@odoo/owl";
+import { Component, t, useProps } from "@odoo/owl";
 
 export class HrEmployeeChat extends Component {
-    static props = {
-        ...standardWidgetProps,
-        showLabel: { type: Boolean, optional: true },
-    };
     static template = "hr.OpenChat";
+
+    props = useProps({
+        ...standardWidgetProps,
+        showLabel: t.boolean().optional(),
+    });
 
     setup() {
         super.setup();
