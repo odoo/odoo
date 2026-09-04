@@ -1,11 +1,7 @@
 import { IrWebSocket } from "@im_livechat/../tests/mock_server/mock_models/ir_websocket";
 
-import {
-    insertText,
-    mailModels,
-    startServer,
-    triggerHotkey,
-} from "@mail/../tests/mail_test_helpers";
+import { mailModels, startServer, triggerHotkey } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import {
     defineModels,
     serverState,
@@ -39,7 +35,7 @@ export function defineLivechatModels() {
  * @param {string} text
  */
 export async function postLivechatMessage(text) {
-    await insertText(".o-mail-Composer-input:enabled", text);
+    await insertTextInComposer(".o-mail-Composer", text);
     await triggerHotkey("Enter");
 }
 

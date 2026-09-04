@@ -8,7 +8,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openDiscuss,
     openFormView,
     openListView,
@@ -17,6 +16,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
@@ -45,9 +45,9 @@ test("enter key should create a newline in composer", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Test\n");
+    await insertTextInComposer(".o-mail-Composer", "Test\n");
     await press("Enter");
-    await insertText(".o-mail-Composer-input", "Other");
+    await insertTextInComposer(".o-mail-Composer", "Other");
     await click("[data-icon='send']");
     await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
@@ -80,7 +80,9 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await pointerDown(".o-mail-Message", { contains: "original message" });
     await advanceTime(LONG_PRESS_DELAY);
     await click("button:text('Edit')");
-    await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
+    await insertTextInComposer(".o-mail-Message .o-mail-Composer", "edited message", {
+        replace: true,
+    });
     await click("button[title='Save editing']");
     await contains(".o-mail-Message:has(:text('edited message (edited)'))");
 });
@@ -104,7 +106,7 @@ test("click on an odoo link should fold the chat window (mobile)", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", `http://${browser.location.host}/odoo.com`);
+    await insertTextInComposer(".o-mail-Composer", `http://${browser.location.host}/odoo.com`);
     await click(".o-mail-Composer button[title='Send']");
     await contains(".o-mail-ChatWindow");
     await click(`.o-mail-Message-richBody a[href="http://${browser.location.host}/odoo.com"]`);

@@ -30,14 +30,14 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
             run: "click",
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-mail-Composer-html",
             content: markup(
                 _t(
                     "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
                 )
             ),
             tooltipPosition: "top",
-            run: `edit SomeText_${new Date().getTime()}`,
+            run: `editor SomeText_${new Date().getTime()}`,
         },
         {
             trigger: ".o-sendMessageActive",

@@ -14,6 +14,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { animationFrame, expect, mockUserAgent, test } from "@odoo/hoot";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { press } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { serverState } from "@web/../tests/web_test_helpers";
@@ -321,7 +322,7 @@ test("Search a message containing single quotes", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "I can't do it");
+    await insertTextInComposer(".o-mail-Composer", "I can't do it");
     await click(".o-sendMessageActive:enabled");
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
@@ -351,7 +352,7 @@ test("Search should trigger a single store fetch", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "This is a message");
+    await insertTextInComposer(".o-mail-Composer", "This is a message");
     await click(".o-sendMessageActive:enabled");
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");

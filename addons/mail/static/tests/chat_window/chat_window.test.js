@@ -24,6 +24,7 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
@@ -75,7 +76,7 @@ test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut f
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
+    await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Test");
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message");
 });
@@ -158,7 +159,7 @@ test("chat window: clicking chat correspondent avatars in start message opens av
 });
 
 test.skip("Fold state of chat window is sync among browser tabs", async () => {
-    // AKU TODO: fix crosstab
+    // FIXME: fix crosstab
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const env1 = await start({ asTab: true });
@@ -260,8 +261,7 @@ test("chat window: close on ESCAPE", async () => {
     const channelId = pyEnv["discuss.channel"].create({});
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o-mail-ChatWindow");
-    await focus(".o-mail-Composer-input");
+    await focus(".o-mail-ChatWindow .o-mail-Composer-html");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow", { count: 0 });
     assertChatHub({});
@@ -280,14 +280,14 @@ test("chat window: close on ESCAPE (multi)", async () => {
     await contains(".o-mail-ChatWindow-header:eq(1):has(:text('channel_2'))");
     await contains(".o-mail-ChatWindow-header:eq(2):has(:text('channel_1'))");
     await contains(".o-mail-ChatWindow-header:eq(3):has(:text('channel_0'))");
-    await focus(".o-mail-Composer-input:eq(3)");
+    await focus(".o-mail-Composer-html:eq(3)");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow", { count: 3 });
     await contains(".o-mail-ChatWindow-header:eq(0):has(:text('channel_3'))");
     await contains(".o-mail-ChatWindow-header:eq(1):has(:text('channel_2'))");
     await contains(".o-mail-ChatWindow-header:eq(2):has(:text('channel_1'))");
     await contains(".o-mail-ChatWindow:eq(2) .o-mail-Composer.o-focused");
-    await focus(".o-mail-Composer-input:eq(0)");
+    await focus(".o-mail-Composer-html:eq(0)");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow-header:eq(0):has(:text('channel_2'))");
@@ -317,7 +317,7 @@ test("Close composer suggestions in chat window with ESCAPE does not also close 
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow");
 });
@@ -414,14 +414,14 @@ test("open 2 different chat windows: enough screen width", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('Channel_1')");
     await contains(".o-mail-ChatWindow:has(:text('Channel_1'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('Channel_2')");
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow:has(:text('Channel_1'))");
     await contains(".o-mail-ChatWindow:has(:text('Channel_2'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
 });
 
@@ -438,14 +438,14 @@ test("focus next visible chat window when closing current chat window with ESCAP
     ).toBeLessThan(1920, {
         message: "should have enough space to open 2 chat windows simultaneously",
     });
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 2 });
-    await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow:has(:text('MyTeam'))"],
-    });
+    await contains(".o-mail-ChatWindow .o-mail-Composer", { count: 2 });
+    await focus(
+        ".o-mail-ChatWindow:has(.o-mail-ChatWindow-header:has(:text('MyTeam'))) .o-mail-Composer-html"
+    );
     triggerHotkey("Escape");
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow:has(:text('General'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
 });
 
@@ -465,21 +465,21 @@ test("chat window: switch on TAB", async () => {
     await click(".o-mail-NotificationItem-name:text('channel1')");
     await contains(".o-mail-ChatWindow", { count: 1 });
     await contains(".o-mail-ChatWindow:has(:text('channel1'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow:has(:text('channel1'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem-name:text('channel2')");
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow:has(:text('channel2'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow:has(:text('channel1'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
 });
 
@@ -501,21 +501,19 @@ test("chat window: TAB cycle with 3 open chat windows", async () => {
         message: "should have enough space to open 3 chat windows simultaneously",
     });
     // FIXME: assumes ordering: MyProject, MyTeam, General
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 3 });
-    await focus(".o-mail-Composer-input", {
-        parent: [".o-mail-ChatWindow:has(:text('MyProject'))"],
-    });
+    await contains(".o-mail-ChatWindow .o-mail-Composer", { count: 3 });
+    await focus(".o-mail-ChatWindow:has(:text('MyProject')) .o-mail-Composer-html");
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow:has(:text('MyTeam'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow:has(:text('General'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow:has(:text('MyProject'))", {
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer-html.odoo-editor-editable:focus"],
     });
 });
 
@@ -596,7 +594,7 @@ test("chat window should scroll to the newly posted message just after posting i
     setupChatHub({ opened: [channelId] });
     await start();
     await contains(".o-mail-Message", { count: 10 });
-    await insertText(".o-mail-Composer-input", "WOLOLO");
+    await insertTextInComposer(".o-mail-Composer", "WOLOLO");
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { count: 11 });
     await contains(".o-mail-Thread", { scroll: "bottom" });
@@ -648,7 +646,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
-    await insertText(".o-mail-Composer-input", "XDU for the win !");
+    await insertTextInComposer(".o-mail-Composer", "AKU for the win !");
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer", {
         count: 0,
     });
@@ -662,7 +660,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
         ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentContainer:not(.o-isUploading)",
         { count: 2 }
     );
-    await contains(".o-mail-Composer-input", { value: "XDU for the win !" });
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('AKU for the win !')");
 });
 
 test("don't show chat hub options when discuss is open", async () => {
@@ -881,7 +879,7 @@ test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat w
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
+    await contains(".o-mail-ChatWindow .o-mail-Composer-html.odoo-editor-editable:focus");
     await webContains(".o-mail-Message").hover();
     await webContains(".o-mail-Message [title='Expand']").click();
     await contains(".o-mail-Message-moreMenu.dropdown-menu");
@@ -933,9 +931,9 @@ test("mark as read when opening chat window", async () => {
         ".o-mail-ChatWindow .o-mail-Thread-empty:has(:text('This is the start of your direct chat with bob'))"
     );
     // composer is focused by default, we remove that focus
-    await contains(".o-mail-Composer-input:focus");
-    document.querySelector(".o-mail-Composer-input").blur();
-    await contains(".o-mail-Composer-input:not(:focus");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:focus");
+    await webContains(".o_navbar").click(); // click away
+    await contains(".o-mail-Composer-html.odoo-editor-editable:not(:focus)");
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -1063,10 +1061,10 @@ test("getting focus of chat window through tab key should jump to new message se
     await contains(".o-mail-ChatWindow:eq(0) .o-mail-Message", { count: 40 });
     await scroll(".o-mail-ChatWindow:eq(0) .o-mail-Thread", 0);
     await contains(".o-mail-ChatWindow:eq(0) .o-mail-Thread", { scroll: 0 });
-    await focus(".o-mail-Composer-input:eq(1)");
-    await contains(".o-mail-ChatWindow:eq(1) .o-mail-Composer.o-focused");
+    await focus(".o-mail-Composer-html:eq(1)");
+    await contains(".o-mail-ChatWindow:eq(1) .o-mail-Composer-html:focus");
     triggerHotkey("Tab");
-    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer.o-focused");
+    await contains(".o-mail-ChatWindow:eq(0) .o-mail-Composer-html:focus");
     await isInViewportOf(
         ".o-mail-Message:contains(message_20)",
         ".o-mail-ChatWindow:eq(0) .o-mail-Thread"
@@ -1169,7 +1167,7 @@ test("Readonly chat window as non-admin shows bottom banner", async () => {
         authenticateAs: { login: "test_member", password: "test_member" },
     });
     await contains(".o-mail-ChatWindow span:text('This channel is read-only.')");
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input", { count: 0 });
+    await contains(".o-mail-ChatWindow .o-mail-Composer-html", { count: 0 });
 });
 
 test("Readonly chat window as admin shows composer", async () => {
@@ -1186,7 +1184,7 @@ test("Readonly chat window as admin shows composer", async () => {
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input");
+    await contains(".o-mail-ChatWindow .o-mail-Composer");
     await contains(".o-mail-ChatWindow span:text('This channel is read-only.')", { count: 0 });
 });
 

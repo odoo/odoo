@@ -21,6 +21,7 @@ import { queryAllTexts } from "@odoo/hoot-dom";
 
 import { signal } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { containsTextInComposer } from "../mail_test_helpers_composer";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -112,7 +113,7 @@ test("Basic keyboard navigation", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus"); // as to ensure no race condition with auto-focus of emoji picker
+    await contains(".o-mail-Composer-html:focus"); // as to ensure no race condition with auto-focus of emoji picker
     await click("button[title='Add Emojis']");
     await contains(".o-Emoji[data-index='0'].o-active");
     // detect amount of emojis per row for navigation
@@ -135,7 +136,7 @@ test("Basic keyboard navigation", async () => {
     ).dataset;
     triggerHotkey("Enter");
     await contains(".o-EmojiPicker", { count: 0 });
-    await contains(".o-mail-Composer-input", { value: codepoints });
+    await contains(".o-mail-Composer-html", { textContent: codepoints });
 });
 
 test("recent category (basic)", async () => {
@@ -232,7 +233,7 @@ test("selecting an emoji while holding down the Shift key prevents the emoji pic
     await click(".o-EmojiPicker-content .o-Emoji:text('👺')", { shiftKey: true });
     await contains(".o-EmojiPicker-navbar [title='Smileys & Emotion']");
     await contains(".o-EmojiPicker");
-    await contains(".o-mail-Composer-input", { value: "👺" });
+    await contains(".o-mail-Composer-html", { textContent: "👺" });
 });
 
 test("shortcodes shown in emoji title in message", async () => {
@@ -271,9 +272,9 @@ test("Frequently used category only appears when the emoji picker is reopened", 
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
     await click(".o-EmojiPicker-content .o-Emoji:text('😀')", { shiftKey: true });
-    await contains(".o-mail-Composer-input", { value: "😀" });
+    await containsTextInComposer(".o-mail-Composer", "😀");
     await click(".o-EmojiPicker-content .o-Emoji:text('😝')", { shiftKey: true });
-    await contains(".o-mail-Composer-input", { value: "😀😝" });
+    await containsTextInComposer(".o-mail-Composer", "😀😝");
     await contains(".o-EmojiPicker-section", { count: 8 });
     expect(queryAllTexts(".o-EmojiPicker-section small")).toEqual([
         "SMILEYS & EMOTION",

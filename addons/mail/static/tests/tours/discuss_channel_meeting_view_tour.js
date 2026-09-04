@@ -35,7 +35,7 @@ function getMeetingViewTourSteps({ isPublicPage = false } = {}) {
                 ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('Meeting, Jan 1')",
         },
         {
-            trigger: ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Composer-input",
+            trigger: ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Composer-html",
             run: "click",
         },
         { trigger: ".o-mail-Meeting [title='Chat']:not(:has(.badge))" },
