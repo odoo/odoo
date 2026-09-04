@@ -231,6 +231,12 @@ patch(PosStore.prototype, {
             if (!result["loyalty.card"].length) {
                 return _t("That coupon is invalid (%s).", code);
             }
+
+            const partnerId = result["loyalty.card"][0].partner_id;
+            if (partnerId && !this.models["res.partner"].get(partnerId)) {
+                await this.data.read("res.partner", [partnerId]);
+            }
+
             const payload = { "loyalty.card": result["loyalty.card"] };
             this.data.synchronizeServerDataInIndexedDB(payload);
             this.models.loadConnectedData(payload);
