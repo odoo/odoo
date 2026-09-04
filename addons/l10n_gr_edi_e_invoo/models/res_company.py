@@ -30,5 +30,7 @@ class ResCompany(models.Model):
 
     def _l10n_gr_edi_get_proxy_user(self):
         self.ensure_one()
-        proxy_user, _registration_created = self._l10n_gr_edi_get_or_create_proxy_user()
+        proxy_user, registration_created = self._l10n_gr_edi_get_or_create_proxy_user()
+        if registration_created and self.env['account.move']._can_commit():
+            self.env.cr.commit()
         return proxy_user
