@@ -91,7 +91,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.assertEqual(sale_order.picking_ids[1].move_ids.product_qty, 300)
         self.assertEqual(sale_order.picking_ids[1].move_ids.quantity, 300)  # 1 delivered => 300 * 2 = 600
 
-    def _create_partially_delivered_sale_order(self, ordered_qty, delivered_qty):
+    def _create_delivered_sale_order(self, ordered_qty, delivered_qty):
         product = self.env['product.product'].create({
             'name': 'Delivered Product',
             'available_in_pos': True,
@@ -117,28 +117,28 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
 
     def test_settle_partially_delivered_order_only_ships_the_remainder(self):
         """Settling in the PoS collects the whole balance but only ships what is left to deliver."""
-        sale_order = self._create_partially_delivered_sale_order(5, 2)
+        sale_order = self._create_delivered_sale_order(5, 2)
 
         self.main_pos_config.open_ui()
         pos_order = self._settle_in_pos(sale_order)
 
-        self.assertEqual(pos_order.lines.qty, 5, "The whole balance is collected")
+        self.assertEqual(pos_order.lines.qty, 5, msg="The whole balance is collected")
         self.assertEqual(pos_order.picking_ids.move_ids.quantity, 3)
         self.assertEqual(
             sale_order.order_line.qty_delivered,
             5,
-            "The 2 quantities shipped by the warehouse must not be delivered again",
+            msg="The 2 quantities shipped by the warehouse must not be delivered again",
         )
 
     def test_settle_fully_delivered_order_ships_nothing(self):
         """A fully delivered order can still be paid in the PoS, without shipping anything."""
-        sale_order = self._create_partially_delivered_sale_order(5, 5)
+        sale_order = self._create_delivered_sale_order(5, 5)
 
         self.main_pos_config.open_ui()
         pos_order = self._settle_in_pos(sale_order)
 
-        self.assertEqual(pos_order.lines.qty, 5, "The whole balance is collected")
-        self.assertFalse(pos_order.picking_ids, "Nothing is left to deliver")
+        self.assertEqual(pos_order.lines.qty, 5, msg="The whole balance is collected")
+        self.assertFalse(pos_order.picking_ids, msg="Nothing is left to deliver")
         self.assertEqual(sale_order.order_line.qty_delivered, 5)
 
     def test_settle_order_with_different_product(self):

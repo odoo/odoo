@@ -28,9 +28,13 @@ class PosOrderLine(models.Model):
                     continue
 
                 for order_line in order_lines:
+                    if not order.shipping_date:
+                        # If the order is not delivered later, and in a "paid", "done" or "invoiced"
+                        # state, it is considered as delivered
+                        order_line.qty_delivered = order_line._get_qty_to_move()
+                        continue
                     if order_line.product_id.type != 'consu':
-                        # If the order is not delivered later, and in a "paid", "done" or "invoiced" state, it fully delivered
-                        order_line.qty_delivered = 0 if order.shipping_date else order_line.qty
+                        order_line.qty_delivered = 0
                         continue
 
                     moves = outgoing_pickings.move_ids.filtered(
