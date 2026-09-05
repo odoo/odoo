@@ -29,7 +29,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
-const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
+export const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
 const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`).join(", ");
 
 /**

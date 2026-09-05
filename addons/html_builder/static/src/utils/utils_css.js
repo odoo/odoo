@@ -1,8 +1,13 @@
 import { EDITOR_COLOR_CSS_VARIABLES, isColorCombinationName } from "@html_editor/utils/color";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
-import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { convertNumericToUnit, getCSSVariableValue } from "@html_editor/utils/formatting";
+import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
+import {
+    normalizeCSSColor,
+    isCSSColor,
+    isColorGradient,
+    convertCSSColorToRgba,
+} from "@web/core/utils/colors";
 
 /**
  * window.getComputedStyle cannot work properly with CSS shortcuts (like
@@ -471,4 +476,44 @@ export function getAllUsedColors(el) {
         collectUrlColors(getBgImageURLFromEl(bgEl));
     }
     return usedCustomColors;
+}
+
+/**
+ * Returns the most contrasting color (pure black or white) with the given CSS
+ * color or custom property.
+ *
+ * @param {string} color - CSS color or CSS custom property
+ * @param {CSSStyleDeclaration} htmlStyle - styles of the document element
+ * @returns {"#000000"|"#FFFFFF"}
+ */
+export function getContrastingColor(color, htmlStyle) {
+    color = normalizeColor(color, htmlStyle);
+    return isRelativeLuminanceLight(color) ? "#000000" : "#FFFFFF";
+}
+
+/**
+ * Returns whether the given color's luminance is light.
+ * Formula adapted from APCA's simplification at
+ * https://gist.github.com/Myndex/e1025706436736166561d339fd667493#the-38-flip
+ *
+ * @param {string} color - CSS color
+ * @returns {boolean} true if the color is light, false if it's dark
+ */
+function isRelativeLuminanceLight(color) {
+    color = convertCSSColorToRgba(color);
+    if (!color) {
+        return;
+    }
+    const { red, green, blue } = color;
+    const rgbContrastRatios = { red: 0.2126, green: 0.7152, blue: 0.0722 };
+    const channelLuminance = (channel, value) =>
+        Math.pow(value / 255, 2.2) * rgbContrastRatios[channel];
+    const l =
+        channelLuminance("red", red) +
+        channelLuminance("green", green) +
+        channelLuminance("blue", blue);
+    // Perceptual luminance inflection point for the human eye is 0.38, not 0.5.
+    // > 0.38 => light luminance
+    // < 0.38 => dark luminance
+    return l > 0.38;
 }
