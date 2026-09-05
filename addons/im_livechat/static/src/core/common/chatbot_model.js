@@ -179,6 +179,9 @@ export class Chatbot extends Record {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
             this.currentStep = this.steps[nextStepIndex];
             this.currentStep.selectedAnswer = null;
+            // The latch below only guards against stale server writes: replaying a
+            // step is a client-side decision, no write can bring the answer back.
+            this.currentStep.selectedAnswerEver = null;
         }
     }
 
