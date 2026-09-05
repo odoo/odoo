@@ -121,7 +121,7 @@ test("pasted/dropped images are converted to attachments on save in website edit
             params.data ===
                 "iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII="
         ).toBe(true);
-        expect(params.res_id).toBe(`${setupWebsiteBuilderOeId}`);
+        expect(params.res_id).toBe(setupWebsiteBuilderOeId);
         expect(params.res_model).toBe("ir.ui.view");
         expect.step("add_data");
         return {
