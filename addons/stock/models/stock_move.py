@@ -2227,10 +2227,11 @@ Please change the quantity done or the rounding precision in your settings.""",
         return
 
     def _skip_push(self):
+        move_dest_ids = self.sudo().move_dest_ids
         return self.is_inventory or (
-            self.move_dest_ids and any(
+            move_dest_ids and any(
                 m.location_id._child_of(self.location_dest_id) or self.location_dest_id._child_of(m.location_id)
-                for m in self.move_dest_ids
+                for m in move_dest_ids
             )
         )
 
