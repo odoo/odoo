@@ -1,7 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { renderToElement } from "@web/core/utils/render";
 
 export class MediaListOptionPlugin extends Plugin {
     static id = "mediaListOption";
@@ -40,8 +39,11 @@ export class SetMediaLayoutAction extends BuilderAction {
 
 export class AddMediaImageAction extends BuilderAction {
     static id = "addMediaImage";
+    static dependencies = ["websiteBridge"];
     apply({ editingElement }) {
-        const imageEl = renderToElement("website.s_media_list.imageWrapper");
+        const imageEl = this.dependencies.websiteBridge.renderToElement(
+            "website.s_media_list.imageWrapper"
+        );
         const contentEl = editingElement.querySelector(".s_media_list_body");
         const contentCol = [...contentEl.classList].find((className) =>
             className.startsWith("col-lg-")

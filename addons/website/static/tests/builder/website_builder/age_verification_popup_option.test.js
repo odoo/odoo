@@ -11,6 +11,7 @@ test("Age verification popup options works correctly", async () => {
     await setupWebsiteBuilderWithSnippet("s_age_verification_popup", {
         loadIframeBundles: true,
         loadAssetsFrontendJS: true,
+        loadIframeBuilderTemplates: true,
     });
     await contains(":iframe .s_age_verification_popup .modal").click();
     expect("[data-label='Display']").toHaveCount(0);

@@ -9,7 +9,7 @@ import {
 defineWebsiteModels();
 
 test("add milestones in timeline", async () => {
-    await setupWebsiteBuilderWithSnippet("s_timeline");
+    await setupWebsiteBuilderWithSnippet("s_timeline", { loadIframeBuilderTemplates: true });
     expect(queryAllTexts(":iframe .s_timeline_row h3")).toEqual([
         "First Feature",
         "Second Feature",
