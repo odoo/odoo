@@ -104,7 +104,7 @@ PAYMENT_METHODS_MAPPING = {
     'bank_bca': 'BCA',
     'bank_permata': 'PERMATA',
     'bpi': 'DD_BPI',
-    'card': 'CREDIT_CARD',
+    'card': 'CARDS',
     'maya': 'PAYMAYA',
     'wechat_pay': 'WECHATPAY',
     'scb': 'DD_SCB_MB',
@@ -118,8 +118,8 @@ PAYMENT_METHODS_MAPPING = {
 # Mapping of transaction states to Xendit payment statuses.
 PAYMENT_STATUS_MAPPING = {
     'draft': (),
-    'pending': ('PENDING'),
-    'done': ('SUCCEEDED', 'PAID', 'CAPTURED'),
-    'cancel': ('CANCELLED', 'EXPIRED'),
+    'pending': ('PENDING', 'ACTIVE', 'REQUIRES_ACTION'),
+    'done': ('SUCCEEDED', 'PAID', 'CAPTURED', 'COMPLETED'),
+    'cancel': ('CANCELLED', 'EXPIRED', 'CANCELED'),
     'error': ('FAILED',)
 }
