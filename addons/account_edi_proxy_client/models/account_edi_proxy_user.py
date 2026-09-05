@@ -183,6 +183,14 @@ class AccountEdiProxyClientUser(models.Model):
             # simulate registration
             response = {'id_client': f'demo{company.id}{proxy_type}', 'refresh_token': 'demo'}
         else:
+
+            if self.search_count([
+                ('company_id', '=', company.id),
+                ('proxy_type', '=', proxy_type),
+                ('edi_mode', '=', edi_mode),
+            ]):
+                raise UserError(self.env._('A user already exists with this identification.'))
+
             try:
                 # b64encode returns a bytestring, we need it as a string
                 server_url = self._get_server_url(proxy_type, edi_mode)
