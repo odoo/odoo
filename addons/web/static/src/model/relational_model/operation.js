@@ -1,6 +1,4 @@
 import { smartDateUnits } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
-import { escapeRegExp } from "@web/core/utils/strings";
 export class Operation {
     static supportedOperators = [];
     static parse() {}
@@ -78,11 +76,7 @@ export class ArithmeticOperation extends Operation {
         if (typeof parseValueFn !== "function") {
             return false;
         }
-        const regex = new RegExp(
-            `^(?<operator>[+\\-*/])\\s*=\\s*(?<operand>-?\\d+(?:[${escapeRegExp(
-                localization.decimalPoint
-            )}]\\d+)?)$`
-        );
+        const regex = new RegExp(`^(?<operator>[+\\-*/])\\s*=\\s*(?<operand>.+)$`);
         const match = operation.match(regex);
         if (match?.groups) {
             const operand = parseValueFn(match.groups.operand);
