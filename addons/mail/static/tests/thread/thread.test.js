@@ -17,6 +17,7 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { Thread } from "@mail/core/common/thread";
+import { UseForwardRefsToParent } from "@mail/utils/common/hooks";
 
 import { describe, expect, test } from "@odoo/hoot";
 import {
@@ -406,6 +407,63 @@ test("should scroll to bottom on receiving new message if the list is initially 
     const scrollTop = queryFirst(".o-mail-Thread").scrollTop; // around 590px with chat window sizing
     const scrollHeight = queryFirst(".o-mail-Thread").scrollHeight; // around 20000px with chat window sizing
     const clientHeight = queryFirst(".o-mail-Thread").clientHeight; // around 540px with chat window sizing
+    expect(scrollHeight / 4).toBeGreaterThan(scrollTop + clientHeight); // viewport is still at least in the 1st quarter, meaning no scroll to bottom
+});
+
+test("should scroll to top of new very long message rendered after the scroll is applied (asc order)", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+    const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    for (let i = 0; i <= 10; i++) {
+        pyEnv["mail.message"].create({
+            body: "not empty",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    patchWithCleanup(UseForwardRefsToParent.prototype, {
+        async registerRef(...args) {
+            // Simulate a resize applying the scroll before the new message is rendered.
+            await Promise.resolve();
+            return super.registerRef(...args);
+        },
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-Message", { count: 11 });
+    await tick(); // wait for the scroll to first unread to complete
+    await scroll(".o-mail-Thread", "bottom");
+    await contains(".o-mail-Thread", { scroll: "bottom" });
+    // simulate receiving a very long message
+    withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "hello".repeat(10000), message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message", { count: 12 });
+    await tick(); // wait for the new message element to be registered
+    // simulate receiving another short message
+    withUser(userId, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "end-msg", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message", { count: 13 });
+    await tick(); // wait in case of an auto-scroll to happen
+    const scrollTop = queryFirst(".o-mail-Thread").scrollTop;
+    const scrollHeight = queryFirst(".o-mail-Thread").scrollHeight;
+    const clientHeight = queryFirst(".o-mail-Thread").clientHeight;
     expect(scrollHeight / 4).toBeGreaterThan(scrollTop + clientHeight); // viewport is still at least in the 1st quarter, meaning no scroll to bottom
 });
 
