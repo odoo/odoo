@@ -575,7 +575,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         if self.ready:
             for model in env.values():
                 model._register_hook()
-            env.flush_all()
+            env.cr.flush()
+            env.transaction.clear()
             self.check_null_constraints(env.cr)
         reset_classes_tp_versions_used(self.values())  # cpython optimisation
 
