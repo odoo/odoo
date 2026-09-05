@@ -142,6 +142,10 @@
 }
 @include o-message-bubble-colors;
 
+.o-mail-Message-bubbleContainer:has(.o-mail-template-body) {
+    min-width: 450px;
+}
+
 .o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;
 
