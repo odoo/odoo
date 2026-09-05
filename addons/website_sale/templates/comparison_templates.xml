@@ -119,6 +119,13 @@
                                         <a t-att-href="product.website_url">
                                             <h6 t-out="product.display_name"/>
                                         </a>
+                                        <span
+                                            t-if="product._is_sold_out()"
+                                            class="o_wsale_stock_badge badge text-bg-danger align-self-start align-top"
+                                        >
+                                            <i class="oi oi-filled me-2 text-danger" data-icon="circle" aria-hidden="true"/>
+                                            Out of stock
+                                        </span>
                                         <span t-if="not combination_info['hide_price']">
                                             <span t-out="combination_info['price']"
                                                   t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
@@ -157,6 +164,7 @@
                                                 t-att-data-product-type="product.product_tmpl_id.type"
                                                 t-att-data-ptav-ids="json.dumps(product.product_template_attribute_value_ids.ids)"
                                                 t-att-data-show-quantity="is_view_active('website_sale.product_quantity')"
+                                                t-att-disabled="product._is_sold_out()"
                                             >
                                                 <i class="oi me-2" data-icon="shopping_cart" aria-hidden="true"/>Add to Cart
                                             </button>

@@ -3,8 +3,12 @@ import { registry } from "@web/core/registry";
 registry.category("web_tour.tours").add('website_sale_stock.subscribe_to_stock_notification', {
     steps: () => [
         {
+            content: "The product is out of stock",
+            trigger: "#product_stock_availability",
+        },
+        {
             content: "Click on 'Be notified when back in stock'",
-            trigger: '#product_stock_notification_message',
+            trigger: '#stock_notification_button',
             run: "click",
         },
         {
@@ -14,12 +18,12 @@ registry.category("web_tour.tours").add('website_sale_stock.subscribe_to_stock_n
         },
         {
             content: "Click on the button",
-            trigger: '#product_stock_notification_form_submit_button',
+            trigger: '#stock_notification_submit_button',
             run: "click",
         },
         {
             content: "Success Message",
-            trigger: '#stock_notification_success_message',
+            trigger: '#stock_notification_subscribed_button',
         },
     ],
 });

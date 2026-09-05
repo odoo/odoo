@@ -1481,6 +1481,21 @@ class ProductTemplate(models.Model):
         """
         return next(self._get_possible_combinations(necessary_values), self.env['product.template.attribute.value'])
 
+    def _get_first_available_combination(self, necessary_values=None):
+        """Return the first combination that is actually available to the customer.
+
+        Unlike `_get_first_possible_combination`, which only checks that the combination is
+        allowed by the attribute lines/exclusions, this is the override point for modules that
+        want to filter out combinations that are technically possible but not available (e.g.
+        out of stock), falling back to the first possible one if none qualify.
+
+        :param product.template.attribute.value necessary_values: attribute values that must be part
+        of the returned combination.
+        :return: the first available combination, or an empty recordset if there is none.
+        :rtype: `product.template.attribute.value` recordset
+        """
+        return self._get_first_possible_combination(necessary_values)
+
     def _cartesian_product(self, product_template_attribute_values_per_line):
         """
         Generate all possible combination for attributes values (aka cartesian product).
