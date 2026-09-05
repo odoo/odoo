@@ -24,6 +24,18 @@ def _l10n_ar_withholding_post_init(env):
                 'account.tax',
             ]
         }
+        # Only update taxes if the related accounts exists.
+        tax_keys = list(data['account.tax'].keys())
+        print(" ---- tax_keys %s" % tax_keys)
+        for tax_key in tax_keys:
+            for line in data['account.tax'][tax_key].get('repartition_line_ids', []):
+                if tax_account := line[-1].get('account_id'):
+                    exist_account = env.ref('account.%i_%s' % (company.id, tax_account), raise_if_not_found=False)
+                    if not exist_account:
+                        data['account.tax'].pop(tax_key)
+                        _logger.warning("We do not update the tax %s because the account %s does not exist", tax_key, tax_account)
+                        break
+
         ChartTemplate._deref_account_tags(template_code, data['account.tax'])
         ChartTemplate._pre_reload_data(company, {}, data)
         ChartTemplate._load_data(data)
