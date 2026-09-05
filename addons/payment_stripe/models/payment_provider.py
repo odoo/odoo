@@ -275,6 +275,31 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
+    def _stripe_acss_get_client_secret(self, values):
+        """ Return the `client_secret` of a SetupIntent, created solely to satisfy ACSS's need for
+        one upfront.
+
+        Our Stripe integration follows Stripe's deferred flow: the Payment Element is shown
+        before any Intent exists. ACSS doesn't support this flow and requires a `client_secret`
+        upfront, which itself requires the Intent to already be created on Stripe's side with the
+        transaction's values (amount, currency, partner). We derive those values from a virtual,
+        non-persisted transaction, just to create the Intent on Stripe's side.
+
+        Note: self.ensure_one()
+
+        :param dict values: The transaction values used to determine the SetupIntent's parameters.
+        :return: The client secret of the SetupIntent, if any.
+        :rtype: str
+        """
+        self.ensure_one()
+        transaction = self.env["payment.transaction"].new({
+            "provider_id": self.id,
+            **values,
+            "operation": "validation",
+        })
+        intent = transaction._stripe_create_intent()
+        return intent["client_secret"] if intent else ""
+
     def _stripe_get_publishable_key(self):
         """Return the publishable key of the provider.
 
@@ -351,6 +376,10 @@ class PaymentProvider(models.Model):
             ),
             "payment_methods_mapping": const.PAYMENT_METHODS_MAPPING,
         }
+        if payment_method_sudo.code == "acss_direct_debit":
+            inline_form_values["access_token"] = payment_utils.generate_access_token(
+                partner_id, amount, currency.id
+            )
         return json.dumps(inline_form_values)
 
     def _stripe_get_country(self, country_code):
