@@ -10,7 +10,7 @@
         to digitize business tax and accounting information declaration.
     """,
     'countries': ['gr'],
-    'depends': ['account_edi_ubl_cii', 'l10n_gr'],
+    'depends': ['account_edi_proxy_client', 'account_edi_ubl_cii', 'l10n_gr'],
     'data': [
         'data/ir_cron.xml',
         'data/template.xml',
@@ -24,6 +24,6 @@
         'views/res_partner_views.xml',
         'security/ir.access.csv',
     ],
-    'auto_install': True,
+    'auto_install': ['l10n_gr'],
     'license': 'LGPL-3',
 }
