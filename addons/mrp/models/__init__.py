@@ -24,3 +24,5 @@ from . import stock_package
 from . import stock_package_history
 from . import stock_quant
 from . import stock_replenish_mixin
+
+from . import res_groups
