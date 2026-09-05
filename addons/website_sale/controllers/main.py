@@ -1895,7 +1895,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         for line in order_lines.filtered(lambda line: not line.is_delivery):
             product = line.product_id
             ret.append({
-                'item_id': product.barcode or product.id,
+                'item_id': product.default_code or product.id,
                 'item_name': product.name or '-',
                 'item_category': product.categ_id.name or '-',
                 'price': line.price_unit,
