@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sifnext_operational_room_list"
+            model="ir.ui.view">
+
+        <field name="name">
+            sifnext.operational.room.list
+        </field>
+
+        <field name="model">sifnext.operational.room</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Data Ruangan">
+
+                <field name="name"/>
+                <field name="location"/>
+                <field name="capacity"/>
+                <field name="facilities"/>
+                <field name="active"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+    <record id="view_sifnext_operational_room_form"
+            model="ir.ui.view">
+
+        <field name="name">
+            sifnext.operational.room.form
+        </field>
+
+        <field name="model">sifnext.operational.room</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Data Ruangan">
+
+                <sheet>
+
+                    <div class="oe_title">
+
+                        <span class="text-muted">
+                            MASTER DATA RUANGAN
+                        </span>
+
+                        <h1>
+                            <field name="name"
+                                   placeholder="Meeting Room A"/>
+                        </h1>
+
+                    </div>
+
+
+                    <group>
+
+                        <group string="Informasi Ruangan">
+
+                            <field name="location"
+                                   placeholder="Gedung / lantai"/>
+
+                            <field name="capacity"
+                                   placeholder="Jumlah maksimal peserta"/>
+
+                            <field name="active"/>
+
+                        </group>
+
+
+                        <group string="Fasilitas">
+
+                            <field name="facilities"
+                                   placeholder="Projector, TV, AC, Whiteboard..."/>
+
+                        </group>
+
+                    </group>
+
+
+                    <div class="sifnext-hint">
+
+                        <strong>Informasi</strong>
+                        <br/>
+
+                        Data ruangan digunakan sebagai master
+                        pada proses peminjaman ruangan.
+
+                    </div>
+
+                </sheet>
+
+            </form>
+
+        </field>
+
+    </record>
+
+
+    <record id="action_sifnext_operational_room"
+            model="ir.actions.act_window">
+
+        <field name="name">
+            Data Ruangan
+        </field>
+
+        <field name="res_model">sifnext.operational.room</field>
+
+        <field name="view_mode">list,form</field>
+
+    </record>
+
+
+    <menuitem id="menu_sifnext_room"
+              name="Peminjaman Ruangan"
+              parent="menu_sifnext_operational"
+              sequence="10"/>
+
+
+    <menuitem id="menu_sifnext_operational_room"
+              name="Data Ruangan"
+              parent="menu_sifnext_room"
+              action="action_sifnext_operational_room"
+              sequence="20"/>
+
+</odoo>

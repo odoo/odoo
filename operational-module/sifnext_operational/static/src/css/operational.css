@@ -1,0 +1,125 @@
+/* =========================================================
+   SIFNEXT OPERATIONAL
+   Modern Enterprise UI
+   ========================================================= */
+
+.sifnext-alert {
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 18px;
+    border: none;
+}
+
+.sifnext-hint {
+    background: #f5f7fa;
+    border: 1px solid #e4e8ee;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 22px;
+    color: #475569;
+}
+
+.sifnext-flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.sifnext-flow-item {
+    background: #ffffff;
+    border: 1px solid #dbe2ea;
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e3a5f;
+}
+
+.sifnext-flow-item:hover {
+    background: #eef4fa;
+}
+
+
+/* Form title */
+
+.o_form_view .oe_title h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+}
+
+
+/* Section labels */
+
+.o_form_view .o_inner_group .o_group_col_6 > .o_form_label {
+    font-weight: 600;
+}
+
+
+/* Notebook / groups */
+
+.o_form_view .o_group {
+    margin-bottom: 18px;
+}
+
+
+/* Statusbar */
+
+.o_form_view .o_statusbar_status {
+    font-weight: 600;
+}
+
+
+/* Buttons */
+
+.o_form_view header .btn-primary {
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.o_form_view header .btn-secondary {
+    border-radius: 8px;
+}
+
+
+/* Chatter */
+
+.o_FormRenderer_chatterContainer {
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* List view */
+
+.o_list_view .o_data_row {
+    transition: background 0.15s ease;
+}
+
+.o_list_view .o_data_row:hover {
+    background: #f8fafc;
+}
+
+
+/* Improve field appearance */
+
+.o_form_view .o_field_widget {
+    border-radius: 7px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .sifnext-flow {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .sifnext-flow > span:not(.sifnext-flow-item) {
+        display: none;
+    }
+
+}

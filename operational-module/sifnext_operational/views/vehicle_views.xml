@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sifnext_operational_vehicle_list"
+            model="ir.ui.view">
+
+        <field name="name">
+            sifnext.operational.vehicle.list
+        </field>
+
+        <field name="model">sifnext.operational.vehicle</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Data Kendaraan">
+
+                <field name="name"/>
+                <field name="license_plate"/>
+                <field name="vehicle_type"/>
+                <field name="brand"/>
+                <field name="capacity"/>
+                <field name="active"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+    <record id="view_sifnext_operational_vehicle_form"
+            model="ir.ui.view">
+
+        <field name="name">
+            sifnext.operational.vehicle.form
+        </field>
+
+        <field name="model">sifnext.operational.vehicle</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Data Kendaraan">
+
+                <sheet>
+
+                    <div class="oe_title">
+
+                        <span class="text-muted">
+                            MASTER DATA KENDARAAN
+                        </span>
+
+                        <h1>
+
+                            <field name="name"
+                                   placeholder="Toyota Innova"/>
+
+                        </h1>
+
+                    </div>
+
+
+                    <group>
+
+                        <group string="Identitas Kendaraan">
+
+                            <field name="license_plate"
+                                   placeholder="B 1234 KSG"/>
+
+                            <field name="vehicle_type"/>
+
+                            <field name="brand"/>
+
+                        </group>
+
+
+                        <group string="Informasi">
+
+                            <field name="capacity"/>
+
+                            <field name="active"/>
+
+                        </group>
+
+                    </group>
+
+
+                    <separator string="Keterangan"/>
+
+                    <field name="description"
+                           placeholder="Keterangan kendaraan..."/>
+
+
+                    <div class="sifnext-hint">
+
+                        <strong>Informasi</strong>
+                        <br/>
+
+                        Data kendaraan digunakan sebagai master
+                        pada proses peminjaman kendaraan dinas.
+
+                    </div>
+
+                </sheet>
+
+            </form>
+
+        </field>
+
+    </record>
+
+
+    <record id="action_sifnext_operational_vehicle"
+            model="ir.actions.act_window">
+
+        <field name="name">
+            Data Kendaraan
+        </field>
+
+        <field name="res_model">sifnext.operational.vehicle</field>
+
+        <field name="view_mode">list,form</field>
+
+    </record>
+
+
+    <menuitem id="menu_sifnext_vehicle"
+              name="Peminjaman Kendaraan"
+              parent="menu_sifnext_operational"
+              sequence="20"/>
+
+
+    <menuitem id="menu_sifnext_operational_vehicle"
+              name="Data Kendaraan"
+              parent="menu_sifnext_vehicle"
+              action="action_sifnext_operational_vehicle"
+              sequence="20"/>
+
+</odoo>

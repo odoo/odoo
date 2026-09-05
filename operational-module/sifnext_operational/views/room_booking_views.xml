@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sifnext_room_booking_list" model="ir.ui.view">
+        <field name="name">sifnext.operational.room.booking.list</field>
+        <field name="model">sifnext.operational.room.booking</field>
+        <field name="arch" type="xml">
+            <list string="Peminjaman Ruangan"
+                  decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'"
+                  decoration-muted="state == 'cancelled'">
+
+                <field name="name"/>
+                <field name="applicant_id"/>
+                <field name="room_id"/>
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="availability"/>
+                <field name="state"/>
+
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sifnext_room_booking_form"
+            model="ir.ui.view">
+        <field name="name">sifnext.operational.room.booking.form</field>
+        <field name="model">sifnext.operational.room.booking</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Peminjaman Ruangan">
+
+                <header>
+
+                    <!-- USER -->
+                    <button name="action_submit"
+                            string="Ajukan Peminjaman"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-paper-plane"
+                            invisible="state != 'draft'"/>
+
+                    <!-- CHECK -->
+                    <button name="action_check_availability"
+                            string="Cek Ketersediaan"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-search"
+                            invisible="state != 'submitted'"/>
+
+                    <!-- GA -->
+                    <button name="action_approve"
+                            string="Setujui"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-check"
+                            groups="sifnext_operational.group_sifnext_operational_ga"
+                            invisible="state != 'waiting_approval'"/>
+
+                    <button name="action_reject"
+                            string="Tolak"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-times"
+                            groups="sifnext_operational.group_sifnext_operational_ga"
+                            invisible="state != 'waiting_approval'"/>
+
+                    <!-- BOOKING -->
+                    <button name="action_book"
+                            string="Booking Jadwal"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-calendar-check-o"
+                            invisible="state != 'approved'"/>
+
+                    <!-- DONE -->
+                    <button name="action_done"
+                            string="Tandai Selesai"
+                            type="object"
+                            class="btn-primary"
+                            icon="fa-check-circle"
+                            invisible="state != 'booked'"/>
+
+                    <!-- CANCEL -->
+                    <button name="action_cancel"
+                            string="Batalkan"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-ban"
+                            invisible="state in ('done', 'cancelled')"/>
+
+                    <button name="action_reset_draft"
+                            string="Kembalikan ke Draft"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-undo"
+                            invisible="state != 'cancelled'"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,submitted,waiting_approval,approved,booked,done"/>
+
+                </header>
+
+                <sheet>
+
+                    <div class="oe_title">
+                        <span class="text-muted">
+                            PEMINJAMAN RUANGAN
+                        </span>
+
+                        <h1>
+                            <field name="name"
+                                   readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- WAITING APPROVAL -->
+                    <div class="alert alert-warning sifnext-alert"
+                         role="alert"
+                         invisible="state != 'waiting_approval'">
+
+                        <strong>Menunggu Approval GA</strong>
+                        <br/>
+                        Pengajuan sudah lolos pengecekan ketersediaan
+                        dan sedang menunggu persetujuan General Affair.
+
+                    </div>
+
+                    <!-- AVAILABLE -->
+                    <div class="alert alert-success sifnext-alert"
+                         role="alert"
+                         invisible="availability != 'available'">
+
+                        <strong>âœ“ Ruangan Tersedia</strong>
+                        <br/>
+                        Ruangan tersedia pada jadwal yang dipilih.
+
+                    </div>
+
+                    <!-- UNAVAILABLE -->
+                    <div class="alert alert-danger sifnext-alert"
+                         role="alert"
+                         invisible="availability != 'unavailable'">
+
+                        <strong>âœ• Ruangan Tidak Tersedia</strong>
+                        <br/>
+                        Silakan pilih ruangan atau jadwal yang berbeda.
+
+                    </div>
+
+                    <group>
+
+                        <group string="Informasi Pengajuan">
+
+                            <field name="applicant_id"/>
+
+                            <field name="room_id"
+                                   options="{'no_create': True}"
+                                   readonly="state != 'draft'"/>
+
+                            <field name="participant_count"
+                                   readonly="state != 'draft'"/>
+
+                            <field name="purpose"
+                                   placeholder="Contoh: Meeting koordinasi project..."
+                                   readonly="state != 'draft'"/>
+
+                        </group>
+
+                        <group string="Jadwal Peminjaman">
+
+                            <field name="start_datetime"
+                                   readonly="state != 'draft'"/>
+
+                            <field name="end_datetime"
+                                   readonly="state != 'draft'"/>
+
+                            <field name="availability"
+                                   readonly="1"/>
+
+                        </group>
+
+                    </group>
+
+                    <separator string="Catatan Approval"/>
+
+                    <group>
+                        <field name="rejection_reason"
+                               placeholder="Isi alasan jika pengajuan ditolak..."
+                               invisible="state != 'rejected'"/>
+                    </group>
+
+                    <div class="sifnext-hint">
+
+                        <strong>Alur Peminjaman</strong>
+
+                        <div class="sifnext-flow">
+
+                            <span class="sifnext-flow-item">
+                                1. Ajukan
+                            </span>
+
+                            <span>â†’</span>
+
+                            <span class="sifnext-flow-item">
+                                2. Cek
+                            </span>
+
+                            <span>â†’</span>
+
+                            <span class="sifnext-flow-item">
+                                3. Approval GA
+                            </span>
+
+                            <span>â†’</span>
+
+                            <span class="sifnext-flow-item">
+                                4. Booking
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </sheet>
+
+                <chatter/>
+
+            </form>
+
+        </field>
+    </record>
+
+    <record id="action_sifnext_room_booking"
+            model="ir.actions.act_window">
+
+        <field name="name">Peminjaman Ruangan</field>
+        <field name="res_model">sifnext.operational.room.booking</field>
+        <field name="view_mode">list,form</field>
+
+    </record>
+
+    <menuitem id="menu_sifnext_room_booking"
+              name="Pengajuan Peminjaman"
+              parent="menu_sifnext_room"
+              action="action_sifnext_room_booking"
+              sequence="10"/>
+
+</odoo>
