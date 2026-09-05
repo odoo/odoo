@@ -460,8 +460,10 @@ class AccountMove(models.Model):
     def _l10n_tw_edi_prepare_item_list(self, json_data, is_allowance=False):
         self.ensure_one()
         item_list = []
+        raw_tax_amounts = []
         sale_amount = 0
         tax_amount = 0
+        has_negative_lines = False
         AccountTax = self.env['account.tax']
         tax_type, _, _ = self._l10n_tw_edi_determine_tax_types()
         for index, line in enumerate(self.invoice_line_ids.filtered(lambda line: line.display_type == "product"), start=1):
@@ -477,6 +479,8 @@ class AccountMove(models.Model):
             if self.l10n_tw_edi_is_b2b:
                 item_price = float_round(twd_excluded_amount / quantity, precision_rounding=0.01)
                 item_amount = float_round(twd_excluded_amount, precision_rounding=0.01)
+                if item_price < 0:
+                    has_negative_lines = True
             else:
                 if not is_allowance and line.tax_ids and not line.tax_ids[0].price_include:
                     item_price = float_round(twd_excluded_amount / quantity, precision_rounding=0.01)
@@ -520,7 +524,17 @@ class AccountMove(models.Model):
                 })
             if self.l10n_tw_edi_is_b2b:
                 sale_amount += item_amount
-                tax_amount += base_line["tax_details"]["taxes_data"][0]["raw_tax_amount"]
+                # Use manual_tax_amounts if they exist because they are the values used in the invoice
+                # else default to the raw tax data
+                tax_data = base_line["tax_details"]["taxes_data"][0]
+                manual_tax_amounts = base_line["manual_tax_amounts"] or {}
+                manual = {}
+                if manual_tax_amounts:
+                    manual = manual_tax_amounts.get(str(tax_data["tax"].id))
+                baseline_tax = manual["tax_amount"] if manual else tax_data["raw_tax_amount"]
+                tax_amount += baseline_tax
+                raw_tax_amounts.append(baseline_tax)
+
             else:
                 sale_amount += item_amount_taxed
 
@@ -563,6 +577,25 @@ class AccountMove(models.Model):
 
         if self.l10n_tw_edi_is_b2b:
             json_data["TaxAmount"] = self.company_id.currency_id.round(tax_amount) if tax_type != "4" else 0
+            if has_negative_lines:
+                # Use the tax difference to ensure overall tax is not lost
+                # when rounding multiple lines that are <1.5
+                tax_difference = json_data["TaxAmount"] - sum(
+                    float_round(raw_tax_amount, precision_rounding=1)
+                    for raw_tax_amount in raw_tax_amounts
+                )
+                for item, raw_tax_amount in zip(item_list, raw_tax_amounts):
+                    item["ItemTax"] = float_round((raw_tax_amount), precision_rounding=1)
+                if tax_difference:
+                    # redistribute tax evenly same way as ECPay
+                    for index in range(int(abs(tax_difference))):
+                        if tax_difference < 0:
+                            item_list[index]["ItemTax"] -= 1
+                            tax_difference += 1
+                        elif tax_difference > 0:
+                            item_list[index]["ItemTax"] += 1
+                            tax_difference -= 1
+                    json_data["Items"] = item_list
 
     def _l10n_tw_edi_generate_invoice_json(self):
         self.ensure_one()
