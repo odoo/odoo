@@ -11,43 +11,61 @@
         </form>
     </t>
     <t t-name="portal.keydescription">
-        <form string="Key Description">
-            <h3><strong>Name your key</strong></h3>
-            <p>Enter a description of and purpose for the key.</p>
-            <input type="text" class="form-control col-10 col-md-6" placeholder="What's this key for?"
-                name="description" required="required"/>
-            <p>
-                It is very important that this description be clear
-                and complete, <strong>it will be the only way to
-                identify the key once created</strong>.
-            </p>
-            <h3 class="fw-bold">
-                Give a duration for the key's validity
-            </h3>
-            <select name="duration" class="form-control">
-                <option t-foreach="this.duration_selection" t-as="duration" t-key="duration[0]"
-                    t-att-id="`duration_${duration[0]}`"
-                    t-out="duration[1]"
-                    t-att-value="duration[0]"/>
-            </select>
-            <p>
-                The key will be deleted once this period has elapsed.
-            </p>
+        <form id="key_description_form" string="Key Description">
+            <label class="text-muted d-block mb-1">Key Name — your only way to identify that key</label>
+            <h1 class="mb-3">
+                <input type="text" class="form-control form-control-lg border-0 px-1" placeholder='e.g. "Odoo MCP"' name="description" required="1"/>
+            </h1>
+            <div class="mb-3" t-if="scope_selection and scope_selection.length > 1">
+                <div class="d-flex flex-wrap gap-2">
+                    <label class="text-muted d-block mb-1">Scope</label>
+                    <t t-foreach="scope_selection" t-as="scope" t-key="scope[0]">
+                        <input type="radio" class="btn-check" name="scope"
+                            t-att-id="`scope_${scope[0]}`" t-att-value="scope[0]"
+                            t-att-default-checked="scope[0] === default_scope"/>
+                        <label class="btn btn-outline-primary rounded-pill btn-sm"
+                            t-attf-for="scope_#{scope[0]}" t-out="scope[1]"/>
+                    </t>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex flex-wrap gap-2">
+                    <label class="text-muted d-block mb-1">Expires</label>
+                    <t t-foreach="duration_selection" t-as="duration" t-key="duration[0]">
+                        <input type="radio" class="btn-check" name="duration"
+                            t-att-id="`duration_${duration[0]}`" t-att-value="duration[0]"
+                            t-att-default-checked="duration[0] === default_duration"/>
+                        <label class="btn btn-outline-primary rounded-pill btn-sm"
+                            t-attf-for="duration_#{duration[0]}" t-out="duration[1]"/>
+                    </t>
+                </div>
+            </div>
         </form>
     </t>
     <t t-name="portal.keyshow">
         <div>
-            <h3><strong>Write down your key</strong></h3>
-            <p>
-                Here is your new API key, use it instead of a password for RPC access.
-                Your login is still necessary for interactive usage.
-            </p>
-            <p><code><span t-out="this.key"/></code></p>
-            <p class="alert alert-warning" role="alert">
-                <strong>Important:</strong>
-                The key cannot be retrieved later and provides <b>full access</b>
-                to your user account, it is very important to store it securely.
-            </p>
+            <h3><strong id="sample">Write down your key</strong></h3>
+            <p>This key won't be shown again. Please copy it and store it securely. Treat it like a password, it grants full access to your account.</p>
+            <div class="d-inline-flex align-items-stretch border rounded mb-3">
+                <code id="portal_api_key_value" t-out="key" class="px-2 py-1"/>
+                <button type="button" class="oi btn btn-sm btn-light border-start rounded-0 px-2" data-icon="content_copy" data-copy-target="#portal_api_key_value"/>
+            </div>
+            <div id="rpc_key_card" class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <strong>To login, use the following parameters (Python):</strong>
+                </div>
+                <div class="card-body">
+                    <code>
+                    import requests<br/><br/>
+                    url = "<t t-out="base_url"/>"<br/>
+                    api_key = "<t t-out="key"/>"<br/><br/>
+                    headers = {<br/>
+                        "Authorization": f"bearer {api_key}",<br/>
+                        "Content-Type": "application/json",<br/>
+                    }
+                    </code>
+                </div>
+            </div>
         </div>
     </t>
 </templates>

@@ -224,7 +224,7 @@
                                     <div class="w-md-50 w-lg-75 d-flex flex-column my-auto">
                                         <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-sm-75 w-md-100 w-lg-75 w-xl-50 o_base_api_keys_kanban_view"/>
                                         <div>
-                                            <button name="api_key_wizard" string="Add API Key" type="object" class="btn btn-secondary h-100"/>
+                                            <button name="api_key_wizard" string="Create API Key" type="object" class="btn btn-secondary h-100"/>
                                         </div>
                                     </div>
                                 </div>
@@ -349,32 +349,20 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                    <h3 class="fw-bold">
-                        Name your key
-                    </h3>
-                    <p>Enter a description of and purpose for the key. <strong>it will be the only way to identify the key once created</strong></p>
-                    <field name="name" placeholder="What's this key for?"/>
-                    <div invisible="available_scopes_count == 1">
-                        <h3 class="fw-bold">
-                            Select a scope
-                        </h3>
-                        <field name="scope"/>
-                        <p class="text-muted">
-                            The API key will only be valid for the selected scope and can't be used for other scopes.
-                        </p>
-                    </div>
-                    <h3 class="fw-bold">
-                        Give a duration for the key's validity
-                    </h3>
-                    <field name="duration"/>
-                    <field name="expiration_date" invisible="duration != '-1'"/>
-                    <p class="text-muted">
-                        The key will be deleted once this period has elapsed.
-                    </p>
-                    <footer>
-                        <button name="make_key" type="object" string="Generate key" class="btn-primary" data-hotkey="q"/>
-                        <button special="cancel" data-hotkey="x" class="btn-secondary"/>
-                    </footer>
+                        <group class="d-flex flex-column gap-0">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" string="Key Name — your only way to identify that key" placeholder='e.g. "Odoo MCP"'/>
+                            </h1>
+                        </group>
+                        <group>
+                            <field name="scope" class="oe_inline" widget="badges_selection" invisible="available_scopes_count == 1"/>
+                            <field name="duration" string="Expires" class="oe_inline" widget="badges_selection"/>
+                        </group>
+                        <footer>
+                            <button name="make_key" type="object" string="Create Key" class="btn-primary" data-hotkey="q"/>
+                            <button special="cancel" data-hotkey="x" class="btn-secondary"/>
+                        </footer>
                     </sheet>
                 </form>
             </field>
@@ -390,17 +378,33 @@
                             Write down your key
                         </h3>
                         <p>
-                            Here is your new API key, use it instead of a password for RPC access.
-                            Your login is still necessary for interactive usage.
+                            This key won't be shown again. Please copy it and store it securely.
+                            Treat it like a password, it grants full access to your account.
                         </p>
-                        <p><code><field name="key" readonly="True"/></code></p>
-                        <p class="alert alert-warning" role="alert">
-                            <strong>Important:</strong>
-                            The key cannot be retrieved later and provides <b>full access</b>
-                            to your user account, it is very important to store it securely.
-                        </p>
+                        <div class="d-inline-flex align-items-stretch border mb-3">
+                            <code id="portal_api_key_value" class="px-2 py-1">
+                                <field name="key" class="mb-0" readonly="True"/>
+                            </code>
+                            <field name="key" widget="CopyClipboardButton" class="border-start mb-0" options="{'btn_class': 'sm', 'icon': 'content_copy'}" string=" "/>
+                        </div>
+                        <div id="rpc_key_card" class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <strong>To login, use the following parameters (Python):</strong>
+                            </div>
+                            <div class="card-body">
+                                <code>
+                                    import requests<br/><br/>
+                                    url = "<field name="base_url"/>"<br/>
+                                    api_key = "<field name="key"/>"<br/><br/>
+                                    headers = {<br/>
+                                        "Authorization": f"bearer {api_key}",<br/>
+                                        "Content-Type": "application/json",<br/>
+                                    }
+                                </code>
+                            </div>
+                        </div>
                         <footer>
-                            <button special="cancel" data-hotkey="x" string="Done!"/>
+                            <button special="cancel" data-hotkey="x" string="Done, I have saved it"/>
                         </footer>
                     </sheet>
                 </form>
@@ -490,7 +494,7 @@
                                     <div class="w-lg-75 d-flex flex-column my-auto">
                                         <field name="api_key_ids" mode="kanban" invisible="not api_key_ids" class="w-lg-75 o_base_api_keys_kanban_view"/>
                                         <div>
-                                            <button name="api_key_wizard" string="Add API Key" type="object" class="btn btn-secondary h-100"/>
+                                            <button name="api_key_wizard" string="Create API Key" type="object" class="btn btn-secondary h-100"/>
                                         </div>
                                     </div>
                                 </div>
