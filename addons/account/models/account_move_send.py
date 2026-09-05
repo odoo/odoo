@@ -35,8 +35,22 @@ class AccountMoveSend(models.AbstractModel):
         return {}
 
     @api.model
+    def _skip_default_extra_edis(self, move):
+        # Extra EDIs are typically governmental EDIs. It does not make sense to apply them
+        # by default for a foreign VAT that is not from the company's country.
+        fiscal_position = move.fiscal_position_id
+        company = move.company_id
+        return (
+            fiscal_position.foreign_vat
+            and fiscal_position.country_id
+            and fiscal_position.country_id not in (company.country_id, company.account_fiscal_country_id)
+        )
+
+    @api.model
     def _get_default_extra_edis(self, move) -> set:
         """ By default, we use all applicable extra EDIs. """
+        if self._skip_default_extra_edis(move):
+            return set()
         extra_edis = self._get_all_extra_edis()
         return {edi_key for edi_key, edi_vals in extra_edis.items() if edi_vals['is_applicable'](move)}
 
