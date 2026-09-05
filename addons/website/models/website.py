@@ -1665,12 +1665,8 @@ class Website(models.CachedModel):
         is_allowed_optional_cookies = self.env['ir.http']._is_allowed_cookie('optional')
         context = {'website_id': self.id, 'cookies_allowed': is_allowed_optional_cookies}
         if 'inherit_branding' not in self.env.context and not self.env.context.get('rendering_bundle'):
-            if editable:
-                # in edit mode add branding on ir.ui.view tag nodes
+            if (editable or has_group_restricted_editor) and not (translatable and self.env.context.get('edit_translations')):
                 context['inherit_branding'] = True
-            elif has_group_restricted_editor:
-                # will add the branding on fields (into values)
-                context['inherit_branding_auto'] = True
 
         return self.env['ir.qweb'].with_context(**context)._render(view.id, values)
 
