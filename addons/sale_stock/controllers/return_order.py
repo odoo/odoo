@@ -13,7 +13,7 @@ from odoo.addons.sale.controllers import portal as sale_portal
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
-    @route("/my/order/return_data", type="jsonrpc", auth="user", readonly=True)
+    @route("/my/order/return_data", type="jsonrpc", auth="public", readonly=True)
     def my_order_return_data(self, order_id, access_token):
         """Prepare return details of order depending on deliveries.
 
