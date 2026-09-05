@@ -142,7 +142,7 @@ export class DynamicFieldPlugin extends Plugin {
 
         const resModel = this.getResModel(target);
         const fullPath = target.getAttribute(this.fieldAttribute) || "";
-        const initialPath = fullPath.substring(fullPath.indexOf(".") + 1);
+        const initialPath = fullPath.substring(fullPath.indexOf(".") + 1).split(" or ")[0];
 
         const initialLabel =
             target.innerText ||
@@ -158,9 +158,12 @@ export class DynamicFieldPlugin extends Plugin {
                 filter: this.filter.bind(this),
                 close: () => this.fieldPopover.close(),
                 validate: async ({ path, label, fieldInfo }) => {
-                    if (path !== initialPath) {
+                    if (path !== initialPath || label !== initialLabel) {
+                        fieldInfo ??= (await this.services.field.loadFieldInfo(resModel, path)).fieldDef;
                         const fullPath = this.getFieldPath(target, path);
-                        await this.setFieldAttributes(target, path, fullPath, fieldInfo);
+                        const fallbackPath = label && this.fieldAttribute === "t-out"
+                            ? fullPath + ` or '${label.replace(/'/g, "\\'")}'` : fullPath;
+                        await this.setFieldAttributes(target, path, fallbackPath, fieldInfo);
                         await this.config.dynamicFieldPostprocess?.({
                             path: fullPath,
                             label,
@@ -222,7 +225,9 @@ export class DynamicFieldPlugin extends Plugin {
 
                     const el = this.document.createElement(this.fieldTagName);
                     const fullPath = this.getFieldPath(target, path);
-                    await this.setFieldAttributes(el, path, fullPath, fieldInfo);
+                    const fallbackPath = label && this.fieldAttribute === "t-out"
+                        ? fullPath + ` or '${label.replace(/'/g, "\\'")}'` : fullPath;
+                    await this.setFieldAttributes(el, path, fallbackPath, fieldInfo);
                     el.setAttribute("data-oe-demo", label);
                     el.innerText = label;
 
