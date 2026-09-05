@@ -92,6 +92,15 @@
     }
 }
 
+// 4. Space out the buttons of a '.btn-group' instead of letting them overlap
+//    their borders, making each of them individually recognizable.
+.btn-group {
+    > :not(.btn-check:first-child) + .btn,
+    > .btn-group:not(:first-child) {
+        margin-left: var(--BtnGroup__btn-spacing, #{$border-width});
+    }
+}
+
 // Bootstrap '$theme-colors' text-x and bg-x classes generation
 // ============================================================================
 // Bootstrap's default behavior is to generate classes directly from its
