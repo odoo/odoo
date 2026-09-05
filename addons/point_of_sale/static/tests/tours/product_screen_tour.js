@@ -503,6 +503,30 @@ registry.category("web_tour.tours").add("PosCustomerAllFieldsDisplayed", {
                 content: `Check "John Doe" is shown`,
                 trigger: `.partner-list .partner-info:nth-child(1):contains("John Doe")`,
             },
+            selectButton("Discard"),
+            {
+                isActive: ["mobile"],
+                ...back(),
+            },
+            // Test multi-word search: words separated by a gap should still
+            // match (e.g. "1 astreet" -> "1 street of astreet", skipping
+            // "street of").
+            ProductScreen.clickPartnerButton(),
+            {
+                isActive: ["mobile"],
+                content: `Click search field`,
+                trigger: `.fa-search.undefined`,
+                run: `click`,
+            },
+            {
+                content: `Search customer with "1 astreet"`,
+                trigger: `.modal-dialog .input-group input`,
+                run: `edit 1 astreet`,
+            },
+            {
+                content: `Check "John Doe" is shown`,
+                trigger: `.partner-list .partner-info:nth-child(1):contains("John Doe")`,
+            },
         ].flat(),
 });
 
@@ -585,6 +609,29 @@ registry.category("web_tour.tours").add("ProductSearchTour", {
             ProductScreen.searchProduct("TESTPROD2"),
             ProductScreen.productIsDisplayed("Test Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Test Product 2"),
+            // Multi-word search: words separated by a gap should still match
+            // (e.g. "Test 1" matching "Test Product 1"). "Apple" is used as the
+            // negative check here (not "Test Product 2") since both test
+            // products' barcodes contain overlapping digits.
+            ProductScreen.searchProduct("Test 1"),
+            ProductScreen.productIsDisplayed("Apple").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 1"),
+            ProductScreen.searchProduct("Test 2"),
+            ProductScreen.productIsDisplayed("Apple").map(negateStep),
+            ProductScreen.productIsDisplayed("Test Product 2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("SearchMoreProductMultiWord", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            // Words separated by a gap should still match through the backend
+            // "search more" domain (e.g. "coca 600" -> "Coca Cola- Regular 600 ml").
+            ProductScreen.searchProduct("coca 600"),
+            selectButton("Search more"),
+            ProductScreen.productIsDisplayed("Coca Cola- Regular 600 ml"),
         ].flat(),
 });
 

@@ -1792,6 +1792,29 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductSearchTour', login="pos_user")
 
+    def test_product_search_multi_word_backend(self):
+        """Verify that words separated by a gap still match through the backend "search more" domain"""
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
+        # Favorite so it is the one product preloaded locally under the count-1
+        # limit, keeping the product below out of the local list and forcing
+        # the "search more" backend domain to be exercised.
+        self.env['product.product'].create({
+            'name': 'Decoy Favorite Product',
+            'is_favorite': True,
+            'list_price': 1,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.product'].create({
+            'name': 'Coca Cola- Regular 600 ml',
+            'list_price': 2,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'SearchMoreProductMultiWord', login="pos_user")
+
     def test_customer_search_more(self):
         partner_test_a = self.env["res.partner"].create({"name": "APartner"})
         self.env["res.partner"].create({"name": "BPartner", "zip": 1111})
@@ -1803,6 +1826,19 @@ class TestUi(TestPointOfSaleHttpCommon):
         with patch.object(PosConfig, 'get_limited_partners_loading', mocked_get_limited_partners_loading):
             self.main_pos_config.with_user(self.pos_user).open_ui()
             self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchMoreCustomer', login="pos_user")
+
+    def test_customer_search_more_multi_word(self):
+        """Verify that the "search more" backend search matches words separated by a gap"""
+        partner_test_a = self.env["res.partner"].create({"name": "APartner"})
+        self.env["res.partner"].create({"name": "Jose Alberto Ramirez Mendoza"})
+
+        def mocked_get_limited_partners_loading(self):
+            return [(partner_test_a.id,)]
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        with patch.object(PosConfig, 'get_limited_partners_loading', mocked_get_limited_partners_loading):
+            self.main_pos_config.with_user(self.pos_user).open_ui()
+            self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'SearchMoreCustomerMultiWord', login="pos_user")
 
     def test_tracking_number_closing_session(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
