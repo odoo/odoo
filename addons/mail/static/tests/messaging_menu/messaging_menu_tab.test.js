@@ -14,6 +14,7 @@ import {
     mockGetMedia,
 } from "@mail/../tests/mail_test_helpers";
 import { MENU_TABS } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
+import { messagingMenuHelpers } from "@mail/../tests/mock_server/controllers/discuss/messaging_menu";
 
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
 import { rightClick } from "@odoo/hoot-dom";
@@ -23,6 +24,7 @@ import {
     Command,
     getService,
     mockService,
+    patchWithCleanup,
     serverState,
     withUser,
 } from "@web/../tests/web_test_helpers";
@@ -220,6 +222,63 @@ test("active filter with no match shows a neutral empty state, not the tab onboa
     await click("button:text(Thread)");
     await contains("button.o-active:text(Thread)");
     await contains(".o-mail-MessagingMenuEmpty:has(:text('No conversation matches this filter.'))");
+});
+
+test("plugin filter narrows a tab's content, ANDed with the chip filter", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const [aliceId, bobId] = pyEnv["res.partner"].create([{ name: "Alice" }, { name: "Bob" }]);
+    const [aliceUnreadId, aliceReadId, bobUnreadId] = pyEnv["mail.message"].create([
+        {
+            author_id: aliceId,
+            body: "hello",
+            model: "res.partner",
+            needaction: true,
+            res_id: aliceId,
+        },
+        {
+            author_id: aliceId,
+            body: "old news",
+            model: "res.partner",
+            needaction: false,
+            res_id: aliceId,
+        },
+        { author_id: bobId, body: "hi", model: "res.partner", needaction: true, res_id: bobId },
+    ]);
+    pyEnv["mail.notification"].create(
+        [aliceUnreadId, aliceReadId, bobUnreadId].map((mail_message_id) => ({
+            is_read: mail_message_id === aliceReadId,
+            mail_message_id,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        }))
+    );
+    patchWithCleanup(messagingMenuHelpers, {
+        _get_menu_tab_filter_domain(env, tab_id, filter_id) {
+            if (tab_id === "notification" && filter_id === "test_author_alice") {
+                return [["author_id", "=", aliceId]];
+            }
+            return super._get_menu_tab_filter_domain(env, tab_id, filter_id);
+        },
+    });
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.NOTIFICATION);
+    await contains("button.o-active:text(Unread)");
+    await click("button:text(All)");
+    await contains("button.o-active:text(All)");
+    await contains(".o-mail-MessagingMenuItem", { count: 3 });
+    getService("mail.store").messagingMenuSystrayState.setPluginFilter("test.author", {
+        id: "test_author_alice",
+        includesMessage: (msg) => msg.author_id?.id === aliceId,
+    });
+    await contains(".o-mail-MessagingMenuItem", { count: 2 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Alice: hello'))");
+    await contains(".o-mail-MessagingMenuItem:has(:text('Alice: old news'))");
+    await click("button:text(Unread)");
+    await contains("button.o-active:text(Unread)");
+    await contains(".o-mail-MessagingMenuItem", { count: 1 });
+    await contains(".o-mail-MessagingMenuItem:has(:text('Alice: hello'))");
 });
 
 test("create new chat from chat tab", async () => {

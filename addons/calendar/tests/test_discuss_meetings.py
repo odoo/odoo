@@ -312,7 +312,7 @@ class TestDiscussMeetingsGuest(HttpCase):
                 "fetch_params": [
                     [
                         "/mail/messaging_menu/discuss.channel/load_more",
-                        {"tab_id": "meeting", "filter_id": "meeting_today", "limit": 30},
+                        {"tab_id": "meeting", "filter_ids": ["meeting_today"], "limit": 30},
                     ],
                 ],
             },

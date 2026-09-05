@@ -84,7 +84,7 @@ class TestInboxPerformance(HttpCase, MailCommon):
                     "fetch_params": [
                         [
                             "/mail/messaging_menu/mail.message/load_more",
-                            {"tab_id": "notification", "filter_id": "notification_unread", "limit": 20},
+                            {"tab_id": "notification", "filter_ids": ["notification_unread"], "limit": 20},
                         ],
                     ],
                 },

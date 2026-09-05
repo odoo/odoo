@@ -95,21 +95,26 @@ export const messagingMenuHelpers = {
     },
 };
 
-/** `tab_id`'s domain, AND'd with `filter_id`'s if given. Throws on an unknown tab/filter
- * (mirrors the real controller's `BadRequest`). */
-function _get_menu_tab_full_domain(env, tab_id, filter_id) {
-    const domain = messagingMenuHelpers._get_menu_tab_domain(env, tab_id);
+/** `tab_id`'s domain, AND'd with the domain of each id in `filter_ids` (the chip filter, plus
+ * any number of addon driven extra filters). Throws on an unknown tab/filter (mirrors the real
+ * controller's `BadRequest`). */
+function _get_menu_tab_full_domain(env, tab_id, filter_ids = []) {
+    let domain = messagingMenuHelpers._get_menu_tab_domain(env, tab_id);
     if (!domain) {
         throw new Error(`unknown messaging menu tab "${tab_id}"`);
     }
-    if (!filter_id) {
-        return domain;
+    for (const filter_id of filter_ids) {
+        const filterDomain = messagingMenuHelpers._get_menu_tab_filter_domain(
+            env,
+            tab_id,
+            filter_id
+        );
+        if (!filterDomain) {
+            throw new Error(`unknown messaging menu filter "${filter_id}" for tab "${tab_id}"`);
+        }
+        domain = [...domain, ...filterDomain];
     }
-    const filterDomain = messagingMenuHelpers._get_menu_tab_filter_domain(env, tab_id, filter_id);
-    if (!filterDomain) {
-        throw new Error(`unknown messaging menu filter "${filter_id}" for tab "${tab_id}"`);
-    }
-    return [...domain, ...filterDomain];
+    return domain;
 }
 
 /**
@@ -163,7 +168,11 @@ registerStoreHandler(
             /** @type {import("mock_models").MailMessage} */
             const MailMessage = this.env["mail.message"];
             for (const [tab_id, filter_id] of Object.entries(filter_id_by_message_tab_id)) {
-                const domain = _get_menu_tab_full_domain(this.env, tab_id, filter_id);
+                const domain = _get_menu_tab_full_domain(
+                    this.env,
+                    tab_id,
+                    filter_id ? [filter_id] : []
+                );
                 const messageIds = MailMessage._filter(domain).map((message) => message.id);
                 store.add_model_values(
                     "MessagingMenuTab",
@@ -205,7 +214,11 @@ registerStoreHandler(
             }
         }
         for (const [tab_id, filter_id] of Object.entries(filter_id_by_channel_tab_id)) {
-            const domain = _get_menu_tab_full_domain(this.env, tab_id, filter_id);
+            const domain = _get_menu_tab_full_domain(
+                this.env,
+                tab_id,
+                filter_id ? [filter_id] : []
+            );
             const tabChannelIds = DiscussChannel.search([
                 ["id", "in", [...unreadChannelIds]],
                 ..._resolve_self_member_domain.call(this, domain),
@@ -223,8 +236,8 @@ registerStoreHandler(
 registerStoreHandler(
     "/mail/messaging_menu/mail.message/load_more",
     function store_messaging_menu_mail_message_load_more(store, params) {
-        const { tab_id, filter_id, exclude_ids, limit, search_term } = params;
-        const domain = _get_menu_tab_full_domain(this.env, tab_id, filter_id);
+        const { tab_id, filter_ids, exclude_ids, limit, search_term } = params;
+        const domain = _get_menu_tab_full_domain(this.env, tab_id, filter_ids);
         if (exclude_ids?.length) {
             domain.push(["id", "not in", exclude_ids]);
         }
@@ -243,8 +256,8 @@ registerStoreHandler(
         const DiscussChannel = this.env["discuss.channel"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        const { tab_id, filter_id, exclude_ids, limit, search_term } = params;
-        const channelDomain = _get_menu_tab_full_domain(this.env, tab_id, filter_id);
+        const { tab_id, filter_ids, exclude_ids, limit, search_term } = params;
+        const channelDomain = _get_menu_tab_full_domain(this.env, tab_id, filter_ids);
         if (exclude_ids?.length) {
             channelDomain.push(["id", "not in", exclude_ids]);
         }

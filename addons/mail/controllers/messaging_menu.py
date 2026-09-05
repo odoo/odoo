@@ -31,15 +31,17 @@ class MessagingMenuController(WebclientController):
             return Domain("needaction", "=", True)
         return Domain.FALSE
 
-    def _get_menu_tab_full_domain(self, tab_id, filter_id):
-        """`tab_id`'s domain, ANDed with `filter_id`'s domain if any is given.
+    def _get_menu_tab_full_domain(self, tab_id, filter_ids=()):
+        """`tab_id`'s domain, ANDed with the domain of each id in `filter_ids` (the chip
+        filter, plus any number of addon driven extra filters.
 
-        :raise BadRequest: if `tab_id`/`filter_id` don't resolve to a known tab/filter.
+        :raise BadRequest: if `tab_id` or any of `filter_ids` don't resolve to a known
+            tab/filter.
         """
         domain = self._get_menu_tab_domain(tab_id)
         if domain is Domain.FALSE:
             raise BadRequest(self.env._("Unknown messaging menu tab %(tab_id)s", tab_id=tab_id))
-        if filter_id:
+        for filter_id in filter_ids or ():
             filter_domain = self._get_menu_tab_filter_domain(tab_id, filter_id)
             if filter_domain is Domain.FALSE:
                 err = self.env._(
@@ -69,7 +71,7 @@ class MessagingMenuController(WebclientController):
         into account).
         """
         return {
-            tab_id: self._get_menu_tab_full_domain(tab_id, filter_id)
+            tab_id: self._get_menu_tab_full_domain(tab_id, [filter_id] if filter_id else ())
             for tab_id, filter_id in filter_id_by_tab_id.items()
         }
 
@@ -89,11 +91,11 @@ class MessagingMenuController(WebclientController):
         store: Store,
         tab_id,
         limit,
-        filter_id=None,
+        filter_ids=None,
         exclude_ids=None,
         search_term=None,
     ):
-        domain = self._get_menu_load_more_domain(tab_id, filter_id, exclude_ids)
+        domain = self._get_menu_load_more_domain(tab_id, filter_ids, exclude_ids)
         messages = self._resolve_messages(
             store,
             domain=domain,
@@ -105,9 +107,9 @@ class MessagingMenuController(WebclientController):
             lambda res: res.attr("is_fully_loaded", len(messages) < limit),
         )
 
-    def _get_menu_load_more_domain(self, tab_id, filter_id, exclude_ids):
-        """`tab_id`'s (and `filter_id`'s) domain, excluding `exclude_ids`."""
-        domain = self._get_menu_tab_full_domain(tab_id, filter_id)
+    def _get_menu_load_more_domain(self, tab_id, filter_ids, exclude_ids):
+        """`tab_id`'s (and `filter_ids`') domain, excluding `exclude_ids`."""
+        domain = self._get_menu_tab_full_domain(tab_id, filter_ids)
         if exclude_ids:
             domain &= Domain("id", "not in", exclude_ids)
         return domain
