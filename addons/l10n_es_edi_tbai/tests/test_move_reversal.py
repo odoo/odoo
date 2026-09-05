@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from odoo.tests import tagged
 
-from .common import TestEsEdiTbaiCommonGipuzkoa
+from .common import TestEsEdiTbaiCommonGipuzkoa, mock_tbai_agency_request
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
@@ -12,10 +12,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         invoice = self._create_posted_invoice()
         invoice_send_wizard = self._get_invoice_send_wizard(invoice)
 
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             invoice_send_wizard.action_send_and_print()
 
         move_reversal = self.env['account.move.reversal']\
@@ -31,10 +28,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         self.assertEqual(credit_note.l10n_es_tbai_refund_reason, 'R4')
 
         send_wizard = self._get_invoice_send_wizard(credit_note)
-        with patch(
-            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
-            return_value=self.mock_response_post_invoice_success,
-        ):
+        with mock_tbai_agency_request(self.mock_response_post_invoice_success):
             send_wizard.action_send_and_print()
 
         self.assertEqual(credit_note.l10n_es_tbai_state, 'sent')
