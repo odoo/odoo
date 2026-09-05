@@ -501,8 +501,8 @@ class DiscussChannel(models.Model):
             predicate=is_livechat_channel,
         )
 
-    def _store_channel_fields(self, res: Store.FieldList):
-        super()._store_channel_fields(res)
+    def _store_channel_fields(self, res: Store.FieldList, **kwargs):
+        super()._store_channel_fields(res, **kwargs)
         res.one("country_id", ["code", "name"], predicate=is_livechat_channel)
         res.attr("livechat_end_dt", predicate=is_livechat_channel)
         # sudo - visitor can access to the channel member history of an accessible channel
