@@ -16,7 +16,7 @@ import time
 import typing
 import uuid
 import warnings
-from contextlib import contextmanager, nullcontext
+from contextlib import closing, contextmanager, nullcontext
 from datetime import datetime, timedelta
 from inspect import currentframe
 
@@ -625,6 +625,24 @@ class PsycoConnection(psycopg2.extensions.connection):
 
     def give_back(self, keep_in_pool=True):
         raise RuntimeError('not bound to a pool')
+
+    @property
+    def has_high_db_privileges(self) -> bool:
+        """
+        Whether this connection's PostgreSQL login role has, or can acquire
+        via SET ROLE, an elevated attribute (SUPERUSER, REPLICATION, BYPASSRLS).
+        """
+        with closing(self.cursor()) as cr:
+            cr.execute("""
+                SELECT EXISTS (
+                    SELECT 1 FROM pg_roles
+                    WHERE (rolsuper OR rolreplication OR rolbypassrls)
+                        AND (rolname = %(role)s OR pg_has_role(%(role)s, oid, 'SET'))
+                )
+            """, {'role': self.info.user})
+            if has_high_privileges := bool(cr.fetchone()[0]):
+                _logger.warning("Database uses a PostgreSQL role with elevated privileges.")
+            return has_high_privileges
 
 
 class ConnectionPool:
