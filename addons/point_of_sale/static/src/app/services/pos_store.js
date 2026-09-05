@@ -174,6 +174,8 @@ export class PosStore extends WithLazyGetterTrap {
         if (this.config.useProxy) {
             await this.connectToProxy();
         }
+        // unique per browser tab instance
+        this.tabId = `${Date.now()}-${random5Chars()}`;
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
@@ -2458,6 +2460,15 @@ export class PosStore extends WithLazyGetterTrap {
             ]);
 
             if (data.status === "success") {
+                if (this._closedByTabId) {
+                    // notify only the tab that initiated 'close_tabs'
+                    localStorage["message"] = "";
+                    localStorage["message"] = JSON.stringify({
+                        message: "session_deleted",
+                        session: this.session.id,
+                        targetTabId: this._closedByTabId,
+                    });
+                }
                 this.redirectToBackend();
             }
         }
@@ -2767,6 +2778,7 @@ export class PosStore extends WithLazyGetterTrap {
         localStorage["message"] = JSON.stringify({
             message: "close_tabs",
             session: this.session.id,
+            initiatorTabId: this.tabId,
         });
 
         window.addEventListener(
@@ -2781,7 +2793,18 @@ export class PosStore extends WithLazyGetterTrap {
                             "POS / Session opened in another window. EXITING POS",
                             CONSOLE_COLOR
                         );
+                        this._closedByTabId = msg.initiatorTabId;
                         this.closePos();
+                    }
+                    // only reload if: this tab was the initiator, the session matches,
+                    // and we're still in opening_control
+                    if (
+                        msg.message === "session_deleted" &&
+                        msg.session == this.session.id &&
+                        this.session.state === "opening_control" &&
+                        msg.targetTabId === this.tabId
+                    ) {
+                        window.location.reload();
                     }
                 }
             },
