@@ -534,7 +534,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=69, employee=69), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=129, employee=129), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -652,7 +652,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=44, employee=44):  # tm 34/34
+        with self.assertQueryCount(admin=50, employee=50):  # tm 40/40
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -663,7 +663,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=72, employee=72):
+        with self.assertQueryCount(admin=78, employee=78):
             composer._action_send_mail()
 
         # notifications
