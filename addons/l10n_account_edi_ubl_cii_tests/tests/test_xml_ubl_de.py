@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
+
 from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
 import base64
+
+RAM_NS = {'ram': 'urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100'}
+
+# Real, checksum-valid example from res.company.l10n_de_stnr's own help text.
+VALID_STNR = '2893081508152'
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -463,3 +470,85 @@ class TestUBLDE(TestUBLCommon):
         xml_content = base64.b64decode(attachment.with_context(bin_size=False).datas)
         xml_etree = self.get_xml_tree_from_string(xml_content)
         self.assertEqual(xml_etree.find('{*}BuyerReference').text, '13075957-K000-52')
+
+
+@tagged('post_install_l10n', 'post_install', '-at_install')
+class TestCIIDESteuernummer(TestUBLCommon):
+
+    @classmethod
+    @TestUBLCommon.setup_country('de')
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_data['company'].partner_id.write({
+            'street': 'Musterstraße 1',
+            'zip': '10115',
+            'city': 'Berlin',
+            'vat': 'DE811112663',
+            'phone': '+49 30 1234567',
+            'email': 'info@example.de',
+            'country_id': cls.env.ref('base.de').id,
+        })
+        cls.de_partner = cls.env['res.partner'].create({
+            'name': 'German customer',
+            'street': 'Kundenstraße 2',
+            'zip': '20095',
+            'city': 'Hamburg',
+            'vat': 'DE462612124',
+            'email': 'customer@example.de',
+            'country_id': cls.env.ref('base.de').id,
+        })
+        # Export re-reads company fields each time, so one invoice can be reused everywhere.
+        cls.invoice = cls._create_invoice_one_line(
+            partner_id=cls.de_partner,
+            company_id=cls.company_data['company'],
+            price_unit=100.0,
+            tax_ids=cls.company_data['company'].account_sale_tax_id,
+            post=True,
+        )
+
+    def _seller_tax_registrations(self, invoice):
+        xml_content = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
+        tree = etree.fromstring(xml_content)
+        seller = tree.find('.//ram:SellerTradeParty', RAM_NS)
+        return [
+            (node.get('schemeID'), node.text)
+            for node in seller.findall('.//ram:SpecifiedTaxRegistration/ram:ID', RAM_NS)
+        ]
+
+    def test_seller_tax_registrations(self):
+        """
+        Verify which SpecifiedTaxRegistration tag is emitted depending on
+        whether the DE company has a VAT number (BT-31, schemeID='VA'),
+        a Steuernummer (BT-32, schemeID='FC'), both, or neither.
+        When vat is '/' and l10n_de_stnr is set, FC replaces VA.
+        When vat is '/' but no stnr is available, VA is kept as-is.
+        """
+        cases = [
+            # (vat, l10n_de_stnr, expected)
+            ('DE811112663', VALID_STNR, [('VA', 'DE811112663')]),
+            (False, VALID_STNR, [('FC', VALID_STNR)]),
+            ('/', VALID_STNR, [('FC', VALID_STNR)]),
+            ('/', False, [('VA', '/')]),  # no stnr to fall back on, keep VA as-is
+            (False, False, []),  # nothing to work with, matches vanilla behaviour
+        ]
+        for vat, stnr, expected in cases:
+            with self.subTest(vat=vat, l10n_de_stnr=stnr):
+                self.company_data['company'].write({'vat': vat, 'l10n_de_stnr': stnr})
+                self.assertEqual(self._seller_tax_registrations(self.invoice), expected)
+
+    def test_other_country_unaffected(self):
+        """
+        The inherited template node is shared across all countries.
+        A non-DE company with no VAT must still produce no
+        SpecifiedTaxRegistration tag, matching vanilla behaviour.
+        """
+        other_company = self.setup_other_company(name='US Co', country_id=self.env.ref('base.us').id)['company']
+        other_company.vat = False
+        invoice = self._create_invoice_one_line(  # partner_a: not restricted to the DE company
+            partner_id=self.partner_a,
+            company_id=other_company,
+            price_unit=100.0,
+            tax_ids=other_company.account_sale_tax_id,
+            post=True,
+        )
+        self.assertEqual(self._seller_tax_registrations(invoice), [])
