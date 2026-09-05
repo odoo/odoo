@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
-
 from . import common
 from . import test_ui
 from . import test_chatbot_ui
+from . import test_cors_livechat
 from . import test_fw_operator
 from . import test_lazy_frontend_bus
 from . import test_livechat_basic_flow

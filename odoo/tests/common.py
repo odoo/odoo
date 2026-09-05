@@ -1154,9 +1154,10 @@ class BaseCase(case.TestCase):
             return
         http_request_required_key = self.http_request_key
         # Read from the raw transmitted cookies rather than request.cookies.
-        # The latter can be cleared by a handler (e.g. downgrade_to_public_user
-        # in livechat CORS flows) before a new cursor is opened, which would
-        # incorrectly fail this check even though the cookie was sent by the test.
+        # The latter can be cleared by a handler (e.g. the force_guest auth
+        # method in livechat CORS flows) before a new cursor is opened, which
+        # would incorrectly fail this check even though the cookie was sent by
+        # the test.
         http_request_key = request.httprequest.cookies.get(TEST_CURSOR_COOKIE_NAME)
         if http_request_key != http_request_required_key:
             expected = http_request_required_key
