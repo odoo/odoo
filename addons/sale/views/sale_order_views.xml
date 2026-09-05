@@ -310,7 +310,7 @@
                     <group name="partner_details">
                         <field name="partner_id"
                                widget="res_partner_many2one"
-                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}"
+                               context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True, 'drop_address_and_vat_after_display': True}"
                                placeholder="Type to find a customer..." readonly="state in ['cancel', 'sale']"/>
                         <field name="partner_invoice_id"
                               groups="account.group_delivery_invoice_address"

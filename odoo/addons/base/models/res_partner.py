@@ -1115,6 +1115,12 @@ class Partner(models.Model):
             'country': self.country_id.code,
         }]
 
+    def get_formview_action(self, access_uid=None):
+        if self.env.context.get("drop_address_and_vat_after_display", False):
+            self = self.with_context(show_address=False, show_vat=False, drop_address_and_vat_after_display=False)
+
+        return super().get_formview_action(access_uid=access_uid)
+
 
 class ResPartnerIndustry(models.Model):
     _description = 'Industry'
