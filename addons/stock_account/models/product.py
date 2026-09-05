@@ -204,6 +204,8 @@ class ProductProduct(models.Model):
 
             products = self.with_company(company.id).with_context(allowed_company_ids=company.ids)
             products = products._with_valuation_context()
+            # PERF: Cache the valued_qty_by_move cache to avoid looping over the move.lines of a move for every lot.
+            self.env.cr.cache['valued_qty_by_move_cache'] = {}
             if at_date:
                 products = products.with_context(at_date=at_date, to_date=at_date)
 
@@ -271,7 +273,7 @@ class ProductProduct(models.Model):
 
             std_price_by_company_id[company.id] = std_price_by_product_id
             total_value_by_company_id[company.id] = total_value_by_product_id
-
+            self.env.cr.cache.pop('valued_qty_by_move_cache')
         for product in self:
             product.total_value = sum(c.currency_id._convert(total_value_by_company_id[c.id].get(product.id, 0), self.env.company.currency_id) for c in self.env.companies)
             valued_quantity = valued_quantity_by_product_id[product.id]
@@ -532,37 +534,64 @@ class ProductProduct(models.Model):
         self.env.cr.cache.pop('moves_with_manual_value', None)
         return std_price_by_product_id, value_by_product_id
 
+    def _run_fifo_batch_for_lots(self, lots, at_date=None, location=None):
+        std_price_by_lot_id, value_by_lot_id = {}, {}
+        quantity_by_lot = {}
+        for lot in lots:
+            quantity = lot.product_qty
+            quantity_by_lot[lot] = quantity
+        fifo_cost_by_lot = self._get_fifo_cost_by_stock_item(lots, quantity_by_lot, at_date, location)
+        for lot in lots:
+            quantity = lot.product_qty
+            value = fifo_cost_by_lot[lot]
+            std_price = value / quantity if quantity else 0
+            std_price_by_lot_id[lot.id] = std_price
+            value_by_lot_id[lot.id] = value
+        return std_price_by_lot_id, value_by_lot_id
+
     def _run_fifo_batch(self, at_date=None, lot=None, location=None):
-        std_price_by_product_id = {}
-        value_by_product_id = {}
+        if lot is not None:
+            std_price_by_lot_id, value_by_lot_id = lot.product_id._run_fifo_batch_for_lots(lot, at_date, location)
+            return {lot.product_id.id: std_price_by_lot_id[lot.id]}, {lot.product_id.id: value_by_lot_id[lot.id]}
+        quantity_by_product = {}
+        for product in self:
+            quantity_by_product[product] = product.qty_available
+        fifo_cost_by_product = self._get_fifo_cost_by_stock_item(self, quantity_by_product, at_date, location)
+        std_price_by_product_id, value_by_product_id = {}, {}
         for product in self:
             quantity = product.qty_available
-            if lot:
-                quantity = lot.product_qty
-            value = product._run_fifo(quantity, lot, at_date, location)
+            value = fifo_cost_by_product[product]
             std_price = value / quantity if quantity else 0
             std_price_by_product_id[product.id] = std_price
             value_by_product_id[product.id] = value
-
         return std_price_by_product_id, value_by_product_id
 
     def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
         self.ensure_one()
+        if lot is not None:
+            return self._get_fifo_cost_by_stock_item(lot, {lot: lot.product_qty}, at_date, location)[lot]
+        quantity_by_product = {self: quantity}
+        fifo_qty_already_processed_by_product = {self: self.env.context.get('fifo_qty_already_processed', 0.0)}
+        return self.with_context(fifo_qty_already_processed_by_product=fifo_qty_already_processed_by_product)._get_fifo_cost_by_stock_item(self, quantity_by_product, at_date, location)[self]
+
+    def _get_fifo_cost(self, lot, fifo_stack, quantity, at_date=None, qty_on_first_move=0):
+        """
+        Helper method called by `_get_fifo_cost_by_stock_item`.
+        """
         if self.uom_id.compare(quantity, 0) <= 0:
             std_price = lot.standard_price if lot else self.standard_price
             if at_date:
                 last_in = self._get_last_in(at_date)
                 return quantity * (last_in._get_price_unit() if last_in else std_price)
             return quantity * std_price
-        external_location = location and location.is_valued_external
 
         fifo_cost = 0
-        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
         last_move = False
         # Going up to get the quantity in the argument
-        while quantity > 0 and fifo_stack:
-            move = fifo_stack.pop(0)
+        for move in fifo_stack:
+            if quantity <= 0:
+                break
             last_move = move
             move_value = move.value
             if qty_on_first_move:
@@ -589,29 +618,40 @@ class ProductProduct(models.Model):
                 fifo_cost += quantity * self.standard_price
         return fifo_cost
 
-    def _run_fifo_get_stack(self, lot=None, at_date=None, location=None):
-        # TODO: return a list of tuple (move, valued_qty) instead
-        external_location = location and location.is_valued_external
-        fifo_stack = []
-        fifo_stack_size = 0
-        if location:
-            self = self.with_context(location=location.ids)  # noqa: PLW0642
-        if lot:
-            fifo_stack_size = lot.product_qty
-        else:
-            fifo_stack_size = self._with_valuation_context().with_context(to_date=at_date).qty_available
-        if self.env.context.get('fifo_qty_already_processed'):
-            # When validating multiple moves at the same time, the qty_available won't be up to date yet
-            fifo_stack_size -= self.env.context['fifo_qty_already_processed']
-        if self.uom_id.compare(fifo_stack_size, 0) <= 0:
-            return fifo_stack, 0
+    def _get_fifo_cost_by_stock_item(self, stock_items, quantity_by_stock_item, at_date=None, location=None):
+        """
+        Calculates the FIFO unit cost for the given stock_items.
+        A stock_item can be either a `stock.lot` or a `product.product` record.
+        :returns: A dictionary mapping each stock_item record to its calculated
+                unit cost.
+        """
+        stock_item_type = stock_items._name
+        positive_qty_stock_item_ids = []
+        for stock_item in stock_items:
+            uom = stock_item.product_id.uom_id if stock_item_type == 'stock.lot' else stock_item.uom_id
+            if uom.compare(quantity_by_stock_item[stock_item], 0) > 0:
+                positive_qty_stock_item_ids.append(stock_item.id)
 
+        positive_stock_items = self.env[stock_item_type].browse(positive_qty_stock_item_ids).with_prefetch(stock_items._prefetch_ids)
+        fifo_stack_by_stock_item = self._run_fifo_get_stack_by_stock_item(positive_stock_items, at_date=at_date)
+        fifo_cost_by_stock_item = {}
+        for stock_item in stock_items:
+            fifo_stack, qty_on_first_move = fifo_stack_by_stock_item.get(stock_item, ([], 0))
+            if stock_item_type == 'stock.lot':
+                value = stock_item.product_id._get_fifo_cost(stock_item, fifo_stack, quantity_by_stock_item[stock_item], at_date, qty_on_first_move)
+            else:
+                value = stock_item._get_fifo_cost(None, fifo_stack, quantity_by_stock_item[stock_item], at_date, qty_on_first_move)
+            fifo_cost_by_stock_item[stock_item] = value
+
+        return fifo_cost_by_stock_item
+
+    def _get_base_fifo_moves_domain(self, at_date=None, location=None):
         moves_domain = Domain([
-            ('product_id', '=', self.id),
+            ('product_id', 'in', self.ids),
             ('company_id', 'in', self.env.companies.ids),
         ])
-        if lot:
-            moves_domain &= Domain([('move_line_ids.lot_id', 'in', lot.id)])
+        external_location = location and location.is_valued_external
+
         if at_date:
             moves_domain &= Domain([('date', '<=', at_date)])
         if location:
@@ -620,27 +660,98 @@ class ProductProduct(models.Model):
             moves_domain &= Domain([('is_out', '=', True)])
         else:
             moves_domain &= Domain([('is_in', '=', True)])
+        return moves_domain
 
-        # Arbitrary limit as we can't guess how many moves correspond to the qty_available, but avoid fetching all moves at the same time.
-        initial_limit = 100
-        moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', limit=initial_limit)
+    def _get_fifo_moves_for_products(self, at_date=None, location=None):
+        base_moves_domain = self._get_base_fifo_moves_domain(at_date, location)
+        moves = self.env['stock.move'].search(
+            domain=base_moves_domain,
+            order='date desc, id desc',
+        )
+        moves_ids_by_product = defaultdict(list)
+        prefetch_ids = []
+        for move in moves:
+            product = move.product_id
+            moves_ids_by_product[product].append(move.id)
+            prefetch_ids.append(move.id)
+        moves_by_product = defaultdict(lambda: self.env['stock.move'])
+        for product, move_ids in moves_ids_by_product.items():
+            moves_by_product[product] = self.env['stock.move'].browse(move_ids).with_prefetch(prefetch_ids)
+        return moves_by_product
 
-        remaining_qty_on_first_stack_move = 0
-        current_offset = 0
-        # Go to the bottom of the stack
-        while self.uom_id.compare(fifo_stack_size, 0) > 0 and moves_in:
-            move = moves_in[0].with_prefetch(moves_in.ids)
-            moves_in = moves_in[1:]
-            in_qty = move._get_valued_qty(lot=lot)
-            fifo_stack.append(move)
-            remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
-            fifo_stack_size -= in_qty
-            if self.uom_id.compare(fifo_stack_size, 0) > 0 and not moves_in:
-                # We need to fetch more moves
-                current_offset += 1
-                moves_in = self.env['stock.move'].search(moves_domain, order='date desc, id desc', offset=current_offset * initial_limit, limit=initial_limit)
-        fifo_stack.reverse()
-        return fifo_stack, remaining_qty_on_first_stack_move
+    def _get_fifo_moves_for_lots(self, lots, at_date=None, location=None):
+        base_moves_domain = lots.product_id._get_base_fifo_moves_domain(at_date, location=None)
+        domain = Domain([('move_id', 'any', base_moves_domain), ('lot_id', 'in', lots.ids)])
+        move_lines = self.env['stock.move.line'].search_fetch(
+            domain,
+            ['move_id', 'lot_id'],
+            order='scheduled_date desc, move_id.id desc',
+        )
+        move_ids_by_lot = defaultdict(list)
+        prefetch_ids = []
+        for move_line in move_lines:
+            lot = move_line.lot_id
+            move = move_line.move_id
+            move_ids_by_lot[lot].append(move.id)
+            prefetch_ids.append(move.id)
+        moves_by_lot_dict = defaultdict(lambda: self.env['stock.move'])
+        for lot, move_line_ids in move_ids_by_lot.items():
+            move_ids = move_ids_by_lot[lot]
+            moves_by_lot_dict[lot] = self.env['stock.move'].browse(move_ids).with_prefetch(prefetch_ids)
+        return moves_by_lot_dict
+
+    def _run_fifo_get_stack_by_stock_item(self, stock_items, at_date=None):
+        """
+        Calculates the FIFO stack of incoming stock moves
+        that make up the current quantity for the given stock_items.
+        The param `stock_items` can be either a batch of `stock.lot`
+        or `product.product`records.
+
+        :returns: A dictionary mapping each lot record to a list containing:
+                - index 0 (list): The FIFO stack of stock moves that make up the
+                  current available quantity, ordered chronologically (oldest first).
+                - index 1 (float): The remaining available quantity on the first
+                  (oldest) move in the stack.
+        :rtype: defaultdict(list)
+        """
+        stock_item_type = stock_items._name
+        if stock_item_type == 'stock.lot':
+            moves = stock_items.product_id._get_fifo_moves_for_lots(stock_items, at_date)
+        else:
+            moves = stock_items._get_fifo_moves_for_products(at_date)
+        fifo_qty_already_processed_by_product = self.env.context.get('fifo_qty_already_processed_by_product', {})
+        fifo_stack_by_stock_item = {}
+        for stock_item in stock_items:
+            # Calculate the adjusted FIFO stack size by deducting the quantity
+            # that has already been processed for the current product.
+            # Note: This value was traditionally passed via the context key
+            # `fifo_qty_already_processed` for an individual product. We use a
+            # batched approach here to maintain backward compatibility with that
+            # behavior while ensuring forward compatibility for future improvements if needed. (check `_run_fifo`)
+            fifo_stack_size = stock_item.product_qty if stock_item_type == 'stock.lot' else stock_item.qty_available - fifo_qty_already_processed_by_product.get(stock_item, 0.0)
+            fifo_stack = []
+            uom = stock_item.product_id.uom_id if stock_item_type == 'stock.lot' else stock_item.uom_id
+            remaining_qty_on_first_stack_move = 0
+            for move in moves[stock_item]:
+                if not uom.compare(fifo_stack_size, 0) > 0:
+                    break
+                in_qty = move._get_valued_qty(lot=stock_item if stock_item_type == 'stock.lot' else None)
+                fifo_stack.append(move)
+                remaining_qty_on_first_stack_move = min(in_qty, fifo_stack_size)
+                fifo_stack_size -= in_qty
+            fifo_stack.reverse()
+            fifo_stack_by_stock_item[stock_item] = [fifo_stack, remaining_qty_on_first_stack_move]
+        return fifo_stack_by_stock_item
+
+    def _run_fifo_get_stack(self, lot=None, at_date=None, location=None):
+        # TODO: return a list of tuple (move, valued_qty) instead
+        # Note: We delegate to the batched versions of the lot/product methods.
+        if lot is not None:
+            return lot.product_id._run_fifo_get_stack_by_stock_item(lot, at_date)[lot]
+        valuated_products = self._with_valuation_context().with_context(to_date=at_date)
+        if location:
+            valuated_products = valuated_products.with_context(location=location.ids)
+        return self._run_fifo_get_stack_by_stock_item(valuated_products, at_date)[self]
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
         """ Update the standard price of product in self.
