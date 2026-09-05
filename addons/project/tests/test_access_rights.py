@@ -5,6 +5,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
 from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
+from odoo.tests import Form
 from odoo.tests.common import tagged, users
 from odoo.tools import mute_logger
 
@@ -444,6 +445,16 @@ class TestAccessRightsInvitedUsers(TestAccessRights):
     @users('admin')
     def test_admin_access_invited_task(self):
         self.assertEqual(self.task.with_user(self.env.user).name, 'Make the world a better place')
+
+    @users('Project user')
+    def test_assignee_access_invited_task(self):
+        self.project_pigs.privacy_visibility = 'followers'
+        self.task.user_ids = self.env.user
+
+        self.assertNotIn(self.env.user.partner_id, self.project_pigs.message_partner_ids)
+        self.env.invalidate_all()
+        task_form = Form(self.task.with_user(self.env.user))
+        self.assertEqual(task_form.name, self.task.name)
 
     @users('Project user', 'Internal user', 'Portal user')
     def test_other_users_access_invited_task(self):
