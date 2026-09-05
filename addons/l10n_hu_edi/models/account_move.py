@@ -881,12 +881,12 @@ class AccountMove(models.Model):
             lambda m: m.l10n_hu_invoice_chain_index and m.l10n_hu_invoice_chain_index < self.l10n_hu_invoice_chain_index
         )
         first_line_number = sum(
-            len(move.line_ids.filtered(lambda l: l.display_type in ['product', 'rounding']))
+            len(move.line_ids.filtered(lambda l: l.display_type == 'product'))
             for move in prev_chain_invoices
         ) + 1
 
         for (line_number, line) in enumerate(
-            self.line_ids.filtered(lambda l: l.display_type in ['product', 'rounding']).sorted(lambda l: l.display_type),
+            self.line_ids.filtered(lambda l: l.display_type == 'product'),
             start=first_line_number,
         ):
             line_values = {
@@ -918,61 +918,34 @@ class AccountMove(models.Model):
                             'advanceExchangeRate': last_reconciled_payment._l10n_hu_get_currency_rate(),
                         })
 
-            if line.display_type == 'product':
-                vat_tax = line.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)
+            vat_tax = line.tax_ids.filtered(lambda t: t.l10n_hu_tax_type)
 
-                if line.quantity == 0.0 or line.discount == 100.0:
-                    price_unit_signed = 0.0
-                else:
-                    price_unit_signed = sign * line.price_subtotal / (1 - line.discount / 100) / line.quantity
+            if float_is_zero(line.quantity, 3) or float_compare(line.discount, 100.0, 3) == 0:
+                price_unit_signed = 0.0
+            else:
+                price_unit_signed = sign * line.price_subtotal / (1 - line.discount / 100) / line.quantity
 
-                price_net_signed = self.currency_id.round(price_unit_signed * line.quantity * (1 - line.discount / 100.0))
-                discount_value_signed = self.currency_id.round(price_unit_signed * line.quantity - price_net_signed)
-                price_total_signed = sign * line.price_total
-                vat_amount_signed = self.currency_id.round(price_total_signed - price_net_signed)
+            price_net_signed = self.currency_id.round(price_unit_signed * line.quantity * (1 - line.discount / 100.0))
+            discount_value_signed = self.currency_id.round(price_unit_signed * line.quantity - price_net_signed)
+            price_total_signed = sign * line.price_total
+            vat_amount_signed = self.currency_id.round(price_total_signed - price_net_signed)
 
-                line_values.update({
-                    'vat_tax': vat_tax,
-                    'vatPercentage': float_round(vat_tax.amount / 100.0, 4),
-                    'quantity': line.quantity,
-                    'unitPrice': price_unit_signed,
-                    'unitPriceHUF': currency_huf.round(price_unit_signed * currency_rate),
-                    'discountValue': discount_value_signed,
-                    'discountRate': line.discount / 100.0,
-                    'lineNetAmount': price_net_signed,
-                    'lineNetAmountHUF': currency_huf.round(price_net_signed * currency_rate),
-                    'lineVatData': not self.currency_id.is_zero(vat_amount_signed),
-                    'lineVatAmount': vat_amount_signed,
-                    'lineVatAmountHUF': currency_huf.round(vat_amount_signed * currency_rate),
-                    'lineGrossAmountNormal': price_total_signed,
-                    'lineGrossAmountNormalHUF': currency_huf.round(price_total_signed * currency_rate),
-                })
-
-            elif line.display_type == 'rounding':
-                atk_tax = self.env['account.tax'].search(
-                    [
-                        ('type_tax_use', '=', 'sale'),
-                        ('l10n_hu_tax_type', '=', 'ATK'),
-                        ('company_id', '=', self.company_id.id),
-                    ],
-                    limit=1,
-                )
-                if not atk_tax:
-                    raise UserError(_('Please create a sales tax with type ATK (outside the scope of the VAT Act).'))
-
-                amount_huf = line.balance if self.company_id.currency_id == currency_huf else currency_huf.round(line.amount_currency * currency_rate)
-                line_values.update({
-                    'vat_tax': atk_tax,
-                    'vatPercentage': float_round(atk_tax.amount / 100.0, 4),
-                    'quantity': 1.0,
-                    'unitPrice': -line.amount_currency,
-                    'unitPriceHUF': -amount_huf,
-                    'lineNetAmount': -line.amount_currency,
-                    'lineNetAmountHUF': -amount_huf,
-                    'lineVatData': False,
-                    'lineGrossAmountNormal': -line.amount_currency,
-                    'lineGrossAmountNormalHUF': -amount_huf,
-                })
+            line_values.update({
+                'vat_tax': vat_tax,
+                'vatPercentage': float_round(vat_tax.amount / 100.0, 4),
+                'quantity': line.quantity,
+                'unitPrice': price_unit_signed,
+                'unitPriceHUF': currency_huf.round(price_unit_signed * currency_rate),
+                'discountValue': discount_value_signed,
+                'discountRate': line.discount / 100.0,
+                'lineNetAmount': price_net_signed,
+                'lineNetAmountHUF': currency_huf.round(price_net_signed * currency_rate),
+                'lineVatData': not self.currency_id.is_zero(vat_amount_signed),
+                'lineVatAmount': vat_amount_signed,
+                'lineVatAmountHUF': currency_huf.round(vat_amount_signed * currency_rate),
+                'lineGrossAmountNormal': price_total_signed,
+                'lineGrossAmountNormalHUF': currency_huf.round(price_total_signed * currency_rate),
+            })
             line_values['lineDescription'] = line_values['lineDescription'] or line.product_id.display_name
             invoice_values['lines_values'].append(line_values)
 
