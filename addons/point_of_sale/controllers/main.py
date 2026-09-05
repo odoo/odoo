@@ -81,6 +81,9 @@ class PosController(PortalAccount):
             return request.redirect('/odoo/action-point_of_sale.action_client_pos_menu')
 
         if not pos_config.has_active_session:
+            if request.httprequest.headers.get('Sec-Fetch-Mode', 'navigate') != 'navigate':
+                # Open a session for a navigation only, as a session opened for the offline cache stays behind
+                return request.redirect('/odoo/action-point_of_sale.action_client_pos_menu')
             # Acquire an row-level lock on the pos_config record to prevent race conditions
             # This prevents multiple concurrent processes from creating duplicate POS sessions
             request.env.cr.execute(
