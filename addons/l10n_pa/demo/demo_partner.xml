@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_pa_demo_1" model="res.partner">
+        <field name="name">Distribuidora Istmo, S.A.</field>
+        <field name="vat">123456-1-123456</field>
+        <field name="l10n_pa_dv">62</field>
+        <field name="street">Calle 50, Edificio Global Plaza, Piso 6</field>
+        <field name="l10n_pa_corregimiento" ref="correg_pa_8_8_7"/>
+        <field name="city_id" ref="city_pa_8_8"/>
+        <field name="city">Panamá</field>
+        <field name="state_id" ref="base.state_pa_8"/>
+        <field name="country_id" ref="base.pa"/>
+    </record>
+
+    <record id="partner_pa_demo_2" model="res.partner">
+        <field name="name">María Pérez González</field>
+        <field name="additional_identifiers" eval="{'PA_CEDULA': '8-702-1234'}"/>
+        <field name="l10n_pa_dv">09</field>
+        <field name="street">Vía Transístmica, Casa 45</field>
+        <field name="l10n_pa_corregimiento" ref="correg_pa_8_10_2"/>
+        <field name="city_id" ref="city_pa_8_10"/>
+        <field name="city">San Miguelito</field>
+        <field name="state_id" ref="base.state_pa_8"/>
+        <field name="country_id" ref="base.pa"/>
+    </record>
+
+    <record id="partner_pa_demo_3" model="res.partner">
+        <field name="name">Consumidor Final</field>
+        <field name="country_id" ref="base.pa"/>
+    </record>
+
+    <record id="partner_pa_demo_4" model="res.partner">
+        <field name="name">Global Trading Corp.</field>
+        <field name="vat">30-1234567</field>
+        <field name="street">2000 Biscayne Blvd</field>
+        <field name="city">Miami</field>
+        <field name="state_id" ref="base.state_us_10"/>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    <record id="partner_pa_demo_5" model="res.partner">
+        <field name="name">Importadora ZLC, S.A.</field>
+        <field name="vat">654321-1-654321</field>
+        <field name="l10n_pa_dv">31</field>
+        <field name="street">Zona Libre de Colón, Calle 15</field>
+        <field name="l10n_pa_corregimiento" ref="correg_pa_3_1_6"/>
+        <field name="city_id" ref="city_pa_3_1"/>
+        <field name="city">Colón</field>
+        <field name="state_id" ref="base.state_pa_3"/>
+        <field name="country_id" ref="base.pa"/>
+    </record>
+
+</odoo>

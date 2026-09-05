@@ -17,9 +17,21 @@ Con la Colaboración de
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',
+        'base_address_extended',
+        'l10n_latam_invoice_document',
     ],
     'auto_install': ['account'],
+    'data': [
+        'views/res_partner_views.xml',
+        'views/res_company_views.xml',
+        'data/res_country_data.xml',
+        'data/l10n_latam.document.type.csv',
+        'data/res.city.csv',
+        'data/l10n_pa.res.city.corregimiento.csv',
+        'security/ir.access.csv',
+    ],
     'demo': [
+        'demo/demo_partner.xml',
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
