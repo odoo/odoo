@@ -68,7 +68,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
         cls.env["account.journal"].create({
             "name": "Cash - Test",
             "type": "cash",
-            "code": "CASH - Test",
+            "code": "CASH-T",
         })
 
         # Avoid Shipping/Billing address page

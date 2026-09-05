@@ -28,7 +28,6 @@ if typing.TYPE_CHECKING:
 class BaseString(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
     translate: bool | Callable[[Callable[[str], str | None], str], str] = False  # whether the field is translated
-    size = None                         # maximum size of values (deprecated)
     is_text = True
     falsy_value = ''
 
@@ -136,7 +135,6 @@ class BaseString(Field[str | typing.Literal[False]]):
             return converted
 
         value = value.decode() if isinstance(value, bytes) else str(value)
-        value = value[:self.size]
         if validate:
             return self._validated_cache_value(value, records.env)
         return value
@@ -521,6 +519,7 @@ class Char(BaseString):
     """
     type = 'char'
     trim: bool = True                   # whether value is trimmed (only by web client and base_import)
+    size: int | None = None             # maximum size of values
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
@@ -573,8 +572,8 @@ class Char(BaseString):
 
 
 class Text(BaseString):
-    """ Very similar to :class:`Char` but used for longer contents, does not
-    have a size and usually displayed as a multiline text box.
+    """ Very similar to :class:`Char` but used for longer contents, usually
+    displayed as a multiline text box.
 
     :param translate: enable the translation of the field's values; use
         ``translate=True`` to translate field values as a whole; ``translate``

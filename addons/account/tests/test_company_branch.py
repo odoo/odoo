@@ -229,7 +229,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
     def test_branch_should_keep_parent_company_currency(self):
         test_country = self.env['res.country'].create({
             'name': 'Gold Country',
-            'code': 'zz',
+            'code': 'ZZ',
             'currency_id': self.other_currency.id
         })
         root_company = self.env['res.company'].create({

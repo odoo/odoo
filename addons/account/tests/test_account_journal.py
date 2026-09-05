@@ -69,7 +69,7 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
     def test_changing_journal_company(self):
         ''' Ensure you can't change the company of an account.journal if there are some journal entries '''
 
-        self.company_data['default_journal_sale'].code = "DIFFERENT"
+        self.company_data['default_journal_sale'].code = "DIFRENT"
         self.env['account.move'].create({
             'move_type': 'entry',
             'date': '2019-01-01',
@@ -310,7 +310,7 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
 
         # other types: no mail support by default
         journals = self.env['account.journal'].create([{
-            'code': f'NEW{jtype}',
+            'code': f'NEW{jtype[:4]}',
             'name': f'Type {jtype}',
             'type': jtype}
             for jtype in ['general']

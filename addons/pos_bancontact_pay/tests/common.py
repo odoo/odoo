@@ -25,14 +25,14 @@ class TestBancontactPay(TestPointOfSaleHttpCommon):
         # Journals
         cls.bancontact_journal = cls.env["account.journal"].create({
             "name": "Bancontact Journal",
-            "code": "BANCONTACT",
+            "code": "BANCO1",
             "type": "bank",
             "company_id": cls.company.id,
             "currency_id": cls.eur_currency.id,
         })
         cls.bancontact_journal_2 = cls.env["account.journal"].create({
             "name": "Bancontact Journal 2",
-            "code": "BANCONTACT2",
+            "code": "BANCO22",
             "type": "bank",
             "company_id": cls.company_2.id,
             "currency_id": False,

@@ -410,7 +410,7 @@ class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
         cash_journal = cls.env['account.journal'].create({
             'name': 'Cash - Test',
             'type': 'cash',
-            'code': 'CASH - Test'
+            'code': 'CASH-T',
         })
         cls.env['payment.provider'].search([('code', '=', 'test')]).write({
             'journal_id': cash_journal.id,
