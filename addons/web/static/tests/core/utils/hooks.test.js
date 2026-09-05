@@ -240,11 +240,11 @@ describe("useAutofocus", () => {
         }
 
         patchWithCleanup(browser, {
-            matchMedia: (media) => {
+            matchMedia(media) {
                 if (media === "(pointer:coarse)") {
                     return { matches: true };
                 }
-                this._super();
+                return super.matchMedia(...arguments);
             },
         });
 

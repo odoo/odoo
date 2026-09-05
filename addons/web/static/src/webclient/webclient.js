@@ -1,5 +1,5 @@
 import { Component, onMounted, onWillStart, proxy, useListener, usePlugin } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { router, routerBus } from "@web/core/browser/router";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { DebugMenu } from "@web/core/debug/debug_menu";
@@ -125,9 +125,9 @@ export class WebClient extends Component {
 
         // Scroll to anchor after the state is loaded
         if (stateLoaded) {
-            if (browser.location.hash !== "") {
+            if (location.hash !== "") {
                 try {
-                    const el = document.querySelector(browser.location.hash);
+                    const el = document.querySelector(location.hash);
                     if (el !== null) {
                         el.scrollIntoView(true);
                     }

@@ -1,4 +1,4 @@
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { _t, translationIsReady } from "@web/core/l10n/translation";
 import { getOrigin } from "@web/core/utils/urls";
@@ -8,7 +8,7 @@ const scssErrorNotificationService = {
     start(env, { notification }) {
         const origin = getOrigin();
         // Iframe with src "about:blank" origin isn't a valid base URL.
-        if (browser.location.origin === "null") {
+        if (location.origin === "null") {
             return;
         }
         const assets = [...document.styleSheets].filter((sheet) => {
@@ -16,7 +16,7 @@ const scssErrorNotificationService = {
                 sheet.href?.includes("/web") &&
                 sheet.href?.includes("/assets/") &&
                 // CORS security rules don't allow reading content in JS
-                new URL(sheet.href, browser.location.origin).origin === origin
+                new URL(sheet.href, location.origin).origin === origin
             );
         });
         translationIsReady.then(() => {

@@ -1,5 +1,5 @@
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -14,7 +14,7 @@ patch(DiscussApp.prototype, {
      * @override
      */
     setActiveURL(activeId) {
-        const url = new URL(browser.location);
+        const url = new URL(location);
         const [model, id] = activeId?.split("_") ?? [];
         if (model === "discuss.channel") {
             url.pathname = `/discuss/channel/${id}`;

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { signal, Plugin, computed } from "@odoo/owl";
@@ -118,7 +118,7 @@ export class PosRouterPlugin extends Plugin {
 
     navigate(routeName, routeParams = {}) {
         const route = this.getRoute(routeName);
-        const url = new URL(browser.location.href);
+        const url = new URL(location.href);
 
         url.pathname = route.replace(
             /\{\w+:(\w+)\}/g,

@@ -9,7 +9,7 @@ import {
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Macro } from "@web/core/macro";
 import { registry } from "@web/core/registry";
@@ -722,8 +722,8 @@ test("Tour redirect to given url", async () => {
             },
         ],
     });
-    expect(browser.location.pathname).toBe("/");
+    expect(location.pathname).toBe("/");
     await odoo.startTour("tour_redirect", { mode: "auto", url: "/odoo" });
     await waitForMacro();
-    expect(browser.location.pathname).toBe("/odoo");
+    expect(location.pathname).toBe("/odoo");
 });

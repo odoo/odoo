@@ -1,5 +1,5 @@
 import { useEnv, useLayoutEffect, useSubEnv } from "@web/owl2/utils";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
@@ -1146,7 +1146,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     }
 
     getThemePreviewUrl(theme) {
-        const previewUrl = new URL("/website/configurator/preview", browser.location.origin);
+        const previewUrl = new URL("/website/configurator/preview", location.origin);
         const palette = this.state.selectedPalette || {};
         previewUrl.searchParams.set("preview_url", theme.preview_url);
         previewUrl.searchParams.set("theme_name", theme.name);

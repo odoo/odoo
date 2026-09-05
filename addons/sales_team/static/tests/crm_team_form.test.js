@@ -4,8 +4,8 @@ import { expect, test } from "@odoo/hoot";
 
 import { defineCrmTeamModels } from "@sales_team/../tests/crm_team_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
-import { contains as webContains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { onRpc, patchWithCleanup, contains as webContains } from "@web/../tests/web_test_helpers";
+import { location } from "@web/core/browser/browser";
 
 defineCrmTeamModels();
 
@@ -24,7 +24,7 @@ test("crm team form activate multi-team option via alert", async () => {
         },
     ]);
 
-    patchWithCleanup(browser.location, {
+    patchWithCleanup(location, {
         reload: () => expect.step("reload"),
     });
     onRpc("has_group", ({ args }) => {

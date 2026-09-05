@@ -1,14 +1,15 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { getDataURLFromFile, getOrigin, redirect, url } from "@web/core/utils/urls";
 
 describe.current.tags("headless");
 
 beforeEach(() => {
-    patchWithCleanup(browser, {
-        location: { protocol: "http:", host: "testhost" },
+    patchWithCleanup(location, {
+        protocol: "http:",
+        host: "testhost",
     });
 });
 
@@ -18,8 +19,9 @@ test("getOrigin", () => {
 });
 
 test("can return current origin", () => {
-    patchWithCleanup(browser, {
-        location: { protocol: "testprotocol:", host: "testhost" },
+    patchWithCleanup(location, {
+        protocol: "testprotocol:",
+        host: "testhost",
     });
     expect(url()).toBe("testprotocol://testhost");
 });
@@ -64,18 +66,15 @@ test("getDataURLFromFile handles empty file", async () => {
 
 test("redirect", () => {
     function testRedirect(url) {
-        browser.location = {
+        patchWithCleanup(location, {
             protocol: "http:",
             host: "testhost",
             origin: "http://www.test.com",
             pathname: "/some/tests",
             href: "http://www.test.com",
-            assign: (url) => {
-                browser.location.href = url;
-            },
-        };
+        });
         redirect(url);
-        return browser.location.href;
+        return location.href;
     }
 
     expect(testRedirect("abc")).toBe("http://www.test.com/some/abc");

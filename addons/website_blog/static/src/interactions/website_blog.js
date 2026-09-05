@@ -1,7 +1,7 @@
 import { scrollFixedOffset, scrollTo } from "@html_builder/utils/scrolling";
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { verifyHttpsUrl } from "@website/utils/misc";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
@@ -77,7 +77,7 @@ export class WebsiteBlog extends Interaction {
         await this.forumScrollAction(
             blogNextContainerEl,
             300,
-            () => (browser.location.href = nextUrl)
+            () => (location.href = nextUrl)
         );
     }
     /**
@@ -100,7 +100,7 @@ export class WebsiteBlog extends Interaction {
         await this.forumScrollAction(
             scrollTargetEl,
             500,
-            () => (browser.location.hash = "blog_content")
+            () => (location.hash = "blog_content")
         );
     }
 
@@ -110,7 +110,7 @@ export class WebsiteBlog extends Interaction {
     onShareArticleClick(ev) {
         let url = "";
         const blogPostTitle = document.querySelector(".o_wblog_post_name").textContent || "";
-        const articleURL = browser.location.href;
+        const articleURL = location.href;
         if (ev.currentTarget.classList.contains("o_twitter")) {
             const tweetText = _t("Amazing blog article: %(title)s! Check it live: %(url)s", {
                 title: blogPostTitle,

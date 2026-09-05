@@ -19,7 +19,7 @@ import {
     useProps,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { memoize } from "@web/core/utils/functions";
 import { useLayoutEffect } from "@web/owl2/utils";
 
@@ -181,7 +181,7 @@ export class HtmlViewer extends Component {
         const isInsideIframe = container.ownerDocument !== document;
         const retargetSelector = isInsideIframe
             ? "a"
-            : `a:not([href^="${browser.location.origin}"]):not([href^="/"])`;
+            : `a:not([href^="${location.origin}"]):not([href^="/"])`;
 
         for (const link of container.querySelectorAll(retargetSelector)) {
             this.retargetLink(link);

@@ -1,7 +1,7 @@
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { cloneContentEls } from "@website/js/utils";
 
@@ -62,7 +62,7 @@ export class WebsiteForumSpam extends Interaction {
             key,
             values,
         ]));
-        browser.location.reload();
+        location.reload();
     }
 }
 

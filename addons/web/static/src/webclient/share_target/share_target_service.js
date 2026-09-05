@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { ShareTargetDialog } from "@web/webclient/share_target/share_target_dialog";
 
 export const shareTargetService = {
@@ -12,7 +12,7 @@ export const shareTargetService = {
             if (
                 !(
                     browser.navigator.serviceWorker?.controller &&
-                    new URL(browser.location).searchParams.get("share_target") === "trigger"
+                    new URL(location).searchParams.get("share_target") === "trigger"
                 )
             ) {
                 return resolve([]);

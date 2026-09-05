@@ -8,7 +8,7 @@ import {
 
 import { proxy } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
@@ -495,8 +495,8 @@ export class Store extends BaseStore {
                 return false;
             }
             if (
-                browser.location.host === url.host &&
-                browser.location.pathname.startsWith("/odoo")
+                location.host === url.host &&
+                location.pathname.startsWith("/odoo")
             ) {
                 this.ChatWindow.get({ channel: thread.channel })?.fold();
             }

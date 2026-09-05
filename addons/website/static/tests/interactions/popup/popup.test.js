@@ -14,7 +14,7 @@ import {
 } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { defineStyle } from "@web/../tests/web_test_helpers";
 
@@ -186,7 +186,7 @@ describe("show popup", () => {
         expect(modal).not.toBeVisible();
         await click("a[href='#modal']");
         await manuallyDispatchProgrammaticEvent(window, "hashchange", {
-            newURL: browser.location.hash,
+            newURL: location.hash,
         });
         expect(modal).toBeVisible();
     });
@@ -263,7 +263,7 @@ describe("trap focus", () => {
         expect("[href='#modal']").toBeFocused();
         await press("Enter");
         await manuallyDispatchProgrammaticEvent(window, "hashchange", {
-            newURL: browser.location.hash,
+            newURL: location.hash,
         });
         expect(modal).toBeVisible();
         await tick();

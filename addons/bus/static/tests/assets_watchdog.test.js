@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { contains, getService, MockServer, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
 import { defineBusModels } from "./bus_test_helpers";
 
@@ -9,7 +9,7 @@ defineBusModels();
 describe.current.tags("desktop");
 
 test("can listen on bus and display notifications in DOM", async () => {
-    browser.location.addEventListener("reload", () => expect.step("reload-page"));
+    location.addEventListener("reload", () => expect.step("reload-page"));
     await mountWithCleanup(WebClient);
     getService("bus_service").subscribe("bundle_changed", () => expect.step("bundle_changed"));
     MockServer.env["bus.bus"]._sendone("broadcast", "bundle_changed", {

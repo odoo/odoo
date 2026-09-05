@@ -2,7 +2,7 @@ import { animationFrame, expect, getFixture, test } from "@odoo/hoot";
 import { Component, useProps, xml } from "@odoo/owl";
 import { contains, makeTestApp, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
+import { location } from "@web/core/browser/browser";
 import { InstallScopedApp } from "@web/core/install_scoped_app/install_scoped_app";
 import { patch } from "@web/core/utils/patch";
 
@@ -21,8 +21,8 @@ class BeforeInstallPromptEvent extends Event {
 }
 
 test("Installation page displays the app info correctly", async () => {
-    patch(browser, { BeforeInstallPromptEvent });
-    patch(browser.location, {
+    patch(window, { BeforeInstallPromptEvent });
+    patch(location, {
         replace: (url) => {
             expect(url.searchParams.get("app_name")).toBe("%3COtto%26", {
                 message: "ask to redirect with updated searchParams",
@@ -64,7 +64,7 @@ test("Installation page displays the app info correctly", async () => {
     expect("button.btn-primary").toHaveCount(0);
     expect("div.bg-info").toHaveCount(1);
     expect("div.bg-info").toHaveText("You can install the app from the browser menu");
-    browser.dispatchEvent(new BeforeInstallPromptEvent("beforeinstallprompt"));
+    window.dispatchEvent(new BeforeInstallPromptEvent("beforeinstallprompt"));
     await animationFrame();
     expect("[data-icon='edit']").toHaveCount(1);
     expect("div.bg-info").toHaveCount(0);
@@ -76,7 +76,7 @@ test("Installation page displays the app info correctly", async () => {
 });
 
 test("Installation page displays the error message when browser is not supported", async () => {
-    patch(browser, { BeforeInstallPromptEvent: undefined });
+    patch(window, { BeforeInstallPromptEvent: undefined });
     await makeTestApp();
     mountManifestLink("/web/manifest.scoped_app_manifest");
     onRpc("/*", (request) => {

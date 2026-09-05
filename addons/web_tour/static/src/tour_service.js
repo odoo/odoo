@@ -1,5 +1,5 @@
 import { assertType, Component, t, whenReady } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
@@ -86,7 +86,7 @@ export class TourService {
             return;
         }
 
-        const paramsTourName = new URLSearchParams(browser.location.search).get("tour");
+        const paramsTourName = new URLSearchParams(location.search).get("tour");
         if (paramsTourName) {
             this.startTour(paramsTourName, { mode: "manual" });
         }
@@ -126,7 +126,7 @@ export class TourService {
                     this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
                         !this.toursEnabled,
                     ]);
-                    browser.location.reload();
+                    location.reload();
                 },
             },
             sequence: 500,

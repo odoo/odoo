@@ -1,6 +1,6 @@
 import { DiscussClientAction } from "@mail/core/public_web/discuss_app/client_action";
 
-import { browser } from "@web/core/browser/browser";
+import { location, browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
@@ -14,7 +14,7 @@ patch(DiscussClientAction.prototype, {
      * if so, the call is joined on the current discuss thread.
      */
     async restoreDiscussThread() {
-        const hasFullScreenUrl = new URL(browser.location.href).searchParams.has("fullscreen");
+        const hasFullScreenUrl = new URL(location.href).searchParams.has("fullscreen");
         await super.restoreDiscussThread(...arguments);
         const action = this.props.action;
         if (!action) {
