@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="website_sale_stock.locationSelector.location">
+    <t t-name="website.locationSelector.location">
         <button
             t-attf-id="location-{{this.props.id}}"
             class="list-group-item list-group-item-action collapsed d-flex gap-2 gap-lg-3"
@@ -16,8 +16,8 @@
                 class="position-absolute top-0 start-0 h-100 ps-1 bg-primary transition-base"
                 t-attf-class="#{this.props.isSelected ? 'ms-0' : 'ms-n1' }"
             />
-            <span t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ this.props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
-                <t t-call="website_sale_stock.locationSelector.map.pinIndicator"
+            <span t-if="this.props.showPinIndicator" t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ this.props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
+                <t t-call="website.locationSelector.map.pinIndicator"
                     number="this.props.number"/>
             </span>
             <span class="d-flex flex-column w-100">

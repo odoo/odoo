@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="website_sale_stock.locationSelector.map.pinIndicator">
+    <t t-name="website.locationSelector.map.pinIndicator">
         <svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg">
             <ellipse cx="15" cy="38" rx="12" ry="2" fill="#000" fill-opacity="0.25"/>
             <path
@@ -8,7 +8,7 @@
                 fill="var(--LocationSelectorMarker-background)"
                 stroke="var(--LocationSelectorMarker-border-color)"
             />
-            <text
+            <text t-if="number"
                 x="50%"
                 y="50%"
                 text-anchor="middle"
