@@ -3,7 +3,7 @@
 <templates>
     <t t-name="html_editor.ImageField" t-inherit="web.ImageField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('position-relative')]//div" position="replace">
-            <div t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{this.isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="this.sizeStyle">
+            <div t-if="!this.env.isParentReadonly()" t-attf-class="position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover {{this.isMobile ? 'o_mobile_controls' : ''}}" aria-atomic="true" t-att-style="this.sizeStyle">
                 <button
                     t-if="this.props.record.data[this.props.name] and this.state.isValid"
                     class="o_select_file_button btn btn-light border-0 rounded-circle m-1 p-1"

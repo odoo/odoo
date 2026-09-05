@@ -25,6 +25,7 @@ export class X2ManyMediaViewer extends X2ManyField {
         this.supportedFields = ["image_1920", "image_1024", "image_512", "image_256", "image_128"];
         useSubEnv({
             parentField: this.props.name,
+            isParentReadonly: () => this.rendererProps.readonly,
         });
     }
 
