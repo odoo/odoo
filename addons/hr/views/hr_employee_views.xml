@@ -187,10 +187,18 @@
                                         <group name="work_location" string="Location">
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
-                                                options='{"highlight_first_line": True}'/>
+                                                options='{"highlight_first_line": True}' invisible="1"/>
                                             <field name="work_location_id"
+                                                string="Usual Work Location"
                                                 context="{'default_address_id': address_id}"
                                                 placeholder="e.g. Building 2, Remote, etc."/>
+                                                <field name="monday_location_id" placeholder="Unspecified" force_save="1"/>
+                                                <field name="tuesday_location_id" placeholder="Unspecified" force_save="1"/>
+                                                <field name="wednesday_location_id" placeholder="Unspecified" force_save="1"/>
+                                                <field name="thursday_location_id" placeholder="Unspecified" force_save="1"/>
+                                                <field name="friday_location_id" placeholder="Unspecified" force_save="1"/>
+                                                <field name="saturday_location_id" placeholder="Unspecified" force_save="1"/>
+                                                <field name="sunday_location_id" placeholder="Unspecified" force_save="1"/>
                                         </group>
                                         <group string="Note" name="note" groups="hr.group_hr_user">
                                             <field name="additional_note" placeholder="Provide additional information about this version..." colspan="2" nolabel="1"/>
