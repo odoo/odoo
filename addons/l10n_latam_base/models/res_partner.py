@@ -67,3 +67,10 @@ class ResPartner(models.Model):
         if self.env.company._is_latam():
             mandatory_fields.update({'l10n_latam_identification_type_id', 'vat'})
         return mandatory_fields
+
+    def _get_vat_label(self, company):
+        """ Return the VAT label to be displayed on the portal and reports."""
+        self.ensure_one()
+        if self.l10n_latam_identification_type_id.country_id:
+            return self.l10n_latam_identification_type_id.name
+        return super()._get_vat_label(company)

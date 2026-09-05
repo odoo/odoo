@@ -1358,6 +1358,11 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return ZoneInfo(self.user_id.tz or self.company_id.partner_id.tz or 'UTC')
 
+    def _get_vat_label(self):
+        """ Return the VAT label to be displayed on the portal and reports."""
+        self.ensure_one()
+        return self.partner_id._get_vat_label(self.company_id) or "Tax ID"
+
     def _update_date_planned_for_lines(self, updated_dates):
         # create or update the activity
         activity = self.env['mail.activity'].search([

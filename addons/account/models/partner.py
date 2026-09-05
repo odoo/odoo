@@ -535,6 +535,9 @@ class ResPartner(models.Model):
     def _get_company_currency_sql(self, table):
         return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
+    def _get_vat_label(self, company):
+        return company.account_fiscal_country_id.vat_label
+
     name = fields.Char(tracking=True)
     credit = fields.Monetary(compute='_credit_debit_get', search=_credit_search,
         string='Total Receivable', help="Total amount this customer owes you.",
