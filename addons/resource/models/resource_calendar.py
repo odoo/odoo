@@ -431,6 +431,8 @@ class ResourceCalendar(models.Model):
 
                     intervals = []
                     current_start_day = start_date
+                    if self.env.context.get('gantt_start_date'):
+                        current_start_day -= timedelta(days=start_date.weekday())
 
                     while current_start_day <= end_date:
                         current_end_of_week = current_start_day + timedelta(days=6)
