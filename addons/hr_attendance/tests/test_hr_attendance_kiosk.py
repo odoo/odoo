@@ -141,15 +141,9 @@ class TestHrAttendanceKiosk(HttpCase):
                 break_duration=1,
             )
 
-    def test_update_break_duration_does_not_change_manager_approved_attendance(self):
+    def test_update_break_duration_does_not_change_validated_attendance(self):
         attendance = self._create_checked_out_attendance()
-        self.company_B.attendance_overtime_validation = 'by_manager'
-        self.env['hr.attendance.overtime.line'].create({
-            'attendance_id': attendance.id,
-            'date': attendance.date,
-            'duration': 0.5,
-            'status': 'approved',
-        })
+        attendance.with_context(skip_time_rules=True).write({'state': 'validated'})
 
         result = self._update_break(
             employee_id=self.employee_A.id,
@@ -159,3 +153,4 @@ class TestHrAttendanceKiosk(HttpCase):
 
         self.assertFalse(result)
         self.assertFalse(attendance.break_duration)
+

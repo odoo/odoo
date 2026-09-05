@@ -1,0 +1,343 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+from collections import defaultdict
+from datetime import date, datetime, time, timedelta, UTC
+from zoneinfo import ZoneInfo
+
+from dateutil.relativedelta import relativedelta
+
+from odoo import api, models
+from odoo.tools.intervals import Intervals
+
+_logger = logging.getLogger(__name__)
+
+
+class HrTimeRuleSourceMixin(models.AbstractModel):
+    """Mixin for hr.attendance and hr.leave models to support time rule evaluation."""
+
+    _name = 'hr.time.rule.source.mixin'
+    _description = 'Time Rule Source Mixin'
+
+    # subclasses declare these
+    _time_rule_source_field = ''      # m2o from output to source
+    _time_rule_output_field = ''      # o2m from source to output
+    _time_rule_span_start_field = ''  # span start field name
+    _time_rule_span_end_field = ''    # span end field name
+    _time_rule_write_ctx = {'skip_time_rules': True, 'tracking_disable': True}
+
+    def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+        raise NotImplementedError
+
+    def _on_sources_collected(self, sources):
+        # overriden in hr_holidays
+        pass
+
+    def _get_pipeline_intervals_local(self, schedule):
+        """Return (start, stop) local-naive pairs for this record's pipeline segments.
+
+        Default: one interval for the full raw span.
+        Override for multi-day absence leaves, clip to schedule.
+        """
+        self.ensure_one()
+        tz = ZoneInfo(self.employee_id.sudo()._get_tz())
+        start = self[self._time_rule_span_start_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        stop = self[self._time_rule_span_end_field].replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        return [(start, stop)]
+
+    def _get_source_extra_fields_domain(self):
+        return []
+
+    def _get_write_source_extra_source_fields(self):
+        return set()
+
+    def _get_time_rule_break_hours(self):
+        return 0.0
+
+    def _get_time_rule_end_write_vals(self, end_utc, stop_local):
+        """Write vals dict for updating the span-end field.
+
+        end_utc is the new UTC end datetime; stop_local is the same instant as a
+        naive datetime in the employee's tz.  Leave overrides to also write
+        request_date_to / request_hour_to.
+        """
+        return {self._time_rule_span_end_field: end_utc}
+
+    def _get_time_rule_deficit_occupied(self, employee_id, start_utc, period_end_utc):
+        """Return Intervals of existing records that occupy [start_utc, period_end_utc].
+
+        Used by the deficit go-around algorithm to find free slots.
+        """
+        raise NotImplementedError
+
+    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+        """Create vals for a new time rule output record.
+
+        df/dt are UTC datetimes; pp is a frozenset of premium pay rule IDs.
+        """
+        raise NotImplementedError
+
+    def _get_time_rule_remainder_vals(self, df, dt):
+        """Create vals for a remainder record (source's original type, trimmed span).
+
+        df/dt are UTC datetimes. work_entry_type_id is intentionally omitted;
+        the caller fills it with the source's original WET before creating.
+        """
+        raise NotImplementedError
+
+    def _get_source_records_for_time_rules(self, start_dt, end_dt, employees=None, check_end=False):
+        domain = [
+            (self._time_rule_span_end_field, '>=', start_dt.replace(tzinfo=None)),
+            (self._time_rule_span_end_field, '!=', False),
+        ]
+        domain.extend(self._get_source_extra_fields_domain())
+        if check_end:
+            domain.append(
+                (self._time_rule_span_end_field, '<=', end_dt.replace(tzinfo=None)))
+        else:
+            domain.append(
+                (self._time_rule_span_start_field, '<=', end_dt.replace(tzinfo=None)))
+        if employees:
+            assert 'employee_id' in self._fields
+            domain.append(('employee_id', 'in', employees.ids))
+        return self.sudo().search(domain)
+
+    def _merge_rule_outputs(self, a, b):
+        merged = defaultdict(lambda: defaultdict(list))
+        for outputs in (a, b):
+            for emp, by_record in outputs.items():
+                for record, items in by_record.items():
+                    merged[emp][record].extend(items)
+        return merged
+
+    def _merge_active_iv(self, a, b):
+        merged = defaultdict(lambda: defaultdict(Intervals))
+        for active_iv in (a, b):
+            for emp, by_src in active_iv.items():
+                for src, iv in by_src.items():
+                    merged[emp][src] |= iv
+        return merged
+
+    def _collect_time_rule_outputs(self, rules, ranges_by_employee):
+        all_excess = defaultdict(lambda: defaultdict(list))
+        all_deficit = defaultdict(lambda: defaultdict(list))
+        all_active_iv = defaultdict(lambda: defaultdict(Intervals))
+        if not rules:
+            return all_excess, all_deficit, all_active_iv
+
+        by_range = defaultdict(list)
+        for employee, (date_from, date_to) in ranges_by_employee.items():
+            start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
+            end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
+            by_range[start_dt, end_dt].append(employee)
+
+        for (start_dt, end_dt), employees in by_range.items():
+            employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
+            sources = self._get_source_records_for_time_rules(start_dt, end_dt, employee_rs)
+            if not sources:
+                _logger.warning(
+                    "time rule collect: no %s source records found in [%s, %s] for employees %s",
+                    self._name, start_dt.date(), end_dt.date(), employee_rs.mapped('name'),
+                )
+                continue
+            _logger.warning(
+                "time rule collect: %d %s source record(s) %s in [%s, %s]",
+                len(sources), self._name, sources.ids, start_dt.date(), end_dt.date(),
+            )
+
+            self._on_sources_collected(sources)
+            excess, deficit, active_iv = rules._evaluate_rules(sources, start_dt, end_dt)
+
+            for emp, by_src in excess.items():
+                for src, items in by_src.items():
+                    all_excess[emp][src].extend(items)
+            for emp, by_src in deficit.items():
+                for src, items in by_src.items():
+                    all_deficit[emp][src].extend(items)
+            for emp, by_src in active_iv.items():
+                for src, iv in by_src.items():
+                    all_active_iv[emp][src] |= iv
+
+        return all_excess, all_deficit, all_active_iv
+
+    @api.model
+    def _cron_process_day_undertime_rules(self):
+        """Daily cron: process day-based time rules for yesterday's records."""
+        assert 'employee_id' in self._fields
+        yesterday = date.today() - timedelta(days=1)
+        start = datetime.combine(yesterday, time.min)
+        end = datetime.combine(yesterday, time.max)
+        sources = self._get_source_records_for_time_rules(start, end, check_end=True)
+        if not sources:
+            return
+        affected = [(s.employee_id, s[s._time_rule_span_start_field], s[s._time_rule_span_end_field]) for s in sources]
+        self._process_time_rules_for(affected, rule_period='day', rule_operator='less_than')
+
+    @api.model
+    def _cron_process_week_time_rules(self):
+        """Daily cron: process week rules whose week boundary fell on yesterday.
+
+        On day X, yesterday was the last day of every week that starts on X.
+        Only rules with week_start matching X are processed, using the 7-day
+        window [X-7 .. X-1].  Days with no matching rules are a cheap no-op.
+        """
+        assert 'employee_id' in self._fields
+        today = date.today()
+        yesterday = today - timedelta(days=1)
+        week_start_key = str(today.weekday())   # '0'=Mon … '6'=Sun
+        week_end = yesterday
+        week_start_date = week_end - timedelta(days=6)
+        start = datetime.combine(week_start_date, time.min)
+        end = datetime.combine(week_end, time.max)
+        sources = self._get_source_records_for_time_rules(start, end, check_end=True)
+        if not sources:
+            return
+        affected = [(s.employee_id, s[s._time_rule_span_start_field], s[s._time_rule_span_end_field]) for s in sources]
+        self._process_time_rules_for(affected, rule_period='week', rule_week_start=week_start_key)
+
+    def _process_time_rules_for(self, affected, rule_period=None, rule_operator=None, rule_week_start=None):
+        """Recompute time rule outputs for the given (employee, date_from, date_to) tuples.
+        """
+        if not affected:
+            return
+
+        rules = self.env['hr.time.rule'].sudo().search([
+            ('active', '=', True),
+            '|',
+                ('company_id', '=', False),
+                ('company_id', 'in', self.env.companies.ids),
+        ])
+        if not rules:
+            _logger.warning(
+                "time rule process skipped: no active rules for companies %s (period=%s operator=%s)",
+                self.env.companies.mapped('name'), rule_period, rule_operator,
+            )
+            return
+
+        if rule_operator:
+            rules = rules.filtered(lambda r: r.threshold_operator == rule_operator)
+
+        if rule_period == 'day':
+            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
+            week_rules = rules.browse()
+        elif rule_period == 'week':
+            day_rules = rules.browse()
+            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+        else:
+            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
+            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+
+        if rule_week_start is not None:
+            week_rules = week_rules.filtered(lambda r: (r.week_start or '0') == rule_week_start)
+
+        if not day_rules and not week_rules:
+            _logger.warning(
+                "time rule process skipped: no matching rules after period/operator filter "
+                "(period=%s operator=%s from %d total active rules)",
+                rule_period, rule_operator, len(rules),
+            )
+            return
+        _logger.warning(
+            "time rule process: %d day-rule(s) + %d week-rule(s) for %d employee range(s) "
+            "(period=%s operator=%s)",
+            len(day_rules), len(week_rules), len(affected), rule_period, rule_operator,
+        )
+
+        day_rules_ranges = defaultdict(lambda: [None, None])
+        for employee, date_from, date_to in affected:
+            df = date_from.date() if hasattr(date_from, 'date') else date_from
+            dt = date_to.date() if hasattr(date_to, 'date') else date_to
+            r = day_rules_ranges[employee]
+            r[0] = df if r[0] is None else min(r[0], df)
+            r[1] = dt if r[1] is None else max(r[1], dt)
+
+        weekly_starts = {int(r.week_start or '0') for r in week_rules}
+        week_rules_ranges = {}
+        if weekly_starts:
+            for employee, (df, dt) in day_rules_ranges.items():
+                wdf, wdt = df, dt
+                for ws in weekly_starts:
+                    wdf = min(wdf, wdf - relativedelta(days=(wdf.weekday() - ws) % 7))
+                    wdt = max(wdt, wdt + relativedelta(days=(ws - 1 - wdt.weekday()) % 7))
+                week_rules_ranges[employee] = (wdf, wdt)
+
+        day_excess, day_deficit, day_active_iv = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
+        week_excess, week_deficit, week_active_iv = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
+
+        merged_excess = self._merge_rule_outputs(day_excess, week_excess)
+        merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
+        merged_active_iv = self._merge_active_iv(day_active_iv, week_active_iv)
+        self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_active_iv)
+
+    def _trigger_time_rules(self):
+        """Apply the full day/week, past/current, exceed/undertime split for validated source record."""
+        domain = [
+            (self._time_rule_span_start_field, '!=', False),
+            (self._time_rule_span_end_field, '!=', False),
+        ]
+        domain.extend(self._get_source_extra_fields_domain())
+        validated = self.filtered_domain(domain)
+        skipped = self - validated
+        if skipped:
+            _logger.warning(
+                "time rule trigger skipped for %d %s record(s) %s (failed domain filter %s)",
+                len(skipped), self._name, skipped.ids, domain,
+            )
+        if not validated:
+            return
+        assert 'employee_id' in self._fields
+        _logger.warning(
+            "time rule trigger: %d %s record(s) %s → building affected list",
+            len(validated), self._name, validated.ids,
+        )
+        self._trigger_time_rules_for_affected([(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated])
+
+    def _trigger_time_rules_for_affected(self, affected):
+        """Apply day/week, past/current, exceed/undertime split for (employee, date_from, date_to) tuples."""
+        if not affected:
+            return
+        today = date.today()
+
+        # find the earliest active week-rule week-start to use as the current-week boundary;
+        # using min across all rules ensures a record inside ANY rule's current week is deferred
+        week_rules = self.env['hr.time.rule'].sudo().search([
+            ('active', '=', True),
+            ('quantity_period', '=', 'week'),
+            '|', ('company_id', '=', False), ('company_id', 'in', self.env.companies.ids),
+        ])
+        if week_rules:
+            week_starts = {int(r.week_start or '0') for r in week_rules}
+            latest_week_start = min(
+                today - timedelta(days=(today.weekday() - ws) % 7)
+                for ws in week_starts
+            )
+        else:
+            latest_week_start = today - timedelta(days=today.weekday())
+
+        def to_date(dt):
+            return dt.date() if hasattr(dt, 'date') else dt
+        past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
+        today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
+        past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
+        _logger.warning(
+            "time rule affected split: %d past-day, %d current/future (exceed-only), %d past-week",
+            len(past_day), len(today_list), len(past_week),
+        )
+        self._process_time_rules_for(past_day, rule_period='day')
+        self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
+        self._process_time_rules_for(past_week, rule_period='week')
+
+    def write(self, vals):
+        assert 'employee_id' in self._fields
+        res = super().write(vals)
+        trigger_fields = {'employee_id', self._time_rule_span_start_field, self._time_rule_span_end_field} | self._get_write_source_extra_source_fields()
+        if not self.env.context.get('skip_time_rules') and trigger_fields.intersection(vals):
+            self._trigger_time_rules()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        if not self.env.context.get('skip_time_rules'):
+            res._trigger_time_rules()
+        return res

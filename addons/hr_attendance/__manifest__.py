@@ -3,7 +3,7 @@
 
 {
     'name': 'Attendances',
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Human Resources/Attendances',
     'sequence': 240,
     'summary': 'Track employee attendance',
@@ -15,20 +15,18 @@ Keeps account of the attendances of the employees on the basis of the
 actions(Check in/Check out) performed by them.
        """,
     'website': 'https://www.odoo.com/app/employees',
-    'depends': ['hr', 'barcodes', 'base_geolocalize'],
+    'depends': ['hr', 'hr_work_entry', 'barcodes', 'base_geolocalize'],
     'data': [
         'data/hr_attendance_data.xml',
         'security/hr_attendance_security.xml',
-        'data/hr_attendance_overtime_ruleset_data.xml',
-        'data/hr_attendance_overtime_rule_data.xml',
         'views/hr_attendance_view.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
         'views/hr_employee_public_views.xml',
         'views/res_config_settings_views.xml',
         'views/hr_attendance_kiosk_templates.xml',
-        'views/hr_attendance_overtime_rule_views.xml',
         'views/hr_version_views.xml',
+        'views/hr_contract_template_views.xml',
         'security/ir.access.csv',
     ],
     'demo': [

@@ -13,10 +13,14 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">110</field>
         <field name="arch" type="xml">
+            <field name="resource_calendar_id" position="after">
+                <field name="attendance_based"/>
+            </field>
             <button name="action_open_versions" position="before">
                 <field name="attendance_state" invisible="1"/>
                 <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_officer" invisible="1"/>
                 <field name="display_attendances" invisible="1"/>
+                <field name="hours_last_month_display" invisible="1"/>
                 <button name="action_open_last_month_attendances"
                         class="oe_stat_button"
                         icon="schedule"
@@ -25,16 +29,7 @@
                         help="Worked hours this month">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="hours_last_month" widget="float_time"/>
-                            <span class="o_stat_value text-success" invisible="hours_last_month_overtime &lt;= 0 or not display_extra_hours">
-                                (+<field name="hours_last_month_overtime" widget="float_time"/>)
-                            </span>
-                            <span class="o_stat_value text-danger" invisible="hours_last_month_overtime &gt;= 0 or not display_extra_hours">
-                                (<field name="hours_last_month_overtime" widget="float_time"/>)
-                            </span>
-                        </span>
-                        <span class="o_stat_text">
-                            Monthly Hours
+                            <field name="hours_last_month_display"/>
                         </span>
                     </div>
                 </button>
@@ -49,12 +44,6 @@
                 <button name="open_barcode_scanner" string="Read a badge" type="object" class="btn btn-link" invisible="barcode"/>
             </xpath>
             <!-- identification_group -->
-            <group name="identification_group" position="inside">
-                <field 
-                    name="ruleset_id" string="Overtime Ruleset"
-                    placeholder="Select a ruleset to manage overtime."
-                    />
-            </group>
         </field>
     </record>
 
@@ -126,9 +115,11 @@
                 js_class="attendance_calendar_view"
                 date_start="check_in"
                 date_stop="check_out"
-                color="overtime_status"
                 quick_create_view_id="%(hr_attendance.hr_attendance_create_view_form)d"
-                mode="month">
+                mode="month"
+                color="wet_color">
+                <field name="wet_color" invisible="1"/>
+                <field name="work_entry_type_id" filters="1" color="color"/>
                 <field name="worked_hours" widget="float_time"/>
             </calendar>
         </field>
@@ -140,9 +131,6 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
-            <field name="overtime_status" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
             <xpath expr="//field[@id='employee_no_manager']" position="replace"/>
             <xpath expr="//field[@id='employee_manager']" position="replace"/>
             <xpath expr="//field[@id='employee_no_officer']" position="attributes">
@@ -157,15 +145,6 @@
             <field name="break_duration" position="attributes">
                 <attribute name="readonly">1</attribute>
             </field>
-            <field name="validated_overtime_hours" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
-            <button name="action_approve_overtime" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
-            <button name="action_refuse_overtime" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
         </field>
     </record>
 

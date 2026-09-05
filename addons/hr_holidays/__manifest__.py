@@ -25,6 +25,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
 """,
     'depends': ['hr_work_entry', 'hr_calendar', 'resource'],
     'data': [
+        'data/hr_time_rule_data.xml',
         'data/report_paperformat.xml',
         'data/mail_activity_type_data.xml',
         'data/mail_message_subtype_data.xml',
@@ -59,6 +60,7 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
 
         'views/hr_views.xml',
         'views/hr_holidays_views.xml',
+        'views/hr_time_rule_views.xml',
         'security/ir.access.csv',
     ],
     'other_files': [

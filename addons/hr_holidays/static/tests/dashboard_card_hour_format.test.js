@@ -21,7 +21,6 @@ function getHourProps(floatHour) {
 			leaves_requested: 0,
 			leaves_taken: 0,
 			max_allowed_negative: 0,
-			overtime_deductible: true,
 			unit_of_measure: "hour",
 			total_virtual_excess: 0,
 			virtual_excess_data: {},

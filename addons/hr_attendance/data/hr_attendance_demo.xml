@@ -109,14 +109,12 @@
             <field eval="(datetime.now()+timedelta(hours=-4)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(minutes=-30)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_hne"/>
-            <field name="overtime_status">to_approve</field>
         </record>
 
         <record id="attendance12" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-31)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_mit"/>
-            <field name="overtime_status">refused</field>
         </record>
 
         <record id="attendance12_message1" model="mail.message">
@@ -133,16 +131,12 @@
             <field eval="(datetime.now()+timedelta(hours=-7)).strftime('%Y-%m-%d %H:%M:10')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_mit"/>
-            <field name="overtime_status">approved</field>
         </record>
 
         <record id="attendance14" model="hr.attendance">
             <field eval="(datetime.now()+timedelta(hours=-15)).strftime('%Y-%m-%d %H:%M:00')" name="check_in"/>
             <field eval="(datetime.now()+timedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:00')" name="check_out"/>
             <field name="employee_id" ref="hr.employee_chs"/>
-        </record>
-        <record id="attendance14" model="hr.attendance">
-            <field name="validated_overtime_hours">2</field>
         </record>
     </data>
 </odoo>

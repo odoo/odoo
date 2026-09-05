@@ -55,7 +55,7 @@ class HrLeaveEmployeeReport(models.Model):
                     DATE_TRUNC('day', date_to),
                     INTERVAL '1 day'
                 ) AS days_included_in_request
-                WHERE hl.employee_company_id IN %(company_ids)s
+                WHERE hl.employee_company_id IN %(company_ids)s AND hl.active IS True AND hl.time_rule_id IS NULL
             )
             SELECT
                 id, leave_id, employee_id,
