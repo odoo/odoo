@@ -21,6 +21,11 @@ export class EditInteractionPlugin extends Plugin {
     resources = {
         normalize_processors: withSequence(0, this.refreshInteractions.bind(this)),
         on_content_manually_updated_handlers: this.refreshInteractions.bind(this),
+        // The normalization does not run on undo/redo. Refresh the interactions
+        // here, as what they build is not recorded in the history and can
+        // therefore not be restored by reverting the mutations.
+        on_history_commit_undone_handlers: () => this.refreshInteractions(this.editable),
+        on_history_commit_redone_handlers: () => this.refreshInteractions(this.editable),
         on_will_save_handlers: withSequence(5, this.stopInteractions.bind(this)),
         on_saved_handlers: this.restartInteractions.bind(this),
         on_will_clone_handlers: ({ originalEl }) => {
