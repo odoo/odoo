@@ -37,7 +37,7 @@ WITHHOLDING_REASON_SELECTION = [
     ('V', '[V] Provisions for door-to-door sales persons and newspaper selling in kiosks'),
     ('V1', '[V1] Income from unusual commercial activities (such as provisions for occasional work or sales representative, mediator, procurer)'),
     ('V2', '[V2] Income from unusual work activities from door-to-door sales representatives'),
-    ('W', '[W] Income from 2015 tinders subject to law art. 25-ter D.P.R. 600/1973'),
+    ('W', '[W] Income from tenders subject to Art. 25-ter of Presidential Decree 600/1973'),
     ('X', '[X] Income from 2014 for foreign companies or institutions subject to law art. 26-quater, c. 1, lett. a) and b) D.P.R. 600/1973'),
     ('Y', '[Y] Income from 1.01.2005 to 26.07.2005 from companies or institutions not included in the description above'),
     ('Z', '[Z] Deprecated'),
