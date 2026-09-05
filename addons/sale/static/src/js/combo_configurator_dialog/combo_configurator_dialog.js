@@ -3,6 +3,7 @@ import { formatCurrency } from '@web/core/currency';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
+import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 import { ProductCombo } from '../models/product_combo';
 import { ProductTemplateAttributeLine } from '../models/product_template_attribute_line';
@@ -250,3 +251,5 @@ export class ComboConfiguratorDialog extends Component {
         return {};
     }
 }
+
+registry.category('sale_configurator_dialogs').add('combo', ComboConfiguratorDialog);
