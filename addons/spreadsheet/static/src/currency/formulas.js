@@ -1,5 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { EvaluationError } from "@odoo/o-spreadsheet";
 const { arg, toString, toJsDate, toNumber } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
 
@@ -13,7 +14,11 @@ functionRegistry.add("ODOO.CURRENCY.RATE", {
         const to = toString(currencyTo);
         const _date = date ? toJsDate(date, this.locale) : undefined;
         const _companyId = companyId ? toNumber(companyId) : undefined;
-        return { value: this.getters.getCurrencyRate(from, to, _date, _companyId) };
+        const currencyRate = this.getters.getCurrencyRate(from, to, _date, _companyId);
+        if (currencyRate === false) {
+            return new EvaluationError(_t("Currency rate unavailable."));
+        }
+        return { value: currencyRate };
     },
     args: [
         arg("currency_from (string)", _t("First currency code.")),

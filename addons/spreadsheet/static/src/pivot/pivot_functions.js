@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { EvaluationError } from "@web/core/py_js/py_builtin";
 
 const { arg, isMatrix, toJsDate, toString, createComputeFunction } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
@@ -19,7 +20,13 @@ const ODOO_FILTER_VALUE = {
     category: "Odoo",
     computeArray: function (filterName) {
         const unEscapedFilterName = toString(filterName).replaceAll('\\"', '"');
-        return this.getters.getFilterDisplayValue(unEscapedFilterName);
+        const filter = this.getters.getGlobalFilterByName(unEscapedFilterName);
+        if (!filter) {
+            return new EvaluationError(
+                _t(`Filter "%(filter_name)s" not found`, { filter_name: filterName })
+            );
+        }
+        return this.getters.getFilterDisplayValue(filter);
     },
 };
 

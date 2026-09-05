@@ -1,16 +1,19 @@
-import { EvaluationError, registries } from "@odoo/o-spreadsheet";
+import { registries } from "@odoo/o-spreadsheet";
 import { OdooEvaluationPlugin } from "@spreadsheet/plugins";
 import { toServerDateString } from "@spreadsheet/helpers/helpers";
-import { _t } from "@web/core/l10n/translation";
 import { computeFormatFromCurrency } from "../helpers";
 const { evaluationPluginRegistry } = registries;
 
 export class CurrencyPlugin extends OdooEvaluationPlugin {
-    static getters = /** @type {const} */ (["getCurrencyRate", "getCompanyCurrencyFormat"]);
+    static getters = /** @type {const} */ ([
+        "getCurrencyRate",
+        "getCompanyCurrency",
+        "getCompanyCurrencyFormat",
+    ]);
 
     constructor(config) {
         super(config);
-        /** @type {string | undefined} */
+        /** @type {import("../helpers").Currency | undefined} */
         this.currentCompanyCurrency = config.defaultCurrency;
         /** @type {import("@spreadsheet/data_sources/server_data").ServerData} */
         this._serverData = config.custom.odooDataProvider?.serverData;
@@ -45,10 +48,22 @@ export class CurrencyPlugin extends OdooEvaluationPlugin {
             company_id: companyId,
         });
         const rate = data !== undefined ? data.rate : undefined;
-        if (rate === false) {
-            throw new EvaluationError(_t("Currency rate unavailable."));
-        }
         return rate;
+    }
+
+    /**
+     * Get the currency of the given company, or the current company's
+     * currency if no company id is provided.
+     * @param {number | undefined} [companyId]
+     * @returns {import("../helpers").Currency | false}
+     */
+    getCompanyCurrency(companyId) {
+        if (!companyId && this.currentCompanyCurrency) {
+            return this.currentCompanyCurrency;
+        }
+        return this.serverData.get("res.currency", "get_company_currency_for_spreadsheet", [
+            companyId,
+        ]);
     }
 
     /**
@@ -57,18 +72,7 @@ export class CurrencyPlugin extends OdooEvaluationPlugin {
      * @returns {string | undefined}
      */
     getCompanyCurrencyFormat(companyId) {
-        if (!companyId && this.currentCompanyCurrency) {
-            return computeFormatFromCurrency(this.currentCompanyCurrency);
-        }
-        const currency = this.serverData.get(
-            "res.currency",
-            "get_company_currency_for_spreadsheet",
-            [companyId]
-        );
-        if (currency === false) {
-            throw new EvaluationError(_t("Currency not available for this company."));
-        }
-        return computeFormatFromCurrency(currency);
+        return computeFormatFromCurrency(this.getCompanyCurrency(companyId));
     }
 }
 
