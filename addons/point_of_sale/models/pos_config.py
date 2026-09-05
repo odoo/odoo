@@ -610,7 +610,6 @@ class PosConfig(models.Model):
         pos_configs._create_sequences()
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
-        pos_configs._update_preparation_printers_menuitem_visibility()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
 
@@ -663,11 +662,6 @@ class PosConfig(models.Model):
             else:
                 raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
 
-    def _update_preparation_printers_menuitem_visibility(self):
-        prepa_printers_menuitem = self.sudo().env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
-        if prepa_printers_menuitem:
-            prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('use_order_printer', '=', True)], limit=1) > 0
-
     def _can_use_cash_payment_method(self, cash_method):
         self.ensure_one()
         return not cash_method.config_ids.filtered(lambda config: config != self)
@@ -689,7 +683,8 @@ class PosConfig(models.Model):
 
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
-        if ('use_order_printer' in vals and not vals['use_order_printer']):
+        if any(field in vals and not vals[field] and any(self.mapped(field))
+               for field in ('preparation_devices', 'use_order_printer')):
             vals['preparation_printer_ids'] = [fields.Command.clear()]
 
         bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
@@ -724,8 +719,6 @@ class PosConfig(models.Model):
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
-        if 'use_order_printer' in vals:
-            self._update_preparation_printers_menuitem_visibility()
         return result
 
     def copy_data(self, default=None):
