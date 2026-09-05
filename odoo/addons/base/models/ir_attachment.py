@@ -423,11 +423,16 @@ class IrAttachment(models.Model):
 
     def _get_datas_related_values(self, data: BinaryValue, mimetype):
         checksum = self._compute_checksum(data)
+        index_content = False
+        if isinstance(data, LocalBinaryFile):
+            index_content = self.search_fetch(
+                [('checksum', '=', data.checksum), ('mimetype', '=', mimetype)],
+                ['index_content'],
+                limit=1,
+            ).index_content
         try:
-            if data:
+            if not index_content and data:
                 index_content = self._index(data, mimetype, checksum=checksum)
-            else:
-                index_content = False
         except TypeError:
             index_content = self._index(data, mimetype)
         values = {
@@ -447,6 +452,9 @@ class IrAttachment(models.Model):
         """ compute the checksum for the given bytes
             :param bin_data : data in its binary form
         """
+        if isinstance(bin_data, LocalBinaryFile):
+            # checksum already known
+            return bin_data.checksum
         # an empty file has a checksum too (for caching)
         return hashlib.sha1(bin_data or b'').hexdigest()
 
