@@ -169,6 +169,10 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             3) Check if there are five timesheets generated for time off and public
                holiday.4 timesheets should be linked to the time off and 1 for
                the public one.
+            4) Reconfigure the company's time off task and verify the old task
+               becomes writable while the new one becomes restricted.
+            5) Verify this still holds correctly in a multi-company environment,
+               including when the timeoff task has no company_id set.
         """
 
         leave_start_datetime = datetime(2022, 1, 24, 7, 0, 0, 0) # Monday
@@ -214,6 +218,44 @@ class TestTimesheetHolidays(TestCommonTimesheet):
 
         self.assertEqual(len(timesheets.filtered('holiday_id')), 4, "4 timesheet should be linked to employee's timeoff")
         self.assertEqual(len(timesheets.filtered('global_leave_id')), 1, '1 timesheet should be linked to global leave')
+
+        new_time_off_task = self.env['project.task'].create({
+            'name': 'New Time off task',
+            'project_id': self.internal_project.id
+        })
+        self.env.company.leave_timesheet_task_id = new_time_off_task
+        # Should be able to create a timesheet on the previous time off task
+        self.env['account.analytic.line'].with_user(self.user_employee).create({
+            'name': "my timesheet",
+            'project_id': self.internal_project.id,
+            'task_id': self.internal_task_leaves.id,
+            'date': '2026-08-10',
+            'unit_amount': 8.0,
+        })
+
+        # should not able to create a timesheet in newly configured timeoff task
+        with self.assertRaises(UserError):
+            self.env['account.analytic.line'].with_user(self.user_employee).create({
+                'name': "my timesheet",
+                'task_id': new_time_off_task.id,
+                'date': '2026-08-10',
+                'unit_amount': 8.0,
+            })
+
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.user_employee.write({'company_ids': [(4, company_b.id)]})
+
+        time_off_task_company_b = company_b.leave_timesheet_task_id
+        time_off_task_company_b.company_id = False
+
+        # should not able to create timesheet in company b timeoff task
+        with self.assertRaises(UserError):
+            self.env['account.analytic.line'].with_user(self.user_employee).create({
+                'name': "my timesheet",
+                'task_id': time_off_task_company_b.id,
+                'date': '2026-08-10',
+                'unit_amount': 8.0,
+            })
 
     def test_delete_timesheet_after_new_holiday_covers_whole_timeoff(self):
         """ A timesheet created from a validated time off should be removed
@@ -262,11 +304,15 @@ class TestTimesheetHolidays(TestCommonTimesheet):
     def test_timeoff_task_creation_with_holiday_leave(self):
         """ Test the search method on is_timeoff_task"""
         company = self.env['res.company'].create({"name": "new company"})
-        self.empl_employee.write({
-            "company_id": company.id,
-        })
+        self.empl_employee.write({'company_id': company.id})
+
+        # New company already has an auto-configured timeoff task
+        self.assertTrue(company.leave_timesheet_task_id)
+        self.assertTrue(company.leave_timesheet_task_id.is_timeoff_task)
+
         task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
         timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
+
         leave = self.Requests.with_user(SUPERUSER_ID).create({
             'name': 'Test Leave',
             'employee_id': self.empl_employee.id,
@@ -275,8 +321,13 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'request_date_to': datetime(2024, 6, 24),
         })
         leave.with_user(SUPERUSER_ID).action_approve()
+
+        # Approving the leave adds a timesheet, but should NOT change the
+        # task_count, since the task was already counted via config, not
+        # via the historical-timesheet query
         new_task_count = self.env['project.task'].search_count([('is_timeoff_task', '!=', False)])
-        self.assertEqual(task_count + 1, new_task_count)
+        self.assertEqual(task_count, new_task_count)
+
         new_timesheet_count = self.env['account.analytic.line'].search_count([('holiday_id', '!=', False)])
         self.assertEqual(timesheet_count + 1, new_timesheet_count)
 
