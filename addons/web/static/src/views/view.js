@@ -373,6 +373,8 @@ export class View extends Component {
             ...(props.className || "").split(" "),
         ]);
 
+        this.env.setDialogSize?.(archXmlDoc.getAttribute("dialog_size"));
+
         Object.assign(this.env.config, {
             rawArch: arch,
             viewArch: archXmlDoc,
