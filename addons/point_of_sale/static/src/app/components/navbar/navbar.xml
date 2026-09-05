@@ -50,53 +50,99 @@
                     </button>
                     <!-- No need to show the cashier name on small screens -->
                     <CashierName t-if="!this.ui.isSmall"/>
-                    <Dropdown>
-                        <button class="btn btn-light btn-lg lh-lg">
-                            <i class="oi oi-fw" data-icon="menu"/>
-                        </button>
-                        <t t-set-slot="content">
-                            <div class="d-flex gap-2 p-2 border-bottom">
-                                <span t-on-click="this.openLnaPopup" role="button" t-attf-class="d-flex align-items-center justify-content-center gap-1 py-1 btn btn-{{this.pos.lnaState.type}} w-100 text-center {{this.pos.config.use_iot_box ? 'flex-column' : '' }}" title="Local Network Access">
-                                    <i class="oi oi-fw" data-icon="wifi"/><span class="lna-label">LNA</span>
-                                </span>
-                            </div>
-                            <div class="p-2 pos-burger-menu-items">
-                                <DropdownItem onSelected="() => this.openCustomerDisplay()">
-                                    <i class="oi oi-fw" data-icon="desktop_windows" aria-hidden="true" /> Customer Display
-                                </DropdownItem>
-                                <DropdownItem t-if="!this.isDisplayStandalone and this.pos.cashier._role != 'minimal'" onSelected="() => window.open(this.appUrl)">
-                                    <i class="oi oi-fw" data-icon="download" aria-hidden="true" /> Install App
-                                </DropdownItem>
-                                <DropdownItem t-if="this.showCashMoveButton and this.pos.cashier._role != 'minimal'" onSelected="() => this.pos.cashMove()">
-                                    <i class="oi oi-fw" data-icon="payments" aria-hidden="true" /> Cash In/Out
-                                </DropdownItem>
-                                <DropdownItem t-if="!this.pos.data.network.offline" onSelected="() => this.pos.reloadData(true)">
-                                    <i class="oi oi-fw" data-icon="refresh" aria-hidden="true" /> Reload Data
-                                </DropdownItem>
-                                <DropdownItem t-if="this.showCreateProductButton" onSelected="() => this.pos.editProduct()">
-                                    <i class="oi oi-fw" data-icon="add" aria-hidden="true" /> Create Product
-                                </DropdownItem>
-                                <DropdownItem t-if="this.showPrinterButton" onSelected="() => this.pos.ticketPrinter.selectPrinter(true)">
-                                    <i class="oi oi-fw" data-icon="print" aria-hidden="true" /> Printers
-                                </DropdownItem>
-                                <DropdownItem t-if="this.isBarcodeScannerSupported() and this.pos.router.currentScreen() == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant" onSelected="() => this.onClickScan()">
-                                    <i class="oi oi-fw" data-icon="barcode" aria-hidden="true" /> <t t-if="this.pos.scanning">Stop</t> Barcode Scanner
-                                </DropdownItem>
-                                <DropdownItem t-if="this.pos.ticketPrinter.hasReceiptPrinters" onSelected="() => this.showSaleDetails()">
-                                    <i class="oi oi-fw" data-icon="picture_as_pdf" aria-hidden="true" /> Print Report
-                                </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.closePos()">
-                                    <i class="oi oi-fw" data-icon="chevron_left" aria-hidden="true" /> Backend
-                                </DropdownItem>
-                                <DropdownItem onSelected="() => this.pos.closeSession()">
-                                    <i class="oi oi-fw" data-icon="key" aria-hidden="true" /> Close Register
-                                </DropdownItem>
-                            </div>
-                        </t>
-                    </Dropdown>
+                    <button class="btn btn-light btn-lg lh-lg" t-on-click="this.openBurgerMenu" aria-label="Open Menu">
+                        <i class="oi oi-fw" data-icon="menu" aria-hidden="true"/>
+                    </button>
                 </div>
             </div>
         </div>
     </t>
 
+    <t t-name="point_of_sale.BurgerDialogMenuButton">
+        <button
+            t-att-class="'btn btn-lg ' + (btnClasses or 'btn-secondary') + ' d-inline-flex flex-md-column justify-content-md-center align-items-center gap-2'"
+            t-on-click="()=>{this.closeAndRun(onClick)}">
+            <i t-if="dataIcon" class="oi oi-fw align-self-center opacity-50" t-att-data-icon="dataIcon" role="img" aria-hidden="true"/>
+            <t t-out="btnLabel"/>
+        </button>
+    </t>
+
+    <t t-name="point_of_sale.BurgerMenuDialog">
+        <Dialog bodyClass="'d-flex flex-column'" footer="false" header="false" backdrop="true">
+            <div class="d-flex align-items-center gap-2 pb-3">
+                <button t-att-class="'btn btn-lg btn-outline-' + (this.pos.lnaState.type)" title="Local Network Access" t-on-click="() => this.props.openLnaPopup()">
+                    <i class="oi oi-fw" t-att-data-icon="(this.pos.lnaState.type === 'success' ? 'wifi' : 'link_off')" aria-hidden="true"/> LNA
+                </button>
+                <button class="btn btn-lg btn-close ms-auto" aria-label="Close" title="Close" t-on-click="() => this.props.close()"/>
+            </div>
+            <div class="o_pos_burger_menu_buttons d-grid gap-2">
+                <t t-call="point_of_sale.BurgerDialogMenuButton"
+                    t-name="customer_display"
+                    dataIcon="'desktop_windows'"
+                    onClick="() => this.props.openCustomerDisplay()"
+                    btnLabel.translate="Customer Display"
+                />
+                <t t-if="!this.isDisplayStandalone and this.pos.cashier._role != 'minimal'"
+                    t-call="point_of_sale.BurgerDialogMenuButton"
+                    t-name="install-app"
+                    dataIcon="'download'"
+                    onClick="() => window.open(this.appUrl)"
+                    btnLabel.translate="Install App"
+                />
+                <t t-if="this.showCashMoveButton and this.pos.cashier._role != 'minimal'"
+                    t-call="point_of_sale.BurgerDialogMenuButton"
+                    dataIcon="'payments'"
+                    onClick="() => this.pos.cashMove()"
+                    btnLabel.translate="Cash In/Out"
+                />
+                <t t-if="!this.pos.data.network.offline"
+                    t-call="point_of_sale.BurgerDialogMenuButton"
+                    dataIcon="'refresh'"
+                    onClick="() => this.props.pos.reloadData(true)"
+                    btnLabel.translate="Reload Data"
+                />
+                <t t-if="this.showCreateProductButton"
+                    t-call="point_of_sale.BurgerDialogMenuButton"
+                    t-name="create_product"
+                    dataIcon="'add'"
+                    onClick="() => this.pos.editProduct()"
+                    btnLabel.translate="Create Product"
+                />
+                <t t-if="this.showPrinterButton"
+                    t-call="point_of_sale.BurgerDialogMenuButton"
+                    dataIcon="'print'"
+                    onClick="() => this.pos.ticketPrinter.selectPrinter(true)"
+                    btnLabel.translate="Printers"
+                />
+                <t t-set="barcodeLabel">
+                    <t t-if="this.pos.scanning">Stop</t> Barcode Scanner
+                </t>
+                <t t-if="this.isBarcodeScannerSupported() and this.pos.router.currentScreen() == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant"
+                    t-call="point_of_sale.BurgerDialogMenuButton"
+                    dataIcon="'barcode'"
+                    onClick="() => this.props.onClickScan()"
+                    btnLabel="barcodeLabel"
+                />
+                <t t-if="this.pos.ticketPrinter.hasReceiptPrinters"
+                    t-call="point_of_sale.BurgerDialogMenuButton"
+                    dataIcon="'picture_as_pdf'"
+                    onClick="() => this.props.showSaleDetails()"
+                    btnLabel.translate="Print Report"
+                />
+                <t t-call="point_of_sale.BurgerDialogMenuButton"
+                    t-name="backend"
+                    dataIcon="'chevron_left'"
+                    onClick="() => this.pos.closePos()"
+                    btnLabel.translate="Backend"
+                />
+                <t t-call="point_of_sale.BurgerDialogMenuButton"
+                    t-name="close_register"
+                    dataIcon="'key'"
+                    onClick="() => this.pos.closeSession()"
+                    btnLabel.translate="Close Register"
+                    btnClasses="'btn-danger'"
+                />
+            </div>
+        </Dialog>
+    </t>
 </templates>

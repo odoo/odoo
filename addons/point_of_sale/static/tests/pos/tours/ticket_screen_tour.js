@@ -442,9 +442,10 @@ registry.category("web_tour.tours").add("test_order_invoice_search", {
             TicketScreen.search("Invoice Number", "00001"),
             TicketScreen.nthRowContains(1, "001", false),
             Chrome.clickMenuOption("Close Register"),
+            Chrome.closeRegisterPopupIsShown(),
             {
                 content: `Select button close register`,
-                trigger: `button:contains(close register)`,
+                trigger: `.modal .modal-footer .btn:contains(close register)`,
                 run: "click",
                 expectUnloadPage: true,
             },
