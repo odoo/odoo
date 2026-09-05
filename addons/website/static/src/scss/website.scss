@@ -1659,6 +1659,19 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 }
 
+// Marquee keyframes (s_announcement_scroll, s_references_carousel, ...)
+// Mixin: @see o-marquee-animation in primary_variables.scss
+@keyframes o-marquee-scroll-left {
+    to {
+        transform: translateX(-100%);
+    }
+}
+@keyframes o-marquee-scroll-right {
+    from {
+        transform: translateX(-100%);
+    }
+}
+
 .carousel .container {
     .carousel-img img {
         max-height: 95%;

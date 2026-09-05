@@ -2429,6 +2429,73 @@ $o-offcanvas-horizontal-width: var(--Offcanvas-horizontal-width, #{$o-offcanvas-
     }
 };
 
+// Shared direction / hover / parallax animation for infinite marquees
+// (s_announcement_scroll, s_references_carousel, ...).
+// Include inside the snippet root selector, above any declaration:
+//   .s_announcement_scroll { @include o-marquee-animation('s_announcement_scroll'); }
+// Expects children: .{prefix}_marquee_container > .{prefix}_marquee_item
+// Keyframes: o-marquee-scroll-left / o-marquee-scroll-right in website.scss
+// Reads `--marquee-animation-speed` (option) and `--marquee-item-size` (set by
+// the Marquee interaction, @see website/interactions/marquee.js)
+@mixin o-marquee-animation($prefix) {
+    overflow-x: clip;
+
+    .#{$prefix}_marquee_item {
+        @media (prefers-reduced-motion: reduce) {
+            animation: none !important;
+        }
+    }
+
+    &.#{$prefix}_direction_right {
+        --marquee-animation: o-marquee-scroll-right;
+    }
+    &.#{$prefix}_direction_none {
+        --marquee-animation: none;
+    }
+
+    // Animation states, only when ready
+    &.#{$prefix}_ready {
+
+        // Base behavior: once the snippet is ready, the animation is going in
+        // the base direction. The second, paused and reversed animation is what
+        // the "Swap Direction" hover effect resumes.
+        .#{$prefix}_marquee_item {
+            --marquee-animation-time: calc((25s - var(--marquee-animation-speed) * 2) * var(--marquee-item-size) * .001);
+
+            animation-composition: add;
+            animation:
+                var(--marquee-animation, o-marquee-scroll-left) linear infinite var(--marquee-animation-time),
+                var(--marquee-animation, o-marquee-scroll-left) linear infinite calc(var(--marquee-animation-time) * var(--marquee-animation-hover-multiplier, 1)) reverse paused;
+        }
+        &.#{$prefix}_hover_slow .#{$prefix}_marquee_item {
+            --marquee-animation-hover-multiplier: 2;
+        }
+
+        // Hover effects, only when not scrolling and on devices that support
+        // hover.
+        @media (hover: hover) {
+            &:where(:hover:not(.#{$prefix}_page_scrolling)) {
+                &.#{$prefix}_hover_pause .#{$prefix}_marquee_item {
+                    animation-play-state: paused;
+                }
+                &.#{$prefix}_hover_slow .#{$prefix}_marquee_item {
+                    animation-play-state: running;
+                }
+                &.#{$prefix}_hover_direction .#{$prefix}_marquee_item {
+                    animation-play-state: paused, running;
+                }
+            }
+        }
+
+        // Parallax: pause CSS animation while the page is scrolling
+        &:where(.#{$prefix}_page_scrolling) {
+            &.#{$prefix}_parallax .#{$prefix}_marquee_item {
+                animation-play-state: paused;
+            }
+        }
+    }
+};
+
 // Replaces 'NULL' string values in a map by the sass null value (this is useful
 // as a "hack" to allow users to define null values in their custom palette as
 // normal null values are immediately removed to act as "removing the user custo
