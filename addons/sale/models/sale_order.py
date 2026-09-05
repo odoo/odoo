@@ -767,17 +767,30 @@ class SaleOrder(models.Model):
         for order in self:
             order.amount_invoiced = sum(order.order_line.mapped('amount_invoiced'))
 
-    @api.depends('company_id', 'partner_id', 'amount_total')
+    def _get_credit_to_invoice(self):
+        """ Return the amount of the order the customer owes but wasn't invoiced for yet."""
+        self.ensure_one()
+        if self.state != 'sale':
+            return 0.0  # only confirmed orders are counted in `credit_to_invoice`
+        not_delivered_amount = sum(
+            line.price_reduce_taxinc * max(line.product_uom_qty - line.qty_delivered, 0)
+            for line in self.order_line
+            if line.product_id.invoice_policy == 'delivery'
+        )
+        return max(self.amount_to_invoice + not_delivered_amount, 0)
+
+    @api.depends('company_id', 'partner_id', 'amount_total', 'state')
     def _compute_partner_credit_warning(self):
         for order in self:
             order = order.with_company(order.company_id)
             order.partner_credit_warning = ''
-            show_warning = order.state in ('draft', 'sent') and \
+            show_warning = order.state != 'cancel' and \
                            order.company_id.account_use_credit_limit
             if show_warning:
+                # A confirmed order already counts in `credit_to_invoice`
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order.sudo(),  # ensure access to `credit` & `credit_limit` fields
-                    current_amount=(order.amount_total / order.currency_rate),
+                    current_amount=order.amount_total / order.currency_rate if order.state != 'sale' else 0.0,
                 )
 
     @api.depends_context('lang')

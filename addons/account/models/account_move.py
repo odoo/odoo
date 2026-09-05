@@ -1855,21 +1855,22 @@ class AccountMove(models.Model):
         self.ensure_one()
         return 0
 
-    @api.depends('company_id', 'partner_id', 'tax_totals', 'currency_id')
+    @api.depends('company_id', 'partner_id', 'tax_totals', 'currency_id', 'state')
     def _compute_partner_credit_warning(self):
         for move in self:
             move = move.with_company(move.company_id)
             move.partner_credit_warning = ''
-            show_warning = move.state == 'draft' and \
+            show_warning = move.state in ('draft', 'posted') and \
                            move.move_type == 'out_invoice' and \
                            move.company_id.account_use_credit_limit
             if show_warning:
                 total_field = 'total_amount_currency' if move.currency_id == move.company_currency_id else 'total_amount'
-                current_amount = move.tax_totals[total_field]
+                # posted invoice already counts in the partner's credit
+                current_amount = move.tax_totals[total_field] if move.state == 'draft' else 0.0
                 move.partner_credit_warning = self._build_credit_warning_message(
                     move,
                     current_amount=current_amount,
-                    exclude_amount=move._get_partner_credit_warning_exclude_amount(),
+                    exclude_amount=move._get_partner_credit_warning_exclude_amount() if move.state == 'draft' else 0.0,
                 )
 
     @api.depends('partner_id')
