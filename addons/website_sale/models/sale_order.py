@@ -1509,12 +1509,14 @@ class SaleOrder(models.Model):
 
         return self._get_cart_qty(product.id), self._get_free_qty(product)
 
-    def _get_cart_qty(self, product_id, exclude_line=None):
+    def _get_cart_qty(self, product_id, exclude_line=None, only_mergeable_lines=False):
         """Return the quantity of the given product in the current cart, if any.
 
         :param int product_id: `product.product` id
         :param exclude_line: an order line to exclude from the computation (e.g. the line
             currently being updated).
+        :param bool only_mergeable_lines: if True, ignore lines that a new line for this
+            product could never be merged into
         :return: product quantity in the product uom
         :rtype: float
         """
@@ -1522,6 +1524,10 @@ class SaleOrder(models.Model):
             return 0.0
         exclude_line = exclude_line or self.env["sale.order.line"]
         order_lines = self._get_common_product_lines(product_id) - exclude_line
+        if only_mergeable_lines:
+            order_lines = order_lines.filtered(
+                lambda sol: not sol.product_custom_attribute_value_ids
+            )
         return sum(
             order_lines.mapped(
                 lambda sol: sol.product_uom_id._compute_quantity(
