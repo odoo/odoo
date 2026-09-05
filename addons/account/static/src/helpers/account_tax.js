@@ -1724,6 +1724,7 @@ export const accountTaxHelpers = {
                 continue;
             }
 
+            base_line.price_unit += tax_details.delta_total_excluded_currency;
             base_line.manual_total_excluded_currency =
                 tax_details.total_excluded_currency + tax_details.delta_total_excluded_currency;
             base_line.manual_total_excluded =
@@ -2453,9 +2454,6 @@ export const accountTaxHelpers = {
                 const amount_to_distribute = amounts_to_distribute[i];
                 const tax_details = base_line.tax_details;
                 tax_details[`delta_total_excluded${delta_suffix}`] += amount_to_distribute;
-                if (delta_suffix === "_currency") {
-                    base_line.price_unit += amount_to_distribute;
-                }
             }
         }
         return new_base_lines;
