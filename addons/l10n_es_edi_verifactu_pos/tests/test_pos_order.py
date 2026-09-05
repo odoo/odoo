@@ -142,7 +142,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
                     'amount': refund.amount_total,
                     'payment_method_id': self.bank_pm1.id,
                 })
-                refund.l10n_es_edi_verifactu_refund_reason = 'R5'
+                refund.l10n_es_invoice_type = 'R5'
                 refund_payment.with_context(**payment_context).check()
                 self.pos_session.close_session_from_ui()
 
@@ -205,7 +205,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         self.assertTrue(invoice)
         self.assertRecordValues(invoice, [{
             'partner_id': self.partner_b.id,
-            'l10n_es_is_simplified': False,
+            'l10n_es_invoice_type': 'F1',
         }])
 
         # The Veri*Factu document was created for the invoice and not the document

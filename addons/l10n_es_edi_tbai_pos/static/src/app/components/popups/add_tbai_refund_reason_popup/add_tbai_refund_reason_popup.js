@@ -9,7 +9,7 @@ export class AddTbaiRefundReasonPopup extends Component {
     setup() {
         this.pos = usePos();
         this.state = proxy({
-            l10n_es_tbai_refund_reason: this.props.order.l10n_es_tbai_refund_reason || "R1",
+            l10n_es_invoice_type: this.props.order.l10n_es_invoice_type || "R1",
         });
     }
     confirm() {

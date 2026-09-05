@@ -5,15 +5,29 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@id='other_tab']//field[@name='delivery_date']" position="after">
-                <field name="l10n_es_is_simplified" invisible="country_code != 'ES'" readonly="state != 'draft'"/>
-            </xpath>
             <xpath expr="//page[@name='other_info']//group[@name='sale_info_group']" position="after">
                 <group string="Spanish Electronic Invoicing"
                        name="l10n_es_electronic_invoicing"
-                       invisible="True">
+                       invisible="country_code != 'ES'">
                     <field name="l10n_es_original_invoice_credited"
                            invisible="move_type not in ['out_refund', 'in_refund'] or reversed_entry_id"/>
+                    <field name="l10n_es_invoice_type_available" invisible="1"/> <!-- Needed for the dynamic_selection widget -->
+                    <field name="l10n_es_invoice_type"
+                           string="Invoice Type"
+                           widget="dynamic_selection"
+                           options="{'available_field': 'l10n_es_invoice_type_available'}"
+                           invisible="move_type in ('out_receipt', 'in_receipt')"
+                           readonly="state == 'posted'"/>
+                    <field name="l10n_es_available_regime_codes" invisible="1"/> <!-- Needed for the dynamic_selection widget -->
+                    <field name="l10n_es_regime_code"
+                           widget="dynamic_selection"
+                           options="{'available_field': 'l10n_es_available_regime_codes'}"
+                           readonly="state == 'posted'"/>
+                    <field name="l10n_es_regime_code_additional"
+                           widget="dynamic_selection"
+                           options="{'available_field': 'l10n_es_available_regime_codes'}"
+                           invisible="not l10n_es_regime_code"
+                           readonly="state == 'posted'"/>
                 </group>
             </xpath>
         </field>

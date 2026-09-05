@@ -120,11 +120,13 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
                 'move_ids': [Command.set((invoice.id,))],
                 'date': '2019-02-10',
                 'journal_id': invoice.journal_id.id,
-                'l10n_es_edi_verifactu_refund_reason': 'R1',
             }
         ).reverse_moves()
         credit_note = invoice.reversal_move_ids
         credit_note.invoice_date = '2019-02-11'
+        # R1 isn't auto-derivable (only R4/R5 are, based on is_simplified); set it explicitly on
+        # the move itself, same as a user would after the wizard creates it with the R4 default.
+        credit_note.l10n_es_invoice_type = 'R1'
         credit_note.action_post()
 
         with self._mock_last_document(None):
@@ -162,7 +164,7 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
                 'date': '2019-02-10',
                 'journal_id': invoice.journal_id.id,
                 # By default:
-                # 'l10n_es_edi_verifactu_refund_reason': 'R1',
+                # 'l10n_es_invoice_type': 'R4',
             }
         ).reverse_moves(is_modify=True)
 
@@ -191,6 +193,7 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
           * Recargo de equivalencia taxes
           * 'FechaOperacion' field (set as `delivery_date` in case it is different from the `invoice_date`)
         """
+        self.company_data['company'].sudo().l10n_es_special_vat_regime = 'equivalence_surcharge'
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': '2019-01-30',
@@ -210,6 +213,41 @@ class TestL10nEsEdiVerifactuJson(TestL10nEsEdiVerifactuCommon):
         with self._mock_zeep_registration_operation_certificate_issue():
             batch_dict, _info = document._send_as_batch()
         self.assertEqual(batch_dict, self._json_file_to_dict('l10n_es_edi_verifactu/tests/files/test_invoice_2.json'))
+
+    def test_invoice_different_regime_codes_per_group(self):
+        """
+        AEAT requires DetalleDesglose to be grouped by the full "condición fiscal": rate +
+        ClaveRegimen + surcharge rate — not just rate. A tax with its own regime code must keep
+        its own ClaveRegimen in its group; a tax with no code of its own falls back to the
+        company's special VAT regime selector instead of inheriting whatever the invoice's other
+        taxes carry.
+        """
+        self.company_data['company'].sudo().l10n_es_special_vat_regime = 'equivalence_surcharge'
+        self.tax21_services.l10n_es_regime_code = '03'
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2019-01-30',
+            'date': '2019-01-30',
+            'partner_id': self.partner_b.id,  # Spanish customer
+            'invoice_line_ids': [
+                # No regime code of its own -> falls back to the selector's mapped code ('18').
+                Command.create({'product_id': self.product_1.id, 'price_unit': 100.0, 'tax_ids': [Command.set(self.tax10_goods.ids)]}),
+                # Explicit regime code -> keeps its own ('03'), distinct from the other group.
+                Command.create({'product_id': self.product_1.id, 'price_unit': 200.0, 'tax_ids': [Command.set(self.tax21_services.ids)]}),
+            ],
+        })
+        invoice.action_post()
+
+        with self._mock_last_document(None):
+            document = invoice._l10n_es_edi_verifactu_create_documents()[invoice]
+        self.assertFalse(document.errors)
+        with self._mock_zeep_registration_operation_certificate_issue():
+            batch_dict, _info = document._send_as_batch()
+
+        detalles = batch_dict['RegistroFactura'][0]['RegistroAlta']['Desglose']['DetalleDesglose']
+        self.assertEqual(len(detalles), 2)
+        claves_by_rate = {d['TipoImpositivo']: d['ClaveRegimen'] for d in detalles}
+        self.assertEqual(claves_by_rate, {'10.00': '18', '21.00': '03'})
 
     def test_invoice_3(self):
         """
