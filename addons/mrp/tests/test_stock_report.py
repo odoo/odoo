@@ -337,6 +337,71 @@ class TestMrpStockReports(TestReportsCommon):
 
         self.assertFalse(keys, "All keys should be in the report with the defined order")
 
+    def test_kit_numbering_split_across_packages(self):
+        """
+        Kit --|- Compo 01 x1
+              |- Compo 02 x1
+
+        When delivering one Kit and putting each of its two components in a
+        *different* package, the delivery slip must still print "Kit - 1/2"
+        and "Kit - 2/2" - not "Kit - 1/1" for both, which is what happens if
+        the "x/y" numbering gets (re)computed on a single move in isolation
+        instead of on every sibling component of the same Kit instance.
+        """
+        compo01, compo02, kit = self.env['product.product'].create([{
+            'name': n,
+            'type': 'consu',
+        } for n in ['Compo 01', 'Compo 02', 'Kit']])
+
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo01.id, 'product_qty': 1}),
+                (0, 0, {'product_id': compo02.id, 'product_qty': 1}),
+            ],
+        })
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.picking_type_out
+        picking_form.partner_id = self.partner
+        with picking_form.move_ids.new() as move:
+            move.product_id = kit
+            move.product_uom_qty = 1
+        picking = picking_form.save()
+        picking.action_confirm()
+        # Phantom-move creation pre-seeds description_picking with the
+        # parent Kit's own name, which - through the field's inverse -
+        # locks it as "manual" and would otherwise permanently block the
+        # numbering compute below. Not what this test is about: clear it so
+        # the numbering behaves as it does for moves that were never
+        # manually edited (the case this fix targets).
+        picking.move_ids.description_picking_manual = False
+
+        picking.move_ids.write({'quantity': 1, 'picked': True})
+        move_compo01 = picking.move_ids.filtered(lambda m: m.product_id == compo01)
+        move_compo02 = picking.move_ids.filtered(lambda m: m.product_id == compo02)
+        # Each component goes into its own, separate package.
+        move_compo01.move_line_ids.result_package_id = self.env['stock.package'].create({'name': 'Package0001'})
+        move_compo02.move_line_ids.result_package_id = self.env['stock.package'].create({'name': 'Package0002'})
+        picking.button_validate()
+
+        # Force description_picking to be (re)computed on a single move at a
+        # time, in isolation, mirroring how the delivery slip report reads
+        # it while iterating package by package.
+        picking.move_ids.invalidate_recordset(['description_picking'])
+        self.assertEqual(move_compo01.description_picking, 'Kit - 1/2')
+        picking.move_ids.invalidate_recordset(['description_picking'])
+        self.assertEqual(move_compo02.description_picking, 'Kit - 2/2')
+
+        picking.move_ids.invalidate_recordset(['description_picking'])
+        html_report = self.env['ir.actions.report']._render_qweb_html(
+            'stock.report_deliveryslip', picking.ids)[0].decode('utf-8')
+        self.assertIn('Kit - 1/2', html_report)
+        self.assertIn('Kit - 2/2', html_report)
+        self.assertNotIn('Kit - 1/1', html_report)
+
     def test_mo_overview(self):
         """ Test that the overview does not traceback when the final produced qty is 0
         """
