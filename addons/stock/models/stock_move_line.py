@@ -792,6 +792,13 @@ class StockMoveLine(models.Model):
             subtype_xmlid='mail.mt_note',
         )
 
+    def _get_outdated_candidate_sort_key(self, candidate):
+        return (
+            candidate.picking_id != self.move_id.picking_id,
+            -(candidate.picking_id.scheduled_date or candidate.move_id.date).timestamp()
+            if candidate.picking_id or candidate.move_id else 0,
+            -candidate.id)
+
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_ids_to_ignore=None):
         """ When editing a done move line or validating one with some forced quantities, it is
         possible to impact quants that were not reserved. It is therefore necessary to edit or
@@ -821,15 +828,7 @@ class StockMoveLine(models.Model):
             ('id', 'not in', tuple(ml_ids_to_ignore)),
         ]
 
-        # We take the current picking first, then the pickings with the latest scheduled date
-        def current_picking_first(cand):
-            return (
-                cand.picking_id != self.move_id.picking_id,
-                -(cand.picking_id.scheduled_date or cand.move_id.date).timestamp()
-                if cand.picking_id or cand.move_id else 0,
-                -cand.id)
-
-        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
+        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(self._get_outdated_candidate_sort_key)
 
         # As the move's state is not computed over the move lines, we'll have to manually
         # recompute the moves which we adapted their lines.
