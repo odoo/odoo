@@ -116,7 +116,10 @@ def adapt_dark_palette_content(root):
             ):
                 rgb = tuple(map(int, (red, green, blue)))
                 _, lightness, _ = colorsys.rgb_to_hls(*(channel / 255 for channel in rgb))
-                if (not alpha or float(alpha) > 0) and lightness < 0.5:
+                # The 65% threshold keeps text light over all theme gradient
+                # filters (e.g. the `s_cover` filter from `theme_monglia`,
+                # which contains a color with 61% lightness).
+                if (not alpha or float(alpha) > 0) and lightness < 0.65:
                     has_dark_gradient = True
                     break
             if any(name.startswith('bg-black-') for name in child_class_names) or has_dark_gradient:
