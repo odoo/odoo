@@ -475,7 +475,15 @@ class StockMove(models.Model):
             if return_data.get('description'):
                 descriptions.append(return_data['description'])
 
-        # 4. standard_price
+        # 4. from previous move in another company
+        if remaining_qty:
+            previous_moves_data = self._get_value_from_previous_company(remaining_qty)
+            value += previous_moves_data['value']
+            remaining_qty -= previous_moves_data['quantity']
+            if previous_moves_data.get('description'):
+                descriptions.append(previous_moves_data['description'])
+
+        # 5. standard_price
         if remaining_qty:
             std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price)
             value += std_price_data['value']
@@ -563,6 +571,17 @@ class StockMove(models.Model):
             ),
         }
 
+    def _get_value_from_previous_company(self, quantity):
+        if not self.move_orig_ids or self.move_orig_ids.company_id == self.company_id or len(self.move_orig_ids) > 1:
+            return dict(VALUATION_DICT)
+        origin_move = self.move_orig_ids
+        # Since move value is signed and previous move is from another operation, we must invert it.
+        return {
+            'value': -1 * origin_move.value * quantity / origin_move.quantity if origin_move.quantity else 0,
+            'quantity': quantity,
+            'description': _('Value from previous move %s', origin_move.reference),
+        }
+
     def _get_value_from_extra(self, quantity):
         return dict(VALUATION_DICT)
 
@@ -585,7 +604,7 @@ class StockMove(models.Model):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
-            if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
+            if not move_line.with_company(move_line.company_id).location_id._should_be_valued() and move_line.with_company(move_line.company_id).location_dest_id._should_be_valued():
                 res.add(move_line.id)
         return self.env['stock.move.line'].browse(res)
 
@@ -615,7 +634,7 @@ class StockMove(models.Model):
                 continue
             if move_line._should_exclude_for_valuation():
                 continue
-            if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
+            if move_line.with_company(move_line.company_id).location_id._should_be_valued() and not move_line.with_company(move_line.company_id).location_dest_id._should_be_valued():
                 res |= move_line
         return res
 

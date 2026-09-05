@@ -115,7 +115,7 @@ class StockRule(models.Model):
     def _check_company_consistency(self):
         for rule in self:
             route = rule.route_id
-            if route.company_id and rule.company_id.id != route.company_id.id:
+            if route.company_id and not rule.company_id.parent_path.startswith(route.company_id.parent_path):
                 raise ValidationError(_(
                     "Rule %(rule)s belongs to %(rule_company)s while the route belongs to %(route_company)s.",
                     rule=rule.display_name,
@@ -202,6 +202,17 @@ class StockRule(models.Model):
     def _compute_picking_type_code_domain(self):
         self.picking_type_code_domain = []
 
+    def _create_mto_rule_if_not_exist(self, vals):
+        route_exists = self.env['stock.rule'].search_count([
+            ('route_id', '=', vals.get('route_id', False)),
+            ('location_src_id', '=', vals.get('location_src_id', False)),
+            ('location_dest_id', '=', vals.get('location_dest_id', False)),
+            ('picking_type_id', '=', vals.get('picking_type_id', False)),
+            ('procure_method', '=', vals.get('procure_method', False)),
+        ], limit=1)
+        if not route_exists:
+            self.env['stock.rule'].create(vals)
+
     def _get_push_new_date(self, move):
         """ Get the new date for a push rule.
 
@@ -240,6 +251,7 @@ class StockRule(models.Model):
             'procure_method': 'make_to_order',
             'move_orig_ids': [Command.link(move_to_copy.id)],
             'move_dest_ids': [Command.link(move_dest.id) for move_dest in move_to_copy.move_dest_ids],
+            'partner_id': self.partner_address_id.id or move_to_copy.partner_id.id,
         }
         return new_move_vals
 
@@ -307,6 +319,9 @@ class StockRule(models.Model):
                     if len(partners) == 1:
                         partner = partners.id
                 move_dest.partner_id = self.location_src_id.warehouse_id.partner_id or self.company_id.partner_id
+
+        # Set partner as `values` to avoid being overwritten in _get_custom_move_fields
+        values['partner_id'] = partner
 
         # If the quantity is negative the move should be considered as a refund
         if uom_id.compare(product_qty, 0.0) < 0:
@@ -461,7 +476,7 @@ class StockRule(models.Model):
         return True
 
     @api.model
-    def _search_rule_for_warehouses(self, route_ids, packaging_uom_id, product_id, warehouse_ids, domain):
+    def _search_rule_for_warehouses(self, route_ids, packaging_uom_id, product_id, warehouse_ids, company_id, domain):
         domain = Domain(domain)
         if warehouse_ids:
             domain &= Domain('warehouse_id', 'in', [False, *warehouse_ids.ids])
@@ -477,7 +492,7 @@ class StockRule(models.Model):
             valid_route_ids |= set(warehouse_ids.route_ids.filtered(filter_function).ids)
         if valid_route_ids:
             domain &= Domain('route_id', 'in', list(valid_route_ids))
-        res = self.env["stock.rule"]._read_group(
+        res = self.env["stock.rule"].sudo()._read_group(  # sudo() needed for cross company warehouse usage
             domain,
             groupby=["location_dest_id", "warehouse_id", "route_id"],
             aggregates=["id:recordset"],
@@ -485,7 +500,11 @@ class StockRule(models.Model):
         )
         rule_dict = defaultdict(OrderedDict)
         for group in res:
-            rule_dict[group[0].id, group[2].id][group[1].id] = group[3].sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
+            rules = group[3]
+            if filtered_rules := rules.filtered(lambda r: company_id and r.company_id == company_id):
+                rules = filtered_rules
+
+            rule_dict[group[0].id, group[2].id][group[1].id] = rules.sorted(lambda rule: (rule.route_sequence, rule.sequence))[0]
         return rule_dict
 
     def _filter_warehouse_routes(self, product, warehouses, route):
@@ -539,6 +558,7 @@ class StockRule(models.Model):
             values.get("packaging_uom_id", False),
             product_id,
             values.get("warehouse_id", locations.warehouse_id),
+            values.get("company_id", False),
             domain,
         )
 

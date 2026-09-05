@@ -111,7 +111,7 @@ class StockMove(models.Model):
 
     def _get_source_document(self):
         res = super()._get_source_document()
-        return self.sale_line_id.order_id or res
+        return self.sale_line_id._filtered_access('read').order_id or res
 
     def _get_sale_order_lines(self):
         """ Return all possible sale order lines for one stock move. """
@@ -237,9 +237,9 @@ class StockPicking(models.Model):
                     self.reference_ids.sale_ids = [Command.unlink(sale_order.id)]
         else:
             if self.sale_id:
-                reference = self.env['stock.reference'].create({
+                reference = self.env['stock.reference'].sudo().create({
                     'sale_ids': [Command.link(self.sale_id.id)],
-                    'name': self.sale_id.name,
+                    'name': self.sale_id.sudo().name,
                 })
                 self._add_reference(reference)
         self.move_ids._reassign_sale_lines(self.sale_id)

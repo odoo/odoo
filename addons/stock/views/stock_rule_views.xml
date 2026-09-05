@@ -77,7 +77,7 @@
                                 <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                             </group>
                             <group string="Options" invisible="action not in ['pull', 'push', 'pull_push']">
-                                <field name="partner_address_id" invisible="action == 'push'"/>
+                                <field name="partner_address_id"/>
                                 <field name="propagate_cancel" invisible="action == 'push'"/>
                                 <label for="delay"/>
                                 <div><field name="delay" class="oe_inline"/> days</div>

@@ -36,7 +36,7 @@ class Website(models.Model):
         warehouses.
         """
         free_qty = super()._get_product_available_qty(product, **kwargs)
-        if self.warehouse_id and self.sudo().in_store_dm_id:  # If warehouse is set on website.
+        if self.sudo().in_store_dm_id and (self.warehouse_id or any(w.company_id != self.company_id for w in self.sudo().in_store_dm_id.warehouse_ids)):
             # Check free quantities in the in-store warehouses.
             return max(free_qty, self._get_max_in_store_product_available_qty(product, **kwargs))
         return free_qty
