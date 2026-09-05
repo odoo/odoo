@@ -6,14 +6,13 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 
 definePosModels();
 
-test("_prepareTryCashInOutPayload", async () => {
+test("_getCashInOutExtraParams", async () => {
     await setupPosEnv();
     const comp = await mountWithCleanup(CashMovePopup, {
         props: { close: () => {} },
     });
-    const result = comp._prepareTryCashInOutPayload();
-    const employee_id = result[result.length - 1].employee_id;
-    expect(employee_id).toBe(2);
+    const res = comp._getCashInOutExtraParams();
+    expect(res.employee_id).toBe(2);
 });
 test("partnerId", async () => {
     const store = await setupPosEnv();
@@ -23,4 +22,13 @@ test("partnerId", async () => {
     const emp = store.models["hr.employee"].get(2);
     store.setCashier(emp);
     expect(comp.partnerId).toBe(emp.work_contact_id.id);
+});
+test("handleAmountBlur", async () => {
+    await setupPosEnv();
+    const comp = await mountWithCleanup(CashMovePopup, {
+        props: { close: () => {} },
+    });
+    comp.state.amount = "10";
+    comp.handleAmountBlur();
+    expect(comp.state.amount).toBe("10.00");
 });

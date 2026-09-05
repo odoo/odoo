@@ -92,6 +92,12 @@ class PosSession(models.Model):
 
         return data
 
+    def try_cash_in_out(self, _type, amount, reason, partner_id, **kwargs):
+        super().try_cash_in_out(_type, amount, reason, partner_id)
+        if employee_id := kwargs.get('employee_id', False):
+            last_line = self.bank_statement_line_ids[:1]
+            last_line.employee_id = employee_id
+
     def get_cash_in_out_list(self):
         cash_in_out_list = super().get_cash_in_out_list()
         if self.config_id.module_pos_hr:
