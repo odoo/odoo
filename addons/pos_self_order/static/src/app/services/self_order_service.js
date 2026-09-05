@@ -1040,6 +1040,12 @@ export class SelfOrder extends Reactive {
             if (error.data.name === "werkzeug.exceptions.Unauthorized") {
                 message = _t("You're not authorized to perform this action");
                 cleanOrders = true;
+                if (error.data.message.includes("not paired")) {
+                    setTimeout(() => {
+                        this.router.navigate("default");
+                        window.location.reload();
+                    }, 3000);
+                }
             } else if (error.data.name === "werkzeug.exceptions.NotFound") {
                 message = _t("Orders not found on server");
                 cleanOrders = true;

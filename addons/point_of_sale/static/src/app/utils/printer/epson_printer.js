@@ -175,7 +175,7 @@ export class EpsonPrinter extends BasePrinter {
         }
 
         try {
-            const res = await fetch(this.address, params);
+            const res = await this.sendRequest(this.address, params);
             const body = await res.text();
             const parser = new DOMParser();
             const parsedBody = parser.parseFromString(body, "application/xml");
@@ -193,6 +193,10 @@ export class EpsonPrinter extends BasePrinter {
                 errorCode: ERROR_CODE_PRINTER_NOT_REACHABLE,
             };
         }
+    }
+
+    async sendRequest(url, params) {
+        return await fetch(url, params);
     }
 
     /**

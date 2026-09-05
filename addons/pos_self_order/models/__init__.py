@@ -22,3 +22,6 @@ from . import mail_template
 from . import pos_snooze
 from . import pos_prep_order
 from . import pos_prep_line
+from . import pos_self_order_kiosk_device
+from . import pos_self_order_kiosk_pairing_request
+from . import pos_self_order_kiosk_device_pairing_wizard

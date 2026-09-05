@@ -66,3 +66,26 @@ export function getLNATargetAddressSpace(url) {
     }
     return "local";
 }
+
+const LOCAL_URL_CACHE = new Map();
+const MAX_CACHE_ENTRIES = 50;
+const LOCAL_HOST =
+    /^(?:localhost|\[::1]|127(?:\.\d{1,3}){3}|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|169\.254(?:\.\d{1,3}){2})$/i;
+
+export function isLocalHTTP(url) {
+    try {
+        const hit = LOCAL_URL_CACHE.get(url);
+        if (hit !== undefined) {
+            return hit;
+        }
+        const u = new URL(url);
+        const result = u.protocol === "http:" && LOCAL_HOST.test(u.hostname);
+        LOCAL_URL_CACHE.set(url, result);
+        if (LOCAL_URL_CACHE.size > MAX_CACHE_ENTRIES) {
+            LOCAL_URL_CACHE.delete(LOCAL_URL_CACHE.keys().next().value);
+        }
+        return result;
+    } catch {
+        return false;
+    }
+}
