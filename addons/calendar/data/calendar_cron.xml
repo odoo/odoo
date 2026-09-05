@@ -12,5 +12,16 @@
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
         </record>
+
+        <record forcecreate="True" id="ir_cron_clean_inactive_calendar_filters" model="ir.cron">
+            <field name="name">Calendar: Cleanup Inactive Filters</field>
+            <field name="model_id" ref="model_calendar_filters"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_clean_inactive_calendar_filters()</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+        </record>
     </data>
 </odoo>

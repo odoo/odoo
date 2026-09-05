@@ -2,17 +2,32 @@
 <templates xml:space="preserve">
     <t t-name="calendar.AttendeeCalendarSidePanel" t-inherit="web.CalendarSidePanel" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_calendar_sidepanel_content')]" position="inside">
-            <div t-if="this.showActivityFilter" class="o-checkbox form-check position-relative w-100 mt-3">
-                <input
-                    id="show_activities_checkbox"
-                    type="checkbox"
-                    class="form-check-input"
-                    t-att-checked="this.state.activityFilterChecked"
-                    t-on-change="this.onToggleActivityFilter"
-                />
-                <span class="d-block fw-bolder text-truncate w-100 cursor-pointer"
-                    t-on-click.prevent.stop="this.onToggleActivityFilter"
-                    t-out="this.activityFilterName"/>
+            <div class="o_calendar_sidepanel_choice mt-2">
+                <span class="fw-bolder">My calendars</span>
+                <div class="o-checkbox form-check position-relative w-100 mt-1">
+                    <input
+                        id="show_my_calendar"
+                        type="checkbox"
+                        class="form-check-input"
+                        t-att-checked="this.state.myCalendarFilterChecked"
+                        t-on-change="this.onToggleMyCalendarFilter"
+                    />
+                    <span class="d-block fw-bold text-truncate w-100 cursor-pointer"
+                        t-on-click.prevent.stop="this.onToggleMyCalendarFilter"
+                        t-out="this.myCalendarFilterName"/>
+                </div>
+                <div t-if="this.showActivityFilter" class="o-checkbox form-check position-relative w-100 mt-1">
+                    <input
+                        id="show_activities_checkbox"
+                        type="checkbox"
+                        class="form-check-input"
+                        t-att-checked="this.state.activityFilterChecked"
+                        t-on-change="this.onToggleActivityFilter"
+                    />
+                    <span class="d-block fw-bold text-truncate w-100 cursor-pointer"
+                        t-on-click.prevent.stop="this.onToggleActivityFilter"
+                        t-out="this.activityFilterName"/>
+                </div>
             </div>
         </xpath>
     </t>
