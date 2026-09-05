@@ -577,36 +577,39 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         }])
 
         profit_and_loss_action = self.env.ref('account_reports.action_account_report_pl')
-        partner_ledger_action = self.env.ref('account_reports.action_account_report_partner_ledger')
+        open_items_action = self.env.ref('account_reports.action_account_report_followup')
         cashflow_analysis_action = self.env.ref('account.action_account_cashflow_analysis')
         invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
         kpis = self.env['account.journal'].get_account_dashboard_kpis()
         self.assertEqual(kpis, [{
             'action_id': profit_and_loss_action.id,
+            'action_method': 'action_open_income_journal_items',
             'has_total': True,
-            'id': 'gross_margin',
-            'name': 'Gross Margin',
-            'value': '$\xa0-675.00',
-        }, {
-            'action_id': profit_and_loss_action.id,
-            'has_total': True,
-            'id': 'revenue',
-            'name': 'Revenue',
+            'id': 'income',
+            'name': 'Income',
+            'period': 'Current FY',
             'value': '$\xa075.00',
         }, {
             'action_id': profit_and_loss_action.id,
-            'has_total': True,
-            'id': 'net_margin',
-            'name': 'Net Margin',
-            'value': '$\xa0-675.00',
-        }, {
-            'action_id': profit_and_loss_action.id,
+            'action_method': 'action_open_expense_journal_items',
             'has_total': True,
             'id': 'expenses',
             'name': 'Expenses',
+            'period': 'Current FY',
             'value': '$\xa0750.00',
         }, {
-            'action_id': partner_ledger_action.id,
+            'action_id': profit_and_loss_action.id,
+            'has_total': False,
+            'id': 'margins',
+            'name': 'Margins',
+            'period': 'Current FY',
+            'values': [
+                {'label': 'Gross', 'value': '$\xa0-675.00'},
+                {'label': 'Net', 'value': '$\xa0-675.00'},
+            ],
+        }, {
+            'action_id': open_items_action.id,
+            'action_method': 'action_open_unpaid_items',
             'has_total': False,
             'id': 'unpaid',
             'name': 'Unpaid',
