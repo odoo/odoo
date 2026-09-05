@@ -3455,6 +3455,7 @@ class BaseModel(metaclass=MetaModel):
             return True
 
         origin = self._origin
+        # check the records for read access
         if operation == 'read' and origin:
             access = self.env._access_cache[self._name]
             if all(map(access.get, origin._ids)):
@@ -3463,13 +3464,23 @@ class BaseModel(metaclass=MetaModel):
             origin.__check_access_fill_cache(access, domain)
             return all(map(access.__getitem__, origin._ids))
 
-        domain = self._access_domain(operation)
         # resolve the 'access' operator if just checking model access
         # so that a rule `('order_id', 'access', 'read')` may become false
         if not origin:
+            if operation == 'read':
+                access = self.env._access_cache[self._name]
+                if isinstance(result := access.get(0), bool):
+                    return result
+            domain = self._access_domain(operation)
             domain = domain.map_conditions(
                 lambda cond: cond.optimize_dynamic(self.sudo()) if cond.operator == 'access' else cond)
-            return not domain.is_false()
+            result = not domain.is_false()
+            if operation == 'read':
+                access[0] = result
+            return result
+
+        # check the records for other access
+        domain = self._access_domain(operation)
         if domain.is_false():
             return False
         if domain.is_true():
@@ -4848,7 +4859,8 @@ class BaseModel(metaclass=MetaModel):
         else:
             sec_domain = self._access_domain('read')
             if sec_domain.is_false():
-                raise self._make_access_error_message('read', sec_domain)
+                self.browse().check_access('read')
+                domain = Domain.FALSE
 
         domain = Domain(domain)
         # inactive records unless they were explicitly asked for
