@@ -122,6 +122,22 @@
     --o-hb-btn-secondary-active-bg: RGBA(#{to-rgb($o-we-color-global)}, 0.4);
     --o-hb-input-active-border: #{$o-we-color-global};
     --o-hb-form-switch-color-active: #{$o-we-color-global};
+
+    .o-hb-range .o-hb-rangeInput:focus-visible {
+        &::-webkit-slider-thumb {
+            box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-color-global;
+        }
+        &::-moz-range-thumb {
+            box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-color-global;
+        }
+        &::-ms-thumb {
+            box-shadow: 0 0 0 1px $o-we-bg-dark, 0 0 0 3px $o-we-color-global;
+        }
+    }
+}
+
+.o_customize_tab {
+    --o-hb-form-switch-color-active: #{$o-we-color-accent};
 }
 
 .o_we_color_preview {

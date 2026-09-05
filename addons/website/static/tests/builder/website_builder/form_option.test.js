@@ -176,8 +176,7 @@ test("undo redo add form field", async () => {
     expect(":iframe span.s_website_form_label_content").toHaveCount(1);
 
     await contains(":iframe span.s_website_form_label_content").click();
-    await contains("button[title='Add some content after this field']").click();
-    await contains("span.o-dropdown-item:contains('Field')").click();
+    await contains("button[title='Add a new field after this one']").click();
 
     expect(":iframe span.s_website_form_label_content").toHaveCount(2);
     undo(editor);
@@ -808,7 +807,7 @@ test("Only state fields have data-link-state-to-country attr", async () => {
     expect(":iframe select[name='state_id']").toHaveAttribute("data-link-state-to-country", "true");
 
     // Other 'select' elements shouldn't have this attribute
-    await contains(".options-container .btn[title='Add some content after this field']").click();
+    await contains(".options-container .btn[title='Add a new field after this one']").click();
     await contains(".hb-row[data-label='Type'] .dropdown-toggle").click();
     await contains(".o-hb-select-dropdown-item:contains('Selection')").click();
     expect(":iframe .s_website_form_field:last-child select").not.toHaveAttribute(

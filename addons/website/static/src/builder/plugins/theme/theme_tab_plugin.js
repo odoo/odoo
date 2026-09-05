@@ -52,8 +52,8 @@ export const GRAY_PARAMS = {
 export const OPTION_POSITIONS = {
     COLORS: 10,
     SETTINGS: 20,
-    PARAGRAPH: 30,
-    HEADINGS: 40,
+    HEADINGS: 30,
+    PARAGRAPH: 40,
     BUTTON: 50,
     LINK: 60,
     INPUT: 70,
