@@ -247,6 +247,7 @@ class CalendarEvent(models.Model):
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
     invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
+    synced_partner_ids = fields.Many2many('res.partner', string="Synchronized Attendees", compute='_compute_synced_partner_ids')
     unavailable_partner_ids = fields.Many2many('res.partner', string="Unavailable Attendees", compute='_compute_unavailable_partner_ids')
     # alarms
     alarm_ids = fields.Many2many(
@@ -386,6 +387,18 @@ class CalendarEvent(models.Model):
         for event in self:
             event.invalid_email_partner_ids = event.partner_ids.filtered(
                 lambda a: not (a.email and single_email_re.match(a.email))
+            )
+
+    @api.depends('partner_ids', 'user_id')
+    def _compute_synced_partner_ids(self):
+        for event in self:
+            if event.user_id._has_any_active_synchronization():
+                event.synced_partner_ids = False
+                continue
+            event.synced_partner_ids = (event.partner_ids - event.user_id.partner_id).filtered(
+                lambda partner: partner.user_ids and any(
+                    user._has_any_active_synchronization() for user in partner.user_ids
+                )
             )
 
     @api.depends('privacy', 'user_id')
