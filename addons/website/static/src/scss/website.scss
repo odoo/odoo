@@ -937,25 +937,61 @@ font[class*='bg-'] {
 }
 
 // Background blur option
-.o_bg_blur_option, header nav, header nav .o_navbar_mobile {
+@mixin o-bg-blur-option {
     --o-blur-factor: MIN(calc(1 + var(--o-bg-blur) * .05), var(--o-bg-blur-enhance, 1.25));
     backdrop-filter: contrast(var(--o-blur-factor)) brightness(var(--o-blur-factor)) blur(calc(var(--o-bg-blur, 0) * 1px));
+}
+
+.o_bg_blur_option {
+    @include o-bg-blur-option;
 }
 
 .o_bg_blur_option.o_bg_blur_no_enhance {
     --o-bg-blur-enhance: 1;
 }
 
-header {
-    // We want to share the header nav's blur with the mobile navbar.
-    nav, .o_navbar_mobile {
-        --o-bg-blur: #{o-website-value('header-bg-blur')};
-    }
+@if o-website-value('header-bg-blur') != 0 {
+    header {
+        $-header-blur-navbar-selector: "nav.navbar";
+        @if o-website-value('header-template') == 'sidebar' {
+            $-header-blur-navbar-selector: "nav.navbar.o_header_mobile";
+        }
 
-    // Avoid nested backdrop-filter conflict: nav blur hides the mobile
-    // offcanvas blur when it's open.
-    &.o_top_menu_collapse_shown nav:has(.o_navbar_mobile) {
-        backdrop-filter: none;
+        // Apply the configured header blur to the nav blur layer and mobile navbar.
+        #{$-header-blur-navbar-selector}::before, .o_navbar_mobile {
+            --o-bg-blur: #{o-website-value('header-bg-blur')};
+        }
+
+        #{$-header-blur-navbar-selector} {
+            position: relative;
+
+            &::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                z-index: 0;
+                border-radius: inherit;
+                pointer-events: none;
+
+                @include o-bg-blur-option;
+            }
+
+            .o_main_nav {
+                position: relative;
+                z-index: 1;
+            }
+        }
+
+        &.o_header_sidebar > nav.navbar:not(.o_header_mobile) {
+            @include media-breakpoint-up(lg) {
+                --o-bg-blur: #{o-website-value('header-bg-blur')};
+                @include o-bg-blur-option;
+            }
+        }
+
+        .o_navbar_mobile {
+            @include o-bg-blur-option;
+        }
     }
 }
 
