@@ -937,6 +937,24 @@ class SingleTransactionCase(BaseCase):
 class ChromeBrowserException(Exception):
     pass
 
+def _process_status(pid, timeout=1.0):
+    if not hasattr(os, 'waitid'):
+        return 'unknown'
+    deadline = time.time() + timeout
+    while True:
+        try:
+            info = os.waitid(os.P_PID, pid, os.WEXITED | os.WNOHANG | os.WNOWAIT)
+        except ChildProcessError:
+            return 'gone'
+        if info is None:
+            if time.time() > deadline:
+                return 'still running'
+            time.sleep(0.05)
+        elif info.si_code == os.CLD_EXITED:
+            return 'exited with %s' % info.si_status
+        else:
+            return 'killed by signal %s' % info.si_status
+
 def fmap(future, map_fun):
     """Maps a future's result through a callback.
 
@@ -1363,10 +1381,12 @@ class ChromeBrowser:
                 self._logger.debug('\n<- %s', msg)
             except websocket.WebSocketTimeoutException:
                 continue
-            except websocket.WebSocketConnectionClosedException as e:
+            except websocket.WebSocketConnectionClosedException:
                 if not self._result.done():
                     del self.ws
-                    self._result.set_exception(e)
+                    self._result.set_exception(ChromeBrowserException(
+                        "Lost the devtools connection to the browser (%s)"
+                        % _process_status(self.chrome.pid)))
                     while True:
                         try:
                             _, f = self._responses.popitem()
@@ -1751,7 +1771,7 @@ which leads to stray network requests and inconsistencies."""
 
         if isinstance(err, concurrent.futures.TimeoutError):
             raise ChromeBrowserException('Script timeout exceeded') from err
-        raise ChromeBrowserException("Unknown error") from err
+        raise ChromeBrowserException("Unknown error: %r" % err) from err
 
     def navigate_to(self, url, wait_stop=False):
         self._logger.info('Navigating to: "%s"', url)
