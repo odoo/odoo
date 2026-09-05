@@ -1718,8 +1718,6 @@ class AccountEdiCommon(models.AbstractModel):
         AccountTax = self.env['account.tax']
         invoice = collected_values['invoice']
         tax_total_values = collected_values['tax_total_values']
-        tolerance = 0.03
-        total_tax_amount = sum(x['tax_amount_currency'] for x in tax_total_values.values())
         currency = collected_values['currency_values']['currency']
 
         tax_to_taxes = {}
@@ -1739,12 +1737,9 @@ class AccountEdiCommon(models.AbstractModel):
                 tax_to_taxes[tax] = taxes
             taxes_to_tax_amount_currency[taxes] = global_tax_values['tax_amount_currency']
 
-        # If we are too far away from the total retrieved in the xml, don't fix anything: the error is elsewhere.
+        # We can't fix the taxes if we failed to map some of them.
         collected_values['are_taxes_complete'] = is_complete
-        if (
-            not is_complete
-            or currency.compare_amounts(abs(invoice.amount_tax - total_tax_amount) - tolerance, 0.0) > 0
-        ):
+        if not is_complete:
             return
 
         # Fix the base lines.
