@@ -65,6 +65,15 @@ kbd {
   color: $o-black;
 }
 
+//== Input group
+.input-group {
+  // Bring the hover buttons to the front so they properly overlay
+  // the borders like the focus state
+  .btn:hover {
+    z-index: 5;
+  }
+}
+
 // == Boostrap Dropdown
 // ----------------------------------------------------------------------------
 :not(.dropstart) > .dropdown-item {
