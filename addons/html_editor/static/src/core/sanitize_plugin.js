@@ -8,7 +8,7 @@ import { Plugin } from "../plugin";
 
 export class SanitizePlugin extends Plugin {
     static id = "sanitize";
-    static shared = ["sanitize"];
+    static shared = ["removed", "sanitize"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
@@ -42,6 +42,14 @@ export class SanitizePlugin extends Plugin {
             elem = cb(elem);
         }
         return elem;
+    }
+    /**
+     * Returns the items removed by the last sanitization.
+     *
+     * @returns {Object[]} the items removed by DOMPurify
+     */
+    removed() {
+        return this.DOMPurify.removed;
     }
 
     normalize(element) {
