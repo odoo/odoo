@@ -77,6 +77,7 @@ class TestAuthLDAP(HttpCaseWithUserDemo):
         fake_req = Mock(
             httprequest=Mock(environ={"REMOTE_ADDR": "123.123.123.123"}),
             session=Session({"identity-check-last": time.time()}, "foo"),
+            cookies={},
         )
         request_reset = request_var.set(fake_req)
         self.addCleanup(request_var.reset, request_reset)
