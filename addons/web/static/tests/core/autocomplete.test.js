@@ -986,8 +986,6 @@ test("input disables browser autocomplete by default", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
-        static props = [];
-
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
 
@@ -999,8 +997,6 @@ test("browser autocomplete attribute can be overridden via prop", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete value="'Hello'" sources="this.sources" autocomplete="'name'"/>`;
-        static props = [];
-
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
 
@@ -1012,8 +1008,6 @@ test("dropdown minWidth should match input width", async () => {
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete value="'Hello'" sources="this.sources"/>`;
-        static props = [];
-
         sources = buildSources(() => [item("World"), item("Hello")]);
     }
 
