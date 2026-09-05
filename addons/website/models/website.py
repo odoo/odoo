@@ -688,13 +688,17 @@ class Website(models.Model):
         domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
         client_themes = Module.search(domain).mapped('name')
         client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes if get_manifest(t)}
-        themes_suggested = self._website_api_rpc(
-            '/api/website/2/configurator/recommended_themes/%s' % (industry_id if industry_id > 0 else ''),
-            {
-                'client_themes': client_themes_img,
-                'result_nbr_max': result_nbr_max,
-            }
-        )
+        try:
+            themes_suggested = self._website_api_rpc(
+                '/api/website/2/configurator/recommended_themes/%s' % (industry_id if industry_id > 0 else ''),
+                {
+                    'client_themes': client_themes_img,
+                    'result_nbr_max': result_nbr_max,
+                },
+            )
+        except AccessError as e:
+            logger.warning(e.args[0])
+            return []
         process_svg = self.env['website.configurator.feature']._process_svg
         for theme in themes_suggested:
             theme['svg'] = process_svg(theme['name'], palette, theme.pop('image_urls'))
@@ -709,13 +713,16 @@ class Website(models.Model):
 
     @api.model
     def configurator_missing_industry(self, unknown_industry):
-        self._website_api_rpc(
-            '/api/website/unknown_industry',
-            {
-                'unknown_industry': unknown_industry,
-                'lang': self.env.context.get('lang'),
-            }
-        )
+        try:
+            self._website_api_rpc(
+                '/api/website/unknown_industry',
+                {
+                    'unknown_industry': unknown_industry,
+                    'lang': self.env.context.get('lang'),
+                },
+            )
+        except AccessError as e:
+            logger.warning(e.args[0])
 
     @api.model
     def configurator_apply(self, **kwargs):
@@ -878,10 +885,14 @@ class Website(models.Model):
 
         # Load suggestion from iap for selected pages
         industry_id = kwargs['industry_id']
-        custom_resources = self._website_api_rpc(
-            '/api/website/2/configurator/custom_resources/%s' % (industry_id if industry_id > 0 else ''),
-            {'theme': theme_name}
-        )
+        try:
+            custom_resources = self._website_api_rpc(
+                '/api/website/2/configurator/custom_resources/%s' % (industry_id if industry_id > 0 else ''),
+                {'theme': theme_name},
+            )
+        except AccessError as e:
+            logger.warning(e.args[0])
+            custom_resources = {}
 
         # Generate text for the pages
         requested_pages = set(pages_views.keys()).union({'homepage'})
