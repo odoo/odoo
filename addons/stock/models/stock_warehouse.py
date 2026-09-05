@@ -155,6 +155,23 @@ class StockWarehouse(models.Model):
             view_location_id = self.env['stock.location'].browse(vals.get('view_location_id'))
             (view_location_id | view_location_id.with_context(active_test=False).child_ids).write({'warehouse_id': warehouse.id})
 
+            # create new delivery address for subsequent warehouses
+            has_other_warehouses = self.env['stock.warehouse'].search_count([
+                ('company_id', '=', warehouse.company_id.id),
+                ('id', '!=', warehouse.id),
+            ]) > 0
+
+            if has_other_warehouses and warehouse.partner_id:
+                company = warehouse.partner_id
+                source_address_vals = company._get_address_values()
+                if source_address_vals:
+                    delivery_contact_values = {"name": warehouse.name, "type": "delivery", "parent_id": warehouse.partner_id.id}
+                    for key, val in source_address_vals.items():
+                        # Convert recordset objects (like res.country) to their integer ID
+                        delivery_contact_values[key] = val.id if isinstance(val, models.BaseModel) else val
+                    delivery_contact = self.env["res.partner"].create(delivery_contact_values)
+                    warehouse.partner_id = delivery_contact.id
+
         self._check_multiwarehouse_group()
 
         return warehouses
