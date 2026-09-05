@@ -1683,20 +1683,25 @@ class ProductTemplate(models.Model):
     def _get_product_placeholder_filename(self):
         return 'product/static/img/placeholder_thumbnail.png'
 
-    def get_single_product_variant(self):
+    def get_single_product_variant(self, product=None):
         """ Method used by the product configurator to check if the product is configurable or not.
 
         We need to open the product configurator if the product:
         - is configurable (see has_configurable_attributes)
         - has optional products (method is extended in sale to return optional products info)
 
+        :param product.product|None product: A specific variant of `self` to use, e.g. one that
+        was identified from a search term (barcode). When provided, it is
+        used as-is instead of checking whether `self` only has one variant.
         Note: self.ensure_one()
         """
         self.ensure_one()
-        if self.product_variant_count == 1 and not self.has_configurable_attributes:
+        if not product and self.product_variant_count == 1 and not self.has_configurable_attributes:
+            product = self.product_variant_id
+        if product:
             return {
-                'product_id': self.product_variant_id.id,
-                'product_name': self.product_variant_id.display_name,
+                'product_id': product.id,
+                'product_name': product.display_name,
             }
         return {}
 

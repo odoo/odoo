@@ -19,6 +19,7 @@ class SaleProductConfiguratorController(Controller):
         company_id=None,
         pricelist_id=None,
         ptav_ids=None,
+        search_term=None,
         only_main_product=False,
         show_price=True,
         **kwargs,
@@ -36,6 +37,10 @@ class SaleProductConfiguratorController(Controller):
         :param int|None pricelist_id: The pricelist to use, as a `product.pricelist` id.
         :param list(int)|None ptav_ids: The combination of the product, as a list of
             `product.template.attribute.value` ids.
+        :param str|None search_term: The text used to find `product_template_id` (e.g. what was
+            typed into the Product field). If it exactly matches the barcode of one of the
+            template's variants, that variant is used directly instead
+            of the template's first possible combination.
         :param bool only_main_product: Whether the optional products should be included or not.
         :param bool show_price: Whether prices are shown by the caller. When False, the (possibly
             unknown) `currency_id` is not used and price computation is skipped entirely.
@@ -48,12 +53,14 @@ class SaleProductConfiguratorController(Controller):
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
         product_template = self._get_product_template(product_template_id)
-
-        res = product_template.get_single_product_variant()
+        matched_variant = self._get_variant_matching_search_term(product_template, search_term)
+        res = product_template.get_single_product_variant(product=matched_variant)
 
         if self.should_show_product_configurator(res, product_template, **kwargs):
             combination = self.env["product.template.attribute.value"]
-            if ptav_ids:
+            if matched_variant:
+                combination = matched_variant.product_template_attribute_value_ids
+            elif ptav_ids:
                 combination = (
                     self
                     .env["product.template.attribute.value"]
@@ -268,6 +275,19 @@ class SaleProductConfiguratorController(Controller):
 
     def _get_product_template(self, product_template_id):
         return self.env["product.template"].browse(product_template_id)
+
+    def _get_variant_matching_search_term(self, product_template, search_term):
+        """Return the variant of `product_template` whose barcode exactly
+        matches `search_term`, if any.
+
+        :param product.template product_template: The template being added to the order.
+        :param str|None search_term: The text used to find `product_template`.
+        :rtype: product.product
+        :return: The matched variant, or an empty recordset if there is no match.
+        """
+        if not search_term:
+            return self.env["product.product"]
+        return product_template.product_variant_ids.filtered(lambda p: search_term == p.barcode)[:1]
 
     def _get_product_information(
         self,
