@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="one2many_discussion_0" model="test_orm.one2many.discussion">
+            <field name="name">Stuff</field>
+            <field name="participants" eval="[Command.link(ref('base.user_root'))]"/>
+        </record>
+        <record id="one2many_message_0_0" model="test_orm.one2many.message">
+            <field name="discussion" ref="one2many_discussion_0"/>
+            <field name="body">Hey dude!</field>
+            <field name="label">hello</field>
+        </record>
+        <record id="one2many_message_0_1" model="test_orm.one2many.message">
+            <field name="discussion" ref="one2many_discussion_0"/>
+            <field name="body">What's up?</field>
+        </record>
+        <record id="one2many_message_0_2" model="test_orm.one2many.message">
+            <field name="discussion" ref="one2many_discussion_0"/>
+            <field name="body">This is a much longer message</field>
+        </record>
+    </data>
+</odoo>
