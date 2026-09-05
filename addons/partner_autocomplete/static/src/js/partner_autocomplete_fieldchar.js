@@ -31,10 +31,10 @@ export class PartnerAutoCompleteCharField extends CharField {
     getSources(fieldName) {
         return [
             {
-                options: async (request, shouldSearchWorldWide) => {
+                options: async (request, shouldSearchWorldwide, shouldIncludeBranch) => {
                     if (await this.validateSearchTerm(request)) {
                         let queryCountryId = this.props.record.data?.country_id ? this.props.record.data.country_id.id : false;
-                        if (shouldSearchWorldWide){
+                        if (shouldSearchWorldwide){
                         	queryCountryId = 0;
                         }
                         const suggestions = await this.partnerAutocomplete.autocomplete(fieldName, request, queryCountryId);

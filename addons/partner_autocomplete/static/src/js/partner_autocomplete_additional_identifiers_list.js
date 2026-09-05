@@ -5,13 +5,13 @@ import { _t } from "@web/core/l10n/translation";
 import { AdditionalIdentifiersList, additionalIdentifiersList } from "@web/views/fields/additional_identifiers/additional_identifiers";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { PartnerAutoComplete } from "@partner_autocomplete/js/partner_autocomplete_component";
 
 export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIdentifiersList {
     static template = "partner_autocomplete.PartnerAutoCompleteAdditionalIdentifiersList";
     static components = {
         ...AdditionalIdentifiersList.components,
-        AutoComplete,
+        PartnerAutoComplete,
     };
     setup() {
         super.setup();
@@ -22,9 +22,9 @@ export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIden
         this.inputRef = signal.ref();
     }
 
-    async getSearchConfig(fieldName, request, shouldSearchWorldWide) {
+    async getSearchConfig(fieldName, request, shouldSearchWorldwide) {
         let defaultCountryId = this.props.record.data?.country_id?.id || false;
-        if (shouldSearchWorldWide) {
+        if (shouldSearchWorldwide) {
             defaultCountryId = 0;
         }
 
@@ -64,12 +64,12 @@ export class PartnerAutoCompleteAdditionalIdentifiersList extends AdditionalIden
     getSources(fieldName) {
         return [
             {
-                options: async (request, shouldSearchWorldWide) => {
-                    const config = await this.getSearchConfig(fieldName, request, shouldSearchWorldWide);
+                options: async (request, shouldSearchWorldwide, shouldIncludeBranch) => {
+                    const config = await this.getSearchConfig(fieldName, request, shouldSearchWorldwide);
                     if (!config.isValid) {
                         return [];
                     }
-                    const suggestions = await this.partnerAutocomplete.autocomplete(fieldName, request, config.country_id);
+                    const suggestions = await this.partnerAutocomplete.autocomplete(fieldName, request, config.country_id, shouldIncludeBranch);
                     return suggestions.map((suggestion) => ({
                         cssClass: "partner_autocomplete_dropdown_char",
                         data: suggestion,
