@@ -1,5 +1,8 @@
 <templates>
     <t t-name="mass_mailing.MailingTemplateKanbanWrapper">
-        <MailingTemplateKanbanRenderer t-props="this.props.kanbanRendererProps()"/>
+        <MailingTemplateKanbanRenderer t-props="{
+            ...this.props.kanbanRendererProps(),
+            'iframeRef': this.props.iframeRef,
+        }"/>
     </t>
 </templates>

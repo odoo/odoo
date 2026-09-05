@@ -3,9 +3,9 @@ import {
     Component,
     onMounted,
     onWillUnmount,
-    onWillUpdateProps,
     signal,
     useApp,
+    useEffect,
     useProps,
     useScope,
 } from "@odoo/owl";
@@ -23,8 +23,8 @@ import { cookie } from "@web/core/browser/cookie";
  */
 export class MailingTemplateKanbanIframe extends Component {
     static template = "mass_mailing.MailingTemplateKanbanIframe";
-    props = useProps(kanbanRendererProps);
 
+    props = useProps(kanbanRendererProps);
     app = useApp();
     iframeRef = signal.ref();
     ready = signal(false);
@@ -44,8 +44,8 @@ export class MailingTemplateKanbanIframe extends Component {
                 this.templateKanbanRoot.destroy();
             }
         });
-        onWillUpdateProps(async (nextProps) => {
-            this.kanbanRendererProps.set(nextProps);
+        useEffect(() => {
+            this.kanbanRendererProps = this.props;
         });
     }
 
@@ -79,10 +79,10 @@ export class MailingTemplateKanbanIframe extends Component {
                     env: this.env,
                     props: props,
                 });
-                await this.loadIframeAssets();
-                this.rendererWrapper = await this.templateKanbanRoot.mount(
-                    this.iframeRef().contentDocument.body
-                );
+                await Promise.all([
+                    this.loadIframeAssets(),
+                    this.templateKanbanRoot.mount(this.iframeRef().contentDocument.body),
+                ]);
             });
         } catch (error) {
             loadingError = error;

@@ -1,6 +1,5 @@
 import { Plugin, t, useConfig } from "@odoo/owl";
 
-export class StylesheetsPlugin extends Plugin {
-    iframePromise = useConfig("iframePromise", t.promise());
-    cardPromise = useConfig("cardPromise", t.promise());
+export class StyleSheetPlugin extends Plugin {
+    promises = useConfig("styleSheetPromises", t.array(t.promise()));
 }

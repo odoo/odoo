@@ -15,7 +15,7 @@
                     class="cursor-pointer dropdown-item px-4 o_mail_template_preview d-flex flex-column justify-content-between"
                     t-on-click="() => this.onSelectTemplate(template.bodyArch)">
                         <div class="d-flex flex-grow-1">
-                            <TemplatePreview template="template" styleSheetsPromise="this.props.styleSheetsPromise"/>
+                            <TemplatePreviewField template="template"/>
                         </div>
                         <div class="mb-2">
                             <h5 class="text-truncate mb-0" t-out="template.subject"/>

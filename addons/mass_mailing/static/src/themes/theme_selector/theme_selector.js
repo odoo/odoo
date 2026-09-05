@@ -7,25 +7,28 @@ import {
     useEffect,
     proxy,
     signal,
+    useScope,
+    providePlugins,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { TemplatePreview } from "./template_preview";
+import { TemplatePreviewField } from "../../fields/template_preview_field/template_preview_field";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { closestScrollableY } from "@web/core/utils/scrolling";
+import { StyleSheetPlugin } from "../../views/mailing_template_kanban_view/stylesheets_plugin";
+import { getStyleSheets } from "../../utils/iframe_assets";
 
 export class ThemeSelector extends Component {
     static template = "mass_mailing.ThemeSelector";
     static props = {
         config: { type: Object },
-        styleSheetsPromise: Promise,
         themesPromise: Promise,
         // Reactive wrapper for templateThemes promise: { promise }
         templateThemes: Object,
         iframeRef: { type: Function },
     };
     static components = {
-        TemplatePreview,
+        TemplatePreviewField,
     };
 
     themeSelectorWrapperRef = signal.ref();
@@ -34,6 +37,17 @@ export class ThemeSelector extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
         this.themeService = useService("mass_mailing.themes");
+        const scope = useScope();
+        providePlugins([StyleSheetPlugin], {
+            styleSheetPromises: [
+                getStyleSheets(scope, this.props.iframeRef(), "mass_mailing.assets_iframe_style"),
+                getStyleSheets(
+                    scope,
+                    this.props.iframeRef(),
+                    "mass_mailing.assets_theme_selector_template_shadowdom"
+                ),
+            ],
+        });
         this.config = this.props.config;
         this.commonThemes = this.themeService.getCommonThemes();
         this.simpleThemes = this.themeService.getSimpleThemes();

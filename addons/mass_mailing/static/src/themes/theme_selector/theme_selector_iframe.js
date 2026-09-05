@@ -16,7 +16,6 @@ import { renderToFragment } from "@web/core/utils/render";
 import { localization } from "@web/core/l10n/localization";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
-import { getStyleSheets } from "../../util/assets_utils";
 
 export class ThemeSelectorIframe extends Component {
     static template = "mass_mailing.ThemeSelectorIframe";
@@ -72,11 +71,6 @@ export class ThemeSelectorIframe extends Component {
     getThemeSelectorProps() {
         Object.assign(this.themeSelectorProps, {
             config: this.props.config,
-            styleSheetsPromise: getStyleSheets(
-                this.scope,
-                this.iframeRef(),
-                "mass_mailing.assets_iframe_style"
-            ),
             themesPromise: this.themeService.load(),
             iframeRef: this.iframeRef,
         });

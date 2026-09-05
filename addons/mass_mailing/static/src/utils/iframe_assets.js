@@ -3,7 +3,8 @@ import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
 const CSSSheetsCache = new Map();
 
 /**
- * Get common stylesheets used for every mail template
+ * Get iframe-related CSSStyleSheet instances from the given asset without
+ * adding them in a document.
  *
  * @returns {Promise<Array<CSSStyleSheet>>}
  */
@@ -27,7 +28,9 @@ export async function getStyleSheets(scope, iframe, assetName) {
 }
 
 /**
- * Custom load which does not add the CSSStyleSheet in the current document
+ * Fetch cssText without creating a link in a document.
+ *
+ * @returns {Promise<string>}
  */
 function loadCSSSheets(url, retryCount = 0) {
     if (CSSSheetsCache.has(url)) {

@@ -97,9 +97,13 @@
             ('include', 'mass_mailing.assets_iframe_helpers'),
             'mass_mailing/static/src/themes/iframe_assets/**/*',
         ],
-        # Assets for mailing template kanban card
-        'mass_mailing.assets_mailing_template_kanban_card_style': [
-            'mass_mailing/static/src/fields/mailing_template_kanban_card_field/mailing_template_kanban_card.scss'
+        # Assets for theme selector template preview shadowdom
+        'mass_mailing.assets_theme_selector_template_shadowdom': [
+            'mass_mailing/static/src/fields/template_preview_field/theme_selector_template_preview/**/*.shadowdom.scss'
+        ],
+        # Assets for mailing template kanban card shadowdom
+        'mass_mailing.assets_mailing_template_kanban_card_shadowdom': [
+            'mass_mailing/static/src/fields/template_preview_field/mailing_template_kanban_card/**/*.shadowdom.scss'
         ],
         # Common style for mass_mailing mail iframes.
         'mass_mailing.assets_iframe_style_base': [
@@ -152,7 +156,6 @@
         ],
         'web.assets_backend': [
             'mass_mailing/static/src/action/**/*',
-            'mass_mailing/static/src/backend_components/**/*',
             'mass_mailing/static/src/components/**/*',
             'mass_mailing/static/src/views/mailing_preview_form_view.js',
             'mass_mailing/static/src/views/mailing_preview_form_view.xml',
@@ -163,7 +166,7 @@
             'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
             'mass_mailing/static/src/themes/*',
-            'mass_mailing/static/src/util/*',
+            'mass_mailing/static/src/utils/**/*',
             'mass_mailing/static/src/themes/theme_selector/**/*',
             'mass_mailing/static/src/iframe/**/*',
             'mass_mailing/static/src/scss/mass_mailing.scss',
@@ -172,7 +175,8 @@
             'mass_mailing/static/src/js/tours/**/*',
             # Don't include dark mode files in light mode
             ('remove', 'mass_mailing/static/src/**/*.dark.scss'),
-            ('remove', 'mass_mailing/static/src/fields/mailing_template_kanban_card_field/mailing_template_kanban_card.scss'),
+            # Don't include shadowdom specific style
+            ('remove', 'mass_mailing/static/src/**/*.shadowdom.scss'),
         ],
         'web.assets_backend_lazy': [
             'mass_mailing/static/src/views/mass_mailing_subscription_graph_renderer.js',
