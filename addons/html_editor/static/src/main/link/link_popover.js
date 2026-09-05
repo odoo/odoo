@@ -106,7 +106,10 @@ export class LinkPopover extends Component {
         this.state = proxy({
             editing: this.props.LinkPopoverState.editing,
             // `.getAttribute("href")` instead of `.href` to keep relative url
-            url: linkElement.getAttribute("href") || this.deduceUrl(textContent),
+            url: this.setUrlFileNamePath(
+                linkElement.getAttribute("href") || this.deduceUrl(textContent),
+                linkElement.textContent
+            ),
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
                 /** @type {'oi'|'imgSrc'|'mimetype'} */
@@ -155,8 +158,20 @@ export class LinkPopover extends Component {
         };
         useCrossDocumentListener(this.props.document, "pointerdown", onPointerDown);
         useContentChange(this.props.linkElement, () => {
-            this.state.urlTitle = this.props.linkElement.textContent;
+            const fileName = this.props.linkElement.textContent;
+            this.state.urlTitle = fileName;
+            this.state.url = this.setUrlFileNamePath(this.state.url, fileName);
         });
+    }
+
+    setUrlFileNamePath(url, fileName) {
+        const hadOrigin = /^https?:\/\//i.test(url);
+        const urlObj = new URL(url, window.location.origin);
+        urlObj.pathname = urlObj.pathname.replace(
+            /^(\/web\/content\/\d+)(?:\/[^/]*)?$/,
+            (_, base) => `${base}/${encodeURIComponent(fileName.replace(/\ufeff/g, ""))}`
+        );
+        return hadOrigin ? urlObj.toString() : urlObj.toString().replace(urlObj.origin, "");
     }
 
     toggleAdvancedOptions() {
