@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-04 17:44+0000\n"
 "PO-Revision-Date: 2026-06-21 00:02+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -480,13 +480,6 @@ msgstr "%(user_name)s 將一個訊息置頂固定在此頻道上。"
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "%s (Email Template)"
 msgstr "%s (電郵範本)"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_activity_plan.py:0
-#: code:addons/mail/models/mail_canned_response.py:0
-msgid "%s (copy)"
-msgstr "%s (副本)"
 
 #. module: mail
 #. odoo-python
@@ -1651,6 +1644,8 @@ msgid "Adjust the slider to set the voice detection sensitivity."
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__channel_role__admin
 msgid "Admin"
 msgstr ""
@@ -3162,12 +3157,6 @@ msgid "Channel Actions"
 msgstr "頻道操作"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
-msgid "Channel Admin"
-msgstr ""
-
-#. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_member_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_member_ids
@@ -3193,12 +3182,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__channel_notifications
 msgid "Channel Notifications"
 msgstr "頻道通知"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
-msgid "Channel Owner"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_role
@@ -9984,6 +9967,8 @@ msgid "Own Activities"
 msgstr "自己的活動"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__user_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__channel_role__owner
@@ -10181,6 +10166,7 @@ msgid "Permissions Lady - Lady pushing a giant toggle button"
 msgstr ""
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity__phone
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
 #: model:ir.model.fields,field_description:mail.field_res_users__phone
 msgid "Phone"
@@ -10993,12 +10979,6 @@ msgid "Remove"
 msgstr "移除"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
-msgid "Remove Admin"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove Context Action"
 msgstr "移除上下文操作"
@@ -11018,12 +10998,6 @@ msgstr "移除關注者"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid "Remove Member"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
-msgid "Remove Owner"
 msgstr ""
 
 #. module: mail
@@ -12110,6 +12084,12 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Set Email"
 msgstr "設定電郵"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Set Member"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16163,6 +16143,9 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (副本)"
 
 #~ msgid "%(caller)s started a call"
 #~ msgstr "%(caller)s 已開始通話"

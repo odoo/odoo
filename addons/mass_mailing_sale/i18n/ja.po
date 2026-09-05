@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-04 17:45+0000\n"
 "PO-Revision-Date: 2026-06-22 00:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -25,61 +25,9 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid ""
-"<font style=\"color: rgb(108, 117, 125)\">Click on this block, then select "
-"products using the panel on the right.</font>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
+msgid "<span class=\"o_stat_text\">Revenues</span>"
 msgstr ""
-"<font style=\"color: rgb(108, 117, 125)\">このブロックをクリックし、右側のパ"
-"ネルからプロダクトを選択してください。</font>"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid "<i class=\"oi\" data-icon=\"shopping_cart\"/> Buy Now"
-msgstr "<i class=\"oi\" data-icon=\"shopping_cart\"/> 今すぐ購入"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid ""
-"<strong>$20</strong>\n"
-"                                        <span class=\"h4-fs\">\n"
-"                                            <s>\n"
-"                                                <font style=\"color: "
-"rgb(108, 117, 125)\">$25</font>\n"
-"                                            </s>\n"
-"                                        </span>"
-msgstr ""
-"<strong>$20</strong>\n"
-"                                        <span class=\"h4-fs\">\n"
-"                                            <s>\n"
-"                                                <font style=\"color: "
-"rgb(108, 117, 125)\">$25</font>\n"
-"                                            </s>\n"
-"                                        </span>"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-msgid ""
-"<strong>$20</strong>\n"
-"                            <span class=\"h4-fs\">\n"
-"                                <s>\n"
-"                                    <font style=\"color: rgb(108, 117, "
-"125)\">$25</font>\n"
-"                                </s>\n"
-"                            </span>"
-msgstr ""
-"<strong>$20</strong>\n"
-"                            <span class=\"h4-fs\">\n"
-"                                <s>\n"
-"                                    <font style=\"color: rgb(108, 117, "
-"125)\">$25</font>\n"
-"                                </s>\n"
-"                            </span>"
 
 #. module: mass_mailing_sale
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
@@ -87,7 +35,8 @@ msgid "Add sale order UTM info on mass mailing"
 msgstr ""
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
+#. odoo-javascript
+#: code:addons/mass_mailing_sale/static/src/snippets/snippet_categories.xml:0
 msgid "Auto-filled from Product"
 msgstr "プロダクト から自動入力"
 
@@ -99,17 +48,16 @@ msgid "Buy Now"
 msgstr "今すぐ購入"
 
 #. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_sale_order__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "表示名"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid "Example Image"
-msgstr "画像例"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__id
@@ -122,11 +70,6 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "INVOICED"
-msgstr "請求済"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
-msgid "Invoiced"
 msgstr "請求済"
 
 #. module: mass_mailing_sale
@@ -165,9 +108,6 @@ msgstr "まだ収益がありません！"
 #. module: mass_mailing_sale
 #. odoo-javascript
 #: code:addons/mass_mailing_sale/static/src/builder/options/product_snapshot_fragments.xml:0
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
 msgid "Price information"
 msgstr "価格情報"
 
@@ -178,26 +118,10 @@ msgid "Product"
 msgstr "プロダクト"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
-msgid "Product Aside"
-msgstr "プロダクト(サイド)"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
-msgid "Product Card"
-msgstr "プロダクトカード"
-
-#. module: mass_mailing_sale
 #. odoo-javascript
 #: code:addons/mass_mailing_sale/static/src/builder/options/product_snapshot_fragments.xml:0
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
 msgid "Product information"
 msgstr "プロダクト情報"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
-msgid "Products List"
-msgstr "プロダクトリスト"
 
 #. module: mass_mailing_sale
 #. odoo-python
@@ -249,13 +173,6 @@ msgid "Sales Order"
 msgstr "販売オーダ"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid "Select the products you want to display!"
-msgstr "表示したいプロダクトを選択してください！"
-
-#. module: mass_mailing_sale
 #: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Selection to determine the winner mailing that will be sent."
 msgstr "送付する当選メールを決定するための選考。"
@@ -274,3 +191,65 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Winner Selection"
 msgstr "当選者選考"
+
+#~ msgid ""
+#~ "<font style=\"color: rgb(108, 117, 125)\">Click on this block, then "
+#~ "select products using the panel on the right.</font>"
+#~ msgstr ""
+#~ "<font style=\"color: rgb(108, 117, 125)\">このブロックをクリックし、右側の"
+#~ "パネルからプロダクトを選択してください。</font>"
+
+#~ msgid "<i class=\"oi\" data-icon=\"shopping_cart\"/> Buy Now"
+#~ msgstr "<i class=\"oi\" data-icon=\"shopping_cart\"/> 今すぐ購入"
+
+#~ msgid ""
+#~ "<strong>$20</strong>\n"
+#~ "                                        <span class=\"h4-fs\">\n"
+#~ "                                            <s>\n"
+#~ "                                                <font style=\"color: "
+#~ "rgb(108, 117, 125)\">$25</font>\n"
+#~ "                                            </s>\n"
+#~ "                                        </span>"
+#~ msgstr ""
+#~ "<strong>$20</strong>\n"
+#~ "                                        <span class=\"h4-fs\">\n"
+#~ "                                            <s>\n"
+#~ "                                                <font style=\"color: "
+#~ "rgb(108, 117, 125)\">$25</font>\n"
+#~ "                                            </s>\n"
+#~ "                                        </span>"
+
+#~ msgid ""
+#~ "<strong>$20</strong>\n"
+#~ "                            <span class=\"h4-fs\">\n"
+#~ "                                <s>\n"
+#~ "                                    <font style=\"color: rgb(108, 117, "
+#~ "125)\">$25</font>\n"
+#~ "                                </s>\n"
+#~ "                            </span>"
+#~ msgstr ""
+#~ "<strong>$20</strong>\n"
+#~ "                            <span class=\"h4-fs\">\n"
+#~ "                                <s>\n"
+#~ "                                    <font style=\"color: rgb(108, 117, "
+#~ "125)\">$25</font>\n"
+#~ "                                </s>\n"
+#~ "                            </span>"
+
+#~ msgid "Example Image"
+#~ msgstr "画像例"
+
+#~ msgid "Invoiced"
+#~ msgstr "請求済"
+
+#~ msgid "Product Aside"
+#~ msgstr "プロダクト(サイド)"
+
+#~ msgid "Product Card"
+#~ msgstr "プロダクトカード"
+
+#~ msgid "Products List"
+#~ msgstr "プロダクトリスト"
+
+#~ msgid "Select the products you want to display!"
+#~ msgstr "表示したいプロダクトを選択してください！"

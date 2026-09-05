@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-04 17:44+0000\n"
 "PO-Revision-Date: 2026-06-18 23:23+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-master/"
@@ -1806,11 +1806,6 @@ msgid "Accept Terms"
 msgstr "약관 동의"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
-msgid "Acceptable file size"
-msgstr "허용되는 파일 크기"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__access_token
 msgid "Access Token"
 msgstr "액세스 토큰"
@@ -2016,6 +2011,8 @@ msgid "Alignment"
 msgstr "정렬"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/product_image/attribute_value_selector/attribute_value_selector.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_select_attributes
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "All"
@@ -2116,6 +2113,12 @@ msgid "Amount of Abandoned Carts"
 msgstr "취소된 장바구니의 금액"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/js/product_image/attribute_value_selector/attribute_value_selector.xml:0
+msgid "And"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_page_empty_screen
 msgid ""
 "Animation showing how to create a new product: Click 'New' in the top-right "
@@ -2150,6 +2153,12 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
+#: code:addons/website_sale/static/src/js/product_image/attribute_value_selector/attribute_value_selector.xml:0
+msgid "Apply to attributes"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 msgid "Arrows"
 msgstr "화살표"
@@ -2174,6 +2183,11 @@ msgstr "첨부 파일 수"
 #: model:ir.actions.act_window,name:website_sale.product_attribute_category_action
 #: model:ir.ui.menu,name:website_sale.menu_attribute_category_action
 msgid "Attribute Categories"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__attribute_value_ids
+msgid "Attribute Value"
 msgstr ""
 
 #. module: website_sale
@@ -3607,6 +3621,11 @@ msgid "Duration"
 msgstr "소요 시간"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
+msgid "Dynamic Carousel"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
 msgid "E-Commerce Extra Fields"
 msgstr "이커머스 추가 필드"
@@ -3753,16 +3772,6 @@ msgstr "추가 단계"
 #: model:ir.model.fields,field_description:website_sale.field_website__extra_step_category_ids
 msgid "Extra Step Categories"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
-msgid "Extra Variant Images"
-msgstr "추가 세부선택항목 이미지"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
-msgid "Extra Variant Media"
-msgstr "추가 세부선택항목 미디어"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -4110,6 +4119,11 @@ msgid "Handle your wishlist from the menu icon."
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_image__has_attribute_value
+msgid "Has Attribute Value"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__has_message
 #: model:ir.model.fields,field_description:website_sale.field_product_template__has_message
 msgid "Has Message"
@@ -4180,11 +4194,6 @@ msgstr "마우스 오버 효과"
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
 msgid "Href"
 msgstr "Href"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
-msgid "Huge file size. The image should be optimized/reduced."
-msgstr "파일 크기가 너무 큽니다. 이미지를 최적화/축소해야 합니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
@@ -4780,6 +4789,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/product_image_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_tag_image_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_variant_option.xml:0
+#: model_terms:ir.ui.view,arch_db:website_sale.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Media"
 msgstr "미디어"
@@ -5436,13 +5446,6 @@ msgid "Open Source eCommerce"
 msgstr "오픈 소스 이커머스"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
-msgid ""
-"Optimization required! Reduce the image size or increase your compression "
-"settings."
-msgstr "최적화 필요! 이미지 크기를 줄이거나 압축 설정을 높이십시오."
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__optional
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__optional
 msgid "Optional"
@@ -6061,7 +6064,6 @@ msgstr "상품 서식"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_product
-#: model:ir.model.fields,field_description:website_sale.field_product_image__product_variant_id
 msgid "Product Variant"
 msgstr "품목 세부선택"
 
@@ -7190,6 +7192,14 @@ msgid "Some products don't meet the minimum quantity required to be purchased."
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Sort By"
 msgstr "정렬 기준"
@@ -7693,6 +7703,12 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/wishlist.py:0
 msgid "This product is not eligible for stock notifications."
 msgstr ""
@@ -7962,6 +7978,11 @@ msgstr "사용자"
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
 msgid "Variant"
 msgstr "세부선택"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__variant_image_ids
+msgid "Variant Extra Images"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__variant_ribbon_id
@@ -8404,9 +8425,15 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
+#: code:addons/website_sale/models/product_product.py:0
 msgid "You can't use a video as the product's main image."
 msgstr "제품의 기본 이미지로는 동영상을 사용할 수 없습니다."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/product_template.py:0
+msgid "You can't use a video as the template's main image."
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
@@ -8777,6 +8804,23 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Acceptable file size"
+#~ msgstr "허용되는 파일 크기"
+
+#~ msgid "Extra Variant Images"
+#~ msgstr "추가 세부선택항목 이미지"
+
+#~ msgid "Extra Variant Media"
+#~ msgstr "추가 세부선택항목 미디어"
+
+#~ msgid "Huge file size. The image should be optimized/reduced."
+#~ msgstr "파일 크기가 너무 큽니다. 이미지를 최적화/축소해야 합니다."
+
+#~ msgid ""
+#~ "Optimization required! Reduce the image size or increase your compression "
+#~ "settings."
+#~ msgstr "최적화 필요! 이미지 크기를 줄이거나 압축 설정을 높이십시오."
 
 #~ msgid "<b>Communication: </b>"
 #~ msgstr "<b>의사소통 : </b>"

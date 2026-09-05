@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-04 17:46+0000\n"
 "PO-Revision-Date: 2026-06-19 00:42+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-master/sale/"
@@ -801,11 +801,16 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid ""
-"<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Quotations\" "
+"<i class=\"oi oi-fw me-1\" data-icon=\"edit_square\" aria-label=\"Revenues\" "
 "role=\"img\"/>"
 msgstr ""
-"<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Devis\" "
-"role=\"img\"/>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"shopping_cart\" aria-"
+"label=\"Quotations\" role=\"img\"/>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -856,9 +861,9 @@ msgstr ""
 "                            <span class=\"d-block d-md-none\">Réf.</span>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
-msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr "<span class=\"flex-grow-1\">/ Mois</span>"
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
+msgid "<span class=\"o_stat_text\">Revenues</span>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -1684,12 +1689,6 @@ msgid "Click to configure"
 msgstr "Cliquer pour configurer"
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid "Click to define an invoicing target"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
 msgid "Client's most used account"
 msgstr "Compte le plus utilisé du client"
@@ -1749,7 +1748,6 @@ msgstr "Communication"
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
-#: model:ir.model.fields,field_description:sale.field_utm_campaign__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
 msgstr "Société"
@@ -3029,17 +3027,6 @@ msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr "Facturez les quantités commandées dès que ce service est vendu."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_crm_team__invoiced
-msgid ""
-"Invoice revenue for the current month. This is the amount the sales channel "
-"has invoiced this month. It is used to compute the progression ratio of the "
-"current and target revenue on the kanban view."
-msgstr ""
-"Prévision de facturation pour le mois en cours. C'est le montant que "
-"l'équipe de vente a facturé ce mois. Permet de calculer le ratio réalisé/"
-"prévision affiché sur la vue kanban."
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
@@ -3065,11 +3052,6 @@ msgstr "Quantité facturée (comptabilisée)"
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Invoiced Quantity: %s"
 msgstr "Quantité facturée : %s"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
-msgid "Invoiced This Month"
-msgstr "Facturé ce mois-ci"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -3104,11 +3086,6 @@ msgstr "Facturation"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_policy
 msgid "Invoicing Policy"
 msgstr "Politique de facturation"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
-msgid "Invoicing Target"
-msgstr "Objectif de facturation"
 
 #. module: sale
 #. odoo-python
@@ -3563,6 +3540,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "No, go back"
 msgstr "Non, revenir en arrière"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Not Cancelled"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
@@ -4104,11 +4087,6 @@ msgid "Product Catalog"
 msgstr "Catalogue de produits"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
-msgid "Product Catalog Product Is In Sale Order"
-msgstr "Produit du catalogue produit se trouve dans la commande client"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4473,14 +4451,6 @@ msgid "Responsible User"
 msgstr "Utilisateur responsable"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
-msgid "Revenue Target for the current month (untaxed total of paid invoices)."
-msgstr ""
-"Objectif de revenus pour le mois en cours (total hors taxes des factures "
-"payées)."
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
 msgstr "Revenus"
@@ -5343,12 +5313,6 @@ msgstr "Le jeton d'accès n'est pas valide."
 #: code:addons/sale/controllers/portal.py:0
 msgid "The amount is lower than the prepayment amount."
 msgstr "Le montant est inférieur au montant de l’acompte."
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/payment_link_wizard.py:0
-msgid "The amount must be greater than the prepayment amount."
-msgstr "Le montant doit être supérieur au montant de l’acompte."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_amount
@@ -6304,6 +6268,43 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-"
+#~ "label=\"Quotations\" role=\"img\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Devis\" "
+#~ "role=\"img\"/>"
+
+#~ msgid "<span class=\"flex-grow-1\">/ Month</span>"
+#~ msgstr "<span class=\"flex-grow-1\">/ Mois</span>"
+
+#~ msgid ""
+#~ "Invoice revenue for the current month. This is the amount the sales "
+#~ "channel has invoiced this month. It is used to compute the progression "
+#~ "ratio of the current and target revenue on the kanban view."
+#~ msgstr ""
+#~ "Prévision de facturation pour le mois en cours. C'est le montant que "
+#~ "l'équipe de vente a facturé ce mois. Permet de calculer le ratio réalisé/"
+#~ "prévision affiché sur la vue kanban."
+
+#~ msgid "Invoiced This Month"
+#~ msgstr "Facturé ce mois-ci"
+
+#~ msgid "Invoicing Target"
+#~ msgstr "Objectif de facturation"
+
+#~ msgid "Product Catalog Product Is In Sale Order"
+#~ msgstr "Produit du catalogue produit se trouve dans la commande client"
+
+#~ msgid ""
+#~ "Revenue Target for the current month (untaxed total of paid invoices)."
+#~ msgstr ""
+#~ "Objectif de revenus pour le mois en cours (total hors taxes des factures "
+#~ "payées)."
+
+#~ msgid "The amount must be greater than the prepayment amount."
+#~ msgstr "Le montant doit être supérieur au montant de l’acompte."
 
 #~ msgid ""
 #~ ", it's 100% free! You'll save time creating beautiful quotations and "

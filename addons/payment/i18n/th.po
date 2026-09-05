@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-04 17:45+0000\n"
 "PO-Revision-Date: 2026-06-21 16:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master/payment/"
@@ -272,11 +272,6 @@ msgstr "บริการชำระเงินของ Amazon"
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
 msgid "Amount"
 msgstr "จำนวน"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
-msgid "Amount Max"
-msgstr "จำนวนเงินสูงสุด"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -1209,11 +1204,6 @@ msgid "Payment History"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
-msgid "Payment Info"
-msgstr "ข้อมูลการชำระเงิน"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
 msgstr "ลิงค์การชำระเงิน"
@@ -1425,12 +1415,6 @@ msgstr ""
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 msgid "Please set a positive amount."
 msgstr "โปรดกำหนดจำนวนที่เป็นบวก"
-
-#. module: payment
-#. odoo-python
-#: code:addons/payment/wizards/payment_link_wizard.py:0
-msgid "Please set an amount lower than %s."
-msgstr "กรุณากำหนดจำนวนเงินให้ต่ำกว่า %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -2036,12 +2020,6 @@ msgid "There is no token created yet."
 msgstr "ยังไม่มีการสร้างโทเค็น"
 
 #. module: payment
-#. odoo-python
-#: code:addons/payment/wizards/payment_link_wizard.py:0
-msgid "There is nothing to be paid."
-msgstr "ไม่มีอะไรจะต้องชำระ"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
 msgstr "ไม่มีอะไรต้องชำระ"
@@ -2545,3 +2523,15 @@ msgstr ""
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
 msgstr ""
+
+#~ msgid "Amount Max"
+#~ msgstr "จำนวนเงินสูงสุด"
+
+#~ msgid "Payment Info"
+#~ msgstr "ข้อมูลการชำระเงิน"
+
+#~ msgid "Please set an amount lower than %s."
+#~ msgstr "กรุณากำหนดจำนวนเงินให้ต่ำกว่า %s"
+
+#~ msgid "There is nothing to be paid."
+#~ msgstr "ไม่มีอะไรจะต้องชำระ"

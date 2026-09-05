@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-04 17:44+0000\n"
 "PO-Revision-Date: 2026-06-19 00:26+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-master/crm/el/"
@@ -511,11 +511,6 @@ msgid "Address:"
 msgstr ""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Advanced Pipelines"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_tree
 msgid "Alias"
@@ -564,15 +559,14 @@ msgstr "Μοντέλο Ψευδωνύμου"
 
 #. module: crm
 #. odoo-javascript
-#: code:addons/crm/static/src/js/tours/crm.js:0
-msgid "All set. Let’s <b>Schedule</b> it."
+#: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
+msgid "All Sales Teams"
 msgstr ""
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"Allow salespeople to belong to multiple teams and navigate between dedicated "
-"pipelines."
+#. odoo-javascript
+#: code:addons/crm/static/src/js/tours/crm.js:0
+msgid "All set. Let’s <b>Schedule</b> it."
 msgstr ""
 
 #. module: crm
@@ -595,8 +589,8 @@ msgstr "Αρχειοθετημένα"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid ""
-"As you are a member of no Sales Team, you are showed the Pipeline of the "
-"<b>first team by default.</b>"
+"As you are a member of no Sales Team, you are showed the Pipeline of <b>all "
+"teams by default.</b>"
 msgstr ""
 
 #. module: crm
@@ -608,6 +602,11 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Assign salespersons into multiple Sales Teams."
 msgstr ""
 
 #. module: crm
@@ -1105,6 +1104,12 @@ msgid "Create an opportunity to start playing with your pipeline."
 msgstr ""
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/js/tours/crm.js:0
+msgid "Create your new contact."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_lead__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__create_uid
@@ -1263,6 +1268,11 @@ msgid "Digest"
 msgstr "Περίληψη"
 
 #. module: crm
+#: model:ir.model,name:crm.model_discuss_channel
+msgid "Discussion Channel"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__display_name
@@ -1278,8 +1288,8 @@ msgstr "Περίληψη"
 #: model:ir.model.fields,field_description:crm.field_crm_team__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__display_name
 #: model:ir.model.fields,field_description:crm.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:crm.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__display_name
-#: model:ir.model.fields,field_description:crm.field_ir_http__display_name
 #: model:ir.model.fields,field_description:crm.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:crm.field_res_partner__display_name
@@ -1650,11 +1660,6 @@ msgid "Go, go, go! Congrats for your first deal."
 msgstr "Πάμε! Συγχαρητήρια για την πρώτη σας συμφωνία."
 
 #. module: crm
-#: model:ir.model,name:crm.model_ir_http
-msgid "HTTP Routing"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__has_message
 msgid "Has Message"
 msgstr "Έχει Μήνυμα"
@@ -1705,8 +1710,8 @@ msgstr "Ώρες"
 #: model:ir.model.fields,field_description:crm.field_crm_team__id
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__id
 #: model:ir.model.fields,field_description:crm.field_digest_digest__id
+#: model:ir.model.fields,field_description:crm.field_discuss_channel__id
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__id
-#: model:ir.model.fields,field_description:crm.field_ir_http__id
 #: model:ir.model.fields,field_description:crm.field_mail_activity__id
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__id
 #: model:ir.model.fields,field_description:crm.field_res_partner__id
@@ -2387,16 +2392,6 @@ msgstr "Σήμανση ως Χαμένη"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Mark as Lost"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Mark as lost"
-msgstr "Σήμανση ως Χαμένη"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Mark as won"
 msgstr ""
 
 #. module: crm
@@ -3194,12 +3189,6 @@ msgstr "Τηλέφωνο:"
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 msgid "Pipeline"
 msgstr "Ροή Πληροφοριών"
-
-#. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
-msgid "Pipeline - %s"
-msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
@@ -4101,13 +4090,13 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
-"tabindex=\"-1\">join a team.</a>"
+"tabindex=\"-1\">join a Team.</a>"
 msgstr ""
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
-msgid "To work with the CRM, you should join a team."
+msgid "To work with the CRM, you should be added to a Team."
 msgstr ""
 
 #. module: crm
@@ -4678,6 +4667,9 @@ msgstr ""
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "valid phone number"
 msgstr ""
+
+#~ msgid "Mark as lost"
+#~ msgstr "Σήμανση ως Χαμένη"
 
 #~ msgid "Font awesome icon e.g. fa-tasks"
 #~ msgstr "Γραμματοσειρά awesome π.χ. fa-tasks"

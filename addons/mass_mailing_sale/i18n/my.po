@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:42+0000\n"
+"POT-Creation-Date: 2026-09-04 17:45+0000\n"
 "PO-Revision-Date: 2026-06-19 13:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-master/"
@@ -20,44 +20,8 @@ msgstr ""
 "X-Generator: Weblate 2026.6.1\n"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid ""
-"<font style=\"color: rgb(108, 117, 125)\">Click on this block, then select "
-"products using the panel on the right.</font>"
-msgstr ""
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid "<i class=\"oi\" data-icon=\"shopping_cart\"/> Buy Now"
-msgstr ""
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid ""
-"<strong>$20</strong>\n"
-"                                        <span class=\"h4-fs\">\n"
-"                                            <s>\n"
-"                                                <font style=\"color: "
-"rgb(108, 117, 125)\">$25</font>\n"
-"                                            </s>\n"
-"                                        </span>"
-msgstr ""
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-msgid ""
-"<strong>$20</strong>\n"
-"                            <span class=\"h4-fs\">\n"
-"                                <s>\n"
-"                                    <font style=\"color: rgb(108, 117, "
-"125)\">$25</font>\n"
-"                                </s>\n"
-"                            </span>"
+#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
+msgid "<span class=\"o_stat_text\">Revenues</span>"
 msgstr ""
 
 #. module: mass_mailing_sale
@@ -66,7 +30,8 @@ msgid "Add sale order UTM info on mass mailing"
 msgstr ""
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
+#. odoo-javascript
+#: code:addons/mass_mailing_sale/static/src/snippets/snippet_categories.xml:0
 msgid "Auto-filled from Product"
 msgstr ""
 
@@ -77,17 +42,16 @@ msgid "Buy Now"
 msgstr ""
 
 #. module: mass_mailing_sale
+#: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_sale_order__display_name
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__display_name
 msgid "Display Name"
 msgstr "ပြသသော အမည်"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid "Example Image"
-msgstr ""
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__id
@@ -101,11 +65,6 @@ msgstr "နံပါတ်"
 #: code:addons/mass_mailing_sale/models/mailing_mailing.py:0
 msgid "INVOICED"
 msgstr ""
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.mailing_mailing_view_form
-msgid "Invoiced"
-msgstr "ပြေစာတောင်းပြီး"
 
 #. module: mass_mailing_sale
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_mailing_mailing__sale_invoiced_amount
@@ -143,9 +102,6 @@ msgstr ""
 #. module: mass_mailing_sale
 #. odoo-javascript
 #: code:addons/mass_mailing_sale/static/src/builder/options/product_snapshot_fragments.xml:0
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
 msgid "Price information"
 msgstr ""
 
@@ -157,27 +113,11 @@ msgid "Product"
 msgstr "ပစ္စည်း"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
-msgid "Product Aside"
-msgstr ""
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
-msgid "Product Card"
-msgstr ""
-
-#. module: mass_mailing_sale
 #. odoo-javascript
 #: code:addons/mass_mailing_sale/static/src/builder/options/product_snapshot_fragments.xml:0
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
 #, fuzzy
 msgid "Product information"
 msgstr "ပစ္စည်းအချက်အလက်"
-
-#. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.email_designer_snippets
-msgid "Products List"
-msgstr ""
 
 #. module: mass_mailing_sale
 #. odoo-python
@@ -228,13 +168,6 @@ msgid "Sales Order"
 msgstr "အရောင်း အော်ဒါ"
 
 #. module: mass_mailing_sale
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_aside
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_card
-#: model_terms:ir.ui.view,arch_db:mass_mailing_sale.s_product_columns
-msgid "Select the products you want to display!"
-msgstr ""
-
-#. module: mass_mailing_sale
 #: model:ir.model.fields,help:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Selection to determine the winner mailing that will be sent."
 msgstr ""
@@ -253,3 +186,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing_sale.field_utm_campaign__ab_testing_winner_selection
 msgid "Winner Selection"
 msgstr ""
+
+#~ msgid "Invoiced"
+#~ msgstr "ပြေစာတောင်းပြီး"

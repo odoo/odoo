@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-04 17:46+0000\n"
 "PO-Revision-Date: 2026-06-21 02:14+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
@@ -801,11 +801,16 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid ""
-"<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Quotations\" "
+"<i class=\"oi oi-fw me-1\" data-icon=\"edit_square\" aria-label=\"Revenues\" "
 "role=\"img\"/>"
 msgstr ""
-"<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-label=\"Quotations\" "
-"role=\"img\"/>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
+msgid ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"shopping_cart\" aria-"
+"label=\"Quotations\" role=\"img\"/>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -856,9 +861,9 @@ msgstr ""
 "<span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
-msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr "<span class=\"flex-grow-1\">/ 月</span>"
+#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
+msgid "<span class=\"o_stat_text\">Revenues</span>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -1684,12 +1689,6 @@ msgid "Click to configure"
 msgstr "クリックして設定"
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid "Click to define an invoicing target"
-msgstr "クリックして請求目標を定義します"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
 msgid "Client's most used account"
 msgstr "顧客との取引で最も使用された勘定科目"
@@ -1749,7 +1748,6 @@ msgstr "通信費"
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__company_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
-#: model:ir.model.fields,field_description:sale.field_utm_campaign__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
 msgstr "会社"
@@ -3018,16 +3016,6 @@ msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr "このサービス販売後すぐにオーダ数量が請求されます。"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_crm_team__invoiced
-msgid ""
-"Invoice revenue for the current month. This is the amount the sales channel "
-"has invoiced this month. It is used to compute the progression ratio of the "
-"current and target revenue on the kanban view."
-msgstr ""
-"今月の請求書収入。これは、販売チャネルが今月請求した金額です。これは、カンバ"
-"ンビューでの現在の収益と目標収益の進行率を計算するために使用されます。"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
@@ -3053,11 +3041,6 @@ msgstr "請求済数量 (記帳済)"
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Invoiced Quantity: %s"
 msgstr "請求数量:%s"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
-msgid "Invoiced This Month"
-msgstr "今月請求済"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -3092,11 +3075,6 @@ msgstr "請求"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_policy
 msgid "Invoicing Policy"
 msgstr "請求ポリシー"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
-msgid "Invoicing Target"
-msgstr "請求目標"
 
 #. module: sale
 #. odoo-python
@@ -3544,6 +3522,12 @@ msgstr "一度確定されたオーダは編集できなくなります"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "No, go back"
 msgstr "いいえ、戻ってください"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Not Cancelled"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
@@ -4079,11 +4063,6 @@ msgid "Product Catalog"
 msgstr "製品カタログ"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
-msgid "Product Catalog Product Is In Sale Order"
-msgstr "プロダクトカタログのプロダクトが販売オーダにあります"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4448,12 +4427,6 @@ msgid "Responsible User"
 msgstr "担当ユーザ"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
-msgid "Revenue Target for the current month (untaxed total of paid invoices)."
-msgstr "当月の売上目標(支払済顧客請求書の税抜合計)。"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "Revenues"
 msgstr "収益"
@@ -5305,12 +5278,6 @@ msgstr "アクセストークンは無効です。"
 #: code:addons/sale/controllers/portal.py:0
 msgid "The amount is lower than the prepayment amount."
 msgstr "金額が前受金額よりも少なくなっています。"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/wizard/payment_link_wizard.py:0
-msgid "The amount must be greater than the prepayment amount."
-msgstr "金額は前受金額を上回る必要があります。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_amount
@@ -6247,6 +6214,43 @@ msgid ""
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }} "
 "{{ object.client_order_ref and ('(' + object.client_order_ref + ')') or '' }}"
 msgstr ""
+
+#~ msgid ""
+#~ "<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-"
+#~ "label=\"Quotations\" role=\"img\"/>"
+#~ msgstr ""
+#~ "<i class=\"oi oi-fw me-1\" data-icon=\"payments\" aria-"
+#~ "label=\"Quotations\" role=\"img\"/>"
+
+#~ msgid "<span class=\"flex-grow-1\">/ Month</span>"
+#~ msgstr "<span class=\"flex-grow-1\">/ 月</span>"
+
+#~ msgid "Click to define an invoicing target"
+#~ msgstr "クリックして請求目標を定義します"
+
+#~ msgid ""
+#~ "Invoice revenue for the current month. This is the amount the sales "
+#~ "channel has invoiced this month. It is used to compute the progression "
+#~ "ratio of the current and target revenue on the kanban view."
+#~ msgstr ""
+#~ "今月の請求書収入。これは、販売チャネルが今月請求した金額です。これは、カン"
+#~ "バンビューでの現在の収益と目標収益の進行率を計算するために使用されます。"
+
+#~ msgid "Invoiced This Month"
+#~ msgstr "今月請求済"
+
+#~ msgid "Invoicing Target"
+#~ msgstr "請求目標"
+
+#~ msgid "Product Catalog Product Is In Sale Order"
+#~ msgstr "プロダクトカタログのプロダクトが販売オーダにあります"
+
+#~ msgid ""
+#~ "Revenue Target for the current month (untaxed total of paid invoices)."
+#~ msgstr "当月の売上目標(支払済顧客請求書の税抜合計)。"
+
+#~ msgid "The amount must be greater than the prepayment amount."
+#~ msgstr "金額は前受金額を上回る必要があります。"
 
 #~ msgid "% Delivered"
 #~ msgstr "% 納品済"

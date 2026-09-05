@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-04 17:44+0000\n"
 "PO-Revision-Date: 2026-06-18 17:28+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-master/crm/"
@@ -546,11 +546,6 @@ msgid "Address:"
 msgstr "Adresa:"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Advanced Pipelines"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_tree
 msgid "Alias"
@@ -598,16 +593,15 @@ msgstr "Model de Alias"
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
+msgid "All Sales Teams"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "All set. Let’s <b>Schedule</b> it."
 msgstr "Totul e gata. Hai să <b>programăm</b>."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"Allow salespeople to belong to multiple teams and navigate between dedicated "
-"pipelines."
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__unlimited
@@ -629,8 +623,8 @@ msgstr "Arhivat"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid ""
-"As you are a member of no Sales Team, you are showed the Pipeline of the "
-"<b>first team by default.</b>"
+"As you are a member of no Sales Team, you are showed the Pipeline of <b>all "
+"teams by default.</b>"
 msgstr ""
 
 #. module: crm
@@ -643,6 +637,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
 msgstr "Atribuie piste"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Assign salespersons into multiple Sales Teams."
+msgstr "Atribuie agenți de vânzări în mai multe echipe de vânzări."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1154,6 +1153,12 @@ msgstr ""
 "Creează o oportunitate pentru a începe să joci cu fluxul de activitate."
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/js/tours/crm.js:0
+msgid "Create your new contact."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_lead__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__create_uid
@@ -1321,6 +1326,11 @@ msgid "Digest"
 msgstr "Rezumat"
 
 #. module: crm
+#: model:ir.model,name:crm.model_discuss_channel
+msgid "Discussion Channel"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__display_name
@@ -1336,8 +1346,8 @@ msgstr "Rezumat"
 #: model:ir.model.fields,field_description:crm.field_crm_team__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__display_name
 #: model:ir.model.fields,field_description:crm.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:crm.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__display_name
-#: model:ir.model.fields,field_description:crm.field_ir_http__display_name
 #: model:ir.model.fields,field_description:crm.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:crm.field_res_partner__display_name
@@ -1720,11 +1730,6 @@ msgid "Go, go, go! Congrats for your first deal."
 msgstr "Hai! Hai! Hai! Felicitări pentru prima dvs. ofertă."
 
 #. module: crm
-#: model:ir.model,name:crm.model_ir_http
-msgid "HTTP Routing"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__has_message
 msgid "Has Message"
 msgstr "Are mesaj"
@@ -1779,8 +1784,8 @@ msgstr "Ore"
 #: model:ir.model.fields,field_description:crm.field_crm_team__id
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__id
 #: model:ir.model.fields,field_description:crm.field_digest_digest__id
+#: model:ir.model.fields,field_description:crm.field_discuss_channel__id
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__id
-#: model:ir.model.fields,field_description:crm.field_ir_http__id
 #: model:ir.model.fields,field_description:crm.field_mail_activity__id
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__id
 #: model:ir.model.fields,field_description:crm.field_res_partner__id
@@ -2482,16 +2487,6 @@ msgstr "Marchează drept pierdut"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Mark as Lost"
 msgstr "Marchează ca pierdută"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Mark as lost"
-msgstr "Marchează ca pierdut(ă)"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Mark as won"
-msgstr "Marchează ca câștigat(ă)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3319,12 +3314,6 @@ msgstr "Telefon:"
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 msgid "Pipeline"
 msgstr "Flux de activitate"
-
-#. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
-msgid "Pipeline - %s"
-msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
@@ -4256,13 +4245,13 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
-"tabindex=\"-1\">join a team.</a>"
+"tabindex=\"-1\">join a Team.</a>"
 msgstr ""
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
-msgid "To work with the CRM, you should join a team."
+msgid "To work with the CRM, you should be added to a Team."
 msgstr ""
 
 #. module: crm
@@ -4851,15 +4840,18 @@ msgstr "adresă de e-mail validă"
 msgid "valid phone number"
 msgstr "număr de telefon valid"
 
+#~ msgid "Mark as lost"
+#~ msgstr "Marchează ca pierdut(ă)"
+
+#~ msgid "Mark as won"
+#~ msgstr "Marchează ca câștigat(ă)"
+
 #~ msgid ""
 #~ "<i class=\"oi\" data-icon=\"east\"/>\n"
 #~ "                                Install Extension"
 #~ msgstr ""
 #~ "<i class=\"oi\" data-icon=\"east\"/>\n"
 #~ "                                Instalează extensia"
-
-#~ msgid "Assign salespersons into multiple Sales Teams."
-#~ msgstr "Atribuie agenți de vânzări în mai multe echipe de vânzări."
 
 #~ msgid ""
 #~ "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "

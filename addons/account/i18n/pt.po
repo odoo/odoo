@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-04 17:44+0000\n"
 "PO-Revision-Date: 2026-06-18 16:28+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-master/"
@@ -5497,6 +5497,11 @@ msgid "Catalog"
 msgstr "Catálogo"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_product_product__catalog_is_in_selected_section
+msgid "Catalog Is In Selected Section"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__category
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Category"
@@ -6139,6 +6144,12 @@ msgstr "Contém lançamentos com hash, mas %s também tem lançamentos com hash.
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body
 msgid "Contents"
 msgstr "Conteúdo"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+msgid "Continue with the default document layout."
+msgstr ""
 
 #. module: account
 #: model:account.account,description:account.24_l10n_id_12281430
@@ -14995,6 +15006,11 @@ msgid "Overdue Amount"
 msgstr "Valor em atraso"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
+msgid "Overdue Invoices"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
 msgid "Overdue invoices"
@@ -16188,11 +16204,6 @@ msgstr "Pré-visualizar dados de movimentação"
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__preview_moves
 msgid "Preview Moves"
 msgstr "Pré-visualizar movimentações"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "Preview invoice"
-msgstr "Pré-visualizar fatura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -24490,6 +24501,9 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "Preview invoice"
+#~ msgstr "Pré-visualizar fatura"
 
 #~ msgid "%s (copy)"
 #~ msgstr "%s (cópia)"

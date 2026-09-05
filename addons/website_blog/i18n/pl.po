@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-04 17:46+0000\n"
 "PO-Revision-Date: 2026-06-20 20:48+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-master/"
@@ -761,7 +761,7 @@ msgstr "Liczba załączników"
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_id
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Author"
@@ -774,7 +774,7 @@ msgstr "Nazwisko Autora"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Authors"
 msgstr ""
 
@@ -843,6 +843,7 @@ msgstr "Strona bloga"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_post
+#: model:ir.model.fields,field_description:website_blog.field_website_track__blog_post_id
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
@@ -871,6 +872,17 @@ msgid "Blog Post Title"
 msgstr "Tytuł wpisu bloga"
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_website_visitor__visitor_blog_post_count
+#: model_terms:ir.ui.view,arch_db:website_blog.website_blog_visitor_view_form
+msgid "Blog Post Views"
+msgstr ""
+
+#. module: website_blog
+#: model:ir.actions.act_window,name:website_blog.website_blog_visitor_blog_post_action
+msgid "Blog Post Views History"
+msgstr ""
+
+#. module: website_blog
 #. odoo-javascript
 #. odoo-python
 #: code:addons/website_blog/models/website_blog.py:0
@@ -878,9 +890,11 @@ msgstr "Tytuł wpisu bloga"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
 #: model:ir.model.fields,field_description:website_blog.field_res_partner__blog_post_ids
 #: model:ir.model.fields,field_description:website_blog.field_res_users__blog_post_ids
+#: model:ir.model.fields,field_description:website_blog.field_website_visitor__blog_post_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_post_pages
 #: model_terms:ir.ui.view,arch_db:website_blog.blogs_nav
 #: model_terms:ir.ui.view,arch_db:website_blog.website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.website_blog_visitor_page_view_search
 msgid "Blog Posts"
 msgstr "Wpisy bloga"
 
@@ -926,7 +940,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_blog/controllers/main.py:0
 #: code:addons/website_blog/static/src/website_builder/blog_searchbar_option.xml:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_blog
 #: model:ir.ui.menu,name:website_blog.menu_blog_global
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_list
@@ -1000,7 +1014,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
 msgid "Category"
 msgstr "Kategoria"
@@ -1154,7 +1168,7 @@ msgstr ""
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Date"
 msgstr "Data"
 
@@ -1184,7 +1198,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Dexter"
 msgstr "Dexter"
 
@@ -1204,6 +1218,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_res_partner__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website__display_name
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_track__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
@@ -1238,6 +1254,11 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Drag blocks here to customize the header of the \"{{0}}\" category."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.website_blog
+msgid "Dynamic Carousel"
 msgstr ""
 
 #. module: website_blog
@@ -1448,7 +1469,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Hover Effect"
 msgstr ""
 
@@ -1503,6 +1524,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_res_partner__id
 #: model:ir.model.fields,field_description:website_blog.field_website__id
 #: model:ir.model.fields,field_description:website_blog.field_website_snippet_filter__id
+#: model:ir.model.fields,field_description:website_blog.field_website_track__id
+#: model:ir.model.fields,field_description:website_blog.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -1666,7 +1689,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Marley"
 msgstr "Marley"
 
@@ -1780,7 +1803,7 @@ msgstr "Nowy wpis bloga"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "New Tag"
 msgstr "Nowy tag"
 
@@ -1794,6 +1817,11 @@ msgstr ""
 #. module: website_blog
 #: model:res.groups.privilege,placeholder:website_blog.res_groups_privilege_blog
 msgid "No"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.actions.act_window,help:website_blog.website_blog_visitor_blog_post_action
+msgid "No blog post views yet for this visitor"
 msgstr ""
 
 #. module: website_blog
@@ -1828,19 +1856,19 @@ msgstr "Brak zdefiniowanych znaczników."
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "None"
 msgstr "Brak"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Normal"
 msgstr "Zwykły"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Normal picture"
 msgstr ""
 
@@ -2059,7 +2087,7 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Picture Size"
 msgstr ""
 
@@ -2318,7 +2346,7 @@ msgstr "Pasek boczny"
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Silly-Chico"
 msgstr "Silly-Chico"
 
@@ -2330,13 +2358,13 @@ msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Smaller"
 msgstr ""
 
 #. module: website_blog
 #. odoo-javascript
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 msgid "Smaller picture"
 msgstr ""
 
@@ -2524,7 +2552,7 @@ msgstr "Nazwa etykiety już istnieje!"
 #: code:addons/website_blog/static/src/website_builder/blog_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
 #: code:addons/website_blog/static/src/website_builder/blog_post_tags_option.xml:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__tag_ids
 #: model:ir.ui.menu,name:website_blog.menu_blog_tag_global
@@ -2542,7 +2570,7 @@ msgstr "Lista tagów"
 #. module: website_blog
 #. odoo-javascript
 #: code:addons/website_blog/static/src/website_builder/blog_post_page_option.xml:0
-#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_option.xml:0
+#: code:addons/website_blog/static/src/website_builder/dynamic_snippet_blog_posts_shared_option.xml:0
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser
 msgid "Teaser"
 msgstr "Zwiastun"
@@ -2716,6 +2744,11 @@ msgid "Top Banner"
 msgstr "Baner górny"
 
 #. module: website_blog
+#: model:ir.model.fields,help:website_blog.field_website_visitor__visitor_blog_post_count
+msgid "Total number of views on blog posts"
+msgstr ""
+
+#. module: website_blog
 #: model:blog.blog,name:website_blog.blog_blog_1
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_horizontal_preview_data
@@ -2804,6 +2837,16 @@ msgid "Visible on current website"
 msgstr "Widoczne na obecnej stronie"
 
 #. module: website_blog
+#: model:ir.model,name:website_blog.model_website_track
+msgid "Visited Page"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.website_blog_visitor_page_view_tree
+msgid "Visitor Blog Post Views History"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model,name:website_blog.model_website
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_id
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_id
@@ -2831,6 +2874,11 @@ msgstr "Wyszukiwarka szablonów"
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url
 msgid "Website URL"
 msgstr "Adres strony internetowej"
+
+#. module: website_blog
+#: model:ir.model,name:website_blog.model_website_visitor
+msgid "Website Visitor"
+msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_description

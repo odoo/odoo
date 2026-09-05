@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-04 17:44+0000\n"
 "PO-Revision-Date: 2026-06-22 00:37+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/mail/"
@@ -494,13 +494,6 @@ msgstr "%(user_name)s heeft een bericht op dit kanaal vastgezet."
 #: code:addons/mail/models/ir_mail_server.py:0
 msgid "%s (Email Template)"
 msgstr "%s (e-mailsjabloon)"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_activity_plan.py:0
-#: code:addons/mail/models/mail_canned_response.py:0
-msgid "%s (copy)"
-msgstr "%s (kopie)"
 
 #. module: mail
 #. odoo-python
@@ -1711,6 +1704,8 @@ msgstr ""
 "stellen."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__channel_role__admin
 msgid "Admin"
 msgstr "Admin"
@@ -3260,12 +3255,6 @@ msgid "Channel Actions"
 msgstr "Kanaalacties"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
-msgid "Channel Admin"
-msgstr "Kanaalbeheerder"
-
-#. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_member_id
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_member_ids
@@ -3291,12 +3280,6 @@ msgstr "Naam van kanaallid"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__channel_notifications
 msgid "Channel Notifications"
 msgstr "Kanaalmeldingen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
-msgid "Channel Owner"
-msgstr "Kanaaleigenaar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_role
@@ -10266,6 +10249,8 @@ msgid "Own Activities"
 msgstr "Eigen activiteiten"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member.xml:0
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__owner_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_template__user_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel_member__channel_role__owner
@@ -10466,6 +10451,7 @@ msgid "Permissions Lady - Lady pushing a giant toggle button"
 msgstr "Machtigingvrouw - Vrouw die op een gigantische schakelaar klikt"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity__phone
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
 #: model:ir.model.fields,field_description:mail.field_res_users__phone
 msgid "Phone"
@@ -11300,12 +11286,6 @@ msgid "Remove"
 msgstr "Verwijderen"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
-msgid "Remove Admin"
-msgstr "Beheerder verwijderen"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Remove Context Action"
 msgstr "Contextactie verwijderen"
@@ -11326,12 +11306,6 @@ msgstr "Volgers verwijderen"
 #: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
 msgid "Remove Member"
 msgstr "Lid verwijderen"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
-msgid "Remove Owner"
-msgstr "Eigenaar verwijderen"
 
 #. module: mail
 #. odoo-javascript
@@ -12436,6 +12410,12 @@ msgstr "Beheerder instellen"
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Set Email"
 msgstr "E-mail instellen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_member_actions.js:0
+msgid "Set Member"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -16638,6 +16618,21 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privé"
+
+#~ msgid "%s (copy)"
+#~ msgstr "%s (kopie)"
+
+#~ msgid "Channel Admin"
+#~ msgstr "Kanaalbeheerder"
+
+#~ msgid "Channel Owner"
+#~ msgstr "Kanaaleigenaar"
+
+#~ msgid "Remove Admin"
+#~ msgstr "Beheerder verwijderen"
+
+#~ msgid "Remove Owner"
+#~ msgstr "Eigenaar verwijderen"
 
 #~ msgid "%(caller)s started a call"
 #~ msgstr "%(caller)s is een gesprek gestart"

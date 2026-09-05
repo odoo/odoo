@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:41+0000\n"
+"POT-Creation-Date: 2026-09-04 17:44+0000\n"
 "PO-Revision-Date: 2026-06-18 17:08+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/crm/"
@@ -580,11 +580,6 @@ msgid "Address:"
 msgstr "住所:"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Advanced Pipelines"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_tree
 msgid "Alias"
@@ -632,16 +627,15 @@ msgstr "エイリアス対象モデル"
 
 #. module: crm
 #. odoo-javascript
+#: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
+msgid "All Sales Teams"
+msgstr ""
+
+#. module: crm
+#. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "All set. Let’s <b>Schedule</b> it."
 msgstr "設定完了。<b>スケジュール</b>しましょう。"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"Allow salespeople to belong to multiple teams and navigate between dedicated "
-"pipelines."
-msgstr ""
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__unlimited
@@ -663,11 +657,9 @@ msgstr "アーカイブ済"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid ""
-"As you are a member of no Sales Team, you are showed the Pipeline of the "
-"<b>first team by default.</b>"
+"As you are a member of no Sales Team, you are showed the Pipeline of <b>all "
+"teams by default.</b>"
 msgstr ""
-"あなたは販売チームに所属していないため、<b>デフォルトで最初のチーム</b>のパイ"
-"プラインが表示されます。"
 
 #. module: crm
 #. odoo-javascript
@@ -679,6 +671,11 @@ msgstr "チームリーダーにアクセス権限の取得を依頼してくだ
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Assign Leads"
 msgstr "リードの割り当て"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Assign salespersons into multiple Sales Teams."
+msgstr "複数の販売チームに販売担当者を割り当て"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1183,6 +1180,12 @@ msgid "Create an opportunity to start playing with your pipeline."
 msgstr "案件を作成してパイプラインを始めましょう。"
 
 #. module: crm
+#. odoo-javascript
+#: code:addons/crm/static/src/js/tours/crm.js:0
+msgid "Create your new contact."
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_lead__create_uid
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__create_uid
@@ -1349,6 +1352,11 @@ msgid "Digest"
 msgstr "レポート"
 
 #. module: crm
+#: model:ir.model,name:crm.model_discuss_channel
+msgid "Discussion Channel"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__display_name
@@ -1364,8 +1372,8 @@ msgstr "レポート"
 #: model:ir.model.fields,field_description:crm.field_crm_team__display_name
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__display_name
 #: model:ir.model.fields,field_description:crm.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:crm.field_discuss_channel__display_name
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__display_name
-#: model:ir.model.fields,field_description:crm.field_ir_http__display_name
 #: model:ir.model.fields,field_description:crm.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:crm.field_res_partner__display_name
@@ -1744,11 +1752,6 @@ msgid "Go, go, go! Congrats for your first deal."
 msgstr "Go, go, go! 初成約おめでとうございます。"
 
 #. module: crm
-#: model:ir.model,name:crm.model_ir_http
-msgid "HTTP Routing"
-msgstr ""
-
-#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__has_message
 msgid "Has Message"
 msgstr "メッセージあり"
@@ -1802,8 +1805,8 @@ msgstr "時間"
 #: model:ir.model.fields,field_description:crm.field_crm_team__id
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__id
 #: model:ir.model.fields,field_description:crm.field_digest_digest__id
+#: model:ir.model.fields,field_description:crm.field_discuss_channel__id
 #: model:ir.model.fields,field_description:crm.field_ir_config_parameter__id
-#: model:ir.model.fields,field_description:crm.field_ir_http__id
 #: model:ir.model.fields,field_description:crm.field_mail_activity__id
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__id
 #: model:ir.model.fields,field_description:crm.field_res_partner__id
@@ -2505,16 +2508,6 @@ msgstr "失注とマーク"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Mark as Lost"
 msgstr "失注とマーク"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Mark as lost"
-msgstr "失注とマーク"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "Mark as won"
-msgstr "成約とする"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3333,12 +3326,6 @@ msgstr "電話:"
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 msgid "Pipeline"
 msgstr "パイプライン"
-
-#. module: crm
-#. odoo-javascript
-#: code:addons/crm/static/src/components/team_switcher/team_switcher.js:0
-msgid "Pipeline - %s"
-msgstr ""
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
@@ -4256,16 +4243,14 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid ""
 "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
-"tabindex=\"-1\">join a team.</a>"
+"tabindex=\"-1\">join a Team.</a>"
 msgstr ""
-"CRMを利用するには、<a name=\"%d\" type=\"action\" tabindex=\"-1\">チームに参"
-"加してください。</a>"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
-msgid "To work with the CRM, you should join a team."
-msgstr "CRMを使用するにはチームに参加する必要があります。"
+msgid "To work with the CRM, you should be added to a Team."
+msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4846,14 +4831,34 @@ msgid "valid phone number"
 msgstr "有効な電話番号"
 
 #~ msgid ""
+#~ "As you are a member of no Sales Team, you are showed the Pipeline of the "
+#~ "<b>first team by default.</b>"
+#~ msgstr ""
+#~ "あなたは販売チームに所属していないため、<b>デフォルトで最初のチーム</b>の"
+#~ "パイプラインが表示されます。"
+
+#~ msgid "Mark as lost"
+#~ msgstr "失注とマーク"
+
+#~ msgid "Mark as won"
+#~ msgstr "成約とする"
+
+#~ msgid ""
+#~ "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
+#~ "tabindex=\"-1\">join a team.</a>"
+#~ msgstr ""
+#~ "CRMを利用するには、<a name=\"%d\" type=\"action\" tabindex=\"-1\">チームに"
+#~ "参加してください。</a>"
+
+#~ msgid "To work with the CRM, you should join a team."
+#~ msgstr "CRMを使用するにはチームに参加する必要があります。"
+
+#~ msgid ""
 #~ "<i class=\"oi\" data-icon=\"east\"/>\n"
 #~ "                                Install Extension"
 #~ msgstr ""
 #~ "<i class=\"oi\" data-icon=\"east\"/>\n"
 #~ "                                 拡張機能をインストール"
-
-#~ msgid "Assign salespersons into multiple Sales Teams."
-#~ msgstr "複数の販売チームに販売担当者を割り当て"
 
 #~ msgid ""
 #~ "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
