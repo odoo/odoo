@@ -1454,6 +1454,65 @@
     </record>
 <!-- PH : Philippines END-->
 
+<!-- UZ : Uzbekistan -->
+    <record id="hr_work_entry.l10n_uz_work_entry_type_annual_labor_leave" model="hr.work.entry.type">
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="count_days_as">calendar</field>
+        <field name="requires_allocation">True</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="allocation_validation_type">hr</field>
+    </record>
+
+    <!-- Automatically created to keep track of annual leaves that fall on Sunday and are unpaid -->
+    <record id="hr_work_entry.l10n_uz_work_entry_type_annual_labor_leave_sunday" model="hr.work.entry.type">
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="count_days_as">calendar</field>
+        <field name="requires_allocation">False</field>
+        <field name="employee_requests">False</field>
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_uz_work_entry_type_social_leave" model="hr.work.entry.type">
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="count_days_as">working</field>
+        <field name="requires_allocation">False</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_validation_type">hr</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_uz_work_entry_type_partially_paid_leave" model="hr.work.entry.type">
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="count_days_as">working</field>
+        <field name="requires_allocation">False</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_validation_type">hr</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_uz_work_entry_type_study_leave" model="hr.work.entry.type">
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="count_days_as">working</field>
+        <field name="requires_allocation">False</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_validation_type">hr</field>
+        <field name="unpaid">True</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_uz_work_entry_type_child_support_leave" model="hr.work.entry.type">
+        <field name="request_unit">day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="count_days_as">working</field>
+        <field name="requires_allocation">False</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_validation_type">hr</field>
+    </record>
+    <!-- UZ: Uzbekistan END -->
+
     <function model="hr.work.entry.type" name="write">
         <value model="hr.work.entry.type" eval="obj().sudo().search([('code', 'in', ['LEAVE100', 'LEAVE105', 'WORK110', 'LEAVE90', 'LEAVE110', 'LEAVE120', 'OUT'])]).ids"/>
         <value eval="{'request_unit': 'half_day'}"/>
