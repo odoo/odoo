@@ -11,14 +11,22 @@ import { PagePropertiesDialog } from "@website/components/dialog/page_properties
  * are not client actions.
  */
 export const websiteCustomMenus = {
-    dependencies: ["website", "orm", "dialog", "ui"],
-    start(env, { website, orm, dialog, ui }) {
+    dependencies: ["website", "orm", "dialog", "ui", "menu"],
+    start(env, { website, orm, dialog, ui, menu }) {
         const services = { website, orm, dialog, ui };
         return {
             get(xmlId) {
                 return registry.category("website_custom_menus").get(xmlId, null);
             },
             async open(customMenu) {
+                const parentMenu = menu.getAll().find((m) => m.children.includes(customMenu.id));
+                // Wait for navigation to complete if the selected item requires the page document
+                if (
+                    parentMenu?.xmlid === "website.menu_current_page" &&
+                    website.isNavigatingToAnotherPage
+                ) {
+                    await website.isNavigatingToAnotherPage.promise;
+                }
                 const menuConfig = this.get(customMenu.xmlid);
                 if (menuConfig.openWidget) {
                     return menuConfig.openWidget(services);
