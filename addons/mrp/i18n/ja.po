@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:37+0000\n"
-"PO-Revision-Date: 2026-07-30 04:11+0000\n"
+"PO-Revision-Date: 2026-09-04 08:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/mrp/"
 "ja/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -163,7 +163,7 @@ msgstr "%(qty)s 生産準備完了"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s To %(route)s"
-msgstr "%(qty)s を%(route)sに"
+msgstr "%(qty)s → %(route)s"
 
 #. module: mrp
 #. odoo-python
@@ -1045,7 +1045,7 @@ msgstr "属性値"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_confirm_production
 msgid "Auto Confirm Production"
-msgstr ""
+msgstr "製造の自動確認"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_mrp_reception_report
@@ -1644,7 +1644,7 @@ msgstr "選択されたロット/シリアル番号をクリアします"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
 msgid "Close Production"
-msgstr ""
+msgstr "製造を終了"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__code
@@ -1680,7 +1680,7 @@ msgstr "会社"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_open_bom_lines
 msgid "Compare BoMs"
-msgstr ""
+msgstr "部品表を比較"
 
 #. module: mrp
 #. odoo-javascript
@@ -1820,7 +1820,7 @@ msgstr "消費警告"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__continuous
 msgid "Continuous Production"
-msgstr ""
+msgstr "連続生産"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
@@ -2694,7 +2694,7 @@ msgstr "予測された問題"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__forecasted_location_id
 msgid "Forecasted Location"
-msgstr ""
+msgstr "予測ロケーション"
 
 #. module: mrp
 #. odoo-javascript
@@ -2934,6 +2934,8 @@ msgid ""
 "If active, registering production on a work order will automatically unblock "
 "the next work order if it is blocked."
 msgstr ""
+"有効化すると、作業オーダで製造を登録した際、後続の作業オーダがブロックされて"
+"いれば自動的に解除されます。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -3333,7 +3335,7 @@ msgstr "消費の問題明細"
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "プロダクトと単位のリンク"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
@@ -3343,7 +3345,7 @@ msgstr "ロケーション"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__forecasted_location_id
 msgid "Location used in the computation of the forecast."
-msgstr ""
+msgstr "予測計算に使用されるロケーション。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
@@ -3469,7 +3471,7 @@ msgstr "製造オーダ準備完了"
 #. module: mrp
 #: model:mail.message.subtype,name:mrp.mt_mo_state
 msgid "MO State"
-msgstr ""
+msgstr "製造オーダステータス"
 
 #. module: mrp
 #. odoo-javascript
@@ -3480,7 +3482,7 @@ msgstr "MRP ブール値アイコン"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_label_production_view_pdf
 msgid "MRP Finished Product Label Report"
-msgstr ""
+msgstr "製造 完成プロダクトラベルレポート"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -4436,7 +4438,7 @@ msgstr "計画"
 #. odoo-javascript
 #: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
 msgid "Plan MO"
-msgstr ""
+msgstr "製造オーダを計画"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -4481,7 +4483,7 @@ msgstr "計画上の問題"
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
 msgid "Planning issue: this work order is scheduled before a dependency"
-msgstr ""
+msgstr "計画上の問題：この作業オーダは依存関係(前提作業)より前に予定されています"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_plastic_laminate_product_template
@@ -4522,7 +4524,7 @@ msgstr "数量は0より大きい値を指定してください。"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Please specify the produced serial numbers."
-msgstr ""
+msgstr "製造したシリアル番号を指定してください。"
 
 #. module: mrp
 #. odoo-python
@@ -4659,7 +4661,7 @@ msgstr "生産済"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Produced Quantity"
-msgstr ""
+msgstr "製造済数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
@@ -4716,7 +4718,7 @@ msgstr "プロダクトカタログプロダクトが製造オーダにありま
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Product Documents"
-msgstr ""
+msgstr "プロダクトドキュメント"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_virtual_available
@@ -5023,6 +5025,8 @@ msgid ""
 "active on the bill of materials, recording quantities will unblock the next "
 "operation."
 msgstr ""
+"この作業オーダですでに処理済みの数量。部品表で連続生産が有効な場合、数量を記"
+"録すると次の工程を開始できるようになります。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_capacity
@@ -5139,7 +5143,7 @@ msgstr "参照"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Remaining"
-msgstr ""
+msgstr "残り"
 
 #. module: mrp
 #. odoo-javascript
@@ -5150,7 +5154,7 @@ msgstr "残り日数"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Remaining Time"
-msgstr ""
+msgstr "残時間"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__remaining_time
@@ -5191,7 +5195,7 @@ msgstr "レポーティング"
 #: model:ir.actions.server,name:mrp.mrp_production_action_reserve
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Reserve"
-msgstr ""
+msgstr "引当"
 
 #. module: mrp
 #. odoo-javascript
@@ -5346,6 +5350,8 @@ msgid ""
 "Select to customise operation dependencies. When checked, operations will be "
 "in parallel by default."
 msgstr ""
+"工程の依存関係をカスタマイズする場合に選択します。チェックすると、工程は"
+"デフォルトで並行(同時)に実行されます。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
@@ -5501,6 +5507,8 @@ msgid ""
 "Some product have invalid variants.\n"
 "\t%(error_message)s"
 msgstr ""
+"一部のプロダクトに無効なバリアントがあります。\n"
+"\t%(error_message)s"
 
 #. module: mrp
 #. odoo-python
@@ -5617,7 +5625,7 @@ msgstr "開始日"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Start date"
-msgstr ""
+msgstr "開始日"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
@@ -5667,7 +5675,7 @@ msgstr "製造ルール後の在庫"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_allocation_report
 msgid "Stock Allocation Report"
-msgstr ""
+msgstr "在庫引当レポート"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_availability
@@ -5930,7 +5938,7 @@ msgstr "生産済数量は正の数にして下さい。"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_to_produce
 msgid "The quantity to produce in this workorder in the backorders chain."
-msgstr ""
+msgstr "バックオーダチェーンにおける、この作業オーダの製造予定数量。"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
@@ -6090,7 +6098,7 @@ msgstr "この生産は以下でマージされています:%s"
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "This production order has been closed."
-msgstr ""
+msgstr "この製造オーダは終了しました。"
 
 #. module: mrp
 #. odoo-python
@@ -6316,13 +6324,13 @@ msgstr "合計数量"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_backorders
 msgid "Total Remaining"
-msgstr ""
+msgstr "残数量合計"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/mrp_production_kanban/mrp_production_kanban_header.js:0
 msgid "Total Remaining Time"
-msgstr ""
+msgstr "残時間合計"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_progress_count
@@ -6332,7 +6340,7 @@ msgstr "合計仕掛中オーダ"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_view_backorders
 msgid "Total To Produce"
-msgstr ""
+msgstr "製造予定数量合計"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
@@ -6393,7 +6401,7 @@ msgstr "転送"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr ""
+msgstr "オペレーションタイプ"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
@@ -6445,6 +6453,8 @@ msgid ""
 "Uncheck this option if you want to create a draft production order on "
 "replenishment, instead of a confirmed one."
 msgstr ""
+"補充時に確定済みではなく下書きの製造オーダを作成したい場合は、このオプション"
+"のチェックを外してください。"
 
 #. module: mrp
 #. odoo-javascript
@@ -6541,7 +6551,7 @@ msgstr "部品表を更新"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Update Quantities & Validate"
-msgstr ""
+msgstr "数量を更新して最終確定"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -7283,7 +7293,7 @@ msgstr "製造オーダ"
 #. odoo-python
 #: code:addons/mrp/report/stock_allocation_report.py:0
 msgid "manufacturing orders"
-msgstr ""
+msgstr "製造オーダ"
 
 #. module: mrp
 #. odoo-python
@@ -7309,7 +7319,7 @@ msgstr "作業区ごと"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "product_qty"
-msgstr ""
+msgstr "product_qty"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.production_message

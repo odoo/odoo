@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-19 17:36+0000\n"
-"PO-Revision-Date: 2026-07-21 13:35+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-03 12:13+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_debit_note/cs/>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -28,6 +28,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"debit_origin_move_type != 'in_invoice'\">Vendor Bill</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"debit_origin_move_type != "
+"'out_invoice'\">Faktura</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"debit_origin_move_type != 'in_invoice'\">Účet dodavatele</span>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
@@ -37,12 +41,12 @@ msgstr "<span class=\"o_stat_text\">Vrubopisy</span>"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Debit Note Date</strong>"
-msgstr ""
+msgstr "<strong>Datum debetního avíza</strong>"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "<strong>Invoice Date</strong>"
-msgstr ""
+msgstr "<strong>Datum faktury</strong>"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
@@ -52,22 +56,22 @@ msgstr "Průvodce přidáním vrubopisu"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Debit Note"
-msgstr ""
+msgstr "Zrušené debetní avízo"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "Zrušená faktura"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Debit Note"
-msgstr ""
+msgstr "Zrušené proforma debetní avízo"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Cancelled Proforma Invoice"
-msgstr ""
+msgstr "Zrušená proforma faktura"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_journal__debit_sequence
@@ -132,7 +136,7 @@ msgstr "Vrubopisy"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_move_type
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_origin_move_type
 msgid "Debit Origin Move Type"
-msgstr ""
+msgstr "Původ debetu typ převodu"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_journal__debit_sequence
@@ -149,22 +153,22 @@ msgstr "Zobrazovací název"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Debit Note"
-msgstr ""
+msgstr "Návrh debetního avíza"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Návrh faktury"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Debit Note"
-msgstr ""
+msgstr "Návrh vzorového debetního avíza"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Draft Proforma Invoice"
-msgstr ""
+msgstr "Návrh proforma faktury"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__id
@@ -191,13 +195,13 @@ msgstr ""
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Invoices"
-msgstr ""
+msgstr "Faktury"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
@@ -249,12 +253,12 @@ msgstr "Původní opravovaná faktura"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Debit Note"
-msgstr ""
+msgstr "Proforma debetní avízo"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.report_invoice_document_inherit_debit_note
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "Proforma faktura"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
@@ -284,7 +288,7 @@ msgstr "Použít konkrétní účetní deník"
 #. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 msgid "Vendor Bills"
-msgstr ""
+msgstr "Přijaté faktury"
 
 #. module: account_debit_note
 #. odoo-python

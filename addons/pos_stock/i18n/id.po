@@ -1,14 +1,15 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_stock
+# * pos_stock
 #
+# "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-07-21 01:55+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-08-31 17:41+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
 "pos_stock/id/>\n"
 "Language: id\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_stock
 #. odoo-python
@@ -28,50 +29,55 @@ msgid ""
 "method to ensure that even the smallest quantity in the original unit does "
 "not round down to zero in the target unit."
 msgstr ""
+"\n"
+"Masalah ini terjadi karena kuantitas menjadi nol setelah pembulatan pada "
+"konversi. Untuk memperbaikinya, sesuaikan faktor konversi atau metode "
+"pembulatan untuk memastikan kuantitas terkecil di unit awal tidak dibulatkan "
+"ke bawah menjadi nol di unit target."
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/stock_move.py:0
 msgid " - From \"%(uom_from)s\" to \"%(uom_to)s\""
-msgstr ""
+msgstr " - Dari \"%(uom_from)s\" sampai \"%(uom_to)s\""
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/stock_warehouse.py:0
 msgid "%(name)s Picking POS"
-msgstr ""
+msgstr "%(name)s Picking POS"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "(as of opening)"
-msgstr ""
+msgstr "(per pembukaan)"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
 msgid "<span>Expected delivery:</span>"
-msgstr ""
+msgstr "<span>Perkiraan pengiriman:</span>"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Allow Ship Later"
-msgstr ""
+msgstr "Izinkan Pengiriman Nanti"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Apply"
-msgstr ""
+msgstr "Terapkan"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__picking_policy__direct
 msgid "As soon as possible, with back orders"
-msgstr ""
+msgstr "Secepatnya, dengan back order"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing"
-msgstr ""
+msgstr "Pada sesi closing"
 
 #. module: pos_stock
 #: model:ir.model.fields,help:pos_stock.field_res_company__point_of_sale_update_stock_quantities
@@ -81,22 +87,25 @@ msgid ""
 "it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
+"Pada sesi closing: Picking dibuat untuk seluruh sesi saat ditutup\n"
+" Secara real time: Setiap order yang dikirim ke server membuat pickingnya "
+"sendiri"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Perusahaan"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Pengaturan Konfig"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Confirm"
-msgstr ""
+msgstr "Konfirmasi"
 
 #. module: pos_stock
 #. odoo-python
@@ -105,34 +114,36 @@ msgid ""
 "Conversion Error: The following unit of measure conversions result in a zero "
 "quantity due to rounding:"
 msgstr ""
+"Kesalahan Konversi: Konversi satuan ukuran berikut menghasilkan kuantitas "
+"nol akibat pembulatan:"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "Create Lot/Serial number..."
-msgstr ""
+msgstr "Buat Nomor Lot/Seri..."
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Dibuat oleh"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Dibuat pada"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "DatePicker"
-msgstr ""
+msgstr "PemilihTanggal"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Buang"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_account_move__display_name
@@ -155,18 +166,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nama Tampilan"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__failed_pickings
 msgid "Failed Pickings"
-msgstr ""
+msgstr "Picking Gagal"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking_type__has_stock_reports_to_print
 msgid "Has Stock Reports To Print"
-msgstr ""
+msgstr "Memiliki Laporan Stok untuk Dicetak"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_account_move__id
@@ -189,7 +200,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_stock_rule__id
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_stock
 #: model:ir.model.fields,help:pos_stock.field_pos_config__picking_policy
@@ -199,49 +210,52 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Bila Anda mengirimkan semua produk sekaligus, surat jalan akan dijadwalkan "
+"berdasarkan waktu tunggu produk yang paling lambat. Bila tidak, akan "
+"berdasarkan waktu tunggu tercepat."
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__res_company__point_of_sale_update_stock_quantities__real
 msgid "In real time"
-msgstr ""
+msgstr "Dalam real time"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/utils/order_payment_validation.js:0
 msgid "Incorrect address for shipping"
-msgstr ""
+msgstr "Alamat pengiriman salah"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Inventory"
-msgstr ""
+msgstr "Inventaris"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Inventory Management"
-msgstr ""
+msgstr "Manajemen Inventaris"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_account_move
 msgid "Journal Entry"
-msgstr ""
+msgstr "Entri Jurnal"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Item Jurnal"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Terakhir Diperbarui oleh"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Terakhir Diperbarui pada"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -249,35 +263,35 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "Lot"
-msgstr ""
+msgstr "Lot"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__lot_name
 msgid "Lot Name"
-msgstr ""
+msgstr "Nama Lot"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial %s is expired"
-msgstr ""
+msgstr "Lot/Seri %s kedaluwarsa"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.xml:0
 msgid "Lot/Serial number"
-msgstr ""
+msgstr "Nomor Seri/Lot"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial number(s) required for"
-msgstr ""
+msgstr "Nomor lot/seri diperlukan untuk"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
-msgstr ""
+msgstr "Nomor Seri/Lot"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -285,37 +299,37 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "Lot:"
-msgstr ""
+msgstr "Lot:"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "No"
-msgstr ""
+msgstr "Tidak"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/pos_order_line.py:0
 msgid "No PoS configuration found"
-msgstr ""
+msgstr "Tidak ada konfigurasi PoS yang ditemukan"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "No existing Lot/Serial number found..."
-msgstr ""
+msgstr "Tidak ada nomor Lot/Seri ditemukan..."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "No existing serial/lot number"
-msgstr ""
+msgstr "Tidak ada nomor seri/lot yang tersedia"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "On hand:"
-msgstr ""
+msgstr "Di tangan:"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__picking_type_id
@@ -323,34 +337,34 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_picking_type_id
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Operation Type"
-msgstr ""
+msgstr "Tipe Operasi"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr ""
+msgstr "Tipe operasi muncul di dashboard Inventaris."
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__order_id
 msgid "Order Ref"
-msgstr ""
+msgstr "Ref Order"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__picking_ids
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__picking_ids
 msgid "Picking"
-msgstr ""
+msgstr "Picking"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__picking_count
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__picking_count
 msgid "Picking Count"
-msgstr ""
+msgstr "Jumlah Picking"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr ""
+msgstr "Tipe Picking"
 
 #. module: pos_stock
 #. odoo-python
@@ -359,85 +373,85 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:pos_stock.view_pos_session_form
 msgid "Pickings"
-msgstr ""
+msgstr "Picking"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:pos_stock.field_stock_reference__pos_order_ids
 msgid "PoS Orders"
-msgstr ""
+msgstr "Order POS"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "Konfigurasi POS"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__pos_type_id
 msgid "Point of Sale Operation Type"
-msgstr ""
+msgstr "Tipe Operasi POS"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order
 msgid "Point of Sale Order"
-msgstr ""
+msgstr "Order POS"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order_line
 msgid "Point of Sale Order Line"
-msgstr ""
+msgstr "Baris Order POS"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Pembuat Struk Order POS"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_session
 msgid "Point of Sale Session"
-msgstr ""
+msgstr "Sesi POS"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr ""
+msgstr "Order POS"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr ""
+msgstr "Baris Order POS"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_stock_picking__pos_session_id
 msgid "Pos Session"
-msgstr ""
+msgstr "Sesi POS"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_template
 #: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__product_id
 msgid "Product"
-msgstr ""
+msgstr "Produk"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Kategori Produk"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__stock_reference_ids
 msgid "Reference"
-msgstr ""
+msgstr "Referensi"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Referensi antara dokumen stok"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_product_removal
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Kebijakan Pengambilan"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -445,7 +459,7 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "SN"
-msgstr ""
+msgstr "NS"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -453,30 +467,30 @@ msgstr ""
 #: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order.js:0
 msgid "SN:"
-msgstr ""
+msgstr "NS:"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Select the shipping date"
-msgstr ""
+msgstr "Pilih tanggal pengiriman"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Selected date cannot be in the past."
-msgstr ""
+msgstr "Tanggal yang dipilih tidak boleh ada di masa lalu."
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Sell products and deliver them later."
-msgstr ""
+msgstr "Jual produk dan kirimkan nanti."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Server communication problem"
-msgstr ""
+msgstr "Masalah komunikasi server"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -484,73 +498,73 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__ship_later
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_ship_later
 msgid "Ship Later"
-msgstr ""
+msgstr "Kirimkan Nanti"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "Tanggal Pengiriman"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__picking_policy
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_picking_policy
 msgid "Shipping Policy"
-msgstr ""
+msgstr "Kebijakan Pengiriman"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "Beberapa Nomor Seri/Lot tidak ada"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Specific route"
-msgstr ""
+msgstr "Rute spesifik"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__route_id
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_route_id
 msgid "Specific route for products delivered later."
-msgstr ""
+msgstr "Rute spesifik untuk produk yang dikirimkan nanti."
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_pos_pack_operation_lot
 msgid "Specify product lot/serial number in pos order line"
-msgstr ""
+msgstr "Tentukan nomor seri/lot produk di baris order pos"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Pergerakan Stok"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Peraturan Stok"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__update_stock_at_closing
 msgid "Stock should be updated at closing"
-msgstr ""
+msgstr "Stok harus diperbarui saat closing"
 
 #. module: pos_stock
 #. odoo-python
 #: code:addons/pos_stock/models/pos_order.py:0
 msgid "Stock variation for %s"
-msgstr ""
+msgstr "Variasi stok untuk %s"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "The Lot/Serial number is already added."
-msgstr ""
+msgstr "Nomor Lot/Seri sudah ditambahkan."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/select_lot_popup/select_lot_popup.js:0
 msgid "The Lot/Serial number is not valid"
-msgstr ""
+msgstr "Nomor Lot/Seri tidak valid"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -559,12 +573,14 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"Nomor seri/lot yang tersedia tidak dapat ditemukan. \n"
+"Lanjutkan tanpa memeriksa validitas nomor seri/lot?"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/utils/order_payment_validation.js:0
 msgid "The selected customer needs an address."
-msgstr ""
+msgstr "Pelanggan yang dipilih membutuhkan alamat."
 
 #. module: pos_stock
 #. odoo-javascript
@@ -573,18 +589,20 @@ msgid ""
 "There is no serial/lot number for the selected product, and their creation "
 "is not allowed from the Point of Sale app."
 msgstr ""
+"Tidak ada nomor seri/lot untuk produk yang terpilih, dan pembuatannya tidak "
+"diizinkan dari aplikasi POS."
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__update_stock_quantities
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Update quantities in stock"
-msgstr ""
+msgstr "Perbarui kuantitas stok"
 
 #. module: pos_stock
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
@@ -592,35 +610,37 @@ msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
 msgstr ""
+"Digunakan untuk mencatat picking produk. Produk dikurangi dari lokasi sumber "
+"defaultnya."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/date_picker_popup/date_picker_popup.js:0
 msgid "Validation Error"
-msgstr ""
+msgstr "Kesalahan Validasi"
 
 #. module: pos_stock
 #: model:ir.model,name:pos_stock.model_stock_warehouse
 #: model:ir.model.fields,field_description:pos_stock.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:pos_stock.res_config_settings_view_form
 msgid "Warehouse"
-msgstr ""
+msgstr "Gudang"
 
 #. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_res_config_settings__pos_warehouse_id
 msgid "Warehouse (PoS)"
-msgstr ""
+msgstr "Gudang (POS)"
 
 #. module: pos_stock
 #: model:ir.model.fields.selection,name:pos_stock.selection__pos_config__picking_policy__one
 msgid "When all products are ready"
-msgstr ""
+msgstr "Ketika semua produk siap"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid "Yes"
-msgstr ""
+msgstr "Ya"
 
 #. module: pos_stock
 #. odoo-javascript
@@ -630,6 +650,9 @@ msgid ""
 "are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
+"Anda sedang mencoba menjual produk dengan nomor seri/lot, tapi beberapa "
+"belum diberi nomor.\n"
+"Yakin ingin tetap melanjutkan?"
 
 #. module: pos_stock
 #. odoo-python
@@ -638,17 +661,19 @@ msgid ""
 "You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
 "(config)s'."
 msgstr ""
+"Anda tidak dapat mengarsip '%(picking_type)s' karena digunakan oleh "
+"konfigurasi POS '%(config)s'."
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "available,"
-msgstr ""
+msgstr "tersedia,"
 
 #. module: pos_stock
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 #: code:addons/pos_stock/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "forecasted"
-msgstr ""
+msgstr "diperkirakan"

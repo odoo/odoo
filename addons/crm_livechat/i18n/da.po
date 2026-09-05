@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-08-07 13:59+0000\n"
+"PO-Revision-Date: 2026-09-04 09:16+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s19-4/"
 "crm_livechat/da/>\n"
@@ -22,18 +22,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: crm_livechat
 #. odoo-python
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 msgid "%s's New Lead"
-msgstr "%ss nye kundeemne"
+msgstr "Nyt lead fra %s"
 
 #. module: crm_livechat
 #: model_terms:ir.ui.view,arch_db:crm_livechat.crm_lead_view_form
 msgid "<span class=\"o_stat_text\">View Live Chat</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Vis livechat</span>"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_chatbot_script
@@ -50,13 +50,13 @@ msgstr "Chatbot-script-trin"
 #: code:addons/crm_livechat/static/src/core/thread_actions.js:0
 #: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
 msgid "Create Lead"
-msgstr "Opret kundeemne"
+msgstr "Opret lead"
 
 #. module: crm_livechat
 #. odoo-javascript
 #: code:addons/crm_livechat/static/src/core/channel_commands.js:0
 msgid "Create a new lead (/lead lead title)"
-msgstr "Opret et nyt kundeemne (/titel på kundeemne)"
+msgstr "Opret et nyt lead (/titel på lead)"
 
 #. module: crm_livechat
 #. odoo-python
@@ -65,6 +65,8 @@ msgid ""
 "Create a new lead with: %(pre_start)s%(lead_command)s %(i_start)slead title%"
 "(i_end)s%(pre_end)s"
 msgstr ""
+"Opret et nyt lead med: %(pre_start)s%(lead_command)s %(i_start)s leadtitel%"
+"(i_end)s%(pre_end)s"
 
 #. module: crm_livechat
 #: model:ir.model,website_form_label:crm_livechat.model_crm_lead
@@ -89,12 +91,12 @@ msgstr "Visningsnavn"
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
 msgid "Generated Lead Count"
-msgstr "Antal genererede kundeemner"
+msgstr "Antal genererede leads"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__has_crm_lead
 msgid "Has Crm Lead"
-msgstr "Har CRM-kundeemne"
+msgstr "Har CRM-lead"
 
 #. module: crm_livechat
 #: model_terms:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
@@ -119,28 +121,28 @@ msgstr "ID"
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_crm_lead
 msgid "Lead"
-msgstr "Kundeemne"
+msgstr "Lead"
 
 #. module: crm_livechat
 #: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
 msgid "Lead Generation Bot"
-msgstr "Bot til generering af kundeemne"
+msgstr "Bot til generering af lead"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_discuss_channel__lead_ids
 #: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
 msgid "Leads"
-msgstr "Kundeemner"
+msgstr "Leads"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_im_livechat_report_channel__leads_created
 msgid "Leads created"
-msgstr "Oprettede kundeemner"
+msgstr "Oprettede leads"
 
 #. module: crm_livechat
 #: model:ir.model.fields,field_description:crm_livechat.field_crm_lead__origin_channel_id
 msgid "Live chat from which the lead was created"
-msgstr "Livechat, hvorfra kundeemner er oprettet"
+msgstr "Livechat, hvorfra leads er oprettet"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_im_livechat_report_channel
@@ -171,7 +173,7 @@ msgstr "Tak, du hører fra os snarest!"
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_discuss_channel__lead_ids
 msgid "The channel becomes accessible to sales users when leads are set."
-msgstr "Salgsbrugere får adgang til kanalen, når der er oprettet kundeemner."
+msgstr "Salgsbrugere får adgang til kanalen, når der er oprettet leads."
 
 #. module: crm_livechat
 #: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
@@ -180,7 +182,7 @@ msgid ""
 "assign the created lead/opportunity to the defined team"
 msgstr ""
 "Anvendes i kombination med trin-typen 'create_lead' til automatisk tildeling "
-"af oprettede kundeemner/salgsmuligheder til det specifikke team"
+"af oprettede leads/salgsmuligheder til det specifikke team"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_res_users
@@ -198,8 +200,7 @@ msgstr "Har du noget imod at give os din e-mailadresse, så vi kan kontakte dig?
 #: code:addons/crm_livechat/models/crm_lead.py:0
 msgid "You cannot create leads linked to channels you don't have access to."
 msgstr ""
-"Du kan ikke oprette kundeemner knyttet til kanaler, som du ikke har adgang "
-"til."
+"Du kan ikke oprette leads knyttet til kanaler, som du ikke har adgang til."
 
 #. module: crm_livechat
 #. odoo-python
@@ -207,14 +208,14 @@ msgstr ""
 msgid ""
 "You cannot update a lead and link it to a channel you don't have access to."
 msgstr ""
-"Du kan ikke opdatere et kundeemne og knytte det til en kanal, som du ikke "
-"har adgang til."
+"Du kan ikke opdatere et lead og knytte det til en kanal, som du ikke har "
+"adgang til."
 
 #. module: crm_livechat
 #. odoo-python
 #: code:addons/crm_livechat/models/discuss_channel.py:0
 msgid "created a new lead: %s"
-msgstr ""
+msgstr "har oprettet et nyt lead: %s"
 
 #. module: crm_livechat
 #. odoo-javascript
@@ -226,4 +227,4 @@ msgstr "f.eks. produktpriser"
 #. odoo-python
 #: code:addons/crm_livechat/models/chatbot_script_step.py:0
 msgid "livechat discussion"
-msgstr ""
+msgstr "livechatdiskussion"
