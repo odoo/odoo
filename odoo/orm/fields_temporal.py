@@ -194,12 +194,6 @@ class Date(BaseDate[date]):
         return value.strftime(DATE_FORMAT) if value else False
 
     def convert_to_cache(self, value, records, validate=True):
-        if not value:
-            return None
-        if isinstance(value, datetime):
-            # TODO: better fix data files (crm demo data)
-            value = value.date()
-            # raise TypeError("%s (field %s) must be string or date, not datetime." % (value, self))
         return self.to_date(value)
 
     def convert_to_export(self, value, record):
@@ -266,8 +260,8 @@ class Datetime(BaseDate[datetime]):
                 return value
             return datetime.combine(value, time.min)
 
-        # TODO: fix data files
-        return datetime.strptime(value, DATETIME_FORMAT[:len(value)-2])
+        # support providing a partial value like "2020-04"
+        return datetime.strptime(value, DATETIME_FORMAT[:len(value) - 2])
 
     # kept for backwards compatibility, but consider `from_string` as deprecated, will probably
     # be removed after V12
