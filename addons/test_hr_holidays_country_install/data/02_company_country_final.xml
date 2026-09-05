@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Step 3 of the reproducer, and the line that fails. Stands in for a
+             downstream module configuring the company from its own data file
+             (legal name, VAT, fiscal regime, country). The write reaches
+             _check_country_change_holidays, which finds the allocation created
+             in step 2 and raises, aborting the installation.
+
+             Nothing here is a user action: this runs inside the data loader,
+             with install_mode in the context. -->
+        <record id="base.main_company" model="res.company">
+            <field name="country_id" ref="base.be"/>
+        </record>
+    </data>
+</odoo>

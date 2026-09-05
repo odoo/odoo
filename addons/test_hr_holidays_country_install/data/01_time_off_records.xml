@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Step 2 of the reproducer. Stands in for hr_holidays' own demo data,
+             which creates leave types the same way: no explicit country, so the
+             field default (env.company.country_id) pins them to the country set
+             in step 1. See addons/hr_holidays/data/hr_holidays_demo.xml, records
+             hr_holiday_status_dv and holiday_status_training. -->
+        <record id="leave_type_reproducer" model="hr.leave.type">
+            <field name="name">Reproducer Time Off</field>
+            <field name="requires_allocation">True</field>
+            <field name="leave_validation_type">no_validation</field>
+            <field name="allocation_validation_type">no_validation</field>
+        </record>
+
+        <!-- The employee only exists to give the allocation a company: the
+             constraint filters on hr.leave.allocation.employee_company_id. -->
+        <record id="employee_reproducer" model="hr.employee">
+            <field name="name">Reproducer Employee</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- The constraint looks at hr.leave and hr.leave.allocation alike; an
+             allocation is used because it needs no working-schedule arithmetic
+             to be created from a data file. -->
+        <record id="allocation_reproducer" model="hr.leave.allocation">
+            <field name="name">Reproducer Allocation</field>
+            <field name="holiday_status_id" ref="leave_type_reproducer"/>
+            <field name="employee_id" ref="employee_reproducer"/>
+            <field name="number_of_days">5</field>
+            <field name="state">confirm</field>
+            <field name="date_from" eval="time.strftime('%Y-01-01')"/>
+            <field name="date_to" eval="time.strftime('%Y-12-31')"/>
+        </record>
+    </data>
+</odoo>
