@@ -257,7 +257,7 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
             'partner_ids': [(4, partner.id)],
         })
         with self.assertRaises(ValidationError):
-            event._sync_odoo2microsoft(MicrosoftCal)
+            event._sync_odoo2microsoft()
 
     def test_cancel_occurence_of_recurrent_event(self):
         """ The user is invited to a recurrent event. When synced, all events are present, there are three occurrences:
