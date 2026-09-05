@@ -1327,6 +1327,14 @@ class TestChannelInternals(MailCommon, HttpCase):
             },
         )
 
+    def test_channel_self_join_no_push_notification(self):
+        """When a user joins a channel via the Join button themselves, they
+        should NOT receive push notification"""
+        self._setup_push_devices_for_partners(self.partner_employee)
+        with self.mock_push_to_end_point():
+            self.test_channel.with_user(self.user_employee).channel_join()
+        self.push_to_end_point_mocked.assert_not_called()
+
     def test_notify_typing_channel_not_found_should_not_crash(self):
         """channel can be deleted while someone is still typing in it.
         When that happens, notify_typing must not crash for the missing channel.
