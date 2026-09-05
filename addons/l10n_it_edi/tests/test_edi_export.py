@@ -514,8 +514,8 @@ class TestItEdiExport(TestItEdi):
         for amount in (50, 100):
             self.env['account.move'].with_company(self.company).browse(
                 self.env['sale.advance.payment.inv'].sudo().create([{
-                    'advance_payment_method': 'fixed',
-                    'fixed_amount': amount,
+                    'advance_payment_method': 'downpayment',
+                    'amount': amount,
                     'sale_order_ids': [Command.link(sale_order.id)],
                 }]).create_invoices()['res_id']
             ).action_post()
