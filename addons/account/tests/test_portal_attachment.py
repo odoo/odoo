@@ -321,3 +321,44 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(len(messages), 3)
         self.assertEqual(messages[0].body, "<p>test message 3</p>")
         self.assertEqual(len(messages[0].attachment_ids), 1)
+
+    @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
+    def test_02_delete_attachment_access_rights(self):
+        # Remove delete (unlink) attachment access from all rules
+        attachment_access_rules = self.env['ir.model.access'].search([
+            ('model_id', '=', self.env['ir.model'].search([("model", "=", "ir.attachment")]).id)
+        ])
+        attachment_access_rules.perm_unlink = False
+
+        attachment = self.env['ir.attachment'].create({
+            'res_model': 'account.move',
+            'res_id': self.out_invoice.id,
+            'name': 'attachment',
+        })
+
+        self.authenticate(self.env.user.login, self.env.user.password)
+        self.url_open(
+            url=f"{self.invoice_base_url}/mail/attachment/delete",
+            json={
+                "params": {
+                    "csrf_token": http.Request.csrf_token(self),
+                    "attachment_id": attachment.id,
+                }
+            },
+        )
+        # Assert that attachment wasn't deleted
+        self.assertTrue(attachment.exists())
+
+        # Add delete access back again
+        attachment_access_rules.perm_unlink = True
+        self.url_open(
+            url=f"{self.invoice_base_url}/mail/attachment/delete",
+            json={
+                "params": {
+                    "csrf_token": http.Request.csrf_token(self),
+                    "attachment_id": attachment.id,
+                }
+            },
+        )
+        # Assert that attachment is deleted
+        self.assertFalse(attachment.exists())
