@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Action for 'seller.shop' model  -->
+    <record id="seller_shop_action" model="ir.actions.act_window">
+        <field name="name">Seller Shop</field>
+        <field name="res_model">seller.shop</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Seller Shop</p>
+        </field>
+    </record>
+    <!--    Form view-->
+    <record id="seller_shop_view_form" model="ir.ui.view">
+        <field name="name">seller.shop.view.form</field>
+        <field name="model">seller.shop</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="approve_request" class="oe_highlight"
+                            type="object"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                            string="Approve"
+                            attrs="{'invisible': [('state', '=', 'Approved')]}"/>
+                    <button name="reject_request" class="oe_highlight"
+                            type="object"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                            string="Reject"
+                            attrs="{'invisible': [('state', '=', 'Denied')]}"/>
+                    <button name="cancel"
+                            groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+                            string="Cancel" special="cancel"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="Pending for Approval,Approved,Denied"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_toggle_is_published"
+                                attrs="{'invisible': [('is_publish', '=', False)]}"
+                                class="oe_stat_button"
+                                type="object"
+                                icon="fa-globe">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-success">Published</span>
+                            </div>
+                        </button>
+                        <button name="action_toggle_is_published"
+                                attrs="{'invisible': [('is_publish', '=', True)]}"
+                                class="oe_stat_button"
+                                type="object"
+                                icon="fa-eye-slash">
+                            <div class="o_stat_info o_field_widget">
+                                <span class="text-danger">Unpublished</span>
+                            </div>
+                        </button>
+                    </div>
+                    <b>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </b>
+                    <group>
+                        <group>
+                            <field name="shop_url"/>
+                            <field name="shop_banner" widget="image"/>
+                            <field name="tag_line"/>
+                            <field name="description"/>
+                            <field name="seller_id"/>
+                        </group>
+                        <group>
+                            <field name="address"/>
+                            <field name="phone"/>
+                            <field name="mobile_number"/>
+                            <field name="email"/>
+                            <field name="fax"/>
+                            <field name="is_publish" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Product">
+                            <field name="product_ids">
+                                <kanban default_group_by="state">
+                                    <field name="state"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="oe_kanban_card oe_kanban_global_click">
+                                                <div class="o_kanban_image me-1">
+                                                    <field name="image_1920"
+                                                           widget="image"/>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <div class="o_kanban_record_top mb-0">
+                                                        <div class="o_kanban_record_headings">
+                                                            <strong class="o_kanban_record_title">
+                                                                <field name="name"/>
+                                                            </strong>
+                                                        </div>
+                                                    </div>
+                                                    <div name="product_lst_price"
+                                                         class="mt-1">
+                                                        Price:
+                                                        <field name="list_price"
+                                                               widget="monetary"/>
+                                                    </div>
+                                                    State:
+                                                    <field name="state"/>
+                                                    <div>
+                                                        Seller
+                                                        <field name="seller_id"/>
+                                                    </div>
+                                                    <div>
+                                                        quantity:
+                                                        <field name="initial_qty"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                        <page name="Terms &amp; condition">
+                            <span>its a demo terms and condition :-->
+                                Use of this site is provided by Demos
+                                subject to the following Terms and
+                                Conditions:
+                                1. Your use constitutes acceptance of these
+                                Terms and Conditions as at the date of your
+                                first use of the site.
+                                2. Demos reserves the rights to change
+                                these Terms and Conditions at any time by
+                                posting changes online. Your continued use
+                                of this site after changes are posted
+                                constitutes your acceptance of this
+                                agreement as modified.
+                                3. You agree to use this site only for
+                                lawful purposes, and in a manner which does
+                                not infringe the rights, or restrict, or
+                                inhibit the use and enjoyment of the site
+                                by any third party.
+                                4. This site and the information, names,
+                                images, pictures, logos regarding or
+                                relating to Demos are provided “as is”
+                                without any representation or endorsement
+                                made and without warranty of any kind
+                                whether express or implied. In no event
+                                will Demos be liable for any damages
+                                including, without limitation, indirect or
+                                consequential damages, or any damages
+                                whatsoever arising from the use or in
+                                connection with such use or loss of use of
+                                the site, whether in contract or in
+                                negligence.
+                                5. Demos does not warrant that the
+                                functions contained in the material
+                                contained in this site will be
+                                uninterrupted or error free, that defects
+                                will be corrected, or that this site or the
+                                server that makes it available are free of
+                                viruses or bugs or represents the full
+                                functionality, accuracy and reliability of
+                                the materials.
+                                6. Copyright restrictions: please refer to
+                                our Creative Commons license terms
+                                governing the use of material on this site.
+                                7. Demos takes no responsibility for the
+                                content of external Internet Sites.
+                                8. Any communication or material that you
+                                transmit to, or post on, any public area of
+                                the site including any data, questions,
+                                comments, suggestions, or the like, is, and
+                                will be treated as, non-confidential and
+                                non-proprietary information.
+                                9. If there is any conflict between these
+                                Terms and Conditions and rules and/or
+                                specific terms of use appearing on this
+                                site relating to specific material then the
+                                latter shall prevail.
+                                10. These terms and conditions shall be
+                                governed and construed in accordance with
+                                the laws of England and Wales. Any disputes
+                                shall be subject to the exclusive
+                                jurisdiction of the Courts of England and
+                                Wales.
+                                11. If these Terms and Conditions are not
+                                accepted in full, the use of this site must
+                                be terminated immediately.
+                            </span>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--    Kanban view-->
+    <record id="seller_shop_view_kanban" model="ir.ui.view">
+        <field name="name">seller.shop.view.kanban</field>
+        <field name="model">seller.shop</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban">
+                <field name="name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click"
+                             style="float: left; min-width: 50%; min-height: 48mm; border: 1px solid black">
+                            <strong class="o_kanban_record_title">
+                                <h1>
+                                    <field name="name"/>
+                                </h1>
+                                <br></br>
+                            </strong>
+                            <div class="o_kanban_image me-1">
+                                <field name="shop_banner" widget="image"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <div name="seller_id" class="mt-1">
+                                    Seller:
+                                    <field name="seller_id"/>
+                                    <div name="total product"
+                                         class="mt-1">
+                                        Total Product:
+                                        <field name="product_count"/>
+                                    </div>
+                                    <div class="o_kanban_image"
+                                         style="position:absolute;left:280px;">
+                                        <field name="seller_image"
+                                               widget="image"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!--    Seller shop menu-->
+    <menuitem id="seller_shop" parent="seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_admin"
+              name="Seller Shop" sequence="15"
+              action="seller_shop_action"/>
+    <!--    My Shop menu-->
+    <menuitem id="my_shop" parent="seller"
+              groups="multi_vendor_marketplace.multi_vendor_marketplace_seller"
+              name="My Shop" sequence="15"
+              action="seller_shop_action"/>
+</odoo>

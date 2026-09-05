@@ -1,0 +1,182 @@
+@media (max-width: 768px) {
+  .navbar-toggler {
+    display: none !important;
+  }
+
+  /* Completely hide desktop navigation icons on mobile */
+  .desktop-nav-icons, 
+  .desktop-nav-icons.d-flex,
+  div[class*="desktop-nav-icons"],
+  .mobile-hidden-force {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  /* Ensure search takes full width */
+  .o_wsale_products_searchbar_form,
+  .products_header .o_wsale_products_searchbar_form,
+  .products_header form {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Mobile bottom navigation styling */
+  .mobile-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background: #fff;
+    border-top: 1px solid #f1f1f1;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 56px;
+    box-shadow: 0 -1px 4px rgba(0,0,0,0.05);
+    padding: 0;
+  }
+  .mobile-bottom-nav .nav-btns {
+    display: flex;
+    flex: 1 1 0;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+  }
+  .mobile-bottom-nav .nav-btn {
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 48px;
+  }
+  .mobile-bottom-nav .nav-btn i {
+    font-size: 22px;
+    color: #888;
+    transition: color 0.2s;
+    background: none;
+    padding: 0;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-bottom-nav .nav-btn.active i {
+    color: #ff6600;
+    background: none;
+  }
+  .mobile-bottom-nav .nav-btn span {
+    display: none !important;
+  }
+  .mobile-bottom-nav .mobile-search {
+    display: none !important;
+  }
+
+  .btn-light.position-relative.ms-3.d-lg-none {
+    display: none !important;
+  }
+
+  /* Fix for mobile product detail page */
+  #product_detail .container,
+  #product_detail .row,
+  #product_detail [class*="col-"],
+  #product_detail .product-detail-main,
+  #product_detail .product_detail_img,
+  #product_detail .js_product {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Constrain product images and galleries */
+  #product_detail .product_detail_img img,
+  #product_detail .o_wsale_product_images img,
+  #product_detail .carousel-inner,
+  #product_detail .carousel-item,
+  #product_detail .carousel-item img,
+  #product_detail .ecommerce-gallery img {
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* Fix product variant selection */
+  #product_detail .js_add_cart_variants,
+  #product_detail .css_attribute_color,
+  #product_detail .variant_attribute,
+  #product_detail .js_product form,
+  #product_detail .product_price,
+  #product_detail .oe_price {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Fix for the action buttons row */
+  #product_detail .action-buttons,
+  #product_detail .action-buttons > *,
+  #product_detail .css_quantity {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  /* Fix product description and specification sections */
+  #product_detail .o_wsale_product_information_text,
+  #product_detail #product_specifications,
+  #product_detail .tab-pane,
+  #product_detail .nav-tabs {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Fix any popup or modal dialogs */
+  #product_detail .modal-dialog {
+    width: 95% !important;
+    max-width: 95% !important;
+    margin: 0 auto !important;
+  }
+
+  /* Make sure all content is center aligned properly */
+  #product_detail .container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  /* Product page body container */
+  body.product_details_page {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+}
+
+/* Additional media query to ensure desktop nav shows properly on larger screens */
+@media (min-width: 769px) {
+  .desktop-nav-icons.d-md-flex {
+    display: flex !important;
+  }
+}
