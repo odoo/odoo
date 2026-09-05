@@ -208,7 +208,7 @@ class StockLot(models.Model):
         return vals_list
 
     @api.depends('quant_ids', 'quant_ids.quantity')
-    @api.depends_context('owner_id', 'package_id', 'to_date', 'location', 'warehouse_id', 'allowed_company_ids')
+    @api.depends_context('owners', 'owner_id', 'package_id', 'to_date', 'location', 'warehouse_id', 'allowed_company_ids')
     def _product_qty(self):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self.env['product.product'].with_context(skip_in_progress=True)._get_domain_locations()
         owner_id = self.env.context.get('owner_id')
@@ -220,6 +220,16 @@ class StockLot(models.Model):
             domain_quant &= Domain([('owner_id', '=', owner_id)])
             domain_move_in_loc &= Domain([('owner_id', '=', owner_id)])
             domain_move_out_loc &= Domain([('owner_id', '=', owner_id)])
+        elif 'owners' in self.env.context:
+            owners = self.env.context['owners']
+            if owners:
+                domain_quant &= Domain([('owner_id', 'in', owners)])
+                domain_move_in_loc &= Domain([('owner_id', 'in', owners)])
+                domain_move_out_loc &= Domain([('owner_id', 'in', owners)])
+            else:
+                domain_quant &= Domain([('owner_id', '=', False)])
+                domain_move_in_loc &= Domain([('owner_id', '=', False)])
+                domain_move_out_loc &= Domain([('owner_id', '=', False)])
         if package_id is not None:
             domain_quant &= Domain([('package_id', '=', package_id)])
         quant_qty_by_lot = dict(self.env['stock.quant']._read_group(domain_quant, ['lot_id'], ['quantity:sum']))
