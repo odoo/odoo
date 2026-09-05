@@ -8,7 +8,7 @@ import {
     enableTransitions,
     runAllTimers,
 } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, xml, proxy, useProps } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -25,7 +25,7 @@ import { Tour, TourStep } from "./tour_models";
 describe.current.tags("desktop");
 
 class Counter extends Component {
-    static props = ["*"];
+    props = useProps();
     static template = xml/*html*/ `
         <div class="counter">
             <div class="interval">
@@ -87,7 +87,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     });
     enableTransitions();
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
@@ -166,7 +166,7 @@ test("should show only 1 pointer at a time", async () => {
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <t>
@@ -204,7 +204,7 @@ test("hovering to the anchor element should show the content and not when conten
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <t>
@@ -252,7 +252,7 @@ test("pointer is added on top of overlay's stack", async () => {
     ];
     Tour._records = [{ name: "tour1" }];
     class DummyDialog extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Dialog };
         static template = xml`
             <Dialog>
@@ -262,7 +262,7 @@ test("pointer is added on top of overlay's stack", async () => {
         `;
     }
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = {};
         static template = xml``;
     }
@@ -297,7 +297,7 @@ test("next step with new anchor at same position", async () => {
     });
 
     class Dummy extends Component {
-        static props = ["*"];
+        props = useProps();
         state = proxy({ bool: true });
         static template = xml/*html*/ `
             <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
@@ -305,7 +305,7 @@ test("next step with new anchor at same position", async () => {
         `;
     }
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Dummy };
         static template = xml/*html*/ `
             <t>
@@ -356,7 +356,7 @@ test("points to next step", async () => {
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml`
             <t>
@@ -384,7 +384,7 @@ test("scroller pointer to reach next step", async () => {
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <div class="scrollable-parent" style="overflow-y: scroll; height: 150px;">
@@ -442,7 +442,7 @@ test("scroller pointer to reach next step (X axis)", async () => {
         ],
     });
     class Root extends Component {
-        static props = ["*"];
+        props = useProps();
         static components = { Counter };
         static template = xml/*html*/ `
             <div class="scrollable-parent d-flex flex-row" style="overflow-x: scroll; width: 300px;">
@@ -521,7 +521,7 @@ test("check tooltip position", async () => {
                 </div>
             </t>
         `;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Root);
     let tooltip, content;
@@ -609,7 +609,7 @@ test("check drop zone", async () => {
                 </div>
             </t>
         `;
-        static props = ["*"];
+        props = useProps();
     }
     await mountWithCleanup(Root);
     await getService("tour_service").startTour("tour_des_drag_and_drop", { mode: "manual" });
