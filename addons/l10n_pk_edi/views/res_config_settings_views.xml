@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_pk_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block id="pakistan_localization" title="Pakistan Electronic Invoicing (FBR)" invisible="country_code != 'PK'">
+                    <div class="content-group">
+                        <setting company_dependent="1" string="Enable Electronic Invoicing">
+                            <field name="l10n_pk_edi_enable"/>
+                        </setting>
+                        <div invisible="not l10n_pk_edi_enable">
+                            <div class="col d-flex justify-content-between mb-3">
+                                <label for="l10n_pk_edi_iap_server_ip" class="col-3"/>
+                                <div class="col d-flex">
+                                    <field name="l10n_pk_edi_iap_server_ip" class="w-50"/>
+                                    <button name="action_refresh_iap_server_ip" type="object" class="btn btn-link p-0" title="Fetch IP">
+                                        <i role="img" aria-label="Fetch now" class="oi oi-fw" data-icon="refresh"/>
+                                    </button>
+                                </div>
+                            </div>
+                            <div invisible="l10n_pk_edi_whitelisted">
+                                <div class="mb-3">
+                                    <field name="l10n_pk_edi_test_vat" class="w-50" placeholder="Enter Business Identification Number"/>
+                                </div>
+                                <div class="mb-3">
+                                    <field name="l10n_pk_edi_test_auth_token" password="True" class="w-50" placeholder="Enter Sandbox Token"/>
+                                </div>
+                                <div class="mb-3">
+                                    <button name="action_l10n_pk_edi_run_sandbox_tests" type="object" string="Whitelist IP" class="btn btn-primary w-25" title="Verify Business Identification Number registration then run the FBR Sandbox scenarios"/>
+                                </div>
+                            </div>
+                            <field name="l10n_pk_edi_production_auth_token" class="w-50" password="True" placeholder="Enter Production Token"/>
+                        </div>
+                    </div>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
