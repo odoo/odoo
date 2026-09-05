@@ -1236,7 +1236,7 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSApplyDownpaymentWithExtraLine', login="accountman")
         self.assertEqual(so.amount_unpaid, 90)
 
-    def test_ensure_downpayment_product_in_multiple_company(self):
+    def test_ensure_default_products_in_multiple_company(self):
         if self.env['ir.module.module']._get('pos_hr').state != 'installed':
             self.skipTest("pos_hr module is required for this test")
 
@@ -1248,7 +1248,9 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
         self.env["pos.config"].with_company(branch).create({
             "name": "Branch Point of Sale"
         })
-        self.env['pos.config']._ensure_default_products()
+        records = self.env['pos.config'].search_read([], ["down_payment_product_id", "default_product_id"])
+        self.assertTrue(all(record['down_payment_product_id'] for record in records))
+        self.assertTrue(all(record['default_product_id'] for record in records))
 
     def test_amount_unpaid_with_refund_pos_order(self):
         product = self.env['product.product'].create({
