@@ -1,6 +1,12 @@
 from odoo import fields, models
 
 
+class ResCompany(models.Model):
+    _inherit = 'res.company'
+
+    test_orm_schema_default = fields.Integer(default=42)
+
+
 class TestOrmSchema(models.Model):
     _name = 'test_orm.schema'
     _description = 'Test ORM Schema'

@@ -345,20 +345,41 @@ def column_exists(cr: Cursor, tablename: str, columnname: str) -> bool:
     return cr.rowcount
 
 
-def create_column(cr: Cursor, tablename: str, columnname: str, columntype: str | SQL, comment: str | None = None):
+def create_column(
+    cr: Cursor,
+    tablename: str,
+    columnname: str,
+    columntype: str | SQL,
+    default: typing.Any = None,
+    comment: str | None = None,
+):
     """ Create a column with the given type. """
-    sql = SQL(
+    column_definition = SQL(
+        "%s%s",
+        columntype if isinstance(columntype, SQL) else SQL.identifier(columntype),
+        SQL(" DEFAULT %s", default) if default is not None else SQL(),
+    )
+    queries = [SQL(
         "ALTER TABLE %s ADD COLUMN %s %s",
         SQL.identifier(tablename),
         SQL.identifier(columnname),
-        columntype if isinstance(columntype, SQL) else SQL.identifier(columntype),
-    )
+        column_definition,
+    )]
+    if default is not None:
+        # PostgreSQL stores constant defaults in attmissingval rather than
+        # rewriting existing rows; dropping the default then leaves future
+        # inserts under ORM control.
+        queries.append(SQL(
+            "ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT",
+            SQL.identifier(tablename),
+            SQL.identifier(columnname),
+        ))
     if comment:
-        sql = SQL("%s; %s", sql, SQL(
+        queries.append(SQL(
             "COMMENT ON COLUMN %s IS %s",
             SQL.identifier(tablename, columnname), comment,
         ))
-    cr.execute(sql)
+    cr.execute(SQL("; ").join(queries))
     _schema.debug("Table %r: added column %r of type %s", tablename, columnname, columntype)
 
 

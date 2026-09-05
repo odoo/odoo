@@ -4,7 +4,7 @@ import ast
 from collections import defaultdict
 
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
-from odoo.tools import SQL
+from odoo.tools import SQL, sql
 from odoo.tools.convert import convert_file
 
 
@@ -17,6 +17,9 @@ class HrJob(models.Model):
     def _default_address_id(self):
         last_used_address = self.env['hr.job'].search([('company_id', 'in', self.env.companies.ids)], order='id desc', limit=1)
         if last_used_address:
+            # Schema initialization may evaluate the default before adding the column.
+            if self.env.context.get('module') and not sql.column_exists(self.env.cr, self._table, 'address_id'):
+                return False
             return last_used_address.address_id
         else:
             return self.env.company.partner_id

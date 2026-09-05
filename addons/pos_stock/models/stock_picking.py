@@ -1,6 +1,6 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_is_zero
+from odoo.tools import float_is_zero, sql
 
 
 class StockPicking(models.Model):
@@ -192,6 +192,12 @@ class StockPickingType(models.Model):
 
     @api.constrains('active')
     def _check_active(self):
+        # Schema initialization may evaluate defaults before adding their columns.
+        if self.env.context.get('module') and not sql.column_exists(
+            self.env.cr, self.env['pos.config']._table, 'picking_type_id',
+        ):
+            return
+
         for picking_type in self:
             if picking_type.active:
                 continue

@@ -296,8 +296,9 @@ class Many2one(_Relational):
         return super().update_db(model, columns)
 
     def update_db_column(self, model, column):
-        super().update_db_column(model, column)
+        column_initialized = super().update_db_column(model, column)
         model.pool.post_init(self.update_db_foreign_key, model, column)
+        return column_initialized
 
     def update_db_foreign_key(self, model, column):
         if self.company_dependent:
