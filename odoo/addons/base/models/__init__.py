@@ -35,6 +35,7 @@ from . import report_layout
 from . import report_paperformat
 
 from . import ir_profile
+from . import ir_profile_query
 from . import image_mixin
 from . import avatar_mixin
 

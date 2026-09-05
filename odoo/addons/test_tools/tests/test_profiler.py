@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 import sys
 import time
 
 from unittest.mock import patch
 from psycopg2.errors import UndefinedTable
 
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import BaseCase, TransactionCase, tagged, new_test_user, HttpCase
 from odoo.tests.result import stats_logger
 from odoo.tools import profiler, mute_logger
@@ -753,3 +754,83 @@ class TestMemoryProfiler(HttpCase):
         # If any positive memory diffs were found, a sampled memory profile is present
         memory_profiles = [prof for prof in result['profiles'] if prof.get('type') == 'sampled']
         self.assertTrue(memory_profiles, "Expected at least one sampled memory profile")
+
+
+class TestExplainAnalyse(TransactionCase):
+    def _create_query(self, query_str):
+        sql_profile = [
+            {
+                'start': 0.0,
+                'time': 1,
+                'query': query_str,
+                'full_query': query_str,
+                'stack': []
+            },
+        ]
+        profile = self.env['ir.profile'].create({
+            'sql': json.dumps(sql_profile),
+            'sql_count': len(sql_profile),
+        })
+        profile.action_open_sql_queries()
+        return self.env['ir.profile.query'].search([('profile_id', '=', profile.id)])
+
+    def test_explain_analyse(self):
+        with Profiler(collectors=['sql'], db=None) as p:
+            self.env.cr.execute("SELECT 1")
+        entries = p.collectors[0].entries
+        profile = self.env['ir.profile'].create({
+            'sql': json.dumps(entries),
+            'sql_count': len(entries),
+        })
+        self.assertFalse(
+            self.env['ir.profile.query'].search([('profile_id', '=', profile.id)]),
+            "query entries are created lazily on demand"
+        )
+        profile.action_open_sql_queries()
+        query = self.env['ir.profile.query'].search([('profile_id', '=', profile.id)])
+        self.assertEqual('SELECT 1', query.full_query)
+        query.action_explain_analyse()
+        self.assertIn('Execution Time', query.plan)
+
+    def test_explain_analyse_does_not_persist_changes(self):
+        partner = self.env['test_tools.partner'].create({'name': 'Raoul'})
+
+        with Profiler(collectors=['sql'], db=None) as p:
+            # Update the partner and profile
+            self.env.cr.execute("UPDATE test_tools_partner SET name='Raoul update 1' WHERE id=%s", (partner.id,))
+        entries = p.collectors[0].entries
+        profile = self.env['ir.profile'].create({
+            'sql': json.dumps(entries),
+            'sql_count': len(entries),
+        })
+        # Update the partner again
+        partner.name = 'Raoul update 2'
+
+        # Explain analyse the first update query
+        profile.action_open_sql_queries()
+        query = self.env['ir.profile.query'].search([('profile_id', '=', profile.id)])
+        query.action_explain_analyse()
+        partner.invalidate_recordset()
+        self.assertEqual(
+            partner.name,
+            'Raoul update 2',
+            "the name should be the last committed value"
+        )
+
+    def test_explain_analyse_access(self):
+        user = new_test_user(self.env, login='profiler-not-system')
+        query = self._create_query('SELECT 1')
+        with self.assertRaises(AccessError):
+            query.with_user(user).action_explain_analyse()
+
+    def test_explain_analyse_ilike(self):
+        """A query containing an unescaped '%' (e.g. from an ILIKE pattern)"""
+        query = self._create_query(r"SELECT id FROM test_tools_partner WHERE name ILIKE '%foo%'")
+        query.action_explain_analyse()
+        self.assertTrue(query.plan)
+
+    def test_explain_analyse_single_statement(self):
+        query_str = "SELECT 1;UPDATE test_tools_partner SET name='hacked' where id=1;COMMIT;"
+        query = self._create_query(query_str)
+        with self.assertRaises(UserError):
+            query.action_explain_analyse()

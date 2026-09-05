@@ -39,13 +39,20 @@
         <field name="model">ir.profile</field>
         <field name="arch" type="xml">
             <form string="IR Profile">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_sql_queries"
+                        class="oe_stat_button"
+                        icon="database"
+                        invisible="sql_count == 0"
+                        type="object">
+                         <field string="SQL queries" name="sql_count" widget="statinfo"/>
+                    </button>
+                </div>
                 <group>
                     <field name="name"/>
                     <field name="session"/>
                     <field name="cpu_duration"/>
                     <field name="entry_count"/>
-                    <!-- Do not rely on sql field for the invisible attrs to avoid fetching whole trace from server. -->
-                    <field name="sql_count" invisible="sql_count == 0"/>
                     <field name="speedscope_url" widget="url"/>
                     <field name="config_url" widget="url"/>
                 </group>
@@ -54,6 +61,72 @@
                 </group>
             </form>
         </field>
+    </record>
+
+    <record id="ir_profile_query_view_search" model="ir.ui.view">
+        <field name="name">IR Profile Query Search</field>
+        <field name="model">ir.profile.query</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="query"/>
+                <field name="full_query"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_profile_query_view_list" model="ir.ui.view">
+        <field name="name">IR Profile Query List</field>
+        <field name="model">ir.profile.query</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="time"/>
+                <field name="query_preview"/>
+                <field name="formatted_query" string="Copy query" widget="CopyClipboardButton" options="{'btn_class': 'btn-link'}"/>
+                <button
+                    name="action_explain_analyse" string="Explain Analyze" type="object" invisible="plan"
+                    title="EXPLAIN ANALYZE really runs this query: data changes are rolled back, but it takes the same locks and can be as slow as the original execution."
+                />
+                <field name="plan" string="Copy plan" widget="CopyClipboardButton" invisible="not plan"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ir_profile_query_view_form" model="ir.ui.view">
+        <field name="name">IR Profile Query Form</field>
+        <field name="model">ir.profile.query</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="profile_id"/>
+                    <field name="time"/>
+                </group>
+                <group string="Query">
+                    <field name="formatted_query" string="Copy query" widget="CopyClipboardButton" nolabel="1"
+                        colspan="2" class="oe_inline mb-2" options="{'btn_class': 'secondary btn-sm'}"/>
+                    <field name="formatted_query" nolabel="1" colspan="2" class="font-monospace"/>
+                </group>
+                <group string="Query Plan">
+                    <button
+                        name="action_explain_analyse" string="Explain Analyze" type="object" invisible="plan"
+                        colspan="2" class="btn-primary btn-sm"
+                        title="EXPLAIN ANALYZE really runs this query: data changes are rolled back, but it takes the same locks and can be as slow as the original execution."
+                    />
+                    <field name="plan" string="Copy query plan" widget="CopyClipboardButton" nolabel="1"
+                        colspan="2" class="oe_inline mb-2" options="{'btn_class': 'secondary btn-sm'}"/>
+                    <field name="plan" nolabel="1" colspan="2" class="font-monospace"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_profile_query_action_explain" model="ir.actions.server">
+        <field name="name">Explain Analyze</field>
+        <field name="model_id" ref="base.model_ir_profile_query"/>
+        <field name="binding_model_id" ref="base.model_ir_profile_query"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_explain_analyse()</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="enable_profiling_wizard" model="ir.ui.view">

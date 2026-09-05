@@ -42,6 +42,7 @@ class IrProfile(models.Model):
     others = fields.Text('others', prefetch=False)
     qweb = fields.Text('Qweb', prefetch=False)
     entry_count = fields.Integer('Entry count')
+    profile_query_ids = fields.One2many('ir.profile.query', 'profile_id')
 
     speedscope = fields.Binary('Speedscope', compute='_compute_speedscope')
     speedscope_url = fields.Text('Open', compute='_compute_speedscope_url')
@@ -170,6 +171,22 @@ class IrProfile(models.Model):
         limit = self.env['ir.config_parameter'].sudo().get_str('base.profiling_enabled_until')
         return limit if str(fields.Datetime.now()) < limit else None
 
+    def _ensure_sql_query_records(self):
+        profiles_with_missing_queries = self.search([
+            ('id', 'in', self.ids),
+            ('sql_count', '>', 0),
+            ('profile_query_ids', '=', False)
+        ])
+        vals_list = []
+        for profile in profiles_with_missing_queries:
+            vals_list.extend({
+                'profile_id': profile.id,
+                'query': query['query'],
+                'full_query': query['full_query'],
+                'time': query['time'],
+            } for query in json.loads(profile.sql))
+        self.env['ir.profile.query'].create(vals_list)
+
     @api.model
     def set_profiling(self, profile=None, collectors=None, params=None):
         """
@@ -225,6 +242,16 @@ class IrProfile(models.Model):
             'type': 'ir.actions.act_url',
             'url': f'/web/profile_config/{ids}',
             'target': 'new',
+        }
+
+    def action_open_sql_queries(self):
+        self._ensure_sql_query_records()
+        return {
+            'name': self.env._('SQL queries'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ir.profile.query',
+            'view_mode': 'list,form',
+            'domain': [('profile_id', 'in', self.ids)]
         }
 
 class BaseEnableProfilingWizard(models.TransientModel):
