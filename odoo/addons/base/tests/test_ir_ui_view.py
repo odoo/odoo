@@ -2259,6 +2259,30 @@ class TestViews(ViewCase):
 
                 self.assertXMLEqual(view[field], original_value)
 
+    def test_xml_editor_creates_view_with_model_id(self):
+        """Check that a new view is validated against the model picked in the form."""
+        view = self.View.create({
+            'name': 'new_model_id_view',
+            'type': 'list',
+            'model_id': self.env['ir.model']._get_id('res.partner.category'),
+            'arch_base': '<list><field name="name"/></list>',
+        })
+        self.assertEqual(view.model, 'res.partner.category')
+
+    def test_xml_editor_changes_model_id_and_arch(self):
+        """Check that changing a view's model and architecture at once uses the new model."""
+        view = self.View.create({
+            'name': 'edited_model_id_view',
+            'type': 'list',
+            'model': 'res.partner.category',
+            'arch_base': '<list><field name="name"/></list>',
+        })
+        view.write({
+            'model_id': self.env['ir.model']._get_id('res.users'),
+            'arch_base': '<list><field name="login"/></list>',
+        })
+        self.assertEqual(view.model, 'res.users')
+
     def test_context_in_view(self):
         arch = """
             <form string="View">
