@@ -86,6 +86,9 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _compute_can_publish(self):
         for record in self:
             target = record.target_model_id
+            if not target:
+                record.can_publish = False
+                continue
             if target._name == 'ir.ui.view':
                 # Check we are in a non-custom state to avoid messing with
                 # manually set values.
@@ -104,6 +107,9 @@ class WebsitePagePropertiesBase(models.TransientModel):
     def _compute_is_published(self):
         for record in self:
             target = record.target_model_id
+            if not target:
+                record.is_published = False
+                continue
             if target._name == 'ir.ui.view':
                 record.is_published = self._is_ir_ui_view_published(target)
             elif 'is_published' in target._fields:
