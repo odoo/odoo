@@ -9,8 +9,6 @@ export const SHOW_OPTIONS = t.object({
     receipts: t.boolean(),
     unitCosts: t.boolean(),
     moCosts: t.boolean(),
-    bomCosts: t.boolean(),
-    realCosts: t.boolean(),
 });
 
 export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
@@ -18,14 +16,12 @@ export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
         showOptions: SHOW_OPTIONS,
         changeDisplay: t.function(),
         limited: t.boolean().optional(false),
-        isProductionDraft: t.boolean().optional(false),
     });
 
     setup() {
         this.displayOptions = {
             unitCosts: _t("Unit Costs"),
             moCosts: _t("MO Costs"),
-            bomCosts: _t("BoM Costs"),
         };
         if (!this.props.limited) {
             this.displayOptions = {
@@ -33,12 +29,6 @@ export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
                 replenishments: _t("Replenishments"),
                 availabilities: _t("Availabilities"),
                 receipts: _t("Receipts"),
-            };
-        }
-        if (!this.props.isProductionDraft) {
-            this.displayOptions = {
-                ...this.displayOptions,
-                realCosts: _t("Real Costs"),
             };
         }
     }
