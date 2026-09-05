@@ -2,8 +2,20 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//*[@name='thread content']" position="replace">
-            <t>$0</t>
-            <CloseConfirmation t-if="this.props.chatWindow.confirmCloseResolver" channelName="this.channel.displayName" onCloseConfirmationDialog="() => this.props.chatWindow.confirmCloseResolver.resolve(false)" onClickLeaveConversation="() => this.props.chatWindow.confirmCloseResolver.resolve(true)"/>
+            <FeedbackPanel t-if="this.props.chatWindow.feedbackDoneResolver" onClickClose="() => this.props.chatWindow.feedbackDoneResolver.resolve(true)" thread="this.channel.thread"/>
+            <t t-else="">
+                <t>$0</t>
+                <CloseConfirmation t-if="this.props.chatWindow.confirmCloseResolver" channelName="this.channel.displayName" onCloseConfirmationDialog="() => this.props.chatWindow.confirmCloseResolver.resolve(false)" onClickLeaveConversation="() => this.props.chatWindow.confirmCloseResolver.resolve(true)"/>
+            </t>
+        </xpath>
+        <xpath expr="//*[@t-ref='this.needactionCounterRef']" position="replace">
+            <t t-if="!this.channel.chatbot">$0</t>
+        </xpath>
+        <xpath expr="//*[@t-ref='this.composerHiddenContainerRef']" position="inside">
+            <button t-if="this.showGiveFeedbackBtn" class="btn btn-link p-0" title="Give your feedback" t-on-click="() => this.props.chatWindow.requestClose()">Continue</button>
+        </xpath>
+        <xpath expr="//*[@t-ref='this.composerHiddenContainerRef']" position="attributes">
+            <attribute name="t-attf-class" add="{{ this.showGiveFeedbackBtn ? 'px-2' : '' }}" separator=" "/>
         </xpath>
     </t>
 </templates>

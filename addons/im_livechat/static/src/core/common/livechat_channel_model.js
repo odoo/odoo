@@ -9,5 +9,7 @@ export class LivechatChannel extends Record {
     id;
     /** @type {string} */
     name;
+    /** @type {string} */
+    review_link;
 }
 LivechatChannel.register();

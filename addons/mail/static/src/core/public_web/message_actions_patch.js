@@ -2,12 +2,8 @@ import { registerMessageAction } from "@mail/core/common/message_actions";
 import { _t } from "@web/core/l10n/translation";
 
 registerMessageAction("pin", {
-    condition: ({ message, owner, store }) =>
-        !owner.env.inMessagingMenu &&
-        !message.pinned_at &&
-        store.self_user &&
-        message.thread &&
-        (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
+    condition: ({ message, owner }) =>
+        !owner.env.inMessagingMenu && !message.pinned_at && message.canTogglePin,
     icon: "push_pin",
     name: _t("Pin"),
     onSelected: ({ action, message }) =>
@@ -16,12 +12,8 @@ registerMessageAction("pin", {
 });
 
 registerMessageAction("unpin", {
-    condition: ({ message, owner, store }) =>
-        !owner.env.inMessagingMenu &&
-        message.pinned_at &&
-        store.self_user &&
-        message.thread &&
-        (!message.channel_id || message.channel_id.canSelfInteractWithChannel),
+    condition: ({ message, owner }) =>
+        !owner.env.inMessagingMenu && message.pinned_at && message.canTogglePin,
     icon: "push_pin",
     name: _t("Unpin"),
     onSelected: ({ action, message }) =>

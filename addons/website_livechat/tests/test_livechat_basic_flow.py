@@ -225,7 +225,7 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                     },
                 ],
                 "im_livechat.channel": [
-                    {"id": self.livechat_channel.id, "name": "The basic channel"}
+                    {"id": self.livechat_channel.id, "name": "The basic channel", "review_link": "https://www.odoo.com"}
                 ],
                 "im_livechat.channel.member.history": [
                     {
@@ -363,6 +363,7 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                     "id": channel.id,
                     "is_editable": False,
                     "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
+                    "livechat_channel_id": self.livechat_channel.id,
                     "livechat_channel_member_history_ids": channel.livechat_channel_member_history_ids.ids,
                     "livechat_end_dt": fields.Datetime.to_string(agent_left_dt),
                     "member_count": 1,
