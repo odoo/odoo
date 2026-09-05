@@ -33,7 +33,10 @@ The system is able to add and compute the shipping line.
         "wizard/delivery_note_views.xml",
     ],
     "demo": ["data/delivery_demo.xml"],
-    "assets": {"web.assets_frontend": ["delivery/static/src/**/*"]},
+    "assets": {
+        "web.assets_frontend": ["delivery/static/src/**/*"],
+        "web.assets_backend": ["delivery/static/src/widgets/carrier_rates_loader*"],
+    },
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
     "author": "Odoo S.A.",

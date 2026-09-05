@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="delivery.carrier_rates_loader" owl="1">
+        <div class="w-100">
+            <button
+                name="update_price"
+                class="btn btn-secondary"
+                type="object"
+                t-if="!this.props.record.data.is_loading_prices and this.showButton()"
+                t-on-click="this.loadCarrierRates"
+            >
+                Get all rates
+            </button>
+            <span t-if="this.props.record.data.is_loading_prices" class="mb-2">
+                Loading Rates
+                <i class="oi oi-spin" data-icon="progress_activity"/>
+            </span>
+        </div>
+    </t>
+</templates>
