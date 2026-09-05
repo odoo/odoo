@@ -202,7 +202,7 @@ class MrpWorkorder(models.Model):
         for workorder in self:
             if workorder.qty_producing != 0 and workorder.production_id.qty_producing != workorder.qty_producing:
                 workorder.production_id.qty_producing = workorder.qty_producing
-                workorder.production_id._set_qty_producing(False)
+                workorder.production_id._set_qty_producing(False, workorder=workorder)
 
     @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.state')
     def _compute_qty_ready(self):

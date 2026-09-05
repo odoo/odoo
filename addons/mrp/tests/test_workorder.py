@@ -131,3 +131,47 @@ class TestWorkorder(TestMrpCommon):
             ],
             field_names=['operation_id'],
         )
+
+    def test_start_wo1_does_not_consume_wo2_components(self):
+        """Test Starting WO 1 must not auto-consume components assigned to WO 2.
+        Scenario:
+        - BOM has 2 operations (op1, op2) and 2 components.
+        - product_2 (comp WO1) is linked to op1; it has on-hand stock and is fully reserved.
+        - product_3 (comp WO2) is linked to op2; it has NO stock (quantity = 0).
+        - When WO 1 is started, only product_2's quantity should be auto-set.
+        - product_3 must remain untouched (quantity = 0) until WO 2 is started.
+        """
+        self.env['stock.quant']._update_available_quantity(
+            self.product_2, self.warehouse_1.lot_stock_id, 10.0
+        )
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_8.product_tmpl_id.id,
+            'product_id': self.product_8.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'operation_ids': [
+                Command.create({'name': 'Operation 1', 'workcenter_id': self.workcenter_1.id, 'sequence': 1}),
+                Command.create({'name': 'Operation 2', 'workcenter_id': self.workcenter_2.id, 'sequence': 2}),
+            ],
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_2.id, 'product_qty': 1.0}),
+                Command.create({'product_id': self.product_3.id, 'product_qty': 1.0}),
+            ],
+        })
+        bom.bom_line_ids[0].operation_id = bom.operation_ids[0]
+        bom.bom_line_ids[1].operation_id = bom.operation_ids[1]
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_8.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+        mo.action_assign()
+        self.assertRecordValues(mo.move_raw_ids, [
+                {'product_id': self.product_2.id, 'workorder_id': mo.workorder_ids[0].id, 'quantity': 1.0},
+                {'product_id': self.product_3.id, 'workorder_id': mo.workorder_ids[1].id, 'quantity': 0.0},
+            ])
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [{'product_id': self.product_2.id, 'quantity': 1.0}])
+        # === Start WO 1 ===
+        mo.workorder_ids[0].button_start()
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [{'product_id': self.product_2.id, 'quantity': 1.0}])
