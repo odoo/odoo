@@ -107,7 +107,7 @@ test("properly compile attributes with nested forms", () => {
                 <OuterGroup>
                     <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
                         <InnerGroup class="scope &amp;&amp; scope.className">
-                            <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
+                            <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" subType="'cell_custom'" isVisible="true" itemSpan="1">
                                 <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.dirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }} {{scope &amp;&amp; scope.className || &quot;&quot; }}">
                                     <div><Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" readonly="__comp__.props.readonly"/></div>
                                 </div>
