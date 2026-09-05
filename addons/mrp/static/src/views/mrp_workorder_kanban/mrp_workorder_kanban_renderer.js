@@ -11,10 +11,10 @@ export class MrpWorkorderKanbanRenderer extends KanbanRenderer {
         KanbanRecord: MrpWorkorderKanbanRecord,
     };
 
-    async sortRecordDrop(dataRecordId, dataGroupId, params) {
+    async sortRecordDrop(dataRecordId, params) {
         // After a resequence, some workorder of other workcenter may have their planned date changed,
         // so we need to reload all the kanban cards.
-        await super.sortRecordDrop(dataRecordId, dataGroupId, params);
+        await super.sortRecordDrop(dataRecordId, params);
         await this.props.list.model.load();
     }
 }

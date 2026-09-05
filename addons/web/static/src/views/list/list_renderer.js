@@ -15,6 +15,7 @@ import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relationa
 import { onWillRender, render } from "@web/owl2/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
+import { getMultiDragRecordIds, startMultiDrag, stopMultiDrag } from "@web/views/multi_drag";
 import {
     TOUCH_SELECTION_THRESHOLD,
     computeAggregatedValue,
@@ -246,8 +247,8 @@ export class ListRenderer extends Component {
         });
         useAutofocus({ ref: this.groupInputRef });
         let dataRowId;
-        let dataGroupId;
         this.resequencePromise = Promise.resolve();
+        this.multiDragRecordIds = null;
         useSortable({
             enable: () => this.canResequenceRows,
             // Params
@@ -260,11 +261,20 @@ export class ListRenderer extends Component {
             onDragStart: (params) => {
                 const { element } = params;
                 dataRowId = element.dataset.id;
-                dataGroupId = this.props.list.isGrouped && element.dataset.groupId;
-                return this.sortStart(params);
+                // sets the width of the cells, so it must be done before hiding them
+                this.sortStart(params);
+                this.multiDragRecordIds = getMultiDragRecordIds(this.props.list, dataRowId);
+                if (this.multiDragRecordIds) {
+                    startMultiDrag(
+                        this.tableRef(),
+                        element,
+                        this.multiDragRecordIds,
+                        this.multiDragParams
+                    );
+                }
             },
             onDragEnd: (params) => this.sortStop(params),
-            onDrop: (params) => this.sortDrop(dataRowId, dataGroupId, params),
+            onDrop: (params) => this.sortDrop(dataRowId, params),
         });
 
         if (this.env.searchModel) {
@@ -517,6 +527,18 @@ export class ListRenderer extends Component {
 
     get fields() {
         return this.props.list.fields;
+    }
+
+    /**
+     * How the rows dragged together are gathered into a single row, see
+     * `startMultiDrag`.
+     */
+    get multiDragParams() {
+        return {
+            placeholderTag: "td",
+            placeholderClass: "fw-bold d-flex align-items-center flex-fill text-nowrap",
+            keptChildSelector: ".o_handle_cell",
+        };
     }
 
     get nbCols() {
@@ -2463,24 +2485,26 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.parent]
      * @param {HTMLElement} [params.previous]
      */
-    async sortDrop(dataRowId, dataGroupId, { element, previous }) {
+    async sortDrop(dataRowId, { element, previous }) {
         element.classList.remove("o_row_draggable");
+        const recordIds = this.multiDragRecordIds || [dataRowId];
+        // rows hidden by this same multi drag are still in the DOM, but can't be a reference
+        while (previous && recordIds.includes(previous.dataset.id)) {
+            previous = previous.previousElementSibling;
+        }
         const refId = previous ? previous.dataset.id : null;
         try {
-            if (dataGroupId) {
+            if (this.props.list.isGrouped) {
                 if (!previous?.dataset?.groupId) {
                     return;
                 }
                 this.resequencePromise = this.props.list.moveRecord(
-                    dataRowId,
-                    dataGroupId,
+                    recordIds,
                     refId,
                     previous.dataset.groupId
                 );
             } else {
-                this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
-                    handleField: this.props.list.handleField,
-                });
+                this.resequencePromise = this.props.list.resequence(recordIds, refId);
             }
             await this.resequencePromise;
         } finally {
@@ -2517,6 +2541,12 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.group]
      */
     sortStop({ element }) {
+        if (this.multiDragRecordIds) {
+            this.multiDragRecordIds = null;
+            // revealed only after `sortDrop`, so that the moved rows all reappear
+            // at once, at their new position
+            stopMultiDrag(this.tableRef());
+        }
         for (const cell of element.querySelectorAll("td")) {
             cell.style.width = null;
         }

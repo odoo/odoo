@@ -504,8 +504,8 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      * @override
      * Reset the values of `collapse_` fields of the subsection if it is dragged
      */
-    async sortDrop(dataRowId, dataGroupId, options) {
-        await super.sortDrop(dataRowId, dataGroupId, options);
+    async sortDrop(dataRowId, options) {
+        await super.sortDrop(dataRowId, options);
 
         const record = this.props.list.records.find(r => r.id === dataRowId);
         const parentSection = this.parentSectionMap().get(record);

@@ -77,8 +77,11 @@ export class DynamicRecordList extends DynamicList {
         return this.count;
     }
 
-    moveRecord(dataRecordId, _dataGroupId, refId, _targetGroupId) {
-        return this.resequence(dataRecordId, refId);
+    /**
+     * @param {string[]} recordIds ids of the records moved together, in display order
+     */
+    moveRecord(recordIds, refId, _targetGroupId) {
+        return this.resequence(recordIds, refId);
     }
 
     removeRecord(record) {
@@ -94,10 +97,9 @@ export class DynamicRecordList extends DynamicList {
         return record;
     }
 
-    async resequence(movedRecordId, targetRecordId) {
-        return this.model.mutex.exec(
-            async () =>
-                await this._resequence(this.records, this.resModel, movedRecordId, targetRecordId)
+    async resequence(movedRecordIds, targetRecordId) {
+        return this.model.mutex.exec(() =>
+            this._resequence(this.records, this.resModel, movedRecordIds, targetRecordId)
         );
     }
 

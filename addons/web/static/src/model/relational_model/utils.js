@@ -780,7 +780,9 @@ export function useRecordObserver(callback) {
  * @param {string} params.resModel - The model to be used for resequencing.
  * @param {Object} params.orm
  * @param {string} params.fieldName - The field used to handle the sequence.
- * @param {number} params.movedId - The id of the record being moved.
+ * @param {string[]} params.movedIds - The ids of the records being moved, in display
+ *                                     order: several of them for a multi selection drag and
+ *                                     drop, a single one otherwise.
  * @param {number} [params.targetId] - The id of the target position, the record will be resequenced
  *                                     after the target. If undefined, the record will be resequenced
  *                                     as the first record.
@@ -795,29 +797,22 @@ export async function resequence({
     resModel,
     orm,
     fieldName,
-    movedId,
+    movedIds,
     targetId,
     asc = true,
     getSequence = (record) => record[fieldName],
     getResId = (record) => record.id,
     context,
 }) {
-    // Find indices
-    const fromIndex = records.findIndex((d) => d.id === movedId);
-    let toIndex = 0;
-    if (targetId !== null) {
-        const targetIndex = records.findIndex((d) => d.id === targetId);
-        toIndex = fromIndex > targetIndex ? targetIndex + 1 : targetIndex;
-    }
+    // Save the original list in case of error
+    const originalOrder = [...records];
 
-    // Determine which records/groups need to be modified
-    const firstIndex = Math.min(fromIndex, toIndex);
-    const lastIndex = Math.max(fromIndex, toIndex) + 1;
+    // Renumbering only a part of the list requires all sequences to be set and sorted
     let reorderAll = records.some((record) => getSequence(record) === undefined);
     if (!reorderAll) {
         let lastSequence = (asc ? -1 : 1) * Infinity;
-        for (let index = 0; index < records.length; index++) {
-            const sequence = getSequence(records[index]);
+        for (const record of records) {
+            const sequence = getSequence(record);
             if ((asc && lastSequence >= sequence) || (!asc && lastSequence <= sequence)) {
                 reorderAll = true;
                 break;
@@ -826,27 +821,28 @@ export async function resequence({
         }
     }
 
-    // Save the original list in case of error
-    const originalOrder = [...records];
-    // Perform the resequence in the list of records/groups
-    const record = records[fromIndex];
-    if (fromIndex !== toIndex) {
-        records.splice(fromIndex, 1);
-        records.splice(toIndex, 0, record);
-    }
+    // Move the records/groups after the target (or first), keeping their relative order
+    const idsToMove = new Set(movedIds);
+    const movedRecords = records.filter((d) => idsToMove.has(d.id));
+    const otherRecords = records.filter((d) => !idsToMove.has(d.id));
+    const insertIndex = (targetId ? otherRecords.findIndex((d) => d.id === targetId) : -1) + 1;
+    records.splice(
+        0,
+        records.length,
+        ...otherRecords.slice(0, insertIndex),
+        ...movedRecords,
+        ...otherRecords.slice(insertIndex)
+    );
 
-    // Creates the list of records/groups to modify
+    // Only the records/groups between the old and the new position of the moved
+    // ones need a new sequence
     let toReorder = records;
-    if (!reorderAll) {
-        toReorder = toReorder.slice(firstIndex, lastIndex).filter((r) => r.id !== movedId);
-        if (fromIndex < toIndex) {
-            toReorder.push(record);
-        } else {
-            toReorder.unshift(record);
-        }
+    if (!reorderAll && movedRecords.length) {
+        const indexes = movedRecords.flatMap((d) => [records.indexOf(d), originalOrder.indexOf(d)]);
+        toReorder = records.slice(Math.min(...indexes), Math.max(...indexes) + 1);
     }
     if (!asc) {
-        toReorder.reverse();
+        toReorder = [...toReorder].reverse();
     }
 
     const resIds = toReorder.map((d) => getResId(d)).filter((id) => id && !isNaN(id));
