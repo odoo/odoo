@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-28 17:43+0000\n"
-"PO-Revision-Date: 2026-08-28 17:43+0000\n"
+"POT-Creation-Date: 2026-09-04 17:46+0000\n"
+"PO-Revision-Date: 2026-09-04 17:46+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -129,6 +129,13 @@ msgid ""
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_max_weight
+msgid ""
+"A transfer will not be automatically added to batches that will exceed this weight if the transfer is added to it.\n"
+"Leave this value as '0' if no weight limit."
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders."
 msgstr ""
@@ -154,6 +161,11 @@ msgid "Auto Print Export Documents"
 msgstr ""
 
 #. module: stock_delivery
+#: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_group_by_carrier
+msgid "Automatically group batches by carriers"
+msgstr ""
+
+#. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
 msgid ""
 "Automatically print the carrier labels of the picking when they are created."
@@ -165,6 +177,11 @@ msgid ""
 "Automatically print the export documents of the picking when they are "
 "created. Availability of export documents depends on the carrier and the "
 "destination."
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model,name:stock_delivery.model_stock_picking_batch
+msgid "Batch Transfer"
 msgstr ""
 
 #. module: stock_delivery
@@ -184,6 +201,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__package_carrier_type
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__carrier_id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_group_by_carrier
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
 msgid "Carrier"
 msgstr ""
@@ -284,6 +302,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__display_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__display_name
@@ -351,6 +370,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__id
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_batch__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__id
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__id
@@ -386,6 +406,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: stock_delivery
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_max_weight
+msgid "Maximum weight"
 msgstr ""
 
 #. module: stock_delivery
@@ -711,6 +736,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_package__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
+#: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__weight_uom_name
 msgid "Weight unit of measure label"
 msgstr ""
