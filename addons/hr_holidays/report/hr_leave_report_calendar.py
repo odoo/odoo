@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError
 class HrLeaveReportCalendar(models.Model):
     _name = 'hr.leave.report.calendar'
     _description = 'Time Off Calendar'
+    _inherit = 'hr.leave.display.name.mixin'
     _auto = False
     _order = "start_datetime DESC, employee_id"
 
@@ -82,12 +83,37 @@ class HrLeaveReportCalendar(models.Model):
         );
         """)
 
+    @api.depends(
+        'tz', 'leave_id.date_from', 'leave_id.date_to', 'employee_id',
+        'leave_id.work_entry_type_id', 'leave_id.number_of_hours',
+        'leave_id.work_entry_type_request_unit', 'leave_id.number_of_days',
+    )
+    @api.depends_context('short_name', 'hide_employee_name', 'group_by', 'scale')
     def _compute_display_name(self):
-        if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
-            for record in self:
-                record.display_name = record.name.removeprefix(f"{record.employee_id.name}").lstrip(": ")
-        else:
-            super()._compute_display_name()
+        is_hr_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        for record in self:
+            leave = record.sudo().leave_id
+            work_entry_type_display = ''
+
+            # Only show work_entry_type if user has access rights
+            if is_hr_user:
+                work_entry_type_display = (
+                    leave.work_entry_type_id.display_code
+                    or leave.work_entry_type_id.name
+                )
+
+            record.display_name = self._build_leave_display_name({
+                'tz': record.tz,
+                'date_from': leave.date_from,
+                'date_to': leave.date_to,
+                'name': leave.name,
+                'employee_name': record.employee_id.name or '',
+                'work_entry_type_display': work_entry_type_display,
+                'request_unit': leave.work_entry_type_request_unit,
+                'number_of_hours': leave.number_of_hours,
+                'number_of_days': leave.number_of_days,
+                'duration_display': record.duration_display,
+            })
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
