@@ -1,6 +1,5 @@
 import uuid
 from psycopg2.extras import Json
-from odoo.tools import split_every
 
 def migrate(cr, version):
     """
