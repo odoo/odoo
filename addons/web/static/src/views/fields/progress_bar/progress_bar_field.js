@@ -16,6 +16,7 @@ export class ProgressBarField extends Component {
         maxValueField: t.or([t.string(), t.number()]).optional(),
         title: t.string().optional(),
         decorations: t.object().optional({}),
+        customClasses: t.string().optional(),
     });
 
     root = signal.ref();
@@ -39,6 +40,9 @@ export class ProgressBarField extends Component {
 
     get isEditable() {
         return !this.props.readonly;
+    }
+    get progressBarClasses() {
+        return this.props.customClasses || "d-flex align-items-center gap-2 w-100 px-2";
     }
     get isPercentage() {
         return !this.props.maxValueField || !isNaN(this.props.maxValueField);
@@ -120,6 +124,7 @@ export const progressBarField = {
         maxValueField: fieldInfo.options.max_value,
         title: fieldInfo.attrs.title,
         decorations: fieldInfo.decorations,
+        customClasses: fieldInfo.attrs.customClasses,
     }),
 };
 

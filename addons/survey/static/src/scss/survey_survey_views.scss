@@ -1,14 +1,13 @@
 // KANBAN VIEW
 .o_survey_view_kanban_view .o_kanban_renderer {
-    // Common: left semi-trophy icon for certifications
-    .o_survey_kanban_card_certification {
-        background-image:
-            linear-gradient(rgba($o-view-background-color,.75),
-                            rgba($o-view-background-color,.75)),
-            url(/survey/static/src/img/trophy-solid.svg);
-        background-repeat: no-repeat;
-        background-position: bottom 6px left -45px;
-        background-size: 100%, 100px;
+    .o_survey_kanban_card {
+        .o_survey_certification_icon {
+            color: $o-main-favorite-color;
+        }
+
+        .o_progressbar {
+            --ProgressBarField-color: none;
+        }
     }
 
     // Grouped / Ungrouped sections hidding
@@ -25,29 +24,71 @@
                 display: none !important; //forcing the d-none to override the d-lg or d-sm classes for grouped view
             }
         }
+
+        .o_survey_kanban_card {
+            .progress {
+                display: none;
+            }
+        }
     }
 
     // Ungrouped display: whole length (kanban-list)
     &.o_kanban_ungrouped {
-        padding: 0px;
+        --Kanban-gap: 0px;
 
         .o_kanban_record {
             width: 100%;
             margin: 0px;
+
+            &:not(:only-of-type) {
+                --Card-border-width: 0 1px 1px 1px;
+
+                &:first-of-type {
+                    --Card-border-width: 1px;
+                }
+            }
+
+            &:not(:first-of-type) {
+                --Card-border-radius-top: 0;
+            }
+
+            &:not(:last-of-type) {
+                --Card-border-radius-bottom: 0;
+            }
         }
 
         .o_survey_kanban_card {
-            border-top: 0px !important;
+            --#{$prefix}gap: #{map-get($spacers, 3)} #{map-get($spacers, 2)};
+
+            .btn-link-inline {
+                --#{$prefix}btn-padding-x: #{$btn-padding-x};
+                --#{$prefix}btn-padding-y: #{$btn-padding-y};
+            }
+
+            .o_progressbar {
+                --ProgressBarField-min-width: 100px;
+
+                flex-direction: row-reverse;
+
+                @include media-breakpoint-down(lg) {
+                    .progress {
+                        display: none;
+                    }
+                }
+            }
+
+            .o_progressbar_value > div {
+                // Keep the correct size based on the percentage value.
+                width: 5ch;
+                font-variant-numeric: tabular-nums;
+            }
         }
     }
 
     // Grouped specific
     &.o_kanban_grouped {
-        // Due to activity widget crashing if present twice, have to set absolute and tweak
-        .o_survey_kanban_card_bottom {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+        .o_survey_kanban_card {
+            --#{$prefix}columns: 2;
         }
     }
 
@@ -62,21 +103,6 @@
         .o_survey_kanban_card_certification {
             background-position: center left -35px;
             background-size: auto 75%;
-        }
-
-        // Due to activity widget crashing if present twice, have to set absolute and tweak
-        .o_survey_kanban_card_bottom {
-            position: absolute;
-            bottom: 4px;
-            right: 19px;
-            @include media-breakpoint-down(lg) {
-                bottom: 19px;
-                right: 0;
-            }
-            @include media-breakpoint-down(sm) {
-                bottom: 10px;
-                right: 10px;
-            }
         }
     }
 

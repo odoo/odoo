@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ProgressBarField">
-        <div class="o_progressbar d-flex align-items-center gap-2 w-100 px-2" t-ref="this.root">
+        <div t-attf-class="o_progressbar {{ this.progressBarClasses }}" t-ref="this.root">
             <div t-if="this.props.title" class="o_progressbar_title text-nowrap pe-1"><t t-out="this.props.title"/></div>
             <div class="progress" aria-valuemin="0" t-att-aria-valuemax="this.maxValue" t-att-aria-valuenow="this.currentValue" t-on-click="this.onProgressClick" t-att-style="this.isEditable ? 'cursor: pointer' : ''">
                 <div t-attf-class="{{ this.progressBarColorClass }}" t-att-style="'width: min(' + 100 * this.currentValue / this.maxValue + '%, 100%)'"></div>
