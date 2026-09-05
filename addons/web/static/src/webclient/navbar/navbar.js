@@ -3,6 +3,7 @@ import {
     onMounted,
     onPatched,
     onWillDestroy,
+    Portal,
     proxy,
     signal,
     useEffect,
@@ -33,10 +34,11 @@ export class NavBar extends Component {
     static template = "web.NavBar";
     static components = {
         Dropdown,
-        DropdownItem,
         DropdownGroup,
-        MenuDropdown,
+        DropdownItem,
         ErrorHandler,
+        MenuDropdown,
+        Portal,
         Transition,
     };
     root = signal.ref();

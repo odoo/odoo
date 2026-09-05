@@ -1,10 +1,10 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, computed, Portal, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
 import { _t } from "@web/core/l10n/translation";
 
 export class SlideInstallModule extends Component {
-    static components = {};
+    static components = { Portal };
     static props = {
         moduleData: {
             type: Object,
@@ -16,6 +16,10 @@ export class SlideInstallModule extends Component {
         },
     };
     static template = "website_slides.SlideInstallModule";
+
+    slideUploadBtnsRef = computed(() =>
+        this.env.dialogRef()?.querySelector("#o_w_slide_upload_btns")
+    );
 
     setup() {
         this.orm = useService("orm");

@@ -7,7 +7,7 @@ import { router } from "@web/core/browser/router";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, Portal, proxy } from "@odoo/owl";
 
 /**
  * This file includes the widget Menu in mobile to render the BurgerMenu which
@@ -21,6 +21,7 @@ export class BurgerMenu extends Component {
     static components = {
         BurgerUserMenu,
         MobileSwitchCompanyMenu,
+        Portal,
         Transition,
     };
 
