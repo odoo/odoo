@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add('apikeys_tour_setup', {
 ...openUserPreferenceSecurity(),
 {
     content: "check that our key is present",
-    trigger: '[name=api_key_ids] .o_kanban_record:contains("my key")',
+    trigger: '.o_base_api_keys_kanban_view .o_kanban_record:contains("my key")',
 }]});
 
 // deletes the previously created key
@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: 'click',
 }, {
     content: "Open kanban dropdown menu of the key",
-    trigger: '[name=api_key_ids] .o_kanban_record:contains("my key") .oe_kanban_action[name="remove"]',
+    trigger: '.o_base_api_keys_kanban_view .o_kanban_record:contains("my key") .oe_kanban_action[name="remove"]',
     run: 'click',
 }, {
     content: "Input password for security mode again",
@@ -107,5 +107,5 @@ registry.category("web_tour.tours").add('apikeys_tour_teardown', {
     run: 'click',
 }, {
     content: "Check that there's no more keys",
-    trigger: "body:not(:has(.o_notebook [name=api_key_ids]))",
+    trigger: "body:not(:has(.o_notebook .o_base_api_keys_kanban_view))",
 }]});
