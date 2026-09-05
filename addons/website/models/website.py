@@ -391,6 +391,12 @@ class Website(models.CachedModel):
             lambda b: (b.res_id, b.checksum) not in mirrored,
         ).copy({'res_field': False})
 
+    def _website_xmlid(self, xmlid):
+        module_name = 'website'
+        if '.' in xmlid:
+            module_name, xmlid = xmlid.split('.', 1)
+        return f"{module_name}.{self.id}_{xmlid}"
+
     @api.model
     def _handle_create_write(self, vals):
         self._handle_favicon(vals)
@@ -1306,8 +1312,8 @@ class Website(models.CachedModel):
         homepage_page.url = '/'
 
         # Bootstrap default menu hierarchy, create a new minimalist one if no default
-        default_menu = self.env.ref('website.main_menu')
-        self.copy_menu_hierarchy(default_menu)
+        if not self.menu_id and (default_menu := self.env.ref('website.main_menu', raise_if_not_found=False)):
+            default_menu._copy_menu_hierarchy(self)
         home_menu = self.env['website.menu'].search([('website_id', '=', self.id), ('url', '=', '/')])
         home_menu.page_id = homepage_page
 
@@ -1337,22 +1343,6 @@ class Website(models.CachedModel):
 
         # 2. Parse --o-font-url-N: "..." custom properties
         return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', compiled)
-
-    def copy_menu_hierarchy(self, top_menu):
-        def copy_menu(menu, t_menu):
-            new_menu = menu.copy({
-                'parent_id': t_menu.id,
-                'website_id': self.id,
-            })
-            for submenu in menu.child_id:
-                copy_menu(submenu, new_menu)
-        for website in self:
-            new_top_menu = top_menu.copy({
-                'name': _('Top Menu for Website %s', website.id),
-                'website_id': website.id,
-            })
-            for submenu in top_menu.child_id:
-                copy_menu(submenu, new_top_menu)
 
     @api.model
     def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, page_values=None, menu_values=None, sections_arch=None, page_title=None):
