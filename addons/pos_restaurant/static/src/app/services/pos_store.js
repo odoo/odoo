@@ -131,12 +131,11 @@ patch(PosStore.prototype, {
 
         if (srcQty) {
             if (srcQty <= qty) {
-                const newPrep = {
+                destPrep[destKey] = {
                     ...srcPrep[srcKey],
                     uuid: destLine.uuid,
                     quantity: existingDestQty + srcQty,
                 };
-                destPrep[destKey] = newPrep;
                 delete srcPrep[srcKey];
             } else {
                 srcPrep[srcKey].quantity = srcQty - qty;
@@ -147,6 +146,9 @@ patch(PosStore.prototype, {
                 };
             }
         }
+    },
+    async transferSplitPreparation(_originalOrder, _newOrder, _transfers) {
+        // Overridden by pos_restaurant_preparation_display to move backend prep tickets.
     },
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
