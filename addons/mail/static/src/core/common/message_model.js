@@ -620,6 +620,21 @@ export class Message extends Record {
         return Boolean(this.thread?.selfFollower && thread?.model === "mail.box");
     }
 
+    /**
+     * Remove all HTML comment nodes from the given elements and their descendants.
+     * @param {...Element} elements
+     */
+    removeHtmlComments(...elements) {
+        for (const element of elements) {
+            const walker = document.createTreeWalker(element, NodeFilter.SHOW_COMMENT);
+            const comments = [];
+            while (walker.nextNode()) {
+                comments.push(walker.currentNode);
+            }
+            comments.forEach((c) => c.remove());
+        }
+    }
+
     async copyLink() {
         let notification = _t("Message Link Copied");
         let type = "success";
@@ -653,6 +668,11 @@ export class Message extends Record {
         const updatedBodyEl = createElementWithContent("div", body);
         messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
         updatedBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
+        // The editor strips HTML comments (e.g. MSO conditional comments like
+        // <!--<![endif]-->) when parsing content. Remove them from the original
+        // body as well so that their absence alone does not flag the message as
+        // edited.
+        this.removeHtmlComments(messageBodyEl, updatedBodyEl);
         if (updatedBodyEl.innerHTML === messageBodyEl.innerHTML && attachments.length === 0) {
             return;
         }
