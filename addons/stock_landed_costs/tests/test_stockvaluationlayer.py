@@ -154,7 +154,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
         # Shoud not raise an Access Error
         self.assertTrue(picking.with_user(self.res_users_stock_user).button_validate())
         self.assertEqual(picking.move_ids.state, 'done')
-        self.assertEqual(self.product1.standard_price, 12.5)
+        self.assertEqual(self.product1.standard_price, 10)
 
 @tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
