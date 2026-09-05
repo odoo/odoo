@@ -2835,3 +2835,55 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_order.order_line, [
             {'product_id': self.new_product.id, 'product_uom_qty': 0, 'qty_delivered': 3}
         ])
+
+    def test_change_linked_sale_order_on_internal_transfer(self):
+        """Test that changing the sale order linked to an internal transfer does
+        not change the link of the sale order with respect to other pickings.
+        """
+        warehouse = self.company_data['default_warehouse']
+        sale_orders = self._get_new_sale_order(product=self.new_product) | self._get_new_sale_order(product=self.new_product)
+        internal_transfer = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.int_type_id.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.new_product.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+            })],
+        })
+        internal_transfer.sale_id = sale_orders[0]
+        internal_transfer.action_confirm()
+        internal_transfer.sale_id = sale_orders[1]
+        sale_orders.action_confirm()
+        self.assertRecordValues((sale_orders.picking_ids | internal_transfer).sorted('id'), [
+            {'picking_type_code': 'internal', 'sale_id': sale_orders[1].id},
+            {'picking_type_code': 'outgoing', 'sale_id': sale_orders[0].id},
+            {'picking_type_code': 'outgoing', 'sale_id': sale_orders[1].id},
+        ])
+
+    def test_set_sale_id_per_reference_isolation(self):
+        """Test that reassigning a receipt must update each reference independently."""
+        sale_orders = self._get_new_sale_order() | self._get_new_sale_order()
+        sale_orders.action_confirm()
+        ref_a, ref_b = sale_orders[0].stock_reference_ids, sale_orders[1].stock_reference_ids
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
+            'partner_id': self.partner_a.id,
+            'move_ids': [Command.create({
+                'product_id': sale_orders.order_line.product_id.id,
+                'product_uom_qty': sum(sale_orders.order_line.mapped('product_uom_qty')),
+            })],
+        })
+        receipt.action_confirm()
+        self.env['report.stock.report_reception'].action_assign(
+            sale_orders.picking_ids.move_ids.ids,
+            sale_orders.order_line.mapped('product_uom_qty'),
+            [receipt.move_ids.ids] * len(sale_orders),
+        )
+        self.assertEqual(receipt.reference_ids, ref_a | ref_b)
+        receipt.sale_id = sale_orders[1]
+        receipt.sale_id = sale_orders[0]
+        self.assertEqual(ref_a.sale_ids, sale_orders[0])
+        self.assertEqual(ref_b.sale_ids, sale_orders)
