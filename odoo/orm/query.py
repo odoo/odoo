@@ -83,6 +83,16 @@ class Query:
         # memoized result
         self._ids: tuple[int, ...] | None = None
 
+    def __copy__(self):
+        assert isinstance(self, Query)
+        cls = type(self)
+        query = cls.__new__(cls)
+        query.__dict__ = self.__dict__.copy()
+        query._joins = query._joins.copy()
+        query._where_clauses = query._where_clauses.copy()
+        query._order_groupby = query._order_groupby.copy()
+        return query
+
     @staticmethod
     def make_alias(alias: str, link: str) -> str:
         """ Return an alias based on ``alias`` and ``link``. """
