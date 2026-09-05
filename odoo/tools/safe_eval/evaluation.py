@@ -281,6 +281,9 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
             assert_valid_codeobj(allowed_codes, const, const.co_name)
 
 
+_COMPILE_FLAG = object()
+
+
 def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Literal['eval', 'exec'] = 'eval'):
     """
         :param str filename: optional pseudo-filename for the compiled expression,
@@ -299,15 +302,43 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
             tree = ast.parse(expr, mode=mode)
             tree = safe_transform(tree)
             code_obj = compile(tree, filename or '', mode)
-            add_monitoring(code_obj)
-            return code_obj
+        else:
+            code_obj = compile(expr, filename or '', mode)
 
-        return compile(expr, filename or '', mode)
+        code_obj = code_obj.replace(co_consts=code_obj.co_consts + (_COMPILE_FLAG,))
+
+        if unsafe_policy():
+            add_monitoring(code_obj)
+
+        return code_obj
 
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:  # noqa: BLE001
         raise ValueError('%r while compiling\n%r' % (e, expr))
+
+
+def eval_codeobj(code_obj: types.CodeType, context: dict, expr: str):
+    assert any(const is _COMPILE_FLAG for const in code_obj.co_consts), \
+        'Compile `expr` using `compile_codeobj`'
+
+    globals_dict = dict(
+        context or {},
+        __name__=f'{__name__}.<evaluated_code>',
+        __builtins__=dict(_BUILTINS),
+    )
+
+    try:
+        # empty locals dict makes the eval behave like top-level code
+        return unsafe_eval(code_obj, globals_dict, None)
+
+    finally:
+        if context is not None:
+            # Leave `__name__` in the globals because objects that will be
+            # created in this namespace must have a corresponding `__module__`.
+            del globals_dict['__builtins__']
+            context.update(globals_dict)
+            del context['__name__']
 
 
 def const_eval(expr):
@@ -418,29 +449,17 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
 
     check_values(context)
 
-    globals_dict = dict(
-        context or {},
-        __name__=f'{__name__}.<evaluated_code>',
-        __builtins__=dict(_BUILTINS),
-    )
-
     c = compile_codeobj(expr, filename=filename, mode=mode)
     assert_valid_codeobj(_SAFE_OPCODES, c, expr)
     try:
         # empty locals dict makes the eval behave like top-level code
-        return unsafe_eval(c, globals_dict, None)
+        return eval_codeobj(c, context, expr)
 
     except _BUBBLEUP_EXCEPTIONS:
         raise
 
     except (Exception, UnsafeError) as e:  # noqa: BLE001
         raise ValueError('%r while evaluating\n%r' % (e, expr))
-
-    finally:
-        if context is not None:
-            del globals_dict['__builtins__']
-            del globals_dict['__name__']
-            context.update(globals_dict)
 
 
 def test_python_expr(expr, mode="eval"):

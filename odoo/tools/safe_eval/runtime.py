@@ -142,15 +142,12 @@ class _SafeTransformer(ast.NodeTransformer):
     order to check that the arguments are "safe".
     """
 
-    # In Qweb, we use the transformer to modify the python expression.
-    # The ast will not be compiled, but instead "unparsed" in the transpiled template.
-    # The expression will be used later and therefore re-parsed.
-    # It is therefore necessary for the identifiers to be valid.
-
-    CALL_ID = '_safe_eval_call'
-    DECO_ID = '_safe_eval_deco'
-    GEN_FUNC_ID = '_safe_eval_gen_func'
-    GEN_ITER_ID = '_safe_eval_gen_iter'
+    # We can use invalid indentifier because the expression resulting from the
+    # transformed AST will no longer be tokenized.
+    CALL_ID = '._safe_eval_call'
+    DECO_ID = '._safe_eval_deco'
+    GEN_FUNC_ID = '._safe_eval_gen_func'
+    GEN_ITER_ID = '._safe_eval_gen_iter'
 
     def visit_Call(self, node):
         """
