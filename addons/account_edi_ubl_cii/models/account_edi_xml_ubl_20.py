@@ -412,7 +412,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._add_invoice_line_id_nodes(line_node, vals)
         self._add_invoice_line_note_nodes(line_node, vals)
         self._add_invoice_line_free_of_charge_indicator_nodes(line_node, vals)
-        self._add_invoice_line_period_nodes(line_node, vals)
         self._add_invoice_line_allowance_charge_nodes(line_node, vals)
         self._add_invoice_line_amount_nodes(line_node, vals)
         self._add_invoice_line_tax_total_nodes(line_node, vals)
@@ -455,9 +454,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _add_invoice_line_amount_nodes(self, line_node, vals):
         self._add_document_line_amount_nodes(line_node, vals)
-
-    def _add_invoice_line_period_nodes(self, line_node, vals):
-        pass
 
     def _add_invoice_line_allowance_charge_nodes(self, line_node, vals):
         self._add_document_line_allowance_charge_nodes(line_node, vals)

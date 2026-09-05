@@ -4,7 +4,6 @@ import re
 
 from collections import defaultdict
 from copy import deepcopy
-from datetime import datetime
 from markupsafe import Markup
 from lxml import etree
 
@@ -886,29 +885,11 @@ class AccountEdiCommon(models.AbstractModel):
         return lines_values, logs
 
     def _retrieve_invoice_line_vals(self, record, tree, document_type=False, qty_factor=1):
-        # Start and End date (enterprise fields)
-        xpath_dict = self._get_invoice_line_xpaths(document_type, qty_factor)
-        deferred_values = {}
-        start_date = end_date = None
-        if self.env['account.move.line']._fields.get('deferred_start_date'):
-            start_date_node = tree.find(xpath_dict['deferred_start_date'])
-            end_date_node = tree.find(xpath_dict['deferred_end_date'])
-            if start_date_node is not None and end_date_node is not None:  # there is a constraint forcing none or the two to be set
-                start_date = datetime.strptime(start_date_node.text.strip(), xpath_dict['date_format'])
-                end_date = datetime.strptime(end_date_node.text.strip(), xpath_dict['date_format'])
-            deferred_values = {
-                'deferred_start_date': start_date,
-                'deferred_end_date': end_date,
-            }
-
         line_vals = self._retrieve_line_vals(record, tree, document_type, qty_factor)
         if not line_vals.get('price_subtotal'):
             return None
 
-        return {
-            **line_vals,
-            **deferred_values,
-        }
+        return line_vals
 
     @api.model
     def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
@@ -1774,10 +1755,6 @@ class AccountEdiCommon(models.AbstractModel):
 
         if name := to_write.get('name'):
             base_line_kwargs['_create_values']['name'] = name
-        if deferred_start_date := to_write.get('deferred_start_date'):
-            base_line_kwargs['_create_values']['deferred_start_date'] = deferred_start_date
-        if deferred_end_date := to_write.get('deferred_end_date'):
-            base_line_kwargs['_create_values']['deferred_end_date'] = deferred_end_date
         if vehicle_id := to_write.get('vehicle_id'):
             base_line_kwargs['_create_values']['vehicle_id'] = vehicle_id
 

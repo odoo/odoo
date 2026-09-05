@@ -167,15 +167,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         self._ubl_add_line_extension_amount_node(sub_vals)
 
-    def _add_invoice_line_period_nodes(self, line_node, vals):
-        # OVERRIDE
-        sub_vals = {
-            **vals,
-            'line_node': line_node,
-            'base_line': vals['line_vals']['base_line'],
-        }
-        self._ubl_add_line_period_nodes(sub_vals)
-
     def _add_invoice_line_pricing_reference_nodes(self, line_node, vals):
         # OVERRIDE
         sub_vals = {
