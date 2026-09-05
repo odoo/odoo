@@ -16,7 +16,7 @@
                         <t t-if="object.image_1024">
                             <div style="padding: 16px 8px 16px 8px; text-align: center;">
                                 <a t-att-href="object.website_share_url">
-                                <img t-att-alt="object.name" t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
+                                <img t-att-alt="object.name" t-att-src="object.get_image_1024_src()" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         </t>
@@ -50,7 +50,7 @@
                         <t t-out="user.name or ''">Mitchell Admin</t> shared the <t t-out="object.slide_category or ''">document</t> <strong t-out="object.name or ''">Trees</strong> with you!
                         <div style="margin: 16px 8px 16px 8px; text-align: center;">
                             <a t-att-href="(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url">
-                                <img t-att-alt="object.name" t-attf-src="{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024" style="height:auto; width:150px; margin: 16px;"/>
+                                <img t-att-alt="object.name" t-att-src="object.get_image_1024_src()" style="height:auto; width:150px; margin: 16px;"/>
                             </a>
                         </div>
                         <div style="padding: 16px 8px 16px 8px; text-align: center;">

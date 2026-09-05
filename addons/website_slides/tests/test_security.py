@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 
+from lxml import html
+
 from odoo import http
 from odoo.addons.base.tests.test_mimetypes import PNG
-from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCase
 from odoo.addons.website_slides.tests import common
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, HttpCase
@@ -318,7 +320,7 @@ class TestAccess(common.SlidesCase):
             self.slide.with_user(self.user_portal).read(['name'])
 
 
-class TestAccessHttp(common.SlidesCase, HttpCase):
+class TestAccessHttp(common.SlidesCase, HttpCase, MailCase):
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule', 'odoo.http')
     def test_access_slide_attachment(self):
         """Check the document of slides, pdf or images, stored in a binary field, so as `ir.attachment`,
@@ -422,6 +424,33 @@ class TestAccessHttp(common.SlidesCase, HttpCase):
         can_read_slides_content(self.user_portal, True)
         membership.unlink()
         can_read_slides_content(self.user_portal, False)
+
+    def test_access_slide_attachment_through_mail(self):
+        """When viewing an image through a mail client, the user does not keep his session
+        and is considered a public user. We need to make they can still see the image, even
+        when the Channel is limited to attendees.
+        """
+        self.channel.visibility = 'members'
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            slide_image = self.env['slide.slide'].create({
+                'name': 'Foo',
+                'channel_id': self.channel.id,
+                'slide_category': 'infographic',
+                'is_published': True,
+                'binary_content': PNG,
+                'is_preview': True,
+            })
+            slide_image._send_share_email("exemple@email.com", False)
+        for msg in self._new_msgs[1:]:
+            root = html.fromstring(msg.body)
+            img_src = root.xpath("//img")[0].attrib['src']
+
+            self.authenticate(self.user_public.login, self.user_public.login)
+            response = self.url_open(img_src)
+            self.assertEqual(
+                base64.b64encode(response.content),
+                PNG,
+            )
 
 
 @tagged('functional', 'security')
