@@ -108,6 +108,7 @@ def categorize_query(decoded_query: str) -> tuple[typing.Literal['from', 'into']
 sql_counter: int = 0
 
 MAX_IDLE_TIMEOUT = int(os.getenv("ODOO_DB_MAX_IDLE_TIMEOUT", "600"))
+POOL_FULL_WAIT_TIMEOUT = 5
 
 
 class Savepoint:
@@ -644,7 +645,7 @@ class ConnectionPool:
         self._check_free_at: float = 0.0
         self._maxconn = max(maxconn, 1)
         self._readonly = readonly
-        self._lock = threading.Lock()
+        self._lock = threading.Condition(threading.Lock())
 
     def __repr__(self):
         used = len(self._used_connections)
@@ -666,55 +667,66 @@ class ConnectionPool:
         as long as there are still slots available. Perform some garbage-collection in the pool:
         idle and dead connections are removed.
 
+        When the pool is full (all connections in use), threaded workers raise
+        ``PoolError`` immediately. Gevent workers wait up to
+        ``POOL_FULL_WAIT_TIMEOUT`` seconds for a connection to be given back
+        (cooperative; the OS thread is not blocked), then raise ``PoolError``.
+
         :param dict connection_info: dict of psql connection keywords
         :rtype: PsycoConnection
         """
-        # find a connection, free idle and dead connections
-        now = time.time()
-        check_all = self._check_free_at < now
-        self._check_free_at = now + MAX_IDLE_TIMEOUT / 10
-        close_used_before = now - MAX_IDLE_TIMEOUT
-        selected_cnx = None
-        for i, cnx in tools.reverse_enumerate(self._free_connections):
-            if not cnx.closed and cnx._pool_last_used < close_used_before:
-                self._debug('Close connection at index %d: %r', i, cnx.dsn)
-                cnx.close()
-            if cnx.closed:
-                self._free_connections.pop(i)
-                self._debug('Removing closed connection at index %d: %r', i, cnx.dsn)
-            elif selected_cnx is None and self._dsn_equals(cnx.dsn, connection_info):
-                self._debug('Borrow existing connection to %r at index %d', cnx.dsn, i)
-                self._free_connections.pop(i)
-                self._used_connections.add(cnx)
-                if not check_all:
-                    return cnx
-                selected_cnx = cnx
-        if selected_cnx is not None:
-            return selected_cnx
+        wait_deadline = time.monotonic() + POOL_FULL_WAIT_TIMEOUT
+        while True:
+            # find a connection, free idle and dead connections
+            now = time.time()
+            check_all = self._check_free_at < now
+            self._check_free_at = now + MAX_IDLE_TIMEOUT / 10
+            close_used_before = now - MAX_IDLE_TIMEOUT
+            selected_cnx = None
+            for i, cnx in tools.reverse_enumerate(self._free_connections):
+                if not cnx.closed and cnx._pool_last_used < close_used_before:
+                    self._debug('Close connection at index %d: %r', i, cnx.dsn)
+                    cnx.close()
+                if cnx.closed:
+                    self._free_connections.pop(i)
+                    self._debug('Removing closed connection at index %d: %r', i, cnx.dsn)
+                elif selected_cnx is None and self._dsn_equals(cnx.dsn, connection_info):
+                    self._debug('Borrow existing connection to %r at index %d', cnx.dsn, i)
+                    self._free_connections.pop(i)
+                    self._used_connections.add(cnx)
+                    if not check_all:
+                        return cnx
+                    selected_cnx = cnx
+            if selected_cnx is not None:
+                return selected_cnx
 
-        if len(self._free_connections) + len(self._used_connections) >= self._maxconn:
-            # pool is full, try to close the oldest connection
-            if self._free_connections:
-                cnx = self._free_connections.pop(0)
-                cnx.close()
-                self._debug('Removing old connection at index %d: %r', 0, cnx.dsn)
-            else:
-                raise PoolError('The Connection Pool Is Full')
+            if len(self._free_connections) + len(self._used_connections) >= self._maxconn:
+                # pool is full, try to close the oldest connection
+                if self._free_connections:
+                    cnx = self._free_connections.pop(0)
+                    cnx.close()
+                    self._debug('Removing old connection at index %d: %r', 0, cnx.dsn)
+                elif (odoo.evented
+                      and (remaining := wait_deadline - time.monotonic()) > 0
+                      and self._lock.wait(timeout=remaining)):
+                    continue
+                else:
+                    raise PoolError('The Connection Pool Is Full')
 
-        try:
-            result = psycopg2.connect(
-                connection_factory=PsycoConnection,
-                **connection_info)
-            result.give_back = functools.partial(self.give_back, result)
-        except psycopg2.Error:
-            _logger.info('Connection to the database failed')
-            raise
-        if result.server_version < MIN_PG_VERSION * 10000:
-            warnings.warn(f"Postgres version is {result.server_version}, lower than minimum required {MIN_PG_VERSION * 10000}")
-        self._used_connections.add(result)
-        self._debug('Create new connection backend PID %d', result.get_backend_pid())
+            try:
+                result = psycopg2.connect(
+                    connection_factory=PsycoConnection,
+                    **connection_info)
+                result.give_back = functools.partial(self.give_back, result)
+            except psycopg2.Error:
+                _logger.info('Connection to the database failed')
+                raise
+            if result.server_version < MIN_PG_VERSION * 10000:
+                warnings.warn(f"Postgres version is {result.server_version}, lower than minimum required {MIN_PG_VERSION * 10000}")
+            self._used_connections.add(result)
+            self._debug('Create new connection backend PID %d', result.get_backend_pid())
 
-        return result
+            return result
 
     @locked
     def give_back(self, connection: PsycoConnection, keep_in_pool: bool = True):
@@ -736,9 +748,11 @@ class ConnectionPool:
             else:
                 connection._pool_last_used = time.time()
                 self._free_connections.append(connection)
+                self._lock.notify()
                 return
         self._debug('Forget connection to %r', connection.dsn)
         connection.close()
+        self._lock.notify()
 
     @locked
     def close_all(self, dsn: dict | str | None = None):

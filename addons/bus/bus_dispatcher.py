@@ -23,11 +23,12 @@ from psycopg2.pool import PoolError
 
 import odoo
 from odoo.service.server import CommonServer
+from odoo.sql_db import db_connect
 from odoo.tools import config
 
 from .session_helpers import check_sessions
 from .tools import orjson
-from .tools.misc import acquire_cursor, tuplify
+from .tools.misc import tuplify
 from .tools.notifications import fetch_bus_notifications
 from .websocket_protocol import CloseCode, ConnectionState, InvalidStateException, Opcode
 
@@ -366,7 +367,7 @@ class BusDispatcher(threading.Thread):
                 continue
             success = False
             try:
-                with acquire_cursor(dbname) as cr:
+                with db_connect(dbname).cursor() as cr:
                     self._kick_invalid_sessions(cr, topics)
                     notifications_by_channel = self._fetch(cr, topics)
                 self._dispatch(topics, notifications_by_channel)
