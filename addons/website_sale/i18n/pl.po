@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"POT-Creation-Date: 2026-09-04 17:37+0000\n"
 "PO-Revision-Date: 2026-08-17 12:10+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-17/"
@@ -545,12 +545,12 @@ msgstr ""
 "</t>\n"
 "<hr>\n"
 "</t>\n"
-"<div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: "
-"14px;\">\n"
-"<a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ "
-"object.access_token }}\" target=\"_blank\" style=\"background-color: "
-"#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; "
-"border-radius: 5px; font-size:13px;\">\n"
+"<div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;"
+"\">\n"
+"<a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?"
+"access_token={{ object.access_token }}\" target=\"_blank\" "
+"style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "Wznów zamówienie</a>\n"
 "</div>\n"
 "<t t-set=\"company\" t-value=\"object.company_id or "
@@ -587,8 +587,8 @@ msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
 "'/' to discover more features."
 msgstr ""
-"Szczegółowy, sformatowany opis promujący Twój produkt na tej stronie. Użyj '/"
-"', aby odkryć więcej funkcji."
+"Szczegółowy, sformatowany opis promujący Twój produkt na tej stronie. Użyj "
+"'/', aby odkryć więcej funkcji."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -791,7 +791,8 @@ msgstr "Pozwól klientom porównać cechy produktów"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr "Pozwól zalogowanym użytkownikom na zapisanie produktów na liście życzeń"
+msgstr ""
+"Pozwól zalogowanym użytkownikom na zapisanie produktów na liście życzeń"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -3999,6 +4000,15 @@ msgid "Taxes"
 msgstr "Podatki"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Tekst"
@@ -4030,7 +4040,8 @@ msgstr "Token dostępu jest nieprawidłowy."
 #: model:ir.model.fields,help:website_sale.field_product_template__compare_list_price
 msgid ""
 "The amount will be displayed strikethroughed on the eCommerce product page"
-msgstr "Kwota będzie wyświetlana w postaci paska na stronie produktu eCommerce."
+msgstr ""
+"Kwota będzie wyświetlana w postaci paska na stronie produktu eCommerce."
 
 #. module: website_sale
 #. odoo-python
@@ -4070,7 +4081,8 @@ msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
 #, python-format
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr "Podana kombinacja nie istnieje, dlatego nie można jej dodać do koszyka."
+msgstr ""
+"Podana kombinacja nie istnieje, dlatego nie można jej dodać do koszyka."
 
 #. module: website_sale
 #. odoo-python
@@ -4783,7 +4795,8 @@ msgstr "Koszyk eCommerce"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
-msgstr "eCommerce: wysyłanie wiadomości e-mail do klientów o porzuconym koszyku"
+msgstr ""
+"eCommerce: wysyłanie wiadomości e-mail do klientów o porzuconym koszyku"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

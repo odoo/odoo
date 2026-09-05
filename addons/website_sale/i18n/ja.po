@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-08-04 09:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"POT-Creation-Date: 2026-09-04 17:37+0000\n"
+"PO-Revision-Date: 2026-09-02 05:11+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-17/"
 "website_sale/ja/>\n"
 "Language: ja\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -375,8 +375,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
-"バリアントに基づく</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">バリア"
+"ントに基づく</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -386,7 +386,7 @@ msgstr "<span class=\"visually-hidden\">フィルタ使用中</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<span>Order</span>"
-msgstr "<span>オーダ</span>"
+msgstr "<span>ご注文</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_kanban
@@ -401,8 +401,8 @@ msgid ""
 "                        Please contact the responsible of the shop for more "
 "information.</span>"
 msgstr ""
-"<span>支払額はカートの金額と一致していないため、オーダは確認できませんでした"
-"。\n"
+"<span>支払額はカートの金額と一致していないため、オーダは確認できませんでし"
+"た。\n"
 "                        詳しい情報は店舗の担当までご連絡ください。</span>"
 
 #. module: website_sale
@@ -522,8 +522,8 @@ msgstr ""
 "                            <hr>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
@@ -577,8 +577,8 @@ msgid ""
 "This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"顧客に見せたい製品の説明。この説明は販売注文、配送注文、顧客請求書/"
-"クレジットノートにコピーされます。"
+"顧客に見せたい製品の説明。この説明は販売注文、配送注文、顧客請求書/クレジット"
+"ノートにコピーされます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -663,8 +663,8 @@ msgid ""
 "Accessories show up when the customer reviews the cart before payment (cross-"
 "sell strategy)."
 msgstr ""
-"お客様は支払う前にカートを確認する時、製品のアクセサリが表示されます "
-"(クロスセル戦略)。"
+"お客様は支払う前にカートを確認する時、製品のアクセサリが表示されます (クロス"
+"セル戦略)。"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -787,7 +787,8 @@ msgstr "顧客が属性に基づいてプロダクトを比較できるように
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr "サインインしたユーザがウィッシュリストにプロダクトを保存できるようにします"
+msgstr ""
+"サインインしたユーザがウィッシュリストにプロダクトを保存できるようにします"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -1545,13 +1546,13 @@ msgstr ""
 "- 見込み客が一つ以上のカゴ落ちを起こして、カゴ落ちメールを送信する前に購入を"
 "完了した場合は、メールは送信されません。     \n"
 "\n"
-"- ユーザが手動でカゴ落ちメールを送信した場合は、メールは再送信されません     "
-"\n"
+"- ユーザが手動でカゴ落ちメールを送信した場合は、メールは再送信されませ"
+"ん     \n"
 "\n"
 "- お客様が決済時にエラーが発生した場合は、メールは送信されません。     \n"
 "\n"
-"- ショップがお客様の住所への配送に対応しない場合は、メールは送信されません。"
-"     \n"
+"- ショップがお客様の住所への配送に対応しない場合は、メールは送信されませ"
+"ん。     \n"
 "\n"
 "- チェックアウトの全てのプロダクトが購入不可の状態の場合は (例: 在庫切れ)、"
 "メールは送信されません。     \n"
@@ -1586,8 +1587,8 @@ msgstr "DHL"
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
 msgstr ""
-"全てのプロダクトで利用できるようにするために、構成要素をここにドロップします"
-"。"
+"全てのプロダクトで利用できるようにするために、構成要素をここにドロップしま"
+"す。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2143,9 +2144,9 @@ msgid ""
 "backend. If you wish to change your name or email address, please do so in "
 "the account settings or contact your administrator."
 msgstr ""
-"外部の方用にオーダする場合は、バックエンドから注文して下さい。名前や"
-"メールアドレスを変更したい場合は、アカウント設定から変更するか、管理者にご連"
-"絡下さい。"
+"外部の方用にオーダする場合は、バックエンドから注文して下さい。名前やメールア"
+"ドレスを変更したい場合は、アカウント設定から変更するか、管理者にご連絡下さ"
+"い。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2284,8 +2285,8 @@ msgid ""
 "It seems that there is already a transaction for your order, you can not "
 "change the delivery method anymore"
 msgstr ""
-"すでにお客様のオーダの取引が発生しており、配送方法を変更することはできません"
-"。"
+"すでにお客様のオーダの取引が発生しており、配送方法を変更することはできませ"
+"ん。"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2446,7 +2447,8 @@ msgstr "主要画像"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards & eWallet"
-msgstr "プロモーション、クーポン、ロイヤリティカード、ギフトカードや電子財布を管理"
+msgstr ""
+"プロモーション、クーポン、ロイヤリティカード、ギフトカードや電子財布を管理"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2629,7 +2631,8 @@ msgstr "次の検索結果が見つかりませんでした: 「"
 msgid ""
 "No shipping method is available for your current order and shipping address. "
 "Please contact us for more information."
-msgstr "現在の注文と配送先住所には配送方法がありません。 詳細はお問い合わせください。"
+msgstr ""
+"現在の注文と配送先住所には配送方法がありません。 詳細はお問い合わせください。"
 
 #. module: website_sale
 #. odoo-python
@@ -3021,7 +3024,7 @@ msgstr "印刷"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
-msgstr "支払いを受け取り次第、オーダを処理します。"
+msgstr "入金を確認次第、オーダ処理を進めてください。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3442,7 +3445,7 @@ msgstr "このウェブサイトへの公開を制限。"
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Resume Order"
-msgstr "オーダを続ける"
+msgstr "注文を再開"
 
 #. module: website_sale
 #. odoo-python
@@ -3968,6 +3971,15 @@ msgid "Taxes"
 msgstr "税金"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "テキスト"
@@ -4179,8 +4191,8 @@ msgid ""
 "menu *Action*."
 msgstr ""
 "B2Bモードで招待状を送信するには、連絡先を開くか、リスト表示で複数の連絡先を選"
-"択して、ドロップダウンメニューの「アクション」から「ポータルアクセス管理」"
-"オプションをクリックしてください。"
+"択して、ドロップダウンメニューの「アクション」から「ポータルアクセス管理」オ"
+"プションをクリックしてください。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4753,7 +4765,8 @@ msgstr "して、前のカートを現在のカートと併合します。"
 msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
-msgstr "して、前のカートを復元します。現在のカートは前のカートで置き換えられます。"
+msgstr ""
+"して、前のカートを復元します。現在のカートは前のカートで置き換えられます。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products

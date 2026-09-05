@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"POT-Creation-Date: 2026-09-04 17:37+0000\n"
 "PO-Revision-Date: 2026-08-27 15:09+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/"
@@ -523,8 +523,8 @@ msgstr ""
 "                            <hr>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
@@ -556,8 +556,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"></t>\n"
 "                    <div style=\"text-align: center;\"><strong>Gracias por "
-"comprar con <t t-out=\"company.name or ''\">Mi Compañía (San Francisco)</t>"
-"!</strong></div>\n"
+"comprar con <t t-out=\"company.name or ''\">Mi Compañía (San Francisco)</t>!"
+"</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -1605,7 +1605,8 @@ msgstr "DHL"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
-msgstr "ARRASTRE BLOQUES AQUÍ PARA QUE ESTÉN DISPONIBLES EN TODOS LOS PRODUCTOS"
+msgstr ""
+"ARRASTRE BLOQUES AQUÍ PARA QUE ESTÉN DISPONIBLES EN TODOS LOS PRODUCTOS"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2152,8 +2153,8 @@ msgstr "Si está marcada, algunos mensajes tienen error de envío."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "If product price equals 0, replace 'Add to Cart' by 'Contact us'."
 msgstr ""
-"Si el precio del producto es igual a 0, sustituya «Añadir a la cesta» por «"
-"Contacta con nosotros»."
+"Si el precio del producto es igual a 0, sustituya «Añadir a la cesta» por "
+"«Contacta con nosotros»."
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -4015,6 +4016,15 @@ msgid "Taxes"
 msgstr "Impuestos"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Texto"
@@ -4097,7 +4107,8 @@ msgstr ""
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr "El producto dado no existe, por lo tanto no se puede añadir a la cesta."
+msgstr ""
+"El producto dado no existe, por lo tanto no se puede añadir a la cesta."
 
 #. module: website_sale
 #. odoo-python
@@ -4641,8 +4652,8 @@ msgid ""
 "                                            If you want to modify your "
 "shipping address, create a"
 msgstr ""
-"¡Está editando su dirección <b>de facturación y envío</b> al mismo "
-"tiempo!<br/>\n"
+"¡Está editando su dirección <b>de facturación y envío</b> al mismo tiempo!"
+"<br/>\n"
 "                                            Si desea modificar su dirección "
 "de envío, cree una"
 

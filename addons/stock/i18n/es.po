@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-08-28 12:49+0000\n"
+"PO-Revision-Date: 2026-09-01 08:10+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-17/stock/"
 "es/>\n"
@@ -860,7 +860,7 @@ msgstr "? Esto puede causar inconsistencias en su inventario."
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
 msgid "A barcode can only be assigned to one package type!"
-msgstr "Un código de barras solo se puede asignar a un tipo de paquete."
+msgstr "¡Un código de barras solo se puede asignar a un tipo de paquete!"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -3143,7 +3143,7 @@ msgstr "Caja desechable"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "Do you confirm you want to scrap"
-msgstr "¿Confirme que desea desechar?"
+msgstr "¿Confirma que quiere desechar"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3309,7 +3309,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
 msgid "Exception(s) occurred on the picking"
-msgstr "Excepcion(es) producida(s) en el albarán:"
+msgstr "Se han producido excepciones en la transferencia"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -4574,7 +4574,7 @@ msgstr "Llega tarde o llegará tarde según la fecha límite y la fecha programa
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
-msgstr "¿Se puede editar la cantidad hecha?"
+msgstr "¿Se puede editar la cantidad?"
 
 #. module: stock
 #. odoo-python
@@ -5193,7 +5193,7 @@ msgstr "Gestionar paquetes"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr "Gestionar flujos de inventario push y pull (jalar & empujar)"
+msgstr "Gestionar flujos de inventario push y pull"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_storage_categories
@@ -6099,12 +6099,12 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services "
 "without prior warning in the event of late payment."
 msgstr ""
-"Nuestras facturas se pueden pagar en un plazo de 21 días laborables, a menos "
-"que se indique otro plazo de pago en la factura o en la orden. En caso de "
-"falta de pago en la fecha de vencimiento, Mi Empresa (Chicago) se reserva el "
-"derecho de solicitar un pago de intereses fijo que asciende al 10% de la "
-"suma restante adeudada. Mi Empresa (Chicago) estará autorizada a suspender "
-"cualquier prestación de servicios sin previo aviso en caso de retraso en el "
+"Nuestras facturas deben abonarse en un plazo de 21 días laborables, salvo "
+"que se indique otro plazo de pago en la factura o en el pedido. En caso de "
+"impago en la fecha de vencimiento, Mi Empresa (Chicago) se reserva el "
+"derecho a exigir el pago de un interés fijo equivalente al 10 % del importe "
+"pendiente de pago. Mi Empresa (Chicago) estará autorizada a suspender la "
+"prestación de cualquier servicio sin previo aviso en caso de retraso en el "
 "pago."
 
 #. module: stock
@@ -7291,13 +7291,15 @@ msgid ""
 "Otherwise, this includes goods leaving any Stock Location with 'internal' "
 "type."
 msgstr ""
-"Cantidad de productos salientes planificados.\n"
-"En un contexto con una única ubicación de stock, esto incluye bienes que "
-"salen de esta ubicación o cualquiera de sus hijos.\n"
-"En un contexto con un solo Almacén, esto incluye los bienes que salen de la "
-"Ubicación de stock de este Almacén, o cualquiera de sus hijos.\n"
-"De lo contrario, esto incluye bienes que salgan de cualquier Stock Stock con "
-"tipo 'interno'."
+"Cantidad de productos de salida planificados.\n"
+"En un contexto con una única ubicación de stock, esto incluye las mercancías "
+"que salen de dicha ubicación o de cualquiera de sus ubicaciones "
+"secundarias.\n"
+"En un contexto con un único almacén, esto incluye las mercancías que salen "
+"de la ubicación de stock de dicho almacén o de cualquiera de sus ubicaciones "
+"secundarias.\n"
+"En los demás casos, esto incluye las mercancías que salen de cualquier "
+"ubicación de stock de tipo «interna»."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__quantity

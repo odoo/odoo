@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock
+# * stock
 #
 # Translators:
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023
@@ -26,14 +26,14 @@
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # Dynamic Business Group, 2025
 # Mohammadamir Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-08-04 07:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-01 13:10+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-17/stock/"
 "fa/>\n"
 "Language: fa\n"
@@ -41,7 +41,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -75,6 +75,8 @@ msgid ""
 "\n"
 "Package: %s"
 msgstr ""
+"\n"
+"بسته: %s"
 
 #. module: stock
 #. odoo-python
@@ -1650,6 +1652,7 @@ msgid ""
 "Changing the Lot/Serial number for move lines with different products is not "
 "allowed."
 msgstr ""
+"تغییر سری ساخت/شماره سریال سطرهای انتقالی که محصولات متفاوتی دارند مجاز نیست."
 
 #. module: stock
 #. odoo-python
@@ -1831,6 +1834,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با DHL<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1849,6 +1855,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با FedEx<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1872,6 +1881,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با UPS<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1885,6 +1897,9 @@ msgid ""
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"محاسبه هزینه و ارسال با USPS<br/>\n"
+"                                    <strong>(برای نصب، وارد داشبورد اصلی و "
+"سپس برنامه‌ها شوید)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2384,7 +2399,7 @@ msgstr "دمو_واحدی_اندازه‌گیری"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "DHL Connector"
-msgstr ""
+msgstr "رابط DHL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -5553,7 +5568,7 @@ msgstr "عملیاتی یافت نشد. بیایید یک انتقال ایجا�
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "No product found to generate Serials/Lots for."
-msgstr ""
+msgstr "محصولی برای تولید شماره سریال یا سری ساخت یافت نشد."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -6136,7 +6151,7 @@ msgstr "بسته A"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package B"
-msgstr ""
+msgstr "بسته B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -6491,6 +6506,8 @@ msgid ""
 "Press the \"New\" button to define the quantity for a product in your stock "
 "or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
+"با استفاده از دکمه «جدید» مقادیر جدیدی برای محصولات انبار خود وارد کنید یا از "
+"طریق منوی «عملیات» مقادیر را از صفحه گسترده ایمپورت کنید"
 
 #. module: stock
 #. odoo-javascript
@@ -8959,7 +8976,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "The Lot/Serial number (%s) is linked to another product."
-msgstr ""
+msgstr "سری ساخت/شماره سریال (%s) به محصول دیگری لینک شده است."
 
 #. module: stock
 #. odoo-python
@@ -10736,6 +10753,8 @@ msgstr ""
 #, python-format
 msgid "You can not create a snoozed orderpoint that is not manually triggered."
 msgstr ""
+"شما نمی‌توانید یک نقطه سفارش به تعویق افتاده ایجاد کنید که به صورت دستی فعال "
+"نشده باشد."
 
 #. module: stock
 #. odoo-python
@@ -10808,6 +10827,8 @@ msgid ""
 "You can only snooze manual orderpoints. You should rather archive 'auto-"
 "trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
+"فقط می‌توانید نقاط سفارش دستی را به تعویق بی‌اندازید. اگر نمی‌خواهید نقاط فروش "
+"اجرا نشوند، باید نقاط «راه‌اندازی خودکار» را بایگانی کنید."
 
 #. module: stock
 #. odoo-python
@@ -10931,7 +10952,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "You cannot duplicate stock quants."
-msgstr ""
+msgstr "امکان تکثیر موجودی واقعی شمارش شده انبار وجود ندارد."
 
 #. module: stock
 #. odoo-python

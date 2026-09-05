@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"POT-Creation-Date: 2026-09-04 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 22:52+0000\n"
 "Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-17/"
@@ -70,7 +70,8 @@ msgstr "&amp;nbsp;"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "&amp;nbsp;(<i>Your shipping address will be requested later)</i>"
-msgstr "&amp;nbsp;(<i>O seu endereço de entrega será solicitado mais tarde)</i>"
+msgstr ""
+"&amp;nbsp;(<i>O seu endereço de entrega será solicitado mais tarde)</i>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -199,8 +200,8 @@ msgid ""
 "<i class=\"fa fa-plus me-md-2\"/><span class=\"d-none d-md-inline\">Add "
 "address</span>"
 msgstr ""
-"<i class=\"fa fa-plus me-md-2\"/><span class=\"d-none d-md-inline\">"
-"Adicionar endereço</span>"
+"<i class=\"fa fa-plus me-md-2\"/><span class=\"d-none d-md-"
+"inline\">Adicionar endereço</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -370,7 +371,8 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr "<span class=\"s_website_form_label_content\">Enviar um documento</span>"
+msgstr ""
+"<span class=\"s_website_form_label_content\">Enviar um documento</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -383,8 +385,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
-"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">"
-"Baseado nas variantes</span>"
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= "
+"1\">Baseado nas variantes</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -523,8 +525,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">HÁ ARTIGOS NO SEU "
-"CARRINHO.</h1>\n"
+"                    <h1 style=\"color:#A9A9A9;\">HÁ ARTIGOS NO SEU CARRINHO."
+"</h1>\n"
 "                    Deseja finalizar a sua compra?<br><br>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -532,8 +534,8 @@ msgstr ""
 "                            <hr>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
@@ -565,8 +567,8 @@ msgstr ""
 "                    <t t-set=\"company\" t-value=\"object.company_id or "
 "object.user_id.company_id or user.company_id\"></t>\n"
 "                    <div style=\"text-align: center;\"><strong>Agradecemos "
-"por comprar na <t t-out=\"company.name or ''\">My Company (San Francisco)</t>"
-"!</strong></div>\n"
+"por comprar na <t t-out=\"company.name or ''\">My Company (San Francisco)</"
+"t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -4018,6 +4020,15 @@ msgid "Taxes"
 msgstr "Impostos"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Texto"
@@ -4638,8 +4649,8 @@ msgid ""
 "                                            If you want to modify your "
 "shipping address, create a"
 msgstr ""
-"Está a editar os seus endereços de <b>faturação e entrega</b> ao mesmo "
-"tempo!<br/>\n"
+"Está a editar os seus endereços de <b>faturação e entrega</b> ao mesmo tempo!"
+"<br/>\n"
 "                                            Se quiser alterar o seu endereço "
 "de entrega, crie um"
 
@@ -4809,7 +4820,8 @@ msgstr "Carrinho de eCommerce"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server
 msgid "eCommerce: send email to customers about their abandoned cart"
-msgstr "eCommerce: envie e-mails para os clientes sobre seu carrinho abandonado"
+msgstr ""
+"eCommerce: envie e-mails para os clientes sobre seu carrinho abandonado"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart

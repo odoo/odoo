@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:38+0000\n"
+"POT-Creation-Date: 2026-09-04 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 05:05+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-17/"
@@ -534,8 +534,8 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                   <h1 style=\"color:#A9A9A9;\">В ВАШЕЙ КОРЗИНЕ ЧТО-ТО "
-"ЕСТЬ.</h1>\n"
+"                   <h1 style=\"color:#A9A9A9;\">В ВАШЕЙ КОРЗИНЕ ЧТО-ТО ЕСТЬ."
+"</h1>\n"
 "                    Вы хотите завершить покупку?<br><br>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
@@ -543,8 +543,8 @@ msgstr ""
 "                            <hr>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\">\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\">\n"
 "                                        <img t-attf-src=\"/web/image/"
 "product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; "
 "height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
@@ -827,7 +827,8 @@ msgstr "Разрешите конечному пользователю выбр�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
-msgstr "Позволяйте покупателю добавлять в корзину товары из предыдущего заказа."
+msgstr ""
+"Позволяйте покупателю добавлять в корзину товары из предыдущего заказа."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -4042,6 +4043,15 @@ msgid "Taxes"
 msgstr "Налоги"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Taxes have been updated based on your address. Your payment method has not "
+"been charged."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Text"
 msgstr "Текст"
@@ -4133,7 +4143,8 @@ msgstr ""
 #, python-format
 msgid ""
 "The given product does not have a price therefore it cannot be added to cart."
-msgstr "У данного товара нет цены, поэтому он не может быть добавлен в корзину."
+msgstr ""
+"У данного товара нет цены, поэтому он не может быть добавлен в корзину."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4667,8 +4678,8 @@ msgid ""
 "                                            If you want to modify your "
 "shipping address, create a"
 msgstr ""
-"Вы одновременно редактируете адреса <b>выставления счетов и доставки</b>"
-"!<br/>\n"
+"Вы одновременно редактируете адреса <b>выставления счетов и доставки</b>!<br/"
+">\n"
 "                                            Если вы хотите изменить адрес "
 "доставки, создайте"
 
@@ -4749,7 +4760,8 @@ msgstr "Ваша корзина пуста!"
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Your cart is not ready to be paid, please verify previous steps."
-msgstr "Ваша корзина не готова к оплате, пожалуйста, проверьте предыдущие шаги."
+msgstr ""
+"Ваша корзина не готова к оплате, пожалуйста, проверьте предыдущие шаги."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
