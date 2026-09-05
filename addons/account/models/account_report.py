@@ -7,6 +7,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.tools import SQL
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -51,7 +52,16 @@ class AccountReport(models.Model):
 
     name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(string="Sequence")
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(compute="_compute_active", compute_sql="_compute_sql_active", inverse="_inverse_active", compute_sudo=False)
+    active_fallback = fields.Boolean(default=True)
+    # In this case we need a selection field because in DB a False boolean is just not set, in this case we need a differenciation of Null an False
+    active_selection = fields.Selection(
+        selection=[
+            ('False', "False"),
+            ('True', "True"),
+        ],
+        company_dependent=True,
+    )
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     groupby = fields.Char(
         string="Group By",
@@ -291,7 +301,27 @@ class AccountReport(models.Model):
         if self.availability_condition != 'country':
             self.country_id = None
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._check_no_active_use_in_data_files(vals_list)
+        return super().create(vals_list)
+
+    @api.model
+    def _check_no_active_use_in_data_files(self, vals_list):
+        """ account.report's active field should never be directly written to in data files. If someone does that, only the active company
+        will receive the data, as a company-dependent value in active_selection. To prevent mistakes (especially with forward-ports),
+        this check is called in write() and create(), making sure active isn't used in the provided values when a module is being installed.
+        """
+        if install_filename := self.env.context.get('install_filename'):
+            if any('active' in vals for vals in vals_list):
+                raise UserError(_(
+                    "'active' field of account.report shouldn't be directly written to in data files. Use active_fallback. (Detected while loading %(file_path)s)",
+                    file_path=install_filename,
+                ))
+
     def write(self, vals):
+        self._check_no_active_use_in_data_files([vals])
+
         # Overridden so that changing the country of a report also creates new tax tags if necessary, or updates the country
         # of existing tags, if they aren't shared with another report.
         if 'country_id' in vals:
@@ -343,6 +373,20 @@ class AccountReport(models.Model):
 
             old_report.column_ids.copy({'report_id': new_report.id})
         return new_reports
+
+    @api.depends_context('company_id')
+    @api.depends('active_selection', 'active_fallback')
+    def _compute_active(self):
+        for record in self:
+            record.active = record.active_selection == 'True' if record.active_selection else record.active_fallback
+
+    def _compute_sql_active(self, table):
+        return SQL("COALESCE(%s = 'True', %s)", table.active_selection, table.active_fallback)
+
+    @api.onchange('active')
+    def _inverse_active(self):
+        for record in self:
+            record.active_selection = str(record.active)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_variant(self):
@@ -780,7 +824,6 @@ class AccountReportExpression(models.Model):
         return result
 
     def write(self, vals):
-
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
 
         if vals.get('engine') == 'tax_tags':
