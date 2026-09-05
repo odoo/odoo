@@ -2,6 +2,7 @@ import { getSectionRecords } from '@account/components/section_and_note_fields_b
 import { SaleOrderLineListRenderer } from '@sale/js/sale_order_line_field/sale_order_line_field';
 import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_service';
+import { useBus } from "@web/core/utils/hooks";
 import { patch } from '@web/core/utils/patch';
 
 patch(SaleOrderLineListRenderer.prototype, {
@@ -9,6 +10,10 @@ patch(SaleOrderLineListRenderer.prototype, {
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
+        this.sortDropProm = Promise.resolve();
+        useBus(this.props.list.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => {
+            detail.proms.push(this.sortDropProm);
+        });
     },
 
     /**
@@ -177,11 +182,20 @@ patch(SaleOrderLineListRenderer.prototype, {
         // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
         record.dirty = true;
         await this.props.list.leaveEditMode();
-        const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
 
-        await super.sortDrop(dataRowId, dataGroupId, { element, previous });
+        let resolveSortDrop;
+        this.sortDropProm = new Promise((resolve) => {
+            resolveSortDrop = resolve;
+        });
+        try {
+            const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
 
-        await this._handleQuantityAdjustment(recordMap);
+            await super.sortDrop(dataRowId, dataGroupId, { element, previous });
+
+            await this._handleQuantityAdjustment(recordMap);
+        } finally {
+            resolveSortDrop();
+        }
     },
 
     /**
