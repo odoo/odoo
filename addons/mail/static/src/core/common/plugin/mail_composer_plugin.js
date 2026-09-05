@@ -28,7 +28,7 @@ const PRESERVED_CLASSNAMES = new Set(["o_mail_redirect", "o_channel_redirect", "
  */
 export class MailComposerPlugin extends Plugin {
     static id = "mail_composer";
-    static dependencies = ["clipboard", "dom", "hint", "history", "input", "selection"];
+    static dependencies = ["clipboard", "dom", "hint", "history", "input", "mention_link", "selection"];
     resources = {
         before_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         bypass_paste_image_files: () => true,
@@ -54,6 +54,9 @@ export class MailComposerPlugin extends Plugin {
             }
         },
         input_handlers: this.config.composerPluginDependencies.onInput.bind(this),
+        valid_partner_mention_handlers: [
+            this.config.composerPluginDependencies.handleValidPartnerMention.bind(this),
+        ],
     };
 
     setup() {
