@@ -30,6 +30,8 @@ export class EditInBackendSystrayItem extends Component {
     }
 
     async _updateMainObjectName() {
-        this.state.mainObjectName = await this.websiteService.getUserModelName();
+        if(this.websiteService.hasEditableRecordInBackend) {
+            this.state.mainObjectName = await this.websiteService.getUserModelName();
+        }
     }
 }
