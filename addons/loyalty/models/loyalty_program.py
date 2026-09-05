@@ -383,12 +383,7 @@ class LoyaltyProgram(models.Model):
                     Command.clear(),
                     Command.create({
                         "trigger": "create",
-                        "mail_template_id": (
-                            self.env.ref(
-                                "loyalty.mail_template_gift_card", raise_if_not_found=False
-                            )
-                            or self.env["mail.template"]
-                        ).id,
+                        "mail_template_id": loyalty_card_mail_template.id,
                     }),
                 ],
             },

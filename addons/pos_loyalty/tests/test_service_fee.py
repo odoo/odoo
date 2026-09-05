@@ -61,7 +61,7 @@ class TestPosLoyaltyServiceFee(TestPointOfSaleHttpCommon):
         program = self.env["loyalty.program"].browse(
             self.env["loyalty.program"].create_from_template("gift_card")["res_id"]
         )
-        program.pos_report_print_id = self.env.ref("loyalty.report_gift_card")
+        program.pos_report_print_id = self.env.ref("loyalty.report_loyalty_card")
         self.env["loyalty.card"].create({
             "program_id": program.id,
             "code": "GIFTCARD",
