@@ -363,8 +363,11 @@ patch(PosOrder.prototype, {
             }
             total = balance + won - spent;
             const name = program.portal_visible ? program.portal_point_name : _t("Points");
+            // Separate deducted (refund) from won (earned) for display purposes
+            const rawWon = points - this._getPointsCorrection(program);
             loyaltyPoints[coupon_id] = {
-                won: parseFloat(won.toFixed(2)),
+                won: parseFloat(Math.max(rawWon, 0).toFixed(2)),
+                deducted: parseFloat(Math.abs(Math.min(rawWon, 0)).toFixed(2)),
                 spent: parseFloat(spent.toFixed(2)),
                 // Display total when order is ongoing.
                 total: parseFloat(total.toFixed(2)),

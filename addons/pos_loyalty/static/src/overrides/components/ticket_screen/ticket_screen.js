@@ -54,4 +54,61 @@ patch(TicketScreen.prototype, {
             this.pos.updateRewards();
         }
     },
+    /**
+     * After building the refund order, log for debugging.
+     * The actual loyalty point reversal happens in two places:
+     * 1. Display: _updateProgramsForRefund() in pos_store.js (reactive, runs when order changes)
+     * 2. Persistence: _reverse_loyalty_points_for_refund() in pos_order.py (server-side, on payment)
+     *
+     * @override
+     */
+    async addAdditionalRefundInfo(order, destinationOrder) {
+        await super.addAdditionalRefundInfo(...arguments);
+    },
+    /**
+     * Seeds couponPointChanges on the refund order with negated point values
+     * from the original order so that _postProcessLoyalty will deduct them.
+     *
+     * Only loyalty-type programs are reversed here; gift cards and ewallets
+     * are handled separately (they are blocked from refund above).
+     */
+    _reverseLoyaltyPointsForRefund(originalOrder, refundOrder) {
+        const originalChanges = originalOrder.uiState?.couponPointChanges || {};
+        if (!Object.keys(originalChanges).length) {
+            return;
+        }
+
+        // Determine the ratio of the refund vs the original order so partial
+        // refunds deduct the proportional share of points.
+        const originalTotal = Math.abs(originalOrder.get_total_with_tax());
+        const refundTotal = Math.abs(refundOrder.get_total_with_tax());
+        const ratio = originalTotal > 0 ? Math.min(refundTotal / originalTotal, 1) : 1;
+
+        for (const pointChange of Object.values(originalChanges)) {
+            const program = this.pos.models["loyalty.program"].get(pointChange.program_id);
+            if (!program) {
+                continue;
+            }
+            // Only reverse loyalty programs; skip gift_card / ewallet.
+            if (!["loyalty", "next_order_coupons", "coupons"].includes(program.program_type)) {
+                continue;
+            }
+            const pointsToReverse = parseFloat((pointChange.points * ratio).toFixed(2));
+            if (pointsToReverse === 0) {
+                continue;
+            }
+            const existingChange = refundOrder.uiState.couponPointChanges[pointChange.coupon_id];
+            if (existingChange) {
+                existingChange.points -= pointsToReverse;
+            } else {
+                refundOrder.uiState.couponPointChanges[pointChange.coupon_id] = {
+                    points: -pointsToReverse,
+                    program_id: pointChange.program_id,
+                    coupon_id: pointChange.coupon_id,
+                    barcode: pointChange.barcode || false,
+                    appliedRules: pointChange.appliedRules || [],
+                };
+            }
+        }
+    },
 });
