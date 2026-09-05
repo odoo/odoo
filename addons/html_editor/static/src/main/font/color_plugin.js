@@ -6,7 +6,7 @@ import {
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
-import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
+import { fillEmpty, removeClass, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
     isElement,
     isEmptyBlock,
@@ -227,8 +227,8 @@ export class ColorPlugin extends Plugin {
                 const li = closestElement(node, "li");
                 if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
                     const existingColor = li.style.color
-                    ? li.style.color
-                    : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
+                        ? li.style.color
+                        : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
                     return rgbaToHex(existingColor).toLowerCase() !== hexColor;
                 }
                 return true;
@@ -411,12 +411,10 @@ export class ColorPlugin extends Plugin {
         const fontsSet = new Set(fonts);
         for (const font of fontsSet) {
             this.colorElement(font, color, mode);
-            if (
-                !hasColor(font, "color") &&
-                !hasColor(font, "backgroundColor") &&
-                ["FONT", "SPAN"].includes(font.nodeName) &&
-                (!font.hasAttribute("style") || !color)
-            ) {
+            const attributeNames = font
+                .getAttributeNames()
+                .filter((name) => name !== "data-oe-zws-empty-inline");
+            if (!attributeNames.length) {
                 cursors.update(callbacksForCursorUpdate.unwrap(font));
                 unwrapContents(font);
                 fontsSet.delete(font);
@@ -434,8 +432,8 @@ export class ColorPlugin extends Plugin {
      * @param {'color'|'backgroundColor'} mode 'color' or 'backgroundColor'
      */
     colorElement(element, color, mode) {
+        const styleMode = mode === "color" ? "color" : "background-color";
         let parts = backgroundImageCssToParts(element.style["background-image"]);
-        const oldClassName = element.getAttribute("class") || "";
 
         if (element.matches(COLOR_COMBINATION_SELECTOR)) {
             removePresetGradient(element);
@@ -444,7 +442,7 @@ export class ColorPlugin extends Plugin {
         const hasGradientStyle = element.style.backgroundImage.includes("-gradient");
         if (mode === "backgroundColor") {
             if (!color) {
-                element.classList.remove("o_cc", ...COLOR_COMBINATION_CLASSES);
+                removeClass(element, "o_cc", ...COLOR_COMBINATION_CLASSES);
             }
             const hasGradient = getComputedStyle(element).backgroundImage.includes("-gradient");
             delete parts.gradient;
@@ -453,37 +451,51 @@ export class ColorPlugin extends Plugin {
             if (hasGradient && !newBackgroundImage) {
                 newBackgroundImage = "none";
             }
-            element.style.backgroundImage = newBackgroundImage;
-            element.style["background-color"] = "";
+            if (newBackgroundImage) {
+                element.style.backgroundImage = newBackgroundImage;
+            } else {
+                removeStyle(element, "background-image");
+            }
+            removeStyle(element, styleMode);
+            if (!color && !element.style.backgroundImage) {
+                // A `background` shorthand sets every background longhand, so
+                // once the color and the image are cleared the rest lingers as
+                // `initial` values.
+                const leftovers = [...element.style].filter(
+                    (prop) =>
+                        prop.startsWith("background-") &&
+                        element.style.getPropertyValue(prop) === "initial"
+                );
+                removeStyle(element, ...leftovers);
+            }
         }
 
-        const newClassName = oldClassName
-            .replace(mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX, "")
-            .replace(/\btext-gradient\b/g, "") // cannot be combined with setting a background
-            .replace(/\s+/, " ");
-        if (oldClassName !== newClassName) {
-            element.setAttribute("class", newClassName);
-        }
+        const classNamesToRemove = [...element.classList].filter((className) =>
+            (mode === "color" ? TEXT_CLASSES_REGEX : BG_CLASSES_REGEX).test(className)
+        );
+        classNamesToRemove.push("text-gradient");
+        removeClass(element, ...classNamesToRemove);
+
         if (isColorGradient(color)) {
-            element.style[mode] = "";
+            removeStyle(element, styleMode);
             parts.gradient = color;
             if (mode === "color") {
-                element.style["background-color"] = "";
+                removeStyle(element, "background-color");
                 element.classList.add("text-gradient");
             }
             this.applyColorStyle(element, "background-image", backgroundImagePartsToCss(parts));
         } else {
             delete parts.gradient;
             if (hasGradientStyle && !backgroundImagePartsToCss(parts)) {
-                element.style["background-image"] = "";
+                removeStyle(element, "background-image");
             }
             if (color.startsWith("text") || color.startsWith("bg-")) {
-                element.style[mode] = "";
+                removeStyle(element, styleMode);
                 element.classList.add(color);
+            } else if (color) {
+                this.applyColorStyle(element, styleMode, color);
             } else {
-                // Change camelCase to kebab-case.
-                mode = mode.replace("backgroundColor", "background-color");
-                this.applyColorStyle(element, mode, color);
+                removeStyle(element, styleMode);
             }
         }
 
@@ -493,7 +505,7 @@ export class ColorPlugin extends Plugin {
         // other background layers though (image, video, shape, ...).
         if (color.startsWith("o_cc")) {
             parts = backgroundImageCssToParts(element.style["background-image"]);
-            element.classList.remove(...COLOR_COMBINATION_CLASSES);
+            removeClass(element, ...COLOR_COMBINATION_CLASSES);
             element.classList.add("o_cc", color);
 
             const hasBackgroundColor = !!getComputedStyle(element).backgroundColor;
@@ -525,7 +537,7 @@ export class ColorPlugin extends Plugin {
             parts.gradient;
 
         if (!hasBackgroundColor && (isColorGradient(color) || color.startsWith("o_cc"))) {
-            element.style["background-image"] = "";
+            removeStyle(element, "background-image");
             parts.gradient = backgroundImageCssToParts(
                 // Compute the style from o_cc class.
                 getComputedStyle(element).backgroundImage
@@ -567,15 +579,23 @@ function removePresetGradient(element) {
     const oldBackgroundImage = element.style["background-image"];
     const parts = backgroundImageCssToParts(oldBackgroundImage);
     const currentGradient = parts.gradient;
-    element.style.removeProperty("background-image");
+    removeStyle(element, "background-image");
     const styleWithoutGradient = getComputedStyle(element);
     const presetGradient = backgroundImageCssToParts(styleWithoutGradient.backgroundImage).gradient;
     if (presetGradient !== currentGradient) {
         const withGradient = backgroundImagePartsToCss(parts);
-        element.style["background-image"] = withGradient === "none" ? "" : withGradient;
+        if (withGradient && withGradient !== "none") {
+            element.style["background-image"] = withGradient;
+        } else {
+            removeStyle(element, "background-image");
+        }
     } else {
         delete parts.gradient;
         const withoutGradient = backgroundImagePartsToCss(parts);
-        element.style["background-image"] = withoutGradient === "none" ? "" : withoutGradient;
+        if (withoutGradient && withoutGradient !== "none") {
+            element.style["background-image"] = withoutGradient;
+        } else {
+            removeStyle(element, "background-image");
+        }
     }
 }
