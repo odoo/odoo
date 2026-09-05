@@ -18,6 +18,7 @@ export class AttachmentUploadService {
         this.nextId = -1;
         this.abortByAttachmentId = new Map();
         this.deferredByAttachmentId = new Map();
+        this.deletingAttachmentIds = new Set();
         this.uploadingAttachmentIds = new Set();
         this._fileUploadBus = new EventBus();
         /** @type {Map<number, {composer: import("models").Composer, thread: import("models").Thread}>} */
@@ -121,7 +122,14 @@ export class AttachmentUploadService {
             abort();
             return;
         }
-        await attachment.remove();
+        if (this.deletingAttachmentIds.has(attachment.id)) {
+            return;
+        }
+        this.deletingAttachmentIds.add(attachment.id);
+
+        await attachment.remove().finally(() => {
+            this.deletingAttachmentIds.delete(attachment.id);
+        });
     }
 
     async upload(thread, composer, file, options) {
