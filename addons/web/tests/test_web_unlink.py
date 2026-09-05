@@ -6,7 +6,7 @@ from odoo.tools import mute_logger
 UNLINK_BLOCKED_ERROR = 'odoo.addons.web.models.models.UnlinkBlockedError'
 
 
-@tagged('-at_install', 'post_install')
+@tagged('at_install', '-post_install')
 class TestWebUnlink(HttpCase):
     """ Test that `web_unlink()` (see `Base.web_unlink` in
     `addons/web/models/models.py`) turns a foreign key/RESTRICT violation

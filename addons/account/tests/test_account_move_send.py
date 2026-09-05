@@ -1149,10 +1149,11 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard.action_send_and_print()
         self.assertTrue(invoice.is_move_sent)
         # Revert move to draft
+        # get the attachment here, because button_draft detaches attachments
+        pdf_report = invoice.invoice_pdf_report_id
         invoice.button_draft()
         self.assertTrue(invoice.is_move_sent)
         # Unlink PDF
-        pdf_report = invoice.invoice_pdf_report_id
         self.assertTrue(pdf_report)
         invoice.invoice_pdf_report_id.unlink()
         self.assertTrue(invoice.is_move_sent)

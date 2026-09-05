@@ -39,11 +39,11 @@ class TestPerfSessionInfo(common.HttpCase):
         self._prepare()
 
         # cold ormcache:
-        # - Only web: 41
+        # - Only web: 35
         # - bus: 42
         # - mail: 67
-        # - All modules: 89
-        with self.assertQueryCount(89):
+        # - All modules: 82
+        with self.assertQueryCount(83):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
@@ -51,11 +51,11 @@ class TestPerfSessionInfo(common.HttpCase):
             )
 
         # cold fields cache - warm ormcache:
-        # - Only web: 7
+        # - Only web: 6
         # - bus: 8
         # - mail: 20
-        # - All modules: 31
-        with self.assertQueryCount(31):
+        # - All modules: 27
+        with self.assertQueryCount(28):
             self.url_open(
                 "/web/session/get_session_info",
                 data=json.dumps({'jsonrpc': "2.0", 'method': "call", 'id': str(uuid4())}),
@@ -65,8 +65,8 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_web_menus_perf(self):
         # cold orm/fields cache:
         # - Web only: 17
-        # - All modules 66
-        with self.assertQueryCount(66):
+        # - All modules 46
+        with self.assertQueryCount(49):
             self.env['ir.ui.menu'].load_web_menus(False)
 
         # cold fields cache:
@@ -81,8 +81,8 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_menus_perf(self):
         # cold orm/fields cache:
         # - Web only: 17
-        # - All modules 66
-        with self.assertQueryCount(66):
+        # - All modules 46
+        with self.assertQueryCount(49):
             self.env['ir.ui.menu'].load_menus(False)
 
         # cold fields cache:

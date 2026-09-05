@@ -159,20 +159,16 @@ class Environment(Mapping[str, "BaseModel"]):
         """ Return the record corresponding to the given ``xml_id``.
 
         :param str xml_id: record xml_id, under the format ``<module.id>``
-        :param bool raise_if_not_found: whether the method should raise if record is not found
-        :returns: Found record or None
-        :raise ValueError: if record wasn't found and ``raise_if_not_found`` is True
+        :param bool raise_if_not_found: whether the method should raise if xml_id is not found
+        :returns: record or None
+        :raise ValueError: if xml_id wasn't found and ``raise_if_not_found`` is True
         """
         res_model, res_id = self['ir.model.data']._xmlid_to_res_model_res_id(
             xml_id, raise_if_not_found=raise_if_not_found
         )
 
-        if res_model and res_id:
-            record = self[res_model].browse(res_id)
-            if record.exists():
-                return record
-            if raise_if_not_found:
-                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
+        if res_id and res_model in self:
+            return self[res_model].browse(res_id)
         return None
 
     def is_superuser(self) -> bool:

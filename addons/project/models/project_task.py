@@ -1446,16 +1446,17 @@ class ProjectTask(models.Model):
                 )
         return result
 
-    def unlink(self):
+    def _delete_collect_extra(self):
+        yield from super()._delete_collect_extra()
         # Add subtasks to batch of tasks to delete
-        self |= self._get_all_subtasks()
-        last_task_id_per_recurrence_id = self.recurrence_id._get_last_task_id_per_recurrence_id()
-        for task in self:
+        all_tasks = self | self._get_all_subtasks()
+        yield all_tasks
+        last_task_id_per_recurrence_id = all_tasks.recurrence_id._get_last_task_id_per_recurrence_id()
+        for task in all_tasks:
             if task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
                 remaining_tasks = task.recurrence_id.task_ids - self
-                task.recurrence_id.unlink()
+                yield task.recurrence_id
                 remaining_tasks.recurring_task = False
-        return super().unlink()
 
     def update_date_end(self, stage_id):
         project_task_type = self.env['project.task.type'].browse(stage_id)
