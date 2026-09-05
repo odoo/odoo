@@ -13,15 +13,15 @@ class HrWorkEntryType(models.Model):
         Holidays includes public holidays, national days, paid holidays and week-ends.""")
     l10n_in_sandwich_policy = fields.Selection(
         selection=[
-            ("full", "Full Sandwich Policy"),
-            ("weekend", "Weekend-Only Policy"),
-            ("public_holiday", "Public Holiday-Only Policy"),
+            ("full", "Weekends and public holidays"),
+            ("weekend", "Weekends Only"),
+            ("public_holiday", "Company holidays Only"),
         ],
         string="Sandwich Leave Policy",
         default="full",
-        help="""Full Sandwich Policy – Count both weekends and public holidays between two leave days.
-        Weekend-Only Policy – Apply only if weekends fall between leave days.
-        Public Holiday-Only Policy – Apply only if public holidays fall between leave days.""")
+        help="""Weekends and public holidays – Count both weekends and public holidays between two leave days.
+        Weekends Only – Apply only if weekends fall between leave days.
+        Company holidays Only – Apply only if public holidays fall between leave days.""")
     l10n_in_is_limited_to_optional_days = fields.Boolean(
         string="Is Limited To Optional Days",
         help="""Enable this option to restrict Flexi Leave to specific days, ensuring that only days marked as
