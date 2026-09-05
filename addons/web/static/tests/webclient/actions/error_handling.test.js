@@ -2,7 +2,7 @@ import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
 import { animationFrame, mockFetch, runAllTimers } from "@odoo/hoot-mock";
-import { Component, onMounted, useProps, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -66,7 +66,6 @@ test("error in a client action (at rendering)", async () => {
     expect.assertions(9);
     class Boom extends Component {
         static template = xml`<div><t t-out="this.a.b.c"/></div>`;
-        props = useProps();
     }
     actionRegistry.add("Boom", Boom);
     onRpc("web_search_read", () => {
@@ -96,11 +95,9 @@ test("dialog opened while an action fails is not closed", async () => {
     class CustomDialog extends Component {
         static components = { Dialog };
         static template = xml`<Dialog title="'Access Error'">content</Dialog>`;
-        props = useProps();
     }
     class Boom extends Component {
         static template = xml`<div><t t-out="this.a.b.c"/></div>`;
-        props = useProps();
     }
     actionRegistry.add("Boom", Boom);
 
@@ -125,7 +122,6 @@ test("error in a client action (after the first rendering)", async () => {
                 <t t-if="this.boom" t-out="this.a.b.c"/>
                 <button t-else="" class="my_button" t-on-click="this.onClick">Click Me</button>
             </div>`;
-        props = useProps();
         setup() {
             this.boom = false;
         }

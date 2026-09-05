@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, proxy, signal, useProps, xml } from "@odoo/owl";
+import { Component, proxy, signal, xml } from "@odoo/owl";
 import { contains, mountWithCleanup, sortableDrag } from "@web/../tests/web_test_helpers";
 
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
@@ -19,7 +19,6 @@ const dragAndDrop = async (from, to) => {
 test("Parameters error handling", async () => {
     const mountNestedSortableAndAssert = async (setupList) => {
         class NestedSortable extends Component {
-            props = useProps();
             static template = xml`
                     <div t-ref="this.rootRef">
                         <ul class="sortable_list">
@@ -89,7 +88,6 @@ test("Sorting in a single group without nesting", async () => {
     expect.assertions(30);
 
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <ul class="sortable_list">
@@ -170,7 +168,6 @@ test("Sorting in a single group without nesting", async () => {
 test("Sorting in groups without nesting", async () => {
     expect.assertions(32);
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <section t-foreach="[1,2,3]" t-as="l" t-key="l" t-att-id="l" class="pb-1">
@@ -262,7 +259,6 @@ test("Sorting with nesting - move right", async () => {
     expect.assertions(24);
     let firstMove = true;
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <ul class="sortable_list">
@@ -361,7 +357,6 @@ test("Sorting with nesting - move left", async () => {
     expect.assertions(17);
 
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <ul class="sortable_list">
@@ -455,7 +450,6 @@ test("Sorting with nesting - move root down", async () => {
     expect.assertions(23);
 
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <ul class="sortable_list">
@@ -543,7 +537,6 @@ test("Sorting with nesting - move child down", async () => {
     expect.assertions(23);
 
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <ul class="sortable_list">
@@ -628,7 +621,6 @@ test("Sorting with nesting - move child down", async () => {
 test("Sorting with nesting - move root up", async () => {
     expect.assertions(23);
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <ul class="sortable_list">
@@ -714,7 +706,6 @@ test("Sorting with nesting - move child up", async () => {
     expect.assertions(23);
 
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef">
                     <ul class="sortable_list">
@@ -798,7 +789,6 @@ test("Dynamically disable NestedSortable feature", async () => {
 
     const state = proxy({ enableNestedSortable: true });
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                 <div t-ref="this.rootRef" class="root">
                     <ul class="list">
@@ -842,7 +832,6 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
     expect.assertions(2);
 
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
                     <div t-ref="this.rootRef" class="root">
                         <ul class="list">
@@ -890,7 +879,6 @@ test("Drag has a default tolerance of 10 pixels before initiating the dragging",
 test("shouldn't drag above max level", async () => {
     expect.assertions(4);
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
             <div t-ref="this.rootRef" class="root">
                 <ul class="list">
@@ -947,7 +935,6 @@ test("shouldn't drag above max level", async () => {
 test("shouldn't drag outside a nest level", async () => {
     expect.assertions(8);
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
             <div t-ref="this.rootRef" class="root">
                 <ul class="list">
@@ -1041,7 +1028,6 @@ test("shouldn't drag outside a nest level", async () => {
 test("shouldn't drag when not allowed", async () => {
     expect.assertions(3);
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
             <div t-ref="this.rootRef" class="root">
                 <ul class="list">
@@ -1100,7 +1086,6 @@ test("shouldn't drag when not allowed", async () => {
 test("placeholder and drag element have same size", async () => {
     expect.assertions(5);
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
             <div t-ref="this.rootRef" class="root">
                 <ul class="list">
@@ -1143,7 +1128,6 @@ test("Ignore specified elements", async () => {
     expect.assertions(4);
 
     class NestedSortable extends Component {
-        props = useProps();
         static template = xml`
             <div t-ref="this.rootRef" class="root">
                 <ul class="list">

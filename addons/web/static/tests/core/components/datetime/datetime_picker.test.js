@@ -1,7 +1,7 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import {
     defineParams,
     isSmall,
@@ -1178,7 +1178,6 @@ test("focus proper month when changing props out of current month", async () => 
     class Parent extends Component {
         static template = xml`<DateTimePicker value="this.state.current"/>`;
         static components = { DateTimePicker };
-        props = useProps();
         setup() {
             this.state = proxy({
                 current: DateTime.now(),

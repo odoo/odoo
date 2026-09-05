@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryText } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, useProps, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -382,7 +382,6 @@ describe("new", () => {
 
         class ErrorClientAction extends Component {
             static template = xml`<div/>`;
-            props = useProps();
             setup() {
                 throw new Error("my error");
             }
@@ -391,7 +390,6 @@ describe("new", () => {
 
         class ClientActionTargetNew extends Component {
             static template = xml`<div class="my_action_new" />`;
-            props = useProps();
         }
         registry.category("actions").add("clientActionNew", ClientActionTargetNew);
 
@@ -400,7 +398,6 @@ describe("new", () => {
                 <div class="my_action" t-on-click="this.onClick">
                     My Action
                 </div>`;
-            props = useProps();
             setup() {
                 this.action = useService("action");
             }

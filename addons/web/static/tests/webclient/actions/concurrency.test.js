@@ -488,7 +488,6 @@ test("properly drop client actions after new action is initiated", async () => {
     const slowWillStartDef = Promise.withResolvers();
     class ClientAction extends Component {
         static template = xml`<div class="client_action">ClientAction</div>`;
-        props = useProps();
         setup() {
             onWillStart(() => slowWillStartDef?.promise);
         }

@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import {
     defineModels,
     getPagerLimit,
@@ -21,7 +21,6 @@ test("pager is correctly displayed", async () => {
     class TestComponent extends Component {
         static components = { ControlPanel };
         static template = xml`<ControlPanel />`;
-        props = useProps();
         setup() {
             usePager(() => ({
                 offset: 0,
@@ -46,7 +45,6 @@ test("pager is correctly displayed on desktop", async () => {
     class TestComponent extends Component {
         static components = { ControlPanel };
         static template = xml`<ControlPanel />`;
-        props = useProps();
         setup() {
             usePager(() => ({
                 offset: 0,
@@ -70,7 +68,6 @@ test("pager is correctly updated", async () => {
     class TestComponent extends Component {
         static components = { ControlPanel };
         static template = xml`<ControlPanel />`;
-        props = useProps();
         setup() {
             this.state = proxy({ offset: 0, limit: 10 });
             usePager(() => ({
@@ -106,7 +103,6 @@ test("pager is correctly updated on desktop", async () => {
     class TestComponent extends Component {
         static components = { ControlPanel };
         static template = xml`<ControlPanel />`;
-        props = useProps();
         setup() {
             this.state = proxy({ offset: 0, limit: 10 });
             usePager(() => ({

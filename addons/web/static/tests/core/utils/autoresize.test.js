@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryRect, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, signal, useProps, xml } from "@odoo/owl";
+import { Component, signal, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { useAutoresize } from "@web/core/utils/autoresize";
@@ -9,7 +9,6 @@ import { useAutoresize } from "@web/core/utils/autoresize";
 test(`resizable input`, async () => {
     class ResizableInput extends Component {
         static template = xml`<input class="resizable-input" t-ref="this.inputRef"/>`;
-        props = useProps();
         inputRef = signal.ref();
 
         setup() {
@@ -45,7 +44,6 @@ test(`resizable input sizes to its placeholder when empty`, async () => {
 test(`resizable textarea`, async () => {
     class ResizableTextArea extends Component {
         static template = xml`<textarea class="resizable-textarea" t-ref="this.textareaRef"/>`;
-        props = useProps();
         textareaRef = signal.ref();
 
         setup() {
@@ -62,7 +60,6 @@ test(`resizable textarea`, async () => {
 test(`resizable textarea with minimum height`, async () => {
     class ResizableTextArea extends Component {
         static template = xml`<textarea class="resizable-textarea" t-ref="this.textareaRef"/>`;
-        props = useProps();
         textareaRef = signal.ref();
 
         setup() {
@@ -80,7 +77,6 @@ test(`resizable textarea with minimum height`, async () => {
 test(`call onResize callback`, async () => {
     class ResizableInput extends Component {
         static template = xml`<input class="resizable-input" t-ref="this.inputRef"/>`;
-        props = useProps();
         inputRef = signal.ref();
 
         setup() {
@@ -104,7 +100,6 @@ test(`call onResize callback`, async () => {
 test(`call onResize callback after resizing text area`, async () => {
     class ResizableTextArea extends Component {
         static template = xml`<textarea class="resizable-textarea" t-ref="this.textareaRef"/>`;
-        props = useProps();
         textareaRef = signal.ref();
 
         setup() {

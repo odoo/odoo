@@ -5,7 +5,7 @@ import {
     mountView,
     mountWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { expect, test } from "@odoo/hoot";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
@@ -48,7 +48,6 @@ test("DocumentationLink Component: add alert-link class", async () => {
         static components = { DocumentationLink };
         static template = xml`
         <DocumentationLink path="'/this_is_a_test.html'" class="'alert-link'"/>`;
-        props = useProps();
     }
     await mountWithCleanup(Parent);
     expect("a.alert-link").toHaveCount(1);

@@ -24,7 +24,6 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 
 class FooterComponent extends Component {
     static template = xml`<span>My footer</span>`;
-    props = useProps();
 }
 
 test("empty providers", async () => {

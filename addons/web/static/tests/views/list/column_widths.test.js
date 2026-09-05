@@ -1,7 +1,7 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { queryAllProperties, queryAllTexts, queryOne, queryRect, resize } from "@odoo/hoot-dom";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useProps, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -465,7 +465,6 @@ test(`width computation: editable list, no record, with handle field`, async () 
 test(`width computation: widget with listViewWidth in its definition`, async () => {
     class MyWidget extends Component {
         static template = xml`<span>My custom widget</span>`;
-        props = useProps();
     }
     const myWidget = {
         listViewWidth: 171,

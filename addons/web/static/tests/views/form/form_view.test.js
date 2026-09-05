@@ -860,7 +860,6 @@ test(`form with o2m having a selection field with fieldDependencies`, async () =
 test(`form view: widget having a o2m field as fieldDependencies`, async () => {
     class MyWidget extends Component {
         static template = xml`<span>My custom widget</span>`;
-        props = useProps();
     }
     widgetsRegistry.add("my_widget", {
         component: MyWidget,
@@ -8325,7 +8324,6 @@ test(`correct amount of buttons`, async () => {
     await assertFormContainsNButtonsWithSizeClass(SIZES.XXL, 7);
 });
 
-
 test(`create with false values`, async () => {
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
@@ -9960,7 +9958,6 @@ test(`basic support for widgets`, async () => {
 
 test(`widget with class attribute`, async () => {
     class MyComponent extends Component {
-        props = useProps();
         static template = xml`<span>Hello</span>`;
     }
     widgetsRegistry.add("test_widget", { component: MyComponent });
@@ -10030,7 +10027,6 @@ test(`support header button as widgets on form statusbar on mobile`, async () =>
 test.tags("mobile");
 test("support header button as widgets in submenu on form statusbar on mobile", async () => {
     class TestUploadWidget extends Component {
-        props = useProps();
         static template = xml`
             <FileUploader onUploaded="this.onUploaded">
                 <t t-set-slot="toggler">
@@ -11200,7 +11196,6 @@ test(`Action Button clicked with failing action on desktop`, async () => {
     expect.errors(1);
 
     class MyComponent extends Component {
-        props = useProps();
         static template = xml`<div/>`;
         setup() {
             throw new Error("test");
@@ -11243,7 +11238,6 @@ test(`Action Button clicked with failing action on mobile`, async () => {
     expect.errors(1);
 
     class MyComponent extends Component {
-        props = useProps();
         static template = xml`<div/>`;
         setup() {
             throw new Error("test");
@@ -12024,7 +12018,6 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
     expect.errors(1);
 
     class TestClientAction extends Component {
-        props = useProps();
         static template = xml`<div></div>`;
         setup() {
             throw new Error("Something went wrong");
@@ -12033,7 +12026,6 @@ test(`coming to an action with an error from a form view with a dirty x2m`, asyn
     registry.category("actions").add("TestClientAction", TestClientAction);
 
     class MyWidget extends Component {
-        props = useProps();
         static template = xml`
             <div class="test_widget">
                 <button t-on-click="this.onClick">MyButton</button>
@@ -12106,7 +12098,6 @@ test(`coming to an action with an error from a form view with a record in creati
     expect.errors(1);
 
     class TestClientAction extends Component {
-        props = useProps();
         static template = xml`<div></div>`;
         setup() {
             throw new Error("Something went wrong");
@@ -12115,7 +12106,6 @@ test(`coming to an action with an error from a form view with a record in creati
     registry.category("actions").add("TestClientAction", TestClientAction);
 
     class MyWidget extends Component {
-        props = useProps();
         static template = xml`
                 <div class="test_widget">
                     <button t-on-click="this.onClick">MyButton</button>
@@ -12673,7 +12663,6 @@ test(`existing record with falsy display_name`, async () => {
 
 test(`field with special data`, async () => {
     class MyWidget extends Component {
-        props = useProps();
         static template = xml`<div>MyWidget</div>`;
         setup() {
             this.specialData = useSpecialData((orm, props) => {
@@ -12707,7 +12696,6 @@ test(`field with special data`, async () => {
 
 test(`field with special data (with persistent Cache)`, async () => {
     class MyWidget extends Component {
-        props = useProps();
         static template = xml`<div class="my_widget">MyWidget <t t-out="this.specialData.data.test"/></div>`;
         setup() {
             this.specialData = useSpecialData((orm, props) => {
@@ -13171,7 +13159,6 @@ test(`cog menu action is executed with up to date context`, async () => {
 
 test("CogMenu receives the model in env", async () => {
     class CogItem extends Component {
-        props = useProps();
         static template = xml`<button class="test-cog" t-on-click="this.onClick">Test</button>`;
         onClick() {
             expect.step([`cog clicked`, this.env.model.root.resModel, this.env.model.root.resId]);

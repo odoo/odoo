@@ -290,7 +290,6 @@ test("search input is focused when being toggled", async () => {
             </div>
         `;
         static components = { SearchBar };
-        props = useProps();
         setup() {
             this.searchBarToggler = useSearchBarToggler();
         }

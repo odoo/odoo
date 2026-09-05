@@ -91,7 +91,6 @@ test(`Simple rendering: with search`, async () => {
 
 test(`Rendering with default ControlPanel and SearchPanel`, async () => {
     class ToyComponent extends Component {
-        props = useProps();
         static template = xml`
             <Layout className="'o_view_sample_data'" display="{ controlPanel: {}, searchPanel: true }">
                 <div class="toy_content"/>
@@ -127,7 +126,6 @@ test(`Rendering with default ControlPanel and SearchPanel`, async () => {
 test(`Nested layouts`, async () => {
     // Component C: bottom (no control panel)
     class ToyC extends Component {
-        props = useProps();
         static template = xml`
             <Layout className="'toy_c'" display="this.display">
                 <div class="toy_c_content"/>
@@ -145,7 +143,6 @@ test(`Nested layouts`, async () => {
 
     // Component B: center (with custom search panel)
     class SearchPanel extends Component {
-        props = useProps();
         static template = xml`<div class="o_toy_search_panel"/>`;
     }
 
@@ -210,7 +207,6 @@ test(`Custom control panel`, async () => {
     }
 
     class ControlPanel extends Component {
-        props = useProps();
         static template = xml`<div class="o_toy_search_panel"/>`;
     }
 
@@ -239,7 +235,6 @@ test(`Custom search panel`, async () => {
     }
 
     class SearchPanel extends Component {
-        props = useProps();
         static template = xml`<div class="o_toy_search_panel"/>`;
     }
 

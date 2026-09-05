@@ -11,7 +11,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -378,7 +378,6 @@ test("async method loadFields is protected", async () => {
         static template = xml`
             <div class="o_child_component" />
         `;
-        props = useProps();
         setup() {
             this.fieldService = useService("field");
             callFieldService = async () => {
@@ -396,7 +395,6 @@ test("async method loadFields is protected", async () => {
                 <Child />
             </t>
         `;
-        props = useProps();
         setup() {
             this.state = proxy({ displayChild: true });
         }

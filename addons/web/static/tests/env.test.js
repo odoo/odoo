@@ -203,7 +203,6 @@ test(`mountComponent creates an env and sets the application as root`, async () 
     let comp = null;
     class Root extends Component {
         static template = xml`Root`;
-        props = useProps();
 
         setup() {
             comp = this;

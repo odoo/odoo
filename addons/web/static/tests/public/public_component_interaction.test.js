@@ -47,7 +47,6 @@ test(`render Public Component`, async () => {
 test(`content of owl-component tag is cleared`, async () => {
     class MyPublicComp extends Component {
         static template = xml`<div>component</div>`;
-        props = useProps();
     }
     publicComponentRegistry.add("my_public_comp", MyPublicComp);
 

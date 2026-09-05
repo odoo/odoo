@@ -1,6 +1,6 @@
 import { test, expect } from "@odoo/hoot";
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
-import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { Component, proxy, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -36,7 +36,6 @@ async function mountMultiRecordSelector(props) {
     class Parent extends Component {
         static components = { MultiRecordSelector };
         static template = xml`<MultiRecordSelector t-props="this.recordProps" />`;
-        props = useProps();
         setup() {
             this.state = proxy({ resIds: props.resIds });
         }

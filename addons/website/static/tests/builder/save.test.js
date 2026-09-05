@@ -28,7 +28,7 @@ import {
     waitForEndOfOperation,
     wrapExample,
 } from "@html_builder/../tests/helpers";
-import { Component, xml, useProps } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
@@ -471,7 +471,6 @@ function setupSaveAndReloadIframe() {
 test("'Switch Theme' after a mutation should only ask one confirmation", async () => {
     class MockSwitchThemeAction extends Component {
         static template = xml`<div class="mock-switch-theme"></div>`;
-        props = useProps();
     }
     defineActions([
         {
