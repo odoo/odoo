@@ -1,7 +1,6 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { isSyncStatusConnected } from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
-import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
 export function nbOrdersIs(nb) {
     return [
@@ -310,8 +309,7 @@ export function sendEmail(email, expectSuccess = true) {
             trigger: `.modal-body [data-icon='send']`,
             run: "click",
         },
-        ...(expectSuccess ? [{ trigger: `.modal-body .text-success` }] : []),
-        Dialog.cancel(),
+        ...(expectSuccess ? [{ trigger: `.o_notification_manager .o_notification_progress` }] : []),
         back(),
     ];
 }
