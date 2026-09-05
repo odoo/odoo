@@ -2,7 +2,7 @@ import { normalizeCSSColor } from "@web/core/utils/colors";
 import { removeClass } from "./dom";
 import { isBold, isItalic, isStrikeThrough, isUnderline } from "./dom_info";
 import { closestElement, closestPath, findNode } from "./dom_traversal";
-import { isBlock } from "./blocks";
+import { closestBlock, isBlock } from "./blocks";
 
 /**
  * Array of all the classes used by the editor to change the font size.
@@ -24,6 +24,16 @@ export const FONT_SIZE_CLASSES = [
 ];
 
 export const TEXT_STYLE_CLASSES = ["display-1", "display-2", "display-3", "display-4", "lead"];
+
+export const DEFAULT_FONT_SIZE_CLASSES = [
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "o_default_font_size",
+];
 
 export const FORMATTABLE_TAGS = ["SPAN", "FONT", "B", "STRONG", "I", "EM", "U", "S", "CODE"];
 
@@ -109,23 +119,50 @@ export const formatsSpecs = {
         removeStyle: (node) => removeStyle(node, "font-size"),
     },
     setFontSizeClassName: {
-        isFormatted: (node, props) =>
-            !!findNode(
+        isFormatted: (node, props) => {
+            const blockParent = closestBlock(node)?.parentElement;
+            const sizedEl =
+                findNode(
                 closestPath(node),
                 (el) =>
-                    props?.className
-                        ? el.classList?.contains(props.className)
-                        : FONT_SIZE_CLASSES.some((className) => el.classList?.contains(className)),
-                isBlock
+                    [
+                    ...FONT_SIZE_CLASSES,
+                    ...DEFAULT_FONT_SIZE_CLASSES,
+                    ...TEXT_STYLE_CLASSES,
+                    ].some((cls) => el.classList?.contains(cls)),
+                (el) => el === blockParent,
+                ) ?? closestElement(node, "li");
+            const fontSizeClass =
+                sizedEl &&
+                FONT_SIZE_CLASSES.find((cls) => sizedEl.classList.contains(cls));
+            return props?.className
+                ? props.className === fontSizeClass
+                : !!fontSizeClass;
+        },
+        hasStyle: (node, props) =>
+            [...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES, ...DEFAULT_FONT_SIZE_CLASSES].find(
+                (cls) => node.classList.contains(cls)
             ),
-        hasStyle: (node, props) => FONT_SIZE_CLASSES.find((cls) => node.classList.contains(cls)),
         addStyle: (node, props) => {
             node.style.removeProperty("font-size");
             node.classList.add(props.className);
         },
         removeStyle: (node) => {
-            removeStyle(node, "font-size");
-            removeClass(node, ...FONT_SIZE_CLASSES, ...TEXT_STYLE_CLASSES);
+            removeClass(node, ...FONT_SIZE_CLASSES);
+            // Typography classes should be preserved on block elements since
+            // they act as semantic equivalents of <h1>, <h2>, etc., not just
+            // removable styles.
+            if (!isBlock(node)) {
+                removeClass(node, ...TEXT_STYLE_CLASSES, ...DEFAULT_FONT_SIZE_CLASSES);
+            }
+        },
+        addNeutralStyle: function (node) {
+            const block = closestBlock(node);
+            if (["H1", "H2", "H3", "H4", "H5", "H6"].includes(block.nodeName)) {
+                node.classList.add(block.nodeName.toLowerCase());
+            } else {
+                node.classList.add("o_default_font_size");
+            }
         },
     },
 };
@@ -231,6 +268,7 @@ export function getFontSizeDisplayValue(sel, document) {
         [style*='font-size'],
         ${FONT_SIZE_CLASSES.map((className) => `.${className}`)},
         ${styleClassesRelatedToFontSize.map((className) => `.${className}`)},
+        ${DEFAULT_FONT_SIZE_CLASSES.map((className) => `.${className}`)},
         ${tagNameRelatedToFontSize}
     `);
     let remValue;
@@ -246,22 +284,25 @@ export function getFontSizeDisplayValue(sel, document) {
             // options.
             return parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
         }
-        // It's a class font size or a hN tag. We don't return the computed
-        // font size because it can be different from the one displayed in
-        // the toolbar because it's responsive.
-        const fontSizeClass = FONT_SIZE_CLASSES.find((className) =>
-            closestFontSizedEl.classList.contains(className)
-        );
+        // It's a font size class (custom or default/neutral) or a heading tag.
+        // Retrieve the theme CSS variable to get the desktop size instead of
+        // the computed font size, which can be different due to responsiveness.
+        const activeClass = [
+            ...FONT_SIZE_CLASSES,
+            ...DEFAULT_FONT_SIZE_CLASSES,
+            ...styleClassesRelatedToFontSize,
+        ].find((cls) => closestFontSizedEl.classList.contains(cls));
+
         let fsName;
-        if (fontSizeClass) {
-            fsName = fontSizeClass.substring(0, fontSizeClass.length - 3); // Without -fs
+        if (activeClass === "o_default_font_size" || activeClass === "base-fs") {
+            fsName = "font-size-base";
+        } else if (activeClass) {
+            // e.g. o_small-fs -> small-font-size
+            fsName = `${activeClass.replace(/^o_/, "").replace(/-fs$/, "")}-font-size`;
         } else {
-            fsName =
-                styleClassesRelatedToFontSize.find((className) =>
-                    closestFontSizedEl.classList.contains(className)
-                ) || closestFontSizedEl.tagName.toLowerCase();
+            fsName = `${closestFontSizedEl.tagName.toLowerCase()}-font-size`;
         }
-        remValue = parseFloat(getCSSVariableValue(`${fsName}-font-size`, htmlStyle));
+        remValue = parseFloat(getCSSVariableValue(fsName, htmlStyle));
     }
     const pxValue = remValue && convertNumericToUnit(remValue, "rem", "px", htmlStyle);
     return pxValue || parseFloat(getComputedStyle(closestStartContainerEl).fontSize);
