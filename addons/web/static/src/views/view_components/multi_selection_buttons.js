@@ -172,9 +172,10 @@ export class MultiSelectionButtons extends Component {
         const values = Object.assign({}, multiCreateFormRecord.data);
         for (const [fieldName, data] of Object.entries(multiCreateFormRecord.data)) {
             if (["one2many", "many2many"].includes(multiCreateFormRecord.fields[fieldName].type)) {
-                values[fieldName] = data.records.map((record) =>
-                    Object.assign({ id: record.resId }, record.data)
-                );
+                values[fieldName] = data.currentIds.map((id) => {
+                    const record = data._cache[id];
+                    return record ? Object.assign({ id: record.resId }, record.data) : { id };
+                });
             }
         }
         return values;
