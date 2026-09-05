@@ -331,9 +331,7 @@ export class DynamicFieldPlugin extends Plugin {
             let doChildren = true;
             for (const dummyAttr of DUMMY_CONTENT_ATTRS) {
                 if (el.hasAttribute(dummyAttr)) {
-                    if (el.textContent.trim() === el.getAttribute(dummyAttr)) {
-                        el.replaceChildren();
-                    }
+                    el.removeAttribute(dummyAttr);
                     doChildren = false;
                 }
             }
