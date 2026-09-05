@@ -7,7 +7,7 @@ export class ImportModuleListRenderer extends ListRenderer {
     }
 
     async onCellClicked(record, column, ev) {
-        if (record._values.module_type && record._values.module_type !== 'official') {
+        if (record._values.module_type === 'industries') {
             const re_action = {
                 name: "more_info",
                 res_model: "ir.module.module",
