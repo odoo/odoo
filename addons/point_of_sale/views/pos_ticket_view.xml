@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- This is the "validation" screen. Recap the ticket info, warn the user to check/set his address and eventually set localization fields if needed. -->
-    <template id="ticket_validation_screen">
+    <template id="ticket_validation_screen" name="Ticket Validation">
         <t t-call="portal.portal_layout" no_breadcrumbs="True">
             <div class="row justify-content-md-center o_customer_address_fill">
                 <form method="post" target="_self" t-att-action="'/pos/ticket/validate'" onsubmit="this.querySelector('#get_my_invoice > button').setAttribute('disabled', 'disabled')" class="address_autoformat">
@@ -10,15 +10,23 @@
                     <input type="hidden" name="access_token" t-att-value="access_token"/>
                     <div class="col-12 col-md-6 mt-4 offset-md-3">
                         <div class="row">
-                            <h2>Invoicing confirmation</h2>
+                            <div class="col-12 d-flex align-items-center">
+                                <div class="d-flex flex-wrap">
+                                    <h2 class="mb-0 me-1">Need an invoice?</h2>
+                                    <small class="text-muted mt-auto" t-out="pos_order.pos_reference"/>
+                                </div>
+                                <a
+                                    role="button"
+                                    class="ms-auto text-nowrap"
+                                    t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token">
+                                    Sign in
+                                </a>
+                            </div>
                             <hr class="mt-1 mb-0"/>
                         </div>
                         <div class="row">
-                            <h4 class="mt-2"><t t-out="pos_order.pos_reference"/></h4>
-                        </div>
-                        <div class="row">
                             <div class="col-12 fw-bold">
-                                Products:
+                                Complete your information:
                             </div>
                         </div>
                         <div class="row">
@@ -32,7 +40,7 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <strong>Amounting to:</strong> <t t-out="format_amount(env, pos_order.amount_total, pos_order.currency_id)"/>
+                                <strong>Total:</strong> <t t-out="format_amount(env, pos_order.amount_total, pos_order.currency_id)"/>
                             </div>
                         </div>
                         <t t-if="user_is_connected">
@@ -86,11 +94,7 @@
                             </t>
                         </t>
                         <t t-else="">
-                            <div class="row mt-4">
-                                <div class="col-12" id="get_info_div">
-                                    <h4>Please enter your billing information <small class="text-muted">or</small> <a role="button" t-att-href="'/web/login?redirect=/pos/ticket/validate?access_token=%s' % access_token" style="margin-top: -11px"> Sign in</a>:</h4>
-                                </div>
-                            </div>
+                            <div id="get_info_div"/> <!-- to override in l10n -->
                             <div class="row portal_details">
                                 <div class="col-lg-12">
                                     <div class="row">
@@ -116,15 +120,10 @@
                                 </div>
                             </t>
                         </t>
-                        <div class="row mt-4">
-                            <div class="col-12 col-md-4" id="get_my_invoice">
-                                <t t-if="user_is_connected and not partner_address">
-                                    <button class="btn btn-primary btn-lg lh-lg w-100" disabled="True">Get my invoice</button>
-                                </t>
-                                <t t-else="">
-                                    <button class="btn btn-primary btn-lg lh-lg w-100">Get my invoice</button>
-                                </t>
-                            </div>
+                        <div id="get_my_invoice" class="mt-4">
+                            <button class="btn btn-primary" t-att-disabled="user_is_connected and not partner_address">
+                                Get my invoice
+                            </button>
                         </div>
                     </div>
                 </form>
@@ -151,7 +150,7 @@
                                     <div class="row">
                                         <div t-attf-class="col-12 mb-6 col-xl-8">
                                             <label class="col-form-label" for="pos_reference">Ticket Nr</label>
-                                            <input type="text" name="pos_reference" placeholder="0014-001-00001"
+                                            <input type="text" name="pos_reference" placeholder="260-001-000001"
                                                    t-attf-class="form-control #{errors.get('pos_reference') and 'is-invalid' or ''}"
                                                    t-att-value="form_values.get('pos_reference')"/>
                                             <label class="col-form-label" for="date_order">Date</label>
