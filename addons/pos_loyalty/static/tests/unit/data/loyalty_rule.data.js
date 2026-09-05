@@ -19,6 +19,7 @@ export class LoyaltyRule extends models.ServerModel {
             "minimum_amount_tax_mode",
             "mode",
             "code",
+            "promo_barcode",
         ];
     }
 
