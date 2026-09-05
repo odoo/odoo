@@ -2,6 +2,7 @@
 import json
 
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -86,10 +87,10 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         self.assertEqual(irHttp._get_host_id_from_domain('xn--dsseldorf-q9a.com'), website2.id)
         self.assertEqual(irHttp._get_host_id_from_domain('düsseldorf.com'), website2.id)
 
-        # CASE: invalid Unicode domain, shouldn't raise an exception or match with anything
-        website2.domain = 'dü sseldorf.com'
-        self.assertNotEqual(irHttp._get_host_id_from_domain('xn--d sseldorf-9db.com'), website2.id)
-        self.assertNotEqual(irHttp._get_host_id_from_domain('dü sseldorf.com'), website2.id)
+        # CASE: invalid Unicode domain, refused on write so that it can never
+        # be matched
+        with self.assertRaises(ValidationError):
+            website2.domain = 'dü sseldorf.com'
 
     def test_04_http_website_id_sequence(self):
         """Verify the default website updates after changing website sequence."""
