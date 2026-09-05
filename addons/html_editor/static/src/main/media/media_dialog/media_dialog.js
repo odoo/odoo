@@ -100,6 +100,7 @@ export class MediaDialog extends Component {
                 ...tab.props,
                 ...additionalProps,
                 id: tab.id,
+                document: this.props.document,
                 resModel: this.props.resModel,
                 resId: this.props.resId,
                 media: this.props.media,

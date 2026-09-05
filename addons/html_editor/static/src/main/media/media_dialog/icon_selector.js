@@ -1,6 +1,6 @@
 import { SearchMedia } from "./search_media";
 import { Component, onWillStart, proxy } from "@odoo/owl";
-import { mapCSSRules } from "@html_editor/utils/formatting";
+import { getCSSVariableValue, getHtmlStyle, mapCSSRules } from "@html_editor/utils/formatting";
 import { rpc } from "@web/core/network/rpc";
 
 /**
@@ -44,6 +44,15 @@ export class IconSelector extends Component {
         // Symbols (name + tags) live in the backend and are fetched on demand,
         // so their large search-terms list never ships to the browser.
         this.oiIcons = IconSelector.getOiIcons();
+        // The dialog is rendered outside of the edited document, so the icon
+        // font selected there (e.g. sharp) has to be mirrored on the previews.
+        const iconFontFamily = getCSSVariableValue(
+            "icon-font-family",
+            getHtmlStyle(this.props.document || document)
+        )
+            .replaceAll("'", "")
+            .trim();
+        this.iconsStyle = iconFontFamily ? `--icon-font-family: '${iconFontFamily}'` : undefined;
         onWillStart(async () => {
             this.allIcons = [...(await searchMsIcons()), ...this.oiIcons];
             this.state.filteredIcons = this.allIcons;

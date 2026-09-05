@@ -7,7 +7,7 @@
                 needle="this.state.needle"
                 delay="250"/>
         </div>
-        <div class="font-icons-icons">
+        <div class="font-icons-icons" t-att-style="this.iconsStyle">
             <!-- Material Symbols and Odoo UI icons: rendered via the data-icon attribute -->
             <t t-foreach="this.state.filteredIcons" t-as="icon" t-key="icon.id">
                 <t t-foreach="[false, true]" t-as="filled" t-key="filled">
