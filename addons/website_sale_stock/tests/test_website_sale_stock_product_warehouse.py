@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale.tests.test_sale_product_attribute_value_config import TestSaleProductAttributeValueCommon
@@ -55,6 +56,43 @@ class TestWebsiteSaleStockProductWarehouse(
         self.assertEqual(combination_info['free_qty'], 25)
         combination_info = self.product_B.with_env(self.test_env)._get_combination_info_variant()
         self.assertEqual(combination_info['free_qty'], 10)
+
+    def test_sold_out_with_a_variant_in_stock(self):
+        """ A template is sold out only when all of its variants are, not when
+        its first variant is. """
+        attribute = self.env['product.attribute'].create({
+            'name': 'Flavour',
+            'value_ids': [
+                Command.create({'name': 'Vanilla'}),
+                Command.create({'name': 'Unflavored'}),
+            ],
+        })
+        template = self.env['product.template'].create({
+            'name': 'Protein',
+            'is_storable': True,
+            'allow_out_of_stock_order': False,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set(attribute.value_ids.ids)],
+            })],
+        })
+        self.website.warehouse_id = self.warehouse_1
+        # Only the second variant is in stock.
+        self._add_product_qty_to_wh(
+            template.product_variant_ids[1].id, 10, self.warehouse_1.lot_stock_id.id
+        )
+
+        with MockRequest(self.env, website=self.website):
+            self.assertFalse(template._is_sold_out())
+            self.assertTrue(template._website_show_quick_add())
+
+            self._add_product_qty_to_wh(
+                template.product_variant_ids[1].id, 0, self.warehouse_1.lot_stock_id.id
+            )
+            template.invalidate_recordset()
+
+            self.assertTrue(template._is_sold_out())
+            self.assertFalse(template._website_show_quick_add())
 
     def test_02_update_cart_with_multi_warehouses(self):
         """ When the user updates his cart and increases a product quantity, if
