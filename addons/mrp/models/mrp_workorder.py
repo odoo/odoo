@@ -504,17 +504,23 @@ class MrpWorkorder(models.Model):
                     elif date_start and date_finished:
                         computed_duration = workorder._calculate_duration_expected(date_start=date_start, date_finished=date_finished)
                         values['duration_expected'] = computed_duration
-                # Update MO dates if the start date of the first WO or the
-                # finished date of the last WO is update.
-                if workorder == workorder.production_id.workorder_ids[0] and 'date_start' in values:
-                    if values['date_start']:
+                # Update the MO's date_start/date_finished as the min/max of its workorders' dates.
+                siblings = workorder.production_id.workorder_ids
+                if values.get('date_start'):
+                    new_date_start = fields.Datetime.to_datetime(values['date_start'])
+                    all_date_starts = [new_date_start if wo == workorder else wo.date_start for wo in siblings]
+                    computed_date_start = min(filter(None, all_date_starts), default=False)
+                    if computed_date_start and computed_date_start != workorder.production_id.date_start:
                         workorder.production_id.with_context(force_date=True).write({
-                            'date_start': fields.Datetime.to_datetime(values['date_start'])
+                            'date_start': computed_date_start
                         })
-                if workorder == workorder.production_id.workorder_ids[-1] and 'date_finished' in values:
-                    if values['date_finished']:
+                if values.get('date_finished'):
+                    new_date_finished = fields.Datetime.to_datetime(values['date_finished'])
+                    all_date_finisheds = [new_date_finished if wo == workorder else wo.date_finished for wo in siblings]
+                    computed_date_finished = max(filter(None, all_date_finisheds), default=False)
+                    if computed_date_finished and computed_date_finished != workorder.production_id.date_finished:
                         workorder.production_id.with_context(force_date=True).write({
-                            'date_finished': fields.Datetime.to_datetime(values['date_finished'])
+                            'date_finished': computed_date_finished
                         })
 
         res = super().write(values)

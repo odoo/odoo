@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import Command
 from odoo.addons.mrp.tests.common import TestMrpCommon
@@ -131,3 +131,54 @@ class TestWorkorder(TestMrpCommon):
             ],
             field_names=['operation_id'],
         )
+
+    def test_planning_updates_mo_dates_with_operation_dependencies(self):
+        """ Test that after planning, the MO's own `date_start`/`date_finished` reflect the
+        earliest/latest workorder dates, even when the BOM operation sequence does not match
+        the actual (dependency-driven) chronological order.
+            opA (BOM sequence 1) is blocked by opB (BOM sequence 2), so opB actually starts
+            and finishes first even though it has a higher BOM sequence.
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'uom_id': self.product_6.uom_id.id,
+            'product_qty': 1.0,
+            'allow_operation_dependencies': True,
+            'operation_ids': [
+                Command.create({'name': 'opA', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 1}),
+                Command.create({'name': 'opB', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 2}),
+                Command.create({'name': 'opC', 'workcenter_id': self.workcenter_3.id, 'time_cycle': 1, 'sequence': 3}),
+            ],
+            'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 1})],
+        })
+        opA, opB, opC = bom.operation_ids.sorted('sequence')
+        opA.blocked_by_operation_ids = [Command.link(opB.id)]
+
+        mo = self.env['mrp.production'].create({
+            'bom_id': bom.id,
+        })
+        mo.action_confirm()
+        mo.button_plan()
+
+        woA = mo.workorder_ids.filtered(lambda w: w.operation_id == opA)
+        woB = mo.workorder_ids.filtered(lambda w: w.operation_id == opB)
+        woC = mo.workorder_ids.filtered(lambda w: w.operation_id == opC)
+        self.assertLess(woB.date_start, woA.date_start)
+        self.assertEqual(mo.date_start, woB.date_start)
+        self.assertEqual(mo.date_finished, woA.date_finished)
+
+        # opC is unblocked: move it before everything else, then check the MO follows it.
+        new_start = woB.date_start - timedelta(days=1)
+        woC.with_context(bypass_duration_calculation=True).write({
+            'date_start': new_start,
+            'date_finished': new_start + timedelta(hours=1),
+        })
+        self.assertEqual(mo.date_start, woC.date_start)
+
+        # Move opC back to a date that is not extreme anymore: the MO should follow opB again.
+        new_start = woB.date_start + timedelta(hours=1)
+        woC.with_context(bypass_duration_calculation=True).write({
+            'date_start': new_start,
+            'date_finished': new_start + timedelta(hours=1),
+        })
+        self.assertEqual(mo.date_start, woB.date_start)
