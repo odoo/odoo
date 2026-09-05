@@ -544,6 +544,7 @@ def _setup_fields(model_cls: type[BaseModel], env: Environment):
     """ Setup the fields, except for recomputation triggers. """
     bad_fields = []
     many2one_company_dependents = model_cls.pool.many2one_company_dependents
+    check_company_fields = model_cls.pool.check_company_fields
     model = model_cls(env, (), ())
     for name, field in model_cls._fields.items():
         try:
@@ -559,6 +560,8 @@ def _setup_fields(model_cls: type[BaseModel], env: Environment):
             raise
         if field.type == 'many2one' and field.company_dependent:
             many2one_company_dependents.add(field.comodel_name, field)
+        if field.relational and field.store and field.check_company and not field.company_dependent:
+            check_company_fields.add(field.comodel_name, field)
 
     for name in bad_fields:
         pop_field(model_cls, name)

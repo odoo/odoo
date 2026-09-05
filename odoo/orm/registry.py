@@ -318,6 +318,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # company dependent
         self.many2one_company_dependents: Collector[str, Field] = Collector()  # {model_name: (field1, field2, ...)}
 
+        # company check: relational fields with check_company=True, by comodel
+        self.check_company_fields: Collector[str, Field] = Collector()  # {model_name: (field1, field2, ...)}
+
         # constraint checks
         self.not_null_fields: set[Field] = set()
 
@@ -552,6 +555,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 todo.extend(self.field_setup_dependents.pop(field, ()))
 
         self.many2one_company_dependents.clear()
+        self.check_company_fields.clear()
 
         model_classes.setup_model_classes(env)
 

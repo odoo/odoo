@@ -3346,8 +3346,13 @@ class BaseModel(metaclass=MetaModel):
 
         User with main company A, having access to company A and B, could be
         assigned or linked to records in company B.
+
+        When `fnames` contains 'company_id' or 'company_ids' (i.e. the company
+        of the records has changed), the records referencing `self` through a
+        `check_company` relational field are checked as well.
         """
-        if fnames is None or {'company_id', 'company_ids'} & set(fnames):
+        check_inverse = fnames is not None and {'company_id', 'company_ids'} & set(fnames)
+        if fnames is None or check_inverse:
             fnames = self._fields
 
         regular_fields = []
@@ -3360,7 +3365,20 @@ class BaseModel(metaclass=MetaModel):
                 else:
                     property_fields.append(name)
 
-        if not (regular_fields or property_fields):
+        inverse_fields = []
+        if check_inverse and self.ids:
+            for field in self.env.registry.check_company_fields[self._name]:
+                if not self.env[field.model_name]._check_company_auto:
+                    continue
+                # skip fields whose inverse field on self is already checked
+                if any(
+                    inverse.model_name == self._name and inverse.name in regular_fields
+                    for inverse in self.pool.field_inverses[field]
+                ):
+                    continue
+                inverse_fields.append(field)
+
+        if not (regular_fields or property_fields or inverse_fields):
             return
 
         inconsistencies = []
@@ -3422,6 +3440,12 @@ class BaseModel(metaclass=MetaModel):
                 })
             lines.append(_("To avoid a mess, no company crossover is allowed!"))
             raise UserError("\n".join(lines))
+
+        # check the (active) records referencing self through a check_company
+        # field, as the company change may have made them inconsistent
+        for field in inverse_fields:
+            corecords = self.env[field.model_name].sudo().search([(field.name, 'in', self.ids)])
+            corecords._check_company([field.name])
 
     @api.private  # use has_access
     @typing.final
@@ -3960,7 +3984,12 @@ class BaseModel(metaclass=MetaModel):
             # validate inversed fields
             real_recs._validate_fields(inverse_fields)
 
-        if self._check_company_auto:
+        if self._check_company_auto or (
+            # even without _check_company_auto, changing the company of a record
+            # may break the records referencing it through a check_company field
+            {'company_id', 'company_ids'} & vals.keys()
+            and self.env.registry.check_company_fields[self._name]
+        ):
             self._check_company(list(vals))
         return True
 

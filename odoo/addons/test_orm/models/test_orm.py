@@ -1202,6 +1202,7 @@ class TestOrmModel_B(models.Model):
 class TestOrmModel_Parent(models.Model):
     _name = 'test_orm.model_parent'
     _description = 'Model Multicompany parent'
+    _check_company_auto = True
 
     name = fields.Char()
     company_id = fields.Many2one('res.company')
