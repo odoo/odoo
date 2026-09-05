@@ -135,7 +135,7 @@ test("creating list directly inside table column (td)", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table">
                 <tbody>
                     <tr>
                         <td><ol style="list-style: upper-alpha;"><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol></td>
@@ -153,7 +153,7 @@ test("creating list directly inside table column (td)", async () => {
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
     );
 });

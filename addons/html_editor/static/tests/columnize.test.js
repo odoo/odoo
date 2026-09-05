@@ -58,7 +58,7 @@ describe("2 columns", () => {
                 ),
             contentAfterEdit:
                 columsDuringEditContainer(
-                    columnDuringEdit(6, `<p data-selection-placeholder=""><br></p><table><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table><p data-selection-placeholder=""><br></p>`) +
+                    columnDuringEdit(6, `<p data-selection-placeholder=""><br></p><div class="o_table_wrapper"><table><tbody><tr><td><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p></td><td><p><br></p></td></tr></tbody></table></div><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`) +
                     columnDuringEdit(6, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
                 ),
             /* eslint-enable */

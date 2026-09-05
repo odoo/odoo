@@ -188,7 +188,7 @@ describe("collapsed selection", () => {
         const { editor } = await setupEditor(`<p>cont[]ent</p>`, {});
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         expect(getContent(editor.editable)).toBe(
-            `<p>cont</p><table><tbody><tr><td><br></td></tr></tbody></table><p>[]ent</p>`
+            `<p>cont</p><div class="o_table_wrapper"><table><tbody><tr><td><br></td></tr></tbody></table></div><p>[]ent</p>`
         );
     });
 
@@ -202,7 +202,7 @@ describe("collapsed selection", () => {
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         await tick();
         expect(getContent(editor.editable)).toBe(
-            `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><table><tbody><tr><td><br></td></tr></tbody></table><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+            `<p data-selection-placeholder=""><br></p><p class="oe_unbreakable">content</p><p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p><div class="o_table_wrapper"><table><tbody><tr><td><br></td></tr></tbody></table></div><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
         );
     });
 
@@ -219,7 +219,7 @@ describe("collapsed selection", () => {
         insertHTML("<table><tbody><tr><td/></tr></tbody></table>")(editor);
         expect(getContent(editor.editable)).toBe(
             '<p data-selection-placeholder=""><br></p>' +
-                `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content</b><table><tbody><tr><td>[]<br></td></tr></tbody></table></p></div>` +
+                `<div><p class="oe_unbreakable" contenteditable="true"><b class="oe_unbreakable">content</b><div class="o_table_wrapper"><table><tbody><tr><td>[]<br></td></tr></tbody></table></div></p></div>` +
                 '<p data-selection-placeholder=""><br></p>'
         );
     });

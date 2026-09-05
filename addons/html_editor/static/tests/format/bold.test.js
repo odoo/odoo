@@ -237,7 +237,7 @@ test("should make a few characters bold inside table (bold)", async () => {
         stepFunction: bold,
         contentAfterEdit: unformat(`
             <p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
+            <div class="o_table_wrapper"><table class="table table-bordered o_table o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td"><p><strong>[abc</strong></p></td>
@@ -255,7 +255,7 @@ test("should make a few characters bold inside table (bold)", async () => {
                         <td><p><br></p></td>
                     </tr>
             </tbody>
-            </table>
+            </table></div>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`),
     });
 });
@@ -565,28 +565,28 @@ test("should not apply bold to selection placeholder nodes", async () => {
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder="">[<br></p>
-            <table class="o_selected_table">
+            <div class="o_table_wrapper"><table class="o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td">1</td>
                     </tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder="">]<br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;">]<br></p>
         `)
     );
     await press(["ctrl", "b"]);
     expect(getContent(el)).toBe(
         unformat(`
             <p data-selection-placeholder="">[<br></p>
-            <table class="o_selected_table">
+            <div class="o_table_wrapper"><table class="o_selected_table">
                 <tbody>
                     <tr>
                         <td class="o_selected_td"><strong>1</strong></td>
                     </tr>
                 </tbody>
-            </table>
-            <p data-selection-placeholder="">]<br></p>
+            </table></div>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;">]<br></p>
         `)
     );
 });
