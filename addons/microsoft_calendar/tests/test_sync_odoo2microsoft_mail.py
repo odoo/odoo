@@ -55,7 +55,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
             'login': 'ms_sync_paused_user',
         })
         self.assertTrue(paused_sync_user.microsoft_synchronization_stopped)
-        for create_user, organizer, mail_notified_partners, attendee in [
+        for index, (create_user, organizer, mail_notified_partners, attendee) in enumerate([
             (user_root, self.users[0], partner + self.users[0].partner_id, partner),  # emulates online appointment with user 0
             (user_root, None, partner, partner),  # emulates online resource appointment
             (self.users[0], None, False, partner),
@@ -64,10 +64,11 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
             # create user has paused sync and organizer can sync -> will not sync because of bug
             # only the organizer is notified as we don't notify the author (= create_user.partner_id) on creation
             (paused_sync_user, self.users[0], self.users[0].partner_id, paused_sync_user.partner_id),
-        ]:
+        ]):
             with self.subTest(create_uid=create_user.name if create_user else None, user_id=organizer.name if organizer else None, attendee=attendee.name):
                 with self.mock_mail_gateway(), patch.object(MicrosoftCalendarService, 'insert') as mock_insert:
-                    mock_insert.return_value = ('1', '1')
+                    event_uid = f'1-{index}'
+                    mock_insert.return_value = (event_uid, event_uid)
                     self.env['calendar.event'].with_user(create_user).create({
                         **event_values,
                         'partner_ids': [(4, organizer.partner_id.id), (4, attendee.id)] if organizer else [(4, attendee.id)],
