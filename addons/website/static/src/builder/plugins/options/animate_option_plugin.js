@@ -12,6 +12,25 @@ import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 import { handleImagesIfDataset } from "@html_builder/utils/image";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
+const blockHoverTranslateDirectionClasses = [
+    "o_block_hover_translate_left",
+    "o_block_hover_translate_right",
+    "o_block_hover_translate_bottom",
+];
+const blockHoverEffectClasses = [
+    "o_block_hover_translate",
+    "o_block_hover_zoom_in",
+    "o_block_hover_zoom_out",
+];
+const blockHoverClasses = [
+    "o_block_hover",
+    ...blockHoverEffectClasses,
+    ...blockHoverTranslateDirectionClasses,
+];
+// Positive eligibility for block hover effects is centralized here. Predicates
+// can still veto or handle more specific cases, like image hover effects.
+const blockHoverAllowedSelector = ".row > div, .s_card, .s_blockquote";
+
 /**
  * @typedef { Object } AnimateOptionShared
  * @property { AnimateOptionPlugin['forceAnimation'] } forceAnimation
@@ -25,7 +44,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
  */
 
 /**
- * @typedef {((el: HTMLElement) => boolean | undefined)[]} can_have_hover_effect_predicates
+ * @typedef {((el: HTMLElement, dataset?: Object) => boolean | undefined)[]} can_have_hover_effect_predicates
  * @typedef {((el: HTMLElement) => Promise<boolean>)[]} hover_effect_allowed_predicates
  */
 
@@ -67,6 +86,7 @@ export class AnimateOptionPlugin extends Plugin {
         system_classes: ["o_animating"],
         builder_actions: {
             SetAnimationModeAction,
+            SetBlockHoverEffectAction,
             SetAnimateIntensityAction,
             ForceAnimationAction,
             SetAnimationEffectAction,
@@ -93,6 +113,11 @@ export class AnimateOptionPlugin extends Plugin {
             5,
             this.onWillSaveMediaDialogHandlers.bind(this)
         ),
+        can_have_hover_effect_predicates: (el) => {
+            if (el.querySelector("input, textarea, select")) {
+                return false;
+            }
+        },
     };
 
     setup() {
@@ -100,6 +125,11 @@ export class AnimateOptionPlugin extends Plugin {
     }
 
     async canHaveHoverEffect(el) {
+        const isBlockHoverAllowed = el.matches(blockHoverAllowedSelector);
+        if (isBlockHoverAllowed) {
+            return this.checkPredicates("can_have_hover_effect_predicates", el) ?? true;
+        }
+
         const proms = this.getResource("hover_effect_image_dataset_providers").map((p) => p(el));
         const datasets = await Promise.all(proms);
         const dataset = Object.assign({}, ...datasets);
@@ -415,6 +445,26 @@ export class AnimateOptionPlugin extends Plugin {
         for (const el of root.querySelectorAll(".o_animate_preview")) {
             el.classList.remove("o_animate_preview");
         }
+        for (const el of root.querySelectorAll(".o_block_hover")) {
+            const classes = el.classList;
+            if (
+                classes.contains("o_block_hover_translate") ||
+                classes.contains("o_block_hover_zoom_in") ||
+                classes.contains("o_block_hover_zoom_out")
+            ) {
+                el.style.removeProperty("--anim-color");
+            }
+            if (!classes.contains("o_block_hover_translate")) {
+                el.style.removeProperty("--anim-shift");
+                classes.remove(...blockHoverTranslateDirectionClasses);
+            }
+            if (
+                !classes.contains("o_block_hover_zoom_in") &&
+                !classes.contains("o_block_hover_zoom_out")
+            ) {
+                el.style.removeProperty("--anim-intensity");
+            }
+        }
         return root;
     }
     async cleanImageHoverDataset(imgEl) {
@@ -469,6 +519,9 @@ export class SetAnimationModeAction extends BuilderAction {
             // included in translation. This implementation is a hack and could
             // be improved.
             await this.triggerAsync("on_hover_animation_mode_cleaned_handlers", editingElement);
+        }
+        if (effectName === "onHoverBlock") {
+            this._cleanBlockHover(editingElement);
         }
 
         const isNextAnimationFadein = this.animationWithFadein.includes(nextAction.value);
@@ -539,6 +592,12 @@ export class SetAnimationModeAction extends BuilderAction {
             targetClassList.remove(className);
         }
     }
+    _cleanBlockHover(editingElement) {
+        editingElement.classList.remove(...blockHoverClasses);
+        editingElement.style.removeProperty("--anim-color");
+        editingElement.style.removeProperty("--anim-shift");
+        editingElement.style.removeProperty("--anim-intensity");
+    }
 }
 export class SetAnimateIntensityAction extends BuilderAction {
     static id = "setAnimateIntensity";
@@ -552,6 +611,44 @@ export class SetAnimateIntensityAction extends BuilderAction {
     apply({ editingElement, value }) {
         editingElement.style.setProperty("--wanim-intensity", `${value}`);
         this.dependencies.animateOption.forceAnimation(editingElement);
+    }
+}
+export class SetBlockHoverEffectAction extends BuilderAction {
+    static id = "setBlockHoverEffect";
+
+    getPriority({ value: className }) {
+        return className ? 1 : 0;
+    }
+    isApplied({ editingElement, value: className }) {
+        if (!className) {
+            return !blockHoverEffectClasses.some((effectClass) =>
+                editingElement.classList.contains(effectClass)
+            );
+        }
+        return editingElement.classList.contains(className);
+    }
+    clean({ editingElement, value: className, nextAction }) {
+        const nextClassName = nextAction.value;
+        if (className === nextClassName) {
+            return;
+        }
+        editingElement.classList.remove(...blockHoverEffectClasses);
+        if (!className) {
+            editingElement.style.removeProperty("--anim-color");
+        } else if (className === "o_block_hover_translate") {
+            editingElement.style.removeProperty("--anim-shift");
+            editingElement.classList.remove(...blockHoverTranslateDirectionClasses);
+        } else if (!this._isZoomEffect(nextClassName)) {
+            editingElement.style.removeProperty("--anim-intensity");
+        }
+    }
+    apply({ editingElement, value: className }) {
+        if (className) {
+            editingElement.classList.add(className);
+        }
+    }
+    _isZoomEffect(className) {
+        return className === "o_block_hover_zoom_in" || className === "o_block_hover_zoom_out";
     }
 }
 export class ForceAnimationAction extends BuilderAction {

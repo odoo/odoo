@@ -22,6 +22,11 @@ export class CarouselSlidesOptionPlugin extends Plugin {
             }
         },
         anchor_excluded_selectors: ".carousel *",
+        can_have_hover_effect_predicates: (el) => {
+            if (el.closest("*:has(> .slide-link)")) {
+                return false;
+            }
+        },
     };
 
     /**
