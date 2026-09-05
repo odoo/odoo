@@ -5,7 +5,6 @@ from odoo.http import request
 
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.controllers.webclient import WebclientController
-from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.store_handler import store_handler
 from odoo.addons.portal.utils import get_portal_partner
@@ -159,7 +158,8 @@ class PortalWebClientController(WebclientController):
             Domain([("model", "=", records._name), ("res_id", "in", records.ids)])
             & Domain("message_type", "in", records._get_customer_portal_message_types())
             & ~records.env["mail.message"]._get_empty_domain()
-            & SHARE_DOMAIN
+            & Domain("is_internal", "=", False)
+            & Domain("subtype_id.internal", "=", False)
         )
 
     @classmethod
