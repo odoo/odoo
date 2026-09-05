@@ -286,13 +286,6 @@ class AccountMove(models.Model):
             code += '1' if transaction_type in active_transaction_types else '0'
         return code
 
-    def action_open_chain_head(self):
-        """
-        Action to show the chain head of the invoice
-        """
-        self.ensure_one()
-        return self.l10n_sa_edi_document_id.l10n_sa_edi_chain_head_id._get_records_action(name=self.env._("Chain Head"))
-
     def _l10n_sa_generate_zatca_template(self):
         """Render the ZATCA UBL file"""
         self.ensure_one()
