@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="livechat_channel_session_14" model="discuss.channel">
-            <field name="name">Visiteur, Mitchell Admin</field>
+            <field name="name">Returning Visitor, Mitchell Admin</field>
             <field name="livechat_lang_id" ref="base.lang_fr"/>
             <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
             <field name="create_date" eval="datetime.now() - timedelta(minutes=1)"/>
@@ -25,25 +25,21 @@
             <field name="last_interest_dt" eval="DateTime.today() - timedelta(minutes=1)"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_14_history_member_admin'))]"/>
         </record>
-        <record id="im_livechat.livechat_channel_session_14_guest" model="mail.guest">
-            <field name="name">Visiteur</field>
-        </record>
         <record id="im_livechat.livechat_channel_session_14_history_member_guest" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="livechat_channel_session_14"/>
-            <field name="guest_id" ref="im_livechat.livechat_channel_session_14_guest"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="livechat_member_type">visitor</field>
             <field name="create_date" eval="datetime.now() - timedelta(minutes=1)"/>
         </record>
         <record id="im_livechat.livechat_channel_session_14_member_guest" model="discuss.channel.member">
-            <field name="guest_id" ref="im_livechat.livechat_channel_session_14_guest"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_14"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_14_history_member_guest'))]"/>
         </record>
 
         <record id="livechat_channel_session_14_message_1" model="mail.message">
-            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_14_guest"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="author_id"/>
-            <field name="email_from">Visiteur</field>
             <field name="date" eval="datetime.now() - timedelta(seconds=30)"/>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=30)"/>
             <field name="write_date" eval="datetime.now() - timedelta(seconds=30)"/>

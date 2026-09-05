@@ -8,7 +8,7 @@
             <field name="livechat_status">need_help</field>
             <field name="livechat_looking_for_help_since_dt" eval="datetime.now() - timedelta(minutes=3)"/>
             <field name="livechat_failure">no_failure</field>
-            <field name="name">Visitatore #304, Support</field>
+            <field name="name">Returning Visitor, Support</field>
             <field name="create_date" eval="datetime.now() - timedelta(minutes=3)"/>
         </record>
         <record id="support_bot_session_4_history_member_bot_demo" model="im_livechat.channel.member.history">
@@ -24,17 +24,14 @@
             <field name="livechat_member_type">bot</field>
             <field name="chatbot_script_id" ref="chatbot_script_support_bot_demo"/>
         </record>
-        <record id="support_bot_session_4_guest_demo" model="mail.guest">
-            <field name="name">Visitatore #304</field>
-        </record>
         <record id="support_bot_session_4_history_member_guest_demo" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="support_bot_session_4_demo"/>
-            <field name="guest_id" ref="support_bot_session_4_guest_demo"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="livechat_member_type">visitor</field>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=30)"/>
         </record>
         <record id="support_bot_session_4_member_guest_demo" model="discuss.channel.member">
-            <field name="guest_id" ref="support_bot_session_4_guest_demo"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="channel_id" ref="support_bot_session_4_demo"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('support_bot_session_4_history_member_guest_demo'))]"/>
         </record>
@@ -57,7 +54,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="support_bot_session_4_demo"/>
             <field name="author_id"/>
-            <field name="author_guest_id" ref="support_bot_session_4_guest_demo"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="body">Troubleshooting</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
@@ -90,7 +87,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="support_bot_session_4_demo"/>
             <field name="author_id"/>
-            <field name="author_guest_id" ref="support_bot_session_4_guest_demo"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="body">Firefox</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
@@ -118,7 +115,7 @@
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="support_bot_session_4_demo"/>
             <field name="author_id"/>
-            <field name="author_guest_id" ref="support_bot_session_4_guest_demo"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_demo"/>
             <field name="body">Livechat</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>

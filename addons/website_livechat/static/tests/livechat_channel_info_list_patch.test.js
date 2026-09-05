@@ -1,7 +1,7 @@
 import { contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockTimeZone } from "@odoo/hoot-mock";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { Command } from "@web/../tests/web_test_helpers";
 import { defineWebsiteLivechatModels } from "./website_livechat_test_helpers";
 
 describe.current.tags("desktop");
@@ -37,73 +37,4 @@ test("shows recent page views", async () => {
     await contains("h6", { text: "Recent page views" });
     await contains("div > span", { text: "General website" });
     await contains("span", { text: "Contact (21:20) → Home (21:00)" });
-});
-
-test("Show recent conversations in channel info list", async () => {
-    const pyEnv = await startServer();
-    const visitorId = pyEnv["website.visitor"].create({
-        website_id: pyEnv["website"].create({ name: "General website" }),
-    });
-    const customerPartnerId = pyEnv["res.partner"].create({
-        name: "Bob",
-        user_ids: [pyEnv["res.users"].create({ name: "Bob" })],
-    });
-    // At least two ongoing chats so that sort function ends up comparing two
-    // ongoing chats.
-    const channelIds = pyEnv["discuss.channel"].create([
-        {
-            channel_member_ids: [],
-            channel_type: "livechat",
-            description: "question about the live chat app",
-            livechat_status: "in_progress",
-            livechat_visitor_id: visitorId,
-        },
-        {
-            channel_member_ids: [],
-            channel_type: "livechat",
-            description: "question about the discuss app",
-            livechat_status: "in_progress",
-            livechat_visitor_id: visitorId,
-        },
-        {
-            channel_member_ids: [],
-            channel_type: "livechat",
-            livechat_status: "in_progress",
-            livechat_visitor_id: visitorId,
-        },
-    ]);
-    pyEnv["discuss.channel.member"].create([
-        {
-            channel_id: channelIds[0],
-            livechat_member_type: "visitor",
-            partner_id: customerPartnerId,
-        },
-        {
-            channel_id: channelIds[1],
-            livechat_member_type: "visitor",
-            partner_id: customerPartnerId,
-        },
-        {
-            channel_id: channelIds[2],
-            livechat_member_type: "visitor",
-            partner_id: customerPartnerId,
-        },
-        {
-            channel_id: channelIds[2],
-            livechat_member_type: "agent",
-            partner_id: serverState.partnerId,
-        },
-    ]);
-    await start();
-    await openDiscuss(channelIds.at(-1));
-    await contains(".o-livechat-LivechatChannelInfoList-recentConversation", {
-        count: 2,
-        text: "Conversation ongoing",
-    });
-    await contains(
-        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the discuss app')"
-    );
-    await contains(
-        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the live chat app')"
-    );
 });

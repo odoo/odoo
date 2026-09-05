@@ -8,8 +8,8 @@ import {
     startServer,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, press, test, waitFor } from "@odoo/hoot";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
+import { describe, expect, press, test, waitFor } from "@odoo/hoot";
+import { Command, mockService, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -340,4 +340,103 @@ test("auto-open of livechat info & members panels should combine", async () => {
     await click(".o-mail-NotificationItem:has(:text('General'))");
     await contains(".o-discuss-ChannelMemberList");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
+});
+
+test("Show recent conversations in channel info list", async () => {
+    const pyEnv = await startServer();
+    const customerPartnerId = pyEnv["res.partner"].create({
+        name: "Batman",
+        user_ids: [pyEnv["res.users"].create({ name: "Batman" })],
+    });
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "3: same interest older id",
+            livechat_status: "in_progress",
+            last_interest_dt: "2026-01-02 00:00:00",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "2: same interest newer id",
+            livechat_status: "in_progress",
+            last_interest_dt: "2026-01-02 00:00:00",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "1: newest ongoing",
+            livechat_status: "in_progress",
+            last_interest_dt: "2026-01-03 00:00:00",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "4: oldest ongoing",
+            livechat_status: "in_progress",
+            last_interest_dt: "2026-01-01 00:00:00",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "5: newest closed",
+            livechat_end_dt: "2026-01-03 00:00:00",
+            last_interest_dt: "2026-01-03 00:00:00",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "6: oldest closed",
+            livechat_end_dt: "2026-01-01 00:00:00",
+            last_interest_dt: "2026-01-01 00:00:00",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            livechat_status: "in_progress",
+            last_interest_dt: "2026-01-01 00:00:00",
+        },
+    ]);
+    pyEnv["discuss.channel.member"].create(
+        channelIds.map((c) => ({
+            channel_id: c,
+            livechat_member_type: "visitor",
+            partner_id: customerPartnerId,
+        }))
+    );
+    mockService("action", {
+        doAction(action) {
+            if (action.name === "Recent Conversations") {
+                expect.step("doAction");
+                return;
+            }
+            return super.doAction(...arguments);
+        },
+    });
+    await start();
+    await openDiscuss(channelIds.at(-1));
+    await contains(".o-livechat-LivechatChannelInfoList-recentConversation a.btn", { count: 5 });
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation a.btn span:text('Conversation ongoing')",
+        { count: 4 }
+    );
+    await contains(".o-livechat-LivechatChannelInfoList-recentConversation .badge:text(6)");
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation a.btn:eq(0) span:text('1: newest ongoing')"
+    );
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation a.btn:eq(1) span:text('2: same interest newer id')"
+    );
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation a.btn:eq(2) span:text('3: same interest older id')"
+    );
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation a.btn:eq(3) span:text('4: oldest ongoing')"
+    );
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation a.btn:eq(4) span:text('5: newest closed')"
+    );
+    await click(".o-livechat-LivechatChannelInfoList-recentConversation a:text('View All')");
+    await expect.waitForSteps(["doAction"]);
 });
