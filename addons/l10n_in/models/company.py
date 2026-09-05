@@ -61,9 +61,27 @@ class ResCompany(models.Model):
     l10n_in_is_gst_registered = fields.Boolean(
         string="Registered Under GST",
         compute="_compute_l10n_in_parent_based_features",
-        inverse="_inverse_l10n_in_is_gst_registered",
         recursive=True,
         store=True,
+    )
+    l10n_in_gst_registration_type = fields.Selection(
+        selection=[
+            ('regular', 'Regular Scheme'),
+            ('composition', 'Composition Scheme'),
+        ],
+        compute="_compute_l10n_in_parent_based_features",
+        inverse="_inverse_l10n_in_gst_registration_type",
+        string="GST Registration Type",
+        store=True,
+        recursive=True,
+    )
+    l10n_in_composition_tax_rate = fields.Selection(
+        selection=[
+            ('1', '1% for Manufacturers and Traders'),
+            ('5', '5% for Restaurants'),
+            ('6', '6% for Service Providers'),
+        ],
+        string="Composition Tax Rate"
     )
     l10n_in_gstin_status_feature = fields.Boolean(string="Check GST Number Status")
     l10n_in_disable_b2c_hsn_reporting = fields.Boolean(string="Disable B2C HSN Reporting")
@@ -84,7 +102,7 @@ class ResCompany(models.Model):
         for company in self:
             self._activate_l10n_in_taxes(['tcs_it_act_25_group'], company, company.l10n_in_tcs_feature)
 
-    def _inverse_l10n_in_is_gst_registered(self):
+    def _inverse_l10n_in_gst_registration_type(self):
         for company in self:
             gst_group_refs = [
                 'sgst_group',
@@ -99,8 +117,12 @@ class ResCompany(models.Model):
             if company.l10n_in_is_gst_registered:
                 self._activate_l10n_in_taxes(gst_group_refs, company, True)
                 # Set sale and purchase tax accounts when user registered under GST.
-                company.account_sale_tax_id = self.env['account.chart.template'].with_company(company).ref('sgst_sale_5', raise_if_not_found=False)
-                company.account_purchase_tax_id = self.env['account.chart.template'].with_company(company).ref('sgst_purchase_5', raise_if_not_found=False)
+                if company.l10n_in_gst_registration_type == 'regular':
+                    company.account_sale_tax_id = self.env['account.chart.template'].with_company(company).ref('sgst_sale_5', raise_if_not_found=False)
+                    company.account_purchase_tax_id = self.env['account.chart.template'].with_company(company).ref('sgst_purchase_5', raise_if_not_found=False)
+                elif company.l10n_in_gst_registration_type == 'composition':
+                    company.account_sale_tax_id = False
+                    company.account_purchase_tax_id = self.env['account.chart.template'].with_company(company).ref('sgst_purchase_5_composition', raise_if_not_found=False)
             else:
                 self._activate_l10n_in_taxes(gst_group_refs, company, False)
                 company.account_sale_tax_id = False
@@ -113,13 +135,14 @@ class ResCompany(models.Model):
             if company.country_code == 'IN':
                 company.force_restrictive_audit_trail = company.root_id._existing_accounting()
 
-    @api.depends('parent_id.l10n_in_tds_feature', 'parent_id.l10n_in_tcs_feature', 'parent_id.l10n_in_is_gst_registered')
+    @api.depends('parent_id.l10n_in_tds_feature', 'parent_id.l10n_in_tcs_feature', 'parent_id.l10n_in_is_gst_registered', 'parent_id.l10n_in_gst_registration_type')
     def _compute_l10n_in_parent_based_features(self):
         for company in self:
             if company.parent_id:
                 company.l10n_in_tds_feature = company.parent_id.l10n_in_tds_feature
                 company.l10n_in_tcs_feature = company.parent_id.l10n_in_tcs_feature
                 company.l10n_in_is_gst_registered = company.parent_id.l10n_in_is_gst_registered
+                company.l10n_in_gst_registration_type = company.parent_id.l10n_in_gst_registration_type
 
     def _activate_l10n_in_taxes(self, group_refs, company, active=True):
         tax_group_ids = [
@@ -129,10 +152,27 @@ class ResCompany(models.Model):
         ]
 
         if tax_group_ids:
-            taxes = self.env['account.tax'].with_company(company).with_context(active_test=False).search([
+            domain = [
                 ('tax_group_id', 'in', tax_group_ids),
-                ('active', '!=', active)
-            ])
+                ('active', '!=', active),
+            ]
+            is_gst_group = (
+                'tds_it_act_25_group' not in group_refs
+                and 'tcs_it_act_25_group' not in group_refs
+            )
+            if company.l10n_in_is_gst_registered and is_gst_group:
+                if company.l10n_in_gst_registration_type == 'regular':
+                    domain += [('l10n_in_tax_type', '!=', 'composition')]
+                elif company.l10n_in_gst_registration_type == 'composition':
+                    domain += [
+                        '|',
+                        '&',
+                        ('type_tax_use', '=', 'purchase'),
+                        ('l10n_in_reverse_charge', '=', True),
+                        ('l10n_in_tax_type', 'in', ['composition', 'nil_rated', 'exempt', 'non_gst']),
+                    ]
+            taxes = self.env['account.tax'].with_company(company).with_context(active_test=False).search(domain)
+            taxes |= taxes.flatten_taxes_hierarchy()
             taxes.write({'active': active})
 
     @api.depends('has_vat')

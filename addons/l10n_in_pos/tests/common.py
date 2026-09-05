@@ -27,6 +27,7 @@ class TestInPosBase(TestPoSCommon):
             "zip": "123456",
             "country_id": country_in_id,
             "l10n_in_is_gst_registered": True,
+            'l10n_in_gst_registration_type': 'regular'
         })
         cls.config = cls.basic_config
         cls.gst_5 = cls.env['account.chart.template'].ref('sgst_sale_5')

@@ -215,4 +215,12 @@
         </t>
     </template>
 
+    <template id="external_layout_footer_content" inherit_id="web.external_layout_footer_content">
+        <xpath expr="//div[contains(@t-attf-class, 'o_footer_content')]" position="inside">
+            <div t-if="doc_model == 'account.move' and o.company_id.account_fiscal_country_id.code == 'IN'
+            and o.company_id.l10n_in_gst_registration_type == 'composition' and o.move_type in ['out_invoice', 'out_refund', 'out_receipt']">
+                Composition Taxable Person – Not Eligible to Collect Tax on Supplies
+            </div>
+        </xpath>
+    </template>
 </odoo>

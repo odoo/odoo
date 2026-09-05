@@ -57,7 +57,7 @@
                             <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied when creating new products."
                                 documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
                                 <div class="content-group">
-                                    <div class="row mt16">
+                                    <div id="sale_tax" class="row mt16">
                                         <label string="Sales Tax" for="sale_tax_id" class="col-lg-3 o_light_label"/>
                                         <field name="sale_tax_id" domain="[('type_tax_use', 'in', ('sale', 'all'))]"/>
                                     </div>

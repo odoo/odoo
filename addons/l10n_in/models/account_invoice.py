@@ -253,6 +253,7 @@ class AccountMove(models.Model):
 
             if (
                 company.l10n_in_is_gst_registered
+                and company.l10n_in_gst_registration_type == 'regular'
                 and company.l10n_in_hsn_code_digit
                 and (filtered_lines := move.invoice_line_ids.filtered(line_filter_func))
                 and (not company.l10n_in_disable_b2c_hsn_reporting
@@ -621,7 +622,7 @@ class AccountMove(models.Model):
         gst_treatment = self.l10n_in_gst_treatment
         company = self.company_id
         tax_types = set(self.invoice_line_ids.tax_ids.mapped('l10n_in_tax_type'))
-        if company.l10n_in_is_gst_registered and tax_types:
+        if company.l10n_in_is_gst_registered and company.l10n_in_gst_registration_type == 'regular' and tax_types:
             if gst_treatment in ['overseas', 'special_economic_zone']:
                 return 'Tax Invoice'
             elif tax_types.issubset(exempt_types):
@@ -630,4 +631,6 @@ class AccountMove(models.Model):
                 return 'Tax Invoice'
             elif gst_treatment in ['unregistered', 'consumer']:
                 return 'Invoice-cum-Bill of Supply'
+        elif company.l10n_in_is_gst_registered and company.l10n_in_gst_registration_type == 'composition':
+            return 'Bill of Supply'
         return 'Invoice'

@@ -31,6 +31,7 @@ class AccountMoveLine(models.Model):
             ("sale_exempt", "Exempt"),
             ("sale_non_gst_supplies", "Non-GST Supplies"),
             ("sale_eco_9_5", "ECO 9(5)"),
+            ("sale_composition_supplies", "Composition Supplies"),
             ("sale_out_of_scope", "Out of Scope"),
             ("purchase_b2b_regular", "B2B Regular"),
             ("purchase_b2b_rcm", "B2B RCM"),
@@ -124,6 +125,12 @@ class AccountMoveLine(models.Model):
                     return 'sale_exempt'
                 elif any(tax.l10n_in_tax_type == 'non_gst' for tax in line.tax_ids):
                     return 'sale_non_gst_supplies'
+
+            if move.company_id.l10n_in_gst_registration_type == 'composition':
+                if gst_treatment != 'overseas' and transaction_type == 'intra_state' and not any(tax.l10n_in_tax_type == 'gst' for tax in line.tax_ids.flatten_taxes_hierarchy()):
+                    return 'sale_composition_supplies'
+                else:
+                    return 'sale_out_of_scope'
 
             # B2CS: Unregistered or Consumer sales with gst tags
             if gst_treatment in ('unregistered', 'consumer') and not is_reverse_charge_tax(line):

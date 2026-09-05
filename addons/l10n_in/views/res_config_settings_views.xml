@@ -40,12 +40,16 @@
                         </setting>
                         <setting string="Registered Under GST"
                                  company_dependent="1"
-                                 help="Enable this if you have GST number except composition scheme.">
+                                 help="Enable this if you have GST number">
                             <field name="l10n_in_is_gst_registered"/>
                             <div invisible="not l10n_in_is_gst_registered">
                                 <div id="india_gst_number" class="row">
                                     <label string="GST Number" for="l10n_in_gstin" class="col-lg-4 o_light_label"/>
                                     <field name="l10n_in_gstin" required="l10n_in_is_gst_registered"/>
+                                    <label string="Registration Type" for="l10n_in_gst_registration_type" class="col-lg-4 o_light_label"/>
+                                    <field name="l10n_in_gst_registration_type" required="l10n_in_is_gst_registered" readonly="has_accounting_entries"/>
+                                    <label string="Tax Rate" for="l10n_in_composition_tax_rate" class="col-lg-4 o_light_label" invisible="l10n_in_gst_registration_type != 'composition'"/>
+                                    <field name="l10n_in_composition_tax_rate" required="l10n_in_is_gst_registered and l10n_in_gst_registration_type == 'composition'" invisible="l10n_in_gst_registration_type != 'composition'"/>
                                 </div>
                             </div>
                         </setting>
@@ -85,7 +89,8 @@
                                      help="Connect to NIC (National Informatics Center) to submit invoices on posting."
                                      company_dependent="1"
                                      string="E-Invoicing"
-                                     documentation="/applications/finance/fiscal_localizations/india.html#india-e-invoicing">
+                                     documentation="/applications/finance/fiscal_localizations/india.html#india-e-invoicing"
+                                     invisible="l10n_in_gst_registration_type == 'composition'">
                                 <field name="module_l10n_in_edi"/>
                                 <div class="content-group" invisible="not module_l10n_in_edi">
                                     <div class="text-warning mt16 mb4">
@@ -120,7 +125,8 @@
                             </setting>
                             <setting name="india_gstr_api"
                                      help="This feature helps you to quickly create draft vendor bills using the data your vendor submitted during E-invoicing on the GST portal."
-                                     company_dependent="1">
+                                     company_dependent="1"
+                                     invisible="l10n_in_gst_registration_type == 'composition'">
                                 <field name="l10n_in_fetch_vendor_edi_feature" widget="upgrade_boolean"/>
                             </setting>
                             <setting string="Disable B2C HSN Reporting"
@@ -128,12 +134,14 @@
                                      help="Select this option to exclude HSN details from B2C supplies.
                                            This is allowed only if your aggregate turnover in the preceding
                                            financial year did not exceed ₹5 crore, in accordance
-                                           with Notification No. 78/2020 – Central Tax.">
+                                           with Notification No. 78/2020 – Central Tax."
+                                     invisible="l10n_in_gst_registration_type == 'composition'">
                                 <field name="l10n_in_disable_b2c_hsn_reporting"/>
                             </setting>
                             <setting string="HSN/SAC Validation"
                                      help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO)."
-                                     company_dependent="1">
+                                     company_dependent="1"
+                                     invisible="l10n_in_gst_registration_type == 'composition'">
                                 <field name="l10n_in_hsn_code_digit"/>
                             </setting>
                         </t>
@@ -176,6 +184,9 @@
                     Once enabled, the Audit Trail cannot be disabled for companies in India,
                     in accordance with the requirements of the Ministry of Corporate Affairs, Government of India.
                 </div>
+            </xpath>
+            <xpath expr="//div[@id='sale_tax']" position="attributes">
+                <attribute name="invisible" separator="or" add="l10n_in_gst_registration_type == 'composition'"/>
             </xpath>
         </field>
     </record>
