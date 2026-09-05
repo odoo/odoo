@@ -162,7 +162,9 @@
                                 <field name="l10n_it_edi_attachment_name" invisible="1"/>
                                 <field name="l10n_it_edi_attachment_file" widget="binary" filename="l10n_it_edi_attachment_name" groups="base.group_no_one" readonly="1"/>
                                 <field name="l10n_it_edi_transaction" string="Transaction ID" groups="base.group_no_one" readonly="1"/>
-                                <field name="l10n_it_document_type" string="Document Type"/>
+                                <field name="l10n_it_document_type"
+                                       string="Document Type"
+                                       domain="[('id', 'in', l10n_it_available_document_type_ids)]"/>
                                 <field name="l10n_it_payment_method" string="Payment Method"/>
                                 <field name="l10n_it_stamp_duty" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="state != 'draft'"/>
                                 <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
