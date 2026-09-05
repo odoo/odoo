@@ -9,6 +9,7 @@
             t-att-disabled="this.props.disabled"
             t-attf-class="btn o_clipboard_button {{ this.props.className || '' }}"
             t-on-click.stop="this.onClick"
+            data-tooltip="Copy to clipboard"
         >
             <span class="oi mx-1" t-att-class="this.props.iconClass" t-attf-data-icon="{{ this.props.icon || 'assignment' }}"/>
             <span t-if="this.props.copyText" t-out="this.props.copyText"/>

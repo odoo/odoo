@@ -72,12 +72,14 @@ patch(AttendeeCalendarModel.prototype, {
         }
         // Retrieves user pending activities for the current calendar date range
         // Done activities are archived and therefore excluded by default.
+        // Meeting activities are excluded as they are already present as events
         const activities = await this.orm.webSearchRead(
             "mail.activity",
             [
                 ["date_deadline", ">=", serializeDate(data.range.start)],
                 ["date_deadline", "<=", serializeDate(data.range.end)],
                 ["user_id", "=", user.userId],
+                ["calendar_event_id", "=", false],
             ],
             {
                 specification: {

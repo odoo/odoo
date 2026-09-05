@@ -4,8 +4,10 @@ from unittest.mock import patch
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from markupsafe import Markup
 
 from odoo import fields
+from odoo.tools import format_time
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
@@ -312,7 +314,10 @@ class TestEventNotifications(CalendarMailCommon):
                             "alarm_id": alarm.id,
                             "event_id": self.event.id,
                             "title": "Doom's day",
-                            "message": self.event.display_time,
+                            "message": Markup("<br/>%s - %s<br/>Online<br/>") % (
+                                format_time(self.env, self.event.start, time_format="short"),
+                                format_time(self.env, self.event.stop, time_format="short")
+                            ),
                             "timer": 20 * 60,
                             "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
                         },
@@ -358,7 +363,10 @@ class TestEventNotifications(CalendarMailCommon):
                             "alarm_id": alarm.id,
                             "event_id": event.id,
                             "title": "Admin Meeting",
-                            "message": event.display_time,
+                            "message": Markup("<br/>%s - %s<br/>Online<br/>") % (
+                                format_time(self.env, event.start, time_format="short"),
+                                format_time(self.env, event.stop, time_format="short")
+                            ),
                             "timer": 20 * 60,
                             "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
                         },
@@ -664,7 +672,10 @@ class TestEventNotifications(CalendarMailCommon):
                             "alarm_id": alarm.id,
                             "event_id": self.event.id,
                             "title": "Doom's day",
-                            "message": self.event.display_time,
+                            "message": Markup("<br/>%s - %s<br/>Online<br/>") % (
+                                format_time(self.env, self.event.start, time_format="short"),
+                                format_time(self.env, self.event.stop, time_format="short")
+                            ),
                             "timer": 20 * 60,
                             "notify_at": fields.Datetime.to_string(now + relativedelta(minutes=20)),
                         },

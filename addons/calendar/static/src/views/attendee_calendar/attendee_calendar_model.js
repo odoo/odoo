@@ -233,6 +233,11 @@ export class AttendeeCalendarModel extends CalendarModel {
         if (rawRecord.effective_privacy === "private") {
             normalizedRecord.titleIcon = "lock";
         }
-        return normalizedRecord;
+        const displayedDateRange = this.computeRange();
+        const isStartInScale = normalizedRecord.start >= displayedDateRange.start;
+        return {
+            ...normalizedRecord,
+            isStartInScale,
+        };
     }
 }

@@ -44,7 +44,6 @@ export const calendarNotificationService = {
                         buttons: [
                             {
                                 name: _t("OK"),
-                                primary: true,
                                 onClick: async () => {
                                     await rpc("/calendar/notify_ack");
                                     notificationRemove();
@@ -62,13 +61,8 @@ export const calendarNotificationService = {
                                     notificationRemove();
                                 },
                             },
-                            {
-                                name: _t("Snooze"),
-                                onClick: () => {
-                                    notificationRemove();
-                                },
-                            },
                         ],
+                        className: env.isMobile ? "o_line_clamp_2" : "o_line_clamp_5",
                     });
                     displayedNotifications.add(key);
                 }, notif.timer * 1000);
