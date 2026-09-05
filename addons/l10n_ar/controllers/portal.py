@@ -17,7 +17,6 @@ class L10nARPortalAccount(CustomerPortal):
             ArAfipResponsibilityType = request.env['l10n_ar.afip.responsibility.type']
             default_afip_responsibility_type_id = (
                 rendering_values["current_partner"].l10n_ar_afip_responsibility_type_id
-                or ArAfipResponsibilityType
             )
             rendering_values.update({
                 "responsibility": default_afip_responsibility_type_id,

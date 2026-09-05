@@ -94,8 +94,8 @@ class ResPartner(models.Model):
     # Bussiness Methods (Get address fields)
 
     def _get_required_address_fields(
-            self, address_type, country, use_delivery_as_billing=False, **kwargs
-        ):
+        self, address_type, country, use_delivery_as_billing=False, **kwargs
+    ):
         required_address_fields = set()
         if address_type == "delivery" or use_delivery_as_billing:
             required_address_fields |= self._get_mandatory_delivery_address_fields(
