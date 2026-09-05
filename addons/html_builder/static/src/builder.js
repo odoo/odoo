@@ -51,6 +51,7 @@ export class Builder extends Component {
         toggleMobile: t.function(),
         iframeLoaded: t.object(),
         isMobile: t.boolean(),
+        mobileBtnDisabled: t.boolean().optional(),
         Plugins: t.array().optional(),
         // This fragment of config will be passed to the Editor and be
         // available to the plugins in `config`

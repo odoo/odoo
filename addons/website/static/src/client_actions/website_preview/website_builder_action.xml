@@ -27,6 +27,14 @@
     </div>
 </t>
 
+<t t-name="website.ThemeColorsPreviewDialog">
+    <Dialog title.translate="Colors Preview" footer="false" withBodyPadding="false"
+        contentClass="'o_theme_colors_preview_dialog h-100'">
+        <iframe class="d-block h-100 w-100" t-att-src="this.props.iframeSrc"
+            t-on-load="this.onIframeLoad"/>
+    </Dialog>
+</t>
+
 <t t-name="website.homepage_editor_welcome_message">
     <div class="container o_homepage_editor_welcome_message text-center pt128 pb128 h-100">
         <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
