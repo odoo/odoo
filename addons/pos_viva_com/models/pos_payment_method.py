@@ -58,11 +58,6 @@ class PosPaymentMethod(models.Model):
                 f"&token={record.viva_com_webhook_verification_key}"
             )
 
-    def _is_write_forbidden(self, fields):
-        # Allow the modification of these fields even if a pos_session is open
-        whitelisted_fields = {'viva_com_bearer_token', 'viva_com_webhook_verification_key', 'viva_com_latest_response'}
-        return super(PosPaymentMethod, self)._is_write_forbidden(fields - whitelisted_fields)
-
     def _get_terminal_provider_selection(self):
         return super()._get_terminal_provider_selection() + [('viva_com', 'Viva.com')]
 

@@ -59,9 +59,6 @@ class PosPaymentMethod(models.Model):
                 if other_online_pms:
                     raise ValidationError(_("The %s already has one online payment.", config.name))
 
-    def _is_write_forbidden(self, fields):
-        return super()._is_write_forbidden(fields - {'online_payment_provider_ids'})
-
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

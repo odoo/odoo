@@ -269,9 +269,11 @@ class PosPaymentMethod(models.Model):
         for record in self:
             record.custom_image = record.image
 
+    def _get_write_forbidden_fields(self):
+        return {'type', 'journal_id', 'outstanding_account_id', 'receivable_account_id', 'currency_ids'}
+
     def _is_write_forbidden(self, fields):
-        whitelisted_fields = {'sequence'}
-        return bool(fields - whitelisted_fields and self.open_session_ids)
+        return bool(fields & self._get_write_forbidden_fields() and self.open_session_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -287,6 +289,20 @@ class PosPaymentMethod(models.Model):
         if self._is_write_forbidden(set(vals.keys())):
             raise UserError(_('Please close and validate the following open PoS Sessions before modifying this payment method.\n'
                             'Open sessions: %s', (' '.join(self.open_session_ids.mapped('name')),)))
+
+        if 'config_ids' in vals:
+            for payment_method in self:
+                new_ids = set(payment_method._fields['config_ids'].convert_to_cache(vals['config_ids'], payment_method))
+                removed_ids = [config_id for config_id in payment_method.config_ids.ids if config_id not in new_ids]
+                if not removed_ids:
+                    continue
+                blocking_sessions = payment_method.open_session_ids.filtered(lambda s: s.config_id.id in removed_ids)
+                if blocking_sessions:
+                    raise UserError(_(
+                        "You cannot remove '%(pm)s' from %(configs)s while it has an open session.",
+                        pm=payment_method.name,
+                        configs=', '.join(blocking_sessions.config_id.mapped('name')),
+                    ))
 
         if 'payment_method_type' in vals:
             self._force_payment_method_type_values(vals, vals['payment_method_type'])
