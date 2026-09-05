@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import itertools
 import logging
 import typing
@@ -856,10 +857,13 @@ class _RelationalMulti(_Relational):
         if isinstance(value, Domain):
             domain = value & field_domain
             bypass_access = self.bypass_search_access or operator in ('any!', 'not any!')
-            if domain.is_condition('id', operator='any!', value=Query):
+            if (
+                domain.is_condition('id', operator='any!', value=Query)
+                and model._search is BaseModel._search
+                and not (model._active_name and model.env.context.get('active_test', True))
+            ):
                 # ('id', 'any!', Query), so we can just use the query
                 query = domain.value
-                # XXX only when no overwrites? # no active test?
             else:
                 registry = model.env.registry
                 for inverse_field in registry.field_inverses[self]:
@@ -872,7 +876,7 @@ class _RelationalMulti(_Relational):
         elif isinstance(value, Query):
             domain = field_domain.optimize_full(comodel)
             if not domain.is_true():
-                # TODO should clone/copy Query value
+                value = copy.copy(value)
                 value.add_where(domain._to_sql(value.table._with_model(comodel)))
             query = value
         elif isinstance(value, SQL):

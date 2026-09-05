@@ -575,7 +575,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
         if self.ready:
             for model in env.values():
                 model._register_hook()
-            env.flush_all()
+            env.cr.flush()
+            env.transaction.clear()
             self.check_null_constraints(env.cr)
         reset_classes_tp_versions_used(self.values())  # cpython optimisation
 
@@ -781,11 +782,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     func(cr)
             else:
                 self._constraint_queue[key] = func
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             if self._is_install:
-                _schema.error(*e.args)
+                _schema.error("Constraint not added: %s", e)
             else:
-                _schema.info(*e.args)
+                _schema.info("Constraint not added: %s", e)
                 self._constraint_queue[key] = func
 
     def finalize_constraints(self, cr: Cursor) -> None:
@@ -794,10 +795,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
             try:
                 with cr.savepoint(flush=False):
                     func(cr)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 # warn only, this is not a deployment showstopper, and
                 # can sometimes be a transient error
-                _schema.warning(*e.args)
+                _schema.warning("Constraint not added during finalize: %s", e)
         self._constraint_queue.clear()
 
     def init_models(self, cr: Cursor, model_names: Iterable[str], context: dict[str, typing.Any], install: bool = True):

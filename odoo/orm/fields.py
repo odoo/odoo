@@ -1751,20 +1751,28 @@ class Field[T]:
         """ Return the subset of ``records`` for which the value of ``self`` is
         either not in cache, or different from ``cache_value``.
         """
-        field_cache = self._get_cache(records.env)
+        env = records.env
+        try:
+            field_cache = env._field_cache_memo[self]
+        except KeyError:
+            field_cache = self._get_cache(env)
         ids_to_update = tuple(
             record_id
             for record_id in records._ids
             if field_cache.get(record_id, SENTINEL) != cache_value
         )
-        return records.__class__(records.env, ids_to_update, records._prefetch_ids)
+        return records.__class__(env, ids_to_update, records._prefetch_ids)
 
     def _to_prefetch(self, record: ModelType) -> ModelType:
         """ Return a recordset including ``record`` to prefetch the field. """
         ids = expand_ids(record.id, record._prefetch_ids)
-        field_cache = self._get_cache(record.env)
-        prefetch_ids = (id_ for id_ in ids if id_ not in field_cache)
-        return record.browse(prefetch_ids)
+        env = record.env
+        try:
+            field_cache = env._field_cache_memo[self]
+        except KeyError:
+            field_cache = self._get_cache(env)
+        prefetch_ids = tuple(id_ for id_ in ids if id_ not in field_cache)
+        return record.__class__(env, prefetch_ids, prefetch_ids)
 
     def _insert_cache(self, records: BaseModel, values: Iterable) -> None:
         """ Update the cache of the given records with the corresponding values,
@@ -1792,7 +1800,10 @@ class Field[T]:
             the update
         """
         env = records.env
-        field_cache = self._get_cache(env)
+        try:
+            field_cache = env._field_cache_memo[self]
+        except KeyError:
+            field_cache = self._get_cache(env)
         for id_ in records._ids:
             field_cache[id_] = cache_value
 

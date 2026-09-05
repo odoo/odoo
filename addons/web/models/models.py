@@ -19,6 +19,7 @@ from odoo.models import regex_order, READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBE
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, BinaryBytes, BinaryValue, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
+from odoo.tools.misc import LazyDict
 from odoo.tools.translate import LazyTranslate
 
 if typing.TYPE_CHECKING:
@@ -29,13 +30,6 @@ _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 MAX_NUMBER_OPENED_GROUPS = 10
 PENDING_ATTACHMENTS_KEY = "pending_attachment_ids"
-
-
-class lazymapping(defaultdict):
-    def __missing__(self, key):
-        value = self.default_factory(key)
-        self[key] = value
-        return value
 
 
 class UnlinkBlockedError(ValidationError):
@@ -1745,7 +1739,7 @@ class Base(models.AbstractModel):
                 }
         :param parent_name: string, indicates which key determines the parent
         """
-        local_counters = lazymapping(lambda id: values_range[id]['__count'])
+        local_counters = LazyDict(lambda id: values_range[id]['__count'])
 
         for id in values_range:
             values = values_range[id]
