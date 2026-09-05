@@ -779,7 +779,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
             'taxes_id': [(5, 0, 0)] if not tax_ids else [(6, 0, tax_ids)],
             'name': name,
             'categ_id': category.id,
-            'lst_price': lst_price,
+            'list_price': lst_price,
             'standard_price': standard_price if standard_price else 0.0,
             'company_id': cls.env.company.id,
         })
