@@ -135,6 +135,7 @@ export class Orderline extends Component {
             taxGroup: this.props.showTaxGroup && taxGroup,
             price: !basic && !line.combo_parent_id && this.line.currencyDisplayPrice,
             lotLines: line.product_id.tracking !== "none" && (line.packLotLines || []),
+            default_code: line.product_id?.default_code || null,
         };
     }
 }
