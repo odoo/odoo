@@ -12,9 +12,9 @@ if (commandProviderRegistry.contains("debug")) {
     commandProviderRegistry.add(
         "debug",
         {
-            provide: (env, options) => {
+            provide(options) {
                 const debugMode = usePlugin(DebugModePlugin);
-                const result = provide(env, options);
+                const result = provide(options);
                 const existingDebugKeys = new Set(debugMode.toList());
                 if (existingDebugKeys.has("translate")) {
                     result.unshift({

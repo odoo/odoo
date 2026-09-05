@@ -45,7 +45,7 @@ export class HotkeyCommandItem extends Component {
 const commandCategoryRegistry = registry.category("command_categories");
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("command", {
-    provide: (env, options = {}) => {
+    provide(options) {
         const commandService = useService("command");
         const commands = commandService
             .getCommands(options.activeElement)
@@ -76,7 +76,7 @@ commandProviderRegistry.add("command", {
 });
 
 commandProviderRegistry.add("data-hotkeys", {
-    provide: (env, options = {}) => {
+    provide(options) {
         const commands = [];
         const overlayModifier = usePlugin(HotkeyPlugin).overlayModifier;
         // Also retrieve all hotkeyables elements

@@ -445,7 +445,7 @@ test("multi provider with the same namespace", async () => {
 test("check the concurrency during a research", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const imSearchDef = Promise.withResolvers();
-    const provide = async (env, options) => {
+    const provide = async (options) => {
         if (options.searchValue) {
             await imSearchDef.promise;
         }
@@ -1435,7 +1435,7 @@ test("generate new session id when opened", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const providers = [
         {
-            provide: (env, { sessionId }) => {
+            provide: ({ sessionId }) => {
                 lastSessionId = sessionId;
                 return [];
             },
@@ -1520,7 +1520,7 @@ test("searchValue must not change without edition", async () => {
     await mountWithCleanup(MainComponentsContainer);
     const providers = [
         {
-            provide: async (env, { searchValue }) => {
+            provide: async ({ searchValue }) => {
                 if (searchValue === "abc") {
                     await provideDef.promise;
                 }
@@ -1564,7 +1564,7 @@ test("display spinner while loading results from providers", async () => {
             providers: [
                 {
                     namespace: "?",
-                    provide: async (env, { searchValue }) => {
+                    provide: async () => {
                         await provideDef.promise;
                         return [];
                     },
