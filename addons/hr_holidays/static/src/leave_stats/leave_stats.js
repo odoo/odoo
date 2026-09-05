@@ -136,6 +136,9 @@ export class LeaveStatsComponent extends Component {
             [this.state.date_from],
             { context: { employee_id: employee.id } }
         );
+        this.state.rawAllocationData = Object.fromEntries(
+            allocation_data.map(([, vals, , id]) => [id, vals])
+        );
         this.state.leaves = allocation_data
             .filter(([, vals]) => vals.leaves_approved > 0)
             .map(([name, vals, , id]) => {

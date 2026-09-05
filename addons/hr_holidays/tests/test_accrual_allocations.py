@@ -234,7 +234,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def assert_allocation_and_balance(self, allocation, expected_allocation_value, expected_balance_value, msg):
         unit = allocation.accrual_plan_id.added_value_type
-        allocation_value = allocation.number_of_hours_display if unit == 'hour' else allocation.number_of_days
+        allocation_value = allocation.number_of_hours if unit == 'hour' else allocation.number_of_days
 
         work_entry_type_data = allocation.work_entry_type_id.get_allocation_data(self.employee_emp)
         remaining_leaves = work_entry_type_data[self.employee_emp][0][1]['remaining_leaves']
@@ -475,7 +475,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         balances = []
         for day in range(2, 9):
             allocation._process_accrual_plans(date(2025, 9, day))
-            balances.append(allocation.number_of_hours_display)
+            balances.append(allocation.number_of_hours)
 
         self.assertEqual(balances, [5, 10, 15, 20, 25, 25, 25])
 
@@ -1871,7 +1871,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
         with freeze_time('2025-01-06'):
             allocation._update_accrual()
-            self.assertAlmostEqual(allocation.number_of_hours_display, 121.44)
+            self.assertAlmostEqual(allocation.number_of_hours, 121.44)
 
         with freeze_time('2025-07-03'):
             allocation._update_accrual()
@@ -4721,7 +4721,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'work_entry_type_id': work_entry_type_hour.id,
             'employee_id': self.employee_emp.id,
             'accrual_plan_id': accrual_plan.id,
-            'number_of_hours_display': 0.0,
+            'number_of_hours': 0.0,
             'date_from': start_date,
         })
         allocation_hour._action_validate()

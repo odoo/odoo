@@ -106,10 +106,10 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
             allocation_form.work_entry_type_id = self.work_entry_type
             allocation_form.date_from = datetime.date(2024, 3, 20)
             allocation_form.name = 'Accrual allocation for employee'
-            self.assertEqual(allocation_form.number_of_hours_display, 8.0)
+            self.assertEqual(allocation_form.number_of_hours, 8.0)
             allocation_form.date_from = datetime.date(2024, 3, 25)
             allocation_form.name = 'Accrual allocation for employee'
-            self.assertEqual(allocation_form.number_of_hours_display, 8.0)
+            self.assertEqual(allocation_form.number_of_hours, 8.0)
 
     def test_accrual_allocation_with_overlapping_attendance(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({

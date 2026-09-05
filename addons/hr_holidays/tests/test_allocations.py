@@ -176,8 +176,8 @@ class TestAllocations(TestHrHolidaysCommon):
             ('employee_id', '=', self.employee_emp.id),
         ])
 
-        self.assertEqual(employee_allocation.number_of_hours_display, 10)
-        self.assertEqual(employee_emp_allocation.number_of_hours_display, 10)
+        self.assertEqual(employee_allocation.number_of_hours, 10)
+        self.assertEqual(employee_emp_allocation.number_of_hours, 10)
 
     def test_allocation_hours_recompute_on_schedule_change(self):
         self.work_entry_type.request_unit = 'hour'
@@ -190,18 +190,18 @@ class TestAllocations(TestHrHolidaysCommon):
             'employee_id': self.employee.id,
             'number_of_days': 7,  # 7 days * 8 hours/day = 56 hours
         })
-        self.assertEqual(allocation.number_of_hours_display, 56)
+        self.assertEqual(allocation.number_of_hours, 56)
 
         # Moving the employee to a 7 hours/day schedule must recompute the
         # allocation duration so the accrued hours stay unchanged.
         self.employee.resource_calendar_id = self.calendar_35h
         self.assertEqual(allocation.number_of_days, 8)  # 56 hours / 7 hours/day
-        self.assertEqual(allocation.number_of_hours_display, 56)
+        self.assertEqual(allocation.number_of_hours, 56)
 
         # A later accrual adds time at the new schedule (number_of_days += days).
         # The hours accrued under the old schedule must not be revalued.
         allocation.number_of_days += 8  # +8 days * 7 hours/day = +56 hours
-        self.assertEqual(allocation.number_of_hours_display, 112)  # 56 + 56
+        self.assertEqual(allocation.number_of_hours, 112)  # 56 + 56
 
     def change_allocation_hours_unit(self):
         self.work_entry_type.write({
@@ -369,10 +369,10 @@ class TestAllocations(TestHrHolidaysCommon):
         with Form(self.env['hr.leave.allocation'].with_user(self.user_hrmanager)) as allocation_form:
             allocation_form.employee_id = employee
             allocation_form.work_entry_type_id = work_entry_type
-            allocation_form.number_of_hours_display = 10
+            allocation_form.number_of_hours = 10
             allocation = allocation_form.save()
 
-        self.assertEqual(allocation.number_of_hours_display, 10.0)
+        self.assertEqual(allocation.number_of_hours, 10.0)
 
     def test_create_allocation_from_company_with_no_employee_for_current_user(self):
         """
@@ -506,7 +506,7 @@ class TestAllocations(TestHrHolidaysCommon):
         with self.assertRaises(AssertionError):  # AssertionError raised by Form as employee is required
             with Form(self.env['hr.leave.allocation']) as allocation_form:
                 allocation_form.work_entry_type_id = self.work_entry_type
-                allocation_form.number_of_hours_display = 10
+                allocation_form.number_of_hours = 10
                 allocation_form.employee_id = self.env["hr.employee"]
             allocation_form.save()
 
