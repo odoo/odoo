@@ -1252,7 +1252,7 @@ class AccountMove(models.Model):
                     else:
                         new_pmt_state = invoice._get_invoice_in_payment_state()
 
-                else:
+                elif invoice.state == 'posted' or reconciliation_vals:
                     new_pmt_state = 'paid'
 
                     reverse_move_types = set()
