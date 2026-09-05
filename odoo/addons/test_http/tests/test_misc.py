@@ -4,6 +4,7 @@ import json
 import logging
 from importlib import metadata
 from io import StringIO
+from http import HTTPStatus
 from socket import gethostbyname
 from unittest.mock import patch
 
@@ -162,6 +163,13 @@ class TestHttpMisc(TestHttpBase):
         res.raise_for_status()
         self.assertEqual(res.headers.get('Content-Type'), 'application/json; charset=utf-8')
         self.assertEqual(set(res.json()), {'version', 'version_info'})
+
+    def test_misc10_request_uri_too_long(self):
+        # Depending on the Werkzeug version, the request can be rejected before
+        # headers are parsed or reach Odoo's routing.
+        with mute_logger('werkzeug'):
+            response = self.url_open('/' + 'a' * 95536)
+        self.assertIn(response.status_code, (HTTPStatus.NOT_FOUND, HTTPStatus.REQUEST_URI_TOO_LONG))
 
 
 @tagged('post_install', '-at_install')
