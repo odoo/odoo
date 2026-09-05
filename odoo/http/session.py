@@ -281,6 +281,7 @@ def finalize(session: Session, env: Environment) -> None:
         'context': user_context,
         'session_token': env.user._compute_session_token(session.sid),
     })
+    env.user._after_session_login()
 
 
 def logout(session: Session, *, keep_db: bool = False) -> None:

@@ -38,7 +38,11 @@ class DiscussChannelMember(models.Model):
         members = super().create(vals_list)
         guest = self.env["mail.guest"]._get_guest_from_context()
         for member in members.filtered(
-            lambda m: m.channel_id.channel_type == "livechat" and not m.livechat_member_type
+            lambda m: (
+                m.channel_id.channel_type == "livechat"
+                and not m.channel_id.livechat_end_dt
+                and not m.livechat_member_type
+            ),
         ):
             # After login, the guest cookie is still available, allowing us to
             # reconcile the user with their previous guest member.
@@ -87,8 +91,6 @@ class DiscussChannelMember(models.Model):
             member.agent_expertise_ids = member.livechat_member_history_ids.agent_expertise_ids
 
     def _create_or_update_history(self, values_by_member):
-        if self.channel_id.livechat_end_dt:
-            return
         members_without_history = self.filtered(lambda m: not m.livechat_member_history_ids)
         history_domain = Domain.OR(
             [

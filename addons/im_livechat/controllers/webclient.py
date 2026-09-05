@@ -41,8 +41,8 @@ class WebClient(WebclientController):
 
     @classmethod
     def _store_init_livechat_fields(cls, res: Store.FieldList, params):
-        user, guest = request.env["res.users"]._get_current_persona()
-        if user:
+        user = request.env.user
+        if user and not user._is_public():
             res.one(
                 "self_user",
                 lambda res: res.one(
@@ -54,7 +54,7 @@ class WebClient(WebclientController):
                 ),
                 value=user,
             )
-        if guest:
+        if guest := request.env["mail.guest"]._get_guest_from_context():
             res.one(
                 "self_guest",
                 lambda res: (

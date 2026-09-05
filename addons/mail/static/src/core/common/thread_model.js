@@ -398,6 +398,10 @@ export class Thread extends Record {
 
     newestPersistentOfAllMessage = this.computed(() => this.newestPersistentAllMessages[0]);
 
+    get newestPersistentCommentOfAllMessages() {
+        return this.newestPersistentAllMessages.find((e) => e.message_type === "comment");
+    }
+
     get oldestPersistentMessage() {
         return this.messages.find((msg) => Number.isInteger(msg.id));
     }
@@ -538,6 +542,18 @@ export class Thread extends Record {
         this.pendingNewMessages = [];
     }
 
+    /** @type {import("models").Store["selvesBySequence"]} */
+    selvesBySequence = fields.Attr(undefined, {
+        /** @this {import("models").Thread} */
+        compute() {
+            return this.computeSelvesBySequence().sort((a, b) => a.sequence - b.sequence);
+        },
+    });
+
+    computeSelvesBySequence() {
+        return [...this.store.selvesBySequence];
+    }
+
     /**
      * Get the effective persona performing actions on this thread.
      * Priority order: logged-in user, portal partner (token-authenticated), guest.
@@ -545,7 +561,7 @@ export class Thread extends Record {
      * @returns {import("models").ResPartner | import("models").MailGuest}
      */
     get effectiveSelf() {
-        return this.store.self_user?.partner_id || this.store.self_guest;
+        return this.selvesBySequence[0]?.self;
     }
 
     /**
@@ -779,9 +795,13 @@ export class Thread extends Record {
         this.channel?.chatWindow?.close();
     }
 
+    /**
+     * @param {import("models").Message} message
+     * @param {import("models").Message} tmpMsg
+     */
     addOrReplaceMessage(message, tmpMsg) {
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && this.effectiveSelf.eq(message.author)) {
+        if (tmpMsg && tmpMsg.in(this.messages) && message.isSelfAuthored) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
