@@ -108,7 +108,7 @@
                         <span class="text-truncate" t-out="selectablePartner.name"/>
                     </div>
                     <div class="d-flex flex-column flex-grow-1 gap-1" name="selectablePartnerDetail">
-                        <span t-if="selectablePartner.email" t-out="selectablePartner.email" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
+                        <span t-if="selectablePartner.displayEmail" t-out="selectablePartner.displayEmail" class="text-truncate text-start smaller text-600 fw-normal lh-1"/>
                     </div>
                 </t>
                 <div t-else="" class="overflow-hidden d-flex flex-column align-items-baseline">

@@ -14,6 +14,7 @@ export class ResPartner extends webModels.ResPartner {
         string: "Main attachment",
     });
     is_in_call = fields.Boolean({ compute: "_compute_is_in_call" });
+    email_normalized = fields.Char({ compute: "_compute_email_normalized" });
     tz = fields.Char();
 
     _views = {
@@ -42,6 +43,15 @@ export class ResPartner extends webModels.ResPartner {
                     ["rtc_session_ids", "!=", false],
                     ["partner_id", "=", partner.id],
                 ]).length > 0;
+        }
+    }
+
+    _compute_email_normalized() {
+        for (const partner of this) {
+            // Mirror tools.email_normalize: keep only the address part, lowercased.
+            const match = (partner.email || "").match(/<([^<>]+)>\s*$/);
+            const address = (match ? match[1] : partner.email || "").trim();
+            partner.email_normalized = address.includes("@") ? address.toLowerCase() : false;
         }
     }
 
@@ -257,7 +267,8 @@ export class ResPartner extends webModels.ResPartner {
         this._compute_main_user_id(); // compute not automatically triggering when necessary
         res.one("main_user_id", "_store_avatar_card_fields", { sudo: true });
         if (res.is_for_internal_users()) {
-            res.extend(["email", "phone", "tz"]);
+            res.extend(["email_normalized", "phone", "tz"]);
+            res.attr("email", undefined, { predicate: (p) => !p.email_normalized });
         }
     }
 
@@ -271,7 +282,8 @@ export class ResPartner extends webModels.ResPartner {
         res.from_method("_store_im_status_fields", { internal: true });
         this._compute_main_user_id(); // compute not automatically triggering when necessary
         res.one("main_user_id", "_store_main_user_fields", { sudo: true });
-        res.extend(["email", "tz"], { internal: true });
+        res.extend(["email_normalized", "tz"], { internal: true });
+        res.attr("email", undefined, { predicate: (p) => !p.email_normalized, internal: true });
     }
 
     /**
