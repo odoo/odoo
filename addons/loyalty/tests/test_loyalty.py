@@ -358,3 +358,20 @@ class TestLoyalty(TransactionCase):
         product.invalidate_recordset(['name'])
         self.assertEqual(product.with_context(lang='en_US').name, 'Test Discount EN')
         self.assertEqual(product.with_context(lang='fr_FR').name, 'Test Discount FR')
+
+    def test_loyalty_program_reward_update(self):
+        """Updating a reward from an already saved loyalty program should work."""
+        with Form(self.env["loyalty.program"]) as program_form:
+            program_form.name = "Test Loyalty"
+            program_form.program_type = "promotion"
+            program_form.save()
+
+            with program_form.reward_ids.edit(0) as reward_form:
+                reward_form.discount = 5.0
+
+        program = program_form.record
+        self.assertEqual(
+            program.reward_ids.discount,
+            5.0,
+            "The discount update should be successfully saved to the database.",
+        )
