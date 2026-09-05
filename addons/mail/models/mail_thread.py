@@ -4236,6 +4236,7 @@ class MailThread(models.AbstractModel):
                     'is_cc': whether to send in "Cc" or "To";
                     'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
                         'whatsapp (WhatsAapp);
+                    'push_allowed': user's push notification preference;
                     'share': is partner a customer (partner.partner_share);
                     'type': partner usage ('customer', 'portal', 'user');
                     'uid': user ID (in case of multiple users, internal then first found
@@ -4305,6 +4306,7 @@ class MailThread(models.AbstractModel):
                 'lang': False,
                 'groups': [],
                 'notif': 'email',
+                'push_allowed': False,
                 'share': True,
                 'type': 'customer',
                 'uid': False,
@@ -4503,7 +4505,9 @@ class MailThread(models.AbstractModel):
         """ Never send to author and to people outside Odoo (email) except comments """
         notif_pids = []
         notif_pids_notinbox = []
-        for recipient in (r for r in recipients_data if r['active'] and r['id']):
+        for recipient in (
+            r for r in recipients_data if r['active'] and r['id'] and r['push_allowed']
+        ):
             notif_pids.append(recipient['id'])
             if recipient["notif"] != "inbox" and message.subtype_id.id != self.env[
                 "ir.model.data"
