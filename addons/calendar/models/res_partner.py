@@ -108,12 +108,16 @@ class ResPartner(models.Model):
 
         :rtype: dict[int, <calendar.event>]
         """
-        events = self.env['calendar.event'].search([
+        # Sudo is used to ensure that we get the 'partner_ids' field even on private events, otherwise
+        # they would be ignored in the loop below.
+        events = self.env['calendar.event'].sudo().search([
             ('stop', '>=', start_datetime.replace(tzinfo=None)),
             ('start', '<=', end_datetime.replace(tzinfo=None)),
             ('partner_ids', 'in', self.ids),
             ('show_as', '=', 'busy'),
         ])
+        # _fetch_query caches censored field values for private events
+        events.invalidate_recordset(['partner_ids'])
 
         event_by_partner_id = defaultdict(lambda: self.env['calendar.event'])
         for event in events:
