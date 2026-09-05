@@ -6,7 +6,7 @@ from re import findall
 from unittest.mock import patch
 
 from odoo.tests import Form, TransactionCase
-from odoo import Command
+from odoo import Command, fields
 
 
 class TestReportsCommon(TransactionCase):
@@ -1443,6 +1443,96 @@ class TestReports(TestReportsCommon):
         _, _, lines = self.get_report_forecast(product_template_ids=self.product1.product_tmpl_id.ids, context={'warehouse_id': self.wh_2.id})
         self.assertEqual(len(lines), 1)
         self.assertEqual(lines[0]['move_out']['id'], move_pick.id)
+
+    def test_report_forecast_15_availability_light_lines(self):
+        """ The picking availability compute asks the report for light lines
+        (forecast_availability_only in the context). Make sure they reconcile the
+        same way as the full ones, on a pick/ship chain and on a plain delivery.
+        """
+        customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
+        self.wh_2.write({'delivery_steps': 'pick_ship'})
+        now = fields.Datetime.now()
+        receipt_date = now + timedelta(days=5)
+        self.env['stock.quant']._update_available_quantity(self.product, self.wh_2.lot_stock_id, 3)
+
+        # pick/ship chain for 5 units: the pick reserves the 3 units in stock
+        pick = self.env['stock.picking'].create({
+            'picking_type_id': self.wh_2.pick_type_id.id,
+            'location_id': self.wh_2.lot_stock_id.id,
+            'location_dest_id': self.wh_2.wh_output_stock_loc_id.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 5,
+                'location_id': self.wh_2.lot_stock_id.id,
+                'location_dest_id': self.wh_2.wh_output_stock_loc_id.id,
+            })],
+        })
+        ship = self.env['stock.picking'].create({
+            'picking_type_id': self.wh_2.out_type_id.id,
+            'location_id': self.wh_2.wh_output_stock_loc_id.id,
+            'location_dest_id': customer_loc.id,
+            'scheduled_date': now + timedelta(days=10),
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 5,
+                'location_id': self.wh_2.wh_output_stock_loc_id.id,
+                'location_dest_id': customer_loc.id,
+                'move_orig_ids': [Command.link(pick.move_ids.id)],
+            })],
+        })
+        (pick + ship).action_confirm()
+        pick.action_assign()
+        self.assertEqual(pick.move_ids.state, 'partially_available')
+        self.assertEqual(ship.move_ids.state, 'waiting')
+
+        # plain delivery for 4 units, nothing left to reserve
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.wh_2.out_type_id.id,
+            'location_id': self.wh_2.lot_stock_id.id,
+            'location_dest_id': customer_loc.id,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 4,
+                'location_id': self.wh_2.lot_stock_id.id,
+                'location_dest_id': customer_loc.id,
+            })],
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.move_ids.state, 'confirmed')
+
+        # receipt of 10 units in 5 days feeds both deliveries
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.wh_2.in_type_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.wh_2.lot_stock_id.id,
+            'scheduled_date': receipt_date,
+            'move_ids': [Command.create({
+                'product_id': self.product.id,
+                'product_uom_qty': 10,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.wh_2.lot_stock_id.id,
+            })],
+        })
+        receipt.action_confirm()
+
+        report = self.env['stock.forecasted_product_product']
+        wh_locations = self.env['stock.location']._search([('id', 'child_of', self.wh_2.view_location_id.id)])
+        keys = ('move_out', 'move_in', 'quantity', 'replenishment_filled')
+        for stock_location in (self.wh_2.lot_stock_id, self.wh_2.wh_output_stock_loc_id):
+            full_lines = report._get_report_lines(False, self.product.ids, wh_locations, stock_location, read=False)
+            light_lines = report.with_context(forecast_availability_only=True)._get_report_lines(False, self.product.ids, wh_locations, stock_location, read=False)
+            self.assertTrue(all(set(line) == set(keys) for line in light_lines))
+            self.assertEqual(
+                [tuple(line.get(key) for key in keys) for line in light_lines],
+                [tuple(line.get(key) for key in keys) for line in full_lines],
+            )
+
+        self.assertRecordValues(ship.move_ids + delivery.move_ids, [
+            {'forecast_availability': 5.0, 'forecast_expected_date': receipt_date},
+            {'forecast_availability': 4.0, 'forecast_expected_date': receipt_date},
+        ])
+        self.assertEqual(ship.products_availability_state, 'expected')
+        self.assertEqual(delivery.products_availability_state, 'late')
 
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
