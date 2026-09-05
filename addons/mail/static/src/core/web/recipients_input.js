@@ -62,6 +62,22 @@ export class RecipientsInput extends Component {
         this.tags()[index]?.onDelete();
     }
 
+    async fetchRecipientSuggestions(term, partnerIds) {
+        return await this.orm.call("res.partner", "web_name_search", [], {
+            name: term,
+            specification: {
+                email: {},
+                lang: {},
+                name: {},
+                parent_name: {},
+                display_name: {},
+            },
+            limit: 8,
+            domain: [["id", "not in", Array.from(partnerIds)]],
+            context: { show_email: true },
+        });
+    }
+
     getAutoCompleteSources() {
         return [
             {
@@ -80,19 +96,7 @@ export class RecipientsInput extends Component {
                     const options = [];
 
                     const limit = 8;
-                    const matches = await this.orm.call("res.partner", "web_name_search", [], {
-                        name: term,
-                        specification: {
-                            email: {},
-                            lang: {},
-                            name: {},
-                            parent_name: {},
-                            display_name: {},
-                        },
-                        limit,
-                        domain: [["id", "not in", Array.from(partnerIds)]],
-                        context: { show_email: true },
-                    });
+                    const matches = await this.fetchRecipientSuggestions(term, partnerIds);
 
                     options.push(
                         ...matches.map((match) => ({

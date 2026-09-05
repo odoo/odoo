@@ -229,6 +229,9 @@
 
             ('include', 'portal.assets_chatter_helpers'),
             'portal/static/src/chatter/portal_project/**/*',
+            'mail/static/src/core/web/recipients_input*',
+            'mail/static/src/core/web/recipient_tag*',
+            'mail/static/src/core/web/recipients_popover*',
             'project/static/src/project_sharing/**/*',
             'web/static/src/start.js',
         ],
