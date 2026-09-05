@@ -1,6 +1,6 @@
 {
     'name': 'Türkiye - Nilvera E-Invoice',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Accounting/Accounting',
     'description': """
 For sending and receiving electronic invoices to Nilvera.
@@ -21,7 +21,6 @@ Features include:
         'views/l10n_tr_nilvera_einvoice_account_tax_code_views.xml',
         'views/res_partner_views.xml',
         'views/account_move_views.xml',
-        'views/account_tax_views.xml',
         'views/product_views.xml',
         'views/res_config_settings_views.xml',
         'wizards/l10n_tr_nilvera_einvoice_ticarifatura_response_wizard_views.xml',

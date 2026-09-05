@@ -222,6 +222,29 @@ class AccountMoveSend(models.AbstractModel):
                 ),
             }
 
+        if missing_withholding_reason := tr_nilvera_moves.filtered(
+            lambda r: r.l10n_tr_gib_invoice_type == "TEVKIFAT"
+            and not r.l10n_tr_exemption_code_id
+        ):
+            alerts["tr_moves_without_withholding_reason"] = {
+                "level": "danger",
+                "message": self.env._("Withholding invoices must specify the GİB withholding reason"),
+                "action_text": self.env._("Check withholding reason"),
+                "action": missing_withholding_reason._get_records_action(
+                    name=self.env._("Check Withholding Reason"),
+                ),
+            }
+
+        if inconsistent_withholding := tr_nilvera_moves.filtered(self._l10n_tr_withholding_is_inconsistent):
+            alerts["tr_moves_with_inconsistent_withholding"] = {
+                "level": "danger",
+                "message": self.env._("The lines of a withholding invoice must all withhold at the ratio its reason describes"),
+                "action_text": self.env._("Check withholding taxes"),
+                "action": inconsistent_withholding._get_records_action(
+                    name=self.env._("Check Withholding Taxes"),
+                ),
+            }
+
         if (
             tr_withholding_credit_note_tax_mismatch
             := self._l10n_tr_withholding_credit_note_tax_mismatch(tr_nilvera_moves)
@@ -247,6 +270,17 @@ class AccountMoveSend(models.AbstractModel):
                 ),
             }
         return alerts
+
+    def _l10n_tr_withholding_is_inconsistent(self, move):
+        if move.l10n_tr_gib_invoice_type not in {"TEVKIFAT", "TEVKIFATIADE"}:
+            return False
+        if not move.l10n_tr_withholding_ratio:
+            # nothing withholds, or the lines disagree
+            return True
+        if move.l10n_tr_gib_invoice_type == "TEVKIFATIADE":
+            # a return has no reason of its own
+            return False
+        return bool(move.l10n_tr_exemption_code_id) and not move._l10n_tr_reason_is_consistent()
 
     def _l10n_tr_withholding_credit_note_tax_mismatch(self, moves):
         errors = defaultdict(defaultdict)
@@ -278,7 +312,6 @@ class AccountMoveSend(models.AbstractModel):
             'action_text': _("Check Tax Amounts on Credit Note(s)"),
             'action': moves._get_records_action(name=_("Check Tax Amounts on Credit Note(s)")),
         }
-
 
     def _get_l10n_tr_tax_partner_address_alert(self, moves):
         if tr_partners_missing_required_fields := moves.filtered(
