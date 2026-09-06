@@ -18,7 +18,7 @@
                 <li t-foreach="blogs" t-as="nav_blog">
                     <a t-attf-href="/blog/#{slug(nav_blog)}"
                        t-attf-class="btn btn-light #{(blog and nav_blog.id == blog.id) and 'active border-primary bg-primary-subtle text-primary-emphasis'}">
-                        <span t-out="nav_blog.name"/>
+                        <span t-field="nav_blog.name"/>
                     </a>
                 </li>
             </ul>
@@ -26,7 +26,7 @@
             <a t-if="len(blogs) > 1 and blog" href="/blog" t-attf-class="btn btn-link d-lg-none flex-shrink-0 me-auto ps-0">
                 <i class="oi me-1" data-icon="chevron_backward" role="img"/>All blogs
             </a>
-            <button t-if="len(blogs) > 1" class="o_wblog_sheet_trigger btn btn-light order-last d-lg-none flex-shrink-0"
+            <button t-if="len(blogs) > 1" class="o_wblog_sheet_trigger btn btn-light order-last d-lg-none flex-shrink-0 o_not_editable"
                     type="button"
                     t-att-title="blog.name if blog else wblog_all_title_string"
                     aria-haspopup="dialog">
@@ -119,21 +119,28 @@
                 t-attf-class="flex-shrink-0 o_not_editable #{_avatar_classes}"/>
         <div t-attf-class="small lh-sm #{_extra_classes}">
             <!-- Author -->
-            <div t-if="opt_posts_loop_show_author">
-                <div class="o_not_editable">
-                    <t t-out="blog_post.author_name"/>
-                </div>
+            <div t-if="opt_posts_loop_show_author" class="o_wblog_post_author">
+                <div t-if="editable" t-field="blog_post.author_id" t-options="{'widget': 'contact', 'fields': ['name']}"/>
+                <div t-else="" class="o_not_editable" t-out="blog_post.author_name"/>
             </div>
             <!-- Date -->
             <div t-if="opt_posts_loop_show_date">
-                <t t-set="show_write_date" t-value="is_post_page and blog_post.write_date and (blog_post.published_date or blog_post.publish_on) and blog_post.write_date.date() != (blog_post.published_date or blog_post.publish_on).date()"/>
-                <span t-if="opt_posts_loop_show_author and show_separator" t-attf-class="text-muted #{_separator_classes}">&#8226;</span>
-                <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{show_write_date and 'small'}" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
-                <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{show_write_date and 'small'}" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
-                <span t-if="show_write_date" class="small text-muted">
-                    (Updated
-                    <span t-field="blog_post.write_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>)
-                </span>
+                <span t-if="opt_posts_loop_show_author and show_separator" t-attf-class="o_not_editable text-muted #{_separator_classes}">&#8226;</span>
+                <t t-if="not is_post_page">
+                    <span t-if="blog_post.publish_on" class="text-muted" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
+                    <span t-elif="blog_post.published_date" class="text-muted" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+                </t>
+                <t t-else="">
+                    <t t-set="show_write_date" t-value="blog_post.website_published and blog_post.write_date and blog_post.write_date.date() != blog_post.published_date.date()"/>
+                    <span t-if="blog_post.publish_on" class="text-muted">
+                        Planned for <span t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+                    </span>
+                    <span t-elif="blog_post.published_date" t-attf-class="text-muted #{show_write_date and 'small'}" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+
+                    <span t-if="show_write_date" class="small text-muted">
+                        (Updated <t t-out="blog_post.write_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>)
+                    </span>
+                </t>
             </div>
         </div>
     </div>
@@ -156,7 +163,7 @@
                     <i class="oi d-lg-none me-1" data-icon="chevron_backward" role="presentation"/><t t-out="blog.name"/>
                 </a>
             </li>
-            <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-out="blog_post.name"/></li>
+            <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-field="blog_post.name"/></li>
         </ol>
     </nav>
 </template>
@@ -273,14 +280,13 @@ Display a sidebar beside the post content.
 <template id="blog_post_sidebar" name="Sidebar - Blog Post">
     <div id="o_wblog_post_sidebar">
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_1"/>
-        <div id="o_wblog_post_sidebar_sticky" t-attf-class="#{opt_blog_post_toc_display and 'o_sticky_reactive sticky-lg-top'}"/>
     </div>
 </template>
 
 
 <!-- (Option) Post Sidebar: Author avatar -->
 <template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="0">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="before">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Written by</h2>
             <t t-call="website_blog.post_published_info"
@@ -295,7 +301,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="False" priority="2">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4" t-ignore="true">
             <h2 class="small mb-3">Share this post</h2>
             <t t-snippet-call="website.s_share" string="Share"
@@ -310,7 +316,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display tags -->
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="False" priority="3">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Tags</h2>
             <div t-if="blog_post.tag_ids" class="d-flex flex-wrap gap-1 small">
@@ -332,7 +338,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Blogs list -->
 <template id="opt_blog_post_blogs_display" name="Blogs List" inherit_id="website_blog.blog_post_sidebar" active="False" priority="4">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Our blogs</h2>
             <ul class="list-unstyled small">
@@ -347,7 +353,7 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Archive -->
 <template id="opt_blog_post_archive_display" name="Archive" inherit_id="website_blog.blog_post_sidebar" active="False" priority="5">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block mb-2 pb-4">
             <h2 class="small mb-3">Archive</h2>
             <t t-call="website_blog.date_selector"/>
@@ -358,7 +364,10 @@ Display a sidebar beside the post content.
 
 <!-- (Option) Post Sidebar: display Table of Contents -->
 <template id="opt_blog_post_toc_display" name="Table of Contents" inherit_id="website_blog.blog_post_sidebar" active="True" priority="1">
-    <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="attributes">
+        <attribute name="class">o_wblog_post_sidebar_sticky o_sticky_reactive sticky-lg-top</attribute>
+    </xpath>
+    <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block o_wblog_toc mb-2 pb-4">
             <h2 class="small mb-3">On this page</h2>
             <nav class="o_wblog_toc_nav o_not_editable">

@@ -88,9 +88,7 @@ according to the enabled options.
                                     <!-- Content column -->
                                     <div class="d-flex flex-column justify-content-center flex-grow-1 p-4 p-md-5 p-xl-4">
                                         <!-- 'Unpublished' badge -->
-                                        <small t-if="not blog_post.website_published and not opt_posts_loop_show_cover" class="badge bg-danger align-self-end w-auto h-auto">
-                                            <i class="oi me-2" data-icon="block" role="presentation"/>Unpublished
-                                        </small>
+                                        <t t-if="not opt_posts_loop_show_cover" t-call="website_blog.post_unpublished_badge" _badge_classes.f="align-self-end"/>
                                         <!-- Title, author and date -->
                                         <a t-if="posts_list_show_parent_blog" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
                                         <t t-call="website_blog.post_heading" _heading_classes.f="h3"/>
@@ -137,27 +135,23 @@ according to the enabled options.
                         <!-- Year/month header -->
                         <t t-if="opt_blog_simple_list_view">
                             <t t-if="not blog_post.website_published" t-set="post_year" t-value="'Unpublished'"/>
-                            <t t-elif="blog_post.published_date" t-set="post_year" t-value="blog_post.published_date.strftime('%Y')"/>
-                            <t t-elif="blog_post.publish_on" t-set="post_year" t-value="blog_post.publish_on.strftime('%Y')"/>
+                            <t t-else="" t-set="post_year" t-value="blog_post.published_date.strftime('%Y')"/>
                             <t t-if="post_year != current_year">
                                 <div class="col-12 pb-4">
-                                    <span t-if="blog_post.published_date" class="badge bg-light" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'yyyy'}"/>
-                                    <span t-elif="blog_post.publish_on" class="badge bg-light" t-out="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'yyyy'}"/>
-                                    <span t-else="" class="badge bg-light">Unpublished</span>
+                                    <span t-if="not blog_post.website_published" class="badge bg-light" t-out="'Unpublished'"/>
+                                    <span t-else="" class="badge bg-light" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'yyyy'}"/>
                                 </div>
                                 <t t-set="current_year" t-value="post_year"/>
                             </t>
                         </t>
                         <t t-elif="opt_blog_compact_list_view">
                             <t t-if="not blog_post.website_published" t-set="post_month" t-value="'Unpublished'"/>
-                            <t t-elif="blog_post.published_date" t-set="post_month" t-value="blog_post.published_date.strftime('%Y-%m')"/>
-                            <t t-elif="blog_post.publish_on" t-set="post_month" t-value="blog_post.publish_on.strftime('%Y-%m')"/>
+                            <t t-else="" t-set="post_month" t-value="blog_post.published_date.strftime('%Y-%m')"/>
                             <t t-if="post_month != current_month">
                                 <div class="o_wblog_compact_list_month_header o_sticky_reactive position-static position-md-sticky sticky-md-top col-12 bg-body py-3">
                                     <h4 class="mb-0">
-                                        <t t-if="blog_post.published_date" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'MMMM yyyy'}"/>
-                                        <t t-elif="blog_post.publish_on" t-out="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'MMMM yyyy'}"/>
-                                        <t t-else="" t-out="'Unpublished'"/>
+                                        <t t-if="not blog_post.website_published" t-out="'Unpublished'"/>
+                                        <t t-else="" t-out="blog_post.published_date" t-options="{'widget': 'date', 'format': 'MMMM yyyy'}"/>
                                     </h4>
                                 </div>
                                 <t t-set="current_month" t-value="post_month"/>
@@ -190,9 +184,7 @@ according to the enabled options.
         </t>
         <div t-attf-class="#{opt_blog_cards_design and 'card-body'} #{opt_blog_bordered_grid_view and 'p-3'}">
             <!-- 'Unpublished' badge -->
-            <small t-if="not blog_post.website_published and not opt_posts_loop_show_cover" class="badge bg-danger w-auto h-auto mb-2">
-                <i class="oi me-2" data-icon="block" role="presentation"/>Unpublished
-            </small>
+            <t t-if="not opt_posts_loop_show_cover" t-call="website_blog.post_unpublished_badge" _badge_classes.f="mb-2"/>
             <!-- Title, teaser and tags -->
             <t t-if="posts_list_show_parent_blog">
                 <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
@@ -216,9 +208,7 @@ according to the enabled options.
 <!-- Card template for the Split template sticky card-->
 <template id="blog_post_split_sticky_card" name="Blog Post Split Sticky Card">
         <!-- 'Unpublished' badge -->
-        <small t-if="not blog_post.website_published" class="o_wblog_unpublished badge bg-danger w-auto h-auto mt-2 me-2">
-            <i class="oi me-2" data-icon="block" role="presentation"/>Unpublished
-        </small>
+        <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="o_wblog_unpublished mt-2 me-2"/>
         <!-- Title, teaser, tags, stats, author and date -->
         <div t-attf-class="#{not opt_posts_loop_show_cover and 'position-relative p-4' or 'z-1'}">
             <a t-if="posts_list_show_parent_blog" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold text-white"></a>
@@ -247,9 +237,7 @@ according to the enabled options.
                 <t t-else="" t-set="contentClasses" t-value="'col-md-6 px-3'"/>
                 <div t-att-class="contentClasses">
                     <!-- 'Unpublished' badge -->
-                    <small t-if="not blog_post.website_published" t-attf-class="badge bg-danger w-auto h-auto mb-2 #{opt_posts_loop_show_cover and 'd-md-none'}">
-                        <i class="oi me-2" data-icon="block" role="presentation"/>Unpublished
-                    </small>
+                    <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="mb-2 #{opt_posts_loop_show_cover and 'd-md-none'}"/>
                     <!-- Title -->
                     <t t-if="posts_list_show_parent_blog">
                         <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
@@ -282,31 +270,31 @@ according to the enabled options.
     <div class="col-12 m-0">
         <article class="o_wblog_post position-relative d-flex flex-column h-100" name="blog_post">
             <div class="row">
-                <div t-attf-class="d-flex align-items-start #{opt_blog_simple_list_view and 'justify-content-between flex-row-reverse mb-3 gap-2' or 'gap-3'}">
+                <div t-attf-class="d-flex align-items-baseline gap-3 #{opt_blog_simple_list_view and 'mb-3'}">
                     <!-- 'Unpublished' badge -->
-                    <small t-if="not blog_post.website_published" class="badge bg-danger w-auto h-auto mb-2 order-last order-lg-first">
-                        <i class="oi me-2" data-icon="block" role="presentation"/>Unpublished
-                    </small>
-                    <!-- Date -->
-                    <t t-if="opt_blog_simple_list_view">
-                        <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
-                        <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
+                    <t t-call="website_blog.post_unpublished_badge" is_mobile_icon="opt_blog_simple_list_view"/>
+                    <!-- Date (Compact) -->
+                    <t t-if="opt_blog_compact_list_view">
+                        <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
+                        <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0"/>
                     </t>
-                    <t t-elif="opt_blog_compact_list_view">
-                        <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
-                        <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
-                    </t>
-                    
-                    <div t-attf-class="#{opt_blog_compact_list_view and 'd-flex flex-grow-1 flex-wrap justify-content-between align-items-start gap-1'}">
+
+                    <!-- Compact -->
+                    <div t-if="opt_blog_compact_list_view" t-attf-class="d-flex flex-grow-1 flex-wrap align-items-baseline gap-1 gap-lg-3 #{opt_blog_sidebar_show and 'flex-xl-nowrap' or 'flex-lg-nowrap'}">
                         <!-- Title -->
-                        <t t-if="opt_blog_simple_list_view">
-                            <t t-call="website_blog.post_heading" _heading_classes.f="h6 small mb-0"/>
-                        </t>
-                        <t t-elif="opt_blog_compact_list_view">
-                            <t t-call="website_blog.post_heading" _link_classes.f="flex-grow-1" _heading_classes.f="h6"/>
-                        </t>
+                        <div t-attf-class="w-100 #{opt_posts_loop_show_tags and (opt_blog_sidebar_show and 'w-xl-75' or 'w-lg-75')}">
+                            <t t-call="website_blog.post_heading" _heading_classes.f="h6" posts_list_show_parent_blog="False"/>
+                        </div>
                         <!-- Tags -->
-                        <t t-if="opt_blog_compact_list_view and opt_posts_loop_show_tags" t-call="website_blog.post_tags" _tags_classes.f="'p-0'"/>
+                        <t t-if="opt_posts_loop_show_tags" t-call="website_blog.post_tags" _tags_classes.f="w-100 #{opt_blog_sidebar_show and 'justify-content-xl-end w-xl-25' or 'justify-content-lg-end w-lg-25'}"/>
+                    </div>
+                    <!-- Minimal -->
+                    <div t-elif="opt_blog_simple_list_view" class="d-flex flex-grow-1 justify-content-between align-items-baseline gap-3">
+                        <!-- Title -->
+                        <t t-call="website_blog.post_heading" _heading_classes.f="h6 small mb-0" posts_list_show_parent_blog="False"/>
+                        <!-- Date -->
+                        <small t-if="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0" t-attf-title="Will be published on #{blog_post.publish_on.strftime('%Y-%m-%d')}"/>
+                        <small t-elif="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
                     </div>
                 </div>
             </div>
@@ -342,11 +330,9 @@ according to the enabled options.
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="text-reset text-decoration-none #{_link_classes}">
         <t t-call="website.record_cover"
             _record="blog_post"
-            additionnal_classes.f="o_cc3 #{_ratio_classes or 'ratio ratio-16x9'} h-auto overflow-hidden #{_cover_classes}">
+            additionnal_classes.f="#{_ratio_classes or 'ratio ratio-16x9'} h-auto overflow-hidden #{_cover_classes}">
             <!-- 'Unpublished' badge -->
-            <small t-if="not blog_post.website_published" t-attf-class="o_wblog_unpublished badge bg-danger w-auto h-auto mt-2 me-2 #{_badge_classes}">
-                <i class="oi me-2" data-icon="block" role="presentation"/>Unpublished
-            </small>
+            <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="o_wblog_unpublished mt-2 me-2 #{_badge_classes}"/>
         </t>
     </a>
 </template>
@@ -366,6 +352,20 @@ according to the enabled options.
                t-out="one_tag.name"/>
         </t>
     </div>
+</template>
+
+<!-- ======   Sub-Template: Posts list : Unpublished/scheduled badge  ============= -->
+<template id="post_unpublished_badge">
+    <t t-if="blog_post.publish_on" t-set="state" t-value="'Scheduled'"/>
+    <t t-elif="not blog_post.website_published" t-set="state" t-value="'Unpublished'"/>
+    <t t-else="" t-set="state" t-value="False"/>
+    <small t-if="state" t-attf-class="badge w-auto h-auto o_not_editable #{state == 'Scheduled' and 'bg-warning' or 'bg-danger'} #{is_mobile_icon and 'd-none d-lg-block'} #{_badge_classes}">
+        <i class="oi me-2" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="presentation"/><t t-out="state"/>
+    </small>
+    <!-- Only display the icon on mobile if asked -->
+    <small t-if="state and is_mobile_icon" t-attf-class="badge w-auto h-auto o_not_editable d-lg-none #{state == 'Scheduled' and 'bg-warning' or 'bg-danger'} #{_badge_classes}">
+        <i class="oi" t-att-data-icon="'schedule' if state == 'Scheduled' else 'block'" role="presentation" t-att-title="state"/>
+    </small>
 </template>
 
 <!--   ======================      OPTIONS      ===========================  -->
