@@ -1,5 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { TRANSLATABLE_ATTRIBUTES } from "@website/builder/plugins/translation/options/attribute_translation_plugin";
 
@@ -19,9 +20,23 @@ export class TranslateAttributeOption extends BaseOptionComponent {
                         return !!elTranslationInfo.textContent;
                     }
                     return !!elTranslationInfo[attr.attribute];
-                }),
+                }).map((attr) => this.getAttributeLabel(editingElement, attr)),
             };
         });
+    }
+
+    getAttributeLabel(editingElement, attr) {
+        if (attr.attribute === "title" && editingElement.matches(".media_iframe_video")) {
+            return {
+                ...attr,
+                name: _t("Description"),
+                tooltip: _t(
+                    "Helps screen readers and improves SEO by providing a relevant description."
+                ),
+                placeholder: _t("Describe content"),
+            };
+        }
+        return attr;
     }
 }
 
