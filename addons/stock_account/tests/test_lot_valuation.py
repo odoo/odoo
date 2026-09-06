@@ -2,12 +2,12 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.addons.stock_account.tests.common import TestStockValuationCommon
+from odoo.addons.stock_account.tests.common import TestStockValuationMultiCompanyCommon
 from odoo.exceptions import UserError
 from odoo.tests import users
 
 
-class TestLotValuation(TestStockValuationCommon):
+class TestLotValuation(TestStockValuationMultiCompanyCommon):
 
     _test_user_groups = (
         'stock.group_stock_manager',  # stock.move/quant/location/picking(.type) are the subject of valuation tests

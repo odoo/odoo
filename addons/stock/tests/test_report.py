@@ -4,14 +4,16 @@ from datetime import date, datetime, timedelta
 from re import findall
 from unittest.mock import patch
 
-from odoo.tests import tagged, Form, TransactionCase
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
+from odoo.tests import tagged, Form, TransactionCase
 
 
 class TestReportsCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.partner = cls.env['res.partner'].create({'name': 'Partner'})
         cls.ModelDataObj = cls.env['ir.model.data']
         cls.picking_type_in = cls.env['stock.picking.type'].browse(cls.ModelDataObj._xmlid_to_res_id('stock.picking_type_in'))
@@ -117,7 +119,7 @@ class TestReports(TestReportsCommon):
             'name': 'Volume-Beta"',
             'product_id': product_test.id,
         })
-        #add group to the user
+        # add group to the user
         self.env.user.group_ids += self.env.ref('stock.group_stock_lot_print_gs1')
         report = self.env.ref('stock.label_lot_template')
         target = b'\n\n^XA^CI28\n^FO100,50\n^A0N,44,33^FD[C4181234""154654654654]Mellohi"^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta"^FS\n\n^FO425,150^BY3\n^BXN,8,200\n^FD010974521379614210Volume-Beta"^FS\n^XZ\n'
@@ -1242,7 +1244,7 @@ class TestReports(TestReportsCommon):
             context = picking.move_ids[0].action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
             for line in lines:
-                if (line['document_in'] and picking.id == line['document_in']['id']) or (line['document_out'] and picking.id == line['document_out']['id']): #document_in is False
+                if (line['document_in'] and picking.id == line['document_in']['id']) or (line['document_out'] and picking.id == line['document_out']['id']):  # document_in is False
                     self.assertTrue(line['is_matched'], "The corresponding picking should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the picking shoud not be matched.")

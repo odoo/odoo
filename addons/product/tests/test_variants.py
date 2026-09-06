@@ -81,6 +81,7 @@ class TestVariantsSearch(ProductVariantsCommon):
         )
         self.assertFalse(templates, "Should not return template.")
 
+
 @tagged('post_install', '-at_install')
 class TestVariants(ProductVariantsCommon):
 
@@ -99,6 +100,11 @@ class TestVariants(ProductVariantsCommon):
     )
 
     _test_user_name = 'Test Product & Contact Manager'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.tmpl_no_attr = cls.env['product.template'].create({'name': 'template'})
 
     def test_variants_is_product_variant(self):
         template = self.product_template_sofa
@@ -179,13 +185,12 @@ class TestVariants(ProductVariantsCommon):
 
         # produced variants: two variants, simple matrix
         self.assertEqual(len(test_template.product_variant_ids), 2)
+        all_variants = test_template.product_variant_ids
         for ptav in sofa_size_s + sofa_size_m:
-            products = self.env['product.product'].search([
-                ('product_tmpl_id', '=', test_template.id),
-                ('product_template_attribute_value_ids', 'in', ptav.id),
-                ('product_template_attribute_value_ids', 'in', sofa_attr1_v2.id)
-            ])
-            self.assertEqual(len(products), 1)
+            matching = all_variants.filtered(
+                lambda p, ptav=ptav: ptav in p.product_template_attribute_value_ids and sofa_attr1_v2 in p.product_template_attribute_value_ids
+            )
+            self.assertEqual(len(matching), 1)
 
     def test_variants_creation_matrix(self):
         test_template = self.env['product.template'].create({
@@ -216,14 +221,13 @@ class TestVariants(ProductVariantsCommon):
 
         # produced variants: value matrix : 2x3 values
         self.assertEqual(len(test_template.product_variant_ids), 6)
+        all_variants = test_template.product_variant_ids
         for value_1 in sofa_attr1_v1 + sofa_attr1_v2:
             for value_2 in sofa_size_s + sofa_size_m + sofa_size_l:
-                products = self.env['product.product'].search([
-                    ('product_tmpl_id', '=', test_template.id),
-                    ('product_template_attribute_value_ids', 'in', value_1.id),
-                    ('product_template_attribute_value_ids', 'in', value_2.id)
-                ])
-                self.assertEqual(len(products), 1)
+                matching = all_variants.filtered(
+                    lambda p, v1=value_1, v2=value_2: v1 in p.product_template_attribute_value_ids and v2 in p.product_template_attribute_value_ids
+                )
+                self.assertEqual(len(matching), 1)
 
     def test_variants_creation_multi_update(self):
         test_template = self.env['product.template'].create({
@@ -427,9 +431,7 @@ class TestVariants(ProductVariantsCommon):
 
     @mute_logger('odoo.models.unlink')
     def test_archive_variant(self):
-        template = self.env['product.template'].create({
-            'name': 'template'
-        })
+        template = self.tmpl_no_attr
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -495,9 +497,7 @@ class TestVariants(ProductVariantsCommon):
 
     @mute_logger('odoo.models.unlink')
     def test_archive_all_variants(self):
-        template = self.env['product.template'].create({
-            'name': 'template'
-        })
+        template = self.tmpl_no_attr
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -671,6 +671,10 @@ class TestVariantsNoCreate(ProductVariantsCommon):
         super().setUpClass()
 
         cls.size_attribute.create_variant = 'no_variant'
+        cls.tmpl_sofa_no_attrs = cls.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': cls.uom_unit.id,
+        })
 
     def test_create_mono(self):
         """ create a product with a 'nocreate' attribute with a single value """
@@ -687,10 +691,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
 
     def test_update_mono(self):
         """ modify a product with a 'nocreate' attribute with a single value """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -717,10 +718,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
 
     def test_update_multi(self):
         """ modify a product with a 'nocreate' attribute with several values """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
@@ -738,11 +736,11 @@ class TestVariantsNoCreate(ProductVariantsCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [Command.link(self.size_attribute_s.id)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -757,19 +755,16 @@ class TestVariantsNoCreate(ProductVariantsCommon):
     @mute_logger('odoo.models.unlink')
     def test_update_mixed_mono(self):
         """ modify a product with regular and 'nocreate' attributes """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [Command.link(self.size_attribute_s.id)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -787,11 +782,11 @@ class TestVariantsNoCreate(ProductVariantsCommon):
             'name': 'Sofa',
             'uom_id': self.uom_unit.id,
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [(6, 0, self.size_attribute.value_ids.ids)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -806,19 +801,16 @@ class TestVariantsNoCreate(ProductVariantsCommon):
     @mute_logger('odoo.models.unlink')
     def test_update_mixed_multi(self):
         """ modify a product with regular and 'nocreate' attributes """
-        template = self.env['product.template'].create({
-            'name': 'Sofa',
-            'uom_id': self.uom_unit.id,
-        })
+        template = self.tmpl_sofa_no_attrs
         self.assertEqual(len(template.product_variant_ids), 1)
 
         template.write({
             'attribute_line_ids': [
-                Command.create({ # no variants for this one
+                Command.create({  # no variants for this one
                     'attribute_id': self.size_attribute.id,
                     'value_ids': [(6, 0, self.size_attribute.value_ids.ids)],
                 }),
-                Command.create({ # two variants for this one
+                Command.create({  # two variants for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [Command.link(self.color_attribute_red.id), Command.link(self.color_attribute_blue.id)],
                 }),
@@ -836,7 +828,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
             'name': 'Sofax',
             'uom_id': self.uom_unit.id,
             'attribute_line_ids': [
-                Command.create({ # one variant for this one
+                Command.create({  # one variant for this one
                     'attribute_id': self.color_attribute.id,
                     'value_ids': [(6, 0, self.color_attribute_red.ids)],
                 }),
@@ -885,6 +877,7 @@ class TestVariantsNoCreate(ProductVariantsCommon):
         self.assertTrue(first_product.active)
         self.assertTrue(second_product.active)
         self.assertTrue(second_product.product_variant_ids)
+
 
 @tagged('post_install', '-at_install')
 class TestVariantsManyAttributes(TransactionCase):
@@ -1830,6 +1823,7 @@ class TestVariantWrite(ProductVariantsCommon):
 
         v1.volume = 1.0
         self.assertEqual(template.volume, 2.0)
+
 
 @tagged('post_install', '-at_install')
 class TestVariantsExclusion(ProductVariantsCommon):

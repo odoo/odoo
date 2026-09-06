@@ -2,8 +2,8 @@
 
 from unittest.mock import patch, DEFAULT
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
 from odoo.tests.common import TransactionCase
 
 
@@ -12,6 +12,7 @@ class TestCarrierPropagation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.warehouse = cls.env.ref("stock.warehouse0")
 
         # Set Warehouse as multi steps delivery
@@ -70,14 +71,13 @@ class TestCarrierPropagation(TransactionCase):
             'partner_id': self.partner_propagation.id,
             'partner_invoice_id': self.partner_propagation.id,
             'order_line': [
-                (0, 0, {'name': self.super_product.name, 'product_id': self.super_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+                (0, 0, {'name': self.super_product.name, 'product_id': self.super_product.id, 'product_uom_qty': 1, 'price_unit': 1}),
             ]
         })
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': so.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+            'order_id': so.id,
+            'carrier_id': self.normal_delivery.id,
+        })
         choose_delivery_carrier.button_confirm()
         # Confirm the SO
         so.action_confirm()
@@ -104,14 +104,13 @@ class TestCarrierPropagation(TransactionCase):
                 'partner_id': self.partner_propagation.id,
                 'partner_invoice_id': self.partner_propagation.id,
                 'order_line': [
-                    (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+                    (0, 0, {'name': product.name, 'product_id': product.id, 'product_uom_qty': 1, 'price_unit': 1}),
                 ]
             })
-            delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': so.id,
-                'default_carrier_id': self.normal_delivery.id,
-            }))
-            choose_delivery_carrier = delivery_wizard.save()
+            choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+                'order_id': so.id,
+                'carrier_id': self.normal_delivery.id,
+            })
             choose_delivery_carrier.button_confirm()
             # Confirm the SO
             so.action_confirm()
@@ -154,7 +153,7 @@ class TestCarrierPropagation(TransactionCase):
         """
         route1 = self.env['stock.route'].create({
             'name': 'Route1',
-            'sale_selectable' : True,
+            'sale_selectable': True,
             'shipping_selectable': True,
             'rule_ids': [Command.create({
                 'name': 'rule1',
@@ -173,8 +172,8 @@ class TestCarrierPropagation(TransactionCase):
         })
         route2 = self.env['stock.route'].create({
             'name': 'Route2',
-            'sale_selectable' : True,
-            'shipping_selectable':True,
+            'sale_selectable': True,
+            'shipping_selectable': True,
             'rule_ids': [Command.create({
                 'name': 'rule2',
                 'location_src_id': shelf1_location.id,
@@ -200,11 +199,10 @@ class TestCarrierPropagation(TransactionCase):
             })],
         })
 
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': sale_order1.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order1.id,
+            'carrier_id': self.normal_delivery.id,
+        })
         choose_delivery_carrier.button_confirm()
 
         sale_order1.action_confirm()
@@ -221,11 +219,10 @@ class TestCarrierPropagation(TransactionCase):
             })],
         })
 
-        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-            'default_order_id': sale_order2.id,
-            'default_carrier_id': self.normal_delivery.id,
-        }))
-        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+            'order_id': sale_order2.id,
+            'carrier_id': self.normal_delivery.id,
+        })
         choose_delivery_carrier.button_confirm()
 
         sale_order2.action_confirm()
@@ -269,11 +266,10 @@ class TestCarrierPropagation(TransactionCase):
             },
         ])
         for so in sale_orders:
-            delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
-                'default_order_id': so.id,
-                'default_carrier_id': self.normal_delivery.id,
-            }))
-            choose_delivery_carrier = delivery_wizard.save()
+            choose_delivery_carrier = self.env['choose.delivery.carrier'].create({
+                'order_id': so.id,
+                'carrier_id': self.normal_delivery.id,
+            })
             choose_delivery_carrier.button_confirm()
 
         def fail_send_to_shipper(pick):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
 
@@ -11,6 +12,7 @@ class TestName(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         cls.product_name = 'Product Test Name'
         cls.product_code = 'PTN'
         cls.product = cls.env['product.product'].create({

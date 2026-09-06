@@ -1,11 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
+from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
 from odoo.tests import HttpCase, tagged
 
 
 @tagged('-at_install', 'post_install')
 class TestStockPickingTour(HttpCase):
     def setUp(self):
+        self.env = self.env['base'].with_context(**DISABLED_MAIL_CREATE_CONTEXT, tracking_disable=True).env
         config = self.env['res.config.settings'].create({
             'group_stock_production_lot': True
         })

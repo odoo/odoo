@@ -10,7 +10,7 @@ from odoo.tools.misc import clean_context
 from odoo.addons.base.tests.common import BaseCommon
 
 
-class TestStockValuationCommon(BaseCommon):
+class TestStockValuationSingleCompanyCommon(BaseCommon):
     _test_user_groups = (
         'stock.group_stock_user',
         'account.group_account_invoice',
@@ -395,13 +395,6 @@ class TestStockValuationCommon(BaseCommon):
             'name': 'Test Vendor',
             'company_id': cls.company.id,
         })
-        cls.other_company = cls._create_company(name="Other Company")
-        cls.branch = cls._create_company(name="Branch Company", parent_id=cls.company.id)
-        # Several tests operate cross-company (other_company / branch); grant the
-        # restricted test_user access to those companies too, otherwise the ORM
-        # raises "Access to unauthorized or invalid companies."
-        if cls._test_user:
-            cls._test_user.company_ids |= cls.other_company | cls.branch
 
         # Stock account
         cls.account_expense = cls.company.expense_account_id
@@ -480,3 +473,30 @@ class TestStockValuationCommon(BaseCommon):
                 'name': 'Avco Product Auto',
                 'categ_id': cls.category_avco_auto.id,
             }).with_context(clean_context(cls.env.context))
+
+
+class TestStockValuationMultiCompanyCommon(TestStockValuationSingleCompanyCommon):
+    """Adds a second, independent company (`other_company`) with its own chart of
+    accounts, for tests that operate cross-company but don't need a branch."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.other_company = cls._create_company(name="Other Company")
+        # The restricted test_user (see BaseCommon) must be granted access to the
+        # extra company, otherwise the ORM raises "Access to unauthorized or
+        # invalid companies."
+        if cls._test_user:
+            cls._test_user.company_ids |= cls.other_company
+
+
+class TestStockValuationCommon(TestStockValuationMultiCompanyCommon):
+    """Full multi-company fixture: `other_company` plus a `branch` of the main
+    company, each with its own chart of accounts."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.branch = cls._create_company(name="Branch Company", parent_id=cls.company.id)
+        if cls._test_user:
+            cls._test_user.company_ids |= cls.branch
