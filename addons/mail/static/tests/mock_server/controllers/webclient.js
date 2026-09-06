@@ -13,7 +13,7 @@ registerStoreHandler(
             fields_params: { request_list: params.request_list, chatter_fields: true },
         });
     },
-    { audience: "everyone" }
+    { audience: "internal" }
 );
 
 registerStoreHandler(

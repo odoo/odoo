@@ -1,5 +1,4 @@
 import { Thread } from "@mail/core/common/thread_model";
-import "@mail/chatter/web_portal_project/thread_model_patch";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -9,18 +8,18 @@ const threadPatch = {
     async fetchThreadData(requestList) {
         this.isLoadingAttachments =
             this.isLoadingAttachments || requestList.includes("attachments");
-        await super.fetchThreadData(...arguments);
+        await this.store.fetchStoreData("mail.thread", {
+            request_list: requestList.filter((r) => r !== "messages"),
+            thread_id: this.id,
+            thread_model: this.model,
+        });
         if (!this.message_main_attachment_id && this.attachmentsInWebClientView.length > 0) {
             this.setMainAttachmentFromIndex(0);
         }
     },
 
     get fullComposerCloseRequestList() {
-        return super.fullComposerCloseRequestList.concat([
-            "defaultSubject",
-            "scheduledMessages",
-            "suggestedSubject",
-        ]);
+        return ["defaultSubject", "messages", "scheduledMessages", "suggestedSubject"];
     },
 };
 patch(Thread.prototype, threadPatch);
