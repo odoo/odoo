@@ -33,6 +33,7 @@ setupChartJsForTests();
 
 test("GaugeField in kanban view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: /* xml */ `
@@ -67,6 +68,7 @@ test("GaugeValue supports max_value option", async () => {
     Partner._records = Partner._records.slice(0, 1);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `

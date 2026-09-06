@@ -99,11 +99,25 @@ export class FixtureManager {
         if (this.shouldPrepareNextFixture) {
             this.shouldPrepareNextFixture = false;
 
-            // Reset focus & selection
-            getActiveElement().blur();
-            getSelection().removeAllRanges();
-            // Wait for selectionchange events to expire before any actual testing.
-            await animationFrame();
+            // Reset focus & selection. Blurring the body and removing ranges
+            // from an empty selection are no-ops that emit no "selectionchange"
+            // event, so we only need to wait for those events to expire (a real
+            // animation frame) when there was actually something to reset.
+            let mustSettle = false;
+            const activeElement = getActiveElement();
+            if (activeElement && activeElement !== activeElement.ownerDocument.body) {
+                activeElement.blur();
+                mustSettle = true;
+            }
+            const selection = getSelection();
+            if (selection && selection.rangeCount) {
+                selection.removeAllRanges();
+                mustSettle = true;
+            }
+            if (mustSettle) {
+                // Wait for selectionchange events to expire before any actual testing.
+                await animationFrame();
+            }
         }
     }
 }

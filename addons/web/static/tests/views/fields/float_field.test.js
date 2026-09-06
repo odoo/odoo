@@ -34,6 +34,7 @@ onRpc("has_group", () => true);
 
 test("human readable format 1", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 101,
@@ -46,6 +47,7 @@ test("human readable format 1", async () => {
 
 test("human readable format 2", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 100,
@@ -58,6 +60,7 @@ test("human readable format 2", async () => {
 
 test("human readable format 3", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 102,
@@ -70,6 +73,7 @@ test("human readable format 3", async () => {
 
 test("still human readable when readonly", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 102,
@@ -82,6 +86,7 @@ test("still human readable when readonly", async () => {
 
 test("unset field should be set to 0", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 4,
@@ -101,6 +106,7 @@ test("use correct digit precision from field definition", async () => {
     Partner._fields.float_field = fields.Float({ string: "Float field", digits: [0, 1] });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -114,6 +120,7 @@ test("use correct digit precision from field definition", async () => {
 
 test("use correct digit precision from options", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -127,6 +134,7 @@ test("use correct digit precision from options", async () => {
 
 test("use correct digit precision from field attrs", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -140,6 +148,7 @@ test("use correct digit precision from field attrs", async () => {
 
 test("with 'step' option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -153,6 +162,7 @@ test("with 'step' option", async () => {
 
 test("with 'hide_trailing_zeros' option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 5,
@@ -166,6 +176,7 @@ test("with 'hide_trailing_zeros' option", async () => {
 
 test("basic flow in form view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -194,6 +205,7 @@ test("basic flow in form view", async () => {
 
 test("use a formula", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -229,6 +241,7 @@ test("use a formula", async () => {
 
 test("use incorrect formula", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -255,6 +268,7 @@ test("use incorrect formula", async () => {
 test.tags("desktop");
 test("float field in editable list view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `
@@ -290,6 +304,7 @@ test("float field with type number option", async () => {
         },
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -318,6 +333,7 @@ test("float field with type number option and comma decimal separator", async ()
         },
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `
@@ -346,6 +362,7 @@ test("float field without type number option", async () => {
         },
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: '<form><field name="float_field"/></form>',
@@ -370,6 +387,7 @@ test("field with enable_formatting option as false", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -390,6 +408,7 @@ test("field with enable_formatting option as false", async () => {
 test.tags("desktop");
 test("field with enable_formatting option as false in editable list view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `
@@ -436,6 +455,7 @@ test("float field can be updated by another field/widget", async () => {
     };
     registry.category("view_widgets").add("wi", myWidget);
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `

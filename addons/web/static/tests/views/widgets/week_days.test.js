@@ -103,6 +103,7 @@ test("simple week recurrence widget", async () => {
 test("week recurrence widget readonly modifiers", async () => {
     defineParams({ lang_parameters: { week_start: 1 } });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -121,6 +122,7 @@ test("week recurrence widget readonly modifiers", async () => {
 test("week recurrence widget show week start as per language configuration", async () => {
     defineParams({ lang_parameters: { week_start: 5 } });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

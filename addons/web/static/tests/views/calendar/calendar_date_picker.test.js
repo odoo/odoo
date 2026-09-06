@@ -33,6 +33,7 @@ beforeEach(() => {
 
 test(`Mount a CalendarDatePicker`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="day"/>`,
@@ -54,6 +55,7 @@ test(`Mount a CalendarDatePicker`, async () => {
 
 test(`Scale: init with day`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="day"/>`,
@@ -64,6 +66,7 @@ test(`Scale: init with day`, async () => {
 
 test(`Scale: init with week`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="week"/>`,
@@ -74,6 +77,7 @@ test(`Scale: init with week`, async () => {
 
 test(`Scale: init with month`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="month"/>`,
@@ -173,6 +177,7 @@ test(`Click on active day should change scale : week -> day`, async () => {
 test(`Scale: today is correctly highlighted`, async () => {
     mockDate("2021-07-04T08:00:00");
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="month"/>`,

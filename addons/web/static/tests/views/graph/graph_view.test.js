@@ -193,6 +193,7 @@ setupChartJsForTests();
 
 test('graph view with "class" attribute', async () => {
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: `<graph class="foobar-class"/>`,
@@ -202,6 +203,7 @@ test('graph view with "class" attribute', async () => {
 
 test("simple bar chart rendering", async () => {
     const view = await mountView({ type: "graph", resModel: "foo" });
+noMainContainer: true,
 
     const { measure, mode, order, stacked } = getGraphModelMetaData(view);
 
@@ -231,6 +233,7 @@ test("simple bar chart rendering with no data", async () => {
     Foo._records = [];
 
     const view = await mountView({ type: "graph", resModel: "foo" });
+noMainContainer: true,
 
     expect(".o_graph_canvas_container canvas").toHaveCount(1);
     expect(".o_nocontent_help").toHaveCount(0);
@@ -240,6 +243,7 @@ test("simple bar chart rendering with no data", async () => {
 
 test("simple bar chart rendering (one groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -266,6 +270,7 @@ test("simple bar chart rendering (one groupBy)", async () => {
 
 test("simple bar chart rendering (two groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -311,6 +316,7 @@ test("simple bar chart rendering (two groupBy)", async () => {
 
 test("bar chart many2many groupBy", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -341,6 +347,7 @@ test("differentiate many2many values with same label", async () => {
     Foo._records.push({ color_ids: [3], revenue: 14 });
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -367,6 +374,7 @@ test("differentiate many2many values with same label", async () => {
 
 test("line chart rendering (no groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `<graph type="line" />`,
@@ -389,6 +397,7 @@ test("line chart rendering (no groupBy)", async () => {
 
 test("line chart rendering (one groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -414,6 +423,7 @@ test("line chart rendering (one groupBy)", async () => {
 
 test("line chart rendering (two groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -469,6 +479,7 @@ test("line chart rendering (two groupBy)", async () => {
 
 test("line chart many2many groupBy", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -506,6 +517,7 @@ test("Check if values in tooltip are correctly sorted when groupBy filter are ap
     ];
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: `
@@ -656,6 +668,7 @@ test("Stacked line prop click false", async () => {
 
 test("Stacked prop and default line chart", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -733,6 +746,7 @@ test("Cumulative prop and default line chart", async () => {
 
 test("Default cumulative prop", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -756,6 +770,7 @@ test("Default cumulative prop", async () => {
 
 test("Cumulative prop and cumulated start", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -804,6 +819,7 @@ test("displaying line chart with only 1 data point", async () => {
     Foo._records = Foo._records.filter((id) => id === 1);
 
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `<graph type="line" stacked="0" />`,
@@ -814,6 +830,7 @@ test("displaying line chart with only 1 data point", async () => {
 
 test("pie chart rendering (no groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `<graph type="pie" />`,
@@ -835,6 +852,7 @@ test("pie chart rendering (no groupBy)", async () => {
 
 test("pie chart rendering (one groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -858,6 +876,7 @@ test("pie chart rendering (one groupBy)", async () => {
 
 test("pie chart many2many groupby", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -883,6 +902,7 @@ test("pie chart many2many groupby", async () => {
 
 test("pie chart rendering (two groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -911,6 +931,7 @@ test("pie chart rendering (no data)", async () => {
     Foo._records = [];
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `<graph type="pie" />`,
@@ -940,6 +961,7 @@ test("pie chart rendering (mix of positive and negative values)", async () => {
     ];
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -963,6 +985,7 @@ test("pie chart rendering (mix of positive and negative values)", async () => {
 
 test("pie chart toggling dataset hides label", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: `<graph type="pie"/>`,
@@ -1195,6 +1218,7 @@ test("displaying chart data with three groupbys", async () => {
     // this test makes sure the line chart shows all data labels (X axis) when
     // it is grouped by several fields
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1234,6 +1258,7 @@ test("no content helper", async () => {
     Foo._records = [];
 
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         noContentHelp: /* xml */ `
@@ -1248,6 +1273,7 @@ test("no content helper", async () => {
 
 test("no content helper after update", async () => {
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         noContentHelp: /* xml */ `
@@ -1274,6 +1300,7 @@ test("display the provided no content helper when search has no matching data", 
     Foo._records = [];
 
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         noContentHelp: /* xml */ `
@@ -1293,6 +1320,7 @@ test("display the provided no content helper when search has no matching data", 
 
 test("can reload with other group by", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1412,6 +1440,7 @@ test("correctly uses graph_ keys from the context", async () => {
     Foo._records.at(-1).color_id = 1;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1436,6 +1465,7 @@ test("correctly uses graph_ keys from the context", async () => {
 
 test("correctly uses graph_ keys from the context (at reload)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1468,6 +1498,7 @@ test("correctly use group_by key from the context", async () => {
     Foo._records.at(-1).color_id = 1;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1562,6 +1593,7 @@ test("reload graph with correct fields", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1587,6 +1619,7 @@ test("initial groupby is kept when reloading", async () => {
         expect(kwargs.groupby).toEqual(["product_id"]);
     });
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1615,6 +1648,7 @@ test("initial groupby is kept when reloading", async () => {
 
 test("use a many2one as a measure should work (without groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1633,6 +1667,7 @@ test("use a many2one as a measure should work (without groupBy)", async () => {
 
 test("use a many2one as a measure should work (with groupBy)", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1782,6 +1817,7 @@ test("graph view `graph_measure` field in context", async () => {
 
 test("`graph_measure` in context is prefered to measure in arch", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -1851,6 +1887,7 @@ test("an invisible field can not be found in the 'Measures' menu", async () => {
 
 test("graph view only keeps finer groupby filter option for a given groupby", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         groupBy: ["date:year", "product_id", "date", "date:quarter"],
@@ -1909,6 +1946,7 @@ test("clicking on bar charts triggers a do_action", async () => {
     });
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         searchViewId: 67,
@@ -1950,6 +1988,7 @@ test("middle click on bar charts triggers a do_action", async () => {
     });
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         searchViewId: 67,
@@ -1991,6 +2030,7 @@ test("Clicking on bar charts removes group_by and search_default_* context keys"
     });
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         searchViewId: 67,
@@ -2034,6 +2074,7 @@ test("clicking on a pie chart trigger a do_action with correct views", async () 
     });
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         searchViewId: 67,
@@ -2173,6 +2214,7 @@ test("graph view reserved word", async () => {
     Foo._records.at(-1).product_id = 150;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2191,6 +2233,7 @@ test("graph view sort by measure", async () => {
     Foo._records.at(-1).product_id = 150;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2251,6 +2294,7 @@ test("graph view sort by measure for grouped data", async () => {
     Foo._records.at(-1).product_id = 150;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2295,6 +2339,7 @@ test("graph view sort by measure for multiple grouped data", async () => {
     );
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2347,6 +2392,7 @@ test("graph view sort by measure for multiple grouped data", async () => {
 
 test("empty graph view with sample data", async () => {
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2380,6 +2426,7 @@ test("empty graph view with sample data", async () => {
 
 test("non empty graph view with sample data", async () => {
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2410,6 +2457,7 @@ test("non empty graph view with sample data", async () => {
 
 test("empty graph view without sample data after filter", async () => {
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2572,6 +2620,7 @@ test("change graph mode while loading a filter", async () => {
     let def;
     onRpc("formatted_read_group", () => def?.promise);
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2626,6 +2675,7 @@ test("only process most recent data for concurrent groupby", async () => {
     let def;
     onRpc(() => def?.promise);
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2672,6 +2722,7 @@ test("fill_temporal is true by default", async () => {
     });
 
     await mountView({ type: "graph", resModel: "foo" });
+noMainContainer: true,
 });
 
 test("fill_temporal can be changed throught the context", async () => {
@@ -2684,6 +2735,7 @@ test("fill_temporal can be changed throught the context", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         context: {
@@ -2698,6 +2750,7 @@ test("group by a non stored, sortable field", async () => {
     Foo._fields.date.store = false;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         groupBy: ["date:month"],
@@ -2709,6 +2762,7 @@ test("group by a non stored, sortable field", async () => {
 
 test("graph_groupbys should be also used after first load", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         viewId: false,
@@ -2749,6 +2803,7 @@ test("graph_groupbys should be also used after first load", async () => {
 
 test("order='desc' on arch", async () => {
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -2834,6 +2889,7 @@ test("single chart rendering on search", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
     });
@@ -2875,6 +2931,7 @@ test("missing property field definition is fetched", async function () {
         }
     });
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: `<graph/>`,
@@ -2933,6 +2990,7 @@ test("missing deleted property field definition is created", async function () {
         }
     });
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: `<graph/>`,
@@ -2968,6 +3026,7 @@ test("display '0' for false group, when grouped by int field", async () => {
     Foo._records[0].foo = false;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         groupBy: ["foo"],
@@ -2982,6 +3041,7 @@ test("display the field's falsy_value_label for false group, if defined", async 
     Foo._records[0].product_id = false;
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         groupBy: ["product_id"],
@@ -2996,6 +3056,7 @@ test("graph views make their control panel available directly", async () => {
     const def = Promise.withResolvers();
     onRpc("formatted_read_group", () => def?.promise);
     await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: `<graph/>`,
@@ -3027,6 +3088,7 @@ test("monetary chart rendering with multiple currencies", async () => {
     Foo._records[4].currency_id = 2;
     Foo._records[5].amount = 100;
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -3057,6 +3119,7 @@ test("graph renders percentage widget measures", async () => {
     Foo._records = [{ id: 1, ratio: 0.3333333 }];
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         arch: /* xml */ `
@@ -3144,6 +3207,7 @@ test("monetary chart rendering with a single foreign currency", async () => {
     ];
 
     const view = await mountView({
+        noMainContainer: true,
         type: "graph",
         resModel: "foo",
         groupBy: ["date:day"],

@@ -1429,6 +1429,7 @@ test(`create multi day event in week mode`, async () => {
         },
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
@@ -1946,6 +1947,7 @@ test(`create event with default context (no quickCreate)`, async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week" all_day="is_all_day" quick_create="0"/>`,
@@ -1961,6 +1963,7 @@ test(`create event with default title in context (with quickCreate)`, async () =
     Event._records = [];
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week" all_day="is_all_day"/>`,
@@ -2398,6 +2401,7 @@ test(`show start time of single day event`, async () => {
     mockTimeZone(-4);
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
@@ -2551,6 +2555,7 @@ test(`readonly calendar view`, async () => {
 test.tags("desktop");
 test(`check filters with filter_field specified on desktop`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2580,6 +2585,7 @@ test(`check filters with filter_field specified on desktop`, async () => {
 test.tags("mobile");
 test(`check filters with filter_field specified on mobile`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2622,6 +2628,7 @@ test(`dynamic filters with selection fields`, async () => {
     Event._records[1].selection = "desert";
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2640,6 +2647,7 @@ test(`dynamic filters with selection fields`, async () => {
 test.tags("desktop");
 test(`string is used as label when provided`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2656,6 +2664,7 @@ test(`string is used as label when provided`, async () => {
 test.tags("desktop");
 test(`filter label falls back to field name when string is absent`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2801,6 +2810,7 @@ test(`Add filters and specific color`, async () => {
         expect.step(step);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2844,6 +2854,7 @@ test(`Add filters and specific color`, async () => {
 
 test(`Colors: dynamic filters without any color attr`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2902,6 +2913,7 @@ test(`Colors: dynamic filters without color attr (related)`, async () => {
         throw makeServerError({ message: "should not fetch event.type filter colors" });
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2927,6 +2939,7 @@ test(`Colors: dynamic filters without color attr (direct)`, async () => {
         throw makeServerError({ message: "should not fetch event.type filter colors" });
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -2970,6 +2983,7 @@ test(`makeFilterUser: color for current user`, async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -3033,6 +3047,7 @@ test(`Colors: dynamic filters with same color as events`, async () => {
         throw makeServerError({ message: "should not fetch event.type filter colors" });
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -3097,6 +3112,7 @@ test(`Colors: dynamic filters with another color source`, async () => {
         expect.step("fetching event.type filter colors");
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -3547,6 +3563,7 @@ test(`single day event from midnight to midnight`, async () => {
         },
     ];
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
@@ -3583,6 +3600,7 @@ test(`event over two days but lasting less than 24h`, async () => {
         },
     ];
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
@@ -3618,6 +3636,7 @@ test(`event over two days lasting longer than 24h`, async () => {
         },
     ];
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
@@ -3657,6 +3676,7 @@ test(`all day event lasting 2 days`, async () => {
         },
     ];
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start_date" date_stop="stop_date" all_day="is_all_day" mode="year"/>`,
@@ -4101,6 +4121,7 @@ test(`fullcalendar initializes with right locale`, async () => {
     serverState.lang = "fr";
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
@@ -4154,6 +4175,7 @@ test(`default week start (US) month mode on desktop`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="month"/>`,
@@ -4184,6 +4206,7 @@ test(`default week start (US) month mode on mobile`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="month"/>`,
@@ -4215,6 +4238,7 @@ test(`European week start month mode on chat`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="month"/>`,
@@ -4246,6 +4270,7 @@ test(`European week start month mode on mobile`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="month"/>`,
@@ -4277,6 +4302,7 @@ test(`Monday week start week mode on desktop`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
@@ -4308,6 +4334,7 @@ test(`Monday week start week mode on mobile`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
@@ -4339,6 +4366,7 @@ test(`Saturday week start week mode on desktop`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
@@ -4369,6 +4397,7 @@ test(`Saturday week start week mode on mobile`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
@@ -4405,6 +4434,7 @@ test(`Monday week start year mode`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
@@ -4499,6 +4529,7 @@ test(`edit record and attempt to create a record with "create" attribute set to 
 
 test(`attempt to create record with "create" and "quick_add" attributes set to false`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar create="0" event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" mode="month"/>`,
@@ -4539,6 +4570,7 @@ test(`attempt to create multiples events and the same day and check the ordering
     ];
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
@@ -4586,6 +4618,7 @@ test(`Resizing Pill of Multiple Days on month mode`, async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar event_open_popup="1" quick_create="0" date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
@@ -4779,6 +4812,7 @@ test(`toggle filters in year view`, async () => {
         },
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -5071,6 +5105,7 @@ test(`calendar with option month_overflow not set (default)`, async () => {
         ]);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -5331,6 +5366,7 @@ test.tags("desktop");
 test(`calendar sidepanel can be collapsed by default if it was set in local storage beforehand`, async () => {
     localStorage.setItem("calendar_sidepanel_expanded,-1,false", false);
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="week"/>`,
@@ -5342,6 +5378,7 @@ test(`calendar should show date information on header`, async () => {
     mockDate("2015-12-26 09:00:00");
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" mode="week"/>`,
@@ -5409,6 +5446,7 @@ test(`calendar sidebar filters are ASC sorted (not valued @end)`, async () => {
     ];
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -5804,6 +5842,7 @@ test('calendar: select range on "Free Zone" opens quick create', async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "calendar",
         resModel: "event",
         arch: `<calendar mode="day" date_start="start" date_stop="stop"/>`,
@@ -5831,6 +5870,7 @@ test("calendar (year): select date range opens quick create", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "calendar",
         resModel: "event",
         arch: `<calendar mode="year" date_start="start" date_stop="stop"/>`,
@@ -5895,6 +5935,7 @@ test("calendar: check context is correclty sent to fetch data", async () => {
         expect(active_test).toBe(true);
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -5907,6 +5948,7 @@ test("calendar: check context is correclty sent to fetch data", async () => {
 
 test(`disable editing without write access rights`, async () => {
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -5929,6 +5971,7 @@ test(`calendar view with show_unusual_days`, async () => {
         return unusualDays;
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -5984,6 +6027,7 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
         },
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `
@@ -6143,6 +6187,7 @@ test(`three calendars are rendered in the ActionSwiper on touch devices`, async 
         expect.step("event.search_read");
     });
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
@@ -6163,6 +6208,7 @@ test("Revert to the previous state if updateRecord fails (onEventResize)", async
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,
@@ -6183,6 +6229,7 @@ test("Revert to the previous state if updateRecord fails (onEventDrop)", async (
     });
 
     await mountView({
+        noMainContainer: true,
         resModel: "event",
         type: "calendar",
         arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="week"/>`,

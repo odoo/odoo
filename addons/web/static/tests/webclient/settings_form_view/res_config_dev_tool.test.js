@@ -25,6 +25,7 @@ test("Simple render", async () => {
     onRpc("/base_setup/demo_active", () => true);
     redirect("/odoo");
     await mountView({
+        noMainContainer: true,
         type: "form",
         arch: /* xml */ `
             <form js_class="base_settings">

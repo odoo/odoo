@@ -571,6 +571,7 @@ test("Export dialog in list view: export list with 'exportable: false'", async (
     });
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `<list export_xlsx="1">
@@ -778,6 +779,7 @@ test("Direct export list", async () => {
     onRpc("/web/export/get_fields", () => fetchedFields.root);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `
@@ -944,6 +946,7 @@ test("Export dialog with duplicated fields on desktop", async () => {
     onRpc("/web/export/get_fields", () => fetchedFields.root);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `
@@ -969,6 +972,7 @@ test("Export dialog with duplicated fields on mobile", async () => {
     onRpc("/web/export/get_fields", () => fetchedFields.root);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `
@@ -1154,6 +1158,7 @@ test("Export dialog: no column_invisible fields in default export list", async (
     onRpc("/web/export/get_fields", () => fetchedFields.root);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `
@@ -1186,6 +1191,7 @@ test("Export dialog: fields displayed in same Order as list view when export", a
     ]);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `
@@ -1316,6 +1322,7 @@ test("Export dialog in kanban view: no raw properties fields in default export l
     ]);
 
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
