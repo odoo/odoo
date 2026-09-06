@@ -196,29 +196,30 @@ const getSeo = async (self, onlyKeywords = false) => {
     }
 };
 
+const getFilenameFromUrl = (src) => {
+    const cleanUrl = src.split("?")[0].split("#")[0];
+    return decodeURIComponent(cleanUrl.split("/").pop() || "");
+};
+
 export const getAltTags = async (self) => {
     const activeAltAttributes = self.seoContext.altAttributes.filter(
         (img) => !img.decorative && !img.alt
     );
-    return Promise.allSettled(
-        activeAltAttributes.map(async (img) => {
-            const response = await fetch(img.src, { method: "HEAD" });
-            const contentDisposition = response.headers.get("Content-Disposition");
+    // add this.
+    if (!activeAltAttributes.length) {
+        return;
+    }
+    const imageUrls = activeAltAttributes.map((img, index) => ({
+        src: img.src,
+        index,
+    }));
 
-            if (contentDisposition) {
-                const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
-                if (filenameMatch?.[1]) {
-                    img.alt = filenameMatch[1];
-                }
-            } else {
-                const urlParts = img.src.split("?")[0].split("#")[0].split("/");
-                if (urlParts.length > 1) {
-                    img.alt = urlParts[urlParts.length - 1];
-                }
-            }
-            img.updated = true;
-        })
-    );
+    const fileNames = await rpc("/website/get_image_file_names", { image_urls: imageUrls });
+
+    activeAltAttributes.forEach((img, index) => {
+        img.alt = fileNames[index] || getFilenameFromUrl(img.src);
+        img.updated = true;
+    });
 };
 
 /**

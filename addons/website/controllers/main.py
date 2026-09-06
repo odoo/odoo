@@ -1766,6 +1766,33 @@ class Website(Home):
 
         return res
 
+    @http.route(['/website/get_image_file_names'], type='jsonrpc', auth="user", website=True, readonly=True)
+    def _get_image_file_names(self, image_urls):
+        file_names = {}
+        url_root = request.env.user.get_base_url()
+        for image_url in image_urls:
+            try:
+                response = requests.head(url_root + image_url.get('src'), timeout=5)
+            except requests.RequestException:
+                continue
+            
+            content_disposition = response.headers.get('Content-Disposition', '')
+            filename_match = re.search(
+                r"(?:^|;)\s*filename\*\s*=\s*(?:UTF-8'')?([^;]+)",
+                content_disposition,
+                re.IGNORECASE,
+            ) or re.search(
+                r'(?:^|;)\s*filename\s*=\s*["\']?([^;"\']+)',
+                content_disposition,
+                re.IGNORECASE,
+            )
+            if filename_match:
+                file_names[image_url.get('index')] = urllib.parse.unquote(
+                    filename_match.group(1).strip().strip('"\'')
+                )
+
+        return file_names
+
     @http.route(['/website/check_can_modify_any'], type='jsonrpc', auth="user", website=True, readonly=True)
     def check_can_modify_any(self, records):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
