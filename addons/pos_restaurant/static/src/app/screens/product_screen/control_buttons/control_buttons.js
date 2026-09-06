@@ -12,6 +12,8 @@ patch(ControlButtons.prototype, {
         this.clickPrintBill = useAsyncLockedMethod(this.clickPrintBill);
     },
     async clickPrintBill() {
+        this.pos.addPendingOrder([this.currentOrder.id]);
+        await this.pos.syncAllOrders();
         // Need to await to have the result in case of automatic skip screen.
         await this.pos.printReceipt({
             printBillActionTriggered: true,
