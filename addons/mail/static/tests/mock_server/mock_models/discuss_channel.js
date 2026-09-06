@@ -559,6 +559,21 @@ export class DiscussChannel extends models.ServerModel {
         res.one("parent_id", "_store_message_fields");
     }
 
+    _get_last_messages() {
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        const lastMessageIds = this.map(
+            (channel) =>
+                MailMessage._filter([
+                    ["model", "=", "discuss.channel"],
+                    ["res_id", "=", channel.id],
+                ]).sort((a, b) => b.id - a.id)[0]
+        )
+            .filter(Boolean)
+            .map((message) => message.id);
+        return MailMessage.browse(lastMessageIds);
+    }
+
     _member_based_naming_channel_types() {
         return ["group"];
     }

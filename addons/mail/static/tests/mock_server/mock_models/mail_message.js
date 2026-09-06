@@ -538,7 +538,7 @@ export class MailMessage extends models.ServerModel {
      * @param {number} [limit=30]
      * @returns {Object[]}
      */
-    _message_fetch(domain, thread, search_term, is_notification, before, after, around, limit) {
+    _message_fetch(domain, thread, search_term, search_filter, before, after, around, limit) {
         /** @type {import("mock_models").IrAttachment} */
         const IrAttachment = this.env["ir.attachment"];
         /** @type {import("mock_models").MailMessageSubtype} */
@@ -547,7 +547,7 @@ export class MailMessage extends models.ServerModel {
             domain,
             thread,
             search_term,
-            is_notification,
+            search_filter,
             before,
             after,
             around,
@@ -557,7 +557,7 @@ export class MailMessage extends models.ServerModel {
             "domain",
             "thread",
             "search_term",
-            "is_notification",
+            "search_filter",
             "before",
             "after",
             "around",
@@ -571,10 +571,25 @@ export class MailMessage extends models.ServerModel {
                 ["message_type", "!=", "user_notification"],
             ]);
         }
-        if (is_notification === true) {
-            domain.push(["message_type", "=", "notification"]);
-        } else if (is_notification === false) {
-            domain.push(["message_type", "!=", "notification"]);
+        if (search_filter === "messages") {
+            domain.push([
+                "subtype_id",
+                "=",
+                MailMessageSubtype._filter([["subtype_xmlid", "=", "mail.mt_comment"]])[0].id,
+            ]);
+        } else if (search_filter === "notes") {
+            domain.push([
+                "subtype_id",
+                "=",
+                MailMessageSubtype._filter([["subtype_xmlid", "=", "mail.mt_note"]])[0].id,
+            ]);
+        } else if (search_filter === "activities") {
+            domain.push(["mail_activity_type_id", "!=", false]);
+        } else if (search_filter === "changes") {
+            domain.push(
+                ["message_type", "in", ["tracking", "notification"]],
+                ["mail_activity_type_id", "=", false]
+            );
         }
         if (search_term) {
             domain = new Domain(domain || []);
@@ -583,7 +598,7 @@ export class MailMessage extends models.ServerModel {
             const irAttachmentIds = IrAttachment.search([["name", "ilike", search_term]]);
             const authorIds = this.env["res.partner"].search([["name", "ilike", search_term]]);
             const guestIds = this.env["mail.guest"].search([["name", "ilike", search_term]]);
-            let message_domain = Domain.or([
+            const message_domain = Domain.or([
                 [["body", "ilike", search_term]],
                 [["attachment_ids", "in", irAttachmentIds]],
                 [["author_id", "in", authorIds]],
@@ -591,19 +606,9 @@ export class MailMessage extends models.ServerModel {
                 [["subject", "ilike", search_term]],
                 [["subtype_ids", "in", subtypeIds]],
             ]);
-            if (thread && is_notification !== false) {
-                const messageIds = this.search([
-                    ["res_id", "=", parseInt(thread[0].id)],
-                    ["model", "=", thread._name],
-                ]);
-                message_domain = Domain.or([
-                    message_domain,
-                    new Domain([["id", "in", messageIds]]),
-                ]);
-            }
             domain = Domain.and([domain, message_domain]).toList();
         }
-        if (search_term || is_notification !== undefined) {
+        if (search_term || search_filter) {
             res.count = this.search_count(domain);
         }
         if (around !== undefined) {

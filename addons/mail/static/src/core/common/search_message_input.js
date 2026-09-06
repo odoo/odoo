@@ -11,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
  * @typedef {Object} SearchFilter
  * @property {string} label
  * @property {string} name
- * @property {true|false|undefined} [is_notification]
+ * @property {string|undefined} [search_filter]
  */
 
 export class SearchMessageInput extends Component {
@@ -40,18 +40,20 @@ export class SearchMessageInput extends Component {
 
     /** @param {SearchFilter} searchFilter */
     onChangeSearchFilter(searchFilter) {
-        if (searchFilter.is_notification !== this.props.messageSearch.is_notification) {
+        if (searchFilter.search_filter !== this.props.messageSearch.search_filter) {
             this.props.messageSearch.lastEmptyTerm = undefined;
-            this.props.messageSearch.is_notification = searchFilter.is_notification;
+            this.props.messageSearch.search_filter = searchFilter.search_filter;
         }
     }
 
     /** @returns {SearchFilter[]} */
     get searchFilters() {
         return [
-            { label: "all", name: _t("All"), is_notification: undefined },
-            { label: "conversations", name: _t("Conversations"), is_notification: false },
-            { label: "tracked_changes", name: _t("Tracked Changes"), is_notification: true },
+            { label: "all", name: _t("All"), search_filter: undefined },
+            { label: "messages", name: _t("Messages"), search_filter: "messages" },
+            { label: "notes", name: _t("Notes"), search_filter: "notes" },
+            { label: "activities", name: _t("Activities"), search_filter: "activities" },
+            { label: "changes", name: _t("Changes"), search_filter: "changes" },
         ];
     }
 
