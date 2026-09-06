@@ -94,4 +94,7 @@ export class ProductInfoPopup extends Component {
             { product_template_id: this.props.productTemplate.id }
         );
     }
+    get taxDetails() {
+        return this.props.info.productTaxDetails;
+    }
 }

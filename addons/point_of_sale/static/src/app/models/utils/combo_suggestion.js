@@ -1,5 +1,4 @@
 import { accountTaxHelpers } from "@account/helpers/account_tax";
-import { computeComboItems } from "./compute_combo_items";
 
 /**
  * Combo suggestion helpers shared by the POS and self-order flows.
@@ -115,14 +114,10 @@ export class ComboSuggestion {
     }
 
     _getComboBaseLines(order, comboProduct, includedItems, extraItems) {
-        const comboPrices = computeComboItems(
-            comboProduct,
+        const comboPrices = comboProduct.getComboPrice(
             includedItems,
-            order.pricelist_id,
-            this.models["decimal.precision"].getAll(),
-            this.models["product.template.attribute.value"].getAllBy("id"),
             extraItems,
-            this.currency
+            order.pricelist_id
         );
         return comboPrices.map((comboPrice) =>
             accountTaxHelpers.prepare_base_line_for_taxes_computation(
