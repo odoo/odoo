@@ -71,6 +71,7 @@ class AccountMove extends models.Model {
 }
 class AccountMoveLine extends models.Model {
     name = fields.Char();
+    translated_product_name = fields.Char();
     product_id = fields.Many2one({
         string:"Product",
         relation:"product",
@@ -92,7 +93,7 @@ test("Update description on product line", async() => {
     const productId = pyEnv["product"].browse([1]);
     const accountMove = pyEnv["account.move"].browse([1]);
     pyEnv["account.move"].write([accountMove[0].id], {
-        invoice_line_ids: [[0, 0, { name: productId[0].name, product_id: productId[0].id }]],
+        invoice_line_ids: [[0, 0, { name: productId[0].name, product_id: productId[0].id, translated_product_name: productId[0].name }]],
     });
     await start();
     onRpc("account.move", "web_save", () => { expect.step("save")});
