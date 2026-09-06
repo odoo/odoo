@@ -1855,6 +1855,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 'partner_cc_ids': partner_3 | partner_4,
             })
 
+    @users('employee')
     def test_mail_composer_recipients_email_only(self):
         """Check that messages can be sent to standalone emails, with no associated partner."""
         email_addrs = [
@@ -2277,6 +2278,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                         fields_values={
                                             'mail_server_id': self.mail_server_domain,
                                             'reply_to_force_new': bool(reply_to),
+                                            'source_template_id': self.template,
                                         },
                                        )
 
@@ -2302,6 +2304,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                             email_values={
                                                 'body_content': exp_body,
                                                 'email_from': test_record.user_id.email_formatted,  # set by template
+                                                'reply_to': exp_reply_to,
                                                 'subject': exp_subject,
                                                 'attachments_info': [
                                                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
@@ -2312,6 +2315,8 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                             },
                                             fields_values={
                                                 'mail_server_id': self.mail_server_domain,
+                                                'reply_to_force_new': bool(reply_to),
+                                                'source_template_id': self.template,
                                             },
                                            )
 
@@ -3255,6 +3260,7 @@ class TestComposerResultsMass(TestMailComposer):
                                             'mail_server_id': self.mail_server_domain,
                                             'reply_to': exp_reply_to,
                                             'reply_to_force_new': bool(reply_to),
+                                            'source_template_id': self.template,
                                             'subject': exp_subject,
                                         },
                                        )

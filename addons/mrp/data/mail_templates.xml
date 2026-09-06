@@ -45,7 +45,7 @@
         <strong><t t-out="message"/> quantity has been updated.</strong>
     </template>
 
-    <template id="track_production_move_template">
+    <template id="track_production_move_template" technical_usage="mail_post_source">
         <div>
             <t t-call="mrp.production_message"/>
             <t t-call="stock.message_body"/>

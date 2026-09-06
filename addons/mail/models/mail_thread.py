@@ -52,6 +52,9 @@ from odoo.tools.mail import (
 )
 
 if typing.TYPE_CHECKING:
+    from odoo.addons.base.models.ir_ui_view import IrUiView
+    from odoo.addons.mail.models.mail_mail import MailMail
+    from odoo.addons.mail.models.mail_message import MailMessage
     from odoo.api import ValuesType
     from odoo.models import BaseModel
 
@@ -2301,7 +2304,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'model', 'res_id', 'subtype'}
+            forbidden_names={'model', 'res_id', 'subtype'},
         )
         if self._name == 'mail.thread' or not self.id:
             raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
@@ -2617,10 +2620,11 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------------
 
     def message_mail_with_source(
-        self, source_ref, *,
-        render_values=None, message_type='notification', auto_commit=False,
+        self, source_ref: str | IrUiView, *,
+        render_values: dict | None = None, message_type: str = 'notification',
+        auto_commit: bool = False,
         **kwargs,
-    ):
+    ) -> MailMail:
         """ Send a mass mail on self, using an external source to render part
         of the content. It can be either a 'mail.template', either a view used
         to render the body using QWeb.
@@ -2634,7 +2638,7 @@ class MailThread(models.AbstractModel):
 
         * subtype_id: will be False, forced by composer in mass mode;
 
-        :param record/str source_ref: reference to a source for rendering.
+        :param str | IrUiView source_ref: reference to a source for rendering.
           It can be one of
 
           * a MailTemplate record. It will be used to render the various
@@ -2644,7 +2648,7 @@ class MailThread(models.AbstractModel):
             (body). Other fields are left to the caller and/or default values
             computation;
           * an XmlID of a MailTemplate or of an IrUiView: see above;
-        :param dict render_values: additional rendering values for qweb context;
+        :param dict | None render_values: additional rendering values for qweb context;
 
         :param str message_type: one of 'notification' or 'comment';
         :param bool auto_commit: auto commit after each batch of emails sent
@@ -2655,6 +2659,10 @@ class MailThread(models.AbstractModel):
         :return: created mail.mail records, as sudo
         """
         template, view = self._get_source_from_ref(source_ref)
+        render_values, kwargs = self._get_message_parameters_updated_for_rendering(
+            source_ref, source_template=template, source_view=view,
+            render_values=render_values, **kwargs
+        )
 
         # preliminary value safety check
         self._raise_for_invalid_parameters(
@@ -2703,10 +2711,11 @@ class MailThread(models.AbstractModel):
         return mails_su
 
     def message_post_with_source(
-        self, source_ref, *,
-        render_values=None, message_type='notification', subtype_xmlid=False, subtype_id=False,
+        self, source_ref: str | IrUiView, *,
+        render_values: dict | None = None, message_type: str = 'notification',
+        subtype_xmlid: str = False, subtype_id: int = False,
         **kwargs,
-    ):
+    ) -> MailMessage:
         """ Post a message on each record of self, using a view to render the
         body using QWeb.
 
@@ -2715,7 +2724,7 @@ class MailThread(models.AbstractModel):
         * subtype_id: if not given, fallback on ``note`` to be consistent
           with what message_post does;
 
-        :param record/str source_ref: reference to a source for rendering.
+        :param str | IrUiView source_ref: reference to a source for rendering.
           It can be one of
 
           * a MailTemplate record. It will be used to render the various
@@ -2725,7 +2734,7 @@ class MailThread(models.AbstractModel):
             (body). Other fields are left to the caller and/or default values
             computation;
           * an XmlID of a MailTemplate or of an IrUiView: see above
-        :param dict render_values: additional rendering values for qweb context;
+        :param dict | None render_values: additional rendering values for qweb context;
 
         :param str message_type: one of 'notification' or 'comment';
         :param str subtype_xmlid: optional xml id of a mail.message.subtype to
@@ -2738,6 +2747,10 @@ class MailThread(models.AbstractModel):
         :return: posted mail.message records
         """
         template, view = self._get_source_from_ref(source_ref)
+        render_values, kwargs = self._get_message_parameters_updated_for_rendering(
+            source_ref, source_template=template, source_view=view,
+            render_values=render_values, **kwargs
+        )
 
         # preliminary value safety check
         self._raise_for_invalid_parameters(
@@ -2764,12 +2777,13 @@ class MailThread(models.AbstractModel):
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
         messages_all = self.env['mail.message']
-        for record in self:
+        # message_post (aka no template) does not support batch
+        for subset in [self] if template else self:
             if template:
                 composer = self.env['mail.compose.message'].with_context(
                     default_composition_mode='comment',
                     default_model=self._name,
-                    default_res_ids=record.ids,
+                    default_res_ids=subset.ids,
                     default_template_id=template.id,
                 ).create({
                     'message_type': message_type,
@@ -2779,8 +2793,8 @@ class MailThread(models.AbstractModel):
                 _mails_as_sudo, messages = composer._action_send_mail()
                 messages_all += messages
             else:
-                messages_all += record.message_post(
-                    body=bodies[record.id],
+                messages_all += subset.message_post(
+                    body=bodies[subset.id],
                     message_type=message_type,
                     subtype_id=subtype_id,
                     **kwargs
@@ -2944,10 +2958,15 @@ class MailThread(models.AbstractModel):
                 'body', 'bodies', 'incoming_email_cc', 'incoming_email_to', 'outgoing_email_to',
             }
         )
+        _template, view = self._get_source_from_ref(view_ref)
+        render_values, kwargs = self._get_message_parameters_updated_for_rendering(
+            view_ref, source_template=False, source_view=view,
+            render_values=render_values, **kwargs
+        )
 
         # with a view, render bodies in batch (template is managed by composer)
         bodies = self.env['mail.render.mixin']._render_template_qweb_view(
-            view_ref,
+            view,
             self._name,
             self.ids,
             add_context=render_values,
@@ -2966,7 +2985,8 @@ class MailThread(models.AbstractModel):
                      message_type='notification',
                      partner_ids=False,
                      attachment_ids=False,
-                     tracking_values=False):
+                     tracking_values=False,
+                     **kwargs):
         """ Shortcut allowing to post note on a document. See ``_message_log_batch``
         for more details. """
         self.ensure_one()
@@ -2978,6 +2998,7 @@ class MailThread(models.AbstractModel):
             partner_ids={self.id: partner_ids},
             attachment_ids={self.id: attachment_ids},
             tracking_values={self.id: tracking_values},
+            **kwargs,
         )
 
     def _message_log_batch(self, bodies, subject=False,
@@ -2985,7 +3006,8 @@ class MailThread(models.AbstractModel):
                            message_type='notification',
                            partner_ids=False,
                            attachment_ids=False,
-                           tracking_values=False):
+                           tracking_values=False,
+                           **kwargs):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -3011,6 +3033,10 @@ class MailThread(models.AbstractModel):
             raise ValueError(_('Batch log cannot support tracking values that is not a per-document dict'))
         if message_type != 'tracking' and tracking_values and any(vals for vals in tracking_values.values()):
             raise ValueError(_('Posting with tracking should be done using tracking message type'))
+        # protect against undesired values from kwargs
+        self._raise_for_invalid_parameters(
+            kwargs.keys(), restricting_names=self._get_log_valid_parameters(),
+        )
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
 
@@ -3031,6 +3057,8 @@ class MailThread(models.AbstractModel):
             'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': generate_tracking_message_id('message-notify'),  # why? this is all but a notify
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, author_id=author_id)[False],
+            # other parameters
+            **kwargs,
         }
         values_list = [dict(
             base_message_values,
@@ -3247,6 +3275,13 @@ class MailThread(models.AbstractModel):
         _message_post_after_hook, which also receives message values."""
         return {'tracking_values'}
 
+    def _get_message_parameters_updated_for_rendering(
+        self, source_ref, source_template=False, source_view=False,
+        render_values=None, **kwargs,
+    ):
+        """Ease custom behavior when posting from a source by enabling inheritance"""
+        return render_values, kwargs
+
     def _get_source_from_ref(self, source_ref):
         """ From a source_reference, return either a mail template, either
         an ir ui view.
@@ -3288,7 +3323,7 @@ class MailThread(models.AbstractModel):
             if res_model == 'mail.template':
                 template = self.env['mail.template'].browse(res_id)
             elif res_model == 'ir.ui.view':
-                view = self.env['ir.ui.view'].browse(res_id)
+                view = self.env['ir.ui.view'].sudo().browse(res_id)  # sudo: read access on 'model_ir_ui_view' restricted to admins by default
             else:
                 raise ValueError(
                     _('Invalid template or view source reference %(svalue)s, is %(model)s instead',
@@ -3302,6 +3337,12 @@ class MailThread(models.AbstractModel):
                   stype=type(source_ref),
                 ))
         return template, view
+
+    def _get_log_valid_parameters(self):
+        """ Some fields should not be given when creating a mail.message from
+        logging shortcut (in addition to some API specific check). Those fields
+        are generally dedicated to post / notify, not logs. """
+        return set()
 
     def _get_notify_valid_parameters(self):
         """ Several parameters exist for notification methods as business
@@ -3358,6 +3399,7 @@ class MailThread(models.AbstractModel):
         :param set restricting_names: set of parameters restricting given
           parameter_names, parameters not belonging to this list are rejected;
         """
+        conflicting_names = []
         if forbidden_names:
             conflicting_names = parameter_names & forbidden_names
         elif restricting_names:
@@ -5194,6 +5236,7 @@ class MailThread(models.AbstractModel):
 
     def _store_message_update_extra_fields(self, res: Store.FieldList):
         pass
+
     # ------------------------------------------------------
     # STORE
     # ------------------------------------------------------

@@ -111,6 +111,11 @@ class TestMassMailing(TestMassMailCommon):
             [{
                 'email': record.email_normalized,
                 'email_to_mail': record.email_from,
+                'mail_values': {
+                    'source_mailing_id': mailing,
+                    'source_template_id': self.env['mail.template'],
+                    'source_view_id': self.env['ir.ui.view'],
+                },  # mail.message source audit
              } for record in recipients],
             mailing, recipients,
             mail_links_info=[[
@@ -251,12 +256,18 @@ class TestMassMailing(TestMassMailCommon):
                 # -> email: trace email: normalized, to ease its management, mainly technical
                 # -> email_to_mail: mail.mail email: email_to stored in outgoing mail.mail (can be multi)
                 # -> email_to_recipients: email_to for outgoing emails, list means several recipients
+                mail_values = {
+                    'source_mailing_id': mailing,
+                    'source_template_id': self.env['mail.template'],
+                    'source_view_id': self.env['ir.ui.view'],
+                }  # mail.message source audit
                 self.assertMailTraces(
                     [
                         {'email': 'customer.multi.1@example.com',
                          'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_mult.name}" <customer.multi.1@example.com>', f'"{customer_mult.name}" <customer.multi.2@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'partner': customer_mult,
                          'trace_status': 'sent'},
                         {'email': 'test.customer.format@example.com',
@@ -264,6 +275,11 @@ class TestMassMailing(TestMassMailCommon):
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
                          'failure_type': False,
+                         'mail_values': {
+                            'source_mailing_id': mailing,
+                            'source_template_id': self.env['mail.template'],
+                            'source_view_id': self.env['ir.ui.view'],
+                         },  # mail.message source audit
                          'partner': customer_fmt,
                          'trace_status': 'sent'},
                         {'email': 'test.customer.😊@example.com',
@@ -271,55 +287,65 @@ class TestMassMailing(TestMassMailCommon):
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_unic.name}" <test.customer.😊@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'partner': customer_unic,
                          'trace_status': 'sent'},
                         {'email': 'test.customer.case@example.com',
                          'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_case.name}" <test.customer.case@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'partner': customer_case,
                          'trace_status': 'sent'},  # lower cased
                         {'email': 'test.customer.weird@example.comweirdformat',
                          'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_weird.name}" <test.customer.weird@example.comweirdformat>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'partner': customer_weird,
                          'trace_status': 'sent'},  # concatenates everything after domain
                         {'email': 'test.customer.weird.2@example.com',
                          'email_to_mail': '',  # using recipient_ids, not email_to
                          'email_to_recipients': [[f'"{customer_weird_2.name}" <test.customer.weird.2@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'partner': customer_weird_2,
                          'trace_status': 'sent'},
                         {'email': 'record.multi.1@example.com',
                          'email_to_mail': 'record.multi.1@example.com,"Record Multi 2" <record.multi.2@example.com>',
                          'email_to_recipients': [['record.multi.1@example.com', '"Record Multi 2" <record.multi.2@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'trace_status': 'sent'},
                         {'email': 'record.format@example.com',
                          'email_to_mail': '"Formatted Record" <record.format@example.com>',
                          'email_to_recipients': [['"Formatted Record" <record.format@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'trace_status': 'sent'},
                         {'email': 'record.😊@example.com',
                          'email_to_mail': '"Unicode Record" <record.😊@example.com>',
                          'email_to_recipients': [['"Unicode Record" <record.😊@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'trace_status': 'sent'},
                         {'email': 'test.record.case@example.com',
                          'email_to_mail': 'test.record.case@example.com',
                          'email_to_recipients': [['test.record.case@example.com']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'trace_status': 'sent'},
                         {'email': 'test.record.weird@example.comweirdformat',
                          'email_to_mail': 'test.record.weird@example.comweirdformat',
                          'email_to_recipients': [['test.record.weird@example.comweirdformat']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'trace_status': 'sent'},
                         {'email': 'test.record.weird.2@example.com',
                          'email_to_mail': '"Weird Format2" <test.record.weird.2@example.com>',
                          'email_to_recipients': [['"Weird Format2" <test.record.weird.2@example.com>']],
                          'failure_type': False,
+                         'mail_values': mail_values,
                          'trace_status': 'sent'},
                     ],
                     mailing,

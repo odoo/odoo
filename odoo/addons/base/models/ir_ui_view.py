@@ -214,7 +214,7 @@ actual arch.
     invalid_locators = fields.Json(compute='_compute_invalid_locators')
     # used mainly for technical sort and find of views, as well to give specific
     # ACLs for specific flows like email marketing (snippets management)
-    technical_usage = fields.Selection(selection=[], string="View's Technical Usage")
+    technical_usage = fields.Selection(selection=[], string="Technical Usage")
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')

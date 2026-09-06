@@ -2,14 +2,14 @@
 <odoo>
     <data>
         <!-- Discuss utility templates for notifications -->
-        <template id="message_user_assigned">
+        <template id="message_user_assigned" technical_usage="mail_post_source">
     <span>Dear <t t-out="object.user_id.sudo().name"/>,</span>
     <br/><br/>
     <span style="margin-top: 8px;">You have been assigned to the <t t-out="model_description or 'document'"/> <t t-out="object.display_name"/>.</span>
     <br/>
         </template>
 
-        <template id="message_activity_done">
+        <template id="message_activity_done" technical_usage="mail_post_source">
 <div>
     <p class="o_mail_activity_title mb-1">
         <span t-attf-class="oi oi-fw oi-filled" t-att-data-icon="activity.activity_type_id.icon"/>
@@ -28,7 +28,7 @@
 </div>
         </template>
 
-        <template id="message_activity_assigned">
+        <template id="message_activity_assigned" technical_usage="mail_post_source">
 <div style="margin: 0px; padding: 0px; font-size: 13px;">
     <!-- All activities must be assigned to the same user (activities.user_id). -->
     Dear <span t-field="activities.user_id.name"/>,
@@ -49,7 +49,7 @@
 </div>
         </template>
 
-        <template id="message_origin_link">
+        <template id="message_origin_link" technical_usage="mail_post_source">
             <p>
                 <t t-if="edit">This <t t-out="self.env['ir.model']._get(self._name).name.lower()"/> has been modified from:</t>
                 <t t-else="">This <t t-out="self.env['ir.model']._get(self._name).name.lower()"/> has been created from:</t>

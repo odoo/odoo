@@ -529,6 +529,8 @@ form: module.record_id""" % (xml_id,)
             record.append(Field(attrib.pop('priority'), name='priority'))
         if 'inherit_id' in attrib:
             record.append(Field(name='inherit_id', ref=attrib.pop('inherit_id')))
+        if 'technical_usage' in attrib:
+            record.append(Field(attrib.pop('technical_usage'), name='technical_usage'))
         if 'website_id' in attrib:
             record.append(Field(name='website_id', ref=attrib.pop('website_id')))
         if 'key' in attrib:
