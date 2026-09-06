@@ -43,8 +43,10 @@ class PaymentData(models.Model):
         Payment data records are processed in insertion order to ensure that older transactions are
         handled first and that same-transaction operations are applied in the correct sequence.
 
-        After successful processing, payment data records are deleted. If it fails, they are marked
-        as errored and left for manual intervention.
+        After successful processing, payment data records are deleted and the transactions are
+        post-processed. If the processing fails, the records are marked as errored and left for
+        manual intervention. If the post-processing fails, it is rolled back without affecting the
+        processing and deferred to the post-processing cron.
 
         :rtype: None
         """
@@ -73,9 +75,7 @@ class PaymentData(models.Model):
                         payment_safe_write=True
                     )._process(payment_data.payload)
                     payment_data.unlink()
-
-                    # Commit the progress and get the remaining time
-                    remaining_time = IrCron._commit_progress(processed=1)
+                    IrCron._commit_progress()  # Post-processing must not roll back the processing
                 except Exception:
                     IrCron._rollback_progress()
                     payment_data.write({"errored": True, "error_traceback": traceback.format_exc()})
@@ -84,8 +84,38 @@ class PaymentData(models.Model):
                         payment_data.id,
                         tx.reference,
                     )
-                    # Commit the progress and get the remaining time
                     remaining_time = IrCron._commit_progress(processed=1)
+                else:
+                    remaining_time = self._post_process_transaction(tx)
 
                 if not remaining_time:  # The cron job might be killed soon
                     return
+
+    @api.model
+    def _post_process_transaction(self, tx):
+        """Post-process the transaction and notify the client.
+
+        The client is notified even if the post-processing fails, as it is then deferred to the
+        post-processing cron and doesn't prevent the customer from being redirected.
+
+        :param payment.transaction tx: The transaction to post-process
+        :return: The remaining time for the cron run
+        :rtype: float
+        """
+        IrCron = self.env["ir.cron"]
+        try:
+            # Post-process the tx and its source tx, whose state may have changed during processing
+            txs_to_post_process = tx | tx.source_transaction_id
+            txs_to_post_process._post_process_with_lock()
+            tx._notify_status()
+            remaining_time = IrCron._commit_progress(processed=1)
+        except Exception:
+            IrCron._rollback_progress()
+            _logger.exception(
+                "Failed to post-process transaction %s; deferring to the post-processing cron.",
+                tx.reference,
+            )
+            self.env.ref("payment.post_processing_cron")._trigger()
+            tx._notify_status()
+            remaining_time = IrCron._commit_progress(processed=1)
+        return remaining_time

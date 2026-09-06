@@ -79,6 +79,7 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
     def test_making_a_payment_request_propagates_token_simulated_state_to_transaction(self):
         """Test that the simulated state of the token is set on the transaction when making a
         payment request."""
+        self._disable_process_patcher()
         for counter, state in enumerate(["pending", "done", "cancel", "error"]):
             tx = self._create_transaction("direct", reference=f"{self.reference}-{counter}")
             token = self._create_token(demo_simulated_state=state)

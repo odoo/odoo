@@ -16,6 +16,7 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
     def test_refund_id_is_set_as_provider_reference(self):
         """Test that the id of the refund object is set as the provider reference of the refund
         transaction."""
+        self._disable_process_patcher()
         source_tx = self._create_transaction("redirect", state="done")
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",

@@ -17,16 +17,3 @@ class PaymentTransaction(models.Model):
                 if previous_states.get(tx.id) == 'draft':
                     tx.pos_order_id._send_self_order_receipt()
                 tx.pos_order_id._send_notification_online_payment_status('success')
-
-    def _process(self, payment_data):
-        super()._process(payment_data)
-        if self._is_self_order_payment_confirmed():
-            self.env.ref('payment.cron_post_process_payment_tx')._trigger()
-
-    def _is_self_order_payment_confirmed(self):
-        self.ensure_one()
-        return (
-            self.pos_order_id
-            and self.state in ('authorized', 'done')
-            and self.pos_order_id.source in ('mobile', 'kiosk')
-        )

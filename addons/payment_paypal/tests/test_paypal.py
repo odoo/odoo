@@ -35,6 +35,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_paypal.controllers.main")
     def test_complete_order_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("direct")
         normalized_data = PaypalController._normalize_paypal_data(self, self.completed_order)
         tx.with_context(payment_safe_write=True)._process(normalized_data)
@@ -42,6 +43,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         self.assertEqual(tx.provider_reference, normalized_data["id"])
 
     def test_feedback_processing(self):
+        self._disable_process_patcher()
         normalized_data = PaypalController._normalize_paypal_data(
             self, self.payment_data.get("resource"), from_webhook=True
         )
@@ -68,6 +70,7 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_paypal.controllers.main")
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("direct")
         url = self._build_url(PaypalController._webhook_url)
         with patch(
@@ -98,7 +101,8 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         with (
             patch.object(
                 PaymentTransaction, "_send_api_request", side_effect=ValidationError("Test error")
-            ), patch.object(PaymentTransaction, "_record") as record_mock
+            ),
+            patch.object(PaymentTransaction, "_record") as record_mock,
         ):
             self._make_json_request(url, data=self.payment_data)
             self.assertEqual(record_mock.call_count, 0)

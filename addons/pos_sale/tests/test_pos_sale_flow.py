@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import tagged
@@ -1366,6 +1368,15 @@ class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, PaymentCo
         """Ensure that the POS correctly handles Sale Orders where a down payment was processed
         via a payment transaction with the automatic invoicing setting enabled.
         """
+        # Disable account payment generation while keeping Sales' post-processing
+        self._disable_post_process_patcher()
+        self.startPatcher(
+            patch(
+                "odoo.addons.account_payment.models.payment_transaction.PaymentTransaction"
+                "._post_process",
+                autospec=True,
+            )
+        )
         self.product_a.available_in_pos = True
         self.env.company.sale_automatic_invoice = True
         self.partner_a.email = "test.customer@example.com"
@@ -1389,14 +1400,14 @@ class TestPoSSalePayment(PoSSaleSyncCommon, TestPointOfSaleHttpCommon, PaymentCo
         down_payment_invoices = sale_order.invoice_ids
         down_payment_invoices.action_post()
         # Online payment transaction for 30% downpayment
-        tx = self._create_transaction(
+        self._create_transaction(
                 flow='direct',
                 amount=sale_order.amount_total * sale_order.prepayment_percent,
                 sale_order_ids=[sale_order.id],
                 state='done',
                 reference='Test Transaction',
             )
-        self._run_post_processing(tx)
+        self._run_post_processing()
         self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
 
         # Both down payments are deducted when settling the order, which is

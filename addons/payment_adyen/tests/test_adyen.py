@@ -50,7 +50,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         tx = self._create_transaction(
             "redirect", state="done", provider_reference="source_reference"
         )
-        self._run_post_processing(tx)  # Create the payment
+        self._run_post_processing()  # Create the payment
 
         # Send the refund request
         with patch(
@@ -357,11 +357,13 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_confirms_transaction(self):
+        self._disable_process_patcher()
         tx = self._create_transaction("direct")
         self._webhook_notification_flow(self.webhook_notification_batch_data)
         self.assertEqual(tx.state, "done")
 
     def test_webhook_notification_authorizes_transaction(self):
+        self._disable_process_patcher()
         self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
         self.provider.capture_manually = True
         tx = self._create_transaction("direct")
@@ -374,6 +376,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_captures_transaction(self):
+        self._disable_process_patcher()
         self.provider.payment_method_ids.active = False  # TODO VCHU: remove in master
         self.provider.capture_manually = True
         tx = self._create_transaction(
@@ -400,6 +403,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_cancels_transaction(self):
+        self._disable_process_patcher()
         tx = self._create_transaction(
             "direct", state="authorized", provider_reference=self.original_reference, amount=9.99
         )
@@ -424,6 +428,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_webhook_notification_refunds_transaction(self):
+        self._disable_process_patcher()
         source_tx = self._create_transaction(
             "direct", state="done", provider_reference=self.original_reference
         )
@@ -515,6 +520,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         )
 
     def test_failed_webhook_refund_notification_sets_refund_transaction_in_error(self):
+        self._disable_process_patcher()
         source_tx = self._create_transaction(
             "direct", state="done", provider_reference=self.original_reference
         )

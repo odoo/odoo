@@ -99,15 +99,16 @@ class PaymentTransaction(models.Model):
             self.with_context(
                 payment_safe_write=True  # The API call is idempotent
             )._set_canceled(extra_allowed_states=("done",))
+            # Post-process immediately, as the state change skipped the processing cron
+            self._try_post_process()
         elif tx_status in const.TRANSACTION_STATUS_MAPPING["refunded"]:
             # The payment has been refunded from Authorize.net side before we could refund it. We
             # create a refund tx on Odoo to reflect the move of the funds.
             self.with_context(
                 payment_safe_write=True  # The API call is idempotent
             )._set_done()
-            # Immediately post-process the transaction as the post-processing will not be
-            # triggered by a customer browsing the transaction from the portal.
-            self.env.ref("payment.cron_post_process_payment_tx")._trigger()
+            # Post-process immediately, as the state change skipped the processing cron
+            self._try_post_process()
         elif any(
             tx_status in const.TRANSACTION_STATUS_MAPPING[k] for k in ("authorized", "captured")
         ):
@@ -224,9 +225,6 @@ class PaymentTransaction(models.Model):
                     self._set_canceled(extra_allowed_states=("done",))
             elif status_type == "refund" and self.operation == "refund":
                 self._set_done()
-                # Immediately post-process the transaction as the post-processing will not be
-                # triggered by a customer browsing the transaction from the portal.
-                self.env.ref("payment.cron_post_process_payment_tx")._trigger()
         elif status_code == "2":  # Declined
             self._set_canceled(state_message=response_content.get("x_response_reason_text"))
         elif status_code == "4":  # Held for Review

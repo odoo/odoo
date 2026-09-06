@@ -23,6 +23,7 @@ class TestPaymentTransaction(PaymentCustomCommon):
         })
 
     def test_postpaid_transactions_are_confirmed(self):
+        self._disable_process_patcher()
         tx = self._create_transaction(
             "redirect",
             provider_id=self.pay_on_invoice_provider.id,

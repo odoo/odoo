@@ -354,11 +354,6 @@ class PaymentTransaction(models.Model):
                     self._set_authorized()
                 else:  # 'CAPTURE'
                     self._set_done()
-
-            # Immediately post-process the transaction if it is a refund, as the post-processing
-            # will not be triggered by a customer browsing the transaction from the portal.
-            if self.operation == "refund":
-                self.env.ref("payment.cron_post_process_payment_tx")._trigger()
         elif payment_state in const.RESULT_CODES_MAPPING["cancel"]:
             self._set_canceled()
         elif payment_state in const.RESULT_CODES_MAPPING["error"]:

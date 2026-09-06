@@ -421,11 +421,6 @@ class PaymentTransaction(models.Model):
                 # In case the tokenization was requested on provider side not from odoo form.
                 self.tokenize = True
             self._set_done()
-
-            # Immediately post-process the transaction if it is a refund, as the post-processing
-            # will not be triggered by a customer browsing the transaction from the portal.
-            if self.operation == "refund":
-                self.env.ref("payment.cron_post_process_payment_tx")._trigger()
         elif entity_status in const.PAYMENT_STATUS_MAPPING["error"]:
             _logger.warning(
                 "The transaction %s underwent an error. Reason: %s",

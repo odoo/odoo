@@ -24,6 +24,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         self.assertFalse(tx.tokenize, "No token should be asked.")
         self._webhook_notification_flow(self.payment_data)
@@ -34,6 +35,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def test_webhook_notification_creates_token(self):
         """Test the processing of a webhook notification when creating a token."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect", tokenize=True)
         self.assertTrue(tx.tokenize, "A token should be asked.")
         self._webhook_notification_flow(self.payment_data)
@@ -46,6 +48,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def test_failed_webhook_notification_set_tx_as_error_1(self):
         """Test the processing of a webhook notification for a failed transaction."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         test = self.payment_data_insufficient_funds
         self._webhook_notification_flow(test)
@@ -55,6 +58,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def test_failed_webhook_notification_set_tx_as_error_2(self):
         """Test the processing of a webhook notification for a failed transaction."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         test = self.payment_data_expired_card
         self._webhook_notification_flow(test)
@@ -64,6 +68,7 @@ class WorldlineTest(WorldlineCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_worldline.controllers.main")
     def test_failed_webhook_notification_set_tx_as_cancel(self):
         """Test the processing of a webhook notification for a cancelled transaction."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         test = {
             "payment": {

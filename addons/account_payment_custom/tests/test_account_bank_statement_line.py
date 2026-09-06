@@ -12,6 +12,7 @@ class TestAccountBankStatementLine(AccountPaymentCustomCommon):
     def test_matching_statement_line_confirms_wire_transfer_transaction(self):
         """Test that wire transfer transactions are confirmed when a matching bank statement line
         is found."""
+        self._disable_process_patcher()
         tx = self._create_transaction(flow="direct", state="pending")
         absl = self.env["account.bank.statement.line"].create({
             "payment_ref": tx.reference,

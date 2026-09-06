@@ -109,6 +109,7 @@ class MollieTest(MollieCommon, PaymentHttpCommon):
     )
     def test_webhook_notification_confirms_transaction(self):
         """Test the processing of a webhook notification."""
+        self._disable_process_patcher()
         tx = self._create_transaction("redirect")
         url = self._build_url(MollieController._webhook_url)
         with patch(

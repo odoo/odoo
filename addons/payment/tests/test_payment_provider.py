@@ -154,7 +154,7 @@ class TestPaymentProvider(PaymentCommon):
 
     def test_installing_provider_activates_post_processing_cron(self):
         """Test that the post-processing cron is activated when a provider is installed."""
-        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
+        post_processing_cron = self.env.ref("payment.post_processing_cron")
         post_processing_cron.active = False
         self.provider._setup_provider("none")
         self.assertTrue(post_processing_cron.active)
@@ -172,7 +172,7 @@ class TestPaymentProvider(PaymentCommon):
 
     def test_uninstalling_provider_deactivates_post_processing_cron(self):
         """Test that the post-processing cron is deactivated when a provider is uninstalled."""
-        post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
+        post_processing_cron = self.env.ref("payment.post_processing_cron")
         post_processing_cron.active = True
         with patch(
             "odoo.addons.payment.models.payment_provider.PaymentProvider.search_count",

@@ -1227,7 +1227,7 @@ class PaymentProvider(models.Model):
         :return: None
         """
         post_processing_cron = self.env.ref(
-            "payment.cron_post_process_payment_tx", raise_if_not_found=False
+            "payment.post_processing_cron", raise_if_not_found=False
         )
         if post_processing_cron:
             any_installed_provider = bool(
