@@ -288,6 +288,25 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
 
+        chair_extras_attribute = env['product.attribute'].create({
+            'name': 'Extras',
+            'display_type': 'multi',
+            'create_variant': 'no_variant',
+        })
+        chair_extras_wheels = env['product.attribute.value'].create({
+            'name': 'Wheels',
+            'attribute_id': chair_extras_attribute.id,
+        })
+        chair_extras_armrests = env['product.attribute.value'].create({
+            'name': 'Armrests',
+            'attribute_id': chair_extras_attribute.id,
+        })
+        env['product.template.attribute.line'].create({
+            'product_tmpl_id': cls.configurable_chair.product_tmpl_id.id,
+            'attribute_id': chair_extras_attribute.id,
+            'value_ids': [(6, 0, [chair_extras_wheels.id, chair_extras_armrests.id])]
+        })
+
         fixed_pricelist = env['product.pricelist'].create({
             'name': 'Fixed',
             'item_ids': [(0, 0, {
