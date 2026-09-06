@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t
+        t-name="sale_pdf_quote_builder.QuotationDocumentListView"
+        t-inherit="web.ListView"
+        t-inherit-mode="primary"
+    >
+        <xpath
+            expr="//t[@t-set-slot='control-panel-additional-actions']/CogMenu[1]"
+            position="before"
+        >
+            <t t-if="this.env.inDialog">
+                <button
+                    t-if="this.activeActions.create"
+                    type="button"
+                    class="btn btn-primary o_list_button_add"
+                    t-on-click="this.onClickCreate"
+                >
+                    New
+                </button>
+                <UploadButton
+                    formData="this.formData"
+                    allowedMIMETypes="this.allowedMIMETypes"
+                    load.bind="() => this.model.root.load()"
+                    uploadRoute="this.uploadRoute"
+                />
+            </t>
+        </xpath>
+    </t>
+</templates>
