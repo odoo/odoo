@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
     <t t-name="discuss.ChannelMember">
         <t t-set="memberAtRender" t-value="this.member()"/>
-        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="this.attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev, { memberAtRender })">
+        <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="this.attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev, { memberAtRender })" t-ref="this.rootRef">
+            <ChannelMemberContextMenu t-props="this.rightClickMenu.menuProps"/>
             <DiscussAvatar record="this.member()"/>
             <div t-ref="this.displayNameRef" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member().name" t-att-title="this.member().name"/>

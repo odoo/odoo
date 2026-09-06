@@ -53,6 +53,9 @@ const messagingMenuItemPatch = {
     get actionsDropdownState() {
         return this.channel ? this.channelDropdownState : super.actionsDropdownState;
     },
+    hasActions() {
+        return this.channel ? this.threadActions.actionsComputed().length : super.hasActions();
+    },
     _computeActionsPartition() {
         return this.channel ? this.threadActions.partition : super._computeActionsPartition();
     },
