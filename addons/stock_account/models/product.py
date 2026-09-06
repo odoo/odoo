@@ -3,7 +3,7 @@ from datetime import date, datetime, time, timedelta
 from collections import defaultdict
 from typing import NamedTuple
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL, split_every
@@ -299,19 +299,24 @@ class ProductProduct(models.Model):
         product_ids_lot_valuated = set()
         date = valuation_date or fields.Datetime.now()
         for product in self:
-            if product.cost_method == 'fifo' or product.standard_price == old_price.get(product):
+            old_value = old_price.get(product)
+            value = product.standard_price
+            if product.cost_method == 'fifo' or value == old_value:
                 continue
 
             if product.lot_valuated:
                 product_ids_lot_valuated.add(product.id)
 
+            quantity = product.sudo().with_context(to_date=date).qty_available
             product_values.append({
                 'product_id': product.id,
-                'value': product.standard_price,
+                'quantity': quantity,
+                'old_value': old_value,
+                'value': value,
                 'company_id': product.company_id.id or self.env.company.id,
                 'date': date,
-                'description': _('Price update from %(old_price)s to %(new_price)s by %(user)s',
-                    old_price=old_price.get(product), new_price=product.standard_price, user=self.env.user.name)
+                'description': self.env._('Price update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s',
+                    old_value=old_value, new_value=value, quantity=quantity, user=self.env.user.name)
             })
         self.env['product.value'].sudo().create(product_values)
         if product_ids_lot_valuated:

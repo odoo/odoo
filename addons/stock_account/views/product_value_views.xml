@@ -8,6 +8,7 @@
                 <sheet>
                 <field name="move_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
+                <field name="company_id" invisible="1" force_save="1"/>
                 <group>
                     <group>
                         <label for="current_value" class="oe_inline"/>
@@ -19,7 +20,7 @@
                         <field name="description"/>
                     </group>
                     <group>
-                        <field class="alert alert-info" role="alert" name="current_value_description" nolabel="1" colspan="2"/>
+                        <field class="alert alert-info" role="alert" name="current_value_description" nolabel="1" colspan="2" invisible="not current_value_description"/>
                         <field class="alert alert-info" role="alert" name="computed_value_description" nolabel="1" colspan="2" invisible="not computed_value_description"/>
                     </group>
                 </group>
@@ -28,9 +29,54 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="product_value_list_view">
+        <field name="name">product.value.list.view</field>
+        <field name="model">product.value</field>
+        <field name="arch" type="xml">
+            <list default_order="id, date desc" create="0" editable="top">
+                <field name="company_id" readonly="1" force_save="1"/>
+                <field name="date"/>
+                <field name="description"/>
+                <field name="product_id" readonly="id"/>
+                <field name="lot_id" readonly="id" required="product_tracking in ('serial', 'lot')" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" optional="hide" groups="stock.group_production_lot" />
+                <field name="move_id" readonly="1" optional="hide"/>
+                <field name="quantity" readonly="1"/>
+                <field name="old_value" readonly="1"/>
+                <field name="value"/>
+                <field name="total_value_before" readonly="1"/>
+                <field name="total_value_after" readonly="1"/>
+                <field name="adjustment" readonly="1"/>
+                <button title="View Account Move" name="action_open_account_move" type="object" class="oe_stat_button" icon="book" icon_class="oi-filled" invisible="not account_move_id"/>
+                <field name="user_id" string="Done By" readonly="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_value_search_view" model="ir.ui.view">
+        <field name="name">product.value.search.view</field>
+        <field name="model">product.value</field>
+        <field name="arch" type="xml">
+            <search string="Adjustments">
+                <field name="product_id"/>
+                <group>
+                    <filter string="Product" name="by_product" domain="[]"  context="{'group_by': 'product_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="product_value_action" model="ir.actions.act_window">
         <field name="name">Adjust Valuation</field>
         <field name="res_model">product.value</field>
         <field name="view_mode">form</field>
     </record>
+
+    <record id="product_value_list_action" model="ir.actions.act_window">
+        <field name="name">Valuation Adjustments</field>
+        <field name="res_model">product.value</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem action="product_value_list_action" id="valuation_adjustments_menu" name="Valuation Adjustments" parent="stock.menu_warehouse_report" sequence="300" groups="base.group_no_one"/>
+
 </odoo>
