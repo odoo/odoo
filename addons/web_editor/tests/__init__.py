@@ -7,3 +7,4 @@ from . import test_odoo_editor
 from . import test_diff_utils
 from . import test_views
 from . import test_tools
+from . import test_websocket
