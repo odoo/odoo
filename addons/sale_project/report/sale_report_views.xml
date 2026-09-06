@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_product_search" model="ir.ui.view">
+        <field name="name">view.order.product.search.inherit.sale.project</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="project_id"/>
+            </xpath>
+            <xpath expr="//filter[@name='User']" position="before">
+                <filter string="Project" name="Project" context="{'group_by':'project_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

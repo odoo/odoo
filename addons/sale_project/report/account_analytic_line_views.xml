@@ -40,6 +40,20 @@
             <xpath expr="//list" position='attributes'>
                 <attribute name="action">action_open_account_analytic_line_origine</attribute>
                 <attribute name="type">object</attribute>
+                <attribute name="default_group_by">account_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_margins_no_group_tree" model="ir.ui.view">
+        <field name="name">account.analytic.margins.no.group.tree</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="view_account_analytic_line_inherit_sale_project_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position='attributes'>
+                <attribute name="default_group_by"/>
             </xpath>
         </field>
     </record>
@@ -50,6 +64,7 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="account.view_account_analytic_line_filter_inherit_account"/>
         <field name="arch" type="xml">
+            <filter name="profit_loss_accounts" position="replace"/>
             <xpath expr="//filter[@name='category']" position="replace">
                 <filter string="Category" name='category' context="{'group_by': 'category_report'}"/>
             </xpath>
@@ -62,10 +77,8 @@
         <field name="path">project-actual-margins</field>
         <field name="search_view_id" ref="sale_project.sale_project_line_search"/>
         <field name="view_id" ref="view_account_analytic_line_inherit_sale_project_pivot"/>
-        <field name="view_mode">pivot,list,kanban,graph</field>
-        <field name="context">{
-            'search_default_month': 'custom_last_365_days',
-        }</field>
+        <field name="view_mode">pivot,graph,list,kanban,form</field>
+        <field name="context">{'search_default_month': 'custom_last_365_days'}</field>
     </record>
 
     <record id="action_view_analytic_reporting_inherit_sale_project_pivot" model="ir.actions.act_window.view">
@@ -75,16 +88,23 @@
         <field name="view_id" ref="view_account_analytic_line_inherit_sale_project_pivot"/>
     </record>
 
+    <record id="action_view_analytic_reporting_inherit_sale_project_graph" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="action_analytic_reporting_inherit_sale_project"/>
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="analytic.view_account_analytic_line_graph"/>
+    </record>
+
     <record id="action_view_analytic_reporting_inherit_sale_project_tree" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_analytic_reporting_inherit_sale_project"/>
-        <field name="sequence" eval="20"/>
+        <field name="sequence" eval="40"/>
         <field name="view_mode">list</field>
         <field name="view_id" ref="view_account_analytic_line_inherit_sale_project_tree"/>
     </record>
 
     <record id="action_view_analytic_reporting_inherit_sale_project_kanban" model="ir.actions.act_window.view">
         <field name="act_window_id" ref="action_analytic_reporting_inherit_sale_project"/>
-        <field name="sequence" eval="40"/>
+        <field name="sequence" eval="50"/>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="analytic.view_account_analytic_line_kanban"/>
     </record>

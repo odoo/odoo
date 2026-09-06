@@ -539,8 +539,9 @@ class ProjectProject(models.Model):
         embedded_action_context = self.env.context.get('from_embedded_action', False)
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project.action_analytic_reporting_inherit_sale_project')
         pivot_view_id = self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single', raise_if_not_found=False).id
+        list_view_id = self.env.ref('sale_project.view_account_analytic_line_margins_no_group_tree', raise_if_not_found=False).id
         action['views'] = [
-            (pivot_view_id if view_type == 'pivot' else view_id, view_type)
+            (pivot_view_id if view_type == 'pivot' else list_view_id if view_type == 'list' else view_id, view_type)
             for view_id, view_type in action['views']
         ]
         action['display_name'] = self.env._("%(name)s's Margins", name=self.name)
@@ -548,9 +549,10 @@ class ProjectProject(models.Model):
         action['context'] = {
             **ast.literal_eval(action.get('context', '{}')),
             'from_embedded_action': embedded_action_context,
-            **({
-                'search_default_month': 0,
-                'pivot_column_groupby': ['date:month'],
-            } if embedded_action_context else {}),
+            'pivot_row_groupby': ['category_report', 'billable_type'],
+            'graph_groupbys': ['product_id'],
+            'pivot_column_groupby': ['date:month'],
         }
+        if embedded_action_context:
+            action['context']['search_default_month'] = 0
         return action

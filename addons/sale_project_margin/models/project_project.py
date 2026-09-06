@@ -27,6 +27,8 @@ class ProjectProject(models.Model):
             **ast.literal_eval(action.get('context', '{}')),
             'from_embedded_action': embedded_action_context,
             'search_default_Customer': 0,
+            'graph_groupbys': ['product_id'],
+            'pivot_row_groupby': ['product_id']
         }
         if embedded_action_context:
             action_context.update({
