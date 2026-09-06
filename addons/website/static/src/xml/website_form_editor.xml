@@ -26,6 +26,12 @@
     <t t-name="website.form_field">
         <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''} #{fieldTypeClasses or ''}"
             t-att-data-type="this.field.type"
+            t-att-data-input-display="this.field.inputDisplay"
+            t-att-data-formula="this.field.formula"
+            t-att-data-formula-base="this.field.formulaBase"
+            t-att-data-formula-prefix="this.field.formulaPrefix"
+            t-att-data-formula-suffix="this.field.formulaSuffix"
+            t-att-data-formula-decimals="this.field.formulaDecimals"
             data-name="Field">
             <div t-if="this.field.formatInfo.labelPosition !== 'none' and this.field.formatInfo.labelPosition !== 'top'" class="row s_col_no_resize s_col_no_bgcolor">
                 <label t-attf-class="#{!this.field.isCheck and 'col-form-label' or ''} col-sm-auto s_website_form_label #{this.field.formatInfo.labelPosition === 'right' and 'text-end' or ''} #{this.field.formatInfo.labelInvisible and 'invisible' or ''}" t-attf-style="width: #{this.field.formatInfo.labelWidth or '200px'}" t-att-for="this.field.id">
@@ -148,33 +154,93 @@
 
     <!-- Integer Field -->
     <t t-name="website.form_field_integer">
-        <t t-call="website.form_field">
-            <input
-                type="number"
-                class="form-control s_website_form_input"
-                t-att-name="field.name"
-                step="1"
-                t-att-required="field.required || field.modelRequired || None"
-                t-attf-value="#{field.value}"
-                t-att-placeholder="field.placeholder"
-                t-att-id="field.id"
-            />
+        <t t-if="field.inputDisplay === 'slider'">
+            <t t-call="website.form_field_range">
+                <t t-set="rangeStep" t-value="field.rangeStep || '1'"/>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-call="website.form_field">
+                <input
+                    type="number"
+                    class="form-control s_website_form_input"
+                    t-att-name="field.name"
+                    step="1"
+                    t-att-required="field.required || field.modelRequired || None"
+                    t-attf-value="#{field.value}"
+                    t-att-placeholder="field.placeholder"
+                    t-att-id="field.id"
+                />
+            </t>
         </t>
     </t>
 
     <!-- Float Field -->
     <t t-name="website.form_field_float">
+        <t t-if="field.inputDisplay === 'slider'">
+            <t t-call="website.form_field_range">
+                <t t-set="rangeStep" t-value="field.rangeStep || 'any'"/>
+            </t>
+        </t>
+        <t t-else="">
+            <t t-call="website.form_field">
+                <input
+                    type="number"
+                    class="form-control s_website_form_input"
+                    t-att-name="field.name"
+                    step="any"
+                    t-att-required="field.required || field.modelRequired || None"
+                    t-attf-value="#{field.value}"
+                    t-att-placeholder="field.placeholder"
+                    t-att-id="field.id"
+                />
+            </t>
+        </t>
+    </t>
+
+    <!-- Slider display of number fields -->
+    <t t-name="website.form_field_range">
         <t t-call="website.form_field">
-            <input
-                type="number"
-                class="form-control s_website_form_input"
-                t-att-name="field.name"
-                step="any"
-                t-att-required="field.required || field.modelRequired || None"
-                t-attf-value="#{field.value}"
-                t-att-placeholder="field.placeholder"
-                t-att-id="field.id"
-            />
+            <div class="s_website_form_range_wrap d-flex align-items-center gap-3">
+                <input
+                    type="range"
+                    class="form-range s_website_form_input"
+                    t-att-name="field.name"
+                    t-att-step="rangeStep"
+                    t-att-min="field.rangeMin || '0'"
+                    t-att-max="field.rangeMax || '100'"
+                    t-attf-value="#{field.value or field.rangeMin or '0'}"
+                    t-att-id="field.id"
+                />
+                <!-- Mirror of the range value, editable from the keyboard; it
+                     has no name on purpose so it is never submitted. -->
+                <input
+                    type="number"
+                    class="s_website_form_range_value form-control"
+                    t-att-step="rangeStep"
+                    t-att-min="field.rangeMin || '0'"
+                    t-att-max="field.rangeMax || '100'"
+                    t-attf-value="#{field.value or field.rangeMin or '0'}"
+                />
+            </div>
+        </t>
+    </t>
+
+    <!-- Computed Field -->
+    <t t-name="website.form_field_computed">
+        <t t-call="website.form_field">
+            <div class="s_website_form_computed d-flex align-items-baseline gap-1 border rounded px-3 py-2">
+                <input
+                    type="hidden"
+                    class="form-control s_website_form_input"
+                    t-att-name="field.name"
+                    t-attf-value="#{field.value or '0'}"
+                    t-att-id="field.id"
+                />
+                <span t-if="field.formulaPrefix" class="s_website_form_computed_prefix text-muted" t-out="field.formulaPrefix"/>
+                <output class="s_website_form_computed_value fs-5 fw-bold" t-out="field.value or '0'"/>
+                <span t-if="field.formulaSuffix" class="s_website_form_computed_suffix text-muted" t-out="field.formulaSuffix"/>
+            </div>
         </t>
     </t>
 
@@ -257,7 +323,24 @@
     <!-- Radio -->
     <t t-name="website.form_radio">
         <t t-set="recordId" t-value="this.field.id + record_index"/>
-        <div t-attf-class="radio col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+        <t t-if="['buttons', 'boxed'].includes(this.field.formatInfo.multiPosition)">
+            <div t-attf-class="radio #{this.field.formatInfo.multiPosition === 'boxed' and 'col-12 col-sm' or 'col-auto'}">
+                <input
+                    type="radio"
+                    class="s_website_form_input btn-check"
+                    t-att-id="recordId"
+                    t-att-name="this.field.name"
+                    t-att="{checked: record.selected and 'checked' or None}"
+                    t-att-value="record.id"
+                    t-att-required="this.field.required || this.field.modelRequired || None"
+                    t-att-data-form-value="record.weight"
+                />
+                <label t-attf-class="btn btn-outline-primary s_website_form_check_label w-100 #{this.field.formatInfo.multiPosition === 'boxed' and 'py-3' or ''}" t-att-for="recordId">
+                    <t t-out="record.display_name"/>
+                </label>
+            </div>
+        </t>
+        <div t-else="" t-attf-class="radio col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
                     type="radio"
@@ -267,6 +350,7 @@
                     t-att="{checked: record.selected and 'checked' or None}"
                     t-att-value="record.id"
                     t-att-required="this.field.required || this.field.modelRequired || None"
+                    t-att-data-form-value="record.weight"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
                     <t t-out="record.display_name"/>
@@ -301,6 +385,7 @@
                     <option t-if="field.allowEmpty" t-out="field.placeholder" class="s_website_form_empty_option" value="" selected="selected"/>
                     <t t-foreach="field.records" t-as="record" t-key="record_index">
                         <option t-out="record.display_name" t-att-id="field.id + record_index" t-att-value="record.id"
+                            t-att-data-form-value="record.weight"
                             t-att="{
                                 selected: record.selected and 'selected' or None,
                                 'data-country-id': field.name == 'state_id' and (record.country_id and record.country_id[0]) or None
@@ -344,7 +429,24 @@
     <!-- Checkbox -->
     <t t-name="website.form_checkbox">
         <t t-set="recordId" t-value="this.field.id + record_index"/>
-        <div t-attf-class="checkbox col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
+        <t t-if="['buttons', 'boxed'].includes(this.field.formatInfo.multiPosition)">
+            <div t-attf-class="checkbox #{this.field.formatInfo.multiPosition === 'boxed' and 'col-12 col-sm' or 'col-auto'}">
+                <input
+                    type="checkbox"
+                    class="s_website_form_input btn-check"
+                    t-att-id="recordId"
+                    t-att-name="this.field.name"
+                    t-att="{checked: record.selected and 'checked' or None}"
+                    t-att-value="record.id"
+                    t-att-required="this.field.required || this.field.modelRequired || None"
+                    t-att-data-form-value="record.weight"
+                />
+                <label t-attf-class="btn btn-outline-primary s_website_form_check_label w-100 #{this.field.formatInfo.multiPosition === 'boxed' and 'py-3' or ''}" t-att-for="recordId">
+                    <t t-out="record.display_name"/>
+                </label>
+            </div>
+        </t>
+        <div t-else="" t-attf-class="checkbox col-12 #{this.field.formatInfo.multiPosition === 'horizontal' and 'col-lg-4 col-md-6' or ''}">
             <div class="form-check">
                 <input
                     type="checkbox"
@@ -354,6 +456,7 @@
                     t-att="{checked: record.selected and 'checked' or None}"
                     t-att-value="record.id"
                     t-att-required="this.field.required || this.field.modelRequired || None"
+                    t-att-data-form-value="record.weight"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
                     <t t-out="record.display_name"/>
