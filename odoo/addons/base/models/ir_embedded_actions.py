@@ -13,7 +13,7 @@ class IrEmbeddedActions(models.Model):
     name = fields.Char(translate=True)
     sequence = fields.Integer()
     parent_action_id = fields.Many2one('ir.actions.act_window', required=True, string='Parent Action', ondelete="cascade")
-    parent_res_id = fields.Integer(string="Active Parent Id")
+    parent_res_id = fields.Integer(string="Active Parent Id", bigint=True)
     parent_res_model = fields.Char(string='Active Parent Model', required=True)
     # It is required to have either action_id or python_method
     action_id = fields.Many2one('ir.actions.actions', string="Action", ondelete="cascade")

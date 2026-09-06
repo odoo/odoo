@@ -422,7 +422,7 @@ class AccountAccount(models.Model):
                            STRING_AGG(%(ancestors_names)s, ' / ' ORDER BY ord) AS name_path
                       FROM account_account child
         CROSS JOIN LATERAL UNNEST(STRING_TO_ARRAY(RTRIM(child.parent_path, '/'), '/')) WITH ORDINALITY AS t(id, ord)
-                      JOIN account_account ancestor ON ancestor.id = t.id::int
+                      JOIN account_account ancestor ON ancestor.id = t.id::bigint
                   GROUP BY child.id
                 )""",
                 ancestors_ids=ancestor_table.id,

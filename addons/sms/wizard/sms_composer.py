@@ -36,7 +36,7 @@ class SmsComposer(models.TransientModel):
         compute='_compute_composition_mode', precompute=True, readonly=False, required=True, store=True)
     res_model = fields.Char('Document Model Name')
     res_model_description = fields.Char('Document Model Description', compute='_compute_res_model_description')
-    res_id = fields.Integer('Document ID')
+    res_id = fields.Integer('Document ID', bigint=True)
     res_ids = fields.Char('Document IDs')
     res_ids_count = fields.Integer(
         'Visible records count', compute='_compute_res_ids_count', compute_sudo=False,

@@ -26,6 +26,6 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self.env.cr.execute("""
             UPDATE website_visitor
                SET access_token = partner_id
-             WHERE partner_id::int != access_token::int
+             WHERE partner_id::bigint != access_token::bigint
                AND partner_id = %s;
         """, (dst_partner.id,))

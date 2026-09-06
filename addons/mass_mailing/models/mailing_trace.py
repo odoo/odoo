@@ -68,8 +68,7 @@ class MailingTrace(models.Model):
         help='ID of the related mail_mail. This field is an integer field because '
              'the related mail_mail can be deleted separately from its statistics. '
              'However the ID is needed for several action and controllers.',
-        index='btree_not_null',
-    )
+        index='btree_not_null', bigint=True)
     email = fields.Char(string="Email", help="Normalized email address")
     message_id = fields.Char(string='Message-ID') # email Message-ID (RFC 2392)
     medium_id = fields.Many2one(related='mass_mailing_id.medium_id')

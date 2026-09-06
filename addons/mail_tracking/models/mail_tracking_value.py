@@ -12,13 +12,13 @@ class MailTrackingValue(models.Model):
         index=True, ondelete='set null')
     field_info = fields.Json('Removed field information')
 
-    old_value_integer = fields.Integer('Old Value Integer', readonly=True)
+    old_value_integer = fields.Integer('Old Value Integer', readonly=True, bigint=True)
     old_value_float = fields.Float('Old Value Float', readonly=True)
     old_value_char = fields.Char('Old Value Char', readonly=True)
     old_value_text = fields.Text('Old Value Text', readonly=True)
     old_value_datetime = fields.Datetime('Old Value DateTime', readonly=True)
 
-    new_value_integer = fields.Integer('New Value Integer', readonly=True)
+    new_value_integer = fields.Integer('New Value Integer', readonly=True, bigint=True)
     new_value_float = fields.Float('New Value Float', readonly=True)
     new_value_char = fields.Char('New Value Char', readonly=True)
     new_value_text = fields.Text('New Value Text', readonly=True)

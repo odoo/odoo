@@ -3,7 +3,7 @@
 -------------------------------------------------------------------------
 
 CREATE TABLE ir_actions (
-  id serial,
+  id bigserial,
   primary key(id)
 );
 CREATE TABLE ir_act_window (primary key(id)) INHERITS (ir_actions);
@@ -13,11 +13,11 @@ CREATE TABLE ir_act_server (primary key(id)) INHERITS (ir_actions);
 CREATE TABLE ir_act_client (primary key(id)) INHERITS (ir_actions);
 
 CREATE TABLE res_users (
-    id serial NOT NULL,
+    id bigserial NOT NULL,
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
-    company_id integer, -- references res_company,
-    partner_id integer, -- references res_partner,
+    company_id bigint, -- references res_company,
+    partner_id bigint, -- references res_partner,
     active boolean default True,
     create_date timestamp without time zone,
     login varchar(64) NOT NULL UNIQUE,
@@ -26,28 +26,28 @@ CREATE TABLE res_users (
 );
 
 CREATE TABLE res_groups (
-    id serial NOT NULL,
+    id bigserial NOT NULL,
     name jsonb NOT NULL,
     primary key(id)
 );
 
 CREATE TABLE ir_module_category (
-    id serial NOT NULL,
-    create_uid integer, -- references res_users on delete set null,
+    id bigserial NOT NULL,
+    create_uid bigint, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
-    write_uid integer, -- references res_users on delete set null,
-    parent_id integer REFERENCES ir_module_category ON DELETE SET NULL,
+    write_uid bigint, -- references res_users on delete set null,
+    parent_id bigint REFERENCES ir_module_category ON DELETE SET NULL,
     name jsonb NOT NULL,
     primary key(id)
 );
 
 CREATE TABLE ir_module_module (
-    id serial NOT NULL,
-    create_uid integer, -- references res_users on delete set null,
+    id bigserial NOT NULL,
+    create_uid bigint, -- references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
-    write_uid integer, -- references res_users on delete set null,
+    write_uid bigint, -- references res_users on delete set null,
     website character varying,
     summary jsonb,
     name character varying NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE ir_module_module (
     state character varying(16),
     latest_version character varying,
     shortdesc jsonb,
-    category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
+    category_id bigint REFERENCES ir_module_category ON DELETE SET NULL,
     description jsonb,
     application boolean default False,
     demo boolean default False,
@@ -69,20 +69,20 @@ CREATE TABLE ir_module_module (
 );
 
 CREATE TABLE ir_module_module_dependency (
-    id serial NOT NULL,
+    id bigserial NOT NULL,
     name character varying,
-    module_id integer REFERENCES ir_module_module ON DELETE cascade,
+    module_id bigint REFERENCES ir_module_module ON DELETE cascade,
     auto_install_required boolean DEFAULT true,
     primary key(id)
 );
 
 CREATE TABLE ir_model_data (
-    id serial NOT NULL,
-    create_uid integer,
+    id bigserial NOT NULL,
+    create_uid bigint,
     create_date timestamp without time zone DEFAULT (now() at time zone 'UTC'),
     write_date timestamp without time zone DEFAULT (now() at time zone 'UTC'),
-    write_uid integer,
-    res_id integer,
+    write_uid bigint,
+    res_id bigint,
     noupdate boolean DEFAULT False,
     name varchar NOT NULL,
     module varchar NOT NULL,
@@ -91,25 +91,25 @@ CREATE TABLE ir_model_data (
 );
 
 CREATE TABLE res_currency (
-    id serial,
+    id bigserial,
     name varchar NOT NULL,
     symbol varchar NOT NULL,
     primary key(id)
 );
 
 CREATE TABLE res_company (
-    id serial,
+    id bigserial,
     name varchar NOT NULL,
-    partner_id integer,
-    currency_id integer,
+    partner_id bigint,
+    currency_id bigint,
     sequence integer,
     create_date timestamp without time zone,
     primary key(id)
 );
 
 CREATE TABLE res_partner (
-    id serial,
-    company_id integer,
+    id bigserial,
+    company_id bigint,
     create_date timestamp without time zone,
     name varchar,
     primary key(id)

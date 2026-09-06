@@ -20,7 +20,7 @@ class ChatbotMessage(models.Model):
     script_step_id = fields.Many2one(
         "chatbot.script.step", string="Chatbot Step", index="btree_not_null")
     user_script_answer_id = fields.Many2one('chatbot.script.answer', string="User's answer", ondelete="set null")
-    user_raw_script_answer_id = fields.Integer(help="Id of the script answer. Useful for statistics when answer is deleted.")
+    user_raw_script_answer_id = fields.Integer(help="Id of the script answer. Useful for statistics when answer is deleted.", bigint=True)
     user_raw_answer = fields.Html(string="User's raw answer")
 
     _unique_mail_message_id = models.Constraint(

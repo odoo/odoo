@@ -57,7 +57,7 @@ class MailAlias(models.Model):
                                  help="A Python dictionary that will be evaluated to provide "
                                       "default values when creating new records for this alias.")
     alias_force_thread_id = fields.Integer(
-        'Record Thread ID',
+        'Record Thread ID', bigint=True,
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
              "if they did not reply to it. If set, this will disable the creation of new records completely.")
     # owner
@@ -67,7 +67,7 @@ class MailAlias(models.Model):
              "is not necessarily the model given by alias_model_id "
              "(example: project (parent_model) and task (model))")
     alias_parent_thread_id = fields.Integer(
-        'Parent Record Thread ID',
+        'Parent Record Thread ID', bigint=True,
         help="ID of the parent record holding the alias (example: project holding the task creation alias)")
     # incoming configuration (mailgateway)
     alias_contact = fields.Selection(
