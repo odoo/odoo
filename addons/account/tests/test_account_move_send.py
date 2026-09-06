@@ -633,10 +633,24 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard = self.create_send_and_print(invoice1 + invoice2)
         self.assertEqual(wizard.move_ids, invoice1 + invoice2)
         self.assertFalse(wizard.alerts)
-        self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 1, 'label': 'Manually'},
-            'email': {'count': 1, 'label': 'by Email'},
-        })
+        expected_batch_wizard_result = {
+            "email": {
+                "count": 1,
+                "label": "by Email",
+                "moves": [
+                    {"id": invoice1.id, "name": invoice1.name, "partner_name": "partner_a"},
+                ],
+            },
+            "manual": {
+                "count": 1,
+                "label": "Manually",
+                "moves": [
+                    {"id": invoice2.id, "name": invoice2.name, "partner_name": "partner_b"},
+                ],
+            },
+        }
+
+        self.assertEqual(wizard.summary_data, expected_batch_wizard_result)
 
         # Process.
         results = wizard.action_send_and_print()
@@ -674,10 +688,24 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         invoice3 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice1 + invoice2 + invoice3)
         self.assertEqual(wizard.move_ids, invoice1 + invoice2 + invoice3)
-        self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 2, 'label': 'Manually'},
-            'email': {'count': 1, 'label': 'by Email'},
-        })
+        expected_batch_wizard_result = {
+            "email": {
+                "count": 1,
+                "label": "by Email",
+                "moves": [
+                    {"id": invoice1.id, "name": invoice1.name, "partner_name": "partner_a"},
+                ],
+            },
+            "manual": {
+                "count": 2,
+                "label": "Manually",
+                "moves": [
+                    {"id": invoice2.id, "name": invoice2.name, "partner_name": "partner_b"},
+                    {"id": invoice3.id, "name": invoice3.name, "partner_name": "partner_b"},
+                ],
+            },
+        }
+        self.assertEqual(wizard.summary_data, expected_batch_wizard_result)
         wizard.action_send_and_print()
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
@@ -702,10 +730,9 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(len(invoice_attachments), 1)
 
     def test_compute_value_of_send_invoice_batch_wizard(self):
-        invoices = (
-            self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True) +
-            self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
-        )
+        inv1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        inv2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+        invoices = (inv1 + inv2)
         template = self.env.ref('account.email_template_edi_invoice')
         template.write({
             'use_default_to': False,
@@ -716,7 +743,17 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             active_model='account.move', active_ids=invoices.ids))
 
         self.assertEqual(move_send_batch_wizard.move_ids.ids, invoices.ids)
-        self.assertEqual(move_send_batch_wizard.summary_data, {'email': {'count': len(invoices), 'label': 'by Email'}})
+        expected_wizard_batch_result = {
+            "email": {
+                "count": 2,
+                "label": "by Email",
+                "moves": [
+                    {"id": inv1.id, "name": inv1.name, "partner_name": "partner_a"},
+                    {"id": inv2.id, "name": inv2.name, "partner_name": "partner_b"},
+                ],
+            },
+        }
+        self.assertEqual(move_send_batch_wizard.summary_data, expected_wizard_batch_result)
         self.assertFalse(move_send_batch_wizard.alerts)
 
     def test_invoice_multi_email_missing(self):
@@ -726,9 +763,17 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.partner_a.email = None
         self.assertTrue(bool(self.partner_b.email))
         wizard = self.create_send_and_print(invoice1 + invoice2)
-        self.assertEqual(wizard.summary_data, {
-            'email': {'count': 1, 'label': 'by Email'},  # Only one will be actually sent by email
-        })
+        expected_batch_wizard_result = {
+            "email": {
+                "count": 1,
+                "label": "by Email",
+                "moves": [
+                    {"id": invoice2.id, "name": invoice2.name, "partner_name": "partner_b"},
+                ],
+            },
+        }
+
+        self.assertEqual(wizard.summary_data, expected_batch_wizard_result)
         self.assertTrue('account_missing_email' in wizard.alerts)
         self.assertEqual(wizard.alerts['account_missing_email']['level'], 'warning')
         wizard.action_send_and_print()
@@ -771,12 +816,58 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
             patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_all_extra_edis', get_all_extra_edis)
         ):
             wizard = self.create_send_and_print(invoice1 + invoice2)
-            self.assertEqual(wizard.summary_data, {
-                'edi1': {'count': 2, 'label': 'by EDI 1'},
-                'edi2': {'count': 1, 'label': 'by EDI 2'},
-                'manual': {'count': 1, 'label': 'Manually'},
-                'email': {'count': 1, 'label': 'by Email'},
-            })
+            expected_wizard_batch_result = {
+                "edi1": {
+                    "count": 2,
+                    "label": "by EDI 1",
+                    "moves": [
+                        {
+                            "id": invoice1.id,
+                            "name": invoice1.name,
+                            "partner_name": "partner_a",
+                        },
+                        {
+                            "id": invoice2.id,
+                            "name": invoice2.name,
+                            "partner_name": "partner_b",
+                        },
+                    ],
+                },
+                "edi2": {
+                    "count": 1,
+                    "label": "by EDI 2",
+                    "moves": [
+                        {
+                            "id": invoice2.id,
+                            "name": invoice2.name,
+                            "partner_name": "partner_b",
+                        }
+                    ],
+                },
+                "email": {
+                    "count": 1,
+                    "label": "by Email",
+                    "moves": [
+                        {
+                            "id": invoice1.id,
+                            "name": invoice1.name,
+                            "partner_name": "partner_a",
+                        }
+                    ],
+                },
+                "manual": {
+                    "count": 1,
+                    "label": "Manually",
+                    "moves": [
+                        {
+                            "id": invoice2.id,
+                            "name": invoice2.name,
+                            "partner_name": "partner_b",
+                        }
+                    ],
+                },
+            }
+            self.assertEqual(wizard.summary_data, expected_wizard_batch_result)
 
     def test_invoice_multi_child_contact(self):
         """ Test bulk invoice sending will retrieve info from the main partner. """
@@ -784,14 +875,31 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         partner = self.env['res.partner'].create({
             'type': 'invoice',
             'email': 'child@example.com',
-            'parent_id': self.partner_a.id
+            'parent_id': self.partner_a.id,
+            'name': 'child_partner',
         })
         invoice1 = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
         invoice2 = self.init_invoice("out_invoice", amounts=[1000], partner=partner, post=True)
         wizard = self.create_send_and_print(invoice1 + invoice2)
-        self.assertEqual(wizard.summary_data, {
-            'manual': {'count': 2, 'label': 'Manually'}
-        })
+        expected_wizard_batch_result = {
+            "manual": {
+                "count": 2,
+                "label": "Manually",
+                "moves": [
+                    {
+                        "id": invoice1.id,
+                        "name": invoice1.name,
+                        "partner_name": "child_partner",
+                    },
+                    {
+                        "id": invoice2.id,
+                        "name": invoice2.name,
+                        "partner_name": "child_partner",
+                    },
+                ],
+            },
+        }
+        self.assertEqual(wizard.summary_data, expected_wizard_batch_result)
 
     def test_invoice_mail_attachments_widget(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
