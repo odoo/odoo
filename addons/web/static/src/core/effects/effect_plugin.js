@@ -19,7 +19,7 @@ const effectRegistry = registry.category("effects");
  * disabled, displays the message in a notification.
  *
  * @param {Object} [params={}]
- * @param {string} [params.message="Well Done!"]
+ * @param {Translation} [params.message="Well Done!"]
  *    The message in the notice the rainbowman holds or the content of the notification if effects are disabled
  *    Can be a simple a string
  *    Can be a string representation of html (prefer component if you want interactions in the DOM)

@@ -81,7 +81,7 @@ const LIST_STYLES = {
  *
  * @see https://www.unicode.org/reports/tr35/tr35-general.html#ListPatterns for more details.
  *
- * @param {Iterable<string>} values values to format into a list.
+ * @param {Iterable<Translation>} values values to format into a list.
  * @param {{
  *  localeCode?: string;
  *  style?: FormatListStyle;

@@ -20,7 +20,7 @@ export class Typing extends Component {
         this.isBrowserSafari = isBrowserSafari;
     }
 
-    /** @returns {string} */
+    /** @returns {Translation} */
     get text() {
         const typingMemberNames = this.props.member
             ? [this.props.member.name]

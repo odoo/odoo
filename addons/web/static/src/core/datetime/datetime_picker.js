@@ -184,6 +184,7 @@ const PRECISION_LEVELS = new Map()
                 }
 
                 // Generate days of week labels
+                /** @type {(Translation | null)[][]} */
                 const daysOfWeek = weeks[0].days.map((d) => [
                     d.range[0].weekdayShort,
                     d.range[0].weekdayLong,

@@ -369,7 +369,7 @@ function _download(data, filename, mimetype) {
             anchor.href = url;
             anchor.setAttribute("download", fileName);
             anchor.className = "download-js-link";
-            anchor.innerText = _t("downloading...");
+            anchor.textContent = String(_t("downloading..."));
             anchor.style.display = "none";
             anchor.target = "_blank";
             document.body.appendChild(anchor);

@@ -104,7 +104,7 @@ export class Store extends BaseStore {
 
     /**
      * @param {string} [tz]
-     * @returns {string|null}
+     * @returns {Translation|null}
      */
     localTimeIn(tz) {
         const partnerTz = resolveTimeZoneName(tz);

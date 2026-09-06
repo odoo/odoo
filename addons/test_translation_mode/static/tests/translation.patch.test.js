@@ -1,7 +1,26 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { allowTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { encodeTranslation, parseTranslatedText } from "../src/translation.patch";
 
 describe.current.tags("headless");
+
+test("a translated term carries its context", () => {
+    allowTranslations();
+    patchWithCleanup(odoo, { debug: "translate" });
+    const translation = appTranslateFn("Component", "web");
+    expect(parseTranslatedText(String(translation))).toEqual([
+        "Component",
+        [
+            {
+                context: "web",
+                isTranslated: false,
+                source: "Component",
+                translation: "Component",
+            },
+        ],
+    ]);
+});
 
 test("encodeTranslation", () => {
     const metadata = ["web", "Component"];

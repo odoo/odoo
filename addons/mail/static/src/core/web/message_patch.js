@@ -69,7 +69,7 @@ patch(Message.prototype, {
     },
 
     /**
-     * @returns {string}
+     * @returns {Translation}
      */
     formatTracking(trackingFieldInfo, trackingValue) {
         switch (trackingFieldInfo.fieldType) {
@@ -110,7 +110,7 @@ patch(Message.prototype, {
     },
 
     /**
-     * @returns {string}
+     * @returns {Translation}
      */
     formatTrackingOrNone(trackingFieldInfo, trackingValue) {
         const formattedValue = this.formatTracking(trackingFieldInfo, trackingValue);

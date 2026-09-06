@@ -9,7 +9,7 @@ import { onMounted, onWillUnmount } from "@odoo/owl";
  * This hook will subscribe/unsubscribe the given subscription
  * when the caller component will mount/unmount.
  *
- * @param {string} name
+ * @param {Translation} name
  * @param {()=>(void | import("@web/core/commands/command_palette").CommandPaletteConfig)} action
  * @param {CommandOptions} [options]
  */

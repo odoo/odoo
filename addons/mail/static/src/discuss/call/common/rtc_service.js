@@ -371,7 +371,7 @@ export class Rtc extends Record {
     viewToRestore = VIEW_TO_RESTORE.NONE;
     /** @type {RtcLog} */
     logs = {};
-    /** @type {Map<any, {id: any, position: "bottom"|"top", text: string}>} call notifications by id */
+    /** @type {Map<any, {id: any, position: "bottom"|"top", text: Translation}>} call notifications by id */
     notifications = proxy(new Map());
     /** @type {Map<string, number>} timeoutId by notificationId for call notifications */
     timeouts = new Map();
@@ -782,7 +782,7 @@ export class Rtc extends Record {
     /**
      * @param {Object} param0
      * @param {any} param0.id
-     * @param {string} param0.text
+     * @param {Translation} param0.text
      * @param {number} [param0.delay]
      * @param {"bottom"|"top"} [param0.position="bottom"] Corner of the call view the notification is anchored to.
      */
@@ -939,10 +939,10 @@ export class Rtc extends Record {
      *
      * @param {Object} [options]
      * @param {string} [options.confirmIcon] Icon displayed on the confirm button.
-     * @param {string} [options.confirmLabel] Label of the confirm button.
-     * @param {string} [options.description] Secondary text describing the consequences of switching.
-     * @param {string} [options.message] Message displayed in the dialog.
-     * @param {string} [options.title] Title of the dialog.
+     * @param {Translation} [options.confirmLabel] Label of the confirm button.
+     * @param {Translation} [options.description] Secondary text describing the consequences of switching.
+     * @param {Translation} [options.message] Message displayed in the dialog.
+     * @param {Translation} [options.title] Title of the dialog.
      * @returns {Promise<boolean>} Whether the user confirmed the action.
      */
     async askCallSwitchConfirmation({
@@ -1483,7 +1483,7 @@ export class Rtc extends Record {
 
     /**
      * @param {import("models").RtcSession} session
-     * @param {String} entry
+     * @param {Translation} entry
      * @param {Object} [param2]
      * @param {Error} [param2.error]
      * @param {String} [param2.step] current step of the flow

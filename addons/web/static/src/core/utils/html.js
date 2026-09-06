@@ -93,8 +93,8 @@ export function htmlFormatList(values, options) {
 /**
  * Applies list join on content and returns a markup result built for HTML.
  *
- * @param {Iterable<string | Markup>} list
- * @param {string | Markup} [separator]
+ * @param {Iterable<Translation>} list
+ * @param {Translation} [separator]
  * @returns {Markup}
  */
 export function htmlJoin(list, separator = "") {
@@ -155,7 +155,7 @@ export function htmlReplaceAll(content, search, replacer) {
  * using `markup()` they are set as it is. Otherwise they are escaped.
  *
  * @param {string} str The string with placeholders (%s) to insert values into.
- * @param  {...unknown[]} substitutions Primitive values to insert in place of placeholders.
+ * @param  {...unknown} substitutions Primitive values to insert in place of placeholders.
  * @returns {string | Markup}
  */
 export function htmlSprintf(str, ...substitutions) {

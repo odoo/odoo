@@ -10,7 +10,7 @@ import { Component, EventBus, t, useProps } from "@odoo/owl";
 
 /**
  * @typedef {{
- *  name: string;
+ *  name: Translation;
  *  action: ()=>(void | CommandPaletteConfig);
  *  category?: string;
  *  href?: string;
@@ -231,7 +231,7 @@ export const commandService = {
 
         return {
             /**
-             * @param {string} name
+             * @param {Translation} name
              * @param {()=>(void | CommandPaletteConfig)} action
              * @param {CommandOptions} [options]
              * @returns {() => void}

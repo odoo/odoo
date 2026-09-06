@@ -1,4 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { markup } from "@odoo/owl";
 
 import {
     formatList,
@@ -33,6 +34,7 @@ describe("localeCompare", () => {
     test("puts empty strings at the end when emptyLast option is true", () => {
         expect(localeCompare("", "a", { emptyLast: false })).toBeLessThan(0);
         expect(localeCompare("", "a", { emptyLast: true })).toBeGreaterThan(0);
+        expect(localeCompare(markup(""), "a", { emptyLast: true })).toBeGreaterThan(0);
     });
 });
 
