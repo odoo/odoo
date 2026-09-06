@@ -25,7 +25,7 @@ class TestFuzzy(ProductVariantsCommon):
         expected_fields = [
             'name', 'variants_default_code',
             'description_ecommerce', 'attribute_line_ids.value_ids.name',
-            'product_tag_ids.name', 'description_sale',
+            'product_tag_ids.name', 'public_categ_ids.name', 'description_sale',
         ]
         options = {
             'displayImage': False, 'displayDescription': True, 'displayExtraLink': False,
@@ -174,6 +174,7 @@ class TestFuzzy(ProductVariantsCommon):
                 'name': 'Some fiscal postion'
             })
             results = website._search_render_results(results, 5)
-            result_tags = results[0]['results_data'][0]['product_tag_ids']
-            self.assertEqual(len(result_tags), 1)
-            self.assertEqual(result_tags[0]['name'], 'Some tag1')
+            badges = results[0]['results_data'][0]['badges']
+            badge_names = [badge['name'] for badge in badges]
+            self.assertIn('Some tag1', badge_names)
+            self.assertNotIn('Some tag2', badge_names)

@@ -30,6 +30,12 @@ class Website(models.Model):
         forum_menu.unlink()
         super().configurator_set_menu_links(menu_company, module_data)
 
+    def _get_search_scopes(self):
+        return {
+            **super()._get_search_scopes(),
+            'forums': {'label': self.env._("Forums"), 'url': '/website/search/forums'},
+        }
+
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)
         if search_type in ['forums', 'forum_post', 'all']:

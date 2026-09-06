@@ -4,12 +4,13 @@
 <t t-name="website.SearchbarOption">
     <BuilderRow label.translate="Search within">
         <BuilderSelect action="'setSearchType'" dataAttributeAction="'searchType'" id="'scope_opt'" preview="false">
-            <BuilderSelectItem dataAttributeActionValue="'all'" actionValue="'/website/search'" id="'search_all_opt'">
-                Everything
-            </BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'pages'" actionValue="'/pages'" id="'search_pages_opt'">
-                Pages
-            </BuilderSelectItem>
+            <t t-foreach="this.searchScopes" t-as="scope" t-key="scope.search_type">
+                <BuilderSelectItem
+                    dataAttributeActionValue="scope.search_type"
+                    actionValue="scope.url"
+                    id="'search_' + scope.search_type + '_opt'"
+                    t-out="scope.label"/>
+            </t>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Order by">
@@ -28,7 +29,9 @@
         <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" min="0"/>
         <span class="flex-grow-1 w-100">results</span>
     </BuilderRow>
+</t>
 
+<t t-name="website.SearchbarStyleOption">
     <BuilderRow label.translate="Style">
         <BuilderSelect action="'setSearchbarStyle'">
             <BuilderSelectItem actionParam="'default'">Default Input Style</BuilderSelectItem>
@@ -41,7 +44,19 @@
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <searchbar_option
             selector=".s_searchbar_input"
+            exclude=".o_header_searchbar"
             applyTo=".search-query"/>
+        <searchbar_style_option
+            template="website.SearchbarStyleOption"
+            selector=".s_searchbar_input"
+            exclude=".o_header_searchbar"
+            applyTo=".search-query"/>
+        <searchbar_option
+            selector=".o_header_searchbar"
+            applyTo=".search-query"
+            editableOnly="false"
+            props='{ "isMainSearch": true }'
+            groups='["website.group_website_designer"]'/>
     </xpath>
 </t>
 
