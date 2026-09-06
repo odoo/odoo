@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="model_res_partner_enrich" model="ir.actions.server">
+        <field name="name">Enrich</field>
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="binding_model_id" ref="model_res_partner"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_enrich_partner()
+        </field>
+    </record>
+</odoo>
