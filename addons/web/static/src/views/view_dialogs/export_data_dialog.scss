@@ -1,34 +1,63 @@
 .o_export_data_dialog .modal-body {
     display: flex;
-
-    .row {
-        flex: 1;
+    @include media-breakpoint-down(md) {
+        display: block;
     }
 
-    .o_left_panel, .o_right_panel {
+    .o_export_grid {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        column-gap: 1.5rem;
+        row-gap: 0.5rem;
 
-        .o_left_field_panel, .o_right_field_panel {
-            user-select: none;
+        @include media-breakpoint-down(md) {
+            grid-auto-flow: row;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: none;
 
-            .o_export_tree_item {
-                &:hover:not(.o_expanded) {
-                    background: rgba($o-brand-odoo, .7);
-                    color: white;
-                }
+            .o_left_field_panel, .o_right_field_panel {
+                min-height: 8rem;
+                max-height: 35vh;
+            }
+        }
+    }
 
-                &.o_expanded {
-                    border-bottom: 1px solid grey;
-                    background: rgba($o-brand-odoo, .2);
-                }
+    .o_export_search_input:not(:placeholder-shown) + .oi {
+        display: none;
+    }
 
-                .o_expand_parent {
-                    inset: 4px auto auto 0.5em;
-                    line-height: inherit;
-                }
+    .o_export_languages .o-autocomplete {
+        flex: 1 0 80px;
+
+        .o_input {
+            height: 100%;
+            border: none;
+            --o-input-background-color: transparent;
+        }
+    }
+
+    .o_left_field_panel, .o_right_field_panel {
+        user-select: none;
+
+        .o_export_tree_item {
+            &:hover:not(.o_expanded) {
+                background: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor});
             }
 
-            .o_export_field_sortable > *:not(.o_remove_field) {
-                cursor: grab;
+            .o_expand_parent {
+                left: -1rem;
+            }
+        }
+
+        .o_export_field_sortable {
+            cursor: grab;
+
+            .o_remove_field {
+                cursor: pointer;
             }
         }
     }

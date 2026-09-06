@@ -114,18 +114,26 @@ class TestExport(XlsxCreatorCase):
             )
             return json.loads(res.content)['result']
 
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
         export = self.env['ir.exports'].create([{
             'name': 'Export of 3 fields',
             'resource': 'res.users',
             'export_fields': [(0, 0, {'name': 'partner_id'}),
                               (0, 0, {'name': 'login'}),
-                              (0, 0, {'name': 'active'})]
+                              (0, 0, {'name': 'active'})],
+            'export_language_ids': [Command.set(lang_fr.ids)],
         }])
 
-        self.assertEqual(get_namelist(export.id),
-                         [{'field_type': 'many2one', 'id': 'partner_id', 'string': 'Related Partner'},
-                          {'field_type': 'char', 'id': 'login', 'string': 'Login'},
-                          {'field_type': 'boolean', 'id': 'active', 'string': 'Active'}])
+        self.assertEqual(get_namelist(export.id), {
+            'fields': [{'field_type': 'many2one', 'id': 'partner_id', 'string': 'Related Partner', 'translate': False},
+                       {'field_type': 'char', 'id': 'login', 'string': 'Login', 'translate': False},
+                       {'field_type': 'boolean', 'id': 'active', 'string': 'Active', 'translate': False}],
+            'export_languages': ['fr_FR'],
+        })
+
+        # languages that are uninstalled afterwards are not part of the template anymore
+        lang_fr.active = False
+        self.assertEqual(get_namelist(export.id)['export_languages'], [])
 
     def test_import_compatible_export(self):
         test_model = 'res.company'
