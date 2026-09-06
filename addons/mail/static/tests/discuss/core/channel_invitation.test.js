@@ -8,8 +8,14 @@ import {
     start,
     startServer,
     MENU_ACTIVE_IDS,
+    pasteMulti,
+    selectText,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import {
+    parseHtmlClipboard,
+    parseTextClipboard,
+} from "@mail/discuss/core/common/channel_invitation_clipboard";
+import { describe, expect, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -293,4 +299,273 @@ test("Invite sidebar action has the correct title for group chats", async () => 
     await click("button[title='Chat Actions']");
     await click(".o-dropdown-item:text('Invite People')");
     await contains(".modal-title:text('Mitchell Admin and Demo')");
+});
+
+test("Pasted list of emails in the invite form should be joined with commas", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test1\ntest2\n test3",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3" });
+});
+
+test("Pasted html table of emails (coming from spreadsheets) in the invite form should be joined with commas", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>`,
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3" });
+});
+
+test("Multi column pasted html table of emails should take all cells and be joined with commas", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td><td>test2</td></tr>
+                        <tr><td>test3</td><td>test4</td></tr>
+                    </table>`,
+        "text/plain": "test1\ntest2\n test3",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3,test4" });
+});
+
+test("Pasting on selected text, should replace the selection with the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1");
+    await selectText(".o-discuss-ChannelInvitation-search", { start: 1, end: 4 });
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test2\ntest3",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "t,test2,test3,1" });
+});
+
+test("Pasting on selected text, should keep commas around the selection when replacing it with the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1,test2,test3");
+    await selectText(".o-discuss-ChannelInvitation-search", { start: 6, end: 11 });
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test4\ntest5",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test1,test4,test5,test3" });
+});
+
+test("Pasting in front of existing text, should keep the existing text after the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1,test2");
+    await selectText(".o-discuss-ChannelInvitation-search", { start: 0, end: 0 });
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test3\ntest4",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test3,test4,test1,test2" });
+});
+
+test("Pasting at the end of existing text, should keep the existing text before the pasted text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await insertText(".o-discuss-ChannelInvitation-search", "test1,test2");
+    await selectText(".o-discuss-ChannelInvitation-search", { start: 11, end: 11 });
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/plain": "test3\ntest4",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test1,test2,test3,test4" });
+});
+
+test("Pasting document with table should fallback to text/plain if it contains other elements", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>
+                    <p>other element</p>`,
+        "text/plain": "test4\ntest5\n test6",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test4,test5,test6" });
+});
+
+test("Pasting document with multiple tables should fallback to text/plain", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>
+                    <table><tr><td>test4</td></tr>
+                        <tr><td>test5</td></tr>
+                        <tr><td>test6</td></tr>
+                    </table>`,
+        "text/plain": "test7\ntest8\n test9",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test7,test8,test9" });
+});
+
+test("Pasting html with no table should fallback to text/plain", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "group",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Chat Actions']");
+    await click(".o-dropdown-item:text('Invite People')");
+    await pasteMulti(".o-discuss-ChannelInvitation-search", {
+        "text/html": `<p>test1</p>
+                    <p>test2</p>
+                    <p>test3</p>`,
+        "text/plain": "test4\ntest5\n test6",
+    });
+    await contains(".o-discuss-ChannelInvitation-search", { value: "test4,test5,test6" });
+});
+
+test("Empty lines filtered when pasting a list of emails (HTML) in the invite form", async () => {
+    const htmlTableWithEmptyLines = `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td></td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>`;
+    expect(parseHtmlClipboard(htmlTableWithEmptyLines)).toBe("test1,test2,test3");
+});
+
+test("Document with multiple tables should not be parsed", async () => {
+    const htmlTableWithMultipleTables = `<table><tr><td>test1</td></tr>
+                        <tr><td>test2</td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>
+                    <table><tr><td>test4</td></tr>
+                        <tr><td>test5</td></tr>
+                        <tr><td>test6</td></tr>
+                    </table>`;
+    expect(parseHtmlClipboard(htmlTableWithMultipleTables)).toBe(null);
+});
+
+test("Empty lines filtered when pasting a list of emails (plain text) in the invite form", async () => {
+    const plainTextWithEmptyLines = "test1\n\ntest2\n test3";
+    expect(parseTextClipboard(plainTextWithEmptyLines)).toBe("test1,test2,test3");
+});
+
+test("Lines should be trimmed when pasting a list of emails (HTML) in the invite form", async () => {
+    const htmlTableWithSpaces = `<table><tr><td>test1</td></tr>
+                        <tr><td> test2 </td></tr>
+                        <tr><td>test3</td></tr>
+                    </table>`;
+    expect(parseHtmlClipboard(htmlTableWithSpaces)).toBe("test1,test2,test3");
+});
+
+test("Lines should be trimmed when pasting a list of emails (plain text) in the invite form", async () => {
+    const plainTextWithSpaces = "test1\n test2 \n test3";
+    expect(parseTextClipboard(plainTextWithSpaces)).toBe("test1,test2,test3");
 });
