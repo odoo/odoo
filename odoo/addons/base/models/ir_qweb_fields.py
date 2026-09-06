@@ -1,5 +1,4 @@
 from datetime import time
-import logging
 import math
 import re
 
@@ -15,8 +14,9 @@ from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.tools.translate import _, LazyTranslate
 
+from .ir_qweb import QwebCallParameters
+
 _lt = LazyTranslate(__name__)
-_logger = logging.getLogger(__name__)
 
 
 def nl2br(string: str) -> Markup:
@@ -904,17 +904,48 @@ class IrQwebFieldContact(models.AbstractModel):
 
 class IrQwebFieldQweb(models.AbstractModel):
     _name = 'ir.qweb.field.qweb'
-    _description = 'Qweb Field qweb'
-    _inherit = ['ir.qweb.field.many2one']
+    _description = 'Qweb Field Qweb'
+    _inherit = ['ir.qweb.field']
+
+    @api.model
+    def value_to_html(self, value, options):
+        if not value:
+            return False
+
+        if isinstance(value, models.BaseModel):
+            value = value.sudo().display_name
+            if not value:
+                return False
+            return nl2br(value)
+
+        name = f"QwebField<<{options.get('__qweb_name', '?')}>>"
+        node = etree.fromstring(f'<t t-name="{name}">{value}</t>', etree.HTMLParser(encoding='utf-8', recover=True))[0][0]
+        for n in node.iter():
+            if n.text:
+                n.text = str(n.text).replace('<', '&lt;').replace('>', '&gt;')
+            if n.tail:
+                n.tail = str(n.tail).replace('<', '&lt;').replace('>', '&gt;')
+
+        return QwebCallParameters(
+            context=dict(restricted_expr=options.get('restricted', True)),
+            view_ref=node,
+            method=None,
+            values={'record': options['__qweb_record']} if options.get('__qweb_record') else {},
+            root_values=None,
+            scope='restricted',
+            directive=options['type'],
+            path_xml=None,
+        )
 
     @api.model
     def record_to_html(self, record, field_name, options):
-        view = record[field_name]
-        if not view:
+        if not record:
+            return False
+        value = record.with_context(**self.env.context)[field_name]
+        if not value:
             return ''
-
-        if view._name != "ir.ui.view":
-            _logger.warning("%s.%s must be a 'ir.ui.view', got %r.", record, field_name, view._name)
-            return ''
-
-        return self.env['ir.qweb']._render(view.id, options.get('values', {}))
+        options['__qweb_name'] = "QwebField<<%s(%s), %s>>" % ((record and record._name), (record and record.id), field_name)
+        options['__qweb_record'] = record
+        if isinstance(value, models.BaseModel) and value._name == "ir.ui.view":
+            options['restricted'] = False
+        return self.value_to_html(value, options)
