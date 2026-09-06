@@ -23,5 +23,5 @@ class HrExpense(models.Model):
                     vals['analytic_distribution'] = vals.get('analytic_distribution', analytic_distribution)
         return super().create(vals_list)
 
-    def _create_company_paid_moves(self):
-        return super(HrExpense, self.with_context(project_id=False))._create_company_paid_moves()
+    def _get_company_paid_move_creation_context(self):
+        return {**super()._get_company_paid_move_creation_context(), 'project_id': False}

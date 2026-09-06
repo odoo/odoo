@@ -75,7 +75,7 @@ class TestExpenseMargin(TestExpenseCommon):
 
         expense.action_submit()
         expense._do_approve()  # Skip duplicate wizard
-        self.post_expenses_with_wizard(expense)
+        self.post_expenses(expense)
 
         self.assertAlmostEqual(sale_order.order_line[0].purchase_price, 1000.0)
         self.assertFalse(sale_order.order_line[0].is_expense)

@@ -72,19 +72,7 @@ class HrExpense(models.Model):
             split_value['sale_order_id'] = self.sale_order_id.id
         return vals
 
-    def _prepare_post_wizard_vals(self):
-        vals = super()._prepare_post_wizard_vals()
-        reinvoiced_expenses = self.filtered('sale_order_id')
-        vals.update({
-            'show_attach_receipts_to_invoice': bool(reinvoiced_expenses),
-            'attach_receipts_to_invoice': bool(reinvoiced_expenses) and all(
-                expense.product_id.reinvoice_policy == 'cost'
-                for expense in reinvoiced_expenses
-            ),
-        })
-        return vals
-
-    def action_post(self):
+    def _do_approve(self, check=True):
         # EXTENDS hr_expense
         # When posting expense, we need the analytic entries to be generated, because reinvoicing uses analytic accounts.
         # We then ensure the proper analytic acocunt is given in the distribution and if not,
@@ -93,7 +81,7 @@ class HrExpense(models.Model):
             if expense.sale_order_id and not expense.analytic_distribution:
                 analytic_account = self.env['account.analytic.account'].create(expense.sale_order_id._prepare_analytic_account_data())
                 expense.analytic_distribution = {analytic_account.id: 100}
-        return super().action_post()
+        return super()._do_approve(check)
 
     def action_open_sale_order(self):
         self.ensure_one()

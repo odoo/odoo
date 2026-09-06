@@ -186,7 +186,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         """
         CASE 1: Creation of the expenses moves. The sale order lines are created.
         """
-        self.post_expenses_with_wizard(self.sale_expense_all)
+        self.post_expenses(self.sale_expense_all)
 
         self.assertRecordValues(self.expense_sale_order.order_line, [
             # [0] Line not created from a re-invoiced, should never be changed
@@ -205,7 +205,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         CASE 2: Reset to draft of the expenses, the quantities of the corresponding SOL are set to 0
         """
         # CASE 1 steps
-        self.post_expenses_with_wizard(self.sale_expense_all)
+        self.post_expenses(self.sale_expense_all)
 
         # CASE 2 steps
         self.sale_expense_all.account_move_id.button_draft()
@@ -229,7 +229,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         CASE 3: Re-Approve and Re-Post the expense after a reset, creating new SOLs with the correct quantities
         """
         # CASE 1 steps
-        self.post_expenses_with_wizard(self.sale_expense_all)
+        self.post_expenses(self.sale_expense_all)
 
         # CASE 2 steps
         self.sale_expense_all.account_move_id.button_draft()
@@ -239,7 +239,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         # CASE 3 steps
         self.sale_expense_all.action_submit()
         self.sale_expense_all._do_approve()  # Skip duplicate wizard
-        self.post_expenses_with_wizard(self.sale_expense_all)
+        self.post_expenses(self.sale_expense_all)
 
         self.assertRecordValues(self.expense_sale_order.order_line, [
             # [0] Line not created from a re-invoiced, should never be changed
@@ -265,7 +265,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         CASE 4: Reset to draft of the expenses move, the quantities of the corresponding SOL are set to 0
         """
         # CASE 1 steps
-        self.post_expenses_with_wizard(self.sale_expense_all)
+        self.post_expenses(self.sale_expense_all)
 
         # CASE 4 steps
         self.sale_expense_all.account_move_id.button_draft()
@@ -287,13 +287,13 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         CASE 5: Re-Post the expenses move, creating new SOLs with the correct quantities
         """
         # CASE 1 steps
-        self.post_expenses_with_wizard(self.sale_expense_all)
+        self.post_expenses(self.sale_expense_all)
 
         # CASE 4 steps
         self.sale_expense_all.account_move_id.button_draft()
 
         # CASE 5 steps
-        self.sale_expense_all.account_move_id.action_post()
+        self.post_expenses(self.sale_expense_all)
 
         self.assertRecordValues(self.expense_sale_order.order_line, [
             # [0] Line not created from a re-invoiced, should never be changed
@@ -319,7 +319,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
         CASE 6: Reverse the expenses move, the quantities of the corresponding SOL are reset to 0
         """
         # CASE 1 steps
-        self.post_expenses_with_wizard(self.sale_expense_all)
+        self.post_expenses(self.sale_expense_all)
 
         # CASE 6 steps
         self.sale_expense_all.account_move_id._reverse_moves()
@@ -363,8 +363,8 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
 
         sale_expense_copies_all.action_submit()
         sale_expense_copies_all._do_approve()  # Skip duplicate wizard
-        self.post_expenses_with_wizard(sale_expense_original_all)
-        self.post_expenses_with_wizard(sale_expense_copies_all)  # To ensure there are two different moves
+        self.post_expenses(sale_expense_original_all)
+        self.post_expenses(sale_expense_copies_all)  # To ensure there are two different moves
 
         # Check that all the expenses can be found on the sale order
         self.assertRecordValues(self.expense_sale_order.order_line, [
@@ -440,7 +440,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
 
         expense.action_submit()
         expense.action_approve()
-        self.post_expenses_with_wizard(expense)
+        self.post_expenses(expense)
 
         self.assertRecordValues(sale_order.order_line, [
             # Original SO line:
@@ -523,7 +523,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
 
         expense.action_submit()
         expense._do_approve()
-        self.post_expenses_with_wizard(expense)
+        self.post_expenses(expense)
 
         self.assertRecordValues(sale_order.order_line, [
             # Original SO line:
@@ -554,7 +554,7 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
 
         expense.action_submit()
         expense._do_approve()
-        expense.action_post()
+        self.post_expenses(expense)
 
         self.assertRecordValues(self.expense_sale_order.order_line, [
             # Original SO line:
