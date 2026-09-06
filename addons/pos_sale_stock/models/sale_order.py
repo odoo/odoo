@@ -14,17 +14,25 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    @api.depends('pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')
+    @api.depends('pos_order_line_ids.qty_delivered', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
 
     def _prepare_qty_delivered(self):
         delivered_qties = super()._prepare_qty_delivered()
 
+        def _get_pos_line_qty(pos_line):
+            # Refunds return the goods through incoming pickings, which `qty_delivered` ignores.
+            return pos_line.qty_delivered if pos_line.qty > 0 else pos_line.qty
+
         def _get_pos_delivered_qty(sale_line, pos_lines):
-            if all(picking.state == "done" for picking in pos_lines.order_id.picking_ids):
+            pickings = pos_lines.order_id.picking_ids
+            if pickings and all(picking.state == "done" for picking in pickings):
                 # Sum converted quantities from POS to sale order UoM
-                return sum(self._convert_qty(sale_line, pos_line.qty, "p2s") for pos_line in pos_lines)
+                return sum(
+                    self._convert_qty(sale_line, _get_pos_line_qty(pos_line), "p2s")
+                    for pos_line in pos_lines
+                )
             return 0
 
         def line_filter(line):

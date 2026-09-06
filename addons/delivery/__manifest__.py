@@ -25,6 +25,7 @@ The system is able to add and compute the shipping line.
         "views/ir_module_module_views.xml",
         "views/payment_form_templates.xml",
         "views/payment_provider_views.xml",
+        "views/portal_templates.xml",
         "views/res_partner_views.xml",
         "views/sale_order_views.xml",
         "wizard/res_config_settings_views.xml",

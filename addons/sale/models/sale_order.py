@@ -2,6 +2,7 @@
 # ruff: noqa: PLW0642
 
 import json
+import math
 from datetime import timedelta
 from itertools import groupby
 
@@ -167,7 +168,8 @@ class SaleOrder(models.Model):
 
     validity_date = fields.Date(
         string="Expiration",
-        help="Validity of the quotation. After this date, you will no longer be able to sign and pay it.",
+        help="Validity of the quotation."
+        " After this date, you will no longer be able to sign and pay it.",
         compute="_compute_validity_date",
         store=True,
         readonly=False,
@@ -407,6 +409,12 @@ class SaleOrder(models.Model):
         " 'done' or 'authorized' and linked to this order.",
         compute="_compute_amount_paid",
         compute_sudo=True,
+    )
+    amount_unpaid = fields.Monetary(
+        string="Amount Remaining",
+        help="Amount left to pay to avoid double payment or double invoicing.",
+        compute="_compute_amount_unpaid",
+        store=True,
     )
 
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
@@ -916,12 +924,32 @@ class SaleOrder(models.Model):
             )
             trans.has_authorized_transaction_ids = bool(trans.authorized_transaction_ids)
 
-    @api.depends("transaction_ids")
+    @api.depends("transaction_ids.state", "transaction_ids.amount")
     def _compute_amount_paid(self):
         """Sum of the amount paid through all transactions for this SO."""
         for order in self:
             order.amount_paid = sum(
                 tx.amount for tx in order.transaction_ids if tx.state in ("authorized", "done")
+            )
+
+    @api.depends("amount_total", "amount_paid", "amount_invoiced", "transaction_ids.invoice_ids")
+    def _compute_amount_unpaid(self):
+        for order in self:
+            online_payments_invoices = order.transaction_ids.filtered(
+                lambda tx: tx.state in {"authorized", "done"}
+            ).invoice_ids
+            offline_invoice_lines = order.order_line.invoice_lines.filtered(
+                lambda line: (
+                    line.parent_state in {"draft", "posted"}
+                    and line.move_id not in online_payments_invoices
+                )
+            )
+            offline_invoice_amount = sum(
+                math.copysign(line.price_total, -line.balance) for line in offline_invoice_lines
+            )
+
+            order.amount_unpaid = max(
+                order.amount_total - order.amount_paid - offline_invoice_amount, 0
             )
 
     def _get_advantages(self):

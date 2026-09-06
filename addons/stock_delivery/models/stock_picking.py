@@ -71,10 +71,30 @@ class StockPicking(models.Model):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
+    def _pre_action_done_hook(self):
+        res = super()._pre_action_done_hook()
+        if (
+            res is True
+            and not self.env.context.get('amount_on_delivery_collected')
+            and self._filtered_pending_delivery_payment()
+        ):
+            return self.env['pay.on.delivery']._get_records_action(target='new')
+        return res
+
+    def _filtered_pending_delivery_payment(self):
+        return self.filtered(
+            lambda picking: (
+                picking.location_dest_id.usage == 'customer'
+                and picking.sale_id.sudo().transaction_ids._filtered_pending_delivery_payment()
+                and picking.sale_id.amount_unpaid
+            )
+        )
+
     def button_validate(self):
         res = super().button_validate()
         if res is not True:
             return res
+        # FIXME: this won't run if the next action is to print the picking report
         for picking in self:
             # `_get_new_picking_values` is used to propagate the carrier before a picking is created (i.e. carrier is set on an SO).
             # Whereas this case handles the propagation of carrier after the picking validation as the carrier maybe set

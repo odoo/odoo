@@ -128,6 +128,21 @@ class PoSSaleSyncCommon:
         return self._sync_paid_pos_order(
             down_payment_lines, partner=sale_order.partner_id, to_invoice=to_invoice)
 
+    def _settle_in_pos(self, sale_order):
+        pos_order_id = self._sync_paid_pos_order(
+            [{
+                'product': line.product_id,
+                'qty': line.product_uom_qty,
+                'price_unit': line.price_unit,
+                'extra_values': {
+                    'sale_order_line_id': line.id,
+                    'sale_order_origin_id': sale_order.id,
+                },
+            } for line in sale_order.order_line],
+            partner=sale_order.partner_id,
+        )
+        return self.env['pos.order'].browse(pos_order_id)
+
 
 class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
     _test_user_groups = None  # FIXME list needed groups
@@ -1311,49 +1326,6 @@ class TestPoSSale(PoSSaleSyncCommon, TestPointOfSaleHttpCommon):
             sale_order.amount_unpaid, 100.0,
             "amount_unpaid must equal amount_total after a full POS refund; "
             "a positive refund line must be treated as negative in the computation",
-        )
-
-    def test_for_ecommerce_postpaid_order_amount_unpaid_equals_amount_paid(self):
-        if self.env['ir.module.module']._get('website_sale_collect').state != 'installed':
-            self.skipTest("This test requires 'Click & Collect' module to be installed.")
-        partner_1 = self.env['res.partner'].create({'name': 'A Test Partner 1'})
-        self.env.user.group_ids += self.quick_ref('sales_team.group_sale_salesman')
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'lst_price': 10.0,
-        })
-        sale_order = self.env['sale.order'].create({
-            'partner_id': partner_1.id,
-            'order_line': [Command.create({
-                'product_id': product_a.id,
-                'product_uom_qty': 2,
-                'price_unit': product_a.lst_price
-            })]
-        })
-        provider = self.env['payment.provider'].create({
-            'name': 'Test',
-            'code': 'custom',
-            'custom_mode': 'on_site',
-        })
-        payment_method = self.env["payment.method"].create({
-            "name": "Payment method",
-            "code": "pay_on_site",
-            "provider_id": provider.id,
-        })
-        self.assertTrue(payment_method._is_postpaid())
-        self.env['payment.transaction'].create({
-            'provider_id': provider.id,
-            'payment_method_id': payment_method.id,
-            'amount': sale_order.amount_total,
-            'currency_id': sale_order.currency_id.id,
-            'partner_id': sale_order.partner_id.id,
-            'state': 'done',
-            'sale_order_ids': [Command.set(sale_order.ids)],
-        })
-        self.assertEqual(
-            sale_order.amount_unpaid, sale_order.amount_paid,
-            "The amount_unpaid for the SO should be equal to amount_paid after a postpaid transaction."
         )
 
 

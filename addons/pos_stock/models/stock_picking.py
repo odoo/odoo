@@ -25,10 +25,13 @@ class StockPicking(models.Model):
         """We'll create some picking based on order_lines"""
 
         pickings = self.env['stock.picking']
-        stockable_lines = lines.filtered(lambda l: l.product_id.type == 'consu' and not l.product_id.uom_id.is_zero(l.qty))
+        stockable_lines = lines.filtered(
+            lambda l: l.product_id.type == 'consu'
+            and not l.product_id.uom_id.is_zero(l._get_qty_to_move())
+        )
         if not stockable_lines:
             return pickings
-        positive_lines = stockable_lines.filtered(lambda l: l.qty > 0)
+        positive_lines = stockable_lines.filtered(lambda l: l._get_qty_to_move() > 0)
         negative_lines = stockable_lines - positive_lines
 
         if positive_lines:
@@ -114,7 +117,7 @@ class StockPicking(models.Model):
             'picking_id': self.id,
             'picking_type_id': self.picking_type_id.id,
             'product_id': first_line.product_id.id,
-            'product_uom_qty': abs(sum(order_lines.mapped('qty'))),
+            'product_uom_qty': abs(sum(line._get_qty_to_move() for line in order_lines)),
             'location_id': self.location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
