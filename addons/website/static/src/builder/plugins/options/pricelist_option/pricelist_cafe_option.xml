@@ -8,13 +8,13 @@
             actionParam="{ itemClass:'s_pricelist_cafe_item', descriptionClass: 's_pricelist_cafe_item_description', descriptionExtraClass: 'o_small-fs' }"/>
     </BuilderRow>
     <BuilderContext applyTo="'.s_pricelist_cafe_item_line'">
-        <BorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Separator" direction="'top'"/>
+        <WebsiteBorderConfigurator withRoundCorner="false" withBSClass="false" label.translate="Separator" direction="'top'"/>
     </BuilderContext>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
-        <price_list_cafe_description_option template="website.PriceListCafeDescriptionOption" selector=".s_pricelist_cafe"/>
+        <price_list_cafe_description_option selector=".s_pricelist_cafe"/>
     </xpath>
 </t>
 

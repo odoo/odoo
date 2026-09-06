@@ -1,6 +1,8 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 
 export class ProductCatalogOptionPlugin extends Plugin {
     static id = "productCatalogOptionPlugin";
@@ -26,4 +28,13 @@ export class ProductCatalogOptionPlugin extends Plugin {
     };
 }
 
+export class ProductCatalogDescriptionOption extends BaseOptionComponent {
+    static id = "product_catalog_description_option";
+    static template = "website.ProductCatalogDescriptionOption";
+    static components = { WebsiteBorderConfigurator };
+}
+
 registry.category("website-plugins").add(ProductCatalogOptionPlugin.id, ProductCatalogOptionPlugin);
+registry
+    .category("website-options")
+    .add(ProductCatalogDescriptionOption.id, ProductCatalogDescriptionOption);
