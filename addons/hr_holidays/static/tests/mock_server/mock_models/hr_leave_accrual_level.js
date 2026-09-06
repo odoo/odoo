@@ -41,7 +41,7 @@ export class HrLeaveAccrualLevel extends models.ServerModel {
             added_value_type: "day",
             action_with_unused_accruals: "all",
             carryover_options: "limited",
-            postpone_max_days: 10,
+            max_carriedover_duration: 10,
             maximum_leave: 25,
         },
         // Level 4: After 5 Years, Yearly accrual with yearly cap & balance cap

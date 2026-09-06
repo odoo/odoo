@@ -137,14 +137,13 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(employee_allocation.name, "Custom Time Off Test (10.0 day(s))")
 
-    def change_allocation_day_unit(self):
+    def test_change_allocation_day_unit(self):
         self.work_entry_type.write({
             'name': 'Custom Time Off Test',
-            'allocation_validation_type': 'hr'
+            'allocation_validation_type': 'hr',
         })
 
         employee_allocation = self.env['hr.leave.allocation'].create({
-            'holiday_type': 'employee',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
         })
@@ -203,14 +202,13 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation.number_of_days += 8  # +8 days * 7 hours/day = +56 hours
         self.assertEqual(allocation.number_of_hours_display, 112)  # 56 + 56
 
-    def change_allocation_hours_unit(self):
+    def test_change_allocation_hours_unit(self):
         self.work_entry_type.write({
             'name': 'Custom Time Off Test',
-            'allocation_validation_type': 'hr'
+            'allocation_validation_type': 'hr',
         })
 
         employee_allocation = self.env['hr.leave.allocation'].create({
-            'holiday_type': 'employee',
             'employee_id': self.employee.id,
             'work_entry_type_id': self.work_entry_type.id,
             'type_request_unit': 'hour',
@@ -252,7 +250,7 @@ class TestAllocations(TestHrHolidaysCommon):
         })
         allocation_with_pending_leave.action_approve()
         pending_leave = self._create_leave(
-            self.work_entry_type_paid, self.employee_responsible, date(2024, 1, 15), date(2024, 1, 19),
+            self.employee_responsible, self.work_entry_type_paid, date(2024, 1, 15), date(2024, 1, 19),
             validate=False, user=self.user_responsible,
         )
         self.assertEqual(pending_leave.state, 'confirm')
@@ -704,18 +702,6 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation.action_approve()
         return allocation
 
-    def _create_leave(self, work_entry_type, employee, date_from, date_to, validate=True, user=False):
-        leave = self.env['hr.leave'].with_user(user or self.env.user).create({
-            'name': 'Leave Request',
-            'work_entry_type_id': work_entry_type.id,
-            'request_date_from': date_from,
-            'request_date_to': date_to,
-            'employee_id': employee.id,
-        })
-        if validate:
-            leave.action_approve()
-        return leave
-
     def test_change_regular_allocation_date_to(self):
         allocation = self._create_validated_allocation(
             self.work_entry_type_paid, self.employee, date(2024, 1, 1), date(2024, 1, 30),
@@ -723,7 +709,7 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation.write({'date_to': date(2024, 1, 31)})
         self.assertEqual(allocation.date_to, date(2024, 1, 31))
 
-        self._create_leave(self.work_entry_type_paid, self.employee, date(2024, 1, 5), date(2024, 1, 10))
+        self._create_leave(self.employee, self.work_entry_type_paid, date(2024, 1, 5), date(2024, 1, 10))
         allocation.write({'date_to': date(2024, 1, 10)})
         self.assertEqual(allocation.date_to, date(2024, 1, 10))
 
@@ -763,7 +749,7 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation.write({'date_to': date(2024, 1, 20)})
             self.assertEqual(allocation.date_to, date(2024, 1, 20))
 
-            self._create_leave(work_entry_type, self.employee_emp, date(2024, 1, 10), date(2024, 1, 10))
+            self._create_leave(self.employee_emp, work_entry_type, date(2024, 1, 10), date(2024, 1, 10))
             allocation.write({'date_to': date(2024, 1, 11)})
             self.assertEqual(allocation.date_to, date(2024, 1, 11))
 
@@ -772,7 +758,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
             allocation.write({'date_to': date(2024, 1, 20)})
             pending_leave = self._create_leave(
-                work_entry_type, self.employee_emp, date(2024, 1, 12), date(2024, 1, 12),
+                self.employee_emp, work_entry_type, date(2024, 1, 12), date(2024, 1, 12),
                 validate=False, user=self.user_employee,
             )
             self.assertEqual(pending_leave.state, 'confirm')

@@ -4,6 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools.date_utils import get_timedelta
 
 
 def _get_selection_days(self):
@@ -104,12 +105,14 @@ class HrLeaveAccrualLevel(models.Model):
         export_string_translation=False)
     cap_accrued_time = fields.Boolean(export_string_translation=False,
         help="When the field is checked the balance of an allocation using this accrual plan will never exceed the specified amount.")
+    # Unit defined by `added_value_type`
     maximum_leave = fields.Float(
         digits=(16, 2), compute="_compute_maximum_leave", default=0, readonly=False, store=True,
         help="Choose a cap for this accrual.", export_string_translation=False)
     cap_accrued_time_yearly = fields.Boolean(export_string_translation=False,
         store=True, readonly=False,
         help="When the field is checked the total amount accrued each year will be capped at the specified amount")
+    # Unit defined by `added_value_type`
     maximum_leave_yearly = fields.Float(digits=(16, 2), export_string_translation=False)
     can_be_carryover = fields.Boolean(related='accrual_plan_id.can_be_carryover', readonly=True,
         export_string_translation=False)
@@ -132,7 +135,8 @@ class HrLeaveAccrualLevel(models.Model):
         default='unlimited', required=True,
         help="You can limit the accrued time carried over for the next period."
     )
-    postpone_max_days = fields.Integer(export_string_translation=False,
+    # Unit defined by `added_value_type`
+    max_carriedover_duration = fields.Integer(export_string_translation=False,
         help="Set a maximum of accruals an allocation keeps at the end of the year.")
     can_modify_value_type = fields.Boolean(compute="_compute_can_modify_value_type", default=False,
         export_string_translation=False)
@@ -155,8 +159,8 @@ class HrLeaveAccrualLevel(models.Model):
         'CHECK(added_value > 0)',
         'You must give a rate greater than 0 in accrual plan levels.',
     )
-    _valid_postpone_max_days_value = models.Constraint(
-        "CHECK(action_with_unused_accruals <> 'all' OR carryover_options <> 'limited' OR COALESCE(postpone_max_days, 0) > 0)",
+    _valid_max_carriedover_duration_value = models.Constraint(
+        "CHECK(action_with_unused_accruals <> 'all' OR carryover_options <> 'limited' OR COALESCE(max_carriedover_duration, 0) > 0)",
         'You cannot have a maximum quantity to carryover set to 0.',
     )
     _valid_accrual_validity_value = models.Constraint(
@@ -296,8 +300,7 @@ class HrLeaveAccrualLevel(models.Model):
         return ['hourly']
 
     def _get_next_date(self, last_call):
-        """
-        Returns the next date with the given last call
+        """ Returns the next date the allocation will be accrued with the given last call (last_call not included)
         """
         self.ensure_one()
         if self.frequency in self._get_hourly_frequencies() + ['daily']:
@@ -365,7 +368,7 @@ class HrLeaveAccrualLevel(models.Model):
             date = last_call + relativedelta(day=int(self.first_day))
             if last_call >= date:
                 return date
-            return last_call + relativedelta(day=int(self.first_day), months=-1, days=1)
+            return last_call + relativedelta(day=int(self.first_day), months=-1)
 
         if self.frequency == 'biyearly':
             first_date = last_call + relativedelta(month=int(self.first_month), day=int(self.first_month_day))
@@ -395,3 +398,7 @@ class HrLeaveAccrualLevel(models.Model):
 
     def action_save_new(self):
         return self.accrual_plan_id.action_create_accrual_plan_level()
+
+    def _get_start_date(self, date_from):
+        self.ensure_one()
+        return date_from + get_timedelta(self.start_count, self.start_type)
