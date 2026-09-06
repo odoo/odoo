@@ -8,6 +8,11 @@
             <xpath expr="//div[@name='available_between']" position="attributes">
                 <attribute name="invisible">0</attribute>
             </xpath>
+            <xpath expr="//group" position="inside">
+                <group>
+                    <field name="self_order_available"/>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>
