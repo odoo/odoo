@@ -13,6 +13,31 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         this.descriptionColumn = "name";
         // product_template_id is added for purchase_product_matrix's PO view and sale's SO view
         this.productColumns = ["product_id", "product_template_id"];
+        // columns to hide by default if the company is not subject to VAT.
+        this.conditionalColumns = ["tax_ids"];
+    }
+
+    processAllColumn(allColumns, list) {
+        const isInvoice = ["out_invoice", "out_refund", "out_receipt"].includes(
+            this.props.list.evalContext.parent.move_type
+        );
+        const isCompanyVatDisabled = this.props.list.evalContext.parent.company_vat_disabled;
+
+        allColumns = allColumns.map((column) => {
+            if (column["optional"] === "conditional" && this.conditionalColumns.includes(column["name"])) {
+                /**
+                 * Hide the `tax_ids` column if the company of invoice is not subject to VAT.
+                 */
+                if (isInvoice && isCompanyVatDisabled) {
+                    column["optional"] = "hide";
+                }
+                else {
+                    column["optional"] = "show";
+                }
+            }
+            return column;
+        });
+        return super.processAllColumn(allColumns, list);
     }
 
     isCellReadonly(column, record) {

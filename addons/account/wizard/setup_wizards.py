@@ -19,11 +19,16 @@ class AccountFinancialYearOp(models.TransientModel):
     fiscalyear_last_month = fields.Selection(related="company_id.fiscalyear_last_month", readonly=False,
                                              required=True,
                                              help="The last day of the month will be used if the chosen day doesn't exist.")
+    company_vat_disabled = fields.Boolean(related="company_id.vat_disabled", readonly=False)
 
     @api.depends('company_id.account_opening_move_id')
     def _compute_opening_move_posted(self):
         for record in self:
             record.opening_move_posted = record.company_id.opening_move_posted()
+
+    def _compute_has_accounting_entries(self):
+        for wizard in self:
+            wizard.has_accounting_entries = wizard.company_id.root_id._existing_accounting()
 
     @api.constrains('fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear(self):

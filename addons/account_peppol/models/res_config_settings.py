@@ -114,9 +114,7 @@ class ResConfigSettings(models.TransientModel):
     # -------------------------------------------------------------------------
 
     def action_open_peppol_form(self):
-        registration_wizard = self.env['peppol.registration'].create({'company_id': self.company_id.id})
-        registration_action = registration_wizard._action_open_peppol_form(reopen=False)
-        return registration_action
+        return self.company_id._action_open_peppol_form()
 
     def button_peppol_disconnect_branch_from_parent(self):
         self.ensure_one()

@@ -314,6 +314,7 @@ class PeppolRegistration(models.TransientModel):
             'name': _("Activate Electronic Invoicing (via Peppol)"),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
+            'views': [(False, 'form')],
             'res_model': 'peppol.registration',
             'target': 'new',
             'context': {

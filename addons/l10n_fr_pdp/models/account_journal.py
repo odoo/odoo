@@ -20,3 +20,11 @@ class AccountJournal(models.Model):
             ('proxy_type', '=', 'pdp'),
         ])
         edi_users._pdp_get_regulatory_documents()
+
+    def _get_onboarding_action_data(self):
+        if self.country_code != 'FR':
+            return super()._get_onboarding_action_data()
+        return {
+            'title': self.env._("Activate Electronic Invoicing"),
+            'action': self.company_id._action_open_pdp_form(),
+        }

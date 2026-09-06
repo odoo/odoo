@@ -269,3 +269,8 @@ class ResCompany(models.Model):
                     'auth_done',
                     {'pdp_registration_id': pdp_registration.id},
                 )
+
+    def _action_open_pdp_form(self):
+        self.ensure_one()
+        registration_wizard = self.env['pdp.registration'].create({'company_id': self.id})
+        return registration_wizard._action_open_pdp_form()
