@@ -8,6 +8,13 @@ from odoo.tests import Form, HttpCase, new_test_user
 from odoo.tests.common import tagged
 from odoo.tools import float_compare
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('hr_attendance_overtime')
 class TestHrAttendanceOvertime(HttpCase):
@@ -53,48 +60,54 @@ class TestHrAttendanceOvertime(HttpCase):
         cls.company.resource_calendar_id = cls.calendar_40h
         cls.company_1.resource_calendar_id = cls.calendar_40h
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
-        cls.employee = cls.env['hr.employee'].create({
-            'name': "Marie-Edouard De La Court",
-            'user_id': cls.user.id,
-            'company_id': cls.company.id,
-            'tz': 'UTC',
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': date(2020, 1, 1),
-            'resource_calendar_id': cls.company.resource_calendar_id.id,
-            'ruleset_id': cls.ruleset.id
-        })
-        cls.other_employee = cls.env['hr.employee'].create({
-            'name': 'Yolanda',
-            'company_id': cls.company.id,
-            'tz': 'UTC',
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': date(2020, 1, 1),
-            'resource_calendar_id': cls.company.resource_calendar_id.id,
-            'ruleset_id': cls.ruleset.id
-        })
-        cls.jpn_employee = cls.env['hr.employee'].create({
-            'name': 'Sacha',
-            'company_id': cls.company.id,
-            'tz': 'Asia/Tokyo',
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': date(2020, 1, 1),
-            'resource_calendar_id': cls.company.resource_calendar_id.id,
-            'ruleset_id': cls.ruleset.id
-        })
+        (
+            cls.employee,
+            cls.other_employee,
+            cls.jpn_employee,
+            cls.honolulu_employee,
+        ) = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
+            {
+                'name': "Marie-Edouard De La Court",
+                'user_id': cls.user.id,
+                'company_id': cls.company.id,
+                'tz': 'UTC',
+                'date_version': date(2020, 1, 1),
+                'contract_date_start': date(2020, 1, 1),
+                'resource_calendar_id': cls.company.resource_calendar_id.id,
+                'ruleset_id': cls.ruleset.id,
+            },
+            {
+                'name': 'Yolanda',
+                'company_id': cls.company.id,
+                'tz': 'UTC',
+                'date_version': date(2020, 1, 1),
+                'contract_date_start': date(2020, 1, 1),
+                'resource_calendar_id': cls.company.resource_calendar_id.id,
+                'ruleset_id': cls.ruleset.id,
+            },
+            {
+                'name': 'Sacha',
+                'company_id': cls.company.id,
+                'tz': 'Asia/Tokyo',
+                'date_version': date(2020, 1, 1),
+                'contract_date_start': date(2020, 1, 1),
+                'resource_calendar_id': cls.company.resource_calendar_id.id,
+                'ruleset_id': cls.ruleset.id,
+            },
+            {
+                'name': 'Susan',
+                'company_id': cls.company.id,
+                'tz': 'Pacific/Honolulu',
+                'date_version': date(2020, 1, 1),
+                'contract_date_start': date(2020, 1, 1),
+                'resource_calendar_id': cls.company.resource_calendar_id.id,
+                'ruleset_id': cls.ruleset.id,
+            },
+        ])
         cls.jpn_employee.tz = 'Asia/Tokyo'
-
-        cls.honolulu_employee = cls.env['hr.employee'].create({
-            'name': 'Susan',
-            'company_id': cls.company.id,
-            'tz': 'Pacific/Honolulu',
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': date(2020, 1, 1),
-            'resource_calendar_id': cls.company.resource_calendar_id.id,
-            'ruleset_id': cls.ruleset.id
-        })
         cls.honolulu_employee.tz = 'Pacific/Honolulu'
 
-        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
+        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).with_context(**MAIL_OFF).create({
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
@@ -105,34 +118,39 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         cls.europe_employee.tz = 'Europe/Brussels'
 
-        cls.no_contract_employee = cls.env['hr.employee'].create({
-            'name': 'No Contract',
-            'company_id': cls.company.id,
-            'tz': 'UTC',
-            'resource_calendar_id': cls.company.resource_calendar_id.id,
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': False,
-        })
-        cls.future_contract_employee = cls.env['hr.employee'].create({
-            'name': 'Future contract',
-            'company_id': cls.company.id,
-            'tz': 'UTC',
-            'resource_calendar_id': cls.company.resource_calendar_id.id,
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': date(2030, 1, 1),
-        })
-
-        cls.flexible_employee = cls.env['hr.employee'].create({
-            'name': 'Flexi',
-            'company_id': cls.company.id,
-            'tz': 'UTC',
-            'resource_calendar_id': False,
-            'hours_per_week': 40,
-            'hours_per_day': 8,
-            'date_version': date(2020, 1, 1),
-            'contract_date_start': date(2020, 1, 1),
-            'ruleset_id': cls.ruleset.id
-        })
+        (
+            cls.no_contract_employee,
+            cls.future_contract_employee,
+            cls.flexible_employee,
+        ) = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
+            {
+                'name': 'No Contract',
+                'company_id': cls.company.id,
+                'tz': 'UTC',
+                'resource_calendar_id': cls.company.resource_calendar_id.id,
+                'date_version': date(2020, 1, 1),
+                'contract_date_start': False,
+            },
+            {
+                'name': 'Future contract',
+                'company_id': cls.company.id,
+                'tz': 'UTC',
+                'resource_calendar_id': cls.company.resource_calendar_id.id,
+                'date_version': date(2020, 1, 1),
+                'contract_date_start': date(2030, 1, 1),
+            },
+            {
+                'name': 'Flexi',
+                'company_id': cls.company.id,
+                'tz': 'UTC',
+                'resource_calendar_id': False,
+                'hours_per_week': 40,
+                'hours_per_day': 8,
+                'date_version': date(2020, 1, 1),
+                'contract_date_start': date(2020, 1, 1),
+                'ruleset_id': cls.ruleset.id,
+            },
+        ])
 
     def test_overtime_company_settings(self):
         self.company.write({
@@ -1367,13 +1385,15 @@ class TestHrAttendanceOvertime(HttpCase):
 
         with freeze_time("2025-11-11 12:00:00"):
             self.env.user.tz = 'UTC'  # to avoid to shift the public holidays hours
-            company_be = self.env['res.company'].create({'name': 'Odoo BE'})
-            company_de = self.env['res.company'].create({'name': 'Odoo DE'})
+            company_be, company_de = self.env['res.company'].create([
+                {'name': 'Odoo BE'},
+                {'name': 'Odoo DE'},
+            ])
 
-            with Form(self.env['resource.calendar.leaves'].with_company(company_be)) as holiday_form:
-                holiday_form.name = 'Armistice Day'
-                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
-                holiday_form.save()
+            self.env['resource.calendar.leaves'].with_company(company_be).create({
+                'name': 'Armistice Day',
+                'date_from': datetime(2025, 11, 11, 0, 0),
+            })
 
             ruleset_be = self.env['hr.attendance.overtime.ruleset'].with_company(company_be).create({
                 'name': 'Ruleset schedule timing',
@@ -1440,10 +1460,10 @@ class TestHrAttendanceOvertime(HttpCase):
                 'resource_calendar_id': self.calendar_40h.id
             })
 
-            with Form(self.env['resource.calendar.leaves'].with_company(company_be)) as holiday_form:
-                holiday_form.name = 'Armistice Day'
-                holiday_form.date_from = datetime(2025, 11, 11, 0, 0)
-                holiday_form.save()
+            self.env['resource.calendar.leaves'].with_company(company_be).create({
+                'name': 'Armistice Day',
+                'date_from': datetime(2025, 11, 11, 0, 0),
+            })
 
             ruleset_be = self.env['hr.attendance.overtime.ruleset'].with_company(company_be).create({
                 'name': 'Ruleset schedule timing',

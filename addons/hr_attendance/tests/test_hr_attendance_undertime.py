@@ -5,6 +5,13 @@ from odoo import Command
 from odoo.tests import Form, HttpCase, new_test_user
 from odoo.tests.common import tagged
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('hr_attendance_overtime')
 class TestHrAttendanceUndertime(HttpCase):
@@ -46,7 +53,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
 
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user,hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)
-        cls.employee = cls.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': "Marie-Edouard De La Court",
             'user_id': cls.user.id,
             'company_id': cls.company.id,
@@ -56,7 +63,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'resource_calendar_id': cls.company.resource_calendar_id.id,
             'ruleset_id': cls.ruleset.id,
         })
-        cls.other_employee = cls.env['hr.employee'].create({
+        cls.other_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Yolanda',
             'company_id': cls.company.id,
             'tz': 'UTC',
@@ -65,7 +72,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'resource_calendar_id': cls.company.resource_calendar_id.id,
             'ruleset_id': cls.ruleset.id,
         })
-        cls.jpn_employee = cls.env['hr.employee'].create({
+        cls.jpn_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Sacha',
             'company_id': cls.company.id,
             'tz': 'Asia/Tokyo',
@@ -76,7 +83,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
         cls.jpn_employee.tz = 'Asia/Tokyo'
 
-        cls.honolulu_employee = cls.env['hr.employee'].create({
+        cls.honolulu_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Susan',
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
@@ -87,7 +94,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
         cls.honolulu_employee.tz = 'Pacific/Honolulu'
 
-        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
+        cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).with_context(**MAIL_OFF).create({
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
@@ -98,7 +105,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
         cls.europe_employee.tz = 'Europe/Brussels'
 
-        cls.no_contract_employee = cls.env['hr.employee'].create({
+        cls.no_contract_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'No Contract',
             'company_id': cls.company.id,
             'tz': 'UTC',
@@ -106,7 +113,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'date_version': date(2020, 1, 1),
             'contract_date_start': False,
         })
-        cls.future_contract_employee = cls.env['hr.employee'].create({
+        cls.future_contract_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Future contract',
             'company_id': cls.company.id,
             'tz': 'UTC',
@@ -115,7 +122,7 @@ class TestHrAttendanceUndertime(HttpCase):
             'contract_date_start': date(2030, 1, 1),
         })
 
-        cls.flexible_employee = cls.env['hr.employee'].create({
+        cls.flexible_employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Flexi',
             'company_id': cls.company.id,
             'tz': 'UTC',

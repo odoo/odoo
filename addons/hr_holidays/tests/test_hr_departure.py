@@ -3,14 +3,14 @@ from datetime import date, timedelta
 
 from odoo.tests import tagged
 
-from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.hr_holidays.tests.common import MAIL_OFF, TestHrHolidaysCommon
 
 
 class TestHolidaysFlow(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.employee = cls.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Sky',
             'date_version': date(2022, 1, 1),
         })

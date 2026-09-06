@@ -12,6 +12,13 @@ from odoo.tests.common import TransactionCase
 
 _logger = logging.getLogger(__name__)
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('post_install', '-at_install', 'hr_attendance_perf')
 class TestHrAttendancePerformance(TransactionCase):
@@ -51,7 +58,7 @@ class TestHrAttendancePerformance(TransactionCase):
                 ],
         })
 
-        employees = cls.env['hr.employee'].create([{
+        employees = cls.env['hr.employee'].with_context(**MAIL_OFF).create([{
             'name': f'Employee {i}',
             'sex': 'male',
             'birthday': '1982-08-01',

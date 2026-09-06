@@ -469,8 +469,7 @@ class TestHrVersion(TestHrCommon):
         Test the multi-edit when the targeted versions have different contracts
         Different fields than contract_date_start and contract_date_end are changed.
         """
-        jobA = self.env['hr.job'].create({'name': "Job A"})
-        jobB = self.env['hr.job'].create({'name': "Job B"})
+        jobA, jobB = self.env['hr.job'].create([{'name': "Job A"}, {'name': "Job B"}])
 
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
@@ -498,8 +497,7 @@ class TestHrVersion(TestHrCommon):
         Test the multi-edit when the targeted versions have the same contract
         Different contract_dates and other fields are changed.
         """
-        jobA = self.env['hr.job'].create({'name': "Job A"})
-        jobB = self.env['hr.job'].create({'name': "Job B"})
+        jobA, jobB = self.env['hr.job'].create([{'name': "Job A"}, {'name': "Job B"}])
 
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',

@@ -10,6 +10,13 @@ from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.tests import new_test_user, tagged, Form
 from odoo.exceptions import AccessError
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 @tagged('post_install', '-at_install')
 class TestSelfAccessPreferences(TestHrCommon):
 
@@ -109,13 +116,13 @@ class TestSelfAccessRights(TestHrCommon):
     def setUpClass(cls):
         super(TestSelfAccessRights, cls).setUpClass()
         cls.richard = new_test_user(cls.env, login='ric', groups='base.group_user', name='Simple employee', email='ric@example.com')
-        cls.richard_emp = cls.env['hr.employee'].create({
+        cls.richard_emp = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Richard',
             'user_id': cls.richard.id,
             'private_phone': '21454',
         })
         cls.hubert = new_test_user(cls.env, login='hub', groups='base.group_user', name='Simple employee', email='hub@example.com')
-        cls.hubert_emp = cls.env['hr.employee'].create({
+        cls.hubert_emp = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'Hubert',
             'user_id': cls.hubert.id,
         })

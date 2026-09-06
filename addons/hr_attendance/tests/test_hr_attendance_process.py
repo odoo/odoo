@@ -10,6 +10,13 @@ from odoo.exceptions import ValidationError
 from odoo.tests import Form, new_test_user
 from odoo.tests.common import HttpCase, tagged, TransactionCase, freeze_time
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('attendance_process')
 class TestHrAttendance(HttpCase, TransactionCase):
@@ -20,16 +27,18 @@ class TestHrAttendance(HttpCase, TransactionCase):
         super(TestHrAttendance, cls).setUpClass()
         cls.user = new_test_user(cls.env, login='fru', groups='base.group_user')
         cls.user_no_pin = new_test_user(cls.env, login='gru', groups='base.group_user')
-        cls.test_employee = cls.env['hr.employee'].create({
-            'name': "François Russie",
-            'user_id': cls.user.id,
-            'pin': '1234',
-            'ruleset_id': False,
-        })
-        cls.employee_kiosk = cls.env['hr.employee'].create({
-            'name': "Machiavel",
-            'pin': '5678',
-        })
+        cls.test_employee, cls.employee_kiosk = cls.env['hr.employee'].with_context(**MAIL_OFF).create([
+            {
+                'name': "François Russie",
+                'user_id': cls.user.id,
+                'pin': '1234',
+                'ruleset_id': False,
+            },
+            {
+                'name': "Machiavel",
+                'pin': '5678',
+            },
+        ])
         cls.hr_user = cls.env['res.users'].create({
             'name': 'HR Officer',
             'login': 'hr_officer',

@@ -5,6 +5,13 @@ from datetime import date
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
+MAIL_OFF = {
+    'tracking_disable': True,
+    'mail_create_nosubscribe': True,
+    'mail_create_nolog': True,
+    'mail_notrack': True,
+}
+
 
 @tagged('post_install', '-at_install')
 class TestHrContractVersions(TransactionCase):
@@ -31,7 +38,7 @@ class TestHrContractVersions(TransactionCase):
             'country_id': cls.env.ref('base.us').id,
         })
         cls.env.user.company_id = cls.company
-        cls.employee = cls.env['hr.employee'].create({
+        cls.employee = cls.env['hr.employee'].with_context(**MAIL_OFF).create({
             'name': 'John Doe',
             'date_version': '2025-01-01'
         })
