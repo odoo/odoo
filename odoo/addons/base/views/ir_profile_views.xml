@@ -44,7 +44,6 @@
                     <field name="session"/>
                     <field name="cpu_duration"/>
                     <field name="entry_count"/>
-                    <!-- Do not rely on sql field for the invisible attrs to avoid fetching whole trace from server. -->
                     <field name="sql_count" invisible="sql_count == 0"/>
                     <field name="speedscope_url" widget="url"/>
                     <field name="config_url" widget="url"/>
@@ -52,6 +51,40 @@
                 <group invisible="not qweb">
                     <field name="qweb" widget="profiling_qweb_view" nolabel="1"/>
                 </group>
+                <field name="query_ids" invisible="not query_ids">
+                    <list create="0" delete="0">
+                        <field name="query_preview"/>
+                        <field name="time"/>
+                        <button name="action_explain_analyse" type="object" string="EXPLAIN ANALYZE"
+                            confirm="EXPLAIN ANALYZE really runs this query: data changes are rolled back, but it takes the same locks and can be as slow as the original execution."
+                        />
+                        <button name="action_open_plan_visualizer" string="Open plan visualizer" type="object" invisible="not plan"/>
+                    </list>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_profile_query_view_form" model="ir.ui.view">
+        <field name="name">IR Profile Query Form</field>
+        <field name="model">ir.profile.query</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_explain_analyse" string="EXPLAIN ANALYZE" type="object"
+                        confirm="EXPLAIN ANALYZE really runs this query: data changes are rolled back, but it takes the same locks and can be as slow as the original execution."
+                    />
+                    <button name="action_open_plan_visualizer" class="btn btn-primary" string="Open plan visualizer" type="object" invisible="not plan"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="time"/>
+                        <field name="query_preview"/>
+                        <field name="full_query" widget="CopyClipboardChar"/>
+                        <field name="plan" widget="CopyClipboardChar"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>

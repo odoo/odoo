@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="view_query_plan">
+        &lt;!DOCTYPE html&gt;
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8"/>
+                <title>Query Plan</title>
+                <link rel="stylesheet" href="/web/static/lib/bootstrap/dist/css/bootstrap.css" />
+                <link rel="stylesheet"
+                    t-attf-href="{{pev2_cdn}}/pev2.css"
+                    crossorigin="anonymous"
+                    integrity="sha256-GjzU+XsFFDawWhbrIlrZ9Obppu8UsMDLqAf1Dpv9nRw="
+                />
+                <link rel="shortcut icon" href="/web/static/img/mimetypes/vector.svg" type="image/x-icon"/>
+                <script
+                    t-attf-src="{{vue_cdn}}/vue.global.prod.js"
+                    crossorigin="anonymous"
+                    integrity="sha256-ngA5o/btDoUwjiTXN0R/Gvavg9Ip1p4SZ6MrKbwqEzc="
+                ></script>
+                <script
+                    t-attf-src="{{pev2_cdn}}/pev2.umd.js"
+                    crossorigin="anonymous"
+                    integrity="sha256-YMdimSzfDuHGHQ8TzMKgofckXejJxXAIl/+XySDh1Yw="
+                ></script>
+                <style>
+                    html, body {
+                        height: 100%;
+                        margin: 0;
+                    }
+                    #app {
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                    }
+                </style>
+            </head>
+            <body>
+                <div id="app"></div>
+                <script>
+                const planSource = <t t-out="json.dumps(plan)"/>;
+                const planQuery = <t t-out="json.dumps(query)"/>;
+                document.addEventListener("DOMContentLoaded", () => {
+                    const app = Vue.createApp({
+                        render() {
+                            return Vue.h(pev2.Plan, { planSource, planQuery });
+                        },
+                    });
+                    app.mount('#app');
+                });
+                </script>
+            </body>
+        </html>
+    </template>
+</odoo>

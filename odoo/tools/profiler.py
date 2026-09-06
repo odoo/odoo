@@ -11,6 +11,7 @@ from datetime import datetime
 
 import psutil
 from psycopg2 import OperationalError
+from psycopg2.extras import Json as PsycopgJson
 
 from odoo import tools
 from odoo.tools import SQL
@@ -177,7 +178,7 @@ class SQLCollector(Collector):
     def hook(self, cr, query, params, query_start, query_time):
         entry = {
             'query': str(query),
-            'full_query': str(cr._format(query, params)),
+            'full_query': str(cr._format(query, params, color_highlight=False)),
             'start': query_start,
             'time': query_time,
         }
@@ -576,12 +577,14 @@ class Profiler:
                         "duration": self.duration,
                         "cpu_duration": self.cpu_duration,
                         "entry_count": self.entry_count(),
-                        "sql_count": sum(len(collector.entries) for collector in self.collectors if collector.name == 'sql')
                     }
                     others = {}
+                    sql_entries = []
                     for collector in self.collectors:
                         if collector.entries:
-                            if collector._store == "others":
+                            if collector.name == 'sql':
+                                sql_entries = collector.entries
+                            elif collector._store == "others":
                                 others[collector.name] = json.dumps(collector.entries)
                             else:
                                 values[collector.name] = json.dumps(collector.entries)
@@ -594,6 +597,27 @@ class Profiler:
                     )
                     cr.execute(query)
                     self.profile_id = cr.fetchone()[0]
+                    if sql_entries:
+                        rows = SQL(",").join(
+                            SQL(
+                                "(%s,%s,%s,%s,%s,%s,%s,%s)",
+                                self.profile_id,
+                                index,
+                                entry['query'],
+                                entry['full_query'],
+                                entry['start'],
+                                entry['time'],
+                                PsycopgJson(entry['stack']),
+                                PsycopgJson(entry['exec_context']),
+                            )
+                            for index, entry in enumerate(sql_entries)
+                        )
+                        cr.execute(SQL(
+                            "INSERT INTO ir_profile_query"
+                            "(profile_id, sequence, query, full_query, start, time, stack, exec_context) "
+                            "VALUES %s",
+                            rows,
+                        ))
                     _logger.info('ir_profile %s (%s) created', self.profile_id, self.profile_session)
         except OperationalError:
             _logger.exception("Could not save profile in database")
