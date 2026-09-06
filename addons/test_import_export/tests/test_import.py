@@ -1047,7 +1047,6 @@ foo3,Invalid Country\n"""),
         self.assertItemsEqual(last_record.html, "<p>foo</p><br><p>bar</p>")
 
     @mute_logger('odoo.addons.base_import.models.base_import')
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xls_datetime_values(self):
         """ Test the support of having dates set as strings with the user format and date/datetime objects
         in the same xls(x) file.
@@ -1120,7 +1119,6 @@ foo3,Invalid Country\n"""),
 
                 self.assertFalse(response.get('messages'))
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_char_field(self):
         """Test that importing datetime values to char field is converted"""
 
@@ -1153,7 +1151,6 @@ foo3,Invalid Country\n"""),
         self.assertFalse(response.get('messages'))
         self.assertEqual(response['name'], ['foo', '08:10:00 06/01/2020', '01/07/2025', '', '', ''])
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_related_char_field(self):
         """Test that importing datetime values to a related char field is converted"""
         file_content = generate_xlsx(
@@ -1182,7 +1179,6 @@ foo3,Invalid Country\n"""),
             ['foo', '08:10:00 06/01/2020', '01/07/2024']
         )
 
-    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
     def test_xlsx_datetime_values_assigned_to_property_char_field(self):
         """Test that importing datetime values to a property char field is converted"""
         def_record = self.env['import.properties.definition'].create([
