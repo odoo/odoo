@@ -212,7 +212,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         })
 
     @patch_api
@@ -275,7 +275,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE'],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         })
 
     @patch_api
@@ -311,7 +311,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE'],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.recurrence_id.id}},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         }, timeout=3)
 
         self.assertGoogleEventDeleted(google_id)
@@ -360,7 +360,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.recurrence_id.id}},
             'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=1;BYDAY=WE'],
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         }, timeout=3)
 
     @patch_api
@@ -448,7 +448,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=WE'],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: new_recurrence.id}},
             'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         }, timeout=3)
 
     @patch_api
@@ -577,7 +577,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'declined'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
             'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         })
 
 
@@ -895,7 +895,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': self.organizer_user.email, 'responseStatus': 'accepted'}],
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=1;BYDAY=WE'],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: recurrence.id}},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         }, timeout=3)
 
     @patch_api
@@ -981,7 +981,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
                             {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
                          ],
             'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
-            'transparency': 'opaque',
+            'transparency': 'transparent',
         }
         self.assertGoogleEventInsertedMultiTime({
             **event_response_data,

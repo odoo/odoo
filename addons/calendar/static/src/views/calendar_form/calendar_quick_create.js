@@ -41,8 +41,15 @@ function getDefaultValuesFromRecord(data) {
 
 export class CalendarQuickCreateFormController extends CalendarFormController {
 
-    goToFullEvent() {
+    getFullEventContext() {
         const context = getDefaultValuesFromRecord(this.model.root.data);
+        if (!this.props.context.disable_event_creation_as_draft) {
+            context.default_is_draft = true;
+        }
+        return context;
+    }
+
+    goToFullEvent() {
         return this.actionService.doAction(
             {
                 type: "ir.actions.act_window",
@@ -53,7 +60,7 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
             {
                 additionalContext: {
                     ...this.props.context,
-                    ...context,
+                    ...this.getFullEventContext(),
                 },
             }
         );

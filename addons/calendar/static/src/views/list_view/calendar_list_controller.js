@@ -1,14 +1,26 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
 import { ListController } from "@web/views/list/list_controller";
-import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
+import { useArchiveOrUnlinkCalendarEvents } from "@calendar/views/hooks";
 
 export class CaledarListController extends ListController {
     setup() {
         super.setup();
-        this.orm = useService("orm");
-        this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
+        this.archiveOrUnlinkCalendarEvents = useArchiveOrUnlinkCalendarEvents();
+    }
+
+    getStaticActionMenuItems() {
+        const actionMenuItems = super.getStaticActionMenuItems(...arguments);
+        if (actionMenuItems.archive.isAvailable) {
+            actionMenuItems.archive.callback = async () => {
+                this.archiveOrUnlinkCalendarEvents({
+                    requestedAction: "archive",
+                    records: this.model.root.selection,
+                    defaultAction: () => this.model.root.toggleArchiveWithConfirmation(true, this.archiveDialogProps),
+                });
+            };
+        }
+        return actionMenuItems;
     }
 
     get modelOptions() {
@@ -17,21 +29,11 @@ export class CaledarListController extends ListController {
             lazy: false,
         };
     }
-
-    /**
-     * Deletes selected records with handling for recurring events.
-     */
     async onDeleteSelectedRecords() {
-        const selectedRecords = this.model.root.selection;
-        let recurrenceUpdate = false;
-        if (selectedRecords.length == 1 && selectedRecords[0]?.data.recurrency) {
-            recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
-            if (recurrenceUpdate) {
-                await this.orm.call(this.model.root.resModel, "action_mass_archive", [[selectedRecords[0]?.resId], recurrenceUpdate]);
-                this.model.load();
-            }
-        } else {
-            super.onDeleteSelectedRecords(...arguments);
-        }
+        this.archiveOrUnlinkCalendarEvents({
+            requestedAction: "unlink",
+            records: this.model.root.selection,
+            defaultAction: () => this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps),
+        });
     }
 }

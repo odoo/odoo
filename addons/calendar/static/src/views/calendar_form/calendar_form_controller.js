@@ -1,4 +1,6 @@
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FormController } from "@web/views/form/form_controller";
+import { useArchiveOrUnlinkCalendarEvent } from "@calendar/views/hooks";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { useService } from "@web/core/utils/hooks";
 
@@ -7,6 +9,33 @@ export class CalendarFormController extends FormController {
         super.setup();
         this.actionService = useService("action");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
+        this.archiveOrUnlinkCalendarEvent = useArchiveOrUnlinkCalendarEvent();
+    }
+
+    /**
+     * This method is meant to be overridden.
+     */
+    shouldUseArchiveWizard() {
+        return true;
+    }
+
+    getStaticActionMenuItems() {
+        const actionMenuItems = super.getStaticActionMenuItems(...arguments);
+        if (actionMenuItems.archive.isAvailable && this.shouldUseArchiveWizard()) {
+            actionMenuItems.archive.callback = async () => {
+                const record = this.model.root;
+                await this.archiveOrUnlinkCalendarEvent({
+                    requestedAction: "archive",
+                    resId: record.resId,
+                    isDraft: record.data.is_draft,
+                    partnerIds: record.data.partner_ids.resIds,
+                    recurrency: record.data.recurrency,
+                    start: record.data.start,
+                    defaultAction: () => this.dialogService.add(ConfirmationDialog, this.archiveDialogProps),
+                });
+            };
+        }
+        return actionMenuItems;
     }
 
     /**
@@ -25,51 +54,37 @@ export class CalendarFormController extends FormController {
     }
 
     /**
-     * Custom delete function for calendar events, which can call the unlink action or not.
-     * When there is only one attendee, who is also the organizer, and the organizer is not listed in the current attendees, it performs the default delete.
-     * Otherwise, it calls the unlink action on the server.
+     * @override
      */
     async deleteRecord() {
         const record = this.model.root;
         const rootValues = record._values;
-        let recurrenceUpdate = false;
-        if (record.data.recurrency) {
-            recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
-        }
         if (rootValues.attendees_count == 1 && rootValues.user_id.id !== rootValues.partner_ids._currentIds[0]) {
-            await this._archiveRecord(record.resId, recurrenceUpdate);
+            await this._archiveRecord(record);
         } else {
-            await this.orm.call("calendar.event", "action_unlink_event", [
-                this.model.root.resId,
-                this.model.root.data.partner_ids.resIds,
-                this.model.root.data.recurrence_update,
-            ])
-            .then((action) => {
-                if (action && action.context) {
-                    this.actionService.doAction(action);
-                } else {
-                    this.actionService.doAction({
-                        type: "ir.actions.act_window",
-                        name: "Meetings",
-                        res_model: "calendar.event",
-                        view_mode: "calendar",
-                        views: [[false, "calendar"]],
-                        target: "current",
-                    });
-                }
+            await this.archiveOrUnlinkCalendarEvent({
+                requestedAction: "unlink",
+                resId: record.resId,
+                isDraft: record.data.is_draft,
+                partnerIds: record.data.partner_ids.resIds,
+                recurrency: record.data.recurrency,
+                start: record.data.start,
+                defaultAction: () => this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps),
+                nextAction: { type: "ir.actions.act_url", target: "self", url: "/odoo/calendar" },
             });
         }
     }
 
     /**
      * Archives a calendar event record.
-     *
-     * @param {number} id - The ID of the record to archive.
-     * @param {boolean} recurrenceUpdate - Indicates how the archive of a recurring event will be updated.
      */
-    async _archiveRecord(id, recurrenceUpdate) {
+    async _archiveRecord(record) {
+        let recurrenceUpdate = false;
+        if (record.data.recurrency) {
+            recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
+        }
         await this.orm.call(this.model.root.resModel, "action_mass_archive", [
-            [id], recurrenceUpdate
+            [record.resId], recurrenceUpdate
         ]);
         this.env.config.historyBack();
     }

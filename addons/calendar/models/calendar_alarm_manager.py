@@ -153,6 +153,7 @@ class CalendarAlarm_Manager(models.AbstractModel):
                 ON event_alarm_rel.calendar_alarm_id = alarm.id
              WHERE alarm.alarm_type = %s
                AND event.active
+               AND event.is_draft IS NOT TRUE
                AND event.start - CAST(alarm.duration || ' ' || alarm.interval AS Interval) >= %s
                AND event.start - CAST(alarm.duration || ' ' || alarm.interval AS Interval) < %s
                %s
