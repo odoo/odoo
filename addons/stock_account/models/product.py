@@ -428,8 +428,38 @@ class ProductProduct(models.Model):
 
         last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
         oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
+
+        # Receipts back-dated before a manual cost update but entered after it were not
+        # part of that valuation, so they must feed the average instead of the seed.
+        backdated_in_moves = self.env['stock.move']
+        backdated_in_qty_by_product = defaultdict(float)
+        if last_manual_value_by_product and not lot:
+            # sudo: create_date is not prefetched and users may lack product.value access
+            manual_values = self.env['product.value'].browse(
+                [pv.id for pv in last_manual_value_by_product.values()])
+            manual_values.sudo().fetch(['create_date'])
+            candidate_domain = [
+                ('product_id', 'in', [pv.product_id.id for pv in last_manual_value_by_product.values()]),
+                ('company_id', '=', self.env.company.id),
+                ('is_in', '=', True),
+                ('date', '<', max(pv.date for pv in last_manual_value_by_product.values())),
+                ('create_date', '>', min(pv.create_date for pv in last_manual_value_by_product.values())),
+            ]
+            if at_date:
+                candidate_domain.append(('date', '<=', at_date))
+            candidate_moves = self.env['stock.move'].search(candidate_domain)
+            for move in candidate_moves:
+                manual_value = last_manual_value_by_product.get(move.product_id)
+                if manual_value and move.date < manual_value.date and move.create_date > manual_value.create_date:
+                    backdated_in_moves |= move
+                    backdated_in_qty_by_product[move.product_id.id] += move._get_valued_qty()
+        backdated_in_move_ids = set(backdated_in_moves.ids)
+
         if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
-            moves_domain &= Domain([('date', '>=', oldest_manual_value)])
+            date_restriction = Domain([('date', '>=', oldest_manual_value)])
+            if backdated_in_move_ids:
+                date_restriction |= Domain([('id', 'in', list(backdated_in_move_ids))])
+            moves_domain &= date_restriction
 
         product_ids_by_manual_value_date = defaultdict(list)
         if not lot:
@@ -442,6 +472,9 @@ class ProductProduct(models.Model):
                 quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
             else:
                 quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
+
+            # exclude back-dated receipts replayed below to avoid counting them twice
+            quantity -= backdated_in_qty_by_product.get(product.id, 0.0)
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
@@ -476,7 +509,7 @@ class ProductProduct(models.Model):
                 if move.product_id != product:
                     product = move.product_id
                     valuation_from_date = date_by_product_id.get(product.id)
-                if valuation_from_date and move.date <= valuation_from_date:
+                if valuation_from_date and move.date <= valuation_from_date and move.id not in backdated_in_move_ids:
                     continue
                 product_move_ids.append(move.id)
 
