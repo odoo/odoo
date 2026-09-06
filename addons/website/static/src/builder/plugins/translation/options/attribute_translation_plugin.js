@@ -53,7 +53,7 @@ registry
 
 export class TranslateAttributeAction extends BuilderAction {
     static id = "translateAttribute";
-    static dependencies = ["domObserver", "translation"];
+    static dependencies = ["valueHistory"];
 
     getValue({ editingElement, params: { mainParam: attr } }) {
         if (attr === "value" && editingElement.tagName === "TEXTAREA") {
@@ -64,35 +64,12 @@ export class TranslateAttributeAction extends BuilderAction {
 
     apply({ editingElement, params: { mainParam: attr }, value }) {
         const isTextarea = editingElement.tagName === "TEXTAREA";
-        const oldValue =
-            attr === "value" ? editingElement.value : editingElement.getAttribute(attr);
-        if (!isTextarea || attr !== "value") {
+        if (attr === "value") {
+            this.dependencies.valueHistory.setValue(editingElement, value);
+        }
+        if (!(isTextarea && attr === "value")) {
             editingElement.setAttribute(attr, value);
         }
         editingElement.classList.add("oe_translated");
-
-        const setCustomHistory = (value) => {
-            if (attr === "value") {
-                editingElement.value = value;
-                if (isTextarea) {
-                    this.dependencies.translation.updateTranslationMap(
-                        editingElement,
-                        value,
-                        "textContent"
-                    );
-                    return;
-                }
-            }
-            this.dependencies.translation.updateTranslationMap(editingElement, value, attr);
-        };
-
-        this.dependencies.domObserver.applyCustomMutation({
-            apply: () => {
-                setCustomHistory(value);
-            },
-            revert: () => {
-                setCustomHistory(oldValue);
-            },
-        });
     }
 }

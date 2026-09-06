@@ -12,7 +12,7 @@ declare module "plugins" {
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
-    import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, on_will_save_element_handlers, save_elements_overrides, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { on_saved_handlers, on_will_save_handlers, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
@@ -35,6 +35,7 @@ declare module "plugins" {
     import { on_bg_color_updated_handlers } from "@html_builder/core/color_style_plugin";
     import { reload_context_processors } from "@html_builder/core/utils";
     import { uncrossable_element_selector, ignore_ctrl_a_predicates } from "@html_builder/core/builder_selection_restriction_plugin";
+    import { read_media_size_width_processors, write_media_size_width_processors } from "@html_builder/plugins/image/media_size_option_plugin";
 
     interface SharedMethods {
         // Main
@@ -99,14 +100,12 @@ declare module "plugins" {
         on_will_remove_handlers: on_will_remove_handlers;
         on_will_restore_containers_handlers: on_will_restore_containers_handlers;
         on_will_save_handlers: on_will_save_handlers;
-        on_will_save_element_handlers: on_will_save_element_handlers;
         on_will_setup_editor_handlers: on_will_setup_editor_handlers;
         on_ready_to_save_document_handlers: on_ready_to_save_document_handlers;
 
         // Overrides
         after_setup_editor_overrides: after_setup_editor_overrides;
         apply_custom_css_style_overrides: apply_custom_css_style_overrides;
-        save_elements_overrides: save_elements_overrides;
 
         // Predicates
         should_keep_overlay_options_predicates: should_keep_overlay_options_predicates;
@@ -121,6 +120,8 @@ declare module "plugins" {
 
         // Processors
         reload_context_processors: reload_context_processors;
+        read_media_size_width_processors: read_media_size_width_processors;
+        write_media_size_width_processors: write_media_size_width_processors;
         snippet_preview_dialog_stylesheets_processors: snippet_preview_dialog_stylesheets_processors;
 
         // Providers
@@ -130,7 +131,6 @@ declare module "plugins" {
         background_shape_target_providers: background_shape_target_providers;
         clone_disabled_reason_providers: clone_disabled_reason_providers;
         default_shape_providers: default_shape_providers;
-        dirty_els_providers: dirty_els_providers;
         image_shape_groups_providers: image_shape_groups_providers;
         options_container_top_buttons_providers: options_container_top_buttons_providers;
         remove_disabled_reason_providers: remove_disabled_reason_providers;

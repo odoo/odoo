@@ -41,13 +41,6 @@ export class WebsiteSnippetModel extends SnippetModel {
         return label;
     }
 
-    cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors) {
-        const rootEl = snippetCopyEl.matches(".s_popup")
-            ? snippetCopyEl.firstElementChild
-            : snippetCopyEl;
-        super.cleanSnippetForSave(rootEl, cleanForSaveProcessors);
-    }
-
     getContext(snippetEl) {
         const context = super.getContext(...arguments);
         const editableParentEl = snippetEl.closest("[data-oe-model][data-oe-field][data-oe-id]");

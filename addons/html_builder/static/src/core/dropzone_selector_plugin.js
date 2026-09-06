@@ -46,7 +46,8 @@ export class DropZoneSelectorPlugin extends Plugin {
                         .join(", ")}, .s_card:not(${special_cards_selector})`;
                 },
                 excludeNearParent: `${so_snippet_addition_drop_in}, .o_no_direct_child_drop`,
-                excludeAncestor: ".s_image_gallery, .s_map, .s_google_map, .s_website_form_label",
+                excludeAncestor:
+                    ".s_image_gallery, .s_map, .s_google_map, .s_website_form_label, .s_announcement_scroll_marquee_container",
             },
             {
                 selector: ".row > div",
