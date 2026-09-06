@@ -139,9 +139,9 @@ export class TimeOffCard extends Component {
         return errorLeavesSignificant || accrualExcess || closeExpire;
     }
 
-    onClickInfo(ev) {
+    getPopoverData(){
         const { data, holidayStatusId, employeeId } = this.props;
-        this.popover.open(ev.target, {
+        return {
             allocated: formatNumber(this.lang, data.max_leaves),
             accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
             approved: formatNumber(this.lang, data.leaves_approved),
@@ -159,7 +159,11 @@ export class TimeOffCard extends Component {
             employeeId: employeeId,
             employeeCompany: data.employee_company,
             employeeCountry: data.employee_country
-        });
+        }
+    }
+
+    onClickInfo(ev) {
+        this.popover.open(ev.target, this.getPopoverData());
     }
 
     getAccrualExcess(data) {
@@ -207,7 +211,7 @@ export class TimeOffCard extends Component {
     }
 }
 
-function openLeaveWindow(actionService, resModel, name, domain, context) {
+export function openLeaveWindow(actionService, resModel, name, domain, context) {
     actionService.doAction({
         type: "ir.actions.act_window",
         name: name,
