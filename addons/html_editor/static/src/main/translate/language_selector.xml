@@ -9,13 +9,11 @@
             <t t-call="html_editor.translateButton" onClick="() => {}">
             </t>
             <t t-set-slot="content">
-                <div data-prevent-closing-overlay="true">
-                    <t t-foreach="this.state.languages" t-as="language" t-key="language[0]">
-                        <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected({languageCode: language[0], languageName: language[1]})">
-                            <div class="lang" t-out="language[1]"/>
-                        </DropdownItem>
-                    </t>
-                </div>
+                <t t-foreach="this.state.languages" t-as="language" t-key="language[0]">
+                    <DropdownItem class="'user-select-none'" onSelected="() => this.onSelected({languageCode: language[0], languageName: language[1]})">
+                        <div class="lang" t-out="language[1]"/>
+                    </DropdownItem>
+                </t>
             </t>
         </Dropdown>
     </t>

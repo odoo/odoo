@@ -8,7 +8,7 @@
         <div t-ref="this.rootRef" class="o-hb-select-wrapper">
             <div inert="" class="h-0 w-0 overflow-hidden" t-att-class="this.props.className" t-ref="this.contentRef"><WithIgnoreItem><t t-call-slot="default" /></WithIgnoreItem></div>
             <Dropdown state="this.dropdown" menuClass="this.props.dropdownClass">
-                <button 
+                <button
                     class="o-hb-select-toggle o-hb-btn btn btn-secondary text-start o-dropdown-caret"
                     t-ref="this.buttonRef"
                     t-att-id="this.props.id"
@@ -19,7 +19,7 @@
                     <t t-call-slot="fixedButton"/>
                 </button>
                 <t t-set-slot="content">
-                    <div t-att-class="this.props.dropdownContainerClass" data-prevent-closing-overlay="true">
+                    <div t-att-class="this.props.dropdownContainerClass">
                         <t t-call-slot="default" />
                     </div>
                 </t>
