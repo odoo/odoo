@@ -496,6 +496,9 @@ class AccountMove(models.Model):
     )
     qr_code_method = fields.Selection(
         string="Payment QR-code", copy=False,
+        compute='_compute_qr_code_method',
+        store=True,
+        readonly=False,
         selection=lambda self: self.env['res.partner.bank'].get_available_qr_methods_in_sequence(),
         help="Type of QR-code to be generated for the payment of this invoice, "
              "when printing it. If left blank, the first available and usable method "
@@ -836,6 +839,11 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('commercial_partner_id', 'commercial_partner_id.qr_code_method')
+    def _compute_qr_code_method(self):
+        for move in self:
+            move.qr_code_method = move.commercial_partner_id.qr_code_method
 
     @api.depends('move_type', 'partner_id')
     def _compute_invoice_default_sale_person(self):
