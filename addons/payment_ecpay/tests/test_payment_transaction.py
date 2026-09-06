@@ -1,9 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
+from freezegun import freeze_time
+
 from odoo.tests import tagged
-from odoo.tools import urls
+from odoo.tools import mute_logger, urls
 
 from odoo.addons.payment_ecpay import const
 from odoo.addons.payment_ecpay.tests.common import EcpayCommon
@@ -11,12 +14,21 @@ from odoo.addons.payment_ecpay.tests.common import EcpayCommon
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(EcpayCommon):
-    def test_reference_uses_only_alphanumeric_chars(self):
+    @freeze_time("2011-11-02 12:00:21")  # Freeze time for consistent singularization behavior.
+    def test_reference_is_singularized(self):
+        """Test that transaction references are unique at the provider level and that any custom
+        prefix is discarded."""
+        reference = self.env["payment.transaction"]._compute_reference(
+            self.ecpay.code, prefix="dummy prefix"
+        )
+        self.assertEqual(reference, "tx20111102120021")
+
+    def test_reference_contains_only_valid_characters(self):
         """The computed reference must be alphanumeric."""
         reference = self.env["payment.transaction"]._compute_reference(provider_code="ecpay")
         self.assertRegex(reference, r"^[a-zA-Z0-9]+$")
 
-    def test_reference_length_is_at_most_20_chars(self):
+    def test_reference_is_stripped_at_max_length(self):
         """The computed reference must be at most 20 characters long."""
         reference = self.env["payment.transaction"]._compute_reference(provider_code="ecpay")
         self.assertTrue(len(reference) <= 20)
@@ -85,6 +97,21 @@ class TestPaymentTransaction(EcpayCommon):
         rendering_values = tx.with_context(lang="zh_TW")._get_specific_rendering_values(None)
         self.assertNotIn("Language", rendering_values["url_params"])
 
+    @mute_logger("odoo.addons.payment.models.payment_transaction")
+    def test_no_input_missing_from_redirect_form(self):
+        """Test that the `api_url` key is not omitted from the rendering values."""
+        tx = self._create_transaction("redirect")
+        with patch(
+            "odoo.addons.payment_ecpay.models.payment_transaction.PaymentTransaction"
+            "._get_specific_rendering_values",
+            return_value={"api_url": "https://dummy.com"},
+        ):
+            processing_values = tx._get_processing_values()
+        form_info = self._extract_values_from_html_form(processing_values["redirect_form_html"])
+        self.assertEqual(form_info["action"], "https://dummy.com")
+        self.assertEqual(form_info["method"], "post")
+        self.assertDictEqual(form_info["inputs"], {})
+
     def test_extract_reference_finds_reference(self):
         """Test that the transaction reference is found in the payment data."""
         tx = self._create_transaction("redirect")
@@ -92,20 +119,6 @@ class TestPaymentTransaction(EcpayCommon):
             "ecpay", self.payment_result_data
         )
         self.assertEqual(tx.reference, reference)
-
-    def test_extract_amount_data_returns_amount_and_currency(self):
-        """Test that the amount and currency are returned from the payment data."""
-        tx = self._create_transaction("redirect")
-        amount_data = tx._extract_amount_data(self.payment_result_data)
-        self.assertDictEqual(
-            amount_data, {"amount": tx.amount, "currency_code": tx.currency_id.name}
-        )
-
-    def test_apply_updates_confirms_transaction(self):
-        """Test that the transaction state is set to 'done' on successful payment."""
-        tx = self._create_transaction("redirect")
-        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
-        self.assertEqual(tx.state, "done")
 
     def test_apply_updates_sets_provider_reference(self):
         """Test that the provider reference is updated from the payment data."""
@@ -119,4 +132,18 @@ class TestPaymentTransaction(EcpayCommon):
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
         self.assertEqual(
             tx.payment_method_id, self.env.ref("payment_ecpay.payment_method_ipass_money")
+        )
+
+    def test_apply_updates_confirms_transaction(self):
+        """Test that the transaction state is set to 'done' on successful payment."""
+        tx = self._create_transaction("redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_result_data)
+        self.assertEqual(tx.state, "done")
+
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are returned from the payment data."""
+        tx = self._create_transaction("redirect")
+        amount_data = tx._extract_amount_data(self.payment_result_data)
+        self.assertDictEqual(
+            amount_data, {"amount": tx.amount, "currency_code": tx.currency_id.name}
         )

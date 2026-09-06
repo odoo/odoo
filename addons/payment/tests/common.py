@@ -282,3 +282,9 @@ class PaymentCommon(BaseCommon):
         """Skip current test if `account_payment` module is not installed."""
         if not self.account_payment_installed:
             self.skipTest("account_payment module is not installed")
+
+    def _mock_send_api_request(self, **kwargs):
+        return patch(
+            "odoo.addons.payment.models.payment_provider.PaymentProvider._send_api_request",
+            **kwargs,
+        )

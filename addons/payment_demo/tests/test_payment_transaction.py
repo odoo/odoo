@@ -11,6 +11,59 @@ from odoo.addons.payment_demo.tests.common import PaymentDemoCommon
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
+    def test_making_a_payment_request_propagates_token_simulated_state_to_transaction(self):
+        """Test that the simulated state of the token is set on the transaction when making a
+        payment request."""
+        for counter, state in enumerate(["pending", "done", "cancel", "error"]):
+            tx = self._create_transaction("direct", reference=f"{self.reference}-{counter}")
+            token = self._create_token(demo_simulated_state=state)
+            self._update_transaction(tx, token_id=token.id)
+            with patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock:
+                tx._charge_with_token()
+            payload = record_mock.call_args.args[0]
+            self.assertEqual(payload["simulated_state"], tx.token_id.demo_simulated_state)
+
+    def test_capture_confirms_tx(self):
+        """Test that capturing an authorized demo transaction records a 'done' simulated state
+        for the capture tx."""
+        self.provider.capture_manually = True
+        tx = self._create_transaction("direct", state="authorized")
+        with patch(
+            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+        ) as record_mock:
+            tx._capture()
+        payload = record_mock.call_args.args[0]
+        self.assertEqual(payload["simulated_state"], "done")
+
+    def test_void_cancels_tx(self):
+        """Test that voiding an authorized demo transaction sets the void tx state to
+        'cancel'."""
+        self.provider.capture_manually = True
+        tx = self._create_transaction("direct", state="authorized")
+        with patch(
+            "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+        ) as record_mock:
+            tx._void()
+        payload = record_mock.call_args.args[0]
+        self.assertEqual(payload["simulated_state"], "cancel")
+
+    def test_refund_creates_refund_tx(self):
+        """Test that refunding a demo transaction creates a refund transaction."""
+        tx = self._create_transaction("direct", state="done")
+        tx._refund()
+        refund_tx = self.env["payment.transaction"].search([("source_transaction_id", "=", tx.id)])
+        self.assertTrue(refund_tx)
+        self.assertEqual(refund_tx.operation, "refund")
+        self.assertEqual(refund_tx.amount, -tx.amount)
+
+    def test_apply_updates_sets_provider_reference(self):
+        """Test that the provider reference is set to a value derived from the tx reference."""
+        tx = self._create_transaction("direct")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
+        self.assertEqual(tx.provider_reference, f"demo-{tx.reference}")
+
     def test_apply_updates_sets_transaction_pending(self):
         """Test that the transaction state is set to 'pending' when the payment data indicate
         a pending payment."""
@@ -76,13 +129,14 @@ class TestPaymentTransaction(PaymentDemoCommon, PaymentHttpCommon):
             )
             self.assertEqual(tx.token_id.demo_simulated_state, state)
 
-    def test_making_a_payment_request_propagates_token_simulated_state_to_transaction(self):
-        """Test that the simulated state of the token is set on the transaction when making a
-        payment request."""
-        for counter, state in enumerate(["pending", "done", "cancel", "error"]):
-            tx = self._create_transaction("direct", reference=f"{self.reference}-{counter}")
-            token = self._create_token(demo_simulated_state=state)
-            self._update_transaction(tx, token_id=token.id)
-            tx._charge_with_token()
-            self._run_processing()
-            self.assertEqual(tx.state, tx.token_id.demo_simulated_state)
+    def test_extract_token_values_maps_fields_correctly(self):
+        tx = self._create_transaction("direct")
+        token_values = tx._extract_token_values(self.payment_data)
+        self.assertDictEqual(
+            token_values,
+            {
+                "payment_details": self.payment_data["payment_details"],
+                "provider_ref": "fake provider reference",
+                "demo_simulated_state": self.payment_data["simulated_state"],
+            },
+        )

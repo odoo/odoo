@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.tests import tagged
 from odoo.tools.urls import urljoin
 
@@ -39,6 +41,20 @@ class TestPaymentTransaction(PayuCommon, PaymentHttpCommon):
         }
         self.assertDictEqual(tx._get_specific_rendering_values(None), expected_rendering_values)
 
+    def test_no_input_missing_from_redirect_form(self):
+        """Test that no key is omitted from the rendering values."""
+        tx = self._create_transaction(flow="redirect")
+        with patch(
+            "odoo.addons.payment_payu.models.payment_transaction.PaymentTransaction"
+            "._get_specific_rendering_values",
+            return_value={"api_url": "https://dummy.com", "url_params": {}},
+        ):
+            processing_values = tx._get_processing_values()
+        form_info = self._extract_values_from_html_form(processing_values["redirect_form_html"])
+        self.assertEqual(form_info["action"], "https://dummy.com")
+        self.assertEqual(form_info["method"], "post")
+        self.assertDictEqual(form_info["inputs"], {})
+
     def test_extract_reference_finds_reference(self):
         tx = self._create_transaction("redirect")
         reference = self.env["payment.transaction"]._extract_reference("payu", self.payment_data)
@@ -55,6 +71,12 @@ class TestPaymentTransaction(PayuCommon, PaymentHttpCommon):
         tx = self._create_transaction(flow="redirect")
         tx.with_context(payment_safe_write=True)._apply_updates(self.payment_data)
         self.assertEqual(tx.provider_reference, self.payment_data["mihpayid"])
+
+    def test_apply_updates_sets_payment_method(self):
+        tx = self._create_transaction(flow="redirect")
+        payment_data = dict(self.payment_data, mode="UPI")
+        tx.with_context(payment_safe_write=True)._apply_updates(payment_data)
+        self.assertEqual(tx.payment_method_id, self.env.ref("payment_payu.payment_method_upi"))
 
     def test_apply_updates_confirms_transaction(self):
         tx = self._create_transaction("redirect")

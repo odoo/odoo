@@ -26,7 +26,7 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
         """Test the computation of reference prefixes based on the provided invoice."""
         self._skip_if_account_payment_is_not_installed()
         company = self.env.company
-        Account = self.env["account.account"]
+        Account = self.env["account.account"]  # noqa: OLS03001
         default_account_revenue = Account.with_company(company).search(
             [
                 *Account._check_company_domain(company),
@@ -36,7 +36,7 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
             limit=1,
         )
 
-        invoice = self.env["account.move"].create({
+        invoice = self.env["account.move"].create({  # noqa: OLS03001
             "move_type": "entry",
             "date": "2011-11-02",
             "line_ids": [
@@ -113,9 +113,39 @@ class TestPaymentTransaction(AsiaPayCommon, PaymentHttpCommon):
         self.assertEqual(form_info["method"], "post")
         self.assertListEqual(list(form_info["inputs"].keys()), expected_input_keys)
 
+    def test_extract_reference_finds_reference(self):
+        """Test that the transaction reference is found in the payment data."""
+        tx = self._create_transaction(flow="redirect")
+        reference = self.env["payment.transaction"]._extract_reference(
+            "asiapay", self.redirect_payment_data
+        )
+        self.assertEqual(tx.reference, reference)
+
+    def test_apply_updates_sets_provider_reference(self):
+        """Test that the provider reference is updated from the payment data."""
+        tx = self._create_transaction("redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.webhook_payment_data)
+        self.assertEqual(tx.provider_reference, self.webhook_payment_data["PayRef"])
+
+    def test_apply_updates_sets_payment_method(self):
+        """Test that the payment method is updated from the payment data."""
+        tx = self._create_transaction("redirect")
+        tx.with_context(payment_safe_write=True)._apply_updates(self.webhook_payment_data)
+        self.assertEqual(
+            tx.payment_method_id, self.env.ref("payment_asiapay.payment_method_alipay")
+        )
+
     def test_apply_updates_confirms_transaction(self):
         """Test that the transaction state is set to 'done' when the payment data indicate a
         successful payment."""
         tx = self._create_transaction(flow="redirect")
         tx.with_context(payment_safe_write=True)._apply_updates(self.webhook_payment_data)
         self.assertEqual(tx.state, "done")
+
+    def test_extract_amount_data_returns_amount_and_currency(self):
+        """Test that the amount and currency are returned from the payment data."""
+        tx = self._create_transaction("redirect")
+        amount_data = tx._extract_amount_data(self.webhook_payment_data)
+        self.assertDictEqual(
+            amount_data, {"amount": tx.amount, "currency_code": tx.currency_id.name}
+        )
