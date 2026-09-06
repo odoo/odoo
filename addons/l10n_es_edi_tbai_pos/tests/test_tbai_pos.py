@@ -195,9 +195,11 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         self.assertEqual(order.l10n_es_tbai_state, 'sent')
         self.assertEqual(order2.l10n_es_tbai_state, 'sent')
 
-    def test_tbai_xml_order_and_refund_line_amounts_with_discount(self):
+    def test_tbai_xml_order_and_refund_amounts_with_discount_and_giftcard(self):
         if self.env['ir.module.module']._get('pos_discount').state != 'installed':
             self.skipTest("pos_discount module is required for this test")
+        if self.env['ir.module.module']._get('pos_loyalty').state != 'installed':
+            self.skipTest("pos_loyalty module is required for this test")
 
         def get_edi_doc_in_xml(order):
             edi_document = order._l10n_es_tbai_create_edi_document(cancel=False)
@@ -215,11 +217,25 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         discount_product = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
         self.pos_config_usd.discount_product_id = discount_product
 
+        product_price, discount, loyalty_price = 100, -10, -20
+        LoyaltyProgram = self.env['loyalty.program']  # noqa: OLS03001
+        LoyaltyProgram.search([]).write({'active': False})
+        loyalty_product = self.env.ref('loyalty.gift_card_product_50')
+        loyalty_product.write({'active': True})
+
+        program_id = LoyaltyProgram.create_from_template('gift_card')['res_id']
+        program = LoyaltyProgram.browse(program_id)
+        program.pos_report_print_id = self.env.ref("loyalty.report_gift_card")
+        loyalty_card = self.env['loyalty.card'].create({  # noqa: OLS03001
+            'program_id': program_id,
+            'points': -loyalty_price,
+        })
+
         self.pos_config_usd.open_ui()
-        product_price, discount = 100, -10
+        tax_21_ids = self._get_tax_by_xml_id("s_iva21b").ids
         pos_order = {
-            "amount_tax": 0.21 * (product_price + discount),
-            "amount_total": 1.21 * (product_price + discount),
+            "amount_tax": 0.21 * (product_price + discount + loyalty_price),
+            "amount_total": 1.21 * (product_price + discount + loyalty_price),
             "amount_paid": 0.0,
             "amount_return": 0.0,
             "session_id": self.pos_config_usd.current_session_id.id,
@@ -228,7 +244,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
                         "product_id": self.product_a.id,
                         "price_unit": product_price,
                         "qty": 1,
-                        "tax_ids": self._get_tax_by_xml_id("s_iva21b").ids,
+                        "tax_ids": tax_21_ids,
                         "price_subtotal": product_price,
                         "price_subtotal_incl": product_price * 1.21,
                 }),
@@ -236,14 +252,26 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
                         "product_id": discount_product.id,
                         "price_unit": discount,
                         "qty": 1,
-                        "tax_ids": self._get_tax_by_xml_id("s_iva21b").ids,
+                        "tax_ids": tax_21_ids,
                         "price_subtotal": discount,
                         "price_subtotal_incl": discount * 1.21,
+                }),
+                Command.create({
+                        "product_id": loyalty_product.id,
+                        "price_unit": loyalty_price,
+                        "qty": 1,
+                        "tax_ids": tax_21_ids,
+                        "price_subtotal": loyalty_price,
+                        "price_subtotal_incl": loyalty_price * 1.21,
+                        "is_reward_line": True,
+                        "reward_id": program.reward_ids.ids[0],
+                        "coupon_id": loyalty_card.id,
+                        "points_cost": -loyalty_price,
                 }),
             ],
             "payment_ids": [
                 Command.create({
-                        "amount": 1.21 * (product_price + discount),
+                        "amount": 1.21 * (product_price + discount + loyalty_price),
                         "name": fields.Datetime.now(),
                         "payment_method_id": self.pos_config_usd.payment_method_ids[0].id,
                 }),
@@ -260,10 +288,12 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         order_lines = xml_doc.find("Factura/DatosFactura/DetallesFactura")
         assert_order_line(order_lines[0], "1.00000000", "100.00000000", "121.00000000")
         assert_order_line(order_lines[1], "1.00000000", "-10.00000000", "-12.10000000")
-        self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "108.90")
+        assert_order_line(order_lines[2], "1.00000000", "-20.00000000", "-24.20000000")
+        self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "84.70")
 
         xml_doc = get_edi_doc_in_xml(pos_refund)
         order_lines = xml_doc.find("Factura/DatosFactura/DetallesFactura")
         assert_order_line(order_lines[0], "1.00000000", "-100.00000000", "-121.00000000")
         assert_order_line(order_lines[1], "1.00000000", "10.00000000", "12.10000000")
-        self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "-108.90")
+        assert_order_line(order_lines[2], "1.00000000", "20.00000000", "24.20000000")
+        self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "-84.70")
