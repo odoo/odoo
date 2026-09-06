@@ -1,7 +1,5 @@
 from odoo import fields, models, api
 
-COMPANY_SCHEMES = {'CRN', 'MOM', 'MLS', '700', 'SAG', 'OTH'}
-
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -32,6 +30,7 @@ class ResPartner(models.Model):
         "Secondary Number must contain 4 numeric digits.",
         )
 
+<<<<<<< 80c63e49edd42b69d4cf7c5f061288f416c2133c
     @api.depends('l10n_sa_edi_additional_identification_scheme', 'l10n_sa_edi_additional_identification_number')
     def _compute_is_company(self):
         """ Determines if a Saudi partner is a company or an individual based on VAT and
@@ -49,6 +48,26 @@ class ResPartner(models.Model):
         l10n_sa_commercial_partners.is_company = True
         super(ResPartner, self - l10n_sa_commercial_partners)._compute_is_company()
 
+||||||| 3aad8eaf069b2901ed9dd28a59c0172db7fc6889
+    @api.depends('l10n_sa_edi_additional_identification_scheme', 'l10n_sa_edi_additional_identification_number')
+    def _compute_is_company(self):
+        """ Determines if a Saudi partner is a company or an individual based on VAT and
+        additional identification fields.
+        """
+        l10n_sa_commercial_partners = self.filtered(
+            lambda p: (
+                p.country_code == 'SA'
+                and p.commercial_partner_id == p
+                and p._is_vat_void(p.vat)
+                and p.l10n_sa_edi_additional_identification_number
+                and p.l10n_sa_edi_additional_identification_scheme in COMPANY_SCHEMES
+            )
+        )
+        l10n_sa_commercial_partners.is_company = True
+        super(ResPartner, self - l10n_sa_commercial_partners)._compute_is_company()
+
+=======
+>>>>>>> c0d37c7a6dc2ebc0aed25df3c4e6161a84bff807
     @api.depends('additional_identifiers')
     def _compute_l10n_sa_edi_additional_identification_fields(self):
         for partner in self:

@@ -87,10 +87,11 @@ class ZatcaUblMixin(models.AbstractModel):
         party_node = {}
 
         if identification_number := self._get_partner_party_identification_number(commercial_partner):
+            scheme_id = 'OTH' if commercial_partner.country_code != 'SA' else commercial_partner.l10n_sa_edi_additional_identification_scheme
             party_node['cac:PartyIdentification'] = {
                 'cbc:ID': {
                     '_text': identification_number,
-                    'schemeID': commercial_partner.l10n_sa_edi_additional_identification_scheme,
+                    'schemeID': scheme_id,
                 },
             }
 
@@ -149,10 +150,10 @@ class ZatcaUblMixin(models.AbstractModel):
         identification_number = partner.l10n_sa_edi_additional_identification_number
         vat = re.sub(r'[^a-zA-Z0-9]', '', partner.vat or "")
         if partner.country_code != "SA":
-            identification_number = vat
+            identification_number = vat or identification_number
         elif partner.l10n_sa_edi_additional_identification_scheme == 'TIN':
             # according to ZATCA, the TIN number is always the first 10 digits of the VAT number
-            identification_number = vat[:10]
+            identification_number = self._l10n_sa_get_tin_from_vat(vat)
         return identification_number
 
     # -------------------------------------------------------------------------

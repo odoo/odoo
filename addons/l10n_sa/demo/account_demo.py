@@ -24,6 +24,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'website': 'https://www.gulfseals-example.sa',
                 'vat': '301765432100003',
                 'is_company': True,
+                'additional_identifiers': {'SA_CRN': '1017654321'},
             },
             'l10n_sa.partner_demo_customer_company_2_sa': {
                 **default_partner_dict,
@@ -38,6 +39,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'website': 'https://www.royaltech-solutions-example.com',
                 'vat': '301456789000003',
                 'is_company': True,
+                'additional_identifiers': {'SA_CRN': '1014567890'},
             },
             'l10n_sa.partner_demo_customer_individual_sa': {
                 **default_partner_dict,
@@ -64,6 +66,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'website': 'http://www.aquasteel-example.sa',
                 'vat': '310105071360003',
                 'is_company': True,
+                'additional_identifiers': {'SA_CRN': '1003672815'},
             },
             'l10n_sa.partner_demo_vendor_2_sa': {
                 **default_partner_dict,
@@ -78,6 +81,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'website': 'https://www.horizon-industries-example.sa',
                 'vat': '301234981200003',
                 'is_company': True,
+                'additional_identifiers': {'SA_CRN': '1012349812'},
             },
         }
 

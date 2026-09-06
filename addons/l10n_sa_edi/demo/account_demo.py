@@ -24,32 +24,22 @@ class AccountChartTemplate(models.AbstractModel):
             'base.partner_demo_company_sa': {
                 'l10n_sa_edi_building_number': '7450',
                 'l10n_sa_edi_plot_identification': '3495',
-                'l10n_sa_edi_additional_identification_scheme': 'CRN',
-                'l10n_sa_edi_additional_identification_number': '1008434875',
             },
             'l10n_sa.partner_demo_customer_company_1_sa': {
                 'l10n_sa_edi_building_number': '8421',
                 'l10n_sa_edi_plot_identification': '4519',
-                'l10n_sa_edi_additional_identification_scheme': 'CRN',
-                'l10n_sa_edi_additional_identification_number': '1017654321',
             },
             'l10n_sa.partner_demo_customer_company_2_sa': {
                 'l10n_sa_edi_building_number': '7734',
                 'l10n_sa_edi_plot_identification': '2893',
-                'l10n_sa_edi_additional_identification_scheme': 'CRN',
-                'l10n_sa_edi_additional_identification_number': '1014567890',
             },
             'l10n_sa.partner_demo_vendor_1_sa': {
                 'l10n_sa_edi_building_number': '3885',
                 'l10n_sa_edi_plot_identification': '1331',
-                'l10n_sa_edi_additional_identification_scheme': 'CRN',
-                'l10n_sa_edi_additional_identification_number': '1003672815',
             },
             'l10n_sa.partner_demo_vendor_2_sa': {
                 'l10n_sa_edi_building_number': '6529',
                 'l10n_sa_edi_plot_identification': '3478',
-                'l10n_sa_edi_additional_identification_scheme': 'CRN',
-                'l10n_sa_edi_additional_identification_number': '1012349812',
             },
         }
 
