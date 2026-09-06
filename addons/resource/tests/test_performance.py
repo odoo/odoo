@@ -6,14 +6,14 @@ from odoo.tests import warmup
 from odoo.tests.common import TransactionCase
 
 
-class TestVariableResourceCalendarPerformance(TransactionCase):
+class TestFlexibleResourceCalendarPerformance(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.variable_calendar = cls.env['resource.calendar'].create({
-            'name': 'Test Variable Calendar',
-            'calendar_type': 'variable',
+        cls.flexible_calendar = cls.env['resource.calendar'].create({
+            'name': 'Test Flexible Calendar',
+            'calendar_type': 'flexible',
             'attendance_ids': [
                 (0, 0, {
                     'date': date(1, 1, 1) + timedelta(days=d, weeks=w),
@@ -28,9 +28,9 @@ class TestVariableResourceCalendarPerformance(TransactionCase):
         })
 
     @warmup
-    def test_performance_attendance_intervals_batch_variable_calendar(self):
+    def test_performance_attendance_intervals_batch_flexible_calendar(self):
         tz = ZoneInfo('UTC')
         start_dt = datetime(2023, 1, 1, 0, 0, 0, tzinfo=tz)
         end_dt = datetime(2023, 12, 31, 23, 59, 59, tzinfo=tz)
         with self.assertQueryCount(5):
-            self.variable_calendar._attendance_intervals_batch(start_dt, end_dt)
+            self.flexible_calendar._attendance_intervals_batch(start_dt, end_dt)

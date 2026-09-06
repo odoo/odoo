@@ -56,7 +56,6 @@
                     <group name="resource_details">
                         <group style="grid-template-columns: fit-content(50%) minmax(0, 1fr);" col="2">
                             <field name="calendar_type" widget="calendar_type_confirm_radio" options="{'horizontal': true}"/>
-                            <field name="days_per_week" style="width: 10ch;" widget="float" digits="[16, 2]" options="{'hide_trailing_zeros': true}" readonly="calendar_type == 'fixed'"/>
                         </group>
                         <group col="2">
                             <label for="hours_per_week"/>
@@ -66,12 +65,13 @@
                                 <field name="hours_per_day" nolabel="1" widget="float_time" readonly="1" class="text-muted" style="width: max-content; flex: none;"/>
                                 <span class="text-muted">/d</span><span class="text-muted">)</span>
                             </span>
+                            <field name="days_per_week" style="width: 10ch;" widget="float" digits="[16, 2]" options="{'hide_trailing_zeros': true}" readonly="calendar_type == 'fixed'"/>
                         </group>
                     </group>
                     <field name="attendance_ids" widget="resource_calendar_attendance_filtered_one2many" domain_filter="[('date', '=', False)]"
                            invisible="calendar_type != 'fixed'"/>
                     <field nolabel="1"  name="attendance_ids" widget="resource_calendar_attendance_calendar_one2many"
-                           class="flex-grow-1" invisible="calendar_type != 'variable'"/>
+                           class="flex-grow-1" invisible="calendar_type != 'flexible'"/>
                 </sheet>
             </form>
         </field>

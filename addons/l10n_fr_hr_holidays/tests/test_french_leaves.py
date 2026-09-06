@@ -199,7 +199,7 @@ class TestFrenchLeaves(TransactionCase):
     def test_2_weeks_calendar(self):
         company_calendar = self.env['resource.calendar'].create({
             'name': 'Company Calendar',
-            'calendar_type': 'variable',
+            'calendar_type': 'flexible',
             'hours_per_day': 8,
             'days_per_week': 4,
             'hours_per_week': 32,
@@ -441,7 +441,7 @@ class TestFrenchLeaves(TransactionCase):
 
         self.company.resource_calendar_id = self.env['resource.calendar'].create({
             'name': 'Company Calendar - 2 weeks with different working hours for each week',
-            'calendar_type': 'variable',
+            'calendar_type': 'flexible',
             'hours_per_day': 8,
             'days_per_week': 5,
             'hours_per_week': 32,
