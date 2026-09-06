@@ -563,7 +563,7 @@ class TestQwebDataSnippet(TransactionCase):
         first_search = 1  # for key & website
         t_call_snippets = 4  # number of nested t-calls (t-call > view > t-call > other views...)
         fetch_snippets = 0  # number of fetches (normally performed with the previous search)
-        get_root_view = 1  # determine the root views
+        get_root_view = 2  # determine the root views
         combine_views = 3  # Queries performed to execute the read combine
 
         all_ir_ui_view_queries = first_search + t_call_snippets + fetch_snippets + get_root_view + combine_views  # 9

@@ -42,7 +42,40 @@ class TestSnippets(HttpCase):
             login="admin",
         )
 
-    def test_02_snippet_products_remove(self):
+    def test_02_snippet_products_grid_edition(self):
+        self.env["product.product"].create([
+            {
+                "name": "Test Product",
+                "website_published": True,
+                "sale_ok": True,
+                "list_price": 500,
+            },
+            {
+                "name": "Test Product 2",
+                "website_published": True,
+                "sale_ok": True,
+                "list_price": 500,
+            },
+            {
+                "name": "Test Product 3",
+                "website_published": True,
+                "sale_ok": True,
+                "list_price": 500,
+            },
+            {
+                "name": "Test Product 4",
+                "website_published": True,
+                "sale_ok": True,
+                "list_price": 500,
+            },
+        ])
+        self.start_tour(
+            self.env["website"].get_client_action_url("/", True),
+            "website_sale.snippet_products_grid",
+            login="admin",
+        )
+
+    def test_03_snippet_products_remove(self):
         Visitor = self.env["website.visitor"]
         user = self.env["res.users"].search([("login", "=", "admin")])
         product = self.env["product.product"].create({

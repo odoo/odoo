@@ -595,7 +595,7 @@
             <t t-if="debug" t-snippet="website.s_dynamic_snippet" string="Dynamic Snippet" group="debug"
                 t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_preview.png"/>
             <t t-if="debug" t-snippet="website.s_dynamic_snippet_carousel" string="Dynamic Carousel" group="debug"
-                t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_carousel_preview.png"/>
+                t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_carousel_preview.webp"/>
         </snippets>
 
         <snippets id="snippet_custom" string="Custom Inner Content"/>
@@ -675,7 +675,9 @@
         <t t-install="website_sale" string="Donation" group="contact_and_forms"
             t-image-preview="/website/static/src/img/snippets_previews/s_donation_preview.png"/>
         <t t-install="website_sale" string="Products Carousel" group="ecommerce"
-            t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_products_preview.webp"/>
+            t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_products_carousel_preview.webp"/>
+        <t t-install="website_sale" string="Products Grid" group="ecommerce"
+            t-image-preview="/website/static/src/img/snippets_previews/s_dynamic_snippet_products_grid_preview.webp"/>
     </xpath>
     <xpath expr="//snippets[@id='snippet_content']" position="inside">
         <t id="newsletter_snippet" t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
