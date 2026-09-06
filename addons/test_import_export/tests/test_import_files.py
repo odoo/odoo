@@ -1,15 +1,10 @@
-import unittest
-
-from odoo.tests import TransactionCase, can_import, loaded_demo_data, tagged
+from odoo.tests import TransactionCase, loaded_demo_data, tagged
 
 
 @tagged("post_install", "-at_install")
 class TestImportFiles(TransactionCase):
 
-    @unittest.skipUnless(
-        can_import("xlrd.xlsx") or can_import("openpyxl"), "XLRD/XLSX not available",
-    )
-    def test_import_contacts_template_xls(self):
+    def test_import_contacts_template_xlsx(self):
         if not loaded_demo_data(self.env):
             self.skipTest('Needs demo data to be able to import those files')
         model = "res.partner"

@@ -1,15 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import unittest
 
-from odoo.tests import TransactionCase, can_import, loaded_demo_data, tagged
+from odoo.tests import TransactionCase, loaded_demo_data, tagged
 from odoo.tools import mute_logger
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "-at_install", "xlrd")
 class TestImportFiles(TransactionCase):
 
     def import_product_xls(self, model, filepath=None):
@@ -55,9 +54,6 @@ class TestImportFiles(TransactionCase):
         )
         return results
 
-    @unittest.skipUnless(
-        can_import("xlrd.xlsx") or can_import("openpyxl"), "XLRD/XLSX not available"
-    )
     def test_import_create_product_demo_xls(self):
         has_demo_data = loaded_demo_data(self.env)
         for model in ("product.pricelist", "product.supplierinfo", "product.template", "product.category"):

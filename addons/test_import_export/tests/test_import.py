@@ -487,7 +487,6 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['5'], ['4', '6']])
 
-    @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
     def test_xls_success(self):
         file_content = self.file_read('test_import_export/data/test_import.xls')
         import_wizard = self.env['base_import.import'].create({
@@ -510,7 +509,6 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
-    @unittest.skipUnless(can_import('xlrd.xlsx') or can_import('openpyxl'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
         file_content = self.file_read('test_import_export/data/test_import.xlsx')
         import_wizard = self.env['base_import.import'].create({
@@ -533,7 +531,6 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
-    @unittest.skipUnless(can_import('openpyxl'), "XLSX not available")
     def test_rich_text_to_html(self):
         importer = self.env["base_import.import"]
 
@@ -1605,9 +1602,6 @@ class test_failures(TransactionCase):
 
 @tagged('at_install', '-post_install')
 class TestUrlImport(TransactionCase):
-    @unittest.skipUnless(
-        can_import("openpyxl"), "openpyxl not available",
-    )
     def test_import_image_by_url_as_non_admin_user(self):
         img_buf = io.BytesIO()
         Image.new('RGB', (1, 1), '#FF0000').save(img_buf, 'PNG')
@@ -1655,9 +1649,6 @@ class TestUrlImport(TransactionCase):
         )
         self.assertEqual(results['name'], ['Test Partner'])
 
-    @unittest.skipUnless(
-        can_import("openpyxl"), "openpyxl not available",
-    )
     def test_import_svg_by_url_mimetype(self):
         """SVG imported via URL: text/plain for non-admin (XSS prevention), image/svg+xml for admin."""
         svg_data = b'<svg xmlns="http://www.w3.org/2000/svg"></svg>'
