@@ -148,19 +148,29 @@
                 <div class="alert alert-warning" role="alert" name="warning_expense_job_position_limit"
                     invisible="state not in ('draft', 'submitted') or not is_own_expense or not is_expense_exceeding_job_position_limit">
                     Your job position has a limit of
-                    <field name="expense_job_position_limit_amount_currency"
+                    <field name="expense_job_position_limit_amount"
+                           widget="monetary"
+                           options="{'currency_field': 'company_currency_id'}"
+                           class="oe_inline"/>
+                    <span invisible="not is_multiple_currency">(<field name="expense_job_position_limit_amount_currency"
                            widget="monetary"
                            options="{'currency_field': 'currency_id'}"
-                           class="oe_inline"/>
+                           class="oe_inline"/>)
+                    </span>
                     for this expense. You may not be fully reimbursed!
                 </div>
                 <div class="alert alert-warning" role="alert" name="warning_manager_expense_job_position_limit"
                     invisible="state not in ('draft', 'submitted') or not can_approve or is_own_expense or not is_expense_exceeding_job_position_limit">
                     This expense exceeds the limit of
-                    <field name="expense_job_position_limit_amount_currency"
+                    <field name="expense_job_position_limit_amount"
+                           widget="monetary"
+                           options="{'currency_field': 'company_currency_id'}"
+                           class="oe_inline"/>
+                    <span invisible="not is_multiple_currency">(<field name="expense_job_position_limit_amount_currency"
                            widget="monetary"
                            options="{'currency_field': 'currency_id'}"
-                           class="oe_inline"/>
+                           class="oe_inline"/>)
+                    </span>
                     defined for this job position.
                     <div class="mt-1">
                         <button name="action_cap_reimbursement_to_policy"
