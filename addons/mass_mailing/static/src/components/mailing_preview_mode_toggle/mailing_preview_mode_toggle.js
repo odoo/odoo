@@ -1,12 +1,11 @@
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, useProps } from "@odoo/owl";
 
 export class MailingPreviewDisplayModeToggle extends Component {
     static template = "mass_mailing.MailingPreviewModeToggle";
-    static props = {
-        ...standardWidgetProps,
-    };
+
+    props = useProps(standardWidgetProps);
 
     setup() {
         this.state = proxy(this.env.displayState);

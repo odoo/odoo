@@ -7,7 +7,7 @@ export class BackgroundShapeSelector extends BaseOptionComponent {
     static template = "html_builder.BackgroundShapeSelector";
     static dependencies = ["backgroundShapeOption"];
     static components = { ShapeSelector };
-    props = useProps({ ...shapeSelectorProps });
+    props = useProps(shapeSelectorProps);
     setup() {
         super.setup();
         this.backgroundShapePlugin = this.dependencies.backgroundShapeOption;
