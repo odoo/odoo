@@ -11,9 +11,10 @@ from freezegun import freeze_time
 from psycopg2 import IntegrityError
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.fields import Domain
 from odoo.sql_db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
@@ -926,3 +927,30 @@ class TestMassMailingActions(MassMailCommon):
         results_trace = self.env["mailing.trace"].search(results['domain'])
         results_partner = self.env["res.partner"].search([('id', 'in', results_trace.res_id)])
         self.assertEqual(results_partner, self.partner_admin, "Trace leaked from mass_mailing_2 to mass_mailing_1")
+
+    def test_mailing_action_save_as_template(self):
+        blob = b'blob1'
+        jinja_content = r"""
+<p>a${'b' or '' | safe} !<a href="${ 'c' or '' }">d</a> e ${'f' or '' | safe}<br>g</p>
+""".strip()
+        mailing_no_body = self.env['mailing.mailing'].create({'subject': 'First Mailing'})
+        mailing_with_attachment = self.env['mailing.mailing'].create({
+            'subject': 'Second Mailing',
+            'body_arch': jinja_content
+        })
+        svg_attachment = self.env['ir.attachment'].create({
+            "name": "test SVG",
+            "mimetype": "image/svg+xml",
+            "raw": blob,
+            "public": True,
+            "res_model": "mailing.mailing",
+            "res_id": mailing_with_attachment.id,
+        })
+        mailing_with_attachment.attachment_ids = [Command.set(svg_attachment.ids)]
+
+        with self.assertRaises(UserError, msg='No design has been created yet!'):
+            mailing_no_body.action_save_as_template()
+
+        template = mailing_with_attachment.action_save_as_template()
+        self.assertNotEqual(template.attachment_ids.ids, svg_attachment.ids)
+        self.assertNotEqual(template.attachment_ids.res_id, svg_attachment.res_id)

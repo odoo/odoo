@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mass_mailing.KanbanMenu" t-inherit="web.KanbanMenu">
+        <xpath expr="//div[hasclass('o_dropdown_kanban')]" position="attributes">
+            <attribute name="style" add="top: 373px !important; visibility: visible;" separator=" "/>
+        </xpath>
+    </t>
+
+    <t t-name="mass_mailing.MailingTemplateKanbanRecord" t-inherit="web.KanbanRecord">
+        <xpath expr="//article[@role='link']" position="attributes">
+            <attribute name="class" add="o_templates_kanban_record" separator=" "/>
+        </xpath>
+    </t>
+</templates>
