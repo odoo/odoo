@@ -28,7 +28,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
     </record>
 
@@ -36,7 +36,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
     </record>
 
@@ -50,7 +50,7 @@
 
     <record id="generic_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -61,7 +61,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
     </record>
 
@@ -69,7 +69,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
     </record>
 
@@ -77,7 +77,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
     </record>
 
@@ -139,7 +139,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ae"/>
     </record>
@@ -148,7 +148,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ae"/>
     </record>
@@ -164,7 +164,7 @@
 
     <record id="uae_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -176,7 +176,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ae"/>
     </record>
@@ -185,13 +185,14 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ae"/>
     </record>
 
     <record id="uae_public_holiday_entry_type" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
+        <field name="color">6</field>
         <field name="code">LEAVE500</field>
         <field name="country_id" ref="base.ae"/>
         <field name="count_as">absence</field>
@@ -237,7 +238,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.au"/>
     </record>
@@ -246,7 +247,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.au"/>
     </record>
@@ -262,7 +263,7 @@
 
     <record id="au_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -274,7 +275,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.au"/>
     </record>
@@ -283,7 +284,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.au"/>
     </record>
@@ -292,7 +293,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.au"/>
     </record>
@@ -480,7 +481,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.be"/>
     </record>
@@ -489,7 +490,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.be"/>
     </record>
@@ -505,7 +506,7 @@
 
     <record id="be_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -546,7 +547,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.be"/>
     </record>
@@ -555,7 +556,7 @@
         <field name="name">Sick Time Off Without Certificate</field>
         <field name="display_code">STOWC</field>
         <field name="code">LEAVE111</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.be"/>
     </record>
@@ -564,7 +565,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.be"/>
     </record>
@@ -626,7 +627,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
     </record>
@@ -1782,7 +1783,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.bd"/>
     </record>
@@ -1791,7 +1792,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.bd"/>
     </record>
@@ -1807,7 +1808,7 @@
 
     <record id="bd_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -1819,7 +1820,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.bd"/>
     </record>
@@ -1828,7 +1829,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.bd"/>
     </record>
@@ -1837,7 +1838,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.bd"/>
     </record>
@@ -1873,7 +1874,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ch"/>
     </record>
@@ -1882,7 +1883,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ch"/>
     </record>
@@ -1898,7 +1899,7 @@
 
     <record id="ch_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -1910,7 +1911,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ch"/>
     </record>
@@ -1919,7 +1920,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ch"/>
     </record>
@@ -1927,7 +1928,7 @@
     <record id="l10n_ch_work_entry_type_bank_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="country_id" ref="base.ch"/>
         <field name="count_as">absence</field>
     </record>
@@ -2099,7 +2100,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.eg"/>
     </record>
@@ -2108,7 +2109,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.eg"/>
     </record>
@@ -2124,7 +2125,7 @@
 
     <record id="eg_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="amount_rate">0.0</field>
@@ -2136,7 +2137,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.eg"/>
     </record>
@@ -2145,7 +2146,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.eg"/>
     </record>
@@ -2276,7 +2277,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.fr"/>
     </record>
@@ -2285,7 +2286,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.fr"/>
     </record>
@@ -2301,7 +2302,7 @@
 
     <record id="fr_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -2313,7 +2314,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.fr"/>
     </record>
@@ -2322,7 +2323,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.fr"/>
     </record>
@@ -2331,7 +2332,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.fr"/>
     </record>
@@ -2368,7 +2369,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.hk"/>
     </record>
@@ -2377,7 +2378,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.hk"/>
     </record>
@@ -2393,7 +2394,7 @@
 
     <record id="hk_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -2405,7 +2406,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.hk"/>
     </record>
@@ -2414,7 +2415,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.hk"/>
     </record>
@@ -2506,7 +2507,7 @@
     <record id="l10n_hk_work_entry_type_public_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
-        <field name="color">5</field>
+        <field name="color">6</field>
         <field name="country_id" ref="base.hk"/>
         <field name="count_as">absence</field>
     </record>
@@ -2551,7 +2552,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.id"/>
     </record>
@@ -2560,7 +2561,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.id"/>
     </record>
@@ -2576,7 +2577,7 @@
 
     <record id="id_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -2588,7 +2589,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.id"/>
     </record>
@@ -2597,7 +2598,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.id"/>
     </record>
@@ -2637,7 +2638,7 @@
     <record id="l10n_id_work_entry_type_public_holiday" model="hr.work.entry.type">
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
-        <field name="color">5</field>
+        <field name="color">6</field>
         <field name="country_id" ref="base.id"/>
         <field name="count_as">absence</field>
     </record>
@@ -2694,7 +2695,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.in"/>
     </record>
@@ -2703,7 +2704,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.in"/>
     </record>
@@ -2719,7 +2720,7 @@
 
     <record id="in_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -2731,7 +2732,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.in"/>
     </record>
@@ -2740,7 +2741,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.in"/>
     </record>
@@ -2749,7 +2750,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.in"/>
     </record>
@@ -2786,7 +2787,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.it"/>
     </record>
@@ -2795,7 +2796,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.it"/>
     </record>
@@ -2811,7 +2812,7 @@
 
     <record id="it_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -2823,7 +2824,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.it"/>
     </record>
@@ -2832,7 +2833,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.it"/>
     </record>
@@ -2841,7 +2842,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.it"/>
     </record>
@@ -2898,7 +2899,7 @@
         <field name="name">Generic Time Off</field>
         <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.iq"/>
     </record>
@@ -2907,7 +2908,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.iq"/>
     </record>
@@ -2923,7 +2924,7 @@
 
     <record id="iq_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -2935,7 +2936,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.iq"/>
     </record>
@@ -2944,7 +2945,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.iq"/>
     </record>
@@ -2953,7 +2954,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.iq"/>
     </record>
@@ -3044,7 +3045,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ke"/>
     </record>
@@ -3053,7 +3054,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ke"/>
     </record>
@@ -3069,7 +3070,7 @@
 
     <record id="ke_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -3081,7 +3082,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ke"/>
     </record>
@@ -3090,7 +3091,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ke"/>
     </record>
@@ -3099,7 +3100,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ke"/>
     </record>
@@ -3132,7 +3133,7 @@
         <field name="name">Generic Time Off</field>
         <field name="code">LEAVE100</field>
         <field name="count_as">absence</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
@@ -3140,7 +3141,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="code">LEAVE105</field>
         <field name="count_as">absence</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
@@ -3156,7 +3157,7 @@
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="country_id" ref="base.kw"/>
         <field name="amount_rate">0.0</field>
     </record>
@@ -3166,7 +3167,7 @@
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
         <field name="count_as">absence</field>
-        <field name="color">4</field>
+        <field name="color">3</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
@@ -3175,7 +3176,7 @@
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
         <field name="count_as">absence</field>
-        <field name="color">3</field>
+        <field name="color">9</field>
         <field name="country_id" ref="base.kw"/>
     </record>
 
@@ -3183,7 +3184,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.kw"/>
     </record>
@@ -3263,7 +3264,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lt"/>
     </record>
@@ -3272,7 +3273,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lt"/>
     </record>
@@ -3288,7 +3289,7 @@
 
     <record id="lt_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -3300,7 +3301,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lt"/>
     </record>
@@ -3309,7 +3310,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lt"/>
     </record>
@@ -3318,7 +3319,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lt"/>
     </record>
@@ -3355,7 +3356,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.jo"/>
     </record>
@@ -3364,7 +3365,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.jo"/>
     </record>
@@ -3380,7 +3381,7 @@
 
     <record id="jo_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -3392,7 +3393,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.jo"/>
     </record>
@@ -3401,7 +3402,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.jo"/>
     </record>
@@ -3410,7 +3411,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.jo"/>
     </record>
@@ -3518,7 +3519,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lu"/>
     </record>
@@ -3527,7 +3528,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lu"/>
     </record>
@@ -3543,7 +3544,7 @@
 
     <record id="lu_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -3555,7 +3556,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lu"/>
     </record>
@@ -3564,7 +3565,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lu"/>
     </record>
@@ -3573,7 +3574,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.lu"/>
     </record>
@@ -3668,7 +3669,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ma"/>
     </record>
@@ -3677,7 +3678,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ma"/>
     </record>
@@ -3693,7 +3694,7 @@
 
     <record id="ma_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -3705,7 +3706,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ma"/>
     </record>
@@ -3714,7 +3715,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ma"/>
     </record>
@@ -3723,7 +3724,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ma"/>
     </record>
@@ -3760,7 +3761,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.mx"/>
     </record>
@@ -3769,7 +3770,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.mx"/>
     </record>
@@ -3785,7 +3786,7 @@
 
     <record id="mx_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -3797,7 +3798,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.mx"/>
     </record>
@@ -3806,7 +3807,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.mx"/>
     </record>
@@ -3815,7 +3816,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.mx"/>
     </record>
@@ -3898,7 +3899,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.my"/>
     </record>
@@ -3907,7 +3908,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.my"/>
     </record>
@@ -3923,7 +3924,7 @@
 
     <record id="my_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -3935,7 +3936,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.my"/>
     </record>
@@ -3944,7 +3945,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.my"/>
     </record>
@@ -3953,7 +3954,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.my"/>
     </record>
@@ -3990,7 +3991,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.nl"/>
     </record>
@@ -3999,7 +4000,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.nl"/>
     </record>
@@ -4015,7 +4016,7 @@
 
     <record id="nl_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4027,7 +4028,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.nl"/>
     </record>
@@ -4036,7 +4037,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.nl"/>
     </record>
@@ -4045,7 +4046,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.nl"/>
     </record>
@@ -4082,7 +4083,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pk"/>
     </record>
@@ -4091,7 +4092,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pk"/>
     </record>
@@ -4107,7 +4108,7 @@
 
     <record id="pk_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4119,7 +4120,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pk"/>
     </record>
@@ -4128,7 +4129,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pk"/>
     </record>
@@ -4137,7 +4138,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pk"/>
     </record>
@@ -4174,7 +4175,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pl"/>
     </record>
@@ -4183,7 +4184,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pl"/>
     </record>
@@ -4199,7 +4200,7 @@
 
     <record id="pl_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4211,7 +4212,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pl"/>
     </record>
@@ -4220,7 +4221,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pl"/>
     </record>
@@ -4229,7 +4230,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.pl"/>
     </record>
@@ -4275,7 +4276,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -4284,7 +4285,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -4300,7 +4301,7 @@
 
     <record id="ro_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4312,7 +4313,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -4321,7 +4322,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -4330,7 +4331,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ro"/>
     </record>
@@ -4367,7 +4368,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.om"/>
     </record>
@@ -4376,7 +4377,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.om"/>
     </record>
@@ -4392,7 +4393,7 @@
 
     <record id="om_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4404,7 +4405,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.om"/>
     </record>
@@ -4413,7 +4414,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.om"/>
     </record>
@@ -4422,7 +4423,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.om"/>
     </record>
@@ -4595,7 +4596,7 @@
         <field name="name">Generic Time Off</field>
         <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sa"/>
     </record>
@@ -4604,7 +4605,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sa"/>
     </record>
@@ -4620,7 +4621,7 @@
 
     <record id="sa_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4632,7 +4633,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sa"/>
     </record>
@@ -4661,7 +4662,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sa"/>
     </record>
@@ -4670,7 +4671,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sa"/>
     </record>
@@ -4771,7 +4772,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sk"/>
     </record>
@@ -4780,7 +4781,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sk"/>
     </record>
@@ -4796,7 +4797,7 @@
 
     <record id="sk_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4808,7 +4809,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sk"/>
     </record>
@@ -4817,7 +4818,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sk"/>
     </record>
@@ -4826,7 +4827,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.sk"/>
     </record>
@@ -4907,7 +4908,7 @@
         <field name="name">Generic Time Off</field>
          <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.tr"/>
     </record>
@@ -4916,7 +4917,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.tr"/>
     </record>
@@ -4932,7 +4933,7 @@
 
     <record id="tr_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -4944,7 +4945,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.tr"/>
     </record>
@@ -4953,7 +4954,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.tr"/>
     </record>
@@ -4962,7 +4963,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.tr"/>
     </record>
@@ -5024,7 +5025,7 @@
 
     <record id="us_work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -5036,7 +5037,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.us"/>
     </record>
@@ -5045,7 +5046,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.us"/>
     </record>
@@ -5054,7 +5055,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.us"/>
     </record>
@@ -5111,7 +5112,7 @@
 <!-- PH : Philippines -->
 <record id="l10n_ph_hr_payroll_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
-        <field name="color">5</field>
+        <field name="color">1</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
         <field name="count_as">absence</field>
@@ -5122,7 +5123,7 @@
         <field name="name">Generic Time Off</field>
         <field name="display_code">GTO</field>
         <field name="code">LEAVE100</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ph"/>
     </record>
@@ -5130,7 +5131,7 @@
         <field name="name">Compensatory Time Off</field>
         <field name="display_code">CTO</field>
         <field name="code">LEAVE105</field>
-        <field name="color">3</field>
+        <field name="color">7</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ph"/>
     </record>
@@ -5138,7 +5139,7 @@
         <field name="name">Sick Time Off</field>
         <field name="display_code">STO</field>
         <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="color">3</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ph"/>
     </record>
@@ -5146,7 +5147,7 @@
         <field name="name">Paid Time Off</field>
         <field name="display_code">PTO</field>
         <field name="code">LEAVE120</field>
-        <field name="color">5</field>
+        <field name="color">9</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ph"/>
     </record>
@@ -5155,7 +5156,7 @@
         <field name="name">Public Holiday</field>
         <field name="code">LEAVE500</field>
         <field name="display_code">PH</field>
-        <field name="color">3</field>
+        <field name="color">6</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.ph"/>
     </record>
