@@ -179,7 +179,15 @@ class PosOrder(models.Model):
         self.env['l10n_es_edi_tbai.document']._add_base_lines_tax_amounts(base_lines, self.company_id)
 
         for base_line in base_lines:
+<<<<<<< e409ed05fe2a04aa297cb60c5b45597dde18dc84
             sign = base_line['is_refund'] and -1 or 1
+||||||| e80171f7bc2f7d96a774136d8fac419b0a3352ab
+            sign = base_line['is_refund'] and -1 or 1
+            if base_line['price_unit'] < 0:  # Only happens with discount lines
+                sign *= -1
+=======
+            sign = -1 * base_line['sign']
+>>>>>>> 83d32270d5e12cbfafccc40ef3f088e1d559bed5
             base_line['gross_price_unit'] = sign * base_line['gross_price_unit']
             base_line['discount_amount'] = sign * base_line['discount_amount']
             base_line['price_total'] = sign * base_line['price_total']
