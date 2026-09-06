@@ -1717,21 +1717,30 @@ class ResUsersApikeys(models.Model):
         self._ensure_can_manage_keys_programmatically()
         assert key, "key required"
         with self.env['res.users']._assert_can_auth(user=key[:INDEX_SIZE]):
-            self.env.cr.execute(SQL('''
-                SELECT id, key
-                FROM %(table)s
-                WHERE
-                    index = %(index)s
-                    AND (
-                        expiration_date IS NULL OR
-                        expiration_date >= now() at time zone 'utc'
-                    )
-            ''', table=SQL.identifier(self._table), index=key[:INDEX_SIZE]))
-            for key_id, current_key in self.env.cr.fetchall():
-                if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
-                    self.env['res.users.apikeys'].browse(key_id)._remove()
-                    return True
+            if self._revoke_by_key(key):
+                return True
             raise AccessDenied(_("The provided API key is invalid."))
+
+    def _revoke_by_key(self, key):
+        """Find the api key record matching `key`, not expired, and remove it.
+        :returns: whether a matching record was found and removed.
+        :rtype: bool
+        """
+        self.env.cr.execute(SQL('''
+            SELECT id, key
+            FROM %(table)s
+            WHERE
+                index = %(index)s
+                AND (
+                    expiration_date IS NULL OR
+                    expiration_date >= now() at time zone 'utc'
+                )
+        ''', table=SQL.identifier(self._table), index=key[:INDEX_SIZE]))
+        for key_id, current_key in self.env.cr.fetchall():
+            if key and KEY_CRYPT_CONTEXT.verify(key, current_key):
+                self.env['res.users.apikeys'].browse(key_id)._remove()
+                return True
+        return False
 
     @api.autovacuum
     def _gc_user_apikeys(self):

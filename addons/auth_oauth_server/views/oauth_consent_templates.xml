@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="consent" name="OAuth Consent">
+        <t t-call="auth_oauth_server_base.oauth_layout">
+            <t t-set="title">Authorize Application</t>
+            <h1 class="h4 text-center mb-4">Authorize Application</h1>
+            <p>
+                <strong t-out="client.client_name"/> is requesting access to your Odoo
+                account for
+                <strong t-out="resource.label"/>.
+            </p>
+            <p class="mb-0">If you allow access, you will be redirected to:</p>
+            <p class="small text-break font-monospace bg-200 border rounded p-2" t-out="params['redirect_uri']"/>
+            <form method="post" action="/oauth/authorize/submit_consent" target="_top">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <t t-foreach="params.items()" t-as="param">
+                    <input type="hidden" t-att-name="param[0]" t-att-value="param[1]"/>
+                </t>
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" name="allow" value="true" class="btn btn-primary">Allow</button>
+                    <button type="submit" name="allow" value="false" class="btn btn-secondary">Deny</button>
+                </div>
+            </form>
+        </t>
+    </template>
+</odoo>
