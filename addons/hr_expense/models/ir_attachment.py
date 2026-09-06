@@ -20,7 +20,7 @@ class IrAttachment(models.Model):
     def _inaccessible_comodel_records(self, model_and_ids: dict[str, Collection[int]], operation: str):
         expense_ids = list(filter(None, model_and_ids.get('hr.expense', [])))
         expenses = self.env['hr.expense'].browse(expense_ids)
-        user_expenses = expenses.filtered(lambda e: e.state in {'draft', 'submitted'} and e.employee_id.user_id == self.env.user)
+        user_expenses = expenses.sudo().filtered(lambda e: e.state in {'draft', 'submitted'} and e.employee_id.user_id == self.env.user)
 
         blocked_expense_ids = []
         if operation != 'read' and not self.env.su:
