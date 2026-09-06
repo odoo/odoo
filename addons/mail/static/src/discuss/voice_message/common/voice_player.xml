@@ -2,24 +2,26 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.VoicePlayer">
-        <div class="o-mail-VoicePlayer d-flex align-items-center my-1 position-relative">
-            <t t-set="playOrPause"><t t-if="this.state.repeat">Repeat</t><t t-elif="this.state.playing">Pause</t><t t-else="">Play</t></t>
-            <button class="border-0 btn shadow-none rounded-pill oi oi-fw ms-sm-2 me-1 me-sm-3 bg-200"
-                t-att-class="{
-                    'text-danger btn-sm': this.state.playing,
-                    'btn-light btn-sm': !this.state.playing,
-                }"
-                t-attf-data-icon="{{ this.state.playing ? 'stop' : (this.state.repeat ? 'redo' : 'play_arrow') }}"
-                t-att-title="playOrPause" t-on-click.stop="() => this.onClickPlayPause()"/>
-            <div class="o-mail-VoicePlayer-wrapper">
-                <div t-ref="this.wrapperRef" class="h-100 position-relative">
-                    <div class="o-mail-VoicePlayer-drawer position-absolute top-0 bottom-0 overflow-hidden" t-ref="this.drawerRef">
+        <div class="o-mail-VoicePlayer d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">
+            <div class="o-mail-VoicePlayer-wave position-absolute z-2 d-flex flex-column">
+                <div class="w-100 flex-grow-1 position-relative cursor-pointer" t-ref="this.wrapperRef">
+                    <div class="position-absolute top-0 bottom-0 overflow-hidden z-1" t-ref="this.drawerRef">
                         <canvas class="position-absolute" t-ref="this.progressRef"/>
                     </div>
                     <canvas class="position-absolute" t-ref="this.waveRef"/>
                 </div>
+                <span class="o-mail-VoicePlayer-time align-self-end text-muted small">
+                    <t t-if="this.state.totalTime"><t t-out="this.state.currentTime"/> / <t t-out="this.state.totalTime"/></t>
+                    <t t-else="">-- : --</t>
+                </span>
             </div>
-            <div class="mx-1 mx-sm-2 text-muted flex-shrink-0 text-nowrap" style="font-variant-numeric: tabular-nums;"><t t-out="this.state.visualTime"/></div>
+            <div class="o-mail-AttachmentCard-image position-relative me-2 flex-shrink-0">
+                <button class="btn p-0 border-0 shadow-none position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center oi fs-3 text-primary"
+                    t-att-data-icon="this.playIcon" t-att-title="this.playTitle"
+                    t-on-click.stop="() => this.onClickPlayPause()"/>
+            </div>
+            <div t-if="this.props.attachment.name" class="text-truncate fw-bold" t-out="this.props.attachment.name"/>
+            <audio t-ref="this.audioRef" class="d-none" preload="auto"/>
         </div>
     </t>
 

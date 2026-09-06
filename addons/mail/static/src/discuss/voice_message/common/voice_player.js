@@ -10,49 +10,49 @@ import {
     useProps,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
+// Used to draw the waveform generated for the recorded voice, sizes in pixels.
+const BAR_WIDTH = 3;
+const BAR_GAP = 2;
+const BAR_MIN_HEIGHT = 3;
+const BAR_RADIUS = 1.5;
+const WAVE_AMPLITUDE = 0.65;
 const WAVE_COLOR = "#7775";
 
 export class VoicePlayer extends Component {
     static template = "mail.VoicePlayer";
 
+    /** @type {HTMLAudioElement} */
+    audioEl;
+    /** @type {string|undefined} */
+    audioUrl;
     /** @type {number} */
-    lastPlaytime = 0;
-    /** @type {number} */
-    lastPos = 0;
-    /** @type {number} */
-    startPosition = 0;
-    /** @type {string} */
-    progressColor;
-    /** @type {GainNode} */
-    gainNode;
-    /** @type {AudioContext} */
-    audioCtx;
-    scheduledPause;
-    /** @type {AudioBuffer} */
-    buffer;
-    /** @type {AnalyserNode} */
-    analyser;
-    /** @type {AudioBufferSourceNode} */
-    source;
-    /** @type {number} */
-    width;
+    barCount;
+    duration = 0;
     /** @type {number} */
     height;
-    /** @type {HTMLElement} */
-    wrapper;
+    isAudioLoading = false;
+    lastPos = 0;
+    // Used to ignore the result of a play() call when playback has already stopped.
+    playRequestId = 0;
+    /** @type {CanvasRenderingContext2D} */
+    progressCtx;
     /** @type {HTMLElement} */
     progressWave;
     /** @type {CanvasRenderingContext2D} */
     waveCtx;
-    /** @type {CanvasRenderingContext2D} */
-    progressCtx;
-    wrapperRef = signal.ref();
+    /** @type {number} */
+    width;
+    /** @type {HTMLElement} */
+    wrapper;
+    audioRef = signal.ref();
     drawerRef = signal.ref();
-    waveRef = signal.ref();
     progressRef = signal.ref();
+    waveRef = signal.ref();
+    wrapperRef = signal.ref();
 
     setup() {
         super.setup();
@@ -62,36 +62,30 @@ export class VoicePlayer extends Component {
         });
         /** @type {import("@mail/discuss/voice_message/common/voice_message_service").VoiceMessageService} */
         this.voiceMessageService = useService("discuss.voice_message");
+        this.notification = useService("notification");
         this.state = proxy({
             paused: true,
             playing: false,
             repeat: false,
-            visualTime: "-- : --",
+            currentTime: "",
+            totalTime: "",
         });
         useOnChange(
-            () => [this.state.playing],
-            (playing) => {
-                if (playing) {
-                    this.addOnAudioProcess();
-                }
-            }
-        );
-        useOnChange(
             () => [this.props.attachment.uploading],
-            (uploading) => {
-                if (uploading) {
-                    return;
+            () => {
+                if (!this.props.attachment.uploading) {
+                    this.loadAudio();
                 }
-                if (this.wasUploading && !uploading) {
-                    this.makeAudio();
-                }
-                this.wasUploading = uploading;
-            }
+            },
+            { initialRun: false }
         );
         onMounted(() => {
             this.initElements();
+            this.audioEl = this.audioRef();
+            this.audioEl.addEventListener("ended", () => this.pause({ end: true }));
             this.wrapper.addEventListener("click", (e) => {
-                if (this.props.attachment.uploading) {
+                e.stopPropagation();
+                if (this.props.attachment.uploading || this.isAudioLoading) {
                     return;
                 }
                 const clientX = (e.targetTouches ? e.targetTouches[0] : e).clientX;
@@ -104,112 +98,129 @@ export class VoicePlayer extends Component {
                 this.seekTo(progress);
             });
             if (!this.props.attachment.uploading) {
-                this.makeAudio();
+                this.loadAudio();
             }
-            this.wasUploading = this.props.attachment.uploading;
         });
         onWillUnmount(() => {
             if (this.state.playing) {
                 this.pause();
             }
-            this.destroyWebAudio();
+            this.destroyAudio();
         });
     }
 
-    makeAudio() {
-        this.audioCtx = new browser.AudioContext();
-        this.gainNode = this.audioCtx.createGain();
-        this.gainNode.connect(this.audioCtx.destination);
-        this.analyser = this.audioCtx.createAnalyser();
-        this.analyser.connect(this.gainNode);
-        this.fetchFile(
-            url(this.props.attachment.urlRoute, {
-                ...this.props.attachment.urlQueryParams,
+    get playIcon() {
+        if (this.state.playing) {
+            return "pause";
+        }
+        return this.state.repeat ? "refresh" : "play_arrow";
+    }
+
+    get playTitle() {
+        if (this.state.playing) {
+            return _t("Pause");
+        }
+        return this.state.repeat ? _t("Replay") : _t("Play");
+    }
+
+    initElements() {
+        this.wrapper = this.wrapperRef();
+        this.progressWave = this.drawerRef();
+        this.width = this.wrapper.clientWidth;
+        this.height = this.wrapper.clientHeight;
+        // Fill the available width with evenly spaced bars (bar + gap)
+        this.barCount = Math.max(1, Math.round((this.width + BAR_GAP) / (BAR_WIDTH + BAR_GAP)));
+        this.waveCtx = this.setupCanvas(this.waveRef(), WAVE_COLOR);
+        this.progressCtx = this.setupCanvas(
+            this.progressRef(),
+            getComputedStyle(this.wrapper).getPropertyValue("--primary")
+        );
+    }
+
+    setupCanvas(canvas, color) {
+        const ratio = window.devicePixelRatio || 1;
+        // Scale the backing canvas to the device pixel ratio for sharper rendering.
+        canvas.width = Math.round(this.width * ratio);
+        canvas.height = Math.round(this.height * ratio);
+        canvas.style.width = `${this.width}px`;
+        canvas.style.height = `${this.height}px`;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = color;
+        return ctx;
+    }
+
+    loadAudio() {
+        if (this.isAudioLoading) {
+            return;
+        }
+        this.isAudioLoading = true;
+        return this._loadAudio()
+            .catch((err) => {
+                console.warn("Voice message audio could not be fetched or decoded.", err);
+                this.notification.add(_t("Could not load the voice message."), {
+                    type: "warning",
+                });
             })
-        ).then((arrayBuffer) => this.drawBuffer(arrayBuffer));
+            .finally(() => {
+                this.isAudioLoading = false;
+            });
     }
 
-    _fetch(...args) {
-        return fetch(...args);
+    async _loadAudio() {
+        this.destroyAudio();
+        const blob = await this.fetchFile();
+        if (status(this) === "destroyed") {
+            return;
+        }
+        this.audioUrl = URL.createObjectURL(blob);
+        this.audioEl.src = this.audioUrl;
+        const audioCtx = new browser.AudioContext();
+        try {
+            const arrayBuffer = await blob.arrayBuffer();
+            const buffer = await audioCtx.decodeAudioData(arrayBuffer);
+            if (status(this) === "destroyed") {
+                return;
+            }
+            this.duration = buffer.duration;
+            this.state.totalTime = this.generateTime(buffer.duration);
+            this.setVisualTime(0);
+            this.onProgress(0);
+            this.drawWave(this.getPeaks(buffer));
+            this.applySettings();
+        } finally {
+            if (audioCtx.state !== "closed") {
+                await audioCtx.close();
+            }
+        }
     }
 
-    async fetchFile(url) {
-        const response = await this._fetch(url);
+    async fetchFile() {
+        const audioUrl = url(this.props.attachment.urlRoute, {
+            ...this.props.attachment.urlQueryParams,
+        });
+        const response = await browser.fetch(audioUrl);
         if (!response.ok) {
             throw new Error("HTTP error status: " + response.status);
         }
-        const arrayBuffer = await response.arrayBuffer();
-        return arrayBuffer;
+        return response.blob();
     }
 
-    getPlayedTime() {
-        return this.audioCtx.currentTime - this.lastPlaytime;
-    }
-
-    getCurrentTime() {
-        if (this.state.paused) {
-            return this.startPosition;
-        } else {
-            return this.startPosition + this.getPlayedTime();
-        }
-    }
-
-    play() {
-        if (this.voiceMessageService.activePlayer) {
-            this.voiceMessageService.activePlayer.pause();
-        }
-        this.voiceMessageService.activePlayer = this;
-        this.state.repeat = false;
-        this.createSource();
-        const { start, end } = this.seekToElapsed();
-        this.scheduledPause = end;
-        this.source.start(0, start);
-        this.state.playing = true;
-        this.state.paused = false;
-    }
-
-    pause(options) {
-        this.voiceMessageService.activePlayer = null;
-        if (options?.end) {
-            this.state.repeat = true;
-        }
-        this.scheduledPause = null;
-        this.startPosition += this.getPlayedTime();
-        if (this.source) {
-            try {
-                this.source.stop();
-            } catch (e) {
-                if (e.name === "InvalidStateError") {
-                    return;
-                }
-                throw e;
-            }
-        }
-        if (!options?.continue) {
-            this.state.paused = true;
-            this.state.playing = false;
-        }
-    }
-
-    getPeaks() {
+    getPeaks(buffer) {
         const peaks = [];
-        const sampleSize = this.buffer.length / this.width;
-        const sampleStep = Math.floor(sampleSize / 10);
-        const chan = this.buffer.getChannelData(0);
-        let i;
-        for (i = 0; i < this.width; i++) {
+        // Number of audio samples represented by each bar.
+        const sampleSize = buffer.length / this.barCount;
+        // Sample roughly 10 points per bar instead of every sample.
+        // This significantly reduces processing while preserving the visual shape.
+        const sampleStep = Math.max(1, Math.floor(sampleSize / 10));
+        const channel = buffer.getChannelData(0);
+        for (let i = 0; i < this.barCount; i++) {
             const start = Math.floor(i * sampleSize);
             const end = Math.floor(start + sampleSize);
-            let min = chan[start];
-            let max = min;
-            let j;
-            for (j = start; j < end; j += sampleStep) {
-                const value = chan[j];
+            let max = 0;
+            for (let j = start; j < end; j += sampleStep) {
+                const value = Math.abs(channel[j]);
                 if (value > max) {
                     max = value;
-                }
-                if (value < min) {
-                    min = value;
                 }
             }
             peaks[i] = max;
@@ -217,37 +228,103 @@ export class VoicePlayer extends Component {
         return peaks;
     }
 
-    createSource() {
-        this.source?.disconnect();
-        this.source = this.audioCtx.createBufferSource();
-        this.source.buffer = this.buffer;
-        this.source.connect(this.analyser);
+    drawWave(peaks) {
+        return browser.requestAnimationFrame(() => {
+            this.drawLineToContext(this.waveCtx, peaks);
+            this.drawLineToContext(this.progressCtx, peaks);
+        });
     }
 
-    /**
-     * @param {number} [start] float representing start time
-     * @param {number} [end] float representing end time
-     * @returns {Object} res
-     * @returns {number} res.start
-     * @returns {number} res.end
-     */
-    seekToElapsed(start, end) {
-        this.scheduledPause = null;
-        if (start === undefined) {
-            start = this.getCurrentTime();
-            if (start >= this.buffer.duration) {
-                start = 0;
-            }
+    drawLineToContext(ctx, peaks) {
+        const { width, height } = ctx.canvas;
+        const ratio = width / this.width;
+        const maxPeak = Math.max(...peaks) || 1;
+        const barWidth = Math.round(BAR_WIDTH * ratio);
+        const radius = BAR_RADIUS * ratio;
+        // distance between the left edges of consecutive bars evenly distributed across the canvas width.
+        const pitch = (width + BAR_GAP * ratio) / peaks.length;
+        ctx.beginPath();
+        for (let i = 0; i < peaks.length; i++) {
+            // Scale each bar relative to the loudest peak, cap it to a fraction of the canvas height,
+            // and enforce a minimum height so sections with silence remain visible.
+            const barHeight = Math.round(
+                Math.max(BAR_MIN_HEIGHT * ratio, (peaks[i] / maxPeak) * height * WAVE_AMPLITUDE)
+            );
+            const x = Math.round(i * pitch);
+            const y = Math.round((height - barHeight) / 2);
+            ctx.roundRect(x, y, barWidth, barHeight, radius);
         }
-        if (end === undefined) {
-            end = this.buffer.duration;
+        ctx.fill();
+    }
+
+    play() {
+        this.voiceMessageService.activePlayer?.pause();
+        this.voiceMessageService.activePlayer = this;
+        if (this.state.repeat) {
+            this.seekTo(0);
         }
-        this.startPosition = start;
-        this.lastPlaytime = this.audioCtx.currentTime;
-        return { start, end };
+        this.state.repeat = false;
+        this.applySettings();
+        const requestId = ++this.playRequestId;
+        this.audioEl
+            .play()
+            .then(() => {
+                if (this.playRequestId !== requestId) {
+                    return;
+                }
+                this.state.playing = true;
+                this.state.paused = false;
+                this.trackPlaybackProgress();
+            })
+            .catch(() => {
+                if (this.playRequestId !== requestId) {
+                    return;
+                }
+                if (this.voiceMessageService.activePlayer === this) {
+                    this.voiceMessageService.activePlayer = null;
+                }
+                this.state.paused = true;
+                this.state.playing = false;
+            });
+    }
+
+    pause(options) {
+        this.playRequestId++;
+        if (this.voiceMessageService.activePlayer === this) {
+            this.voiceMessageService.activePlayer = null;
+        }
+        if (options?.end) {
+            this.state.repeat = true;
+            this.setVisualTime(this.duration);
+            this.onProgress(1);
+        }
+        this.audioEl.pause();
+        this.state.paused = true;
+        this.state.playing = false;
+    }
+
+    seekTo(progress) {
+        this.state.repeat = false;
+        const elapsedTime = progress * this.duration;
+        this.audioEl.currentTime = elapsedTime;
+        this.setVisualTime(elapsedTime);
+        this.onProgress(progress);
+    }
+
+    trackPlaybackProgress() {
+        if (status(this) === "destroyed") {
+            return;
+        }
+        const time = this.audioEl.currentTime;
+        if (this.state.playing) {
+            this.setVisualTime(time);
+            this.onProgress(Math.min(time / this.duration, 1));
+            browser.requestAnimationFrame(() => this.trackPlaybackProgress());
+        }
     }
 
     onProgress(progress) {
+        // Only update when playback progresses by a visible pixel.
         const position = Math.round(progress * this.width);
         if (position < this.lastPos || position - this.lastPos >= 1) {
             this.lastPos = position;
@@ -255,133 +332,44 @@ export class VoicePlayer extends Component {
         }
     }
 
-    seekTo(progress) {
-        if (this.state.playing) {
-            this.pause({ continue: true });
-        }
-        this.state.repeat = false;
-        const elapsedTime = progress * this.buffer.duration;
-        this.state.visualTime = this.generateTime(Math.floor(elapsedTime));
-        this.seekToElapsed(elapsedTime);
-        this.onProgress(progress);
-        if (this.state.playing) {
-            this.play();
-        }
+    applySettings() {
+        const { voiceMetadata } = this.props.attachment;
+        this.audioEl.playbackRate = voiceMetadata.playbackRate;
     }
 
-    async drawBuffer(arrayBuffer) {
-        const buffer = await this.audioCtx.decodeAudioData(arrayBuffer);
-        this.state.visualTime = this.generateTime(Math.floor(buffer.duration));
-        this.startPosition = 0;
-        this.lastPlaytime = this.audioCtx.currentTime;
-        this.buffer = buffer;
-        this.createSource();
-        this.drawWave(this.getPeaks());
-    }
-
-    async destroyWebAudio() {
-        this.source?.disconnect();
-        this.gainNode?.disconnect();
-        this.analyser?.disconnect();
-        try {
-            await this.audioCtx?.close();
-        } catch (e) {
-            if (e.name === "InvalidStateError") {
-                return;
-            }
-            throw e;
-        }
-    }
-
-    addOnAudioProcess() {
-        if (status(this) === "destroyed") {
-            return;
-        }
-        const time = this.getCurrentTime();
-        if (time >= this.scheduledPause && this.state.playing) {
-            this.pause({ end: true });
-        } else if (this.state.playing) {
-            this.state.visualTime = this.generateTime(Math.floor(time));
-            const playedPercents = this.getCurrentTime() / this.buffer.duration;
-            this.onProgress(playedPercents);
-            requestAnimationFrame(() => this.addOnAudioProcess());
-        }
+    setVisualTime(timeInSecond) {
+        this.state.currentTime = this.generateTime(timeInSecond);
     }
 
     generateTime(timeInSecond) {
-        const second = timeInSecond % 60;
+        const second = Math.floor(timeInSecond % 60);
         const minute = Math.floor(timeInSecond / 60);
-        return (
-            (minute < 10 ? "0" + minute : minute) + " : " + (second < 10 ? "0" + second : second)
-        );
+        return `${String(minute).padStart(2, "0")} : ${String(second).padStart(2, "0")}`;
     }
 
-    initElements() {
-        this.wrapper = this.wrapperRef();
-        this.progressWave = this.drawerRef();
-        this.progressColor = getComputedStyle(this.wrapper).getPropertyValue("--primary");
-        this.width = this.wrapper.clientWidth;
-        this.height = this.wrapper.clientHeight;
-
-        const wave = this.waveRef();
-        wave.width = this.width;
-        wave.height = this.height;
-        this.waveCtx = wave.getContext("2d");
-        this.waveCtx.fillStyle = WAVE_COLOR;
-
-        const progress = this.progressRef();
-        progress.width = this.width;
-        progress.height = this.height;
-        this.progressCtx = progress.getContext("2d");
-        this.progressCtx.fillStyle = this.progressColor;
-    }
-
-    drawWave(peaks) {
-        return requestAnimationFrame(() => {
-            this.drawLines(peaks);
-            this.fillRect(0, this.height / 2, this.width, 0.5);
-        });
-    }
-
-    fillRect(x, y, width, height) {
-        const intersection = {
-            x1: x,
-            y1: y,
-            x2: x + width,
-            y2: y + height,
-        };
-        if (intersection.x1 < intersection.x2) {
-            this.fillRects(
-                intersection.x1,
-                intersection.y1,
-                intersection.x2 - intersection.x1,
-                intersection.y2 - intersection.y1
-            );
+    destroyAudio() {
+        this.playRequestId++;
+        this.audioEl.pause();
+        this.audioEl.removeAttribute("src");
+        this.audioEl.load();
+        this.state.paused = true;
+        this.state.playing = false;
+        if (this.audioUrl) {
+            URL.revokeObjectURL(this.audioUrl);
+            this.audioUrl = "";
         }
-    }
-
-    fillRects(x, y, width, height) {
-        this.waveCtx.fillRect(x, y, width, height);
-        this.progressCtx.fillRect(x, y, width, height);
-    }
-
-    drawLines(peaks) {
-        this.drawLineToContext(this.waveCtx, peaks);
-        this.drawLineToContext(this.progressCtx, peaks);
-    }
-
-    drawLineToContext(ctx, peaks) {
-        const maxPeak = Math.max(...peaks);
-        let i, peak;
-        for (i = 0; i <= peaks.length; i++) {
-            peak = peaks[i];
-            const h = (peak * this.height) / maxPeak;
-            ctx.fillRect(i, (this.height - h) / 2, 1.5, h);
+        this.duration = 0;
+        this.state.currentTime = "";
+        this.state.totalTime = "";
+        this.lastPos = 0;
+        this.progressWave.style.width = "0px";
+        for (const ctx of [this.waveCtx, this.progressCtx]) {
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         }
     }
 
     onClickPlayPause() {
-        if (this.props.attachment.uploading) {
+        if (this.props.attachment.uploading || this.isAudioLoading) {
             return;
         }
         if (this.state.paused) {

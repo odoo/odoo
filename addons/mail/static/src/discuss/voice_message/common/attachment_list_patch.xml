@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.AttachmentList" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-AttachmentCard')]" position="after">
+            <VoicePlayerControls t-if="attachment.voice" attachment="attachment"/>
+        </xpath>
         <xpath expr="//div[hasclass('o-mail-AttachmentCard-info')]" position="replace">
             <t t-if="attachment.voice">
                 <VoicePlayer attachment="attachment"/>
