@@ -13,6 +13,9 @@ function checkResponseStatus(response) {
 export async function get(route, readMethod = "json") {
     const response = await browser.fetch(route, { method: "GET" });
     checkResponseStatus(response);
+    if (readMethod === "response") {
+        return response;
+    }
     return response[readMethod]();
 }
 
@@ -36,8 +39,11 @@ export async function post(route, params = {}, readMethod = "json") {
         method: "POST",
     });
     checkResponseStatus(response);
-    if ( readMethod === "url" ) {
+    if (readMethod === "url") {
         return response.url;
+    }
+    if (readMethod === "response") {
+        return response;
     }
     return response[readMethod]();
 }
