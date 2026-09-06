@@ -1,23 +1,30 @@
-import { escapeTextNodes } from "@html_builder/utils/escaping";
+import { prepareElementForSave } from "@html_builder/core/save_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-
-/**
- * @typedef { Object } WebsiteSaveShared
- * @property { WebsiteSavePlugin['saveView'] } saveView
- */
 
 const ATTRS_TO_TRANSLATE = {
     img: ["src", "srcset"],
 };
 
+/**
+ * @typedef {((context: Object) => context)[]} save_element_context_processors
+ */
+
 export class WebsiteSavePlugin extends Plugin {
     static id = "websiteSavePlugin";
-    static shared = ["saveView"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        on_will_save_element_handlers: this.saveView.bind(this),
+        on_ready_to_save_document_handlers: this.saveElements.bind(this),
+        clean_for_save_processors: (rootEl) => {
+            if (
+                (rootEl.dataset.oeModel === "ir.ui.view" && rootEl.dataset.oeField === "arch") ||
+                rootEl.dataset.oeType === "html"
+            ) {
+                this.setTranslateAttributes(rootEl);
+            }
+            return rootEl;
+        },
     };
 
     setTranslateAttributes(rootEl) {
@@ -33,41 +40,37 @@ export class WebsiteSavePlugin extends Plugin {
         }
     }
 
-    /**
-     * Saves one (dirty) element of the page.
-     *
-     * @param {HTMLElement} el - the element to save.
-     */
-    saveView(el, delayTranslations = true) {
-        const viewID = Number(el.dataset["oeId"]);
-        if (!viewID) {
-            return;
-        }
-
+    async saveElements() {
         let context = {};
         if (this.services.website) {
-            const delay = delayTranslations ? { delay_translations: true } : {};
-            context = {
+            context = this.processThrough("save_element_context_processors", {
                 website_id: this.services.website.currentWebsite.id,
                 lang: this.services.website.currentWebsite.metadata.lang,
-                ...delay,
-            };
+                delay_translations: true,
+            });
         }
-
-        // Only translate attributes within arch views (website pages) or html
-        // fields. Any other type should not be translated.
-        if (
-            (el.dataset.oeModel === "ir.ui.view" && el.dataset.oeField === "arch") ||
-            el.dataset.oeType === "html"
-        ) {
-            this.setTranslateAttributes(el);
-        }
-        escapeTextNodes(el);
-        return this.services.orm.call(
-            "ir.ui.view",
-            "save",
-            [viewID, el.outerHTML, (!el.dataset["oeExpression"] && el.dataset["oeXpath"]) || null],
-            { context }
+        const dirtys = this.editable.querySelectorAll(
+            "[data-oe-model].o_dirty:not([data-oe-translation-source-sha])"
+        );
+        const getGroupKey = (el) =>
+            `${el.dataset.oeModel}::${el.dataset.oeId}::${el.dataset.oeField}`;
+        await Promise.all(
+            Object.values(Object.groupBy(dirtys, getGroupKey)).map(async (els) => {
+                // parts of the same group are uploaded sequentially to avoid
+                // dataraces on backend that could lead to duplication or loss
+                for (const el of els) {
+                    await this.services.orm.call(
+                        "ir.ui.view",
+                        "save",
+                        [
+                            Number(el.dataset.oeId),
+                            prepareElementForSave(this, el).outerHTML,
+                            (!el.dataset.oeExpression && el.dataset.oeXpath) || null,
+                        ],
+                        { context }
+                    );
+                }
+            })
         );
     }
 }
