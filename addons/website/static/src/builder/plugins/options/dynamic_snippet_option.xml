@@ -7,9 +7,10 @@
     <t t-set="templateKey" t-value="this.dynamicOptionParams.domState.templateKey"/>
     <t t-set="filteredTemplates" t-value="this.dynamicOptionParams.getFilteredTemplates()"/>
     <t t-set="isSingleMode" t-value="this.dynamicOptionParams.domState.isSingleMode"/>
-    <t t-set="numberOfRecords" t-value="this.dynamicOptionParams.domState.numberOfRecords"/>
+    <t t-set="limit" t-value="this.dynamicOptionParams.domState.limit"/>
+    <t t-set="modelNameFilter" t-value="this.dynamicOptionParams.modelNameFilter"/>
     <!-- Single record filter options -->
-    <BuilderRow label.translate="Model" t-if="!this.modelNameFilter and isSingleMode">
+    <BuilderRow label.translate="Model" t-if="!modelNameFilter and isSingleMode">
         <BuilderSelect action="'dynamicModel'" preview="false" id="'model_opt'"></BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Record" t-if="isSingleMode">
@@ -30,7 +31,7 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow id="this.template_opt_row" label.translate="Template" t-if="!this.modelNameFilter and filteredTemplates.length > 1">
+    <BuilderRow id="this.template_opt_row" label.translate="Template" t-if="!modelNameFilter and filteredTemplates.length > 1">
         <BuilderSelect action="'dynamicSnippetTemplate'" preview="false" id="'template_opt'">
             <t t-foreach="filteredTemplates" t-as="template" t-key="template.key">
                 <t t-if="template.thumb">
@@ -52,7 +53,7 @@
     </BuilderRow>
     <BuilderRow id="this.number_of_records_opt_row" label.translate="Fetched Elements" t-if="!!this.dynamicOptionParams.domState.filterId or isSingleMode">
         <BuilderSelect action="'numberOfRecords'" preview="false" id="'number_of_records_opt'">
-            <t t-foreach="['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']" t-as="value" t-key="value">
+            <t t-foreach="Array.from(Array(17).keys()).slice(1)" t-as="value" t-key="value">
                 <BuilderSelectItem actionParam="value" t-out="value"/>
             </t>
         </BuilderSelect>

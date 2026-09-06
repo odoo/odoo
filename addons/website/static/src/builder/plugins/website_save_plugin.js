@@ -58,7 +58,8 @@ export class WebsiteSavePlugin extends Plugin {
         // fields. Any other type should not be translated.
         if (
             (el.dataset.oeModel === "ir.ui.view" && el.dataset.oeField === "arch") ||
-            el.dataset.oeType === "html"
+            el.dataset.oeType === "html" ||
+            el.dataset.oeType === "qweb_content"
         ) {
             this.setTranslateAttributes(el);
         }

@@ -968,28 +968,6 @@ class Website(Home):
         assert layout_mode in ('grid', 'list'), "Invalid layout mode"
         request.session[f'website_{view_id}_layout_mode'] = layout_mode
 
-    @http.route('/website/snippet/filters', type='jsonrpc', auth='public', website=True, readonly=True)
-    def get_dynamic_filter(self, filter_id, **kwargs):
-        """Render records from an existing website.snippet.filter as HTML cards.
-
-        :param int filter_id: id of the `website.snippet.filter` to use as data source.
-        :param str template_key: MANDATORY.
-        :param int limit: MANDATORY. max records to render (capped at 16).
-        :param list search_domain: extra domain ANDed with the filter's base domain.
-        :param str res_model: with res_id and limit=1, render that one record instead.
-        :param int res_id: id of the single record to render, see res_model.
-        :return: one HTML string per rendered record.
-        :rtype: list[str]
-        """
-        dynamic_filter_sudo = request.env['website.snippet.filter'].sudo()
-        if filter_id:
-            dynamic_filter_sudo = dynamic_filter_sudo.search(
-                Domain('id', '=', filter_id) & self.env.website.website_domain()
-            )
-        single_record_filter = kwargs.get('limit') == 1 and kwargs.get('res_model') and kwargs.get('res_id')
-        dynamic_filter_found = single_record_filter or dynamic_filter_sudo
-        return dynamic_filter_sudo._render(**kwargs) if dynamic_filter_found else []
-
     @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):

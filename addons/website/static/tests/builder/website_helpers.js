@@ -49,6 +49,9 @@ class IrUiView extends models.Model {
     render_public_asset() {
         return getWebsiteSnippets();
     }
+    render_editable_call(template, values, main_model, main_id) {
+        return `editable call ${template}(${JSON.stringify(values)}, ${main_model}(${main_id}))`;
+    }
 }
 
 export const setupWebsiteBuilderOeId = 539;
@@ -463,7 +466,7 @@ export async function waitForSnippetDialog() {
         targetDoc: queryOne("iframe.o_add_snippet_iframe").contentDocument,
         js: false,
     });
-    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe");
+    await waitFor(".o_add_snippet_dialog iframe.show.o_add_snippet_iframe", { timeout: 1000 });
 }
 
 /**

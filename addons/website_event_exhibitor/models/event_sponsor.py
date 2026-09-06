@@ -38,7 +38,7 @@ class EventSponsor(models.Model):
     exhibitor_type = fields.Selection(
         [('sponsor', 'Footer Logo Only'), ('exhibitor', 'Exhibitor'), ('online', 'Online Exhibitor')],
         string="Sponsor Type", default="sponsor")
-    website_description = fields.Html(
+    website_description = fields.Qweb(
         'Description', compute='_compute_website_description',
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=True, translate=html_translate,

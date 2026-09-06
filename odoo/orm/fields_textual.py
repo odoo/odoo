@@ -743,6 +743,10 @@ class Html(BaseString):
     to_plaintext = staticmethod(html2plaintext)
     from_plaintext = staticmethod(plaintext2html)
 
+class Qweb(Html):
+    """ Encapsulates a qweb code content."""
+    type = 'qweb_content'
+
 
 class LangProxyDict(collections.abc.MutableMapping):
     """A view on a dict[id, dict[lang, value]] that maps id to value given a

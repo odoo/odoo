@@ -64,7 +64,7 @@ class ProductPublicCategory(models.Model):
         compute_sudo=True,
     )
 
-    website_description = fields.Html(
+    website_description = fields.Qweb(
         string="Description",
         sanitize_attributes=False,
         sanitize_form=False,
@@ -72,7 +72,7 @@ class ProductPublicCategory(models.Model):
         translate=html_translate,
     )
 
-    website_footer = fields.Html(
+    website_footer = fields.Qweb(
         string="Category Footer",
         sanitize_attributes=False,
         sanitize_form=False,

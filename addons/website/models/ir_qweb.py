@@ -1,13 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
+import json
+import logging
 
 from collections import OrderedDict
 
-from odoo import models
+from lxml import etree
+from odoo import models, _
 from odoo.http import request
+from odoo.addons.base.models.ir_qweb import indent_code
 from odoo.addons.website.tools import add_form_signature
 
-
+_logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 re_translate_span = re.compile(r'<span.+?data-oe-translation-source-sha.+?>(.+?)</span>')
 
@@ -69,6 +73,37 @@ class IrQweb(models.AbstractModel):
                     if match:
                         atts['data-oe-translate-{}'.format(att.removesuffix('.translate'))] = value
                         atts[att] = match.group(1)
+
+    def _get_preload_attribute_xmlids(self):
+        return super()._get_preload_attribute_xmlids() + ['t-editable-call']
+
+    def _directives_eval_order(self):
+        directives = super()._directives_eval_order()
+        att_index = directives.index('att')
+        return [*directives[:att_index], 'editable-call', directives[att_index], 'editable-call-internal', *directives[att_index + 1:]]
+
+    def _compile_directive_editable_call(self, el, compile_context, indent):
+        if bool(list(el) or el.text):
+            _logger.warning("t-editable-call does not support inner content")
+            el.text = None
+            el[:] = []
+        callee = el.attrib.pop('t-editable-call')
+        assert '.editable_call_template_' in callee, _("You can only use template prefixed by editable_call_template_ ")
+        el.attrib['data-oe-editable-call'] = callee
+        el.attrib['t-editable-call-internal'] = callee
+        return []
+
+    def _compile_directive_editable_call_internal(self, el, compile_context, indent):
+        callee = el.attrib.pop('t-editable-call-internal')
+        el.append(etree.Element('t', {'t-call': callee, 't-args': 'SHARED_SNIPPET_ARGS', 'main_contextual_record': "main_object or record_of_field"}))
+        return [indent_code("values['SHARED_SNIPPET_ARGS'] = self._gather_editable_call_args(attrs)", indent)]
+
+    def _gather_editable_call_args(self, attrs):
+        args = {}
+        for attr, value in sorted(attrs.items()):
+            if attr.startswith('data-arg-'):
+                args[attr[len('data-arg-'):]] = json.loads(value)
+        return args
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):

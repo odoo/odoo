@@ -114,7 +114,8 @@ class TestSnippets(HttpCase):
                 self
                 .env["website.snippet.filter"]
                 .sudo()
-                ._prepare_category_list_data(parent_id=category.id)
+                .with_context(search_info={"parentCategoryId": category.id})
+                ._prepare_category_list_data()
             )
 
         # Assert that the returned cover_image use absolute URL without domain

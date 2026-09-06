@@ -67,7 +67,7 @@
     position: relative;
 }
 
-:not(.oe_structure):not([data-oe-type="html"]) {
+:not(.oe_structure):not([data-oe-type="html"] ,[data-oe-type="qweb_content"]) {
     // "Inner content" drop zones.
     > .oe_drop_zone.oe_insert:not(.oe_grid_zone):not(.oe_sanitized_drop_zone) {
         height: $o-we-inner-content-dropzone-size;

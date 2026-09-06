@@ -588,7 +588,7 @@ class Base_ImportImport(models.TransientModel):
                 model = self.env[current_field.comodel_name]
             else:
                 current_field = model._fields.get(field_path[-1])
-                if current_field and current_field.type == 'html':
+                if current_field and current_field.type in ['html', 'qweb_content']:
                     html_columns.add(index)
 
         return html_columns

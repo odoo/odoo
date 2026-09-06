@@ -10,40 +10,46 @@
         <BuilderRow id="this.filter_opt_row" position="replace"/>
         <BuilderRow id="section_title_opt_row" position="after">
             <BuilderRow label.translate="Columns">
-                <BuilderRange dataAttributeAction="'columns'" min="2" max="5"/>
+                <BuilderRange action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'wrapper_data', key: 'cols_count' }" min="2" max="5"/>
             </BuilderRow>
             <BuilderRow label.translate="Spacing">
-                <BuilderRange dataAttributeAction="'gap'" min="0" max="5"/>
+                <BuilderRange action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'wrapper_data', key: 'gap' }" min="0" max="5"/>
             </BuilderRow>
             <BuilderRow label.translate="Roundness">
-                <BuilderRange dataAttributeAction="'rounded'" min="0" max="5"/>
+                <BuilderRange action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'wrapper_data', key: 'rounded' }" min="0" max="5"/>
             </BuilderRow>
             <BuilderRow label.translate="Size">
-                <BuilderSelect dataAttributeAction="'size'">
-                    <BuilderSelectItem dataAttributeActionValue="'small'">Small</BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'medium'">
+                <BuilderSelect action="'composite'" actionParam="[
+                    { action: 'dynamicSnippetInnerArg', actionParam: { arg: 'content_data', key: 'size' } },
+                    { action: 'dynamicSnippetInnerArg', actionParam: { arg: 'wrapper_data', key: 'size' } },
+                ]">
+                    <BuilderSelectItem actionValue="'small'">Small</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'medium'">
                         Medium
                     </BuilderSelectItem>
-                    <BuilderSelectItem dataAttributeActionValue="'large'">Large</BuilderSelectItem>
+                    <BuilderSelectItem actionValue="'large'">Large</BuilderSelectItem>
                 </BuilderSelect>
             </BuilderRow>
             <BuilderRow label.translate="Alignment">
-                <BuilderButtonGroup dataAttributeAction="'alignment'">
-                    <BuilderButton dataAttributeActionValue="'left'">
+                <BuilderButtonGroup action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'content_data', key: 'alignment' }">
+                    <BuilderButton actionValue="'left'">
                         <i class="oi oi-fw" data-icon="format_align_left"/>
                     </BuilderButton>
-                    <BuilderButton dataAttributeActionValue="'center'">
+                    <BuilderButton actionValue="'center'">
                         <i class="oi oi-fw" data-icon="format_align_center"/>
                     </BuilderButton>
-                    <BuilderButton dataAttributeActionValue="'right'">
+                    <BuilderButton actionValue="'right'">
                         <i class="oi oi-fw" data-icon="format_align_right"/>
                     </BuilderButton>
                 </BuilderButtonGroup>
             </BuilderRow>
             <BuilderRow label.translate="Filters">
-                <BuilderSelect dataAttributeAction="'parentCategoryId'">
+                <BuilderSelect action="'composite'" actionParam="[
+                    { action: 'dynamicSnippetInnerArg', actionParam: { arg: 'content_data', key: 'parent_category_id' } },
+                    { action: 'dynamicSearchInfo', actionParam: { mainParam: 'parentCategoryId' } },
+                ]">
                     <BuilderSelectItem
-                        dataAttributeActionValue=""
+                        actionValue=""
                         title.translate="All Categories"
                     >
                         All Categories
@@ -54,7 +60,7 @@
                         t-key="category.id"
                     >
                         <BuilderSelectItem
-                            dataAttributeActionValue="`${category.id}`"
+                            actionValue="category.id"
                             label="category.name"
                             t-out="category.name"
                         />
@@ -64,9 +70,8 @@
             <BuilderRow
                 t-if="this.dynamicOptionParams.domState.parentCategoryId"
                 label.translate="Parent Category"
-                dataAttributeAction="'showParent'"
             >
-                <BuilderCheckbox dataAttributeActionValue="'true'"/>
+                <BuilderCheckbox action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'content_data', key: 'include_parent' }" actionValue="true"/>
             </BuilderRow>
             <BuilderRow label.translate="Clickable items">
                 <BuilderCheckbox
@@ -110,7 +115,7 @@
                 />
             </BuilderRow>
             <BuilderRow label.translate="Button" t-if="!this.isActiveItem('clickable_items_opt')">
-                <BuilderTextInput dataAttributeAction="'button'"/>
+                <BuilderTextInput action="'dynamicSnippetInnerArg'" actionParam="{ arg: 'content_data', key: 'button_text' }"/>
             </BuilderRow>
         </BuilderRow>
     </t>

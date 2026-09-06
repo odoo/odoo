@@ -10,7 +10,7 @@ import { CARD_PARENT_HANDLERS } from "./utils";
 const special_cards_selector = `.s_card.s_timeline_card, div:is(${CARD_PARENT_HANDLERS}) > .s_card`;
 
 const so_snippet_addition_drop_in =
-    ":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section:not(.s_snippet_group), > div:not(.o_hook_drop_zone)))";
+    ":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(.o_mega_menu):not(p)[data-oe-type=qweb_content], :not(p).oe_structure.oe_structure_solo:not(:has(> section:not(.s_snippet_group), > div:not(.o_hook_drop_zone)))";
 
 // TODO need to split by addons
 

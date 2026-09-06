@@ -9,7 +9,7 @@ from PIL import Image
 from lxml import etree, html
 
 from odoo import api, fields, models, tools
-from odoo.tools import BinaryBytes, BinaryValue, posix_to_ldml, float_is_zero, float_utils, format_date, format_duration
+from odoo.tools import BinaryBytes, BinaryValue, posix_to_ldml, float_is_zero, float_utils, format_date, format_duration, html_escape
 from odoo.tools.image import binary_to_image, image_data_uri
 from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
@@ -441,6 +441,38 @@ class IrQwebFieldHtml(models.AbstractModel):
                 element.attrib.clear()
                 element.attrib.update(attrib)
         return Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
+
+
+class IrQwebFieldQwebContent(models.AbstractModel):
+    _name = 'ir.qweb.field.qweb_content'
+    _description = 'Qweb Field Qweb Content'
+    _inherit = ['ir.qweb.field.html']
+
+    @api.model
+    def render_values(self, options):
+        return dict(record_of_field=options.get('record'))
+
+    @api.model
+    def value_to_html(self, value, options):
+        irQweb = self.env['ir.qweb']
+        record = options.get('record')
+        content = etree.fromstring('<body>%s</body>' % value, etree.HTMLParser(encoding='utf-8'))[0]
+        for node in content.iter():
+            node.text = node.text and html_escape(node.text)
+            node.tail = node.tail and html_escape(node.tail)
+
+        # TODO: remove this condition once the evaluation makes it un-needed
+        allowed_directives = ["t-editable-call"]
+        if any(any((attr == "groups" or attr.startswith("t-")) and not attr in allowed_directives for attr in node.attrib) for node in content.iter()):
+            raise SyntaxError("forbidden directive")
+
+        content.tag = 't'
+        content.attrib["t-name"] = "HTMLField<<%s(%s), %s>>" % ((record and record._name), (record and record.id), options.get('field_name'))
+        return irQweb._render(content, self.render_values(options))
+
+    @api.model
+    def record_to_html(self, record, field_name, options):
+        return super().record_to_html(record, field_name, dict(options, record=record, field_name=field_name))
 
 
 class IrQwebFieldImage(models.AbstractModel):

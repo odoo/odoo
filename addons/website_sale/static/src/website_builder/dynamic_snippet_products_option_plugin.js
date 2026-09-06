@@ -1,16 +1,23 @@
-import { setDatasetIfUndefined } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { getContextualFilterDomain } from "./dynamic_snippet_products_option";
 
 export class DynamicSnippetProductsOptionPlugin extends Plugin {
     static id = "dynamicSnippetProductsOption";
-    static dependencies = ["dynamicSnippetCarouselOption"];
-    static shared = ["fetchCategories", "getModelNameFilter"];
-    modelNameFilter = "product.product";
+    static shared = ["fetchCategories"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
-        on_dynamic_snippet_template_updated_handlers: this.onTemplateUpdated.bind(this),
-        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        dynamic_filter_contextual_domain_processors: (domain, { snippetEl }) => {
+            if (snippetEl.matches(".s_dynamic_snippet_products")) {
+                domain.push(...getContextualFilterDomain(this.editable));
+            }
+            return domain;
+        },
+        model_name_filter_overrides: (snippetEl) => {
+            if (snippetEl.matches(".s_dynamic_snippet_products")) {
+                return "product.product";
+            }
+        },
     };
     setup() {
         this.categories = undefined;
@@ -18,32 +25,6 @@ export class DynamicSnippetProductsOptionPlugin extends Plugin {
     destroy() {
         super.destroy();
         this.categories = undefined;
-    }
-    async onSnippetDropped({ snippetEl }) {
-        if (snippetEl.matches(".s_dynamic_snippet_products")) {
-            for (const [optionName, value] of [
-                ["productCategoryId", "all"],
-                ["showVariants", true],
-            ]) {
-                setDatasetIfUndefined(snippetEl, optionName, value);
-            }
-            await this.dependencies.dynamicSnippetCarouselOption.setOptionsDefaultValues(
-                snippetEl,
-                this.modelNameFilter,
-                getContextualFilterDomain(this.editable)
-            );
-        }
-    }
-    getModelNameFilter() {
-        return this.modelNameFilter;
-    }
-    onTemplateUpdated({ el, template }) {
-        if (el.matches(".s_dynamic_snippet_products")) {
-            this.dependencies.dynamicSnippetCarouselOption.updateTemplateSnippetCarousel(
-                el,
-                template
-            );
-        }
     }
     async fetchCategories() {
         if (!this.categories) {

@@ -30,7 +30,7 @@ Rendering process
 =================
 
 In **input** you have an XML template giving the corresponding input etree.
-Each etree input nodes are used to generate a python function. This fonction is
+Each etree input nodes are used to generate a python function. This function is
 called and will give the XML **output**.
 The ``_compile`` method is responsible to generate the function from the
 etree, that function is a python generator that yield one output line at a
@@ -60,7 +60,7 @@ dynamic attributes must remain.
 How the code works
 ==================
 
-In the graphic below you can see theresume of the call of the methods performed
+In the graphic below you can see the resume of the call of the methods performed
 in the IrQweb class.
 
 .. code-block:: rst
@@ -84,8 +84,8 @@ in the IrQweb class.
               ┃  ┃    ┗━► t-set           ━━► _compile_directive_set           ◄━━┓  ┃    ┃
               ┃  ┃    ┗━► t-call          ━━► _compile_directive_call            ━┛ ━┫ ━━━┛
               ┃  ┃    ┗━► t-att           ━━► _compile_directive_att                 ┃
-              ┃  ┃    ┗━► t-tag-open      ━━► _compile_directive_open          ◄━━┓  ┃
-              ┃  ┃    ┗━► t-tag-close     ━━► _compile_directive_close         ◄━━┫  ┃
+              ┃  ┃    ┗━► t-tag-open      ━━► _compile_directive_tag_open      ◄━━┓  ┃
+              ┃  ┃    ┗━► t-tag-close     ━━► _compile_directive_tag_close     ◄━━┫  ┃
               ┃  ┃    ┗━► t-out           ━━► _compile_directive_out             ━┛ ━┫ ◄━━┓
               ┃  ┃    ┗━► t-field         ━━► _compile_directive_field               ┃   ━┛
               ┃  ┃    ┗━► t-*             ━━► ...                                    ┃

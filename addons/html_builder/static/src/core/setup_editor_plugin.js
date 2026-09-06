@@ -58,7 +58,7 @@ export class SetupEditorPlugin extends Plugin {
         // drop elements.
         const dragAndDropSavableEls = [
             ...this.editable.querySelectorAll(
-                '.o_savable.oe_structure.oe_empty, .o_savable[data-oe-type="html"]'
+                '.o_savable.oe_structure.oe_empty, .o_savable[data-oe-type="html"], .o_savable[data-oe-type="qweb_content"]'
             ),
         ];
         for (const el of dragAndDropSavableEls) {
