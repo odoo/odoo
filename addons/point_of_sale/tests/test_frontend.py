@@ -355,18 +355,18 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         env['product.pricelist'].create({
             'name': 'Percentage',
             'item_ids': [(0, 0, {
-                'compute_price': 'percentage',
-                'percent_price': 100,
+                'compute_price': 'discount',
+                'price_discount': 100,
                 'applied_on': '0_product_variant',
                 'product_id': cls.wall_shelf.product_variant_id.id,
             }), (0, 0, {
-                'compute_price': 'percentage',
-                'percent_price': 99,
+                'compute_price': 'discount',
+                'price_discount': 99,
                 'applied_on': '0_product_variant',
                 'product_id': cls.small_shelf.product_variant_id.id,
             }), (0, 0, {
-                'compute_price': 'percentage',
-                'percent_price': 0,
+                'compute_price': 'discount',
+                'price_discount': 0,
                 'applied_on': '0_product_variant',
                 'product_id': cls.magnetic_board.product_variant_id.id,
             })],
@@ -375,32 +375,32 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         env['product.pricelist'].create({
             'name': 'Formula',
             'item_ids': [(0, 0, {
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
                 'product_id': cls.wall_shelf.product_variant_id.id,
             }), (0, 0, {
                 # .99 prices
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
                 'product_id': cls.small_shelf.product_variant_id.id,
             }), (0, 0, {
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
                 'product_id': cls.magnetic_board.product_variant_id.id,
             }), (0, 0, {
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
                 'product_id': cls.monitor_stand.product_variant_id.id,
             }), (0, 0, {
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
@@ -513,8 +513,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Cost base',
             'item_ids': [(0, 0, {
                 'base': 'standard_price',
-                'compute_price': 'percentage',
-                'percent_price': 55,
+                'compute_price': 'discount',
+                'price_discount': 55,
             })],
         })
 
@@ -523,8 +523,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'item_ids': [(0, 0, {
                 'base': 'pricelist',
                 'base_pricelist_id': cost_base_pricelist.id,
-                'compute_price': 'percentage',
-                'percent_price': 15,
+                'compute_price': 'discount',
+                'price_discount': 15,
             })],
         })
 
@@ -533,8 +533,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'item_ids': [(0, 0, {
                 'base': 'pricelist',
                 'base_pricelist_id': pricelist_base_pricelist.id,
-                'compute_price': 'percentage',
-                'percent_price': 3,
+                'compute_price': 'discount',
+                'price_discount': 3,
             })],
         })
 
@@ -543,8 +543,8 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'item_ids': [(0, 0, {
                 'base': 'pricelist',
                 'base_pricelist_id': fixed_pricelist.id,
-                'compute_price': 'percentage',
-                'percent_price': 0.01,
+                'compute_price': 'discount',
+                'price_discount': 0.01,
             })],
         })
 
@@ -1874,8 +1874,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pricelist_id': percentage_pricelist.id,
             'base': 'pricelist',
             'base_pricelist_id': test_pricelist.id,
-            'compute_price': 'percentage',
-            'percent_price': 50,
+            'compute_price': 'discount',
+            'price_discount': 50,
             'applied_on': '3_global',
         })
 

@@ -124,7 +124,7 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
                 'product_tmpl_id': self.product_product_custo_desk.id,
                 'price_discount': 20,
                 'min_quantity': 2,
-                'compute_price': 'formula'
+                'compute_price': 'discount'
             })]
         })
         self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman')
@@ -176,7 +176,7 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
                 'product_tmpl_id': self.product_product_custo_desk.id,
                 'price_discount': 20,
                 'min_quantity': 2,
-                'compute_price': 'formula'
+                'compute_price': 'discount'
             })]
         })
 
@@ -306,7 +306,7 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
                 'product_tmpl_id': self.product_product_custo_desk.id,
                 'price_discount': 20,
                 'min_quantity': 2,
-                'compute_price': 'formula'
+                'compute_price': 'discount'
             })]
         })
 

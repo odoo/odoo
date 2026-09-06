@@ -96,15 +96,15 @@ class TestSaleOrder(SaleManagementCommon):
                 "name": "Product 1 premium price",
                 "applied_on": "1_product",
                 "product_tmpl_id": cls.product_1.product_tmpl_id.id,
-                "compute_price": "percentage",
-                "percent_price": cls.pl_discount,
+                "compute_price": "discount",
+                "price_discount": cls.pl_discount,
             }),
             Command.create({
                 "name": "Optional product premium price",
                 "applied_on": "1_product",
                 "product_tmpl_id": cls.optional_product.product_tmpl_id.id,
-                "compute_price": "percentage",
-                "percent_price": cls.pl_option_discount,
+                "compute_price": "discount",
+                "price_discount": cls.pl_option_discount,
             }),
         ]
 

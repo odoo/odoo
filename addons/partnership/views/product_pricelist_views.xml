@@ -5,14 +5,12 @@
         <field name="model">product.pricelist</field>
         <field name="inherit_id" ref="product.product_pricelist_view"/>
         <field name="arch" type="xml">
-            <sheet position="inside">
-                <div name="button_box" class="oe_button_box">
-                    <button type="action" name="partnership.action_pricelist_partners" class="oe_stat_button" icon="group" icon_class="oi-filled">
-                        <field name="partners_count" widget="statinfo" class="oe_inline me-1" nolabel="1"/>
-                        <field name="partners_label" widget="statinfo" nolabel="1"/>
-                    </button>
-                </div>
-            </sheet>
+            <div name="button_box" position="inside">
+                <button type="action" name="partnership.action_pricelist_partners" class="oe_stat_button" icon="group" icon_class="oi-filled">
+                    <field name="partners_count" widget="statinfo" class="oe_inline me-1" nolabel="1"/>
+                    <field name="partners_label" widget="statinfo" nolabel="1"/>
+                </button>
+            </div>
         </field>
     </record>
 </odoo>

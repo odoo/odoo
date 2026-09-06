@@ -104,7 +104,7 @@ class TestL10nArWebsiteSale(TestArCommon):
                     'product_tmpl_id': self.product_1.id,
                 }),
                 Command.create({
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'price_surcharge': 2.0,
                     'applied_on': '3_global',
                 }),

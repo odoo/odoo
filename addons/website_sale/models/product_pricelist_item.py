@@ -7,7 +7,9 @@ class ProductPricelistItem(models.Model):
     _inherit = "product.pricelist.item"
 
     def _show_discount_on_shop(self):
-        """On ecommerce, formula rules are also expected to show discounts.
+        """Whether the shop should strike through the price the discount was taken from.
+
+        The base must be a price the customer could have seen, so a cost is never shown.
 
         Only for /shop, /product, and configurators, not on the cart or the checkout.
         """
@@ -16,8 +18,4 @@ class ProductPricelistItem(models.Model):
 
         self.ensure_one()
 
-        return self.compute_price == "percentage" or (
-            self.compute_price == "formula"
-            and self.price_discount
-            and self.base in ("list_price", "pricelist")
-        )
+        return self._is_discount_rule() and self.base in ("list_price", "pricelist")

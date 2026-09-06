@@ -38,21 +38,21 @@ class TestPricelist(ProductVariantsCommon):
             'name': 'Sale pricelist',
             'item_ids': [
                 Command.create({
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'list_price',  # based on public price
                     'price_discount': 10,
                     'product_id': cls.usb_adapter.id,
                     'applied_on': '0_product_variant',
                 }),
                 Command.create({
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'list_price',  # based on public price
                     'price_surcharge': -0.5,
                     'product_id': cls.datacard.id,
                     'applied_on': '0_product_variant',
                 }),
                 Command.create({
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'standard_price',  # based on cost
                     'price_markup': 99.99,
                     'applied_on': '3_global',
@@ -118,7 +118,7 @@ class TestPricelist(ProductVariantsCommon):
         self.env['product.pricelist.item'].create({
             'pricelist_id': self.pricelist.id,
             'applied_on': '0_product_variant',
-            'compute_price': 'formula',
+            'compute_price': 'discount',
             'base': 'list_price',  # based on public price
             'min_quantity': 3,  # min = 3 tonnes
             'price_surcharge': -10,  # -10 EUR / tonne
@@ -233,7 +233,7 @@ class TestPricelist(ProductVariantsCommon):
         with self.assertRaises(UserError):
             shared_pricelist.item_ids = [
                 Command.create({
-                    'compute_price': 'formula',
+                    'compute_price': 'discount',
                     'base': 'pricelist',
                     'base_pricelist_id': self.pricelist.id,
                 })
@@ -241,12 +241,12 @@ class TestPricelist(ProductVariantsCommon):
 
         self.pricelist.item_ids = [
             Command.create({
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'base': 'pricelist',
                 'base_pricelist_id': shared_pricelist.id,
             }),
             Command.create({
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'base': 'pricelist',
                 'base_pricelist_id': second_pricelist.id,
             })
@@ -276,24 +276,35 @@ class TestPricelist(ProductVariantsCommon):
         with Form(partner) as partner_form:
             self.assertEqual(partner_form.property_product_pricelist, self.sale_pricelist_id)
 
-    def test_pricelist_change_to_formula_and_back(self):
-        pricelist_2 = self.env['product.pricelist'].create({
+    def _create_pricelist_based_rule(self):
+        return self.env['product.pricelist'].create({
             'name': 'Sale pricelist 2',
             'item_ids': [
                 Command.create({
-                    'compute_price': 'percentage',
-                    'percent_price': 20,
+                    'compute_price': 'discount',
+                    'price_discount': 20,
                     'base': 'pricelist',
                     'base_pricelist_id': self.sale_pricelist_id.id,
                     'applied_on': '3_global',
                 }),
             ],
         })
+
+    def test_pricelist_change_to_fixed_and_back(self):
+        pricelist_2 = self._create_pricelist_based_rule()
         with Form(pricelist_2.item_ids) as item_form:
-            item_form.compute_price = 'formula'
-            item_form.compute_price = 'percentage'
-            item_form.percent_price = 20
+            item_form.compute_price = 'fixed'
+            item_form.compute_price = 'discount'
+            item_form.price_discount = 20
         self.assertFalse(pricelist_2.item_ids.base_pricelist_id.id)
+
+    def test_pricelist_change_between_discount_and_surcharge(self):
+        """The base pricelist is kept when switching between the two methods using it."""
+        pricelist_2 = self._create_pricelist_based_rule()
+        with Form(pricelist_2.item_ids) as item_form:
+            item_form.compute_price = 'markup'
+            item_form.price_markup = 20
+        self.assertEqual(pricelist_2.item_ids.base_pricelist_id, self.sale_pricelist_id)
 
     def test_sync_parent_pricelist(self):
         """Check that adding a parent to a partner updates the partner's pricelist."""
@@ -345,7 +356,7 @@ class TestPricelist(ProductVariantsCommon):
         def create_item_vals(pl_from, pl_to):
             return {
                 'pricelist_id': pl_from.id,
-                'compute_price': 'formula',
+                'compute_price': 'discount',
                 'base': 'pricelist',
                 'base_pricelist_id': pl_to.id,
                 'applied_on': '3_global',

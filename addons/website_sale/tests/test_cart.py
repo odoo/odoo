@@ -345,8 +345,8 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon, HttpCase):
             "item_ids": [
                 Command.create({
                     "base": "list_price",
-                    "compute_price": "percentage",
-                    "percent_price": 50,
+                    "compute_price": "discount",
+                    "price_discount": 50,
                 })
             ]
         })

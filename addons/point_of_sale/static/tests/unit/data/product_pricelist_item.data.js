@@ -19,7 +19,6 @@ export class ProductPricelistItem extends models.ServerModel {
             "date_end",
             "compute_price",
             "fixed_price",
-            "percent_price",
             "base_pricelist_id",
             "base",
             "categ_id",
@@ -48,7 +47,6 @@ export class ProductPricelistItem extends models.ServerModel {
             date_end: false,
             compute_price: "fixed",
             fixed_price: 3.0,
-            percent_price: 0.0,
             base_pricelist_id: false,
             base: "list_price",
             categ_id: false,
@@ -59,10 +57,10 @@ export class ProductPricelistItem extends models.ServerModel {
             id: 2,
             base: "list_price",
             company_id: 250,
-            compute_price: "percentage",
+            compute_price: "discount",
             currency_id: 1,
             pricelist_id: 3,
-            percent_price: 90.0,
+            price_discount: 90.0,
         },
     ];
 }
