@@ -64,7 +64,7 @@ class CalendarEvent(models.Model):
     @api.model
     def _get_microsoft_synced_fields(self):
         return {'name', 'description', 'allday', 'start', 'date_end', 'stop',
-                'user_id', 'privacy',
+                'user_id', 'calendar_id', 'privacy',
                 'attendee_ids', 'alarm_ids', 'location', 'show_as', 'active', 'videocall_location'}
 
     @api.model
@@ -315,6 +315,9 @@ class CalendarEvent(models.Model):
         if custom_lower_bound_range:
             lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=custom_lower_bound_range)
         domain = Domain([
+            # Do not include events from secondary calendars - doing so would cause issues if we eventually introduce
+            # multi-calendar synchronization to microsoft.
+            ('calendar_id.microsoft_sync_enabled', '=', True),
             ('partner_ids.user_ids', 'in', [self.env.user.id]),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
@@ -328,9 +331,8 @@ class CalendarEvent(models.Model):
 
         return self._extend_microsoft_domain(domain)
 
-
     @api.model
-    def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values=None, with_ids=False):
+    def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values=None, with_ids=False, with_calendar_id=False):
         if microsoft_event.is_cancelled():
             return {'active': False}
 
@@ -348,12 +350,13 @@ class CalendarEvent(models.Model):
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None) - relativedelta(days=1)
         else:
             stop = parse(microsoft_event.end.get('dateTime')).astimezone(timeZone_stop).replace(tzinfo=None)
+        organizer = microsoft_event.owner_id(self.env)
         values = default_values or {}
         values.update({
             'name': microsoft_event.subject or _("(No title)"),
             'description': microsoft_event.body and microsoft_event.body['content'],
             'location': microsoft_event.location and microsoft_event.location.get('displayName') or False,
-            'user_id': microsoft_event.owner_id(self.env),
+            'user_id': organizer,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, False),
             'attendee_ids': commands_attendee,
             'allday': microsoft_event.isAllDay,
@@ -362,6 +365,9 @@ class CalendarEvent(models.Model):
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
         })
+        if with_calendar_id:
+            values['calendar_id'] = self.env['res.users'].browse(organizer)._find_or_create_primary_calendar().id if organizer else False
+
         if commands_partner:
             # Add partner_commands only if set from Microsoft. The write method on calendar_events will
             # override attendee commands if the partner_ids command is set but empty.
@@ -384,7 +390,6 @@ class CalendarEvent(models.Model):
         if with_ids:
             values['microsoft_id'] = microsoft_event.id
             values['ms_universal_event_id'] = microsoft_event.iCalUId
-
 
         if microsoft_event.is_recurrent():
             values['microsoft_recurrence_master_id'] = microsoft_event.seriesMasterId
@@ -483,7 +488,7 @@ class CalendarEvent(models.Model):
                     interval = 'minutes'
                     duration = minutes
                     name = _("%s - At time of event", alarm_type_label)
-                elif minutes % (60*24) == 0:
+                elif minutes % (60 * 24) == 0:
                     interval = 'days'
                     duration = minutes / 60 / 24
                     name = _(
@@ -590,7 +595,7 @@ class CalendarEvent(models.Model):
             }
             # Set default privacy in event according to the organizer's calendar default privacy if defined.
             if self.user_id:
-                sensitivity_o2m[False] = sensitivity_o2m.get(self.user_id.calendar_default_privacy)
+                sensitivity_o2m[False] = sensitivity_o2m.get(self.calendar_id.calendar_default_privacy)
             else:
                 sensitivity_o2m[False] = 'normal'
             values['sensitivity'] = sensitivity_o2m.get(self.privacy)

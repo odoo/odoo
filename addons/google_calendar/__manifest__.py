@@ -21,6 +21,7 @@
             'google_calendar/static/tests/**/*',
         ],
     },
+    "uninstall_hook": "remove_unimported_calendars",
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

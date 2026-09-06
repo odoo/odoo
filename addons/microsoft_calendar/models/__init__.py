@@ -2,7 +2,8 @@
 
 from . import res_config_settings
 from . import microsoft_sync
-from . import calendar
+from . import calendar_calendar
+from . import calendar_event
 from . import calendar_recurrence_rule
 from . import res_users
 from . import res_users_settings

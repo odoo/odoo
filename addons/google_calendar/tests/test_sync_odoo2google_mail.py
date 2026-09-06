@@ -23,6 +23,8 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
         user_root = self.env.ref('base.user_root')
         organizer1.google_calendar_token = 'abc'
         organizer2.google_calendar_token = False
+        organizer1.primary_calendar_id.google_id = 'primary_calendar_id'
+        organizer2.primary_calendar_id.google_id = 'primary_calendar2'
         event_values = {
             'name': "Event",
             'start': datetime(2020, 1, 15, 8, 0),
@@ -31,7 +33,7 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
         partner = self.env['res.partner'].create({'name': 'Jean-Luc', 'email': 'jean-luc@opoo.com'})
         for create_user, organizer, responsible, expect_mail, is_public in [
             (user_root, organizer1, organizer1, False, True), (user_root, None, user_root, True, True),
-                (organizer1, None, organizer1, False, False), (organizer1, organizer2, organizer1, False, True)]:
+            (organizer1, None, organizer1, False, False), (organizer1, organizer2, organizer1, False, True)]:
             with self.subTest(create_uid=create_user.name if create_user else None, user_id=organizer.name if organizer else None):
                 with self.mock_mail_gateway(), self.mock_google_sync(user_id=responsible):
                     self.env['calendar.event'].with_user(create_user).create({

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests.common import tagged, BaseCase
-from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
+from odoo.addons.google_calendar.utils.google_calendar_service import GoogleEvent
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
@@ -8,8 +8,8 @@ class TestGoogleEvent(BaseCase):
     def test_google_event_readonly(self):
         event = GoogleEvent()
         with self.assertRaises(TypeError):
-            event._events['foo'] = 'bar'
+            event._items['foo'] = 'bar'
         with self.assertRaises(AttributeError):
-            event._events.update({'foo': 'bar'})
+            event._items.update({'foo': 'bar'})
         with self.assertRaises(TypeError):
-            dict.update(event._events, {'foo': 'bar'})
+            dict.update(event._items, {'foo': 'bar'})

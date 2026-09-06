@@ -17,6 +17,8 @@ import {
     expandCalendarView,
     findDateColumn,
     findTimeRow,
+    toggleFilter,
+    toggleSectionFilter,
 } from "@web/../tests/views/calendar/calendar_test_helpers";
 import { user } from "@web/core/user";
 
@@ -33,9 +35,10 @@ const arch = /*xml*/ `
         all_day="allday"
         mode="month"
     >
-        <field name="partner_ids" options="{'block': True, 'icon': 'group', 'icon_class': 'oi-filled'}"/>
+        <field name="partner_ids" options="{'block': True, 'icon': 'group', 'icon_class': 'oi-filled'}"
             filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
             write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"/>
+        <field name="calendar_id" write_model="calendar.user" write_field="calendar_id" filters="1" filter_field="is_filter_checked"/>
         <field name="partner_id" string="Organizer" options="{'icon': 'person'}"/>
         <field name="user_id"/>
         <field name="start"/>
@@ -78,6 +81,14 @@ beforeEach(async () => {
         { partner_id: partnerId_1 },
         { partner_id: partnerId_2 },
     ]);
+    serverData.calendarIds = pyEnv["calendar.calendar"].create([
+        { name: "Primary Calendar" },
+        { name: "Secondary Calendar" },
+    ])
+    pyEnv["calendar.user"].create([
+        { calendar_id: serverData.calendarIds[0], user_id: serverState.userId, is_filter_checked: true, is_filter_active: true, is_primary: true },
+        { calendar_id: serverData.calendarIds[1], user_id: serverState.userId, is_filter_checked: true, is_filter_active: true, is_primary: false },
+    ])
     pyEnv["calendar.filters"].create([
         { partner_id: partnerId_1, partner_checked: true, user_id: serverState.userId },
         { partner_id: partnerId_2, partner_checked: true, user_id: serverData.userId },
@@ -89,6 +100,7 @@ beforeEach(async () => {
             stop: "2016-12-11 01:00:00",
             attendee_ids: serverData.attendeeIds,
             partner_ids: [serverState.partnerId, partnerId_1, partnerId_2],
+            calendar_id: serverData.calendarIds[0],
         },
         {
             name: "event 2",
@@ -97,6 +109,14 @@ beforeEach(async () => {
             attendee_ids: [serverData.attendeeIds[0], serverData.attendeeIds[1]],
             partner_ids: [serverState.partnerId, partnerId_1],
         },
+        {
+            name: "secondary calendar event",
+            start: "2016-12-13 10:55:05",
+            stop: "2016-12-13 14:55:05",
+            attendee_ids: [serverData.attendeeIds[0]],
+            partner_ids: [serverState.partnerId],
+            calendar_id: serverData.calendarIds[1],
+        }
     ]);
     // Create activities on different models
     pyEnv["mail.activity"].create([
@@ -201,8 +221,8 @@ test("Default duration rendering", async () => {
         confirm: false,
     });
     await contains(".o-calendar-quick-create--create-btn").click();
-    // This new event is the third
-    await clickEvent(3);
+    // This new event is the fourth
+    await clickEvent(4);
     expect("div[name='start'] div").toHaveText("Dec 15, 3:00 PM");
     expect("div[name='stop'] div").toHaveText("Dec 15, 6:15 PM", {
         message: "The duration should be 3.25 hours",
@@ -286,4 +306,49 @@ test("Activity events rendering and popover", async () => {
     expect(a2.state).toBe("done");
     const a3 = pyEnv["mail.activity"].browse(3)[0];
     expect(a3.date_deadline).toBe("2016-12-13");
+});
+
+test.tags("desktop");
+test("Filter events by primary/secondary calendar and attendees", async () => {
+    onRpc("res.users", "has_group", () => true);
+    onRpc("res.partner", "get_attendee_detail", () => []);
+    onRpc("res.users", "get_calendar_model_data", () => ({
+        credential_status: {},
+        sync_status: {},
+        sync_email: false,
+        default_duration: 1,
+    }));
+    onRpc("res.users", "read", ({ args, kwargs }) => {
+        if (args[0][0] === user.userId && (args[1]).includes("calendar_ids")) {
+            return [{ id: user.userId, calendar_ids: serverData.calendarIds }];
+        }
+    });
+
+    await mountView({ type: "calendar", resModel: "calendar.event", arch });
+    // Uncheck every filter: both calendars and all attendee/partner filters.
+    await toggleSectionFilter("partner_ids");
+    await toggleFilter("calendar_id", serverData.calendarIds[0]);
+    await toggleFilter("calendar_id", serverData.calendarIds[1]);
+
+    expect(".o_event:not(.o_activity_event)").toHaveCount(0, {
+        message: "no events should be displayed when all filters are unchecked",
+    });
+
+    // Check the primary calendar filter only.
+    await toggleFilter("calendar_id", serverData.calendarIds[0]);
+    expect(".o_event:not(.o_activity_event)").toHaveCount(2, {
+        message: "should show events in the primary calendar plus events attended by the user that are not in their calendars",
+    });
+    expect(queryAllTexts(".o_event .o_event_title")).toEqual(["event 1", "event 2"]);
+
+    // Check the secondary calendar filter.
+    await toggleFilter("calendar_id", serverData.calendarIds[1]);
+    expect(".o_event:not(.o_activity_event)").toHaveCount(3, {
+        message: "the event in the secondary calendar should now also be displayed",
+    });
+    expect(queryAllTexts(".o_event:not(.o_activity_event) .o_event_title")).toEqual([
+        "event 1",
+        "event 2",
+        "secondary calendar event",
+    ]);
 });

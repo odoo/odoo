@@ -10,4 +10,44 @@
             </field>
         </field>
     </record>
+
+    <record id="calendar_calendar_view_form_inherit_google_calendar" model="ir.ui.view">
+        <field name="name">calendar.calendar.view.form.inherit.google.calendar</field>
+        <field name="model">calendar.calendar</field>
+        <field name="inherit_id" ref="calendar.calendar_calendar_view_form"/>
+        <field name="arch" type="xml">
+            <field name="color" position="after">
+                <field name="google_sync_enabled" string="Google Sync"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="calendar_user_view_form_inherit_google_calendar" model="ir.ui.view">
+        <field name="name">calendar.user.view.form.inherit.google.calendar</field>
+        <field name="model">calendar.user</field>
+        <field name="inherit_id" ref="calendar.calendar_user_view_form"/>
+        <field name="arch" type="xml">
+            <field name="filter_color" position="after">
+                <field name="google_sync_enabled" string="Google Sync"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="calendar_calendar_view_list_inherit_google_calendar" model="ir.ui.view">
+        <field name="name">calendar.calendar.view.list.inherit.google.calendar</field>
+        <field name="model">calendar.calendar</field>
+        <field name="inherit_id" ref="calendar.calendar_calendar_view_list"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="decoration-muted">is_import_pending</attribute>
+            </list>
+            <field name="calendar_default_privacy" position="attributes">
+                <attribute name="invisible">is_import_pending</attribute>
+            </field>
+            <field name="calendar_default_privacy" position="after">
+                <field name="google_sync_enabled" string="Google Sync" widget="boolean_toggle" readonly="False"/>
+            </field>
+        </field>
+    </record>
+
 </odoo>

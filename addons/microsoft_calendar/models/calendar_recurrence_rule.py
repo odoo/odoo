@@ -150,11 +150,14 @@ class CalendarRecurrence(models.Model):
         return self._extend_microsoft_domain(Domain.FALSE)
 
     def _cancel_microsoft(self):
-        self.calendar_event_ids.with_context(dont_notify=True)._cancel_microsoft()
+        # If we canceled and unlinked the events before canceling the recurrence,
+        # we would lose the calendar_id information which is related based on the events
+        events_to_cancel = self.calendar_event_ids.with_context(dont_notify=True)
         super()._cancel_microsoft()
+        events_to_cancel._cancel_microsoft()
 
     @api.model
-    def _microsoft_to_odoo_values(self, microsoft_recurrence, default_reminders=(), default_values=None, with_ids=False):
+    def _microsoft_to_odoo_values(self, microsoft_recurrence, default_reminders=(), default_values=None, with_ids=False, with_calendar_ids=False):
         recurrence = microsoft_recurrence.get_recurrence()
 
         if with_ids:
