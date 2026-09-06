@@ -5,27 +5,45 @@ import { useService } from "@web/core/utils/hooks";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
 import { _t } from "@web/core/l10n/translation";
 import { signal } from "@odoo/owl";
+import { makePopover } from "@web/core/popover/popover_hook";
+import { HrDateTimePickerPopover } from "@hr/components/datetime_picker/datetime_picker_popover";
+
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
 
     datetimePickerTargetRef = signal.ref();
+    creationMode = signal("version");
 
     /** @override **/
     setup() {
         super.setup();
         this.actionService = useService("action");
         this.orm = useService("orm");
+        this.popoverService = useService("popover");
+        const self = this;
 
         this.dateTimePicker = useDateTimePicker({
             target: this.datetimePickerTargetRef,
+            createPopover: (component, options) =>
+                makePopover(this.popoverService.add.bind(this.popoverService), HrDateTimePickerPopover, options),
             onApply: (date) => {
                 if (date) {
-                    this.createVersion(date);
+                    this.createVersionOrContract(date);
                 }
             },
             get pickerProps() {
-                return { type: "date" };
+                return {
+                    type: "date",
+                    showCreationModeToggle: true,
+                    creationMode: self.creationMode.value,
+                    onCreationModeChange: (mode) => {
+                        self.creationMode.value = mode;
+                        if (self.dateTimePicker) {
+                            self.dateTimePicker.state.creationMode = mode;
+                        }
+                    },
+                };
             },
         });
     }
@@ -62,12 +80,17 @@ export class VersionsTimeline extends StatusBarField {
         );
     }
 
-    async createVersion(date) {
+    async createVersionOrContract(date) {
         await this.props.record.save();
-        const version_id = await this.orm.call("hr.employee", "create_version", [
-            this.props.record.evalContext.id,
-            { date_version: date },
-        ]);
+
+        const mode = this.creationMode.value || "version";
+        const args =
+            mode === "contract"
+                ? [this.props.record.evalContext.id, date]
+                : [this.props.record.evalContext.id, { date_version: date }];
+        const method = mode === "contract" ? "create_contract" : "create_version";
+
+        const version_id = await this.orm.call("hr.employee", method, args);
 
         await this.props.record.model.load({
             context: {
