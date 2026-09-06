@@ -30,6 +30,9 @@ class StockTraceabilityReport(models.TransientModel):
             move_line = lines_todo.pop(0)
             # if MTO
             if move_line.move_id.move_orig_ids:
+                if not move_line.move_id.move_orig_ids.location_id.has_access('read'):
+                    # We don't want to show more from other companies than what the user has access to.
+                    continue
                 lines = move_line.move_id.move_orig_ids.mapped('move_line_ids').filtered(
                     lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
                 ) - lines_seen

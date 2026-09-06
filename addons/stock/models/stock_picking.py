@@ -316,7 +316,7 @@ class StockPicking(models.Model):
                 'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False),
                 'late_elements': [{
                     'id': late_move.id,
-                    'name': late_move.display_name,
+                    'name': late_move.sudo().display_name,  # sudo need for cross company transfers
                     'model': late_move._name,
                 } for late_move in picking.move_ids.filtered(lambda m: m.delay_alert_date).move_orig_ids._delay_alert_get_documents()
                 ]
@@ -751,6 +751,11 @@ class StockPicking(models.Model):
             )}
 
     def action_confirm(self):
+        if self.partner_id.company_id and self.partner_id.company_id != self.company_id:
+            raise UserError(self.env._(
+                "There is a mismatch between the company the Contact is restricted to and the company doing the transfer. "
+                "Please ensure the company is the same or that the Contact has no company restriction set."
+                ))
         self._check_company()
         if not self.env.context.get('skip_zero_demand_check') and not modules.module.current_test:
             # Check for zero demand moves before confirming

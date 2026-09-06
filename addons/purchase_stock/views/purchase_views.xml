@@ -65,7 +65,7 @@
                 <field name="date_promised" invisible="state not in ('purchase', 'cancel')"/>
             </xpath>
             <xpath expr="//div[@name='reminder']" position="after">
-                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
+                <field name="picking_type_id" options="{'no_create': True}" readonly="state in ['cancel', 'purchase']"/>
                 <field name="dest_address_id" invisible="default_location_dest_id_usage != 'customer'" readonly="locked" required="default_location_dest_id_usage == 'customer'"/>
             </xpath>
             <xpath expr="//div[@name='receipt_status_on_form']" position="after">

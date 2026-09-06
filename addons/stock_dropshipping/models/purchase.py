@@ -26,6 +26,11 @@ class PurchaseOrder(models.Model):
     def action_view_dropship(self):
         return self._get_action_view_picking(self.picking_ids.filtered(lambda p: p.is_dropship))
 
+    @api.model
+    def _get_allowed_picking_code(self):
+        res = super()._get_allowed_picking_code()
+        return res + ['incoming']
+
     def _prepare_reference_vals(self):
         res = super()._prepare_reference_vals()
         sale_orders = self.order_line.sale_order_id

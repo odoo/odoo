@@ -9,6 +9,6 @@ class ResConfigSettings(models.TransientModel):
     website_warehouse_id = fields.Many2one(
         "stock.warehouse",
         related="website_id.warehouse_id",
-        domain="[('company_id', '=', website_company_id)]",
+        domain=lambda self: [('company_id', 'in', self.env.companies.ids + self.website_company_id.ids)],
         readonly=False,
     )
