@@ -6,23 +6,34 @@ const { DateTime } = luxon;
 
 export class OutLine extends Component {
     static template = "stock.AllocationReport.OutLine";
+<<<<<<< 61f78b0b530f8540977c692b7a8482e248f8b74c
     props = useProps({
         allocateQuantity: types.signal(types.number()),
+||||||| 159f15bb18718f2b5fe83861608fca1010b12aae
+    props = props({
+        allocateQuantity: types.signal(types.number()),
+=======
+    props = props({
+        quantityToAllocate: types.signal(types.number()),
+>>>>>>> 77282f8677f28bc42b3afb6f2003e9857b204632
         availableQuantity: types.number(),
         isReserved: types.signal(types.boolean()),
+        isSmall: types.boolean().optional(),
         moves: types.array(),
         productUom: types.object(),
-        reservedQuantity: types.signal(types.number()),
+        allocatedQuantity: types.signal(types.number()),
         updateMoveReservation: types.function(),
     })
     static components = {
         CheckBox,
     }
 
-    favorite = computed(() => this.props.moves.some(move => move.priority == 1))
-    date = computed(() => this.props.moves[0].date)
-    isLate = computed(() => this.date() < serializeDateTime(DateTime.now()))
-    demandQuantity = computed(() => this.props.moves.reduce((v, mv) => v + mv.quantity, 0))
+    favorite = computed(() => this.props.moves.some(move => move.priority == 1));
+    date = computed(() => this.props.moves[0].date);
+    isLate = computed(() => this.date() < serializeDateTime(DateTime.now()));
+    demandQuantity = computed(() =>
+        this.props.moves.reduce((v, mv) => v + mv.quantity - mv.reserved_quantity, 0)
+    );
 
     setup() {
         const move = this.props.moves[0];
@@ -34,16 +45,16 @@ export class OutLine extends Component {
     }
 
     get quantityCSSClass() {
-        if (this.props.reservedQuantity()) {
-            return this.props.reservedQuantity() >= this.demandQuantity() ? "text-success" : "text-warning";
-        } else if (this.props.allocateQuantity() && this.props.allocateQuantity() >= this.demandQuantity()) {
+        if (this.props.allocatedQuantity()) {
+            return this.props.allocatedQuantity() >= this.demandQuantity() ? "text-success" : "text-warning";
+        } else if (this.props.quantityToAllocate() && this.props.quantityToAllocate() >= this.demandQuantity()) {
             return "";
         }
         return "text-danger";
     }
 
     get quantityToDisplay() {
-        return this.props.reservedQuantity() || this.props.allocateQuantity();
+        return this.props.allocatedQuantity() || this.props.quantityToAllocate();
     }
 
     getCheckBoxProps() {
@@ -70,7 +81,7 @@ export class OutLine extends Component {
     }
 
     async onPrintLabels() {
-        if (this.props.reservedQuantity()) {
+        if (this.props.allocatedQuantity()) {
             const docids = this.props.moves.map((move) => move.id)
             const movesQty = this.props.moves.map((move) => move.is_reserved ? move.quantity : 0);
             await this.env.bus.trigger("print_labels", { docids, movesQty });

@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="stock.AllocationReport.ProductLine">
+        <t t-if="this.props.isSmall" t-call="stock.AllocationReport.ProductLine.MobileContent"/>
+        <t t-else="" t-call="stock.AllocationReport.ProductLine.Content"/>
+    </t>
+
+    <t t-name="stock.AllocationReport.ProductLine.MobileContent">
+        <div class="container mb-3">
+            <h3 class="row text-center border bg-white mb-0 py-3">
+                <div t-out="this.props.name"/>
+                <div class="fw-bold w-100">
+                    <t t-out="this.props.totalQty"/> <t t-out="this.props.uom.display_name"/>
+                    <button class="btn btn-link fa fa-area-chart"
+                            t-on-click="() => this.onClickForecast()"
+                            name="forecasted_report_link"/>
+                </div>
+            </h3>
+            <t t-if="this.needs.length">
+                <t t-foreach="this.needs" t-as="outLine" t-key="outLine_index">
+                    <OutLine t-if="!outLine.hidden()" t-props="this.getOutLineProps(outLine)" isSmall="this.props.isSmall"/>
+                </t>
+                <t t-if="this.displayViewMore()">
+                    <div class="row border bg-white py-3">
+                        <a href="#" t-on-click="() => this.onClickViewMore()">View more</a>
+                    </div>
+                </t>
+            </t>
+            <t t-else="">
+                <div class="row border bg-white py-3"><span>No allocation need found.</span></div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="stock.AllocationReport.ProductLine.Content">
         <t t-set="outLine" t-value="this.rowSpan() >= 1 ? this.needs[0] : false"/>
         <tr class="border">
             <td class="border-end py-4 fs-3" t-att-rowspan="this.rowSpan() or false">
