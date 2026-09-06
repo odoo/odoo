@@ -59,11 +59,3 @@ class StockMove(models.Model):
         if not self.env.context.get('merge_extra'):
             res['cost_share'] = sum(self.mapped('cost_share'))
         return res
-
-    def _get_qty_received_without_self(self):
-        line = self.purchase_line_id
-        if line and line.qty_received_method == 'stock_moves' and line.state != 'cancel' and any(move.product_id != line.product_id for move in line.move_ids):
-            kit_bom = self.env['mrp.bom']._bom_find(line.product_id, company_id=line.company_id.id, bom_type='phantom').get(line.product_id)
-            if kit_bom:
-                return line._compute_kit_quantities_from_moves(line.move_ids - self, kit_bom)
-        return super()._get_qty_received_without_self()

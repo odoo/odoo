@@ -3,7 +3,6 @@ import re
 
 from markupsafe import Markup
 from collections import defaultdict
-from datetime import datetime
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
@@ -1119,14 +1118,6 @@ class HrApplicant(models.Model):
         res = super(HrApplicant, self.with_context(just_unarchived=True)).action_unarchive()
         self.reset_applicant()
         return res
-
-    def _get_duration_from_tracking(self, trackings):
-        json = super()._get_duration_from_tracking(trackings)
-        now = datetime.now()
-        for applicant in self:
-            if applicant.refuse_reason_id and applicant.refuse_date:
-                json[applicant.stage_id.id] -= (now - applicant.refuse_date).total_seconds()
-        return json
 
     def _creation_message(self):
         self.ensure_one()

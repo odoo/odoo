@@ -1160,6 +1160,9 @@ class IrAttachment(models.Model):
             raise ValidationError(_("URL attachment (%s) shouldn't be migrated to local.", self.id))
 
 
+IrAttachment._inverse_raw.__override__ = False  # whitelist super()
+
+
 class LocalBinaryFile(BinaryValue):
     """Lazily loaded file."""
     __slots__ = ('__checksum', '__content', '__mimetype', '__path', '__stat', 'filename')

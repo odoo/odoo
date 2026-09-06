@@ -1540,3 +1540,6 @@ class MailMessage(models.Model):
             .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
             for message in self.filtered(lambda m: m.model and m.res_id)
         }
+
+
+MailMessage._search_res_access.__override__ = False  # whitelist super()

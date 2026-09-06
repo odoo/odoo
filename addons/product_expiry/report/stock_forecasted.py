@@ -59,3 +59,6 @@ class StockForecasted_Product_Product(models.AbstractModel):
             # Compensate for any reserved products that are no longer fresh
             free_stock += reserved_expired
         return res + super()._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
+
+
+StockForecasted_Product_Product._get_expired_quant_domain.__override__ = False  # whitelist super()

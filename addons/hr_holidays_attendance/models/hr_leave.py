@@ -57,11 +57,6 @@ class HrLeave(models.Model):
                     raise ValidationError(_('You do not have enough extra hours to request this leave'))
                 raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
 
-    def action_reset_confirm(self):
-        self._check_overtime_deductible(self)
-        res = super().action_reset_confirm()
-        return res
-
     def action_approve(self, check_state=True):
         res = super().action_approve(check_state)
         self._check_overtime_deductible(self)

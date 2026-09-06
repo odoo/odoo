@@ -90,10 +90,6 @@ spirit. To be successful, you will have solid solving problem skills.''')
                 continue
             job.website_url = f'/jobs/{self.env["ir.http"]._slug(job)}'
 
-    def set_open(self):
-        self.write({'website_published': False, 'publish_on': False})
-        return super().set_open()
-
     def get_backend_menu_id(self):
         return self.env.ref('hr_recruitment.menu_hr_recruitment_root').id
 

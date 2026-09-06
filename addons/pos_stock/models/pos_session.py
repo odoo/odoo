@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
-from odoo.tools import float_compare, float_is_zero, split_every
+from odoo.tools import float_compare, split_every
 from odoo.tools.constants import IN_MAX
 
 
@@ -76,10 +76,6 @@ class PosSession(models.Model):
             pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
             pickings.write({'pos_session_id': self.id, 'origin': self.name})
 
-    def _get_account_move_data(self, bank_payment_method_diffs):
-        data = super()._get_account_move_data(bank_payment_method_diffs)
-        return self._create_stock_valuation_lines(data)
-
     def _get_rounding_difference_vals(self, amount, amount_converted):
         if self.config_id.cash_rounding:
             partial_args = {
@@ -94,23 +90,6 @@ class PosSession(models.Model):
                 partial_args['account_id'] = self.config_id.rounding_method.profit_account_id.id
                 return self._credit_amounts(partial_args, amount, amount_converted)
         return None
-
-    def _create_non_reconciliable_move_lines(self, data):
-        data = super()._create_non_reconciliable_move_lines(data)
-        stock_expense = data.get('stock_expense')
-        rounding_difference = data.get('rounding_difference')
-        MoveLine = data.get('MoveLine')
-        rounding_vals = []
-
-        if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
-            rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
-
-        MoveLine.create(
-            [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
-            + rounding_vals,
-        )
-
-        return data
 
     def _create_stock_valuation_lines(self, data):
         MoveLine = data.get('MoveLine')
