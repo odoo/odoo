@@ -26,10 +26,6 @@ class ProductTemplate(models.Model):
     def _get_saleable_tracking_types(self):
         return super()._get_saleable_tracking_types() + ['subcontract']
 
-    @api.model
-    def _get_product_types_allow_zero_price(self):
-        return super()._get_product_types_allow_zero_price() + ['subcontract']
-
     @api.model_create_multi
     def create(self, vals_list):
         templates = super().create(vals_list)

@@ -308,29 +308,6 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         }
         self._ubl_add_line_price_node(sub_vals)
 
-    def _export_order_vals(self, sale_order):
-        vals = super()._export_order_vals(sale_order)
-
-        customer = sale_order.partner_id
-        supplier = sale_order.company_id.partner_id
-        customer_delivery_address = customer.child_ids.filtered(lambda child: child.type == 'delivery')
-        delivery = (sale_order.partner_shipping_id
-                    or (customer_delivery_address and customer_delivery_address[0])
-                    or customer)
-        order_line_vals = self._get_order_line_vals(sale_order.order_line, customer, supplier)
-
-        vals['vals'].update({
-            'order_type_code': 220,
-            'validity_date': sale_order.validity_date,
-            'originator_document_reference': sale_order.client_order_ref,
-            'customer_party_vals': self._get_partner_party_vals(customer, role='customer'),
-            'supplier_party_vals': self._get_partner_party_vals(supplier, role='supplier'),
-            'delivery_party_vals': self._get_partner_party_vals(delivery, role='delivery'),
-            'anticipated_monetary_total_vals': self._get_anticipated_monetary_total_vals(order_line_vals, sale_order.currency_id, sale_order.amount_total, sale_order.amount_paid),
-            'order_lines': order_line_vals,
-        })
-        return vals
-
     def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
         # EXTENDS account.edi.xml.ubl_bis3
         discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)

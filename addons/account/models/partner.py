@@ -1175,16 +1175,6 @@ class ResPartner(models.Model):
         )
         return customer_values.get('customer') or self.env['res.partner']
 
-    def _merge_method(self, destination, source):
-        """
-        Prevent merging partners that are linked to already hashed journal items.
-        """
-        if self.env['account.move.line'].sudo().search_count([('move_id.inalterable_hash', '!=', False), ('partner_id', 'in', source.ids)], limit=1):
-            return {
-                'error': self.env._('Partners that are used in hashed entries cannot be merged.')
-            }
-        return super()._merge_method(destination, source)
-
     @api.depends('country_id')
     def _compute_partner_vat_placeholder(self):
         for partner in self:
