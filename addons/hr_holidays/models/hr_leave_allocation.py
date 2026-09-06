@@ -138,6 +138,7 @@ class HrLeaveAllocation(models.Model):
     yearly_accrued_amount = fields.Float(export_string_translation=False)
     is_officer = fields.Boolean(compute='_compute_is_officer')
     accrual_plan_id = fields.Many2one('hr.leave.accrual.plan', index='btree_not_null', tracking=True)
+    hide_accrual_plan_id = fields.Boolean(compute='_compute_hide_accrual_plan_id')
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
     virtual_remaining_leaves = fields.Float(compute='_compute_leaves', string='Available Time Off')
@@ -148,6 +149,11 @@ class HrLeaveAllocation(models.Model):
     def _check_date_from_date_to(self):
         if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
             raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
+
+    @api.constrains('accrual_plan_id', 'work_entry_type_id')
+    def _check_accrual_plan_work_entry_type(self):
+        if any(allocation.accrual_plan_id and allocation.accrual_plan_id.work_entry_type_id != allocation.work_entry_type_id for allocation in self):
+            raise UserError(_("Selected Time Type must be the same one set on accrual plan"))
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
@@ -269,7 +275,7 @@ class HrLeaveAllocation(models.Model):
         for allocation in self:
             allocation.manager_id = allocation.employee_id and allocation.employee_id.parent_id
 
-    @api.depends('employee_company_id')
+    @api.depends('employee_company_id', 'accrual_plan_id')
     def _compute_allowed_work_entry_type_ids(self):
         for allocation in self:
             country = allocation.employee_company_id.country_id or self.env.company.country_id
@@ -288,6 +294,9 @@ class HrLeaveAllocation(models.Model):
                 if not default_work_entry_type_id:  # fetch when we need it
                     default_work_entry_type_id = self._default_work_entry_type_id()
                 allocation.work_entry_type_id = default_work_entry_type_id
+
+            if allocation.accrual_plan_id and allocation.work_entry_type_id != allocation.accrual_plan_id.work_entry_type_id:
+                allocation.work_entry_type_id = allocation.accrual_plan_id.work_entry_type_id
 
     @api.depends('work_entry_type_id', 'number_of_hours_display', 'number_of_days_display', 'type_request_unit', 'employee_id')
     def _compute_number_of_days(self):
@@ -342,6 +351,11 @@ class HrLeaveAllocation(models.Model):
     def _compute_type_request_unit(self):
         for allocation in self:
             allocation.type_request_unit = allocation._get_request_unit()
+
+    @api.depends("work_entry_type_id")
+    def _compute_hide_accrual_plan_id(self):
+        for allocation in self:
+            allocation.hide_accrual_plan_id = allocation.work_entry_type_id and not self.env['hr.leave.accrual.plan'].sudo().search_count([('work_entry_type_id', '=', allocation.work_entry_type_id.id)])
 
     def _get_carryover_date(self, date_from):
         self.ensure_one()

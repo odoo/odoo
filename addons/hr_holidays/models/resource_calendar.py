@@ -7,6 +7,12 @@ class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
     associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
+    leave_accrual_plan_id = fields.Many2one(
+        string="Accrual Plan",
+        comodel_name="hr.leave.accrual.plan",
+        index="btree_not_null",
+        help="",
+    )
 
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env['resource.calendar.leaves']._read_group(

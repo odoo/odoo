@@ -3,6 +3,7 @@ from calendar import monthrange
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 
 from odoo.addons.hr_holidays.models.hr_leave_accrual_plan_level import _get_selection_days
 
@@ -15,6 +16,9 @@ class HrLeaveAccrualPlan(models.Model):
     name = fields.Char('Name', required=True)
     employees_count = fields.Integer("Employees", compute='_compute_employee_count')
     level_ids = fields.One2many('hr.leave.accrual.level', 'accrual_plan_id', copy=True, string="Milestones")
+    work_entry_type_id = fields.Many2one("hr.work.entry.type", string="Time Type", required=True, domain='[("id", "in", allowed_work_entry_type_ids)]', help="Time type to be accrued")
+    allowed_work_entry_type_ids = fields.Many2many(
+        "hr.work.entry.type", compute='_compute_allowed_work_entry_type_ids')
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id',
         export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', domain=lambda self: [('id', 'in', self.env.companies.ids)])
@@ -57,6 +61,17 @@ class HrLeaveAccrualPlan(models.Model):
     ], export_string_translation=False, default=lambda self: str((fields.Date.context_today(self)).month))
     added_value_type = fields.Selection([('day', 'Days'), ('hour', 'Hours')],
         export_string_translation=False, default="day", store=True)
+
+    @api.depends('company_id')
+    def _compute_allowed_work_entry_type_ids(self):
+        for accrual in self:
+            country = accrual.company_id.country_id or self.env.company.country_id
+            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+                domain = [('country_id', '=', False)]
+            else:
+                domain = [('country_id', '=', country.id)]
+            domain = Domain.AND([Domain('requires_allocation', '=', True), domain])
+            accrual.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     @api.depends('level_ids')
     def _compute_show_transition_mode(self):

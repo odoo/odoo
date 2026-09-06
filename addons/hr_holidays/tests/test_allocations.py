@@ -738,15 +738,6 @@ class TestAllocations(TestHrHolidaysCommon):
 
     def test_change_accrual_allocation_date_to(self):
         with freeze_time('2024-01-05'):
-            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-                'name': 'Daily Accrual Plan',
-                'accrued_gain_time': 'end',
-                'level_ids': [(0, 0, {
-                    'added_value': 1,
-                    'added_value_type': 'day',
-                    'frequency': 'daily',
-                })],
-            })
             work_entry_type = self.env['hr.work.entry.type'].create({
                 'name': 'Accrual Leave Type',
                 'code': 'Accrual Leave Type',
@@ -756,6 +747,16 @@ class TestAllocations(TestHrHolidaysCommon):
                 'leave_validation_type': 'hr',
                 'request_unit': 'day',
                 'unit_of_measure': 'day',
+            })
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Daily Accrual Plan',
+                'work_entry_type_id': work_entry_type.id,
+                'accrued_gain_time': 'end',
+                'level_ids': [(0, 0, {
+                    'added_value': 1,
+                    'added_value_type': 'day',
+                    'frequency': 'daily',
+                })],
             })
             allocation = self._create_validated_allocation(
                 work_entry_type, self.employee_emp, date(2024, 1, 1), accrual_plan=accrual_plan, days=0,
