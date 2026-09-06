@@ -237,6 +237,9 @@ test("AutofillCashCount: cash count autofill with comma decimal separator", asyn
     await animationFrame();
 
     await waitFor(".close-pos-popup");
-    expect(document.querySelector(".close-pos-popup .cash-difference").textContent).toInclude("0");
-    expect(document.querySelector(".close-pos-popup .cash-input input").value).toBe("123.456,00");
+    expect(".close-pos-popup .amount-difference").toHaveCount(0);
+    expect(".close-pos-popup .cash-input input").toHaveValue("123.456,00");
+    await contains(".close-pos-popup .cash-input input").edit("456");
+    await animationFrame();
+    expect(".close-pos-popup .amount-difference").toHaveText("($ -123.000,00)");
 });

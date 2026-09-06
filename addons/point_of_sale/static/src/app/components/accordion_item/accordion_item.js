@@ -2,11 +2,12 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onMounted, useProps, proxy, signal, t } from "@odoo/owl";
 
 export class AccordionItem extends Component {
-    static template = "pos_hr.AccordionItem";
+    static template = "point_of_sale.AccordionItem";
 
     props = useProps({
         disabled: t.boolean().optional(false),
         slots: t.object(),
+        contentClass: t.string().optional(""),
     });
 
     content = signal.ref();

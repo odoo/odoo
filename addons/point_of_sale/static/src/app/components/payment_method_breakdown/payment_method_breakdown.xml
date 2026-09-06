@@ -1,24 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.PaymentMethodBreakdown">
-        <AccordionItem disabled="this.props.transactions.length === 0">
+        <AccordionItem contentClass="'w-100'" disabled="this.props.transactions.length === 0">
             <t t-set-slot="header">
                 <div class="name-amount d-flex justify-content-between w-100">
                     <span t-out="this.props.title"/>
                     <span>
-                        <span class="cash-sign me-1" t-out="this.props.total_amount &lt; 0 ? '-' : '+'" />
-                        <t t-out="this.pos.formatCurrency(Math.abs(this.props.total_amount))"/>
+                        <span t-out="this.pos.formatCurrency(this.props.total_amount)"/>
                     </span>
                 </div>
             </t>
             <t t-set-slot="content">
                 <div class="border-start small text-muted d-flex flex-column ps-2 ms-1">
-                    <div t-foreach="this.props.transactions" t-as="payment" t-key="payment.id" class="d-flex justify-content-between">
-                        <span t-out="payment.name"/>
-                        <span>
-                            <span class="cash-sign me-1" t-out="payment.amount &lt; 0 ? '-' : '+'" />
-                            <t t-out="this.pos.formatCurrency(Math.abs(payment.amount))"/>
-                        </span>
+                    <div t-foreach="this.props.transactions" t-as="payment" t-key="payment.id" class="d-flex justify-content-between fst-italic">
+                        <PaymentMethodBreakdown
+                            t-if="payment.subTransactions?.length"
+                            title="payment.name"
+                            total_amount="payment.amount"
+                            transactions="payment.subTransactions"
+                        />
+                        <t t-else="">
+                            <span t-out="payment.name" />
+                            <span t-out="this.pos.formatCurrency(payment.amount)"/>
+                        </t>
                     </div>
                 </div>
             </t>
