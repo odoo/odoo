@@ -42,6 +42,15 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         });
     }
 
+    get actionMenuItems() {
+        // Remove automatic print in order to replace it
+        const menuItems = super.actionMenuItems || {};
+        if (menuItems.print) {
+            menuItems.print = [];
+        }
+        return menuItems;
+    }
+
     displaySubmit() {
         const records = this.model.root.selection;
         return records.length && records.every(record => record.data.state === 'draft');
@@ -57,6 +66,12 @@ export class ExpenseListController extends ExpenseDocumentUpload(ListController)
         return this.userIsAccountInvoicing && records.length && records.every(record => record.data.state === 'approved');
     }
 
+    async onClickPrintSelected() {
+        const recordIds = this.model.root.selection.map(r => r.resIds);
+        this.env.services.action.doAction('hr_expense.action_report_hr_expense', {
+            additionalContext: { active_ids: recordIds },
+        });
+    }
     async onClick (action) {
         const records = this.model.root.selection;
         const recordIds = records.map((a) => a.resId);

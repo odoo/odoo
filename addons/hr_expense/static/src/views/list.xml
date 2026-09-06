@@ -30,6 +30,12 @@
         <xpath expr="//t[@t-component='this.props.Renderer']" position="attributes">
             <attribute name="uploadDocument.bind">this.uploadDocument</attribute>
         </xpath>
+        <xpath expr="//t[@t-set-slot='control-panel-selection-actions']//t[@t-if='this.props.info.actionMenus']" position="before">
+            <button class="d-none d-md-block btn btn-secondary" t-on-click="this.onClickPrintSelected">
+                <i class="oi me-1" data-icon="print"/>
+                Print
+            </button>
+        </xpath>
     </t>
 
     <t t-name="hr_expense.ListRenderer" t-inherit="web.ListRenderer" t-inherit-mode="primary">
