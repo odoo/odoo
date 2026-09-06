@@ -107,6 +107,18 @@
                         </span>
                     </div>
                 </button>
+                <t groups="sales_team.group_sale_salesman_all_leads">
+                    <button
+                        name="action_estimated_margin"
+                        type="object"
+                        invisible="is_template or not allow_billable"
+                        groups="project.group_project_manager"
+                        class="oe_stat_button"
+                    >
+                        <field name="estimated_cost" invisible="1"/> <!-- Used for `estimated_cost_ratio` costs_percentpie cost_field_name -->
+                        <field name="estimated_cost_ratio" widget="costs_percentpie" string="Estimated Costs" cost_field_name="estimated_cost"/>
+                    </button>
+                </t>
                 <button name="action_real_margin"
                     type="object"
                     invisible="is_template or not allow_billable"
@@ -176,6 +188,16 @@
         <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]"/>
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="python_method">action_real_margin</field>
+        <field name="context">{"from_embedded_action": true}</field>
+    </record>
+
+    <record id="project_embedded_action_project_projected_margin" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">135</field>
+        <field name="name">Forecast Margins</field>
+        <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]"/>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_estimated_margin</field>
         <field name="context">{"from_embedded_action": true}</field>
     </record>
 

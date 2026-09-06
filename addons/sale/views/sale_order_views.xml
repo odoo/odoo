@@ -817,7 +817,7 @@
                                     readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment or product_type != 'consu'"/>
                                 <!--
                                     price_unit is wrapped in a column so inheriting modules (e.g.
-                                    sale_margin) can add fields to it via position="inside" instead
+                                    sale_management) can add fields to it via position="inside" instead
                                     of replacing the price_unit field node. A replace would silently
                                     discard changes made by lower-priority inherited views and
                                     require duplicating this definition.

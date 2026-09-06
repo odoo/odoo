@@ -39,6 +39,7 @@ class AccountMoveLine(models.Model):
         if self.expense_id:
             res.update({
                 'name': self.name,
+                'expense_id': self.expense_id.id,
                 'expense_ids': [Command.set(self.expense_id.ids)],
                 'analytic_distribution': self.analytic_distribution,
             })
