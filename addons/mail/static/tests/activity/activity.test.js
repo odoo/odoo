@@ -4,6 +4,7 @@ import {
     click,
     contains,
     defineMailModels,
+    focus,
     mailModels,
     inputFiles,
     openFormView,
@@ -216,15 +217,21 @@ test("activity with a summary layout", async () => {
     await contains(".o-mail-Activity .o-mail-Activity-info span:text('test summary')");
 });
 
-test("call activity displays a phone link and opens the native dialer", async () => {
+test("call activity displays phone actions", async () => {
     patchWithCleanup(browser, {
         open(url) {
             expect.step(url);
         },
     });
+    patchWithCleanup(browser.navigator.clipboard, {
+        async writeText(text) {
+            expect.step(`copied: ${text}`);
+        },
+    });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["mail.activity"].create({
+        can_write: true,
         phone: "+1 202 555 0182",
         res_id: partnerId,
         res_model: "res.partner",
@@ -233,9 +240,41 @@ test("call activity displays a phone link and opens the native dialer", async ()
     await openFormView("res.partner", partnerId);
 
     await contains(".o-mail-Activity-phoneNumber", { text: "+1 202 555 0182" });
-    expect(".o-mail-Activity-phoneNumber > a").toHaveAttribute("href", "tel:+12025550182");
-    await click(".o-mail-Activity-phoneNumber > a");
+    expect(".o-mail-Activity-phoneNumber > a").toHaveCount(0);
+    expect(".o-mail-Activity-phoneNumber > span.user-select-all").toHaveCount(0);
+    expect(".o-mail-Activity-phoneNumber .o-mail-Activity-call").toHaveCount(0);
+    expect(".o-mail-Activity-call + .o-mail-Activity-markDone").toHaveCount(1);
+    expect(".o-mail-Activity-call").not.toHaveClass("text-action");
+    expect(".o-mail-Activity-copy > span:last-child").toHaveStyle({
+        height: "1px",
+        overflow: "hidden",
+        position: "absolute",
+        width: "1px",
+    });
+    expect(".o-mail-Activity-copy").toHaveStyle({ opacity: "0" });
+    await click(".o-mail-Activity-call");
     expect.verifySteps(["tel:+12025550182"]);
+    await focus(".o-mail-Activity-copy");
+    expect(".o-mail-Activity-copy").toHaveStyle({ opacity: "1" });
+    await click(".o-mail-Activity-copy");
+    expect.verifySteps(["copied: +1 202 555 0182"]);
+});
+
+test("call action remains available on a read-only activity", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create({
+        can_write: false,
+        phone: "+1 202 555 0182",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+
+    await start();
+    await openFormView("res.partner", partnerId);
+
+    await contains(".o-mail-Activity-call");
+    expect(".o-mail-Activity-markDone, .o-mail-Activity-edit").toHaveCount(0);
 });
 
 test("activity without summary layout", async () => {
