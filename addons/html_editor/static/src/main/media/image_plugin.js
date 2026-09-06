@@ -143,6 +143,7 @@ export class ImagePlugin extends Plugin {
                 id: "image_preview",
                 groupId: "image_actions",
                 commandId: "previewImage",
+                takesFocus: true,
             },
             {
                 id: "image_delete",
