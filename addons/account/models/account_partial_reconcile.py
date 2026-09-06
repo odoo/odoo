@@ -233,6 +233,467 @@ class AccountPartialReconcile(models.Model):
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
 
+    def _calculate_paid_percentage(self, payment_partials, move_total_amount, foreign_currency):
+        total_amount_paid = sum(
+                                part.debit_amount_currency
+                                if foreign_currency else part.amount
+                                for part in payment_partials
+                            )
+        return total_amount_paid / move_total_amount
+
+    def _reverse_payment_moves(
+            self,
+            move_values,
+            lines_and_amount_to_adjust,
+            previous_payment_partials,
+            refunded_total_amount,
+            foreign_currency,
+        ):
+        '''Reverse payment moves linked to an invoice when a refund exceeds the remaining amount of one or more invoice lines.
+
+        :param move_values:                   The result of 'account.move._collect_tax_cash_basis_values' for the invoice.
+        :param lines_and_amount_to_adjust:    A dictionary mapping the invoice lines to the amount that must be adjusted.
+        :param previous_payment_partials:     All the previous payment partials linked to the current invoice.
+        :param refunded_total_amount:         The total amount refunded on the invoice.
+        :param foreign_currency:              A boolean indicating whether the move currency is different from the company's
+                                              currency.
+        '''
+        move_total_amount = move_values['total_amount_currency'] if foreign_currency else move_values['total_balance'] - refunded_total_amount
+        max_percentage_to_free = max(
+            amount_to_adjust / abs(line.amount_currency if foreign_currency else line.balance)
+            for line, amount_to_adjust in lines_and_amount_to_adjust.items()
+        )
+
+        partials_to_unlink = self.env['account.partial.reconcile']
+        percentage_freed = 0.0
+        for partial in previous_payment_partials:
+            if percentage_freed >= max_percentage_to_free:
+                break
+            percentage_freed += self._calculate_paid_percentage(partial, move_total_amount, foreign_currency)
+            partials_to_unlink |= partial
+
+        partials_to_unlink.unlink()
+
+    def _set_excess_distribution_info_for_tax_cash_basis(self, excess_distribution_info):
+        draft_caba_move_vals = {}
+        if self.draft_caba_move_vals:
+            draft_caba_move_vals = json.loads(self.draft_caba_move_vals)
+
+        draft_caba_move_vals.setdefault('debit_excess_distribution_info', {})
+        draft_caba_move_vals['debit_excess_distribution_info'].update(excess_distribution_info)
+        self.draft_caba_move_vals = json.dumps(draft_caba_move_vals)
+
+    def _distribute_excess_for_tax_cash_basis(
+        self,
+        excess_total_amount,
+        processed_lines,
+        to_process_lines,
+        foreign_currency,
+    ):
+        def calculate_excess_payment_percentage():
+            return excess_total_amount / abs(
+                sum(
+                    line.amount_currency if foreign_currency else line.balance
+                    for _caba, line in excess_distribution_lines
+                ),
+            )
+
+        indexed_tax_lines = {}
+        excess_distribution_lines = set()
+        excess_distribution_info = {}
+
+        for line in processed_lines['tax']:
+            tax_id = line.tax_line_id
+            indexed_tax_lines[tax_id] = (line)
+
+        for line, vals in processed_lines['base'].items():
+            if vals.get('excess_causing_line', False):
+                continue
+            excess_distribution_lines.add(('base', line))
+            for tax_id in line.tax_ids:
+                excess_distribution_lines.add(('tax', indexed_tax_lines[tax_id]))
+
+        excess_payment_percentage = calculate_excess_payment_percentage()
+        for caba_treatment, line in list(excess_distribution_lines):
+            vals = processed_lines[caba_treatment][line]
+            line_excess_amount = abs(line.amount_currency) * excess_payment_percentage
+            remaining_line_amount = vals['remaining_line_amount']
+
+            if line.currency_id.compare_amounts(remaining_line_amount, line_excess_amount) < 0:
+                excess_distribution_info[line.id] = remaining_line_amount
+                to_process_lines[caba_treatment][line] = vals.get('refunded_line_amount', 0.0) + remaining_line_amount
+
+                excess_total_amount -= remaining_line_amount
+                excess_distribution_lines.remove((caba_treatment, line))
+                excess_payment_percentage = calculate_excess_payment_percentage()
+
+            else:
+                to_process_lines[caba_treatment][line] = vals.get('refunded_line_amount', 0.0) + line_excess_amount
+                excess_distribution_info[line.id] = line_excess_amount
+
+        self._set_excess_distribution_info_for_tax_cash_basis(excess_distribution_info)
+        return to_process_lines
+
+    def _handle_fully_paid_refund_for_tax_cash_basis(self, line, current_refunded_line_amount, remaining_line_amount):
+        excess_causing_line = False
+        if line.currency_id.compare_amounts(abs(current_refunded_line_amount), remaining_line_amount) <= 0:
+            return abs(current_refunded_line_amount), excess_causing_line
+
+        excess_causing_line = True
+        return remaining_line_amount, excess_causing_line
+
+    def _handle_partially_paid_refund_for_tax_cash_basis(
+        self,
+        line,
+        previous_payment_partials,
+        current_refunded_line_amount,
+        previous_refunded_total_amount,
+        previous_excess_total_amount,
+        remaining_line_amount,
+        foreign_currency,
+    ):
+        excess_causing_line = False
+        payment_amount_to_adjust = 0.0
+        line_amount = abs(line.amount_currency if foreign_currency else line.balance)
+
+        if line.currency_id.compare_amounts(abs(current_refunded_line_amount), remaining_line_amount) <= 0:
+            refunded_line_amount = abs(current_refunded_line_amount)
+            return refunded_line_amount, excess_causing_line, payment_amount_to_adjust
+
+        max_refundable = line_amount - abs(previous_refunded_total_amount) - previous_excess_total_amount
+
+        refunded_line_amount = abs(
+            current_refunded_line_amount
+            if line.currency_id.compare_amounts(abs(current_refunded_line_amount), max_refundable) <= 0
+            else max_refundable,
+        )
+
+        if previous_payment_partials:
+            payment_amount_to_adjust = refunded_line_amount - remaining_line_amount
+
+        total_refunded_amount = abs(current_refunded_line_amount) + abs(previous_refunded_total_amount) + previous_excess_total_amount
+        if line.currency_id.compare_amounts(line_amount, total_refunded_amount) < 0:
+            excess_causing_line = True
+
+        return refunded_line_amount, excess_causing_line, payment_amount_to_adjust
+
+    def _process_refunded_lines_for_tax_cash_basis_values(
+        self,
+        move_values,
+        previous_payment_partials,
+        current_refunded_lines,
+        previous_refunded_lines,
+        previous_excess_distribution_lines,
+        paid_percentage,
+        foreign_currency,
+    ):
+        def calculate_remaining_line_amount():
+            return (
+                abs(line.amount_currency if foreign_currency else line.balance)
+                - abs(previous_refunded_total_amount)
+                - abs(previous_excess_total_amount)
+                ) * (1 - paid_percentage)
+
+        def calculate_partial_payment_percentage():
+            if foreign_currency:
+                return self.debit_amount_currency / (move_values['total_residual_currency'] + self.debit_amount_currency)
+            return self.amount / (move_values['total_residual'] + self.amount)
+
+        to_process_lines = {
+            'base': {},
+            'tax': {},
+        }
+        processed_lines = {
+            'base': {},
+            'tax': {},
+        }
+        lines_and_paid_amount_to_adjust = {}
+        partial_amount = self.debit_amount_currency if foreign_currency else self.amount
+        partial_payment_percentage = calculate_partial_payment_percentage() if not current_refunded_lines else 0.0
+
+        for caba_treatment, line in move_values['to_process_lines']:
+            previous_refunded_total_amount = previous_refunded_lines[caba_treatment].get(line, 0.0) if previous_refunded_lines else 0.0
+            previous_excess_total_amount = previous_excess_distribution_lines.get(str(line.id), 0.0) if previous_excess_distribution_lines else 0.0
+            remaining_line_amount = calculate_remaining_line_amount()
+
+            if remaining_line_amount <= 0:
+                continue
+
+            if current_refunded_lines:
+                current_refunded_line_amount = current_refunded_lines[caba_treatment].get(line, 0.0)
+                if not current_refunded_line_amount:
+                    processed_lines[caba_treatment][line] = {
+                        'remaining_line_amount': remaining_line_amount,
+                    }
+                    continue
+
+                if not move_values['is_fully_paid']:
+                    refunded_line_amount, excess_causing_line, payment_amount_to_adjust = \
+                        self._handle_partially_paid_refund_for_tax_cash_basis(
+                            line=line,
+                            previous_payment_partials=previous_payment_partials,
+                            current_refunded_line_amount=current_refunded_line_amount,
+                            previous_refunded_total_amount=previous_refunded_total_amount,
+                            previous_excess_total_amount=previous_excess_total_amount,
+                            remaining_line_amount=remaining_line_amount,
+                            foreign_currency=foreign_currency,
+                        )
+                    partial_amount -= refunded_line_amount
+                    if payment_amount_to_adjust:
+                        lines_and_paid_amount_to_adjust[line] = payment_amount_to_adjust
+                    to_process_lines[caba_treatment][line] = refunded_line_amount
+                    processed_lines[caba_treatment][line] = {
+                        'excess_causing_line': excess_causing_line,
+                        'remaining_line_amount': remaining_line_amount - refunded_line_amount,
+                        'refunded_line_amount': refunded_line_amount,
+                    }
+
+                else:
+                    refunded_line_amount, excess_causing_line = \
+                        self._handle_fully_paid_refund_for_tax_cash_basis(line, current_refunded_line_amount, remaining_line_amount)
+
+                    partial_amount -= abs(refunded_line_amount)
+                    to_process_lines[caba_treatment][line] = refunded_line_amount
+                    processed_lines[caba_treatment][line] = {
+                        'excess_causing_line': excess_causing_line,
+                        'remaining_line_amount': remaining_line_amount - refunded_line_amount,
+                        'refunded_line_amount': refunded_line_amount,
+                    }
+
+            else:
+                line_amount = remaining_line_amount * partial_payment_percentage
+                to_process_lines[caba_treatment][line] = line_amount
+
+        return to_process_lines, processed_lines, lines_and_paid_amount_to_adjust, partial_amount
+
+    def _add_refund_info_to_tax_cash_basis_values(
+        self,
+        move_values,
+        previous_payment_partials,
+        current_refunded_lines,
+        previous_refunded_lines,
+        previous_excess_distribution_lines,
+        paid_percentage,
+        refunded_total_amount,
+        foreign_currency,
+    ):
+        '''Add the refund information to the move_values dictionary to be used for tax cash basis.
+
+        :param move_values:                         The result of 'account_move.collect_tax_cash_basis_values' for the current invoice.
+        :param previous_payment_partials:           All the previous payment partials linked to the current invoice.
+        :param current_refunded_lines:              The result of 'account_partial_reconcile._compute_refunded_lines_and_amount' for the
+                                                    current move.
+        :param previous_refunded_lines:             The result of 'account_partial_reconcile._compute_refunded_lines_and_amount' for the
+                                                    past refund moves linked to the invoice.
+        :param previous_excess_distribution_lines   The result of 'account_partial_reconcile._get_previous_excess_distribution_info' for
+                                                    the past refund moves linked to the invoice.
+        :param paid_percentage:                     The percentage of invoice already paid.
+        :param refunded_total_amount:               The total amount refunded on the invoice.
+        :param foreign_currency:                    A boolean indicating whether the move currency is different from the company's
+                                                    currency.
+        :return:                                    The mutated move_values dictionary.
+        '''
+        to_process_lines, processed_lines, lines_and_amount_to_adjust, partial_amount = \
+            self._process_refunded_lines_for_tax_cash_basis_values(
+            move_values=move_values,
+            previous_payment_partials=previous_payment_partials,
+            current_refunded_lines=current_refunded_lines,
+            previous_refunded_lines=previous_refunded_lines,
+            previous_excess_distribution_lines=previous_excess_distribution_lines,
+            paid_percentage=paid_percentage,
+            foreign_currency=foreign_currency,
+            )
+
+        if not self.company_currency_id.is_zero(partial_amount) and current_refunded_lines:
+            to_process_lines = self._distribute_excess_for_tax_cash_basis(
+                excess_total_amount=partial_amount,
+                processed_lines=processed_lines,
+                to_process_lines=to_process_lines,
+                foreign_currency=foreign_currency,
+            )
+
+        if lines_and_amount_to_adjust:
+            self._reverse_payment_moves(
+                move_values,
+                lines_and_amount_to_adjust,
+                previous_payment_partials,
+                refunded_total_amount,
+                foreign_currency,
+            )
+
+        move_values.update({
+            'to_process_lines': [
+                (
+                    caba_treatment,
+                    line,
+                    line.currency_id.round((-1 if line.amount_currency < 0 else 1) * line_amount),
+                )
+                    for caba_treatment in ('base', 'tax')
+                    for line, line_amount in to_process_lines[caba_treatment].items()
+                ],
+            })
+        return move_values
+
+    def _process_base_lines_for_tax_cash_basis(self, move_values, debit_base_lines, foreign_currency):
+        '''Process the 'debit_base_lines' to extract the refunded lines and amount for tax cash basis entries.
+
+        :param move_values:                 The result of 'account_move.collect_tax_cash_basis_values' for the current invoice.
+        :param debit_base_lines:            The result of '_get_tax_cash_basis_base_lines' containing the base_lines of the
+                                            debit move with the refund information under the 'discount_base_lines' key.
+        :param foreign_currency:            A boolean indicating whether the move currency is different from the company's
+                                            currency.
+        :return:                            A dictionary mapping each refunded line to its refunded amount.
+        '''
+        to_process_lines = {
+            'base': defaultdict(float),
+            'tax': {},
+        }
+        manual_tax_amounts = defaultdict(float)
+        for base_line in debit_base_lines:
+            discount_base_lines = base_line.get('discount_base_lines', False)
+            if not discount_base_lines:
+                continue
+            for discount_base_line in discount_base_lines:
+                to_process_lines['base'][base_line['record']] += discount_base_line['tax_details']['raw_total_excluded_currency'] \
+                    if foreign_currency else discount_base_line['tax_details']['raw_total_excluded']
+                for tax_data in discount_base_line['tax_details']['taxes_data']:
+                    manual_tax_amounts[tax_data['tax']] += tax_data['tax_amount_currency'] if foreign_currency else tax_data['tax_amount']
+
+        for caba_treatment, line in move_values['to_process_lines']:
+            if caba_treatment != 'tax':
+                continue
+            refunded_tax_line_amount = manual_tax_amounts.get(line.tax_line_id)
+            if refunded_tax_line_amount:
+                to_process_lines['tax'][line] = refunded_tax_line_amount
+
+        return to_process_lines
+
+    def _get_base_lines_for_tax_cash_basis_values(self, move, refund_moves):
+        '''Collect the updated base_lines of an invoice if a refund exists aganist it.
+
+        :param move:                    The debit/credit move of the current partial reconcile record being processed.
+        :param refund_moves:            A list containing the refund moves linked to the invoice.
+        :return:                        The new base_lines of an invoice with the refund information added under the
+                                        'discount_base_lines' key.
+        '''
+
+        AccountTax = self.env['account.tax']
+        base_lines, _tax_lines = move._get_rounded_base_and_tax_lines()
+        all_refund_base_lines = []
+        for refund_move in refund_moves:
+            refund_base_lines, _refund_tax_lines = refund_move._get_rounded_base_and_tax_lines()
+            refund_base_lines = AccountTax._turn_base_lines_is_refund_flag_off(refund_base_lines)
+            for refund_base_line in refund_base_lines:
+                refund_base_line['special_type'] = 'global_discount'
+            all_refund_base_lines.extend(refund_base_lines)
+
+        company_id = self.company_id
+        base_lines = AccountTax._dispatch_global_discount_lines(base_lines + all_refund_base_lines, company_id)
+        AccountTax._squash_global_discount_lines(base_lines, company_id)
+
+        return base_lines
+
+    def _compute_refunded_lines_and_amount(self, move_values, refund_moves, foreign_currency):
+        '''Compute the refunded base and tax line amounts to be used for tax cash basis entries.'''
+
+        if not refund_moves:
+            return {}
+
+        debit_base_lines = self._get_base_lines_for_tax_cash_basis_values(move_values['move'], refund_moves)
+        return self._process_base_lines_for_tax_cash_basis(move_values, debit_base_lines, foreign_currency)
+
+    def _get_previous_excess_distribution_info(self, previous_refund_partials):
+        previous_excess_distribution_info = {}
+        if not previous_refund_partials:
+            return previous_excess_distribution_info
+
+        for partial in previous_refund_partials:
+            if not partial.draft_caba_move_vals:
+                continue
+
+            draft_caba_move_vals = json.loads(partial.draft_caba_move_vals)
+            excess_distribution_info = draft_caba_move_vals.get('debit_excess_distribution_info') or {}
+            for line_id, excess_line_amount in excess_distribution_info.items():
+                previous_excess_distribution_info[line_id] = previous_excess_distribution_info.get(line_id, 0.0) + excess_line_amount
+
+        return previous_excess_distribution_info
+
+    def _get_moves_for_tax_cash_basis_values(self, move_values):
+        ''' Collect all the moves related to the current partial.
+
+        :param move_values:     The result of 'account_move.collect_tax_cash_basis_values' for the current invoice.
+        :return:                A tuple of 4 elements:
+            * current_refund_move:          The current refund move.
+            * previous_refund_moves:        All the previous refund moves linked to the invoice.
+            * previous_payment_partials:    All the previous payment partials linked to the invoice.
+            * previous_refund_partials:     All the previous refund partials linked to the invoice.
+        '''
+        current_refund_move = self.env['account.move']
+        previous_refund_moves = self.env['account.move']
+        previous_payment_partials = self.env['account.partial.reconcile']
+        previous_refund_partials = self.env['account.partial.reconcile']
+        payment_term = move_values['payment_term']
+
+        move_type = move_values['move'].move_type
+        partials = payment_term.matched_credit_ids if move_type == 'out_invoice' else payment_term.matched_debit_ids
+        for part in partials:
+            refund_move = part.credit_move_id.move_id if move_type == 'out_invoice' else part.debit_move_id.move_id
+            refund_move_values = refund_move._collect_tax_cash_basis_values()
+            if part.id == self.id and not refund_move_values:
+                continue
+            if part.id == self.id and refund_move_values:
+                current_refund_move |= refund_move
+            elif refund_move_values:
+                previous_refund_moves |= refund_move
+                previous_refund_partials |= part
+            else:
+                previous_payment_partials |= part
+
+        return current_refund_move, previous_refund_moves, previous_refund_partials, previous_payment_partials
+
+    def _update_tax_cash_basis_values(self, move_values):
+        ''' Update the result of 'account_move.collect_tax_cash_basis_values' to include the information about
+        refunds if they exist aganist an invoice.
+
+        :return:                    The updated move_values dictionary with refund information passed as:
+            *to_process_lines:      A list of tuples (caba_treatment, line, line_amount) where:
+                                    - line_amount is the amount of the line to make the caba entry with.
+        '''
+
+        foreign_currency = move_values['currency'] != move_values['move'].company_id.currency_id
+        move_total_amount = move_values['total_amount_currency'] if foreign_currency else move_values['total_balance']
+        refunded_total_amount = 0.0
+        current_refund_move, previous_refund_moves, previous_refund_partials, previous_payment_partials = \
+            self._get_moves_for_tax_cash_basis_values(move_values)
+
+        if current_refund_move or previous_refund_moves:
+            if previous_payment_partials:
+                refunded_total_amount = sum(
+                    move.amount_total_in_currency_signed
+                    if foreign_currency else move.amount_total
+                    for move in previous_refund_moves
+                )
+                move_total_amount = move_total_amount - refunded_total_amount
+                paid_percentage = self._calculate_paid_percentage(previous_payment_partials, move_total_amount, foreign_currency)
+            else:
+                paid_percentage = 0.0
+
+            previous_excess_distribution_lines = self._get_previous_excess_distribution_info(previous_refund_partials)
+            previous_refunded_lines = self._compute_refunded_lines_and_amount(move_values, previous_refund_moves, foreign_currency)
+            current_refunded_lines = self._compute_refunded_lines_and_amount(move_values, current_refund_move, foreign_currency)
+            return self._add_refund_info_to_tax_cash_basis_values(
+                move_values=move_values,
+                previous_payment_partials=previous_payment_partials,
+                current_refunded_lines=current_refunded_lines,
+                previous_refunded_lines=previous_refunded_lines,
+                previous_excess_distribution_lines=previous_excess_distribution_lines,
+                paid_percentage=paid_percentage,
+                refunded_total_amount=refunded_total_amount,
+                foreign_currency=foreign_currency,
+                )
+
+        return move_values
+
     def _collect_tax_cash_basis_values(self):
         ''' Collect all information needed to create the tax cash basis journal entries on the current partials.
         :return:    A dictionary mapping each move_id to the result of 'account_move._collect_tax_cash_basis_values'.
@@ -261,6 +722,9 @@ class AccountPartialReconcile(models.Model):
                 # Nothing to process on the move.
                 if not move_values:
                     continue
+
+                if move.move_type in ('out_invoice', 'in_invoice'):
+                    move_values = partial._update_tax_cash_basis_values(move_values)
 
                 # No payment, no CABA
                 if not self.env['account.move.line'].is_payment((move + counterpart_move).line_ids):
@@ -470,21 +934,6 @@ class AccountPartialReconcile(models.Model):
         )
 
     @api.model
-    def _get_cash_basis_base_line_grouping_key_from_record(self, base_line, account=None):
-        ''' Get the grouping key of a journal item being a base line.
-        :param base_line:   An account.move.line record.
-        :param account:     Optional account to shadow the current base_line one.
-        :return:            The grouping key as a tuple.
-        '''
-        return (
-            base_line.currency_id.id,
-            base_line.partner_id.id,
-            (account or base_line.account_id).id,
-            tuple(base_line.tax_ids.flatten_taxes_hierarchy().filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
-            frozendict(base_line.analytic_distribution or {}),
-        )
-
-    @api.model
     def _get_cash_basis_tax_line_grouping_key_from_vals(self, tax_line_vals):
         ''' Get the grouping key of a cash basis tax line that hasn't yet been created.
         :param tax_line_vals:   The values to create a new account.move.line record.
@@ -501,23 +950,7 @@ class AccountPartialReconcile(models.Model):
             frozendict(tax_line_vals['analytic_distribution'] or {}),
         )
 
-    @api.model
-    def _get_cash_basis_tax_line_grouping_key_from_record(self, tax_line, account=None):
-        ''' Get the grouping key of a journal item being a tax line.
-        :param tax_line:    An account.move.line record.
-        :param account:     Optional account to shadow the current tax_line one.
-        :return:            The grouping key as a tuple.
-        '''
-        return (
-            tax_line.currency_id.id,
-            tax_line.partner_id.id,
-            (account or tax_line.account_id).id,
-            tuple(tax_line.tax_ids.filtered(lambda x: x.tax_exigibility == 'on_payment').ids),
-            tax_line.tax_repartition_line_id.id,
-            frozendict(tax_line.analytic_distribution or {}),
-        )
-
-    def _create_tax_cash_basis_moves(self):
+    def _create_tax_cash_basis_moves(self, aml_residual_map):
         ''' Create the tax cash basis journal entries.
         :return: The newly created journal entries.
         '''
@@ -529,7 +962,10 @@ class AccountPartialReconcile(models.Model):
         for move_values in tax_cash_basis_values_per_move.values():
             move = move_values['move']
             pending_cash_basis_lines = []
-            amount_residual_per_tax_line = {line.id: line.amount_residual_currency for line_type, line in move_values['to_process_lines'] if line_type == 'tax'}
+            amount_residual_per_tax_line = {
+                line.id: aml_residual_map.get(line.id, line.amount_residual_currency)
+                for line_type, line, *line_amount in move_values['to_process_lines'] if line_type == 'tax'
+            }
 
             for partial_values in move_values['partials']:
                 partial = partial_values['partial']
@@ -554,26 +990,31 @@ class AccountPartialReconcile(models.Model):
                 # Used to reduce the number of generated lines and to avoid rounding issues.
                 partial_lines_to_create = {}
 
-                for caba_treatment, line in move_values['to_process_lines']:
+                for caba_treatment, line, *line_amount in move_values['to_process_lines']:
                     # ==========================================================================
                     # Compute the balance of the current line on the cash basis entry.
                     # This balance is a percentage representing the part of the journal entry
                     # that is actually paid by the current partial.
                     # ==========================================================================
 
-                    # Percentage expressed in the foreign currency.
-                    amount_currency = line.currency_id.round(line.amount_currency * partial_values['percentage'])
-                    if (
-                        caba_treatment == 'tax'
-                        and (
-                            move_values['is_fully_paid']
-                            or line.currency_id.compare_amounts(abs(line.amount_residual_currency), abs(amount_currency)) < 0
-                        )
-                        and partial_values == move_values['partials'][-1]
-                    ):
-                        # If the move is supposed to be fully paid, and we're on the last partial for it,
-                        # put the remaining amount to avoid rounding issues
-                        amount_currency = amount_residual_per_tax_line[line.id]
+                    if line_amount:
+                        amount_currency = line_amount[0]
+                    else:
+                        # Percentage expressed in the foreign currency.
+                        amount_currency = line.currency_id.round(line.amount_currency * partial_values['percentage'])
+
+                        if (
+                            caba_treatment == 'tax'
+                            and (
+                                move_values['is_fully_paid']
+                                or line.currency_id.compare_amounts(abs(line.amount_residual_currency), abs(amount_currency)) < 0
+                            )
+                            and partial_values == move_values['partials'][-1]
+                        ):
+                            # If the move is supposed to be fully paid, and we're on the last partial for it,
+                            # put the remaining amount to avoid rounding issues
+                            amount_currency = amount_residual_per_tax_line[line.id]
+
                     if caba_treatment == 'tax':
                         amount_residual_per_tax_line[line.id] -= amount_currency
                     balance = partial_values['payment_rate'] and amount_currency / partial_values['payment_rate'] or 0.0
@@ -705,7 +1146,12 @@ class AccountPartialReconcile(models.Model):
         credit_vals = self.credit_move_id.move_id._collect_tax_cash_basis_values() or {}
         if not debit_vals and not credit_vals:
             return False
-        return json.dumps({
+
+        existing_draft_caba_move_vals = {}
+        if self.draft_caba_move_vals:
+            existing_draft_caba_move_vals = json.loads(self.draft_caba_move_vals)
+
+        existing_draft_caba_move_vals.update({
             'debit_caba_lines': [(aml_type, aml.id) for aml_type, aml in debit_vals.get('to_process_lines', [])],
             'debit_total_balance': debit_vals.get('total_balance'),
             'debit_total_amount_currency': debit_vals.get('total_amount_currency'),
@@ -713,6 +1159,7 @@ class AccountPartialReconcile(models.Model):
             'credit_total_balance': credit_vals.get('total_balance'),
             'credit_total_amount_currency': credit_vals.get('total_amount_currency'),
         })
+        return json.dumps(existing_draft_caba_move_vals)
 
     def _set_draft_caba_move_vals(self):
         for partial in self:
