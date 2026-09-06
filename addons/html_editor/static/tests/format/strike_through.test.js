@@ -106,7 +106,7 @@ test("should make two paragraphs not strikeThrough", async () => {
 
 test("should make qweb tag strikeThrough", async () => {
     await testEditor({
-        contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
+        contentBefore: `<div>[<p t-out="'Test'" contenteditable="false">Test</p>]</div>`,
         stepFunction: strikeThrough,
         contentAfter: `<div>[<p t-out="'Test'" style="text-decoration-line: line-through;">Test</p>]</div>`,
         config: { includePlugins: [QWebPlugin] },
