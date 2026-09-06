@@ -83,6 +83,9 @@ class MailActivitySchedule(models.TransientModel):
     summary = fields.Char(
         'Summary', compute="_compute_summary",
         readonly=False, store=True)
+    phone = fields.Char(
+        'Phone', compute="_compute_phone",
+        readonly=False, store=True, compute_sudo=False)
     note = fields.Html(
         'Note', compute="_compute_note",
         readonly=False, store=True, sanitize_style=True)
@@ -281,6 +284,15 @@ class MailActivitySchedule(models.TransientModel):
             elif not scheduler.summary:
                 scheduler.summary = scheduler.activity_type_id.name
 
+    @api.depends('activity_type_id', 'res_model', 'res_ids')
+    def _compute_phone(self):
+        for scheduler in self:
+            records = scheduler._get_applied_on_records()
+            if scheduler.activity_category != 'phonecall' or not records or len(records) != 1:
+                scheduler.phone = False
+                continue
+            scheduler.phone = scheduler._get_phone_number(records)
+
     @api.depends('activity_type_id')
     def _compute_note(self):
         for scheduler in self.filtered(lambda s: s.activity_type_id.default_note):
@@ -419,16 +431,22 @@ class MailActivitySchedule(models.TransientModel):
     def _action_schedule_activities(self):
         if not self.res_model:
             return self._action_schedule_activities_personal()
-        return self._get_applied_on_records().activity_schedule(
-            activity_type_id=self.activity_type_id.id,
-            automated=False,
-            summary=self.summary,
-            note=self.note,
-            user_id=self.activity_user_id.id,
-            role_id=self.activity_role_id.id,
-            date_deadline=self.date_deadline,
-            activity_user_id_fname=self.activity_user_id_fname
-        )
+        records = self._get_applied_on_records()
+        is_single_call = self.activity_category == 'phonecall' and len(records) == 1
+        phone = self.phone if is_single_call else False
+        activity_values = {
+            'activity_type_id': self.activity_type_id.id,
+            'automated': False,
+            'summary': self.summary,
+            'note': self.note,
+            'user_id': self.activity_user_id.id,
+            'role_id': self.activity_role_id.id,
+            'date_deadline': self.date_deadline,
+            'activity_user_id_fname': self.activity_user_id_fname,
+        }
+        if is_single_call:
+            activity_values['phone'] = phone
+        return records.activity_schedule(**activity_values)
 
     def _action_schedule_activities_personal(self):
         if not self.activity_user_id:
@@ -448,6 +466,10 @@ class MailActivitySchedule(models.TransientModel):
     # ------------------------------------------------------------
     # TOOLS
     # ------------------------------------------------------------
+
+    def _get_phone_number(self, record):
+        """Hook for phone modules to find the number."""
+        return False
 
     def _evaluate_res_ids(self):
         """ Parse composer res_ids, which can be: an already valid list or
