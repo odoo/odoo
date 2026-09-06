@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.MoveMessagesDialog">
+        <Dialog size="'md'" title="dialogTitle">
+            <div class="o-mail-MoveMessagesDialog">
+                <div class="mb-3">
+                    <label
+                        class="form-label fw-bold"
+                        for="move_target_channel"
+                        t-esc="labels.channel"
+                    />
+                    <select
+                        id="move_target_channel"
+                        class="form-select"
+                        t-on-change="(ev) => this.onChangeChannel(ev)"
+                    >
+                        <t t-foreach="state.channels" t-as="channel" t-key="channel.id">
+                            <option
+                                t-att-value="channel.id"
+                                t-att-selected="channel.id === state.targetChannelId"
+                            >
+                                # <t t-esc="channel.name" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label
+                        class="form-label fw-bold"
+                        for="move_target_topic"
+                        t-esc="labels.thread"
+                    />
+                    <t t-if="state.topics.length">
+                        <select
+                            id="move_target_topic"
+                            class="form-select mb-2"
+                            t-on-change="(ev) => this.onChangeTopic(ev)"
+                        >
+                            <option value="">— <t t-esc="labels.createNewThread" /> —</option>
+                            <t t-foreach="state.topics" t-as="topic" t-key="topic.id">
+                                <option
+                                    t-att-value="topic.id"
+                                    t-att-selected="topic.id === state.targetTopicId"
+                                >
+                                    <t t-esc="topic.name" />
+                                </option>
+                            </t>
+                        </select>
+                    </t>
+                    <input
+                        type="text"
+                        class="form-control"
+                        t-att-placeholder="labels.newThreadPlaceholder"
+                        t-att-value="state.newTopicName"
+                        t-att-disabled="!!state.targetTopicId"
+                        t-on-input="(ev) => this.onInputNewTopic(ev)"
+                    />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold" for="move_scope" t-esc="labels.scope" />
+                    <select
+                        id="move_scope"
+                        class="form-select"
+                        t-on-change="(ev) => this.onChangeScope(ev)"
+                    >
+                        <t t-foreach="scopeOptions" t-as="option" t-key="option.value">
+                            <option
+                                t-att-value="option.value"
+                                t-att-selected="option.value === state.scope"
+                            >
+                                <t t-esc="option.label" />
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button
+                    class="btn btn-secondary"
+                    t-on-click="() => this.onCancel()"
+                    t-esc="labels.cancel"
+                />
+                <button
+                    class="btn btn-primary"
+                    t-att-disabled="!canConfirm"
+                    t-on-click="() => this.onConfirm()"
+                    t-esc="labels.confirm"
+                />
+            </t>
+        </Dialog>
+    </t>
+</templates>
