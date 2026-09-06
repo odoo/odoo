@@ -69,12 +69,14 @@ class MailActivity(models.Model):
 
     def _get_activity_done_message_extra_values(self, activity):
         """Extra values for the chatter template send on activity marked as done."""
+        values = super()._get_activity_done_message_extra_values(activity)
         event = activity.calendar_event_id
-        if not event.partner_ids:
-            return {}
+        if not event.partner_ids or values.get("call_history"):
+            return values
         attendee_names = format_list(self.env, event.partner_ids.mapped("name"))
         attendee_count = len(event.partner_ids)
         return {
+            **values,
             "attendee_names": attendee_names,
             "truncated_attendee_names": (
                 format_list(self.env, [

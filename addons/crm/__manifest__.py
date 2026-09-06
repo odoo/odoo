@@ -40,6 +40,7 @@
         'wizard/crm_lead_to_opportunity_mass_views.xml',
         'wizard/crm_merge_opportunities_views.xml',
         'wizard/crm_lead_pls_update_views.xml',
+        'wizard/mail_activity_schedule_views.xml',
 
         'views/calendar_views.xml',
         'views/crm_recurring_plan_views.xml',

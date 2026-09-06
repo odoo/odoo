@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import logging
 from markupsafe import Markup
 
@@ -94,6 +95,18 @@ class MailActivitySchedule(models.TransientModel):
         readonly=False, store=True)
     # used in both (plan- and activity- based)
     activity_user_id_fname = fields.Char('User Field', help="Field name of the user to choose on the record")
+    # logging a call (voip.call, discuss.call.history) in the chatter of a document
+    activity_type_id_domain = fields.Char(
+        compute='_compute_activity_type_id_domain', export_string_translation=False)
+    call_history_id = fields.Many2one('discuss.call.history', export_string_translation=False)
+    contact_id = fields.Many2one(
+        'res.partner', compute='_compute_contact_id',
+        readonly=False, store=False)
+    is_call_ongoing = fields.Boolean(
+        compute='_compute_is_call_ongoing', export_string_translation=False)
+    res_model_selection = fields.Selection(
+        selection='_selection_res_model', string="Related Model",
+        inverse='_inverse_res_model_selection', store=False)
 
     @api.depends('res_model')
     def _compute_res_model_id(self):
@@ -101,6 +114,7 @@ class MailActivitySchedule(models.TransientModel):
         for scheduler in self.filtered('res_model'):
             scheduler.res_model_id = self.env['ir.model']._get_id(scheduler.res_model)
 
+    @api.depends(lambda self: ('res_model_selection', *self._get_res_model_fields().values()))
     @api.depends_context('active_ids')
     def _compute_res_ids(self):
         context = self.env.context
@@ -110,6 +124,13 @@ class MailActivitySchedule(models.TransientModel):
                 scheduler.res_ids = f"{context['active_ids']}"
             elif not active_res_ids and context.get('active_id'):
                 scheduler.res_ids = f"{[context['active_id']]}"
+        fields_map = self._get_res_model_fields()
+        for scheduler in self:
+            field_name = fields_map.get(scheduler.res_model_selection)
+            if not field_name:
+                continue
+            record = scheduler[field_name]
+            scheduler.res_ids = f"{[record.id]}" if record else False
 
     @api.depends('res_model_id', 'res_ids')
     def _compute_company_id(self):
@@ -300,6 +321,27 @@ class MailActivitySchedule(models.TransientModel):
             if scheduler.activity_type_id.default_user_id or scheduler.activity_type_id.default_role_id:
                 scheduler.activity_role_id = scheduler.activity_type_id.default_role_id
 
+    @api.depends_context('log_activity_category')
+    @api.depends('res_model_selection')
+    def _compute_activity_type_id_domain(self):
+        category = self.env.context.get('log_activity_category')
+        for scheduler in self:
+            # res_model is not reliable here, compute it from res_model_selection instead
+            res_model = scheduler._get_res_model_from_selection(scheduler.res_model_selection)
+            domain = Domain('res_model', '=', res_model) | Domain('res_model', '=', False)
+            if category:
+                domain &= Domain('category', '=', category)
+            scheduler.activity_type_id_domain = domain
+
+    @api.depends_context('log_contact_id')
+    def _compute_contact_id(self):
+        self.contact_id = self.env.context.get('log_contact_id')
+
+    @api.depends('call_history_id.end_dt')
+    def _compute_is_call_ongoing(self):
+        for scheduler in self:
+            scheduler.is_call_ongoing = bool(scheduler.call_history_id) and not scheduler.call_history_id.end_dt
+
     # Any writable fields that can change error computed field
     @api.constrains('res_model_id', 'res_ids',  # records (-> responsible)
                     'plan_id', 'plan_on_demand_user_id',  # plan specific
@@ -419,7 +461,7 @@ class MailActivitySchedule(models.TransientModel):
     def _action_schedule_activities(self):
         if not self.res_model:
             return self._action_schedule_activities_personal()
-        return self._get_applied_on_records().activity_schedule(
+        activities = self._get_applied_on_records().activity_schedule(
             activity_type_id=self.activity_type_id.id,
             automated=False,
             summary=self.summary,
@@ -429,6 +471,12 @@ class MailActivitySchedule(models.TransientModel):
             date_deadline=self.date_deadline,
             activity_user_id_fname=self.activity_user_id_fname
         )
+        # sudo: discuss.call.history: no one may write a call history, yet whoever attended
+        # the call may log it on a document of theirs.
+        call_history = self.call_history_id.sudo()
+        if call_history and not call_history.activity_id:
+            call_history.activity_id = activities[:1]
+        return activities
 
     def _action_schedule_activities_personal(self):
         if not self.activity_user_id:
@@ -444,6 +492,88 @@ class MailActivitySchedule(models.TransientModel):
             'user_id': self.activity_user_id.id,
             'role_id': self.activity_role_id.id,
         })
+
+    # ------------------------------------------------------------
+    # CALL LOGGING API
+    # ------------------------------------------------------------
+
+    @api.model
+    def _get_field_selection_for_model(self, model_name, res_id):
+        """ Find the res_model_selection option matching the given model and
+        return the context dict to pre-fill the wizard with that record.
+
+        :param str model_name: model of the record the call is logged on
+        :param int res_id: ID of the record the call is logged on
+        :return: a dict like ``{"default_lead_id": id}``, or None if no option
+            of the wizard accepts this record"""
+        if model_name == 'res.partner':
+            # res.partner is already handled by the default context of the log actions
+            return None
+        wizard = self.new()
+        fields_map = wizard._get_res_model_fields()
+        for value, _label in wizard._selection_res_model():
+            if wizard._get_res_model_from_selection(value) != model_name:
+                continue
+            field_name = fields_map.get(value)
+            # The field may define a ``{field}_domain`` (e.g. ``lead_id_domain``)
+            # restricting which records are selectable: check that the record
+            # is within that domain before pre-selecting it.
+            domain_field = f'{field_name}_domain'
+            if domain_field in wizard._fields:
+                domain = ast.literal_eval(wizard[domain_field] or '[]')
+                if not self.env[model_name].search_count(
+                    Domain('id', '=', res_id) & Domain(domain), limit=1,
+                ):
+                    # The record is out of this option's domain: skip it and
+                    # try the next option mapping to the same model, e.g. a
+                    # plain ``sale.order`` failing the ``sale.subscription``
+                    # domain still matches the ``sale.order`` option.
+                    continue
+            return {
+                f'default_{field_name}': res_id,
+                'default_res_model_selection': value,
+            }
+        return None
+
+    def _get_partner_from_target(self):
+        """ Return the partner of the record the activity is logged on.
+
+        :return: a ``res.partner`` recordset, void when the target has none"""
+        record = self._get_applied_on_records()
+        if self.res_model == 'res.partner':
+            return record
+        if 'partner_id' in record._fields:
+            return record.partner_id
+        return self.env['res.partner']
+
+    def _get_res_model_fields(self):
+        """ Return the mapping {res_model_selection: field_name} used to
+        populate res_ids from the corresponding many2one field.
+
+        Extension modules override this method to register their own field,
+        e.g. ``{"crm.lead": "lead_id"}`` in crm.
+
+        :return: a dict mapping a selection value to a field name"""
+        return {'res.partner': 'contact_id'}
+
+    def _get_res_model_from_selection(self, selection_key):
+        """ Map a res_model_selection key to an actual model name. Override for
+        special mappings (e.g. sale.subscription -> sale.order).
+
+        :param str selection_key: value of the res_model_selection field
+        :return: the model name this selection value applies on"""
+        return selection_key
+
+    def _inverse_res_model_selection(self):
+        """ Sync res_model when the user changes res_model_selection """
+        for scheduler in self.filtered('res_model_selection'):
+            scheduler.res_model = scheduler._get_res_model_from_selection(scheduler.res_model_selection)
+
+    def _selection_res_model(self):
+        """ Return the models a call can be logged on, as selection values.
+
+        :return: a list of (model name, label) tuples"""
+        return [('res.partner', _("Contact"))]
 
     # ------------------------------------------------------------
     # TOOLS
