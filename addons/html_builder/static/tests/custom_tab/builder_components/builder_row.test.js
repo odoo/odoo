@@ -12,7 +12,7 @@ import {
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains, defineStyle } from "@web/../tests/web_test_helpers";
-import { OPEN_DELAY } from "@web/core/tooltip/tooltip_service";
+import { OPEN_DELAY } from "@web/core/tooltip/tooltip_plugin";
 
 function reapplyCollapseTransition() {
     defineStyle(/* css */ `
