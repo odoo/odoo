@@ -50,12 +50,13 @@ class ProductProduct(models.Model):
                 }
                 if product_has_cost:
                     expense_vals.update({
-                        'price_unit': expense_product_sudo.standard_price,
+                        # Product cost is expressed in the company's currency.
+                        'price_unit_currency': expense_product_sudo.standard_price,
                     })
                 else:
                     expense_vals.update({
                         'quantity': 1,
-                        'price_unit': expense_sudo.total_amount
+                        'price_unit_currency': expense_sudo.total_amount_currency
                     })
                 expense_sudo.write(expense_vals)
         return result
