@@ -47,6 +47,14 @@
                         <field name="engine">tax_tags</field>
                         <field name="formula">RITA</field>
                     </record>
+                    <!-- The amount remitted to the tax authority is the withholding *operated* on purchases (this
+                         line + ENASARCO on purchases) - withholding *suffered* on sales (ritv/enasarcov) is money
+                         withheld by others, not part of what this company owes. -->
+                    <record id="withh_purchase_tax_report_it_line_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">rita.total + enasarcoa.total</field>
+                    </record>
                 </field>
             </record>
             <record id="enasarco_purchase_tax_report_it_line" model="account.report.line">

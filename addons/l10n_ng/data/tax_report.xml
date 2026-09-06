@@ -272,6 +272,12 @@
                                 <field name="carryover_target">L10N_NG_C100._applied_carryover_balance</field>
                                 <field name="subformula" eval="False"/>
                             </record>
+                            <record id="l10n_ng_tr_c_115_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_C115.balance</field>
+                                <field name="subformula">if_below(NGN(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="l10n_ng_tr_c_120" model="account.report.line">
@@ -283,6 +289,12 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">L10N_NG_C95.balance + L10N_NG_C100.balance</field>
+                                <field name="subformula">if_above(NGN(0))</field>
+                            </record>
+                            <record id="l10n_ng_tr_c_120_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_C120.balance</field>
                                 <field name="subformula">if_above(NGN(0))</field>
                             </record>
                         </field>

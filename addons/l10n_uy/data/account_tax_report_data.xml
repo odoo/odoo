@@ -161,6 +161,14 @@
                 <field name="name@es_419">Balance IVA</field>
                 <field name="aggregation_formula">IVA_COMPRAS__PAGADO.balance + UYTAX_040102.balance - IVA_VENTAS__PERCIBIDO.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="code">SALDO_IVA</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_sldo_iva_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">SALDO_IVA.balance</field>
+                    </record>
+                </field>
                 <field name="children_ids">
                     <record id="account_tax_report_iva_cmprs_pagdo" model="account.report.line">
                         <field name="name">VAT Purchases - paid</field>

@@ -765,6 +765,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">AGG_DE_19.tax + AGG_DE_31.tax + AGG_DE_46.tax  - AGG_DE_55_TAX.tax + DE_65.tax + DE_69.tax - DE_39.tax</field>
                             </record>
+                            <record id="tax_report_de_tag_83_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">DE_83.tax</field>
+                            </record>
                         </field>
                     </record>
                 </field>

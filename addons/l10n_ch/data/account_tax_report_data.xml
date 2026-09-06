@@ -533,11 +533,18 @@
                         <field name="name@it">500 - Importo da versare</field>
                         <field name="name@de">500 - Zu bezahlender Betrag</field>
                         <field name="name@fr_BE">500 - Montant à payer</field>
+                        <field name="code">tax_ch_500</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_chtax_500_formula" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">tax_ch_399.balance - tax_ch_479.balance</field>
+                                <field name="subformula">if_above(CHF(0))</field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_500_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tax_ch_500.balance</field>
                                 <field name="subformula">if_above(CHF(0))</field>
                             </record>
                         </field>
@@ -548,11 +555,18 @@
                         <field name="name@it">510 - Credito del contribuente </field>
                         <field name="name@de">510 - Guthaben der steuerpflichtigen Person</field>
                         <field name="name@fr_BE">510 - Solde en faveur de l’assujetti</field>
+                        <field name="code">tax_ch_510</field>
                         <field name="expression_ids">
                             <record id="account_tax_report_line_chtax_510_formula" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">tax_ch_479.balance - tax_ch_399.balance</field>
+                                <field name="subformula">if_above(CHF(0))</field>
+                            </record>
+                            <record id="account_tax_report_line_chtax_510_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">tax_ch_510.balance</field>
                                 <field name="subformula">if_above(CHF(0))</field>
                             </record>
                         </field>

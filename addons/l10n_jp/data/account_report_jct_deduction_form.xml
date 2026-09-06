@@ -569,6 +569,11 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">DED_F3_1_11.balance + DED_F3_1_22.balance - DED_F3_1_8.balance - DED_F3_1_12.balance - DED_F3_1_19.balance - DED_F3_1_23.balance</field>
                     </record>
+                    <record id="l10n_jp_form_deduction_ded_f3_1_26_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">DED_F3_1_26.balance</field>
+                    </record>
                 </field>
             </record>
             <record id="l10n_jp_form_deduction_ded_f3_2" model="account.report.line">

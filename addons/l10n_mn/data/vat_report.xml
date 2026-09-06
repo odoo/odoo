@@ -656,6 +656,12 @@
                                 <field name="formula">VAT_LINE62.balance - VAT_LINE63.balance</field>
                                 <field name="subformula">if_above(MNT(0))</field>
                             </record>
+                            <record id="vat_report_line64_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VAT_LINE64.balance</field>
+                                <field name="subformula">if_above(MNT(0))</field>
+                            </record>
                         </field>
                     </record>
                     <record id="vat_report_line65" model="account.report.line">
@@ -663,10 +669,16 @@
                         <field name="code">VAT_LINE65</field>
                         <field name="aggregation_formula" eval="False"/>
                         <field name="expression_ids">
-                            <record id="vat_report_line64_balance" model="account.report.expression">
+                            <record id="vat_report_line65_balance" model="account.report.expression">
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">VAT_LINE63.balance - VAT_LINE62.balance</field>
+                                <field name="subformula">if_above(MNT(0))</field>
+                            </record>
+                            <record id="vat_report_line65_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">VAT_LINE65.balance</field>
                                 <field name="subformula">if_above(MNT(0))</field>
                             </record>
                         </field>
