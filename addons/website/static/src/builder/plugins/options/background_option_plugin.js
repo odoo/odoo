@@ -80,6 +80,7 @@ export class WebsiteBackgroundVideoPlugin extends Plugin {
                         Component: VideoSelector,
                         props: {
                             isForBgVideo: true,
+                            allowVideoFile: !!this.config.allowVideoFile,
                             vimeoPreviewIds: [
                                 "528686125",
                                 "430330731",
@@ -98,17 +99,18 @@ export class WebsiteBackgroundVideoPlugin extends Plugin {
                 ],
                 visibleTabs: ["VIDEO_BACKGROUND"],
                 save: (media) => {
-                    resolve(media.querySelector("iframe").src);
+                    const playerEl = media.querySelector("iframe, video");
+                    resolve({
+                        src: playerEl.getAttribute("src"),
+                        isVideoFile: playerEl.tagName === "VIDEO",
+                    });
                 },
             });
             onClose.then(resolve);
         });
     }
-    applyReplaceBackgroundVideo({
-        editingElement,
-        loadResult: mediaSrc,
-        params: { forceClean = false },
-    }) {
+    applyReplaceBackgroundVideo({ editingElement, loadResult, params: { forceClean = false } }) {
+        const { src: mediaSrc, isVideoFile } = loadResult || {};
         if (!forceClean && !mediaSrc) {
             // No video has been chosen by the user on the media dialog
             return;
@@ -116,8 +118,14 @@ export class WebsiteBackgroundVideoPlugin extends Plugin {
         editingElement.classList.toggle("o_background_video", !!mediaSrc);
         if (mediaSrc) {
             editingElement.dataset.bgVideoSrc = mediaSrc;
+            if (isVideoFile) {
+                editingElement.dataset.bgVideoIsFile = "true";
+            } else {
+                delete editingElement.dataset.bgVideoIsFile;
+            }
         } else {
             delete editingElement.dataset.bgVideoSrc;
+            delete editingElement.dataset.bgVideoIsFile;
         }
     }
     /**

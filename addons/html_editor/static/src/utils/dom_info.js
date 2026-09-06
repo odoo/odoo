@@ -404,6 +404,7 @@ export function getIconType(el) {
 export function isMediaElement(node) {
     return (
         node.nodeName === "IMG" ||
+        node.nodeName === "VIDEO" ||
         isIconElement(node) ||
         (node.classList &&
             (node.classList.contains("o_file_box") ||

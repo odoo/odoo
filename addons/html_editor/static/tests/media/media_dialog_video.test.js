@@ -1,11 +1,13 @@
-import { describe, expect, mockFetch, test, advanceTime } from "@odoo/hoot";
-import { click, edit, press, hover, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { beforeEach, describe, expect, mockFetch, test, advanceTime } from "@odoo/hoot";
+import { click, edit, press, hover, queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { patch } from "@web/core/utils/patch";
 
 import { setupEditor } from "../_helpers/editor";
 import { insertText } from "../_helpers/user_actions";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
+import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 
 import {
     EMBEDDED_COMPONENT_PLUGINS,
@@ -22,18 +24,10 @@ const EMBEDDED_COMPONENTS_CONFIG = {
     resources: { embedded_components: MAIN_EMBEDDINGS },
 };
 
-const getMediaHtml = (
-    videoId
-) => `<div data-base-url="https://www.youtube.com/watch?v=${videoId}" data-embed-url="https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0" data-platform="youtube" data-video-id="${videoId}" class="media_iframe_video" contenteditable="false">
-                <div class="css_editable_mode_display"></div>
-                <div class="media_iframe_video_size" contenteditable="false"></div>
-                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0"></iframe>
-            </div>`;
-
 const getEmbededComponentHtml = (videoId) =>
     `<div data-embedded="video" data-oe-protected="true" contenteditable="false" data-embedded-props='{"baseUrl":"https://www.youtube.com/watch?v=${videoId}","videoId":"${videoId}","platform":"youtube","params":{"startFrom":0,"autoplay":false,"loop":false,"hideControls":false,"hideFullscreen":false,"noCookie":false,"enableJsApi":true,"showRelatedVideos":false}}' class=""><iframe title="Video player" frameborder="0" allowfullscreen="allowfullscreen" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" src="" data-base-url="https://www.youtube.com/watch?v=${videoId}" data-src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0"> Your browser does not support iframe. </iframe></div>`;
 
-describe("media dialod video", () => {
+describe("media dialog video", () => {
     describe("without embeded Components", () => {
         for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
             const videoUrl = platformClass.exampleUrls.base;
@@ -132,7 +126,12 @@ describe("media dialod video", () => {
             );
             expect(iframeContainerData.videoId).toBe("dQw4w9WgXcQ");
             expect(iframeContainerData.embedUrl).toBe(iframe.src);
-            expect(getContent(el)).toBe(`<p>ab</p>${getMediaHtml("dQw4w9WgXcQ")}<p>[]cd</p>`);
+            expect(getContent(el)).toBe(
+                `<p>ab</p><div data-platform="youtube" data-base-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" data-embed-url="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&rel=0" data-video-id="dQw4w9WgXcQ" class="media_iframe_video" contenteditable="false">
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size" contenteditable="false"></div>
+            <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1&rel=0"></iframe></div><p>[]cd</p>`
+            );
         });
         test("Should insert an instagram video verticaly", async () => {
             const { editor } = await setupEditor("<p>ab[]cd</p>", {
@@ -609,6 +608,147 @@ describe("media dialod video", () => {
             const regeneratedUrl = iframeAfter.dataset.src || iframeAfter.src;
             expect(regeneratedUrl).not.toInclude("playlist=");
             expect(regeneratedUrl).not.toInclude("loop=");
+        });
+    });
+
+    describe("video files", () => {
+        const VIDEO_FILE_CONFIG = {
+            ...NO_EMBEDDED_COMPONENTS_CONFIG,
+            allowVideoFile: true,
+        };
+
+        /**
+         * Open the media dialog on the "Videos" tab, focused on the url input.
+         */
+        async function openVideoDialog(editor) {
+            await insertText(editor, "/video");
+            await expectElementCount(".o-we-powerbox", 1);
+            await press("Enter");
+            await waitFor("div.modal");
+            await click("#o_video_text");
+        }
+
+        async function typeVideoUrl(url) {
+            await edit(url);
+            // `refreshVideoData()` is debounced.
+            await advanceTime(100);
+            await waitForNone(".o_video_dialog_loading");
+        }
+
+        async function toggleVideoOption(label) {
+            const switchEl = queryAll(".o_video_dialog_options .o_switch").find(
+                (el) => el.querySelector("span.ms-2")?.textContent.trim() === label
+            );
+            expect(switchEl).not.toBe(undefined);
+            await click(switchEl.querySelector("input").closest("label"));
+            await advanceTime(100);
+        }
+
+        beforeEach(() => patch(VideoFile, { isValidVideoUrl: (url) => Promise.resolve([url]) }));
+
+        test("should insert a video file with the default options", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", { config: VIDEO_FILE_CONFIG });
+            await openVideoDialog(editor);
+            await typeVideoUrl("https://example.com/video/my-video.mp4");
+            await expectElementCount("div.modal .o_video_preview .alert", 0);
+            await click("div.modal .modal-footer button.btn-primary");
+            await animationFrame();
+            await waitForNone("div.modal");
+
+            const containerEl = await waitFor("div.media_iframe_video");
+            const videoEl = await waitFor("div.media_iframe_video video");
+            expect("div.media_iframe_video iframe").toHaveCount(0);
+            expect(containerEl.dataset.platform).toBe("video_file");
+            expect(videoEl).toHaveAttribute("src", "https://example.com/video/my-video.mp4");
+            expect(videoEl).toHaveAttribute("controls");
+            expect(videoEl).toHaveAttribute("playsinline");
+            expect(videoEl).toHaveAttribute("preload", "metadata");
+            expect(videoEl).not.toHaveAttribute("loop");
+            expect(videoEl).not.toHaveAttribute("autoplay");
+        });
+
+        test("should apply the selected options on the inserted video file", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", { config: VIDEO_FILE_CONFIG });
+            await openVideoDialog(editor);
+            await typeVideoUrl("https://example.com/video/my-video.mp4");
+            await waitFor(".o_video_dialog_options");
+            // The fullscreen button of a native player cannot be hidden, so
+            // the option must not be proposed.
+            const optionLabels = queryAll(".o_video_dialog_options .o_switch").map((el) =>
+                el.querySelector("span.ms-2")?.textContent.trim()
+            );
+            expect(optionLabels).toEqual([
+                "Autoplay",
+                "Loop",
+                "Hide player controls",
+                "Vertical",
+                "Start at",
+            ]);
+            await toggleVideoOption("Loop");
+            await toggleVideoOption("Autoplay");
+            await toggleVideoOption("Hide player controls");
+            await click("div.modal .modal-footer button.btn-primary");
+            await animationFrame();
+            await waitForNone("div.modal");
+
+            const videoEl = await waitFor("div.media_iframe_video video");
+            expect(videoEl).toHaveAttribute("loop");
+            expect(videoEl).toHaveAttribute("autoplay");
+            expect(videoEl).toHaveAttribute("muted");
+            // The attribute is not enough on an element which is not created by
+            // the html parser.
+            expect(videoEl.muted).toBe(true);
+            expect(videoEl).not.toHaveAttribute("controls");
+        });
+
+        test("should play the previewed video file when autoplay is enabled", async () => {
+            patch(HTMLMediaElement.prototype, {
+                play() {
+                    expect.step("play");
+                    return Promise.resolve();
+                },
+                pause() {
+                    expect.step("pause");
+                },
+            });
+            const { editor } = await setupEditor("<p>ab[]cd</p>", { config: VIDEO_FILE_CONFIG });
+            await openVideoDialog(editor);
+            await typeVideoUrl("https://example.com/video/my-video.mp4");
+
+            const videoEl = await waitFor("div.modal .o_video_preview video");
+            expect(videoEl).not.toHaveAttribute("autoplay");
+            expect(videoEl.muted).toBe(false);
+            expect.verifySteps(["pause"]);
+
+            await toggleVideoOption("Autoplay");
+            await animationFrame();
+            expect(videoEl).toHaveAttribute("autoplay");
+            expect(videoEl.muted).toBe(true);
+            expect.verifySteps(["play"]);
+
+            await toggleVideoOption("Autoplay");
+            await animationFrame();
+            expect(videoEl).not.toHaveAttribute("autoplay");
+            expect(videoEl.muted).toBe(false);
+            expect.verifySteps(["pause"]);
+        });
+
+        test("should not accept an url that is not a video", async () => {
+            patch(VideoFile, {
+                isValidVideoUrl(url) {
+                    expect.step(`probe ${url}`);
+                    return Promise.resolve(false);
+                },
+            });
+            const { editor } = await setupEditor("<p>ab[]cd</p>", { config: VIDEO_FILE_CONFIG });
+            await openVideoDialog(editor);
+            await typeVideoUrl("https://www.myvideos.com/page/123456789");
+
+            const alertEl = await waitFor("div.modal .o_video_preview .alert");
+            expect(alertEl.textContent).toBe(
+                "The provided url does not reference any supported video"
+            );
+            expect.verifySteps(["probe https://www.myvideos.com/page/123456789"]);
         });
     });
 });

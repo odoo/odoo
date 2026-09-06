@@ -213,7 +213,6 @@ export class WebsiteBuilder extends Component {
             "PowerboxPlugin",
             "SearchPowerboxPlugin",
             "MediaUrlPastePlugin",
-            "YoutubePlugin",
             "ImagePlugin",
             "AlignPlugin",
             "ListPlugin",
@@ -249,6 +248,7 @@ export class WebsiteBuilder extends Component {
             };
         };
         builderProps.config.translatedElements = this.translatedElements;
+        builderProps.config.allowVideoFile = true;
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         builderProps.animateThemeTabSwitch = true;
         const installSnippetModule = builderProps.installSnippetModule;

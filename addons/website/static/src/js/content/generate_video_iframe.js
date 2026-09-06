@@ -6,6 +6,7 @@ import { Instagram } from "@html_editor/main/media/video/providers/instagram";
 import { Facebook } from "@html_editor/main/media/video/providers/facebook";
 import { Twitch } from "@html_editor/main/media/video/providers/twitch";
 import { Loom } from "@html_editor/main/media/video/providers/loom";
+import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 
 export const PLATFORMS = {
     youtube: Youtube,
@@ -17,6 +18,8 @@ export const PLATFORMS = {
     twitch: Twitch,
     loom: Loom,
 };
+
+export const THIRD_PARTY_VIDEO_SELECTOR = `.media_iframe_video:not([data-platform="${VideoFile.id}"])`;
 
 /**
  * This is a non-lazy version of the `manageIframeSrc` function already
@@ -108,7 +111,7 @@ export function generateVideoIframe(parentEl, manageIframeSrcFct) {
  * Auto generate video iframes.
  */
 document.addEventListener("DOMContentLoaded", () => {
-    for (const videoIframeEl of document.querySelectorAll(".media_iframe_video")) {
+    for (const videoIframeEl of document.querySelectorAll(THIRD_PARTY_VIDEO_SELECTOR)) {
         if (!videoIframeEl.querySelector(":scope > iframe")) {
             generateVideoIframe(videoIframeEl);
         }

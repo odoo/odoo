@@ -32,3 +32,25 @@ test("media video: iframe replaced in edition if not present", async () => {
     await switchToEditMode(core);
     expect("iframe").toHaveCount(1);
 });
+
+test("media video: a self-hosted video is not handled by the iframe interaction", async () => {
+    const { core } = await startInteractions(
+        `
+        <div style="background-color: white;">
+            <div class="media_iframe_video" data-platform="video_file" contenteditable="false">
+                <div class="css_editable_mode_display">&nbsp;</div>
+                <div class="media_iframe_video_size">&nbsp;</div>
+                <video src="https://example.com/video/my-video.mp4" controls="" playsinline="" contenteditable="false"></video>
+            </div>
+        </div>
+    `,
+        { editMode: true }
+    );
+    expect(".media_iframe_video video").toHaveCount(1);
+    await switchToEditMode(core);
+    expect(".media_iframe_video video").toHaveCount(1);
+    // A `<video>` element is not rebuilt client-side, it is saved.
+    core.stopInteractions();
+    expect(".media_iframe_video video").toHaveCount(1);
+    expect("iframe").toHaveCount(0);
+});

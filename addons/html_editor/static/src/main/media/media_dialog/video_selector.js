@@ -1,8 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, onMounted, useProps, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, useOnChange, useProps, proxy, signal, t } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -14,6 +14,7 @@ import { Instagram } from "@html_editor/main/media/video/providers/instagram";
 import { Facebook } from "@html_editor/main/media/video/providers/facebook";
 import { Twitch } from "@html_editor/main/media/video/providers/twitch";
 import { Loom } from "@html_editor/main/media/video/providers/loom";
+import { VideoFile } from "@html_editor/main/media/video/providers/video_file";
 
 export const PLATFORMS = {
     youtube: Youtube,
@@ -24,6 +25,11 @@ export const PLATFORMS = {
     vimeo: Vimeo,
     twitch: Twitch,
     loom: Loom,
+};
+
+export const VIDEO_PROVIDERS = {
+    ...PLATFORMS,
+    [VideoFile.id]: VideoFile,
 };
 
 class VideoOption extends Component {
@@ -53,6 +59,36 @@ class VideoIframe extends Component {
     };
 }
 
+class VideoFilePreview extends Component {
+    static template = "html_editor.VideoFilePreview";
+    static props = {
+        src: { type: String },
+        options: { type: Object, optional: true },
+    };
+
+    videoRef = signal.ref();
+
+    setup() {
+        // The `autoplay` and `muted` attributes are only taken into account
+        // while the element loads its source: toggling them on the already
+        // loaded preview has no effect, so the playback is updated manually.
+        useOnChange(
+            () => [this.videoRef(), !!this.props.options?.autoplay, !!this.props.options?.muted],
+            (videoEl, autoplay, muted) => {
+                if (!videoEl) {
+                    return;
+                }
+                videoEl.muted = muted;
+                if (autoplay) {
+                    videoEl.play().catch(() => {});
+                } else {
+                    videoEl.pause();
+                }
+            }
+        );
+    }
+}
+
 export class VideoSelector extends Component {
     static mediaSpecificClasses = ["media_iframe_video"];
     static mediaSpecificStyles = [];
@@ -61,6 +97,7 @@ export class VideoSelector extends Component {
     static template = "html_editor.VideoSelector";
     static components = {
         VideoIframe,
+        VideoFilePreview,
         VideoOption,
     };
     props = useProps({
@@ -68,21 +105,23 @@ export class VideoSelector extends Component {
         errorMessages: t.function(),
         vimeoPreviewIds: t.array().optional([]),
         isForBgVideo: t.boolean().optional(false),
+        allowVideoFile: t.boolean().optional(false),
         media: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE).optional(),
     });
 
     urlInputRef = signal.ref();
 
     setup() {
-        this.http = useService("http");
-
         this.state = proxy({
             options: {},
+            // The options actually applied to the previewed video
+            previewOptions: {},
             src: "",
             urlInput: "",
             platform: null,
             vimeoPreviews: [], // Background video suggestions (website)
             errorMessage: "",
+            isValidatingUrl: false,
         });
 
         this.OPTIONS = {
@@ -126,8 +165,10 @@ export class VideoSelector extends Component {
                     embedUrl = "https:" + embedUrl;
                 }
 
-                if (!embedUrl && media.tagName === "IFRAME") {
-                    embedUrl = media.getAttribute("src");
+                const videoEl = mediaContainer?.querySelector("video");
+                const playerEl = media.tagName === "IFRAME" ? media : videoEl;
+                if (!embedUrl && playerEl) {
+                    embedUrl = playerEl.getAttribute("src");
                 }
                 if (embedUrl) {
                     this.state.urlInput =
@@ -135,6 +176,16 @@ export class VideoSelector extends Component {
                     this.state.src = embedUrl;
                     this.updateOption("isVertical", mediaContainer?.dataset.isVertical);
                     this.parseOptionsFromUrl(embedUrl);
+                    // A video file stores its options as attributes on the
+                    // `<video>` element, contrary to the third party providers
+                    // which encode them in the embed url.
+                    if (videoEl) {
+                        for (const [id, isActive] of Object.entries(
+                            VideoFile.getOptionsFromElement(videoEl)
+                        )) {
+                            this.updateOption(id, isActive);
+                        }
+                    }
                 }
             }
             await this.prepareVimeoPreviews();
@@ -161,7 +212,7 @@ export class VideoSelector extends Component {
         if (this.props.isForBgVideo || !this.state.platform) {
             return options;
         }
-        const platformOptionsConfig = PLATFORMS[this.state.platform].optionsConfig;
+        const platformOptionsConfig = VIDEO_PROVIDERS[this.state.platform].optionsConfig;
         for (const [id, config] of Object.entries(this.OPTIONS)) {
             const option = { id: id, ...config };
             const isVisible = config?.isVisible ? config?.isVisible() : true;
@@ -202,10 +253,14 @@ export class VideoSelector extends Component {
         this.refreshVideoDataLongDebounced(ev, optionId);
     }
 
-    onClickSuggestion(src) {
+    setVideoUrl(src) {
         this.state.urlInput = src;
         this.state.src = src;
         this.parseOptionsFromUrl(src);
+    }
+
+    get isVideoFile() {
+        return this.state.platform === VideoFile.id;
     }
 
     /**
@@ -213,7 +268,7 @@ export class VideoSelector extends Component {
      *
      * @param {string} url
      */
-    getVideoUrlData(url) {
+    async getVideoUrlData(url) {
         this.state.errorMessage = "";
         if (!URL.canParse(url)) {
             this.state.errorMessage = _t("The provided url is not valid");
@@ -230,6 +285,15 @@ export class VideoSelector extends Component {
                 break;
             }
         }
+        // Fall back on a video file.
+        if (!platform && this.props.allowVideoFile) {
+            this.state.isValidatingUrl = true;
+            urlMatch = await VideoFile.isValidVideoUrl(url);
+            this.state.isValidatingUrl = false;
+            if (urlMatch) {
+                platform = VideoFile.id;
+            }
+        }
 
         if (!platform) {
             this.state.errorMessage = _t("The provided url does not reference any supported video");
@@ -238,7 +302,8 @@ export class VideoSelector extends Component {
         }
         this.state.errorMessage = "";
         this.props.errorMessages(this.state.errorMessage);
-        return PLATFORMS[platform].getVideoUrlData(urlMatch);
+        this.urlMatch = urlMatch;
+        return VIDEO_PROVIDERS[platform].getVideoUrlData(urlMatch);
     }
 
     /**
@@ -246,12 +311,13 @@ export class VideoSelector extends Component {
      *
      * @param {string} url
      */
-    parseOptionsFromUrl(url) {
-        const videoData = this.getVideoUrlData(url);
+    async parseOptionsFromUrl(url) {
+        const videoData = await this.getVideoUrlData(url);
         if (!videoData) {
             this.state.src = "";
             this.state.options = {};
             this.state.platform = null;
+            this.urlMatch = null;
             /**
              * When the url input is emptied, we need to call the `selectMedia`
              * callback function to notify the other components that the media
@@ -285,7 +351,7 @@ export class VideoSelector extends Component {
             return;
         }
         const forcedOptions = {};
-        const platformClass = PLATFORMS[this.state.platform];
+        const platformClass = VIDEO_PROVIDERS[this.state.platform];
         if (this.props.isForBgVideo) {
             forcedOptions.hideControls = true;
             forcedOptions.hideFullscreen = true;
@@ -308,10 +374,7 @@ export class VideoSelector extends Component {
             }
         }
 
-        const videoData = platformClass.getVideoUrlData(
-            platformClass.isValidVideoUrl(this.state.urlInput),
-            forcedOptions
-        );
+        const videoData = platformClass.getVideoUrlData(this.urlMatch, forcedOptions);
         this.updateVideoPreview(videoData);
     }
 
@@ -320,6 +383,7 @@ export class VideoSelector extends Component {
         this.state.src = embedUrl;
 
         options.isVertical = this.state.options?.isVertical?.isActive;
+        this.state.previewOptions = options;
 
         if (thumbnailUrl instanceof Promise) {
             thumbnailUrl = await thumbnailUrl;
@@ -351,10 +415,12 @@ export class VideoSelector extends Component {
     static createElements(selectedVideos, { document = window.document } = {}) {
         return selectedVideos.map((videoData) => {
             const div = document.createElement("div");
-            div.dataset.baseUrl = videoData.baseUrl;
-            div.dataset.embedUrl = videoData.embedUrl;
             div.dataset.platform = videoData.platform;
-            div.dataset.videoId = videoData.videoId;
+            if (videoData.platform !== VideoFile.id) {
+                div.dataset.baseUrl = videoData.baseUrl;
+                div.dataset.embedUrl = videoData.embedUrl;
+                div.dataset.videoId = videoData.videoId;
+            }
             let sizeClass = "media_iframe_video_size";
             if (videoData.options?.isVertical) {
                 div.dataset.isVertical = "true";
@@ -363,10 +429,10 @@ export class VideoSelector extends Component {
             div.innerHTML = `
                 <div class="css_editable_mode_display"></div>
                 <div class="${sizeClass}" contenteditable="false"></div>
-                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
             `;
-
-            div.querySelector("iframe").src = videoData.embedUrl;
+            div.append(
+                VIDEO_PROVIDERS[videoData.platform].createPlayerElement(videoData, document)
+            );
             return div;
         });
     }

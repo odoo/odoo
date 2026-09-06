@@ -111,4 +111,19 @@ export class AbstractThirdPartyVideo {
             options,
         };
     }
+
+    /**
+     * @param {Object} videoData @see getVideoUrlData
+     * @param {Document} [document]
+     * @returns {HTMLIFrameElement}
+     */
+    static createPlayerElement(videoData, document = window.document) {
+        const iframeEl = document.createElement("iframe");
+        iframeEl.setAttribute("loading", "lazy");
+        iframeEl.setAttribute("frameborder", "0");
+        iframeEl.setAttribute("contenteditable", "false");
+        iframeEl.setAttribute("allowfullscreen", "allowfullscreen");
+        iframeEl.src = videoData.embedUrl;
+        return iframeEl;
+    }
 }
