@@ -2937,7 +2937,7 @@ export class OdooEditor extends EventTarget {
             }
             const nthColumn = getColumnIndex(item);
             const firstRow = [...table.querySelector('tr').children];
-            [item, neighbor] = [firstRow[nthColumn], firstRow[nthColumn + 1]];
+            [item, neighbor] = [firstRow[nthColumn] || item, firstRow[nthColumn + 1] || neighbor];
             for (const td of hostCells) {
                 if (td !== item && td !== neighbor && closestElement(td, 'table') === table && getColumnIndex(td) !== 0) {
                     td.style.removeProperty(sizeProp);
