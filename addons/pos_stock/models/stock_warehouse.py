@@ -10,8 +10,8 @@ class StockWarehouse(models.Model):
         sequence_values = super()._get_sequence_values(name=name, code=code)
         sequence_values.update({
             'pos_type_id': {
-                'name': self.env._('%(name)s Picking POS', name=self.name),
-                'prefix': self.code + '/POS/',
+                'name': self.env._('%(name)s Picking POS', name=name or self.name),
+                'prefix': (code or self.code) + '/POS/',
                 'padding': 5,
                 'company_id': self.company_id.id,
             }
@@ -38,6 +38,19 @@ class StockWarehouse(models.Model):
             }
         })
         return picking_type_create_values, max_sequence + 2
+
+    def _update_name_and_code(self, new_name=False, new_code=False):
+        super()._update_name_and_code(new_name, new_code)
+        for warehouse in self:
+            if warehouse.pos_type_id:
+                sequence_data = warehouse._get_sequence_values(name=new_name, code=new_code)
+                pos_sequence = warehouse.pos_type_id.sequence_id
+                if self.env.user.has_group('stock.group_stock_manager'):
+                    pos_sequence = pos_sequence.sudo()
+                pos_sequence.write({
+                    'name': sequence_data['pos_type_id']['name'],
+                    'prefix': sequence_data['pos_type_id']['prefix'],
+                })
 
     @api.model
     def _create_missing_pos_picking_types(self):
