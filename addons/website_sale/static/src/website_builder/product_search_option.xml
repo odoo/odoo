@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_sale.ProductSearchOption">
+    <BuilderRow label.translate="Category">
+        <BuilderSelect dataAttributeAction="'categoryId'">
+            <BuilderSelectItem dataAttributeActionValue="''">All Products</BuilderSelectItem>
+            <t t-foreach="this.state.categories" t-as="category" t-key="category.id">
+                <BuilderSelectItem dataAttributeActionValue="category.id.toString()" t-out="category.name"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Tags">
+        <BuilderSelect dataAttributeAction="'tagId'">
+            <BuilderSelectItem dataAttributeActionValue="''">All Tags</BuilderSelectItem>
+            <t t-foreach="this.state.tags" t-as="tag" t-key="tag.id">
+                <BuilderSelectItem dataAttributeActionValue="tag.id.toString()" t-out="tag.name"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Ribbons">
+        <BuilderSelect dataAttributeAction="'ribbonId'">
+            <BuilderSelectItem dataAttributeActionValue="''">All Ribbons</BuilderSelectItem>
+            <t t-foreach="this.state.ribbons" t-as="ribbon" t-key="ribbon.id">
+                <BuilderSelectItem dataAttributeActionValue="ribbon.id.toString()" t-out="ribbon.name"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Attribute Filter">
+        <button
+            class="btn btn-success btn-sm w-100"
+            t-att-disabled="!this.state.attributes || !this.state.attributes.length"
+            t-on-click="() => this.addAttributeFilter()"
+        >Add</button>
+    </BuilderRow>
+    <BuilderRow label.translate="Search Bar">
+        <BuilderCheckbox classAction="'d-none'" applyTo="'.s_product_search_search'" inverseAction="true"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Tags">
+        <BuilderCheckbox classAction="'d-none'" applyTo="'.s_product_search_tags_wrap'" inverseAction="true"/>
+    </BuilderRow>
+    <BuilderRow id="'price_range_opt'" label.translate="Price Range">
+        <BuilderCheckbox classAction="'d-none'" applyTo="'.s_product_search_price_range'" inverseAction="true"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website_sale.ProductSearchAttributeFilterOption">
+    <BuilderRow t-if="this.state.attributes" label.translate="Attribute">
+        <BuilderSelect action="'setProductSearchAttribute'" actionParam="'attributeId'">
+            <t t-foreach="this.state.attributes" t-as="attribute" t-key="attribute.id">
+                <BuilderSelectItem actionValue="attribute.id.toString()" t-out="attribute.name"/>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
+<t t-name="website_sale.ProductSearchFieldOption">
+    <BuilderRow label.translate="Label">
+        <BuilderTextInput action="'setProductSearchLabel'" applyTo="':scope .s_product_search_field_label'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Placeholder">
+        <BuilderTextInput attributeAction="'placeholder'" applyTo="':scope input'"/>
+    </BuilderRow>
+</t>
+
+<t t-name="website_sale.ProductSearchTagsFieldOption">
+    <BuilderRow label.translate="Label">
+        <BuilderTextInput action="'setProductSearchLabel'" applyTo="':scope .s_product_search_field_label'"/>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <product_search_option
+            selector=".s_product_search"
+            title="Product Search"
+        />
+        <product_search_attribute_filter_option
+            selector=".s_product_search_attribute_filter"
+            title="Attribute Filter"
+        />
+        <product_search_search_option
+            template="website_sale.ProductSearchFieldOption"
+            selector=".s_product_search_search"
+            title="Search Bar"
+        />
+        <product_search_tags_field_option
+            template="website_sale.ProductSearchTagsFieldOption"
+            selector=".s_product_search_tags_wrap"
+            title="Tags"
+        />
+        <product_search_min_price_option
+            template="website_sale.ProductSearchFieldOption"
+            selector=".s_product_search_min_price_wrap"
+            title="Minimum Price"
+        />
+        <product_search_max_price_option
+            template="website_sale.ProductSearchFieldOption"
+            selector=".s_product_search_max_price_wrap"
+            title="Maximum Price"
+        />
+    </xpath>
+</t>
+
+</templates>
