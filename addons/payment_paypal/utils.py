@@ -50,7 +50,7 @@ def format_shipping_address(tx_sudo):
         partner_shipping.street
         and partner_shipping.city
         and (country := partner_shipping.country_id)
-        and (partner_shipping.zip or not country.zip_required)
+        and (partner_shipping.zip or country.zip_applicability != "required")
         and (partner_shipping.state_id or not country.state_required)
     ):
         address_vals["shipping"] = format_partner_address(partner_shipping)

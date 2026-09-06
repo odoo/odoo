@@ -2,26 +2,27 @@
 <odoo>
     <template id="address_form_fields" inherit_id="portal.address_form_fields">
         <div id="div_vat" position="after">
-            <t t-set="current_ice" t-value="current_partner._get_additional_identifier('MA_ICE') if current_partner else ''"/>
-            <t t-set="ice_readonly" t-value="current_ice and not can_edit_commercial_fields"/>
-            <div id="div_ma_ice" class="col-xl-6 mb-2"
-                t-att-style="(not country or country.code != 'MA') and 'display:none;'">
-                <label class="col-form-label label-optional" for="MA_ICE">
-                ICE
-                </label>
+            <div
+                id="div_ma_ice"
+                t-if="res_company.account_fiscal_country_id.code == 'MA'"
+                class="col-lg-6 mb-2"
+                t-att-style="(not country or country.code != 'MA') and 'display:none;'"
+            >
+                <label class="col-form-label label-optional" for="MA_ICE">ICE</label>
+                <i
+                    t-if="ice_warning"
+                    class="oi text-warning"
+                    data-icon="info"
+                    data-bs-toggle="tooltip"
+                    t-att-title="ice_warning"
+                />
                 <input
                     type="text"
                     name="MA_ICE"
                     t-att-value="current_ice"
-                    t-att-readonly="'1' if ice_readonly else None"
-                    class="form-control"
+                    t-att-readonly="ice_warning and '1'"
+                    class="form-control o_handle"
                 />
-                <div t-if="ice_readonly" class="col-12 d-none d-lg-block mb-1">
-                    <small class="form-text text-muted">
-                        Modifying the ICE number is not allowed once documents have
-                        been issued for your account. Please contact us directly if that's what you intend to do.
-                    </small>
-                </div>
             </div>
         </div>
     </template>

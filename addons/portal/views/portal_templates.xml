@@ -142,10 +142,12 @@
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 flex-grow-1 px-0">
             <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="oi" data-icon="home"/></a></li>
             <li t-if="page_name == 'my_addresses'" class="breadcrumb-item active">Addresses</li>
-            <li t-elif="page_name == 'address_form'" class="breadcrumb-item active">
+
+            <li t-elif="page_name in ['my_details', 'address_form']" class="breadcrumb-item active">
                 <a href="/my/addresses" aria-label="Addresses" title="Addresses">Addresses</a>
             </li>
-            <li t-if="page_name in ['my_details', 'address_form']" class="breadcrumb-item active">Details</li>
+            <li t-if="page_name == 'my_details'" class="breadcrumb-item active">Account Details</li>
+            <li t-if="page_name == 'address_form'" class="breadcrumb-item active">Details</li>
         </ol>
     </template>
 

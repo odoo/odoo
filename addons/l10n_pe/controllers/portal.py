@@ -7,17 +7,15 @@ from odoo.addons.portal.controllers.portal import CustomerPortal
 
 class L10nPEPortalAccount(CustomerPortal):
 
-    def _is_peru_company(self):
-        return request.env.company.country_code == 'PE'
-
     def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
         rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
-        if self._is_peru_company():
-            city = partner_sudo.city_id
+        if rendering_values["country"].code == "PE":
+            city = rendering_values["city"]
             District = request.env['l10n_pe.res.city.district'].sudo()
-            rendering_values.update({
-                'city_districts': District.search([('city_id', '=', city.id)]) if city else District,
-            })
+            if city:
+                rendering_values["city_districts"] = District.search([("city_id", "=", city.id)])
+            else:
+                rendering_values["city_districts"] = District
         return rendering_values
 
     def _get_mandatory_address_fields(self, country_sudo):
@@ -27,7 +25,7 @@ class L10nPEPortalAccount(CustomerPortal):
         return mandatory_fields
 
     @route(
-        '/portal/city_infos/<model("res.city"):city>',
+        "/my/address/city_info/<model('res.city'):city>",
         type='jsonrpc',
         auth='public',
         methods=['POST'],

@@ -118,20 +118,33 @@
         groups="base.group_no_one"
         sequence="5"/>
 
-    <menuitem id="menu_localisation" name="Localization"
-        parent="res_partner_menu_config" sequence="6"/>
+    <menuitem
+        id="menu_localisation"
+        name="Localization"
+        parent="res_partner_menu_config"
+        sequence="6"
+    >
+        <menuitem
+            id="menu_country_partner"
+            action="base.action_country"
+            sequence="1"
+        />
+        <menuitem
+            id="menu_country_state_partner"
+            action="base.action_country_state"
+            sequence="2"
+        />
+        <menuitem
+            id="menu_res_city"
+            action="base_address_extended.action_res_city_tree"
+            sequence="3"
+        />
+        <menuitem
+            id="menu_country_group"
+            action="base.action_country_group"
+            name="Country Group"
+            sequence="4"
+        />
+    </menuitem>
 
-    <menuitem id="menu_country_partner"
-        action="base.action_country" parent="menu_localisation"
-        sequence="1"/>
-
-    <menuitem id="menu_country_group"
-        action="base.action_country_group"
-        name="Country Group" parent="menu_localisation"
-        sequence="3"/>
-
-    <menuitem id="menu_country_state_partner"
-        action="base.action_country_state"
-        parent="menu_localisation"
-        sequence="2"/>
 </odoo>
