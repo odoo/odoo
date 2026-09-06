@@ -15,6 +15,12 @@
                         <field string="Expenses" name="nb_expenses" widget="statinfo"/>
                     </button>
                 </xpath>
+
+                <xpath expr="//div[@id='alerts']" position="after">
+                    <div class="d-flex alert alert-danger w-100 d-flex align-items-center gap-1" invisible="not bill_paid_by_employee" role="alert">
+                        <span>This bill was already paid by an employee and the bill has been sent to you. Don't pay the supplier</span>
+                    </div>
+                </xpath>
             </field>
         </record>
 
