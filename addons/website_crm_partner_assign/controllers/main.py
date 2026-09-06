@@ -242,8 +242,13 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
         if not country and not country_all:
             if request.geoip.country_code:
                 country = country_obj.search([('code', '=', request.geoip.country_code)], limit=1)
+
+        industry_domain = [('industry_id', '=', current_industry.id)] if (
+            current_industry and self.env.website.is_view_active("website_crm_partner_assign.industries_setting")
+        ) else []
+
         # Group by country
-        country_domain = list(base_partner_domain)
+        country_domain = list(base_partner_domain) + industry_domain
         if grade:
             country_domain += [('grade_id', '=', grade.id)]
         country_groups = partner_obj.sudo()._read_group(
@@ -256,7 +261,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
         if fallback_all_countries:
             country = None
 
-        grade_domain = list(base_partner_domain)
+        grade_domain = list(base_partner_domain) + industry_domain
         if country:
             grade_domain += [('country_id', '=', country.id)]
         grades = self._get_grades(grade, grade_domain)
@@ -278,8 +283,14 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             base_partner_domain = Domain.AND([base_partner_domain, Domain('grade_id', '=', grade.id)])
         if self.env.website.is_view_active("website_crm_partner_assign.countries_setting") and country:
             base_partner_domain = Domain.AND([base_partner_domain, Domain('country_id', '=', country.id)])
-        if self.env.website.is_view_active("website_crm_partner_assign.industries_setting") and current_industry:
-            base_partner_domain = Domain.AND([base_partner_domain, Domain('implemented_partner_ids.industry_id', 'in', current_industry.id)])
+        industry_groups = partner_obj.sudo()._read_group(
+            Domain.AND([
+                base_partner_domain,
+                Domain('industry_id', '!=', False),
+            ]),
+            ["industry_id"], ["__count"], order="industry_id")
+        industry_counts = {industry.id: count for industry, count in industry_groups}
+        base_partner_domain = Domain.AND([base_partner_domain, Domain(industry_domain)])
 
         # format pager
         slug = request.env['ir.http']._slug
@@ -320,6 +331,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             'grades': grades,
             'current_grade': grade,
             'partners': partners,
+            'industry_counts': industry_counts,
+            'partner_count': partner_count,
             'pager': pager,
             'searches': post,
             'search_path': "%s" % werkzeug.urls.url_encode(post),

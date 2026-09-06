@@ -464,6 +464,24 @@ class WebsiteSlides(WebsiteProfile):
         else:
             search_tags = request.env['slide.channel.tag']
 
+        domain_search = Domain('name', 'ilike', fuzzy_search_term or search) if search else Domain.TRUE
+
+        def available_tags(tag_domain):
+            """ Tags of any matching course, not only of the displayed page. """
+            grouped_tags = request.env['slide.channel']._read_group(Domain.AND(tag_domain) & domain_search, ['tag_ids'])
+            return request.env['slide.channel.tag'].union(tag for [tag] in grouped_tags if tag)
+
+        available_tags_by_group = dict.fromkeys(tag_groups.ids, available_tags(details[0]['base_domain'])) | {
+            group_id: available_tags(tag_domain) for group_id, tag_domain in details[0]['no_tag_domains'].items()
+        }
+
+        clicked_tag_id = post.pop('pinned_tag', '')
+        clicked_group = request.env['slide.channel.tag'].browse(
+            int(clicked_tag_id)).exists().group_id if clicked_tag_id.isdigit() else None
+        search_tags = search_tags.filtered(
+            lambda tag: tag.group_id == clicked_group
+            or tag in available_tags_by_group.get(tag.group_id.id, tag))
+
         render_values = self._slide_render_context_base()
         render_values.update(self._prepare_user_values(**post))
         render_values.update(self._slides_channel_user_values(
@@ -482,12 +500,16 @@ class WebsiteSlides(WebsiteProfile):
             'slide_query_url': QueryURL('/slides', ['tag']),
             'pager': self.env.website.pager(
                 url=request.httprequest.path.partition('/page/')[0],
-                url_args=request.httprequest.args.to_dict(),
+                url_args={
+                    key: value for key, value in request.httprequest.args.items()
+                    if key != 'pinned_tag'
+                },
                 total=search_count,
                 page=page,
                 step=page_size,
                 scope=3) if page else False,
             'structured_data': channels._render_jsonld(),
+            'available_tags_by_group': available_tags_by_group,
         })
 
         return render_values

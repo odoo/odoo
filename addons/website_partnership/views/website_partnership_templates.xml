@@ -18,6 +18,7 @@
 </template>
 
 <template id="index" name="Find Partners">
+    <t t-set="has_active_filters" t-value="bool(current_grade or current_country or current_industry or searches.get('search'))"/>
     <div class="container" id="partners_page_top_menu">
         <section id="page_top_section" class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
             <h1 id="page_title" class="me-auto mb-0 h4">Find a partner</h1>
@@ -26,46 +27,30 @@
         </section>
     </div>
     <!-- Off canvas filters on mobile-->
-    <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title">Filters</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+    <t t-call="website.filters_offcanvas"
+        offcanvas_id="'o_wcrm_offcanvas'"
+        refresh_selectors="'#page_top_section,#o_wcrm_partners_results,#o_wcrm_offcanvas'"
+        has_active_filters="has_active_filters"
+        clear_url="'/partners'"
+        count="partner_count">
+        <div class="accordion accordion-flush">
+            <t t-call="website.filters_section"
+                section_id="'o_wcrm_offcanvas_grade'"
+                title.translate="Categories">
+                <t t-foreach="grades" t-as="grade">
+                    <t t-if="not grade['grade_id'][0] or grade['grade_id_count'] or grade['active']"
+                        t-call="website.filters_option"
+                        group_name="'grade'"
+                        option_id="'o_wcrm_offcanvas_grade_%s' % grade['grade_id'][0]"
+                        label="grade['grade_id'][1] if grade['grade_id'][0] else all_categories_label"
+                        count="grade['grade_id_count']"
+                        checked="bool(grade['active'])"
+                        option_url="keep_partners_url(grade=grade['grade_id'][0])"/>
+                </t>
+            </t>
         </div>
-        <div class="offcanvas-body p-0">
-            <div class="accordion accordion-flush">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed"
-                            type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target=".o_wcrm_offcanvas_grade"
-                            aria-expanded="false"
-                            aria-controls="o_wcrm_offcanvas_grade">
-                            Filter by category
-                        </button>
-                    </h2>
-                    <div class="o_wcrm_offcanvas_grade accordion-collapse collapse">
-                        <div class="accordion-body pt-0">
-                            <ul class="list-group list-group-flush">
-                                <t t-foreach="grades" t-as="grade">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                        <a id="filter_category_link" t-att-href="keep_partners_url(grade=grade['grade_id'][0])"
-                                        class="text-reset" aria-label="See categories filters">
-                                            <div class="form-check">
-                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-attf-id="#{grade}" t-att-checked="bool(grade['active'])"/>
-                                                <label class="form-check-label" t-attf-for="#{grade}" t-out="grade"/>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </t>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row mb-4">
+    </t>
+    <div class="row mb-4" id="o_wcrm_partners_results">
         <div class="my-5 py-5 text-center" t-if="not partners and not searches.get('search', '')">
             <h3>We're expanding our partner network.</h3>
             <p class="lead">Please check back soon.</p>
@@ -152,11 +137,10 @@
                     </button>
                 </div>
             </form>
-            <button class="btn btn-light position-relative ms-2 d-lg-none"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#o_wcrm_offcanvas">
-                <i class="oi" data-icon="tune"/>
-            </button>
+            <t t-call="website.filters_toggler"
+                offcanvas_id="'o_wcrm_offcanvas'"
+                toggler_classes="'ms-2'"
+                has_active_filters="has_active_filters"/>
         </div>
     </xpath>
 </template>
@@ -171,9 +155,10 @@
             </button>
             <div class="dropdown-menu">
                 <t t-foreach="grades" t-as="grade">
-                    <a t-att-href="keep_partners_url(grade=grade['grade_id'][0])"
-                    class="dropdown-item d-flex justify-content-between">
-                        <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label" />&amp;nbsp;&amp;nbsp;
+                    <a t-if="not grade['grade_id'][0] or grade['grade_id_count'] or grade['active']"
+                        t-att-href="keep_partners_url(grade=grade['grade_id'][0])"
+                        class="dropdown-item d-flex justify-content-between">
+                        <t t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>&amp;nbsp;&amp;nbsp;
                         <span class="badge text-white bg-secondary rounded-pill px-2 py-1" t-out="grade['grade_id_count']"/>
                     </a>
                 </t>

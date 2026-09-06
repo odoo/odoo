@@ -119,10 +119,22 @@ class WebsiteEventController(http.Controller):
         # count by domains without self search
         domain_search = Domain('name', 'ilike', fuzzy_search_term or searches['search']) if searches['search'] else Domain.TRUE
 
+        categories = request.env['event.tag.category'].search(
+            Domain('is_published', '=', True) & self.env.website.website_domain())
+
+        def available_tags(tag_domain):
+            """ Tags of any matching event, not only of the displayed page. """
+            grouped_tags = Event._read_group(Domain.AND(tag_domain) & domain_search, ['tag_ids'])
+            return request.env['event.tag'].union(tag for [tag] in grouped_tags if tag)
+
+        available_tags_by_category = dict.fromkeys(categories.ids, available_tags(event_details['base_domain'])) | {
+            category_id: available_tags(tag_domain) for category_id, tag_domain in event_details['no_tag_domains'].items()
+        }
+
         no_date_domain = Domain.AND(event_details['no_date_domain'])
         dates = event_details['dates']
         for date in dates:
-            if date[0] not in ['all', 'old']:
+            if date[0] != 'all':
                 date[3] = Event.search_count(no_date_domain & domain_search & Domain(date[2]))
 
         no_country_domain = Domain.AND(event_details['no_country_domain'])
@@ -136,7 +148,12 @@ class WebsiteEventController(http.Controller):
                 'country_id': g_country and (g_country.id, g_country.sudo().display_name),
             })
 
-        search_tags = self._extract_searched_event_tags(searches, slug_tags)
+        clicked_tag_id = searches.pop('pinned_tag', '')
+        clicked_category = request.env['event.tag'].browse(
+            int(clicked_tag_id)).exists().category_id if clicked_tag_id.isdigit() else None
+        search_tags = self._extract_searched_event_tags(searches, slug_tags).filtered(
+            lambda tag: tag.category_id == clicked_category
+            or tag in available_tags_by_category.get(tag.category_id.id, tag))
         current_date = event_details['current_date']
         current_type = None
         current_country = None
@@ -172,8 +189,9 @@ class WebsiteEventController(http.Controller):
             'current_country': current_country,
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
+            'available_tags_by_category': available_tags_by_category,
             'dates': dates,
-            'categories': request.env['event.tag.category'].search(Domain('is_published', '=', True) & self.env.website.website_domain()),
+            'categories': categories,
             'countries': countries,
             'include_online_events': include_online_events,
             'pager': pager,
