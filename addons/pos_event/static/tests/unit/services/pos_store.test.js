@@ -16,3 +16,9 @@ test("createDummyProductForEvents", async () => {
         expect(product.event_id).toEqual(events.find((event) => event.id === product._event_id));
     }
 });
+
+test("searchProductsFromDBDomain excludes event service products", async () => {
+    const store = await setupPosEnv();
+    const domain = store.searchProductsFromDBDomain();
+    expect(domain).toInclude(["service_tracking", "!=", "event"]);
+});
