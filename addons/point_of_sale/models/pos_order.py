@@ -653,7 +653,8 @@ class PosOrder(models.Model):
                 order.account_move.with_context(skip_invoice_sync=True)._generate_and_send()
             except (UserError, ValidationError) as e:
                 _logger.error("Error processing order %s: %s", order.name, e)
-            order.defer_invoice_pdf = False
+            else:
+                order.defer_invoice_pdf = False
 
     def action_view_invoice(self):
         invoices = self.account_move

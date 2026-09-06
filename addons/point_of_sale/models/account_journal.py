@@ -31,6 +31,9 @@ class AccountJournal(models.Model):
     def _unlink_journal_cascade_pos_payment_methods(self):
         if self.env.context.get(MODULE_UNINSTALL_FLAG):  # only cascade when switching CoA
             self.pos_payment_method_ids.unlink()
+            self.env['pos.config'].search([
+                ('closing_journal_id', 'in', self.ids),
+            ]).closing_journal_id = False
             self.env['pos.config'].search([('journal_id', 'in', self.ids)]).unlink()
 
     def action_archive(self):
@@ -44,7 +47,7 @@ class AccountJournal(models.Model):
         )
 
     @api.model
-    def _ensure_company_account_journal(self):
+    def _ensure_pos_journal(self):
         journal = self.search([
             ('code', '=', 'POSS'),
             ('type', '=', 'sale'),
