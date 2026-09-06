@@ -170,17 +170,17 @@ class TestXMLIDS(common.TransactionCase):
         ir_field = self.env['ir.model.fields']._get('test_orm.selection', 'state')
         xml_ids = ir_field._get_external_ids()
         self.assertCountEqual(xml_ids.get(ir_field.id), [
-            'test_orm.field_test_orm_selection__state',
+            'test_base.field_test_orm_selection__state',
             'test_inherit.field_test_orm_selection__state',
         ])
 
         foo, bar, baz = ir_field.selection_ids
         xml_ids = (foo + bar + baz)._get_external_ids()
         self.assertCountEqual(xml_ids.get(foo.id), [
-            'test_orm.selection__test_orm_selection__state__foo',
+            'test_base.selection__test_orm_selection__state__foo',
         ])
         self.assertCountEqual(xml_ids.get(bar.id), [
-            'test_orm.selection__test_orm_selection__state__bar',
+            'test_base.selection__test_orm_selection__state__bar',
             'test_inherit.selection__test_orm_selection__state__bar',
         ])
         self.assertCountEqual(xml_ids.get(baz.id), [

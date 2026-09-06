@@ -5,7 +5,7 @@
     'version': '0.1',
     'category': 'Hidden/Tests',
     'description': """A module to verify the inheritance using _inherits in non-original modules.""",
-    'depends': ['test_orm'],
+    'depends': ['test_base'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

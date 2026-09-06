@@ -11,7 +11,7 @@ tests independently to functional aspects of other models. """,
         'mail',
         'sms',
         'sms_twilio',
-        'test_orm',
+        'test_base',
     ],
     'data': [
         'security/ir.access.csv',
