@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
+
 from odoo.tools import frozendict
 from odoo.tests.common import new_test_user
 from odoo.addons.google_calendar.models.res_users import ResUsers
@@ -106,7 +108,38 @@ class TestSyncWorkLocationsGoogle(TestSyncGoogle):
             home_location = self.env['hr.work.location'].search([('name', '=', 'Home')])
             custom_location = self.env['hr.work.location'].search([('name', '=', 'Odoo Louvain-la-Neuve Office')])
 
-            self.assertEqual(self.hr_employee.monday_location_id, office_location)
-            self.assertEqual(self.hr_employee.tuesday_location_id, home_location)
-            self.assertEqual(self.hr_employee.wednesday_location_id, custom_location)
-            self.assertEqual(self.hr_employee.thursday_location_id, custom_location)
+            employee_locations = self.env['hr.employee.location'].search([
+                ('employee_id', '=', self.hr_employee.id),
+                ('date', '>=', '2025-04-28'),
+                ('date', '<=', '2025-05-01'),
+            ], order='date')
+            self.assertRecordValues(employee_locations, [
+                {'date': date(2025, 4, 28), 'work_location_id': office_location.id, 'google_id': 'workingLocation_office'},
+                {'date': date(2025, 4, 29), 'work_location_id': home_location.id, 'google_id': 'workingLocation_home'},
+                {'date': date(2025, 4, 30), 'work_location_id': custom_location.id, 'google_id': 'workingLocation_custom'},
+                {'date': date(2025, 5, 1), 'work_location_id': custom_location.id, 'google_id': 'workingLocation_custom_same'},
+            ])
+
+    @patch_api
+    def test_work_location_odoo_to_google(self):
+        home_location = self.env.ref('hr.home_work_location')
+        employee_location = self.env['hr.employee.location'].with_user(self.work_location_user).create({
+            'employee_id': self.hr_employee.id,
+            'date': '2025-04-29',
+            'work_location_id': home_location.id,
+            'need_sync': False,
+        })
+
+        employee_location._sync_odoo2google(self.google_service)
+        self.assertGoogleEventInserted({
+            'id': False,
+            'eventType': 'workingLocation',
+            'start': {'date': '2025-04-29', 'dateTime': None},
+            'end': {'date': '2025-04-30', 'dateTime': None},
+            'workingLocationProperties': {'type': 'homeOffice'},
+        })
+
+        employee_location.google_id = 'workingLocation_home'
+        employee_location.unlink()
+        self.assertFalse(employee_location.exists())
+        self.assertGoogleEventDeleted('workingLocation_home')

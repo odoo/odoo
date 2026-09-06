@@ -4,6 +4,7 @@ from . import resource_resource
 from . import resource_calendar
 from . import resource_calendar_leaves
 from . import hr_employee
+from . import hr_employee_location
 from . import hr_employee_departure
 from . import hr_employee_public
 from . import hr_department

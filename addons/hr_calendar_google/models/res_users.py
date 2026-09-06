@@ -54,3 +54,19 @@ class User(models.Model):
                 if events:
                     self.env['calendar.event'].with_user(user)._pre_process_google_events(events)
         return True
+
+    def restart_google_synchronization(self):
+        result = super().restart_google_synchronization()
+        self.env['hr.employee.location']._restart_google_sync()
+        return result
+
+    def _check_pending_odoo_records(self):
+        return super()._check_pending_odoo_records() or self.env['hr.employee.location']._check_any_records_to_sync()
+
+    def _sync_google_calendar(self, calendar_service):
+        result = super()._sync_google_calendar(calendar_service)
+        for user in self:
+            locations = self.env['hr.employee.location'].with_user(user)._get_records_to_sync()
+            locations.with_context(send_updates=False)._sync_odoo2google(calendar_service)
+            result = result or bool(locations)
+        return result
