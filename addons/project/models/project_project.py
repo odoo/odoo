@@ -126,27 +126,34 @@ class ProjectProject(models.Model):
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', 'Invited internal users'),
-            ('invited_users', 'Invited internal and portal users'),
+            ('followers', 'Team members only'),
+            ('invited_users', 'Team members and invited portal users'),
             ('employees', 'All internal users'),
             ('portal', 'All internal users and invited portal users'),
         ],
         string='Visibility', required=True,
         default='portal',
         tracking=True,
-        help="Project and Task Visibility:\n"
-             "- Invited internal users: Can access only the project or tasks they follow. Assignees automatically get access.\n"
-             "- Invited internal and portal users: Same as above, extended to portal users.\n"
-             "- All internal users: Full access to the project and all its tasks.\n"
-             "- All internal and invited portal users: Internal users get full access. Portal users can access only the project or tasks they follow.\n\n"
-             "Portal Access Levels:\n"
-             "- Read-only: Portal users see tasks via their portal but can’t edit them.\n"
-             "- Edit (limited): Portal users access kanban/list views and can edit limited fields on followed tasks.\n"
-             "- Edit: Same as above, with access to all tasks.\n\n"
-             "Other Rules:\n"
-             "- Internal users can open a task from a direct link, even without project access.\n"
-             "- Project admins have access to private projects, even if not followers.\n")
-    privacy_visibility_warning = fields.Char('Privacy Visibility Warning', compute='_compute_privacy_visibility_warning', export_string_translation=False)
+        help="Project and task visibility\n"
+             "Control who can access this project:\n\n"
+             "• Internal users: choose whether access is limited to team members or available to everyone in your organization.\n"
+             "• Portal users: choose whether invited collaborators can access the project.\n\n"
+             "Access levels for portal users\n\n"
+             "• View: can access tasks and send messages.\n"
+             "• Edit: can create and update tasks.\n"
+             "• Advanced Edit: can create and update tasks, change task priority, and update task stages.\n\n"
+             "Other rules\n\n"
+             "• Internal users can open a task from a direct link, even if they don't have access to the project application.\n"
+             "• Project admins have access to private projects, even if they are not team members.")
+    allowed_internal_user_ids = fields.Many2many(
+        comodel_name='res.users',
+        relation='project_allowed_internal_users_rel',
+        string='Team Members',
+        compute='_compute_allowed_internal_user_ids',
+        store=True,
+        readonly=False,
+        domain=lambda self: f"[('share', '=', False), ('group_ids', 'in', {self.env.ref('project.group_project_user').id}), ('company_ids', '=?', company_id)]"
+    )
     access_instruction_message = fields.Char('Access Instruction Message', compute='_compute_access_instruction_message', export_string_translation=False)
     date_start = fields.Date(string='Start Date', copy=False)
     date = fields.Date(string='Expiration Date', copy=False, index=True, tracking=True,
@@ -298,6 +305,16 @@ class ProjectProject(models.Model):
             if not project.company_id and project.partner_id.company_id:
                 project.company_id = project.partner_id.company_id
 
+    @api.depends('user_id', 'company_id', 'privacy_visibility')
+    def _compute_allowed_internal_user_ids(self):
+        for project in self:
+            if project.company_id and project.allowed_internal_user_ids:
+                project.allowed_internal_user_ids = project.allowed_internal_user_ids.filtered(
+                    lambda u: project.company_id in u.company_ids
+                )
+            if project.user_id and project.privacy_visibility in ['followers', 'invited_users']:
+                project.allowed_internal_user_ids |= project.user_id
+
     @api.depends_context('company')
     @api.depends('company_id', 'company_id.resource_calendar_id')
     def _compute_resource_calendar_id(self):
@@ -404,26 +421,14 @@ class ProjectProject(models.Model):
             project.collaborator_count = collaborator_count_by_project.get(project.id, 0)
 
     @api.depends('privacy_visibility')
-    def _compute_privacy_visibility_warning(self):
-        for project in self:
-            if not project.ids:
-                project.privacy_visibility_warning = ''
-            elif project.privacy_visibility in ['invited_users', 'portal'] and project._origin.privacy_visibility not in ['invited_users', 'portal']:
-                project.privacy_visibility_warning = _('Customers will be added to the followers of their project and tasks.')
-            elif project.privacy_visibility not in ['invited_users', 'portal'] and project._origin.privacy_visibility in ['invited_users', 'portal']:
-                project.privacy_visibility_warning = _('Portal users will be removed from the followers of the project and its tasks.')
-            else:
-                project.privacy_visibility_warning = ''
-
-    @api.depends('privacy_visibility')
     def _compute_access_instruction_message(self):
         for project in self:
             if project.privacy_visibility == 'portal':
-                project.access_instruction_message = self.env._('To give portal users access to your project, add them as followers. For task access, add them as followers for each task.')
+                project.access_instruction_message = self.env._('All internal users have access to the project. Invite portal users as collaborators to give them access. They can also access tasks they follow.')
             elif project.privacy_visibility == 'followers':
-                project.access_instruction_message = self.env._('Grant employees access to your project or tasks by adding them as followers. Employees automatically get access to the tasks they are assigned to.')
+                project.access_instruction_message = self.env._('Add internal users as team members to give them access to the project. They can also access tasks they follow.')
             elif project.privacy_visibility == 'invited_users':
-                project.access_instruction_message = self.env._("Grant users access by adding them as followers — either to the project or individual tasks. Internal users automatically gain access to tasks they are assigned to.")
+                project.access_instruction_message = self.env._("Add internal users as team members and invite portal users as collaborators to give them access to the project. They can also access tasks they follow.")
             else:
                 project.access_instruction_message = ''
 
@@ -677,9 +682,16 @@ class ProjectProject(models.Model):
             if vals.pop('is_favorite', False):
                 vals['favorite_user_ids'] = [self.env.uid]
         projects = super().create(vals_list)
+        collaborators_to_create = []
         for project in projects:
-            if project.privacy_visibility == 'portal':
-                project.message_subscribe(partner_ids=[project.partner_id.id])
+            if project.privacy_visibility in ['portal', 'invited_users'] and project.partner_id:
+                collaborators_to_create.append({
+                    'project_id': project.id,
+                    'partner_id': project.partner_id.id,
+                    'access_mode': 'view',
+                })
+        if collaborators_to_create:
+            self.env['project.collaborator'].create(collaborators_to_create)
         return projects
 
     def write(self, vals):
@@ -773,7 +785,18 @@ class ProjectProject(models.Model):
                     task.user_ids = task.user_ids.filtered(
                         lambda user: project.company_id in user.company_ids
                     )
-
+        if 'partner_id' in vals or 'privacy_visibility' in vals:
+            collaborators_to_create = []
+            for project in self:
+                if project.privacy_visibility in ['portal', 'invited_users'] and project.partner_id:
+                    if project.partner_id not in project.collaborator_ids.partner_id:
+                        collaborators_to_create.append({
+                            'project_id': project.id,
+                            'partner_id': project.partner_id.id,
+                            'access_mode': 'view',
+                        })
+            if collaborators_to_create:
+                self.env['project.collaborator'].sudo().create(collaborators_to_create)
         return res
 
     def unlink(self):
@@ -979,7 +1002,7 @@ class ProjectProject(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'type': 'danger',
-                    'message': self.env._('Sharing is not available with this project visibility setting.'),
+                    'message': self.env._('This project can’t be shared with external people.'),
                 },
             }
 
@@ -1144,12 +1167,18 @@ class ProjectProject(models.Model):
             if project.privacy_visibility == new_visibility:
                 continue
             if new_visibility in ['invited_users', 'portal']:
-                project.message_subscribe(partner_ids=project.partner_id.ids)
+                if project.partner_id and project.partner_id not in project.collaborator_ids.partner_id:
+                    self.env['project.collaborator'].create({
+                            'project_id': project.id,
+                            'partner_id': project.partner_id.id,
+                            'access_mode': 'view',
+                        })
                 for task in project.task_ids.filtered('partner_id'):
                     task.message_subscribe(partner_ids=task.partner_id.ids)
             elif project.privacy_visibility in ['invited_users', 'portal']:
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
+                project.collaborator_ids.unlink()
                 project.with_context(active_test=False).tasks._unsubscribe_portal_users()
                 # revoke access_token since the project and its tasks are no longer accessible for portal/public users
                 project.with_context(active_test=False).tasks.access_token = ''
@@ -1166,7 +1195,7 @@ class ProjectProject(models.Model):
             return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
         return self.env.user._is_internal()
 
-    def _add_collaborators(self, partners, limited_access=False):
+    def _add_collaborators(self, partners, access_mode='advanced_edit'):
         self.ensure_one()
         new_collaborators = self._get_new_collaborators(partners)
         if not new_collaborators:
@@ -1175,7 +1204,7 @@ class ProjectProject(models.Model):
         self.write({'collaborator_ids': [
             Command.create({
                 'partner_id': collaborator.id,
-                'limited_access': limited_access,
+                'access_mode': access_mode,
             }) for collaborator in new_collaborators],
         })
 

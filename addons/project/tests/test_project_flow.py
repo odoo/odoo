@@ -486,16 +486,27 @@ class TestProjectFlow(TestProjectCommon, MailCase):
         self.assertEqual(self.user_projectuser, task_3.user_ids)
 
     def test_customer_can_access_public_project(self):
-        """Test that a customer is automatically subscribed when the project is public."""
+        """Test that a customer is automatically added as a collaborator when the project is public."""
         project = self.env['project.project'].create({
             'name': 'Public Project',
             'privacy_visibility': 'portal',
             'partner_id': self.partner_1.id,
         })
 
-        self.assertIn(
+        self.assertNotIn(
             self.partner_1, project.message_partner_ids,
-            "Customer should be automatically subscribed to the project when visibility is set to 'public'."
+            "Customer should no longer be automatically subscribed as a follower."
+        )
+
+        collaborator = project.collaborator_ids.filtered(lambda c: c.partner_id == self.partner_1)
+        self.assertTrue(
+            collaborator,
+            "Customer should be automatically added as a collaborator when visibility is set to 'portal'."
+        )
+
+        self.assertEqual(
+            collaborator.access_mode, 'view',
+            "The automatically created collaborator should have 'view' access mode by default."
         )
 
     def test_partner_follows_project_change_on_new_task(self):

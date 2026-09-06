@@ -165,13 +165,22 @@
                                     <field name="alias_contact" class="oe_inline" string="Accept Emails From"
                                            invisible="not alias_email"/>
                                     <field name="privacy_visibility" widget="radio"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
+                                    <field name="allowed_internal_user_ids"
+                                        widget="many2many_avatar_user"
+                                        placeholder="Select who can access"
+                                        options="{'no_create': True}"
+                                        invisible="privacy_visibility not in ['followers', 'invited_users']"/>
+                                    <button name="%(project.project_share_wizard_action)d" 
+                                            type="action" 
+                                            string="Invite Portal Users" 
+                                            class="btn btn-link p-0" 
+                                            colspan="2"
+                                            icon="east"
+                                            invisible="privacy_visibility not in ['portal', 'invited_users']"/>
                                     <span colspan="2" class="text-muted o_row ps-1" invisible="access_instruction_message == ''">
                                         <i class="oi pe-2" data-icon="lightbulb" title="Info"/><field class="d-inline" name="access_instruction_message" nolabel="1"/>
                                     </span>
-                                    <span colspan="2" class="text-muted o_row ps-1" invisible="privacy_visibility_warning == ''">
-                                        <i class="oi pe-2" data-icon="warning" title="Warning"/><field class="d-inline" name="privacy_visibility_warning" nolabel="1"/>
-                                    </span>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                                 </group>
                                 <div class="o_col">
                                     <group name="other_section">
