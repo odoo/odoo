@@ -122,12 +122,14 @@ class WebsiteEventBoothController(WebsiteEventController):
         available_booth_categories = event_sudo.event_booth_category_available_ids
         chosen_booth_category = available_booth_categories.filtered(lambda cat: cat.id == booth_category_id)
         default_booth_category = available_booth_categories[0] if available_booth_categories else request.env['event.booth.category']
+        booth_categories = event_sudo.event_booth_category_ids if not event_sudo.is_finished else request.env['event.booth.category']
         return {
             'available_booth_category_ids': available_booth_categories,
             'event': event_sudo,
             'event_booths': event_sudo.event_booth_ids,
             'hide_sponsors': True,
             'main_object': event_sudo,
+            'structured_data': booth_categories.with_context(event_id=event.id)._render_jsonld(),
             'selected_booth_category_id': (chosen_booth_category or default_booth_category).id,
             'selected_booth_ids': booth_ids if booth_category_id == chosen_booth_category.id and booth_ids else False,
         }
