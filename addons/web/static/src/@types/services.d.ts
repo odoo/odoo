@@ -18,7 +18,7 @@ declare module "services" {
     import { uiService } from "@web/core/ui/ui_plugin";
     import { sortableService } from "@web/core/utils/sortable_plugin";
     import { publicInteractionService } from "@web/public/interaction_service";
-    import { viewService } from "@web/views/view_service";
+    import { viewService } from "@web/views/view_plugin";
     import { actionService } from "@web/webclient/actions/action_service";
     import { profilingService } from "@web/webclient/debug/profiling/profiling_service";
     import { menuService } from "@web/webclient/menus/menu_service";
