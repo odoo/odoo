@@ -471,3 +471,35 @@ registry.category("web_tour.tours").add("test_switch_cashier_with_badge", {
             TicketScreen.nthRowContains(2, "Test Employee 3", false),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_hr_chatter_author", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.login("Pos Employee1", "2580"),
+            Dialog.confirm("Open Register"),
+            ProductScreen.isShown(),
+            ProductScreen.addOrderline("Desk Pad", "2"),
+            ProductScreen.saveOrder(),
+            Chrome.waitForOrdersSync(),
+            PosHr.clickCashierName(),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
+            ProductScreen.isShown(),
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("001"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.isShown(),
+            ProductScreen.clickLine("Desk Pad", "2"),
+            ProductScreen.clickNumpad("1"),
+            ProductScreen.selectedOrderlineHas("Desk Pad", "1"),
+            ProductScreen.saveOrder(),
+            Chrome.waitForOrdersSync(),
+            Chrome.clickOrders(),
+            TicketScreen.deleteOrder("001"),
+            Dialog.confirm(),
+            Chrome.clickMenuOption("Close Register"),
+            ProductScreen.closeWithCashAmount("0"),
+            Chrome.clickBtn("Close Register", { expectUnloadPage: true }),
+        ].flat(),
+});
