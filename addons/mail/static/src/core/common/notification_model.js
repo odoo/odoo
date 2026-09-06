@@ -89,7 +89,7 @@ export class Notification extends Record {
     }
 
     get icon() {
-        return "mail";
+        return this.isFailure ? "cancel" : "mail";
     }
 
     get iconClass() {

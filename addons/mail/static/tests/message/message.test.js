@@ -1598,7 +1598,7 @@ test("Notification Error", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
-    expect(".o-mail-Message-notification i:first").toHaveAttribute("data-icon", "mail");
+    expect(".o-mail-Message-notification i:first").toHaveAttribute("data-icon", "cancel");
     await click(".o-mail-Message-notification").then(() => {});
     await contains(".o-mail-MessageNotificationPopover");
     expect(".o-mail-MessageNotificationPopover i[data-icon='close'].text-danger").toHaveCount(1);
@@ -2411,7 +2411,7 @@ test("Message actions for 'email_outgoing' messages", async () => {
     await contains(".o-mail-Message-actions button[title='Add a Reaction']");
     await contains(".o-mail-Message-actions button[title='Expand']");
     await click(".o-mail-Message [title='Expand']");
-    await contains(".o-dropdown-item", { count: 7 });
+    await contains(".o-dropdown-item", { count: 8 });
     await contains(".o-dropdown-item:has(:text('Forward'))");
     await contains(".o-dropdown-item:has(:text('Reply All'))");
     await contains(".o-dropdown-item:has(:text('Pin'))");
@@ -2419,6 +2419,7 @@ test("Message actions for 'email_outgoing' messages", async () => {
     await contains(".o-dropdown-item:has(:text('Copy Text'))");
     await contains(".o-dropdown-item:has(:text('Copy Message Link'))");
     await contains(".o-dropdown-item:has(:text('Translate'))");
+    await contains(".o-dropdown-item:has(:text('Send Again'))");
 });
 
 test("Message should display attachments in order", async () => {

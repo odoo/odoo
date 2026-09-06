@@ -110,3 +110,20 @@ registerMessageAction("forward", {
     },
     sequence: 30,
 });
+registerMessageAction("send-again", {
+    condition: ({ message, owner }) => !owner.env.inMessagingMenu && message.canForward,
+    icon: "send",
+    name: _t("Send Again"),
+    onSelected: ({ message, owner }) => {
+        const context = {
+            default_attachment_ids: message.attachment_ids.map((a) => a.id),
+            default_body: prepareBodyForEditing(message.body),
+            default_composition_mode: "comment",
+            default_email_add_signature: false,
+            default_partner_ids: message.partner_ids.map((p) => p.id),
+            default_partner_cc_ids: message.partner_cc_ids.map((p) => p.id),
+        };
+        messageActionOpenFullComposer(_t("Send Again"), context, owner);
+    },
+    sequence: 35,
+});
