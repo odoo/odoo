@@ -410,6 +410,9 @@ class MailActivityMixin(models.AbstractModel):
             create_vals_list.append(create_vals)
         return create_vals_list
 
+    def _activity_schedule_postprocess(self, activities):
+        """Hook called after scheduling ``activities`` on ``self``."""
+
     def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', activity_user_id_fname='', **act_values):
         """ Schedule activities on each record of the current record set (see `_activity_schedule_create_vals`). """
         if self.env.context.get('mail_activity_automation_skip'):
@@ -417,6 +420,7 @@ class MailActivityMixin(models.AbstractModel):
         create_vals_list = self._activity_schedule_create_vals(
             act_type_xmlid, date_deadline, summary, note, activity_user_id_fname, **act_values)
         activities = self.env['mail.activity'].with_context(clean_context(self.env.context)).create(create_vals_list)
+        self._activity_schedule_postprocess(activities)
         return activities.with_context(self.env.context)
 
     def _activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
