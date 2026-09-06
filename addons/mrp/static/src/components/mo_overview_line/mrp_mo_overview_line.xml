@@ -20,7 +20,7 @@
         </td>
         <td t-attf-class="text-end" t-out="this.formattedQuantity"/>
         <td t-if="this.props.showOptions.uom" class="text-start" t-out="this.data.uom_name"/>
-        <td class="text-end" t-if="this.props.showOptions.availabilities">
+        <td name="td_mrp_mo_free_to_use" class="text-end" t-if="this.props.showOptions.availabilities">
             <t t-if="this.hasQuantity('quantity_on_hand')">
                 <t t-out="this.formatFloat(this.data.quantity_free)"/> /
                 <t t-out="this.formatFloat(this.data.quantity_on_hand)"/>

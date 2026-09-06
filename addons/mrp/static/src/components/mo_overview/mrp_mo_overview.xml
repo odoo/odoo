@@ -19,7 +19,7 @@
                             <th class="text-start"/>
                             <th class="text-center" t-if="this.showReplenishments">Status</th>
                             <th t-attf-class="{{ this.showUom ? 'text-center' : 'text-end' }}" t-attf-colspan="{{ this.showUom ? 2 : 1 }}">Quantity</th>
-                            <th class="text-end" t-if="this.showAvailabilities">Free to use / On Hand</th>
+                            <th name="th_mrp_mo_free_to_use" class="text-end" t-if="this.showAvailabilities">Free to use / On Hand</th>
                             <th class="text-end" t-if="this.showAvailabilities">Reserved</th>
                             <th class="text-end" t-if="this.showReceipts">Receipt</th>
                             <th class="text-end" t-if="this.showUnitCosts">Unit Cost</th>
