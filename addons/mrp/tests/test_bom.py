@@ -3125,3 +3125,22 @@ class TestTourBoM(HttpCase):
                     Command.create({'product_id': c3.id, 'product_qty': 1, 'cost_share': 70}),  # All attributes
             ],
         })
+
+
+class TestMrpMobileTour(HttpCase):
+    browser_size = '375x667'
+    touch_enabled = True
+
+    def test_mo_operation_kept_on_mobile(self):
+        """ Test that creating an MO on a small screen keeps the work order's operation link. """
+        self.env.ref('base.user_admin').group_ids = [Command.link(self.env.ref('mrp.group_mrp_routings').id)]
+        product = self.env['product.product'].create({'name': 'test1', 'is_storable': True})
+        bom = self.env['mrp.bom'].create({'product_tmpl_id': product.product_tmpl_id.id})
+        operation = self.env['mrp.routing.workcenter'].create({
+            'name': 'Assemble',
+            'bom_id': bom.id,
+            'workcenter_id': self.env['mrp.workcenter'].create({'name': 'Assembly'}).id,
+        })
+        self.start_tour('/odoo/action-mrp.mrp_production_action/new', 'test_mo_operation_kept_on_mobile', login='admin')
+        mo = self.env['mrp.production'].search([('product_id', '=', product.id)])
+        self.assertEqual(mo.workorder_ids.operation_id, operation)
