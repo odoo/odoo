@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from io import BytesIO
 from PIL import Image
-from unittest.mock import patch
 from markupsafe import Markup
 
 from odoo import Command, fields
@@ -336,7 +335,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         post_time = fields.Datetime.now()
         # Mocks the return value of field.Datetime.now(),
         # so we can see if the `last_interest_dt` is updated correctly
-        with patch.object(fields.Datetime, 'now', lambda: post_time):
+        with self.mock_datetime_and_now(post_time):
             chat.message_post(body="Test", message_type='comment', subtype_xmlid='mail.mt_comment')
         self.assertEqual(chat.last_interest_dt, post_time)
 
@@ -1187,7 +1186,8 @@ class TestChannelInternals(MailCommon, HttpCase):
             "model": "discuss.channel",
             "res_id": channel.id,
         })
-        with self.assertBus(
+        with self.mock_datetime_and_now('2025-04-08 10:00:00'), \
+            self.assertBus(
             [
                 BusResult(
                     channel,
@@ -1203,19 +1203,18 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "pinned_at": message.pinned_at,
                                 "subject": message.subject,
                                 "translationValue": False,
-                                "write_date": fields.Datetime.to_string(message.write_date),
+                                "write_date": '2025-04-08 10:00:00',
                             },
                         ],
                     },
                 ),
             ],
         ):
-            with freeze_time('2025-04-08 10:00:00'):
-                channel._message_update_content(
-                    message,
-                    body=Markup("<p>Test update</p>"),
-                    attachment_ids=[],
-                )
+            channel._message_update_content(
+                message,
+                body=Markup("<p>Test update</p>"),
+                attachment_ids=[],
+            )
 
     def test_member_based_channel_naming(self):
         john = mail_new_test_user(self.env, groups="base.group_user", login="john")

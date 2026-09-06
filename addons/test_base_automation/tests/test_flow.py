@@ -980,19 +980,20 @@ action = {
             patch.object(automation.__class__, '_process', side_effect=automation._process) as mock,
             self.enter_registry_test_mode(),
         ):
-            with patch.object(self.env.cr, '_now', now := datetime.datetime.now()):
+            now = datetime.datetime.now()
+            with self.mock_datetime_and_now(now):
                 past_date = now - datetime.timedelta(1)
                 self.env["base.automation.lead.test"].create([{
                     'name': f'lead {i}',
                     # 2 without a date, 8 set in past, 5 set in future (10, 11, ... minutes after now)
                     'date_automation_last': False if i < 2 else past_date if i < 10 else now + datetime.timedelta(minutes=i),
                 } for i in range(15)])
-            with common.freeze_time('2020-01-01 03:02:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
+            with self.mock_datetime_and_now('2020-01-01 03:02:01'):
                 # process records
                 self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 10)
                 self.assertEqual(automation.last_run, self.env.cr.now())
-            with common.freeze_time('2020-01-01 03:13:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
+            with self.mock_datetime_and_now('2020-01-01 03:13:59'):
                 # 2 in the future (because of timing)
                 # 10 previously done records because we use the date_automation_last as trigger without delay
                 self.automation_cron.method_direct_trigger()
@@ -1002,7 +1003,7 @@ action = {
                 automation.trg_date_calendar_id = self.env["resource.calendar"].search([], limit=1).ensure_one()
                 automation.trg_date_range_type = 'day'
                 self.env["base.automation.lead.test"].create({'name': 'calendar'})  # for the run
-            with common.freeze_time('2020-02-02 03:11:00'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
+            with self.mock_datetime_and_now('2020-02-02 03:11:00'):
                 self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 38)
 

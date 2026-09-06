@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import copy
 
 from datetime import datetime
-from freezegun import freeze_time
-from unittest.mock import patch
 
 from odoo import exceptions
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
@@ -92,8 +89,7 @@ class TestMailingListMerge(MassMailCommon):
             new = new.with_context(default_list_ids=[list_id])
             self.assertFalse(any(contact.opt_out for contact in new))
 
-        with freeze_time('2022-01-01 12:00'), \
-             patch.object(self.env.cr, 'now', lambda: datetime(2022, 1, 1, 12, 0, 0)):
+        with self.mock_datetime_and_now(datetime(2022, 1, 1, 12, 0, 0)):
             contact_form = Form(self.env['mailing.contact'])
             contact_form.name = 'Contact_test'
             with contact_form.subscription_ids.new() as subscription:

@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from ast import literal_eval
 from contextlib import closing
 from datetime import datetime, timedelta
-from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -796,7 +794,7 @@ class TestStockQuant(TestStockCommon):
         move._action_done()
 
         tomorrow = fields.Datetime.now() + timedelta(days=1)
-        with patch.object(fields.Datetime, 'now', lambda: tomorrow):
+        with self.mock_datetime_and_now(tomorrow):
             move = self.env['stock.move'].create({
                 'product_id': self.productA.id,
                 'product_uom_qty': 1,

@@ -1,7 +1,6 @@
 import datetime
 
 from contextlib import contextmanager, nullcontext
-from freezegun import freeze_time
 from unittest import mock
 
 from odoo.addons.point_of_sale.models.pos_order import PosOrder
@@ -26,9 +25,7 @@ class TestL10nEsEdiVerifactuPosOrder(TestL10nEsEdiVerifactuPosCommon):
         # Ensure the date of all orders is in the past.
         # Else the associated move does not get posted (since it will be in the future / on the order date).
         cls.fakenow = datetime.datetime(2025, 1, 1)
-        cls.startClassPatcher(freeze_time(cls.fakenow))
-        # `freeze_time` does not change the `create_date`
-        cls.startClassPatcher(cls._mock_create_date(cls, '2025-01-01'))
+        cls.enterClassContext(cls.mock_datetime_and_now(cls.fakenow))
 
     @contextmanager
     def with_pos_session(self):
