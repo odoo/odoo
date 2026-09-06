@@ -17,6 +17,7 @@ function getRelation(fieldDef, followRelationalProperties = false) {
     return null;
 }
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const fieldService = {
     dependencies: ["orm"],
     async: [

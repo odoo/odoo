@@ -42,6 +42,7 @@ import { registry } from "@web/core/registry";
  * @property {boolean} loadIrFilters
  */
 
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
 export const viewService = {
     dependencies: ["orm", "ui"],
     async: ["loadViews"],

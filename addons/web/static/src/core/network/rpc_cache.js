@@ -7,11 +7,12 @@ import { Crypto, CRYPTO_ALGO } from "../crypto";
  * callback?: function;
  * type?: "ram" | "disk";
  * update?: "once" | "always";
- * maxAge?: number; // Max age in milliseconds.
- *                  // Defines the validity of a new entry created by this call.
- *                  // On read, the entry is checked against last stored expiry time; if expired, it is ignored.
+ * maxAge?: number;
  * noCache?: boolean;
  * }} RPCCacheSettings
+ *
+ * `maxAge` is in milliseconds. It defines the validity of a new entry created by this call.
+ * On read, the entry is checked against last stored expiry time; if expired, it is ignored.
  */
 
 function jsonEqual(v1, v2) {

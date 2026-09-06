@@ -3,7 +3,7 @@ declare module "registries" {
     import { OdooEnv } from "@web/env";
     import { Interaction } from "@web/public/interaction";
     import { Compiler } from "@web/views/view_compiler";
-    import { ActionDescription } from "@web/webclient/actions/action_service";
+    import { ActionDescription, ActionOptions, ActionMode, ActionRequest } from "@web/webclient/actions/action_service";
 
     interface ActionHandlerParams {
         action: object;
