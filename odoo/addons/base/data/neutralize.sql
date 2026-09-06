@@ -31,3 +31,8 @@ VALUES ('database.is_neutralized', true)
 UPDATE ir_act_server
    SET webhook_url = 'neutralization - disable webhook'
  WHERE state = 'webhook';
+
+-- prevent access to database.secret protected data
+UPDATE ir_config_parameter
+   SET value = 'dummysecret'
+ WHERE key = 'database.secret';
