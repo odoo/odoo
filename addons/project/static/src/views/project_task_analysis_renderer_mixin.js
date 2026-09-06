@@ -12,7 +12,7 @@ export const ProjectTaskAnalysisRendererMixin = (T) => class ProjectTaskAnalysis
                 leaf[0] = "id";
             }
         }
-        const fieldsNotInBaseModel = ["nbr", "rating_last_value", "rating_avg", "delay_endings_days"];
+        const fieldsNotInBaseModel = ["nbr", "rating_last_value", "rating_avg", "delay_endings_days", "time_spent"];
         const newDomain = Domain.removeDomainLeaves(domain, fieldsNotInBaseModel).toList();
 
         this.actionService.doAction({

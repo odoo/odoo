@@ -7,4 +7,12 @@ export class ProjectTaskAnalysisGraphModel extends ProjectTaskModelMixin(GraphMo
         searchParams.domain = this._processSearchDomain(domain);
         return super.load(searchParams);
     }
+
+    _buildMetaData(params) {
+        const metaData = super._buildMetaData(params);
+        if (this.searchParams.context?.hide_count_measure) {
+            delete metaData.measures.__count;
+        }
+        return metaData;
+    }
 }
