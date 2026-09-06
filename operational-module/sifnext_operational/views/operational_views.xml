@@ -1,15 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ROOT -->
     <menuitem id="menu_sifnext_root"
               name="SIFNEXT"
               sequence="10"
               web_icon="sifnext_operational,static/description/icon.png"/>
 
 
+    <!-- OPERATIONAL -->
     <menuitem id="menu_sifnext_operational"
               name="Operational"
               parent="menu_sifnext_root"
               sequence="10"/>
+
+
+    <!-- KONFIGURASI -->
+    <menuitem id="menu_sifnext_configuration"
+              name="Konfigurasi"
+              parent="menu_sifnext_root"
+              sequence="20"/>
+
+
+    <!-- RUANGAN -->
+    <menuitem id="menu_sifnext_room"
+              name="Ruangan"
+              parent="menu_sifnext_operational"
+              sequence="10"/>
+
+
+    <!-- KENDARAAN -->
+    <menuitem id="menu_sifnext_vehicle"
+              name="Kendaraan"
+              parent="menu_sifnext_operational"
+              sequence="20"/>
 
 </odoo>

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_sifnext_vehicle_booking_list"
-            model="ir.ui.view">
+    <!-- ========================================================= -->
+    <!-- LIST VIEW -->
+    <!-- ========================================================= -->
 
-        <field name="name">
-            sifnext.operational.vehicle.booking.list
-        </field>
+    <record id="view_sifnext_vehicle_booking_list" model="ir.ui.view">
 
+        <field name="name">sifnext.operational.vehicle.booking.list</field>
         <field name="model">sifnext.operational.vehicle.booking</field>
 
         <field name="arch" type="xml">
@@ -33,20 +33,32 @@
     </record>
 
 
-    <record id="view_sifnext_vehicle_booking_form"
-            model="ir.ui.view">
+    <!-- ========================================================= -->
+    <!-- FORM VIEW -->
+    <!-- ========================================================= -->
 
-        <field name="name">
-            sifnext.operational.vehicle.booking.form
-        </field>
+    <record id="view_sifnext_vehicle_booking_form" model="ir.ui.view">
 
+        <field name="name">sifnext.operational.vehicle.booking.form</field>
         <field name="model">sifnext.operational.vehicle.booking</field>
 
         <field name="arch" type="xml">
 
             <form string="Peminjaman Kendaraan">
 
+                <!-- ================================================= -->
+                <!-- HEADER / WORKFLOW BUTTONS -->
+                <!-- ================================================= -->
+
                 <header>
+
+                    <!-- Active role user -->
+                    <field name="sifnext_active_role" invisible="1"/>
+
+
+                    <!-- ============================================= -->
+                    <!-- USER : AJUKAN -->
+                    <!-- ============================================= -->
 
                     <button name="action_submit"
                             string="Ajukan Peminjaman"
@@ -55,6 +67,11 @@
                             icon="fa-paper-plane"
                             invisible="state != 'draft'"/>
 
+
+                    <!-- ============================================= -->
+                    <!-- SYSTEM : CEK KETERSEDIAAN -->
+                    <!-- ============================================= -->
+
                     <button name="action_check_availability"
                             string="Cek Ketersediaan"
                             type="object"
@@ -62,21 +79,29 @@
                             icon="fa-search"
                             invisible="state != 'submitted'"/>
 
+
+                    <!-- ============================================= -->
+                    <!-- GA : APPROVAL -->
+                    <!-- ============================================= -->
+
                     <button name="action_approve"
                             string="Setujui"
                             type="object"
                             class="btn-primary"
                             icon="fa-check"
-                            groups="sifnext_operational.group_sifnext_operational_ga"
-                            invisible="state != 'waiting_approval'"/>
+                            invisible="state != 'waiting_approval' or sifnext_active_role != 'ga'"/>
 
                     <button name="action_reject"
                             string="Tolak"
                             type="object"
                             class="btn-secondary"
                             icon="fa-times"
-                            groups="sifnext_operational.group_sifnext_operational_ga"
-                            invisible="state != 'waiting_approval'"/>
+                            invisible="state != 'waiting_approval' or sifnext_active_role != 'ga'"/>
+
+
+                    <!-- ============================================= -->
+                    <!-- BOOKING -->
+                    <!-- ============================================= -->
 
                     <button name="action_book"
                             string="Booking Jadwal"
@@ -85,12 +110,22 @@
                             icon="fa-calendar-check-o"
                             invisible="state != 'approved'"/>
 
+
+                    <!-- ============================================= -->
+                    <!-- DONE -->
+                    <!-- ============================================= -->
+
                     <button name="action_done"
                             string="Tandai Selesai"
                             type="object"
                             class="btn-primary"
                             icon="fa-check-circle"
                             invisible="state != 'booked'"/>
+
+
+                    <!-- ============================================= -->
+                    <!-- CANCEL -->
+                    <!-- ============================================= -->
 
                     <button name="action_cancel"
                             string="Batalkan"
@@ -99,6 +134,11 @@
                             icon="fa-ban"
                             invisible="state in ('done', 'cancelled')"/>
 
+
+                    <!-- ============================================= -->
+                    <!-- RESET -->
+                    <!-- ============================================= -->
+
                     <button name="action_reset_draft"
                             string="Kembalikan ke Draft"
                             type="object"
@@ -106,13 +146,27 @@
                             icon="fa-undo"
                             invisible="state != 'cancelled'"/>
 
+
+                    <!-- ============================================= -->
+                    <!-- STATUS BAR -->
+                    <!-- ============================================= -->
+
                     <field name="state"
                            widget="statusbar"
                            statusbar_visible="draft,submitted,waiting_approval,approved,booked,done"/>
 
                 </header>
 
+
+                <!-- ================================================= -->
+                <!-- SHEET -->
+                <!-- ================================================= -->
+
                 <sheet>
+
+                    <!-- ================================================= -->
+                    <!-- TITLE -->
+                    <!-- ================================================= -->
 
                     <div class="oe_title">
 
@@ -121,46 +175,67 @@
                         </span>
 
                         <h1>
-                            <field name="name"
-                                   readonly="1"/>
+                            <field name="name" readonly="1"/>
                         </h1>
 
                     </div>
 
+
+                    <!-- ================================================= -->
+                    <!-- WAITING APPROVAL ALERT -->
+                    <!-- ================================================= -->
 
                     <div class="alert alert-warning sifnext-alert"
                          role="alert"
                          invisible="state != 'waiting_approval'">
 
                         <strong>Menunggu Approval GA</strong>
+
                         <br/>
+
                         Pengajuan sedang menunggu persetujuan
                         General Affair.
 
                     </div>
 
 
+                    <!-- ================================================= -->
+                    <!-- AVAILABLE ALERT -->
+                    <!-- ================================================= -->
+
                     <div class="alert alert-success sifnext-alert"
                          role="alert"
                          invisible="availability != 'available'">
 
-                        <strong>âœ“ Kendaraan Tersedia</strong>
+                        <strong>✓ Kendaraan Tersedia</strong>
+
                         <br/>
+
                         Kendaraan tersedia pada jadwal yang dipilih.
 
                     </div>
 
 
+                    <!-- ================================================= -->
+                    <!-- UNAVAILABLE ALERT -->
+                    <!-- ================================================= -->
+
                     <div class="alert alert-danger sifnext-alert"
                          role="alert"
                          invisible="availability != 'unavailable'">
 
-                        <strong>âœ• Kendaraan Tidak Tersedia</strong>
+                        <strong>✕ Kendaraan Tidak Tersedia</strong>
+
                         <br/>
+
                         Silakan pilih kendaraan atau jadwal yang berbeda.
 
                     </div>
 
+
+                    <!-- ================================================= -->
+                    <!-- INFORMASI PENGAJUAN -->
+                    <!-- ================================================= -->
 
                     <group>
 
@@ -186,6 +261,10 @@
                         </group>
 
 
+                        <!-- ================================================= -->
+                        <!-- JADWAL PERJALANAN -->
+                        <!-- ================================================= -->
+
                         <group string="Jadwal Perjalanan">
 
                             <field name="start_datetime"
@@ -202,16 +281,24 @@
                     </group>
 
 
+                    <!-- ================================================= -->
+                    <!-- CATATAN APPROVAL -->
+                    <!-- ================================================= -->
+
                     <separator string="Catatan Approval"/>
 
                     <group>
 
                         <field name="rejection_reason"
                                placeholder="Isi alasan jika pengajuan ditolak..."
-                               invisible="state != 'rejected'"/>
+                               invisible="state not in ('waiting_approval', 'rejected')"/>
 
                     </group>
 
+
+                    <!-- ================================================= -->
+                    <!-- FLOW -->
+                    <!-- ================================================= -->
 
                     <div class="sifnext-hint">
 
@@ -223,19 +310,25 @@
                                 1. Ajukan
                             </span>
 
-                            <span>â†’</span>
+                            <span>
+                                →
+                            </span>
 
                             <span class="sifnext-flow-item">
                                 2. Cek
                             </span>
 
-                            <span>â†’</span>
+                            <span>
+                                →
+                            </span>
 
                             <span class="sifnext-flow-item">
                                 3. Approval GA
                             </span>
 
-                            <span>â†’</span>
+                            <span>
+                                →
+                            </span>
 
                             <span class="sifnext-flow-item">
                                 4. Booking
@@ -247,6 +340,11 @@
 
                 </sheet>
 
+
+                <!-- ================================================= -->
+                <!-- CHATTER -->
+                <!-- ================================================= -->
+
                 <chatter/>
 
             </form>
@@ -255,6 +353,10 @@
 
     </record>
 
+
+    <!-- ========================================================= -->
+    <!-- ACTION PEMINJAMAN KENDARAAN -->
+    <!-- ========================================================= -->
 
     <record id="action_sifnext_vehicle_booking"
             model="ir.actions.act_window">
@@ -268,10 +370,84 @@
     </record>
 
 
+    <!-- ========================================================= -->
+    <!-- MENU PENGAJUAN KENDARAAN -->
+    <!-- ========================================================= -->
+
     <menuitem id="menu_sifnext_vehicle_booking"
               name="Pengajuan Kendaraan"
               parent="menu_sifnext_vehicle"
               action="action_sifnext_vehicle_booking"
               sequence="10"/>
+
+
+    <!-- ========================================================= -->
+    <!-- CALENDAR VIEW PEMINJAMAN KENDARAAN -->
+    <!-- ========================================================= -->
+
+    <record id="view_vehicle_booking_calendar"
+            model="ir.ui.view">
+
+        <field name="name">sifnext.operational.vehicle.booking.calendar</field>
+
+        <field name="model">sifnext.operational.vehicle.booking</field>
+
+        <field name="arch" type="xml">
+
+            <calendar
+                string="Jadwal Peminjaman Kendaraan"
+                date_start="start_datetime"
+                date_stop="end_datetime"
+                color="vehicle_id"
+                mode="month">
+
+                <field name="name"/>
+                <field name="vehicle_id"/>
+                <field name="applicant_id"/>
+                <field name="destination"/>
+                <field name="purpose"/>
+                <field name="state"/>
+
+            </calendar>
+
+        </field>
+
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- ACTION JADWAL KENDARAAN -->
+    <!-- ========================================================= -->
+
+    <record id="action_vehicle_booking_calendar"
+            model="ir.actions.act_window">
+
+        <field name="name">Jadwal Peminjaman Kendaraan</field>
+
+        <field name="res_model">sifnext.operational.vehicle.booking</field>
+
+        <field name="view_mode">calendar,list,form</field>
+
+        <field name="view_id"
+               ref="view_vehicle_booking_calendar"/>
+
+        <field name="domain">
+            [('state', 'in', ['waiting_approval', 'approved', 'booked'])]
+        </field>
+
+    </record>
+
+
+    <!-- ========================================================= -->
+    <!-- MENU JADWAL KENDARAAN -->
+    <!-- ========================================================= -->
+
+    <menuitem
+        id="menu_vehicle_booking_calendar"
+        name="Jadwal Peminjaman"
+        parent="menu_sifnext_vehicle"
+        action="action_vehicle_booking_calendar"
+        sequence="20"
+    />
 
 </odoo>

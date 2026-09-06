@@ -22,22 +22,19 @@
     ],
 
     "data": [
-
-        # Security
         "security/security.xml",
         "security/ir.model.access.csv",
 
-        # Data
         "data/sequence.xml",
         "data/room_data.xml",
         "data/vehicle_data.xml",
 
-        # Views
         "views/operational_views.xml",
         "views/room_views.xml",
         "views/room_booking_views.xml",
-        "views/vehicle_views.xml",
         "views/vehicle_booking_views.xml",
+        "views/vehicle_views.xml",
+        "views/user_role_views.xml",
     ],
 
     "assets": {
