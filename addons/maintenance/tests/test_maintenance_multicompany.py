@@ -131,8 +131,8 @@ class TestEquipmentMulticompany(TransactionCase):
         # Now there are total 2 equipment created and can view by equipment_manager user
         self.assertEqual(Equipment.with_user(equipment_manager).with_context(allowed_company_ids=cids).search_count([]), 2)
 
-        # And there is total 1 equipment can be view by Normal User ( Which user is followers)
-        self.assertEqual(Equipment.with_user(user).search_count([]), 1)
+        # Users can view all equipments.
+        self.assertEqual(Equipment.with_user(user).search_count([]), 2)
 
         # create an equipment team BY user
         with self.assertRaises(AccessError):

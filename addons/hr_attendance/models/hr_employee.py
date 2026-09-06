@@ -16,7 +16,7 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     def _get_attendance_manager_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['group_user_regular', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_attendance.group_hr_attendance_own').id
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('role', 'in', ['regular_user', 'group_system']), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_attendance.group_hr_attendance_own').id
     attendance_manager_id = fields.Many2one(
         'res.users', store=True, readonly=False,
         string="Attendance Approver",

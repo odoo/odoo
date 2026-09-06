@@ -3,6 +3,7 @@
 from . import barcode
 from . import digest
 from . import ir_actions_report
+from . import ir_ui_menu
 from . import product_strategy
 from . import res_company
 from . import res_partner
@@ -27,3 +28,5 @@ from . import stock_picking_batch
 from . import stock_picking_type
 from . import stock_storage_category
 from . import stock_scrap_reason_tag
+
+from . import res_groups

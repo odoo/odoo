@@ -1,6 +1,10 @@
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import common
+
+from odoo.addons.base.models.res_groups import ResGroups
 
 
 @common.tagged('at_install', '-post_install', 'groups')
@@ -277,13 +281,13 @@ class TestGroupsOdoo(common.TransactionCase):
 
         user.group_ids = self.env.ref('base.group_user') + self.test_group
 
-        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
+        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_user_regular', 'base.group_no_one', 'base.group_everyone'})
 
         # update res.group implied_ids having the effect that users have distinct groups
         with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             self.test_group.implied_ids += self.env.ref('base.group_public')
 
-        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_no_one', 'base.group_everyone'})
+        self.assertEqual(set(self.test_group.all_implied_ids.get_external_id().values()), {'base.base_test_group', 'base.group_user', 'base.group_user_regular', 'base.group_no_one', 'base.group_everyone'})
 
         with self.assertRaises(ValidationError, msg="The user cannot have more than one user types."):
             self.env.ref('base.group_public').implied_by_ids = self.test_group
@@ -305,7 +309,7 @@ class TestGroupsOdoo(common.TransactionCase):
             "res_id": new_group.id,
         })
         self.env.ref('base.group_public').implied_ids += new_group
-        self.assertEqual(set(self.env.ref('base.group_public').all_implied_ids.get_external_id().values()), {'base.group_public', 'base.new_group', 'base.group_everyone'})
+        self.assertEqual(set(self.env.ref('base.group_public').all_implied_ids.get_external_id().values()), {'base.group_public', 'base.new_group', 'base.group_user_regular', 'base.group_everyone'})
 
     def test_groups_7_distinct(self):
         def create(name, implied_by_ids=[]):
@@ -382,3 +386,232 @@ class TestGroupsOdoo(common.TransactionCase):
         self.assertGreater(len(system._get_external_ids()[system.id]), 1, "Group with multiple xmlids")
         self.definitions = self.env['res.groups']._get_group_definitions()
         self.assertEqual(self.parse_repr('base.group_system'), self.parse_repr('base.test_group_system'))
+
+    def test_reduce_to_light_groups(self):
+        job = self.env['res.groups.privilege'].create({'name': 'Monkey Job Positions'})
+        accounting = self.env['res.groups.privilege'].create({'name': 'Monkey Accounting'})
+        fleet = self.env['res.groups.privilege'].create({'name': 'Monkey Feet'})
+        project = self.env['res.groups.privilege'].create({'name': 'Monkey Project'})
+        hr = self.env['res.groups.privilege'].create({'name': 'Monkey Hr'})
+
+        user = self.env.ref('base.group_user')
+
+        export = self.env['res.groups'].create({'name': 'Monk Export'})
+
+        hr_interviewer = self.env['res.groups'].create({'name': 'HR Interviewer', 'privilege_id': hr.id})
+        hr_interviewer.implied_ids += user
+        hr_user = self.env['res.groups'].create({'name': 'HR Officer', 'privilege_id': hr.id})
+        hr_user.implied_ids += hr_interviewer
+        hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': hr.id})
+        hr_manager.implied_ids += hr_user
+
+        proj_user = self.env['res.groups'].create({'name': 'Project User', 'privilege_id': project.id})
+        proj_user.implied_ids += user
+        proj_manager = self.env['res.groups'].create({'name': 'Project Manager', 'privilege_id': project.id})
+        proj_manager.implied_ids += proj_user + export
+
+        fleet_user = self.env['res.groups'].create({'name': 'Fleet User', 'privilege_id': fleet.id})
+        fleet_user.implied_ids += user
+        fleet_manager = self.env['res.groups'].create({'name': 'Fleet Manager', 'privilege_id': fleet.id})
+        fleet_manager.implied_ids += fleet_user
+
+        acc_ext = self.env['res.groups'].create({'name': 'Accounting Extern', 'privilege_id': accounting.id})
+        acc_ext.implied_ids += user
+        acc_user = self.env['res.groups'].create({'name': 'Accounting User', 'privilege_id': accounting.id})
+        acc_user.implied_ids += user
+        acc_manager = self.env['res.groups'].create({'name': 'Accounting Manager', 'privilege_id': accounting.id})
+        acc_manager.implied_ids += acc_user + export
+
+        team_leader = self.env['res.groups'].create({'name': 'Team leader', 'privilege_id': job.id})
+        team_leader.implied_ids += proj_manager + hr_interviewer
+        office_manager = self.env['res.groups'].create({'name': 'Office Manager', 'privilege_id': job.id})
+        office_manager.implied_ids += acc_user + fleet_user
+        cto = self.env['res.groups'].create({'name': 'cto'})
+        cto.implied_ids += acc_manager + fleet_manager + proj_manager + hr_manager
+
+        null = self.env['res.groups']
+
+        light_groups = ('base.group_user', hr_interviewer.id, fleet_user.id, acc_user.id, acc_ext.id)
+
+        def test_reduce_to_light(a, b):
+            with patch.object(ResGroups, '_get_light_group_xmlids', lambda s: light_groups):
+                self.assertEqual(a._reduce_to_light_groups().mapped('name'), b.mapped('name'), f"Try to reduce: {a.mapped('name')}")
+
+        # hr
+        test_reduce_to_light(hr_interviewer, hr_interviewer)
+        test_reduce_to_light(hr_user, hr_interviewer)
+        test_reduce_to_light(hr_manager, hr_interviewer)
+
+        # project
+        test_reduce_to_light(proj_user, null)
+        test_reduce_to_light(proj_manager, null)
+
+        # fleet
+        test_reduce_to_light(fleet_user, fleet_user)
+        test_reduce_to_light(fleet_manager, fleet_user)
+
+        # accounting
+        test_reduce_to_light(acc_ext, acc_ext)
+        test_reduce_to_light(acc_user, acc_user)
+        test_reduce_to_light(acc_manager, acc_user)
+
+        # job positions
+        test_reduce_to_light(team_leader, null)
+        test_reduce_to_light(office_manager, null)
+        test_reduce_to_light(cto, null)
+
+        # combine
+        test_reduce_to_light(cto + acc_manager, acc_user)
+        test_reduce_to_light(cto + acc_ext, acc_ext)
+        test_reduce_to_light(team_leader + proj_manager, null)
+        test_reduce_to_light(team_leader + hr_interviewer, hr_interviewer)
+        test_reduce_to_light(proj_manager + fleet_manager + hr_manager, fleet_user + hr_interviewer)
+        test_reduce_to_light(hr_manager + user, user + hr_interviewer)
+
+    def _assert_regular_user_consistency(self):
+        """ Invariant enforced by ``_apply_group_regular``: every regular
+        (non-light) group must transitively imply ``base.group_user_regular``.
+
+        If this does not hold, the database is inconsistent: ``_compute_role``
+        classifies a user from its *direct* groups (``_is_light_groups``) while
+        ``_search_role`` relies on the *transitive* presence of the regular-user
+        marker. A regular group not implying the marker would let a user own
+        that group's rights while being seen as a light user (and be invisible
+        to the ``role = regular_user`` filter).
+        """
+        Groups = self.env['res.groups']
+        regular = self.env.ref('base.group_user_regular')
+        light_groups = Groups.browse([
+            group.id
+            for xid in Groups._get_light_group_xmlids()
+            if (group := self.env.ref(xid, raise_if_not_found=False))
+        ])
+        excluded = light_groups | regular | Groups._get_user_type_groups()
+        for group in Groups.search([]):
+            if group in excluded:
+                continue
+            self.assertIn(
+                regular, group.all_implied_ids,
+                f"The regular group {group.name!r} must imply the regular-user marker",
+            )
+
+    def test_regular_user_applied_on_create(self):
+        """ The regular-user marker is granted automatically when groups are
+        created, so that DB data cannot end up with a regular group that does
+        not flag its users as regular. """
+        regular = self.env.ref('base.group_user_regular')
+        group_user = self.env.ref('base.group_user')  # light group
+
+        hr = self.env['res.groups.privilege'].create({'name': 'Monkey Hr'})
+        hr_interviewer = self.env['res.groups'].create({'name': 'HR Interviewer', 'privilege_id': hr.id})
+        hr_interviewer.implied_ids += group_user
+        hr_user = self.env['res.groups'].create({'name': 'HR Officer', 'privilege_id': hr.id})
+        hr_user.implied_ids += hr_interviewer
+        hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': hr.id})
+        hr_manager.implied_ids += hr_user
+
+        # a group without privilege is a regular group on its own
+        export = self.env['res.groups'].create({'name': 'Monk Export'})
+
+        # the lowest group of a privilege carries the marker directly
+        self.assertIn(regular, hr_interviewer.implied_ids)
+        # the highest group only carries it transitively (through the lowest one),
+        # it is not redundantly flagged as a direct regular group
+        self.assertNotIn(regular, hr_manager.implied_ids)
+        self.assertIn(regular, hr_manager.all_implied_ids)
+        # a group without privilege carries the marker directly
+        self.assertIn(regular, export.implied_ids)
+        # a light group is never turned into a (direct) regular group
+        self.assertNotIn(group_user, regular.implied_by_ids)
+
+        self._assert_regular_user_consistency()
+
+    def test_regular_user_applied_on_write(self):
+        """ Editing the group topology re-applies the regular-user marker, so a
+        group promoted/demoted in a privilege stays consistent. """
+        regular = self.env.ref('base.group_user_regular')
+        group_user = self.env.ref('base.group_user')  # light group
+
+        hr = self.env['res.groups.privilege'].create({'name': 'Monkey Hr'})
+        hr_interviewer = self.env['res.groups'].create({'name': 'HR Interviewer', 'privilege_id': hr.id})
+        hr_interviewer.implied_ids += group_user
+        hr_user = self.env['res.groups'].create({'name': 'HR Officer', 'privilege_id': hr.id})
+        hr_user.implied_ids += hr_interviewer
+        hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': hr.id})
+        hr_manager.implied_ids += hr_user
+
+        # baseline: the top group only implies the marker transitively
+        self.assertIn(regular, hr_interviewer.implied_ids)
+        self.assertNotIn(regular, hr_manager.implied_ids)
+
+        # detach the manager from the chain: it becomes a lowest-level regular
+        # group and the marker must be re-applied to it on write
+        hr_manager.write({'implied_ids': [Command.unlink(hr_user.id), Command.link(group_user.id)]})
+        self.assertIn(regular, hr_manager.implied_ids)
+        self._assert_regular_user_consistency()
+
+    def test_regular_user_applied_on_duplicate(self):
+        """ Duplicating a manager group must not silently produce a group that
+        grants regular rights while escaping the regular-user flag: the copy
+        still implies the marker (transitively), so its users are detected as
+        regular users. """
+        regular = self.env.ref('base.group_user_regular')
+        group_user = self.env.ref('base.group_user')  # light group
+
+        hr = self.env['res.groups.privilege'].create({'name': 'Monkey Hr'})
+        hr_interviewer = self.env['res.groups'].create({'name': 'HR Interviewer', 'privilege_id': hr.id})
+        hr_interviewer.implied_ids += group_user
+        hr_user = self.env['res.groups'].create({'name': 'HR Officer', 'privilege_id': hr.id})
+        hr_user.implied_ids += hr_interviewer
+        hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': hr.id})
+        hr_manager.implied_ids += hr_user
+
+        hr_manager_copy = hr_manager.copy()
+
+        # the marker is not directly applied to the duplicated manager...
+        self.assertNotIn(regular, hr_manager_copy.implied_ids)
+        # ... but the copy is still a regular group transitively
+        self.assertIn(regular, hr_manager_copy.all_implied_ids)
+        self.assertFalse(hr_manager_copy._is_light_groups())
+
+        # a user in the duplicated manager is correctly detected as a regular
+        # user (both by _compute_role and _search_role, i.e. consistent data)
+        user = self.env['res.users'].create({
+            'name': 'Monkey Manager',
+            'login': 'monkey_manager',
+            'group_ids': [Command.set((group_user + hr_manager_copy).ids)],
+        })
+        self.assertEqual(user.role, 'regular_user')
+        self.assertIn(regular, user.all_group_ids)
+        self.assertIn(user, self.env['res.users'].search([('role', '=', 'regular_user')]))
+
+        self._assert_regular_user_consistency()
+
+    def test_regular_user_applied_on_unlink_intermediate(self):
+        """ Deleting an intermediate group of an implication chain must not
+        leave a regular group without the regular-user marker.
+
+        Manager -> Leader -> User (marked regular). When the intermediate
+        Leader is unlinked, Manager loses its path to the marker, so it must be
+        re-applied (Manager becomes a lowest-level regular group and implies the
+        marker directly). """
+        regular = self.env.ref('base.group_user_regular')
+        group_user = self.env.ref('base.group_user')  # light group
+
+        priv = self.env['res.groups.privilege'].create({'name': 'Monkey Hr'})
+        hr_user = self.env['res.groups'].create({'name': 'HR User', 'privilege_id': priv.id})
+        hr_user.implied_ids += group_user
+        hr_leader = self.env['res.groups'].create({'name': 'HR Leader', 'privilege_id': priv.id})
+        hr_leader.implied_ids += hr_user
+        hr_manager = self.env['res.groups'].create({'name': 'HR Manager', 'privilege_id': priv.id})
+        hr_manager.implied_ids += hr_leader
+
+        # baseline: Manager reaches the marker through the chain
+        self.assertIn(regular, hr_manager.all_implied_ids)
+
+        hr_leader.unlink()
+
+        # the chain is broken, but Manager must still imply the marker
+        self.assertNotIn(hr_leader, hr_manager.implied_ids)
+        self.assertIn(regular, hr_manager.all_implied_ids)
+        self._assert_regular_user_consistency()
