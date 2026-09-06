@@ -2,8 +2,11 @@
 <templates xml:space="preserve">
     <t t-name="discuss.CallParticipantVideo">
         <div class="o-discuss-CallParticipantVideo w-100 h-100 rounded-3 d-flex align-items-center overflow-hidden">
-            <video class="w-100"
-                t-att-class="{ 'o-inset': this.props.inset }"
+            <video class="w-100 h-100"
+                t-att-class="{
+                    'o-inset': this.props.inset,
+                    'object-fit-cover': this.props.isCropped,
+                }"
                 t-att-type="this.props.type"
                 t-att-data-facing-mode="this.store.settings.cameraFacingMode"
                 playsinline="true"

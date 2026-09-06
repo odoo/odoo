@@ -122,6 +122,8 @@ export class RtcSession extends Record {
     videoError;
     /** @type {number} value between 0 and 1 that represents volume in % */
     talkingVolume = 0;
+    /** @type {number|undefined} when this session last stopped talking (epoch ms) */
+    stoppedTalkingAt;
     isTalking = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         onUpdate() {
@@ -131,7 +133,20 @@ export class RtcSession extends Record {
             this.channel?.updateCallFocusStack(this);
         },
     });
-    isActuallyTalking = this.computed(() => this.isTalking && !this.isMute);
+    isActuallyTalking = fields.Attr(false, {
+        /** @this {import("models").RtcSession} */
+        compute() {
+            return this.isTalking && !this.isMute;
+        },
+        /** @this {import("models").RtcSession} */
+        onUpdate() {
+            if (!this.isActuallyTalking) {
+                // Start of the grace period during which the participant stays on the main stage.
+                this.stoppedTalkingAt = Date.now();
+            }
+            this.channel?.updateActiveSpeakers();
+        },
+    });
     isVideoStreaming = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         compute() {

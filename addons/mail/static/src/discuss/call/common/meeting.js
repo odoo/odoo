@@ -12,7 +12,7 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { MeetingReadyBanner } from "./meeting_ready_banner";
-import { MeetingSideActions } from "./meeting_side_actions";
+import { meetingMoreActionGroups, MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
 
@@ -77,6 +77,22 @@ export class Meeting extends Component {
         return this.store.startOfMinute.toLocaleString(DateTime.DATETIME_MED, {
             locale: user.lang,
         });
+    }
+
+    /**
+     * @returns {Array<Array>} the side actions, when this bar has no room to render them as a
+     *  cluster of their own and the call bar's "More" takes them over instead.
+     */
+    get sideActionGroups() {
+        // PiP has its own, much shorter list ({@link pipExtraActions}).
+        if (this.hasSideActions || this.rtc.isPipMode) {
+            return [];
+        }
+        return meetingMoreActionGroups(this.threadActions);
+    }
+
+    get hasSideActions() {
+        return !this.rtc.isPipMode && !this.ui.isSmall;
     }
 
     get pipExtraActions() {
