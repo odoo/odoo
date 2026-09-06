@@ -559,7 +559,7 @@ export class FormOptionPlugin extends Plugin {
         }
         fieldsToMark.forEach((field) => {
             const span = document.createElement("span");
-            span.classList.add("s_website_form_mark");
+            span.classList.add("s_website_form_mark", "o_not_translate_inline");
             span.textContent = ` ${mark}`;
             field.querySelector(".s_website_form_label").appendChild(span);
             const descriptionMarkEl = field.querySelector("[data-description-mark]");
