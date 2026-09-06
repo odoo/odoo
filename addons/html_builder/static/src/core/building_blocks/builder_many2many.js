@@ -1,5 +1,5 @@
-import { Component, asyncComputed, onWillStart, t, useProps } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
+import { Component, asyncComputed, onWillStart, plugin, t, useProps } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
 import {
     basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
@@ -27,7 +27,7 @@ export class BuilderMany2Many extends Component {
 
     setup() {
         useBuilderComponent(this.props);
-        this.fields = useService("field");
+        this.fields = plugin(FieldPlugin);
         const { getAllActions, callOperation } = getAllActionsAndOperations(this.props);
         this.cachedModel = useCachedModel();
         this.callOperation = callOperation;

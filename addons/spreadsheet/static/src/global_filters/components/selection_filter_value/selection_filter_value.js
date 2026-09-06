@@ -4,6 +4,7 @@ import {
     Component,
     onWillStart,
     onWillUpdateProps,
+    plugin,
     signal,
     t,
     onMounted,
@@ -11,7 +12,7 @@ import {
 } from "@odoo/owl";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
-import { useService } from "@web/core/utils/hooks";
+import { FieldPlugin } from "@web/core/field_plugin";
 
 export class SelectionFilterValue extends Component {
     static template = "spreadsheet.SelectionFilterValue";
@@ -35,7 +36,7 @@ export class SelectionFilterValue extends Component {
         });
         this.tags = [];
         this.sources = [];
-        this.fields = useService("field");
+        this.fields = plugin(FieldPlugin);
         onWillStart(() => this._computeTagsAndSources(this.props));
         onWillUpdateProps((nextProps) => this._computeTagsAndSources(nextProps));
     }

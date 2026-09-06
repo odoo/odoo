@@ -1,9 +1,9 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, onWillStart, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { Component, onWillStart, plugin, proxy, signal, t, useEffect, useProps } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { sortBy } from "@web/core/utils/arrays";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 
@@ -129,7 +129,7 @@ export class ModelFieldSelectorPopover extends Component {
     rootRef = signal.ref();
 
     setup() {
-        this.fieldService = useService("field");
+        this.fieldService = plugin(FieldPlugin);
         this.state = proxy({ page: null });
         this.keepLast = new KeepLast();
         this.debouncedSearchFields = debounce(this.searchFields.bind(this), 250);

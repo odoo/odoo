@@ -1,7 +1,7 @@
-import { Component, onWillStart, onWillUpdateProps, proxy, t, useProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, plugin, proxy, t, useProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useService } from "@web/core/utils/hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
@@ -26,7 +26,7 @@ export class ModelFieldSelector extends Component {
     });
 
     setup() {
-        this.fieldService = useService("field");
+        this.fieldService = plugin(FieldPlugin);
         this.popover = usePopover(this.constructor.components.Popover, {
             popoverClass: "o_popover_field_selector",
             onClose: async () => {
