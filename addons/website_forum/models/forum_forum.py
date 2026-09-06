@@ -126,7 +126,6 @@ class ForumForum(models.Model):
     karma_comment_unlink_own = fields.Integer(string='Delete own comments', default=50)
     karma_comment_unlink_all = fields.Integer(string='Delete all comments', default=500)
     karma_flag = fields.Integer(string='Flag a post as offensive', default=500)
-    karma_dofollow = fields.Integer(string='Nofollow links', help='If the author has not enough karma, a nofollow attribute is added to links', default=500)
     karma_editor = fields.Integer(string='Editor Features: image and links',
                                   default=30)
     karma_user_bio = fields.Integer(string='Display detailed user biography', default=750)

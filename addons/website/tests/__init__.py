@@ -34,6 +34,7 @@ from . import test_sitemap
 from . import test_skip_website_configurator
 from . import test_snippets
 from . import test_theme
+from . import test_tools
 from . import test_ui
 from . import test_unsplash_beacon
 from . import test_views

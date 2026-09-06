@@ -4,6 +4,7 @@ import re
 
 import werkzeug.urls
 from lxml import etree, html
+from lxml.etree import ParserError as LxmlParserError
 
 from odoo.tools.misc import hmac
 from odoo.tools.urls import urljoin
@@ -207,3 +208,27 @@ def create_image_attachment(env, image_path, image_name):
         'url': Attachments.get_base_url() + image_path,
     })
     return img
+
+
+def add_seo_rels_to_links(html_template):
+    """
+    Add 'nofollow', 'noopener', 'noreferrer', and 'ugc' to anchor tags.
+    This is useful to prevent users from harming SEO.
+
+    :param html_template: the html code to edit
+    :return: the updated html template
+    """
+    try:
+        tree = html.fragment_fromstring(str(html_template), create_parent="template")
+        links = list(tree.iter('a'))
+        if not links:
+            return html_template
+        for link in links:
+            old_values = set(link.get("rel", "").split())
+            old_values.update({'nofollow', 'noopener', 'noreferrer', 'ugc'})
+            link.set("rel", " ".join(sorted(old_values)))
+        result = html.tostring(tree, encoding="unicode")
+        result = result[len("<template>"):-len("</template>")]
+        return type(html_template)(result)
+    except LxmlParserError:
+        return html_template
