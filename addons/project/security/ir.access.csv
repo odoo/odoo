@@ -1,5 +1,11 @@
 id,name,model_id,group_id/id,operation,domain
-project_project_manager_rule,Project: project manager: see all,project.project,project.group_project_manager,crud,
+project_project_manager_rule,Project: administrator: see all,project.project,base.group_system,crud,
+project_project_manager_create_rule,Project: project manager: create any project,project.project,project.group_project_manager,c,
+project_manager_rule,Project: project manager: see non-private projects and templates,project.project,project.group_project_manager,rud,"['|', '|',
+                                        ('privacy_visibility', 'in', ['employees', 'portal']),
+                                        ('message_partner_ids', 'in', [user.partner_id.id]),
+                                        ('is_template', '=', True)
+                                    ]"
 project_public_members_rule,Project: employees: following required for follower-only projects,project.project,base.group_user,r,"['|',
                                         ('privacy_visibility', 'in', ['employees', 'portal']),
                                         ('message_partner_ids', 'in', [user.partner_id.id])
@@ -18,7 +24,7 @@ task_type_manager_rule,Project/Task Type: manager sees all,project.task.type,pro
 task_type_own_write_rule,Project/Task Type: write own stages,project.task.type,project.group_project_user,cud,"[('user_id', '=', user.id)]"
 access_project_task_type_portal,task_type_portal,project.task.type,base.group_portal,r,
 task_type_visibility_rule,Project/Task Type: see own or unowned stages,project.task.type,,crud,"[('user_id', 'in', (False, user.id))]"
-project_manager_all_project_tasks_rule,Project/Task: project manager: see all tasks linked to a project or its own tasks and all tasks templates,project.task,project.group_project_manager,crud,"[
+project_manager_all_project_tasks_rule,Project/Task: administrator: see all tasks linked to a project or its own tasks and all tasks templates,project.task,base.group_system,crud,"[
             '|',
                 '|',
                     ('project_id', '!=', False),
@@ -60,7 +66,8 @@ project_task_rule_portal,Project/Task: portal users: can only see a task if he's
                 ]),
         ]"
 task_comp_rule,Project/Task: multi-company,project.task,,crud,"[('company_id', 'in', company_ids + [False])]"
-report_project_task_manager_rule,Tasks Analysis: project visibility Manager,report.project.task.user,project.group_project_manager,r,
+report_project_task_manager_rule,Tasks Analysis: administrator sees all,report.project.task.user,base.group_system,r,
+report_project_task_manager_visibility_rule,Tasks Analysis: project manager visibility,report.project.task.user,project.group_project_manager,r,"[('project_id', 'access', 'read')]"
 report_project_task_user_report_comp_rule,Task Analysis multi-company,report.project.task.user,,crud,"[('company_id', 'in', company_ids + [False])]"
 res_partner_rule_user,user read access,res.partner,project.group_project_user,r,
 access_resource_calendar,project.resource_calendar user,resource.calendar,project.group_project_user,r,
@@ -77,7 +84,7 @@ account_analytic_line_rule_manager,Analytic Line: full access for manager,accoun
 access_project_task_type_delete_wizard,project.task.type.delete.wizard,project.task.type.delete.wizard,project.group_project_manager,crud,
 access_project_project_stage_delete_wizard,project.project.stage.delete.wizard,project.project.stage.delete.wizard,project.group_project_manager,crud,
 access_project_task_recurrence,project.task.recurrence,project.task.recurrence,project.group_project_user,crud,
-burndown_chart_project_manager_rule,Burndown chart: project visibility User,project.task.burndown.chart.report,project.group_project_manager,crud,
+burndown_chart_project_manager_rule,Burndown chart: administrator sees all,project.task.burndown.chart.report,base.group_system,crud,
 burndown_chart_project_user_rule,Burndown chart: project visibility User,project.task.burndown.chart.report,project.group_project_user,r,"[
         '|',
             ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
@@ -103,7 +110,7 @@ update_visibility_rule_1,Project/Update: employees: follow required for follower
                     ('user_id', '=', user.id),
                     ('project_id.user_id', '=', user.id)
         ]"
-update_visibility_project_admin,Project updates : Project user can see all project updates,project.update,project.group_project_manager,crud,
+update_visibility_project_admin,Project updates : administrator can see all project updates,project.update,base.group_system,crud,
 update_comp_rule,Project/Updates: multi-company,project.update,,crud,"['|', ('project_id.company_id', 'in', company_ids), ('project_id.company_id', '=', False)]"
 milestone_visibility_rule,Project/Milestone: employees: follow required for follower-only projects,project.milestone,base.group_user,r,"[
         '|',
@@ -123,7 +130,8 @@ milestone_visibility_rule_1,Project/Milestone: employees: follow required for fo
                 ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
                 ('project_id.user_id', '=', user.id),
         ]"
-milestone_visibility_project_admin,Project/Milestone: Project manager can see all project milestones,project.milestone,project.group_project_manager,crud,
+milestone_visibility_project_admin,Project/Milestone: administrator can see all project milestones,project.milestone,base.group_system,crud,
+milestone_visibility_manager_template,Project/Milestone: project manager can see template milestones,project.milestone,project.group_project_manager,crud,"[('project_id.is_template', '=', True)]"
 milestone_comp_rule,Project/Milestone: multi-company,project.milestone,,crud,"['|', ('project_id.company_id', 'in', company_ids), ('project_id.company_id', '=', False)]"
 access_project_collaborator_manager,project.collaborator.manager,project.collaborator,project.group_project_manager,crud,
 access_project_collaborator_user,project.collaborator.user,project.collaborator,project.group_project_user,r,
