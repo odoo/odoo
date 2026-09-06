@@ -182,6 +182,12 @@ class TestLintOverrideSignatures(RegistryLintCase):
                 original_decorators = get_decorators(method)
                 is_private = method_name.startswith('_')
 
+                # https://docs.python.org/3/library/typing.html#typing.override
+                with self.subTest(module=parent_module, model=model_name, method=method_name):
+                    if getattr(method, '__override__', 'super' in method.__code__.co_names):
+                        msg = f"override with no parent method in {model_name} for {method_name}"
+                        raise TypeError(msg)
+
                 # Assert that all child classes correctly override the method
                 for child_class in reverse_mro:
                     if method_name not in child_class.__dict__:
