@@ -277,7 +277,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
         if move.narration:
             invoice['IncludedNote'] = {
                 'Subject': {'_text': 'AAB'},
-                'Content':  {'_text': html2plaintext(move.narration).strip()},
+                'Content': {'_text': html2plaintext(move.narration).strip()[:1024]},
             }
 
     @api.model
@@ -330,6 +330,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     def _invoice_add_partner_vals(self, invoice, partner, tag):
         # Country codes for DROM-COM territories are mapped to 'FR' for PPF transmission
         mapped_country_code = drom_com_territories.map_country_code_for_ppf(partner.country_id.code)
+        mapped_country_code = mapped_country_code.upper() if mapped_country_code else mapped_country_code
         # Check for specific identifier schemes (RIDET, TAHITI, etc.)
         specific_scheme = drom_com_territories.get_specific_identifier_scheme(partner.country_id.code)
 
@@ -378,13 +379,14 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     @api.model
     def _invoice_add_delivery_vals(self, invoice, move):
         if move.partner_shipping_id:
+            country_code = drom_com_territories.map_country_code_for_ppf(move.partner_shipping_id.country_id.code)
             location = {
                 'LineOne': {'_text': move.partner_shipping_id.street},
                 **({'LineTwo': {'_text': move.partner_shipping_id.street2}} if move.partner_shipping_id.street2 else {}),
                 'CityName': {'_text': move.partner_shipping_id.city},
                 'PostalZone': {'_text': move.partner_shipping_id.zip},
                 **({'CountrySubentity': {'_text': move.partner_shipping_id.state_id}} if move.partner_shipping_id.state_id else {}),
-                'CountryId': {'_text': drom_com_territories.map_country_code_for_ppf(move.partner_shipping_id.country_id.code)},
+                'CountryId': {'_text': country_code.upper() if country_code else country_code},
             }
             invoice['Delivery'] = {
                 'Date': {'_text': self._format_date(move.date)},
@@ -559,7 +561,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'AllowanceChargeBaseAmount': {'_text': allowance_charge_base},
             }
             res['Product'] = {
-                'Name': {'_text': line.display_name},
+                'Name': {'_text': line.display_name[:255]},
             }
 
             invoice['Line'].append(res)
