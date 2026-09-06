@@ -44,6 +44,38 @@ mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'no_reset_password': True})
 
 
+def transient_message_bus_result(listener, channel, body):
+    """Expected notification of the transient message posted in ``channel`` for
+    ``listener``. The message id is read from the sequence, as it has no record."""
+    env = channel.env
+    env.cr.execute("SELECT currval('mail_message_id_seq')")
+    message_id = env.cr.fetchone()[0]
+    return BusResult(
+        listener,
+        "mail.record/insert",
+        {
+            "mail.message": [
+                {
+                    "author_id": env.ref("base.partner_root").id,
+                    "body": ["markup", body],
+                    "id": message_id,
+                    "is_transient": True,
+                    "subtype_id": env.ref("mail.mt_note").id,
+                    "thread": {"id": channel.id, "model": channel._name},
+                },
+            ],
+            "mail.thread": [
+                {
+                    "id": channel.id,
+                    "messages": [["ADD", [message_id]]],
+                    "model": channel._name,
+                    "transientMessages": [["ADD", [message_id]]],
+                },
+            ],
+        },
+    )
+
+
 class MockEmail(common.BaseCase, MockSmtplibCase):
     """ Tools, helpers and asserts for mailgateway-related tests
 

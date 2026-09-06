@@ -351,7 +351,7 @@ export class Message extends Record {
     }
 
     get persistent() {
-        return Number.isInteger(this.id);
+        return !this.is_transient && !this.isPending;
     }
 
     get resUrl() {

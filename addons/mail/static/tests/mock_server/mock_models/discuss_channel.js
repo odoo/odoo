@@ -704,18 +704,53 @@ export class DiscussChannel extends models.ServerModel {
         };
     }
 
+    /**
+     * @param {number} id
+     * @param {string} content
+     */
+    _bus_send_transient_message(id, content) {
+        /** @type {import("mock_models").BusBus} */
+        const BusBus = this.env["bus.bus"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
+
+        const messageId = MailMessage._getNextId();
+        const store = new Store();
+        store.add_model_values("mail.message", (res) => {
+            res.one("author_id", [], { value: ResPartner.browse(serverState.odoobotId) });
+            res.attr("body", ["markup", content]); // mock: html fields must be markup-wrapped
+            res.attr("id", messageId);
+            res.attr("is_transient", true);
+            res.attr(
+                "subtype_id",
+                MailMessageSubtype._filter([["subtype_xmlid", "=", "mail.mt_note"]])[0].id
+            );
+            res.one("thread", [], { as_thread: true, value: this.browse(id) });
+        });
+        store.add(
+            this.browse(id),
+            (res) => {
+                res.many("messages", [], { value: [messageId], mode: "ADD" });
+                res.many("transientMessages", [], { value: [messageId], mode: "ADD" });
+            },
+            { as_thread: true }
+        );
+        const [partner] = ResPartner.read(this.env.user.partner_id);
+        BusBus._sendone(partner, "mail.record/insert", store.as_dict());
+    }
+
     /** @param {number} id */
     execute_command_help(ids) {
         const kwargs = getKwArgs(arguments, "ids");
         ids = kwargs.ids;
         delete kwargs.ids;
 
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
 
         const id = ids[0];
         const [channel] = this.search_read([["id", "=", id]]);
@@ -737,11 +772,7 @@ export class DiscussChannel extends models.ServerModel {
             <b>::shortcut</b> to insert a canned response<br>
             <b>:emoji:</b> to insert an emoji</span>
         `;
-        const [partner] = ResPartner.read(this.env.user.partner_id);
-        BusBus._sendone(partner, "discuss.channel/transient_message", {
-            body: notifBody,
-            channel_id: channel.id,
-        });
+        this._bus_send_transient_message(channel.id, notifBody);
         return true;
     }
 
@@ -751,8 +782,6 @@ export class DiscussChannel extends models.ServerModel {
         ids = kwargs.ids;
         delete kwargs.ids;
 
-        /** @type {import("mock_models").BusBus} */
-        const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannelMember} */
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResPartner} */
@@ -773,11 +802,10 @@ export class DiscussChannel extends models.ServerModel {
                     .map((partner) => partner.name)
                     .join(", ")} and you`;
             }
-            const [partner] = ResPartner.read(this.env.user.partner_id);
-            BusBus._sendone(partner, "discuss.channel/transient_message", {
-                body: `<span class="o_mail_notification">${message}</span>`,
-                channel_id: channel.id,
-            });
+            this._bus_send_transient_message(
+                channel.id,
+                `<span class="o_mail_notification">${message}</span>`
+            );
         }
     }
 
