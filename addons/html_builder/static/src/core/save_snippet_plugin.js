@@ -1,9 +1,9 @@
-import { escapeTextNodes } from "@html_builder/utils/escaping";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { BLOCKQUOTE_PARENT_HANDLERS } from "@html_builder/core/utils";
+import { prepareElementForSave } from "./save_plugin";
 
 /**
  * @typedef {CSSSelector[]} submit_button_selectors
@@ -55,27 +55,6 @@ export class SaveSnippetPlugin extends Plugin {
         ];
     }
 
-    /**
-     * Execute the `on_will_save_handlers` on {@link snippetEl},
-     * then execute {@link callback}, and finally execute the
-     * `on_saved_handlers` on {@link snippetEl}.
-     * This is used, for example, to stop the interactions before cloning a
-     * snippet, and restarting them after cloning it.
-     *
-     * @param {HTMLElement} snippetEl
-     * @param {Function} callback
-     */
-    async wrapWithBeforeAfterSaveHandlers(snippetEl, callback) {
-        await Promise.all(this.trigger("on_will_save_handlers", snippetEl));
-        let node;
-        try {
-            node = callback();
-        } finally {
-            this.trigger("on_saved_handlers", snippetEl);
-        }
-        return node;
-    }
-
     async saveSnippet(el) {
         // When saving a parent handler, save the child snippet instead
         if (el.matches(BLOCKQUOTE_PARENT_HANDLERS)) {
@@ -84,18 +63,14 @@ export class SaveSnippetPlugin extends Plugin {
                 el = childBlockquote;
             }
         }
-        const cleanForSaveProcessors = [
-            ...this.getResource("clean_for_save_processors"),
-            (root) => {
-                escapeTextNodes(root);
-                return root;
-            },
-        ];
-        const savedName = await this.config.saveSnippet(
-            el,
-            cleanForSaveProcessors,
-            this.wrapWithBeforeAfterSaveHandlers.bind(this)
-        );
+        const savedName = await this.config.saveSnippet(el, async (el) => {
+            await Promise.all(this.trigger("on_will_save_handlers", el));
+            try {
+                return prepareElementForSave(this, el, { saveSnippet: true });
+            } finally {
+                this.trigger("on_saved_handlers", el);
+            }
+        });
         this.dependencies.disableSnippets.disableUndroppableSnippets();
         if (savedName) {
             if (this.delegateTo("custom_snippets_notification_overrides", savedName)) {

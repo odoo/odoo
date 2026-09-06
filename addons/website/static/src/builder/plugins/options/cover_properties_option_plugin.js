@@ -16,7 +16,7 @@ export class CoverPropertiesOptionPlugin extends Plugin {
         savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]",
         content_not_editable_selectors: ".o_savable.o_record_cover_container[data-res-model]",
         on_will_save_handlers: this.savePendingBackgroundImage.bind(this),
-        on_will_save_element_handlers: this.saveCoverProperties.bind(this),
+        on_ready_to_save_document_handlers: this.saveAllCoverProperties.bind(this),
     };
 
     async savePendingBackgroundImage(editableEl = this.editable) {
@@ -61,12 +61,11 @@ export class CoverPropertiesOptionPlugin extends Plugin {
         }
     }
 
+    saveAllCoverProperties() {
+        const els = this.editable.querySelectorAll("[data-cover-properties-to-be-saved]");
+        return Promise.all([...els].map((el) => this.saveCoverProperties(el)));
+    }
     saveCoverProperties(el) {
-        if (!el.dataset.coverPropertiesToBeSaved) {
-            return;
-        }
-        delete el.dataset.coverPropertiesToBeSaved;
-
         const resModel = el.dataset.resModel;
         const resID = Number(el.dataset.resId);
 

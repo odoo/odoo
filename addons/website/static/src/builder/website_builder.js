@@ -51,6 +51,9 @@ export class WebsiteBuilder extends Component {
             this.translatedElements = this.props.translation
                 ? await rpc("/website/get_translated_elements")
                 : [];
+            this.translatedAttributes = this.props.translation
+                ? await rpc("/website/get_translated_attributes")
+                : [];
         });
         onMounted(() => {
             if (this.props.translation && !browser.localStorage.getItem(localStorageNoDialogKey)) {
@@ -249,6 +252,7 @@ export class WebsiteBuilder extends Component {
             };
         };
         builderProps.config.translatedElements = this.translatedElements;
+        builderProps.config.translatedAttributes = this.translatedAttributes;
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         builderProps.animateThemeTabSwitch = true;
         const installSnippetModule = builderProps.installSnippetModule;
