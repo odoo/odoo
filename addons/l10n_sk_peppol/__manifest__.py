@@ -15,6 +15,7 @@ It also allows to register a company in the Peppol Directory via the Slovak KYC 
     ],
     'auto_install': True,
     'data': [
+        'data/cron.xml',
         'wizard/peppol_registration.xml',
     ],
     'author': 'Odoo S.A.',
