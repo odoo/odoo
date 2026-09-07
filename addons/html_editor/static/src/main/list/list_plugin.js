@@ -402,6 +402,7 @@ export class ListPlugin extends Plugin {
                 list.setAttribute("dir", element.getAttribute("dir"));
             }
         }
+        this.adjustListPadding(list);
         cursors.restore();
         return list;
     }
