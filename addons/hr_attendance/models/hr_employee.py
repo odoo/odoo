@@ -422,7 +422,13 @@ class HrEmployee(models.Model):
 
         for cal, employees in employees_by_calendar.items():
             if not cal:  # employees are flex or fully flex
+<<<<<<< 26fa003b48040ee29e340cce7c98f3dcfbdd1e56
                 employees = employees.filtered(lambda e: not e._is_fully_flexible())
+||||||| ed2ee0ebaa3b2fcacccfc5910e4a99ef9561438a
+                employees = employees.filtered(lambda e: not e.is_fully_flexible)
+=======
+                employees = employees.filtered(lambda e: not e.sudo().is_fully_flexible)
+>>>>>>> f034f7f6342b0841694f800660e912dee9e1cd1b
                 if not employees:
                     continue
             resources_per_tz = employees._get_resources_per_tz()
