@@ -64,3 +64,21 @@ class TestLinkTracker(TransactionCase):
         })
         self.assertTrue(link_3.short_url.startswith(base_url),
             "Short URL uses web.base.url when no website is resolvable from context")
+
+    @users('test_user')
+    def test_compute_short_url_host_second_website_of_company(self):
+        """Each website of a company gets its own domain, not the company's first one."""
+        website_3 = self.env['website'].sudo().create({
+            'name': 'website 3',
+            'domain': 'https://maincompany-second-site.odoo.com',
+            'company_id': self.company_1.id,
+        })
+        self.company_1.sudo().website_id = self.website_1
+        self.assertNotEqual(self.company_1.website_id, website_3,
+            "The company points at another of its websites")
+
+        link = self.env['link.tracker'].with_context(website_id=website_3.id).create({
+            'url': 'https://www.4odoo.com',
+        })
+        self.assertTrue(link.short_url.startswith(website_3.domain),
+            "Short URL uses the current website's domain, not another website of the same company")
