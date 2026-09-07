@@ -178,10 +178,19 @@ export class Dropdown extends Component {
             })
         );
 
-        // useLayoutEffect(
-        //     (target) => this.setTargetElement(target),
-        //     () => [this.target]
-        // );
+        let currentTarget;
+        let cleanupTarget;
+        const updateTargetElement = () => {
+            const target = this.target;
+            if (target === currentTarget) {
+                return;
+            }
+            cleanupTarget?.();
+            currentTarget = target;
+            cleanupTarget = this.setTargetElement(target);
+        };
+        onMounted(updateTargetElement);
+        onWillDestroy(() => cleanupTarget?.());
         useEffect(() => {
             if (this.props.disabled) {
                 this.closePopover();
