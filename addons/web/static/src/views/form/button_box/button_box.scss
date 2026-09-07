@@ -103,8 +103,25 @@
             opacity: 1;
             color:inherit;
         }
-        &.btn-outline-secondary:active {
-            z-index: 1;
+
+        // The following code ensures that the correct button state
+        // is brought to the front, depending on the situation.
+        // For example, when a user starts clicking on one button
+        // and then drags to another.
+        &.btn-outline-secondary, .o_button_more {
+            z-index: var(--o-stat-button-z-index, auto);
+
+            &:hover {
+                --o-stat-button-z-index: 1;
+            }
+
+            &:active, &.show {
+                --o-stat-button-z-index: 2;
+            }
+
+            &:focus-visible {
+                --o-stat-button-z-index: 3;
+            }
         }
     }
 
@@ -204,6 +221,11 @@
 .o_dropdown_more {
 
     .oe_stat_button {
+        // Use the value of $focus-ring-box-shadow defined in bootstrap_overridden.scss,
+        // but apply it with inset so the ring is visible inside the button.
+        // If the default value changes, this should be updated accordingly.
+        --#{$prefix}btn-focus-box-shadow: inset 0 0 #{$focus-ring-blur} #{$focus-ring-width * .5} #{$o-component-active-border}, inset 0 0 #{$focus-ring-blur} #{$focus-ring-width} #{$focus-ring-color};
+
         height: auto;
         width: 100%;
         border: none;
