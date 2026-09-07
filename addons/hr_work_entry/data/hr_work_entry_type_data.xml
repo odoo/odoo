@@ -912,6 +912,16 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_breast_feeding_unassimilated" model="hr.work.entry.type">
+        <field name="name">Breastfeeding Break (Unassimilated)</field>
+        <field name="code">LEAVE2901</field>
+        <field name="color">5</field>
+        <field name="display_code">BFB</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_medical_assistance" model="hr.work.entry.type">
         <field name="name">Medical Assistance</field>
         <field name="code">MEDIC01</field>
@@ -1098,6 +1108,16 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_work_accident_unassimilated" model="hr.work.entry.type">
+        <field name="name">Work Accident (Unassimilated)</field>
+        <field name="code">LEAVE118</field>
+        <field name="color">5</field>
+        <field name="display_code">WAU</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
+    </record>
+
     <record id="l10n_be_work_entry_occupational_disease_unpaid" model="hr.work.entry.type">
         <field name="name">Occupational Disease (Unpaid)</field>
         <field name="code">LEAVE116</field>
@@ -1111,6 +1131,17 @@
     <record id="l10n_be_work_entry_type_partial_incapacity" model="hr.work.entry.type">
         <field name="name">Partial Incapacity (due to illness)</field>
         <field name="code">LEAVE281</field>
+        <field name="color">4</field>
+        <field name="display_code">PIN</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+        <field name="resource_calendar_selectable" eval="True"/>
+        <field name="amount_rate">0.0</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_partial_incapacity_unassimilated" model="hr.work.entry.type">
+        <field name="name">Partial Incapacity (due to illness) (Unassimilated)</field>
+        <field name="code">LEAVE282</field>
         <field name="color">4</field>
         <field name="display_code">PIN</field>
         <field name="country_id" ref="base.be"/>
@@ -1468,6 +1499,7 @@
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
         <field name="resource_calendar_selectable" eval="True"/>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="l10n_be_work_entry_type_temporary_unemployment_collective_closure" model="hr.work.entry.type">
@@ -1559,6 +1591,7 @@
         <field name="display_code">MLC</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="l10n_be_work_entry_type_postponed_paid_time_off_n1" model="hr.work.entry.type">
@@ -1606,6 +1639,7 @@
         <field name="display_code">FOS</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="l10n_be_work_entry_type_available_not_working" model="hr.work.entry.type">
@@ -1708,6 +1742,7 @@
         <field name="display_code">MIL</field>
         <field name="country_id" ref="base.be"/>
         <field name="count_as">absence</field>
+        <field name="amount_rate">0.0</field>
     </record>
 
     <record id="l10n_be_work_entry_type_normal_inactivity" model="hr.work.entry.type">
