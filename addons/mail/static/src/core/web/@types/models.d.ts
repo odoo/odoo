@@ -6,7 +6,7 @@ declare module "models" {
         edit: () => Promise<void>;
         isNoteEmpty: boolean;
         markAsDone: (attachmentIds: number[]) => Promise<void>;
-        markAsDoneAndScheduleNext: () => Promise<import("@web/webclient/actions/action_service").ActionDescription>;
+        markAsDoneAndScheduleNext: () => Promise<import("@web/webclient/actions/action_plugin").ActionDescription>;
         remove: (param0: { broadcast: boolean }) => void;
     }
     export interface Message {

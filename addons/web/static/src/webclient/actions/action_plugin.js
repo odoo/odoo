@@ -1,4 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
+import { useSubEnv, useEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { location, browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
@@ -6,6 +6,7 @@ import { useDebugCategory } from "@web/core/debug/debug_context";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
 import { user } from "@web/core/user";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -17,6 +18,13 @@ import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";
 import { OfflinePlugin } from "@web/core/offline/offline_plugin";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
+import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
+import { EffectPlugin } from "@web/core/effects/effect_plugin";
+import { NotificationPlugin } from "@web/core/notifications/notification_plugin";
+import { TitlePlugin } from "@web/core/browser/title_plugin";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 import {
     Component,
@@ -24,7 +32,9 @@ import {
     onError,
     onMounted,
     onWillUnmount,
+    Plugin,
     usePlugin,
+    useListener,
     proxy,
     status,
     t,
@@ -38,7 +48,6 @@ import { isHtmlEmpty } from "@web/core/utils/html";
 import { omit, pick, shallowEqual } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import { exprToBoolean } from "@web/core/utils/strings";
-import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 class BlankComponent extends Component {
     props = useProps({
@@ -82,9 +91,9 @@ const actionRegistry = registry.category("actions");
  * @property {boolean} [forceLeave]
  */
 
-export async function clearUncommittedChanges(env, { forceLeave } = {}) {
+export async function clearUncommittedChanges(bus, { forceLeave } = {}) {
     const callbacks = [];
-    env.bus.trigger("CLEAR-UNCOMMITTED-CHANGES", callbacks);
+    bus.trigger("CLEAR-UNCOMMITTED-CHANGES", callbacks);
     const res = await Promise.all(callbacks.map((fn) => fn({ forceLeave })));
     return !res.includes(false);
 }
@@ -125,7 +134,7 @@ export class ControllerNotFoundError extends Error {}
 export class InvalidButtonParamsError extends Error {}
 
 // -----------------------------------------------------------------------------
-// ActionManager (Service)
+// ActionManager
 // -----------------------------------------------------------------------------
 
 // regex that matches context keys not to forward from an action to another
@@ -142,11 +151,17 @@ const EMBEDDED_ACTIONS_CTX_KEYS = [
 // only register this template once for all dynamic classes ControllerComponent
 const ControllerComponentTemplate = xml`<t t-component="this.Component" t-props="this.componentProps"/>`;
 
-export function makeActionManager(env, router = _router) {
+export function useActionManager(router = _router) {
     const scope = useScope();
     const debugMode = usePlugin(DebugModePlugin);
     const offlinePlugin = usePlugin(OfflinePlugin);
-    const { dialog: dialogService, effect: effectService, notification, title, ui } = env.services;
+    const bus = usePlugin(GlobalBusPlugin).bus;
+    const dialogService = usePlugin(DialogPlugin);
+    const effectService = usePlugin(EffectPlugin);
+    const notification = usePlugin(NotificationPlugin);
+    const title = usePlugin(TitlePlugin);
+    const ui = usePlugin(UIPlugin);
+    const env = useEnv();
 
     const breadcrumbCache = {};
     const keepLast = new KeepLast();
@@ -157,7 +172,7 @@ export function makeActionManager(env, router = _router) {
 
     router.hideKeyFromUrl("globalState");
 
-    rpcBus.addEventListener("RPC:RESPONSE", async (ev) => {
+    useListener(rpcBus, "RPC:RESPONSE", async (ev) => {
         const { model, method } = ev.detail.data.params;
         if (
             model === "ir.actions.act_window" &&
@@ -949,7 +964,7 @@ export function makeActionManager(env, router = _router) {
             if (previousController) {
                 restore(previousController.jsId);
             } else {
-                env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
+                bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
             }
         };
         controller.config.isReloadingController = controller === controllerStack.at(-1);
@@ -975,7 +990,7 @@ export function makeActionManager(env, router = _router) {
                     this.__beforeLeave__ = new CallbackRecorder();
                     this.__getGlobalState__ = new CallbackRecorder();
                     this.__getLocalState__ = new CallbackRecorder();
-                    useBus(env.bus, "CLEAR-UNCOMMITTED-CHANGES", (ev) => {
+                    useBus(bus, "CLEAR-UNCOMMITTED-CHANGES", (ev) => {
                         const callbacks = ev.detail;
                         const beforeLeaveFns = this.__beforeLeave__.callbacks;
                         callbacks.push(...beforeLeaveFns);
@@ -1002,7 +1017,7 @@ export function makeActionManager(env, router = _router) {
                 }
                 if (!controller.isMounted && status(this) === "mounted") {
                     // The error occurred during an onMounted hook of one of the components.
-                    env.bus.trigger("ACTION_MANAGER:UPDATE", {
+                    bus.trigger("ACTION_MANAGER:UPDATE", {
                         id: ++id,
                         Component: BlankComponent,
                         componentProps: {
@@ -1041,7 +1056,7 @@ export function makeActionManager(env, router = _router) {
                         return _restore(lastController.jsId, { keepDialogs: true });
                     }
                 } else {
-                    env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+                    bus.trigger("ACTION_MANAGER:UPDATE", {});
                 }
             }
             onMounted() {
@@ -1072,7 +1087,7 @@ export function makeActionManager(env, router = _router) {
                     browser.sessionStorage.setItem("current_lang", user.lang);
                 }
                 resolve();
-                env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
+                bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
                 controller.isMounted = true;
             }
             onWillUnmount() {
@@ -1166,7 +1181,7 @@ export function makeActionManager(env, router = _router) {
 
         if (options.clearBreadcrumbs && !options.noEmptyTransition) {
             const { promise, resolve } = Promise.withResolvers();
-            env.bus.trigger("ACTION_MANAGER:UPDATE", {
+            bus.trigger("ACTION_MANAGER:UPDATE", {
                 id: ++id,
                 Component: BlankComponent,
                 componentProps: {
@@ -1188,7 +1203,7 @@ export function makeActionManager(env, router = _router) {
         if (!options.keepDialogs) {
             dialogService.closeAll({ noReload: true });
         }
-        env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
+        bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         await currentActionProm;
     }
 
@@ -1286,7 +1301,7 @@ export function makeActionManager(env, router = _router) {
         }
 
         let view = (options.viewType && views.find((v) => v.type === options.viewType)) || views[0];
-        if (ui.isSmall) {
+        if (ui.isSmall()) {
             view = _findView(views, view.multiRecord, action.mobile_view_mode) || view;
         }
         if (
@@ -1357,7 +1372,7 @@ export function makeActionManager(env, router = _router) {
         action.path ||= clientAction.path;
         if (clientAction.prototype instanceof Component) {
             if (action.target !== "new" && !options.newWindow) {
-                const canProceed = await clearUncommittedChanges(env, pick(options, "forceLeave"));
+                const canProceed = await clearUncommittedChanges(bus, pick(options, "forceLeave"));
                 if (!canProceed) {
                     return;
                 }
@@ -1534,7 +1549,7 @@ export function makeActionManager(env, router = _router) {
             case "ir.actions.act_window":
                 if (action.target !== "new" && !options.newWindow) {
                     const canProceed = await clearUncommittedChanges(
-                        env,
+                        bus,
                         pick(options, "forceLeave")
                     );
                     if (!canProceed) {
@@ -1754,7 +1769,7 @@ export function makeActionManager(env, router = _router) {
             });
 
         if (!newWindow) {
-            const canProceed = await clearUncommittedChanges(env);
+            const canProceed = await clearUncommittedChanges(bus);
             if (!canProceed) {
                 return;
             }
@@ -1809,7 +1824,7 @@ export function makeActionManager(env, router = _router) {
             const msg = jsId ? "Invalid controller to restore" : "No controller to restore";
             throw new ControllerNotFoundError(msg);
         }
-        const canProceed = await clearUncommittedChanges(env);
+        const canProceed = await clearUncommittedChanges(bus);
         if (!canProceed) {
             return;
         }
@@ -1878,7 +1893,7 @@ export function makeActionManager(env, router = _router) {
                         };
                         return loadState(newState);
                     } else {
-                        env.bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
+                        bus.trigger("WEBCLIENT:LOAD_DEFAULT_APP");
                     }
                 } else {
                     throw error;
@@ -1963,10 +1978,23 @@ export function makeActionManager(env, router = _router) {
     };
 }
 
+export class ActionManagerPlugin extends Plugin {
+    setup() {
+        this.manager = useActionManager();
+    }
+}
+services.add(ActionManagerPlugin);
+
+/**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the action service are removed
+ * -----------------------------------------------------------------------------
+ */
 export const actionService = {
     dependencies: ["dialog", "effect", "localization", "notification", "title", "ui"],
-    start(env) {
-        return makeActionManager(env);
+    start() {
+        return usePlugin(ActionManagerPlugin).manager;
     },
 };
 
