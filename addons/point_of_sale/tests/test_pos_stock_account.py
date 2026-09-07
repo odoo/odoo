@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -225,7 +224,7 @@ class TestPoSStock(TestPoSCommon):
         orders.append(self.create_ui_order_data([(self.product4, 1)]))
 
         # sync orders
-        order = self.env['pos.order'].sync_from_ui(orders)
+        self.env['pos.order'].sync_from_ui(orders)
 
         # check values before closing the session
         self.assertEqual(1, self.pos_session.order_count)
