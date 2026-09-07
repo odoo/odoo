@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mrp.MoOverviewComponentsBlock" t-inherit-mode="extension">
+        <xpath expr="." position="inside">
+            <tr t-if="this.props.summary.extra_cost &gt; 0">
+                <td><div class="text-truncate" t-attf-style="margin-left: {{ this.props.summary.level * 20 }}px">Extra Cost</div></td>
+                <td t-if="this.props.showOptions.replenishments"/>
+                <td t-attf-class="text-end" t-out="this.formatFloat(this.props.summary.quantity)"/>
+                <td t-if="this.props.showOptions.uom" class="text-start" t-out="this.props.summary.uom_name"/>
+                <td t-if="this.props.showOptions.availabilities" colspan="2"/>
+                <td t-if="this.props.showOptions.receipts"/>
+                <td class="text-end" t-if="this.props.showOptions.unitCosts" t-out="this.formatMonetary(this.props.summary.extra_cost)"/>
+                <td class="text-end" t-if="this.props.showOptions.moCosts" t-out="this.formatMonetary(this.props.summary.extra_cost * this.props.summary.quantity)"/>
+                <td class="text-end" t-if="this.props.showOptions.bomCosts" t-out="this.formatMonetary(this.props.summary.extra_cost * this.props.summary.quantity)"/>
+                <td class="text-end" t-if="this.props.showOptions.realCosts" t-out="this.formatMonetary(this.props.summary.extra_cost * this.props.summary.quantity)"/>
+            </tr>
+        </xpath>
+    </t>
+</templates>

@@ -34,6 +34,7 @@
                 <tbody>
                     <t t-call="mrp.mo_overview_line" line="data['summary']"/>
                     <t t-call="mrp.mo_overview_components"
+                        summary="data['summary']"
                         components="data['components']"
                         operations="data['operations']"
                         byproducts="data['byproducts']"/>
@@ -186,6 +187,7 @@
                 <t t-call="mrp.mo_overview_line" line="replenishment['summary']"/>
                 <t t-if="replenishment['summary']['index'] in data['unfolded_ids'] and (replenishment.get('components', []) or replenishment.get('operations', {}).get('details', []))">
                     <t t-call="mrp.mo_overview_components"
+                        summary="replenishment.get('summary', {})"
                         components="replenishment.get('components', [])"
                         operations="replenishment.get('operations', {})"
                         byproducts="replenishment.get('byproducts', {})"/>
