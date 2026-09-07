@@ -1,6 +1,11 @@
+from lxml import etree
+
 from odoo import Command
 from odoo.exceptions import ValidationError
+from odoo.libs.text import str2bool
 from odoo.tests import tagged
+from odoo.tools.misc import file_path
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.sale_project.tests.common import TestSaleProjectCommon
 
@@ -109,3 +114,67 @@ class TestServiceProductConfig(TestSaleProjectCommon):
 
         res_no_ctx = line._prepare_order_line_values()
         self.assertNotIn("task_id", res_no_ctx)
+
+    def test_demo_project_template_satisfies_its_own_fields_domain(self):
+        """Whatever the demo declares for ``so_template_project`` must be
+        pickable in the dropdown that references it.
+
+        ``product_template.project_template_id`` only offers real templates
+        (`models/product_template.py`), so an archived plain project is
+        referenced by three demo products while being unpickable in the very
+        dropdown that references it -- and it takes the plain ``copy()`` branch
+        of ``_timesheet_create_project`` instead of
+        ``action_create_from_template``.
+
+        A fresh ``--with-demo`` database cannot be built on this branch (base's
+        own ``res_users_data.xml`` fails to load), so the record's declared
+        values are read straight from the demo file and replayed here, with
+        ``str2bool`` interpreting the booleans the way ``tools/convert.py:475``
+        does. Only the fields the domain actually reads are replayed; the stage
+        links are irrelevant to it.
+        """
+        root = etree.parse(
+            file_path("sale_project/data/sale_project_demo.xml")
+        ).getroot()
+        node = root.find('.//record[@id="so_template_project"]')
+        self.assertIsNotNone(node, "The demo template record must still exist.")
+
+        declared = {"name": "Replay of so_template_project"}
+        for field in node.findall("field"):
+            name = field.get("name")
+            if name not in ("active", "is_template", "allow_billable"):
+                continue
+            raw = field.get("eval") or (field.text or "")
+            declared[name] = str2bool(raw.strip(), default=True)
+
+        replica = (
+            self.env["project.project"].with_context(active_test=False).create(declared)
+        )
+
+        # The domain the web client actually receives for the field, evaluated
+        # with the values one of the referencing demo products declares -- also
+        # read from the file, since that product is demo data too.
+        product = root.find('.//record[@id="product_service_create_project_and_task"]')
+        self.assertEqual(
+            product.find('field[@name="project_template_id"]').get("ref"),
+            "so_template_project",
+            "The demo product should still point at the demo template.",
+        )
+        description = self.env["product.template"].fields_get(["project_template_id"])[
+            "project_template_id"
+        ]
+        domain = safe_eval(
+            description["domain"],
+            {
+                # the product declares no company, so the field falls back to
+                # the company-less branch of the domain
+                "company_id": False,
+                "current_company_id": self.env.company.id,
+                "service_policy": product.find('field[@name="service_policy"]').text,
+            },
+        )
+        self.assertIn(
+            replica,
+            self.env["project.project"].search(domain),
+            "The demo template must be pickable in the dropdown that uses it.",
+        )
