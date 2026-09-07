@@ -37,7 +37,6 @@ HR_WRITABLE_FIELDS = [
     'address_id',
     'barcode',
     'birthday',
-    'category_ids',
     'children',
     'coach_id',
     'country_of_birth',
