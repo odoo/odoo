@@ -188,8 +188,11 @@
                         <page string="Pembayaran" groups="sifnext_ppl.group_ppl_finance">
                             <group>
                                 <group string="Sumber Dana">
+                                    <field name="payment_source_domain_name" invisible="1"/>
                                     <field name="payment_method" readonly="state != 'approved'"/>
-                                    <field name="payment_source_account_id" readonly="state != 'approved'" options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="payment_source_account_id" readonly="state != 'approved'" 
+                                           options="{'no_create': True, 'no_create_edit': True}"
+                                           domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'asset'), ('name', 'ilike', payment_source_domain_name)]"/>
                                     <field name="payment_date" readonly="state != 'approved'"/>
                                     <field name="payment_reference" readonly="state != 'approved'"/>
                                 </group>

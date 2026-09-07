@@ -58,12 +58,12 @@ class SifnextPPL(models.Model):
     payment_method = fields.Selection(
         [("cash", "Kas"), ("bank", "Bank")], string="Metode Pembayaran", tracking=True,
     )
+    payment_source_domain_name = fields.Char(compute="_compute_payment_source_domain")
     payment_source_account_id = fields.Many2one(
         "sif.coa",
         string="Sumber Dana (Kas/Bank)",
         tracking=True,
-        domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'asset'),"
-        " '|', ('name', 'ilike', 'kas'), ('name', 'ilike', 'bank')]",
+        domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'asset')]",
         help="Akun kas/bank sumber dana pembayaran; sisi Kredit jurnal mengikuti akun ini.",
     )
     payment_date = fields.Date(string="Tanggal Pembayaran", tracking=True)
@@ -86,6 +86,20 @@ class SifnextPPL(models.Model):
         "unique (name, company_id)",
         "Nomor PPL harus unik dalam satu perusahaan.",
     )
+
+    @api.depends("payment_method")
+    def _compute_payment_source_domain(self):
+        for record in self:
+            if record.payment_method == "cash":
+                record.payment_source_domain_name = "kas"
+            elif record.payment_method == "bank":
+                record.payment_source_domain_name = "bank"
+            else:
+                record.payment_source_domain_name = ""
+
+    @api.onchange("payment_method")
+    def _onchange_payment_method(self):
+        self.payment_source_account_id = False
 
     @api.depends("line_ids.subtotal", "line_ids.has_ppn", "ppn_percentage")
     def _compute_total_amount(self):
