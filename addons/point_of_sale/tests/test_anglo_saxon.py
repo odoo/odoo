@@ -4,10 +4,10 @@
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
-class TestAngloSaxonCommon(AccountTestInvoicingCommon):
+class TestAngloSaxonCommon(TestStockValuationCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -22,8 +22,8 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
         cls.category = cls.env.ref('product.product_category_services')
         cls.category = cls.category.copy({'name': 'New category','property_valuation': 'real_time'})
         cls.account = cls.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00', 'account_type': 'asset_receivable', 'reconcile': True})
-        account_expense = cls.env['account.account'].create({'name': 'Expense', 'code': 'EXP00', 'account_type': 'expense', 'reconcile': True})
-        account_income = cls.env['account.account'].create({'name': 'Income', 'code': 'INC00', 'account_type': 'income', 'reconcile': True})
+        account_expense = cls.account_expense
+        account_income = cls.account_income
         account_valuation = cls.env['account.account'].create({'name': 'Valuation', 'code': 'STV00', 'account_type': 'expense', 'reconcile': True})
         cls.partner.property_account_receivable_id = cls.account
         cls.category.property_account_income_categ_id = account_income
@@ -434,7 +434,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
                 'product_id': self.product.id,
                 'price_unit': 95,
                 'qty': 1.0,
-                'tax_ids': [(6, 0, self.tax_purchase_a.ids)],
+                'tax_ids': [(6, 0, self.env.company.account_purchase_tax_id.ids)],
                 'price_subtotal': 90.25,
                 'price_subtotal_incl': 103.79,
                 'discount': 5,
