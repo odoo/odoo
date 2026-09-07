@@ -1517,6 +1517,7 @@ describe("Should not convert blacklisted class to inline styles", () => {
 
     beforeEach(() => {
         editable = document.createElement("div");
+        getFixture().append(editable); // editable needs to be in the DOM to compute its dynamic styles.
 
         styleEl = document.createElement("style");
         styleEl.type = "text/css";
@@ -1529,10 +1530,12 @@ describe("Should not convert blacklisted class to inline styles", () => {
         editable.innerHTML = `
             <a contenteditable="false" href="#" class="o_mail_redirect">@Marc Demo</a> Testing!`;
 
+        // border-radius depends on installed modules (eg. web_enterprise), read it dynamically.
+        const borderRadius = getComputedStyle(editable.querySelector("a")).borderRadius;
         classToStyle(editable, getCSSRules(editable.ownerDocument));
 
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect" style="text-decoration: none; border-radius: 0.375rem; padding: 0rem 0.25rem; margin: 0rem; box-sizing: border-box; overflow-wrap: unset;">@Marc Demo</a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect" style="text-decoration: none; border-radius: ${borderRadius}; padding: 0rem 0.25rem; margin: 0rem; box-sizing: border-box; overflow-wrap: unset;">@Marc Demo</a> Testing!`,
             {
                 message: "blacklisted class styles should remain unconverted",
             }
@@ -1546,9 +1549,11 @@ describe("Should not convert blacklisted class to inline styles", () => {
             }
         `);
         editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-style">@Marc Demo</a> Testing!`;
+        // border-radius depends on installed modules (eg. web_enterprise), read it dynamically.
+        const borderRadius = getComputedStyle(editable.querySelector("a")).borderRadius;
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect test-style" style="text-decoration: none; border-radius: 0.375rem; padding: 0rem 0.25rem; margin: 0rem; box-sizing: border-box; background-color: yellow; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-style" style="text-decoration: none; border-radius: ${borderRadius}; padding: 0rem 0.25rem; margin: 0rem; box-sizing: border-box; background-color: yellow; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
             { message: "styles marked !important should override blacklisted class restrictions" }
         );
     });
@@ -1560,9 +1565,11 @@ describe("Should not convert blacklisted class to inline styles", () => {
             }
         `);
         editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-color">@Marc Demo</a> Testing!`;
+        // border-radius depends on installed modules (eg. web_enterprise), read it dynamically.
+        const borderRadius = getComputedStyle(editable.querySelector("a")).borderRadius;
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect test-color" style="text-decoration: none; border-radius: 0.375rem; padding: 0rem 0.25rem; margin: 0rem; box-sizing: border-box; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-color" style="text-decoration: none; border-radius: ${borderRadius}; padding: 0rem 0.25rem; margin: 0rem; box-sizing: border-box; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
             {
                 message:
                     "should ignore styles from lower specificity class in favor of blacklisted class",
