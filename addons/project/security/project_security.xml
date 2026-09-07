@@ -10,7 +10,7 @@
         <field name="name">User</field>
         <field name="comment">User: Can manage tasks in projects shared with them.</field>
         <field name="sequence">10</field>
-        <field name="implied_ids" eval="[(3, ref('base.group_user')), (4, ref('base.group_user_regular'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         <field name="privilege_id" ref="res_groups_privilege_project"/>
     </record>
 
