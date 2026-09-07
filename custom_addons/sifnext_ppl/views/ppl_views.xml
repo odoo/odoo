@@ -85,17 +85,10 @@
                     <button name="action_return_to_draft" type="object" string="Kembalikan ke Draft"
                             groups="sifnext_ppl.group_ppl_finance" invisible="state not in ('submitted', 'verified')"
                             context="{'return_reason': 'Dikembalikan Finance untuk revisi'}"/>
+                    <button name="action_show_transaction_history" type="object" string="Lihat History Transfer" class="btn-info" invisible="state not in ('paid', 'done')"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,verified,approved,paid,done"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="action_show_transaction_history" type="object" class="oe_stat_button" icon="fa-history" invisible="state not in ('paid', 'done')">
-                            <div class="o_stat_info">
-                                <span class="o_stat_text">History</span>
-                                <span class="o_stat_text">Transfer</span>
-                            </div>
-                        </button>
-                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1><field name="name"/></h1>
