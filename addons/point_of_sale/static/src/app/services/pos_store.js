@@ -3220,6 +3220,30 @@ export class PosStore extends WithLazyGetterTrap {
         const availableIds = new Set(available.map((c) => c.id));
         return available.filter((c) => !c.parent_id || !availableIds.has(c.parent_id.id));
     }
+
+    async ensureRefundedOrderLoaded(order) {
+        if (!order?.isRefund || order.refunded_order_id || this.data.network.offline) {
+            return order;
+        }
+
+        const refundedOrderId = order.raw.refunded_order_id;
+        if (!refundedOrderId) {
+            return order;
+        }
+
+        try {
+            await this.data.loadServerOrders([["id", "=", refundedOrderId]]);
+        } catch (error) {
+            logPosMessage(
+                "Store",
+                "ensureRefundedOrderLoaded",
+                `Could not load refunded order ${refundedOrderId}`,
+                CONSOLE_COLOR,
+                [error]
+            );
+        }
+        return order;
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
