@@ -436,6 +436,19 @@ class SifnextPPL(models.Model):
             "approved_at": fields.Datetime.now(),
         })
 
+    def action_show_transaction_history(self):
+        self.ensure_one()
+        view_id = self.env.ref("sifnext_ppl.view_ppl_history_transfer_form").id
+        return {
+            "name": "Detail Transaksi / History Transfer",
+            "type": "ir.actions.act_window",
+            "res_model": "sifnext.ppl",
+            "res_id": self.id,
+            "view_mode": "form",
+            "view_id": view_id,
+            "target": "new",
+        }
+
     def action_pay(self):
         self._check_group("sifnext_ppl.group_ppl_finance", "Hanya Keuangan yang dapat mencatat pembayaran.")
         for record in self:
