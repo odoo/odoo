@@ -1,126 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- FORM JURNAL TRANSAKSI -->
-    <record id="view_sif_jurnal_entry_form" model="ir.ui.view">
-        <field name="name">sif.jurnal.entry.form</field>
-        <field name="model">sif.jurnal.entry</field>
+
+    <!-- ================================================================= -->
+    <!-- 1. POPUP WIZARD FILTER TANGGAL AWAL & AKHIR BUKU BESAR             -->
+    <!-- ================================================================= -->
+    <record id="view_sif_buku_besar_wizard_form" model="ir.ui.view">
+        <field name="name">sif.buku.besar.wizard.form</field>
+        <field name="model">sif.buku.besar.wizard</field>
         <field name="arch" type="xml">
-            <form string="Input Jurnal Transaksi">
-                <header>
-                    <button name="action_post" string="Validasi / Posting" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <button name="action_draft" string="Kembalikan ke Draft" type="object" invisible="state != 'posted'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
-                </header>
+            <form string="Filter Periode Buku Besar">
                 <sheet>
                     <div class="oe_title">
-                        <h1><field name="name"/></h1>
+                        <h2>Filter Periode Buku Besar</h2>
                     </div>
                     <group>
-                        <group>
-                            <field name="date" readonly="state == 'posted'"/>
-                            <field name="reference" readonly="state == 'posted'"/>
-                            <field name="source_document"/>
+                        <group string="Rentang Tanggal">
+                            <field name="date_from" string="Tanggal Awal"/>
+                            <field name="date_to" string="Tanggal Akhir"/>
                         </group>
-                        <group>
-                            <field name="unit_dept" readonly="state == 'posted'"/>
+                        <group string="Filter Tambahan (Opsional)">
+                            <field name="account_id" string="Account"/>
+                            <field name="unit_name" string="Unit Kerja"/>
                         </group>
                     </group>
-                    <notebook>
-                        <page string="Baris Jurnal">
-                            <field name="line_ids" readonly="state == 'posted'">
-                                <list editable="bottom">
-                                    <field name="account_id"/>
-                                    <field name="name"/>
-                                    <field name="debit" sum="Total Debit"/>
-                                    <field name="credit" sum="Total Kredit"/>
-                                </list>
-                            </field>
-                        </page>
-                    </notebook>
+                    <footer>
+                        <button name="action_tampilkan_buku_besar" string="Tampilkan Buku Besar" type="object" class="btn-primary"/>
+                        <button string="Batal" class="btn-secondary" special="cancel"/>
+                    </footer>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="view_sif_jurnal_entry_tree" model="ir.ui.view">
-        <field name="name">sif.jurnal.entry.list</field>
-        <field name="model">sif.jurnal.entry</field>
-        <field name="arch" type="xml">
-            <list string="Daftar Jurnal Umum">
-                <field name="date"/>
-                <field name="name"/>
-                <field name="reference"/>
-                <field name="source_document"/>
-                <field name="unit_dept"/>
-                <field name="total_debit"/>
-                <field name="total_credit"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
-            </list>
-        </field>
+    <record id="action_sif_buku_besar_wizard" model="ir.actions.act_window">
+        <field name="name">Filter Periode Buku Besar</field>
+        <field name="res_model">sif.buku.besar.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
     </record>
 
-    <record id="action_sif_jurnal_entry" model="ir.actions.act_window">
-        <field name="name">Input Jurnal Dasar</field>
-        <field name="res_model">sif.jurnal.entry</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <!-- LIST VIEW BUKU BESAR DENGAN RUNNING BALANCE & PERIODE -->
-    <record id="view_sif_buku_besar_tree" model="ir.ui.view">
-        <field name="name">sif.jurnal.line.buku.besar.list</field>
+    <!-- ================================================================= -->
+    <!-- 2. VIEW BUKU BESAR (FLAT VIEW STANDAR SISKEU SIF)                -->
+    <!-- ================================================================= -->
+    <record id="view_sif_buku_besar_list" model="ir.ui.view">
+        <field name="name">sif.jurnal.line.list</field>
         <field name="model">sif.jurnal.line</field>
         <field name="arch" type="xml">
             <list string="Buku Besar" create="false" edit="false">
-                <field name="date"/>
-                <field name="account_id"/>
-                <field name="account_type"/>
-                <field name="entry_id" string="No. Referensi Jurnal"/>
+                <header>
+                    <button name="%(action_sif_buku_besar_wizard)d" string="Ganti Periode Tanggal" type="action" class="btn-primary"/>
+                </header>
+                <field name="date" string="Tanggal"/>
+                <field name="unit_name" string="Unit Kerja"/>
+                <field name="entry_number" string="Bukti / Nomer"/>
+                <field name="kwitansi_ref" string="Kwitansi" optional="show"/>
                 <field name="name" string="Keterangan"/>
-                <field name="unit_dept"/>
-                <field name="debit" sum="Total Debit"/>
-                <field name="credit" sum="Total Kredit"/>
-                <field name="balance" sum="Total Saldo Mutasi"/>
-                <field name="period_key" string="Periode" optional="show"/>
-                <field name="state" widget="badge" decoration-success="state == 'posted'"/>
+                <field name="account_code" string="Account"/>
+                <field name="account_name" string="Nama Account" optional="show"/>
+                <field name="debit" string="Debet" sum="Total Debet"/>
+                <field name="credit" string="Kredit" sum="Total Kredit"/>
             </list>
         </field>
     </record>
 
-    <!-- SEARCH VIEW & FILTER BULANAN BUKU BESAR (SRS 3.3.2) -->
     <record id="view_sif_buku_besar_search" model="ir.ui.view">
         <field name="name">sif.jurnal.line.search</field>
         <field name="model">sif.jurnal.line</field>
         <field name="arch" type="xml">
             <search string="Pencarian Buku Besar">
-                <field name="account_id"/>
-                <field name="unit_dept"/>
-                <field name="entry_id"/>
-                <field name="period_key"/>
-                
-                <!-- Filter Status Posted -->
-                <filter string="Sudah Diposting" name="filter_posted" domain="[('state', '=', 'posted')]"/>
+                <field name="entry_number" string="Bukti / Nomer"/>
+                <field name="unit_name" string="Unit Kerja"/>
+                <field name="account_id" string="Account"/>
+                <field name="name" string="Keterangan"/>
                 <separator/>
-                
-                <!-- Filter Periode Bulanan Spesifik -->
-                <filter string="Januari" name="m_01" domain="[('period_month', '=', '01')]"/>
-                <filter string="Februari" name="m_02" domain="[('period_month', '=', '02')]"/>
-                <filter string="Maret" name="m_03" domain="[('period_month', '=', '03')]"/>
-                <filter string="April" name="m_04" domain="[('period_month', '=', '04')]"/>
-                <filter string="Mei" name="m_05" domain="[('period_month', '=', '05')]"/>
-                <filter string="Juni" name="m_06" domain="[('period_month', '=', '06')]"/>
-                <filter string="Juli" name="m_07" domain="[('period_month', '=', '07')]"/>
-                <filter string="Agustus" name="m_08" domain="[('period_month', '=', '08')]"/>
-                <filter string="September" name="m_09" domain="[('period_month', '=', '09')]"/>
-                <filter string="Oktober" name="m_10" domain="[('period_month', '=', '10')]"/>
-                <filter string="November" name="m_11" domain="[('period_month', '=', '11')]"/>
-                <filter string="Desember" name="m_12" domain="[('period_month', '=', '12')]"/>
+                <filter string="Bulan Ini" name="this_month" 
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
                 <separator/>
-                
-                <!-- Grouping -->
-                <filter string="Kelompokkan Akun Rekening" name="group_by_account" context="{'group_by': 'account_id'}"/>
-                <filter string="Kelompokkan Periode Bulanan" name="group_by_period" context="{'group_by': 'period_key'}"/>
-                <filter string="Kelompokkan Unit Kerja" name="group_by_unit" context="{'group_by': 'unit_dept'}"/>
-                <filter string="Kelompokkan Tanggal" name="group_by_date" context="{'group_by': 'date:month'}"/>
+                <filter string="Per Akun (Buku Besar)" name="group_by_account" context="{'group_by':'account_id'}"/>
+                <filter string="Per Unit Kerja" name="group_by_unit" context="{'group_by':'unit_name'}"/>
+                <filter string="Per Tanggal" name="group_by_date" context="{'group_by':'date:month'}"/>
             </search>
         </field>
     </record>
@@ -130,6 +88,113 @@
         <field name="res_model">sif.jurnal.line</field>
         <field name="view_mode">list</field>
         <field name="search_view_id" ref="view_sif_buku_besar_search"/>
-        <field name="context">{'search_default_filter_posted': 1, 'search_default_group_by_account': 1}</field>
+        <field name="context">{}</field>
     </record>
+
+    <!-- ================================================================= -->
+    <!-- 3. VIEW JURNAL TRANSAKSI (HEADER DOKUMEN ENTRY)                  -->
+    <!-- ================================================================= -->
+    <record id="view_sif_jurnal_entry_list" model="ir.ui.view">
+        <field name="name">sif.jurnal.entry.list</field>
+        <field name="model">sif.jurnal.entry</field>
+        <field name="arch" type="xml">
+            <list string="Jurnal Transaksi">
+                <field name="name" string="Nomor Bukti"/>
+                <field name="date" string="Tanggal"/>
+                <field name="unit_name" string="Unit Kerja"/>
+                <field name="ref" string="Referensi / Dokumen"/>
+                <field name="source_type" string="Sumber" widget="badge"
+                       decoration-info="source_type == 'ppl'"
+                       decoration-warning="source_type in ('asset_buy', 'asset_depr')"/>
+                <field name="total_debit" string="Total Debet" sum="Total Debet"/>
+                <field name="total_credit" string="Total Kredit" sum="Total Kredit"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'posted'" 
+                       decoration-info="state == 'draft'"
+                       decoration-danger="state == 'cancel'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sif_jurnal_entry_form" model="ir.ui.view">
+        <field name="name">sif.jurnal.entry.form</field>
+        <field name="model">sif.jurnal.entry</field>
+        <field name="arch" type="xml">
+            <form string="Entri Jurnal">
+                <header>
+                    <button name="action_post" string="Posting" type="object" class="oe_highlight" 
+                            invisible="state == 'posted'"/>
+                    <button name="action_draft" string="Set to Draft" type="object" 
+                            invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nomor Bukti Jurnal"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="ref"/>
+                            <field name="kwitansi_ref"/>
+                        </group>
+                        <group>
+                            <field name="unit_name"/>
+                            <field name="source_type" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rincian Baris Jurnal">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="account_id"/>
+                                    <field name="name" string="Keterangan"/>
+                                    <field name="unit_name" string="Unit Kerja"/>
+                                    <field name="debit" sum="Total Debet"/>
+                                    <field name="credit" sum="Total Kredit"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_debit"/>
+                                <field name="total_credit"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sif_jurnal_entry_search" model="ir.ui.view">
+        <field name="name">sif.jurnal.entry.search</field>
+        <field name="model">sif.jurnal.entry</field>
+        <field name="arch" type="xml">
+            <search string="Pencarian Jurnal Transaksi">
+                <field name="name" string="Nomor Bukti"/>
+                <field name="unit_name" string="Unit Kerja"/>
+                <field name="ref" string="No. Referensi / PPL / Aset"/>
+                <separator/>
+                <filter string="Posted" name="filter_posted" domain="[('state', '=', 'posted')]"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Dari PPL" name="filter_source_ppl" domain="[('source_type', '=', 'ppl')]"/>
+                <filter string="Dari Aset" name="filter_source_asset" domain="[('source_type', 'in', ('asset_buy', 'asset_depr'))]"/>
+                <separator/>
+                <filter string="Per Unit Kerja" name="group_unit" context="{'group_by':'unit_name'}"/>
+                <filter string="Per Sumber Transaksi" name="group_source" context="{'group_by':'source_type'}"/>
+                <filter string="Per Tanggal" name="group_date" context="{'group_by':'date:month'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sif_jurnal_entry" model="ir.actions.act_window">
+        <field name="name">Jurnal Transaksi</field>
+        <field name="res_model">sif.jurnal.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_sif_jurnal_entry_search"/>
+    </record>
+
 </odoo>
