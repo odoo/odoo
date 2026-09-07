@@ -37,7 +37,7 @@ Saat ini **Finance Verifier** dan **Finance Payment** belum dipisahkan menjadi d
 1. Login sebagai `ppl_user`, buka **SIFNEXT Keuangan → PPL**, buat PPL dengan minimal satu detail, lalu klik **Ajukan**.
 2. Login sebagai `ppl_finance`, buka pengajuan tersebut, isi COA pada setiap detail, lalu klik **Verifikasi**.
 3. Login sebagai `ppl_director`, buka PPL berstatus **Verified**, lalu klik **Setujui**.
-4. Login kembali sebagai `ppl_finance`, isi metode, tanggal, dan referensi pembayaran, klik **Konfirmasi Pembayaran**, lalu **Selesaikan**.
+4. Login kembali sebagai `ppl_finance`, isi metode, **sumber dana (Kas/Bank)**, tanggal, dan referensi pembayaran, klik **Konfirmasi Pembayaran**, lalu **Selesaikan**.
 5. Periksa tab **Audit** dan pastikan user serta timestamp setiap tahap terisi.
 6. Login kembali sebagai `ppl_user` dan pastikan pengajuan milik pegawai lain tidak terlihat.
 
