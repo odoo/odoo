@@ -1,0 +1,126 @@
+PRESENLY ATTENDANCE DETAIL UI AND EMPLOYEE SECURITY — POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.9.0.0
+
+PROBLEM CONFIRMED
+- The native Attendance summary already showed Check In and Check Out timestamps.
+- The native Check In/Check Out detail sections hid location fields whenever res.company.attendance_device_tracking was disabled.
+- Presenly mobile still stored GPS and selfie evidence independently, so the data existed but did not render in those native sections.
+- Employee accounts maulanasetyawan9@gmail.com and yusril@konsultasg.com had a direct native Officer: Manage all attendances grant.
+- That native grant intentionally caused Odoo to render Employee as a selector, even though later ACL/rule checks could reject some changes.
+
+UI FIX
+- The top native summary remains the only location for Employee, Check In timestamp, Check Out timestamp, Worked Time, and overtime summary.
+- Check In and Check Out timestamps are not repeated in lower sections.
+- The lower sections are explicitly titled Check-In Evidence and Check-Out Evidence.
+- Attendance Context appears once and contains Company, Work Location, Work Location Schedule, and Source.
+- Each evidence section contains only event-specific evidence:
+  - Mode
+  - GPS coordinates
+  - View on Maps
+  - Distance from Work Location
+  - GPS accuracy
+  - Selfie
+- Presenly mobile GPS/selfie evidence renders independently of native Device & Location Tracking configuration.
+- Native IP/browser/location values remain available for non-Presenly attendance when native device tracking is enabled.
+- Check-out evidence remains hidden until check_out exists.
+- Selfie attachments remain private; the form displays them through read-only related image fields.
+
+NON-REDUNDANCY ASSERTIONS
+- Exactly one check_in field exists in the composed Attendance form.
+- Exactly one check_out field exists in the composed Attendance form.
+- Neither timestamp appears inside the evidence groups.
+- Exactly one Attendance Context group exists.
+- Exactly one Check-In Evidence section exists.
+- Exactly one Check-Out Evidence section exists.
+- Work Location is displayed once in Attendance Context, not repeated in both event sections.
+
+EMPLOYEE SELECTOR ROOT CAUSE AND FIX
+- Native Odoo makes Employee selectable for users in hr_attendance.group_hr_attendance_user.
+- The two Employee accounts had this group assigned directly, outside the Presenly role hierarchy.
+- Upgrade 19.0.9.0.0 removes that direct cross-employee management grant only from Presenly Employee/Approver users who are not Presenly HR.
+- The cleanup is idempotent.
+- Presenly HR now officially implies native Officer: Manage all attendances.
+- Presenly Administrator retains HR and native Attendance management through the role hierarchy.
+- Employee/Approver users receive a dedicated Attendances > Overview > My Attendances action.
+- My Attendances has domain [('employee_id.user_id', '=', uid)] and disables create/delete.
+- Employee is rendered as read-only with no create/open interaction for employee self-service.
+
+SERVER-SIDE SECURITY
+- UI locking is not the only protection.
+- HrAttendance.create rejects an Employee/Approver creating attendance for another Employee.
+- HrAttendance.write rejects an Employee/Approver changing employee_id.
+- Native is_manager is forced false for Presenly Employee/Approver users who are not HR, preventing timestamp editing inherited from accidental native groups.
+- Presenly HR/Administrator may still perform corrections subject to native Odoo Attendance Manager/Administrator authorization.
+- Employee identity for mobile API remains derived from the authenticated session.
+
+EXISTING DATA PRESERVATION
+Before and after rollout:
+- hr.attendance: 1
+- presenly.attendance.event: 5
+- Successful evidence events: 2
+- Failed evidence events: 3
+- Evidence events with selfie: 2
+- Attendance ID: 1
+- Employee ID: 3 (Maulana Feri Setyawan)
+- Check In: 2026-09-06 02:03:29
+- Check Out: 2026-09-06 02:03:55
+- Source: mobile
+- Check-in selfie attachment: 166
+- Check-out selfie attachment: 167
+- Both private selfie attachments remain present and readable through the authorized form.
+- GPS, distance, and 35-meter accuracy values remain present for both successful events.
+
+ACTIVE USER POST-CHECK
+- maulanasetyawan9@gmail.com:
+  - Presenly Employee retained.
+  - Direct native Manage all attendances removed.
+  - Can read Attendance ID 1 because it is his own Employee attendance.
+  - Employee field is read-only and non-interactive.
+  - Check In/Out timestamps are read-only.
+  - GPS, distance, accuracy, and both selfies are readable.
+- yusril@konsultasg.com:
+  - Presenly Employee retained.
+  - Direct native Manage all attendances removed.
+  - Cannot read Maulana's Attendance ID 1.
+- Admin:
+  - Administrative attendance control retained.
+
+TESTING
+- Tests ran on clone database odoo_presenly_attendance_ui_20260906.
+- Final result: 31 test cases / 41 test stats.
+- Failures: 0.
+- Errors: 0.
+- Added coverage includes:
+  - Employee with accidental native attendance group still cannot reassign attendance.
+  - ORM reassignment guard.
+  - Presenly HR authorized correction path.
+  - One timestamp summary only.
+  - Dedicated evidence sections.
+  - Employee field read-only composed view.
+- Full existing Attendance, API session, geofence, schedule, Permission, and Approval suites also passed.
+- Validation clone was removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parse: 17 files passed.
+- Shell syntax: passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-attendance-detail-ui-20260906-022451.dump
+- Backup size at rollout: 4,461,185 bytes.
+
+ROLLOUT
+- Before: presenly 19.0.8.0.0.
+- After: presenly 19.0.9.0.0.
+- Final Odoo server PID: 97625.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Final registry refresh has no duplicate-label warning, ERROR, CRITICAL, or traceback.
+- Accuracy labels are unique:
+  - Check-In GPS Accuracy (m)
+  - Check-Out GPS Accuracy (m)
+
+NO COMMIT
+- No Git commit was created.
