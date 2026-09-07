@@ -5,7 +5,16 @@ import { isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_utils";
 import { getFirstAndLastTabableElements, refreshMedias, utils } from "./ui_utils";
 
-import { computed, EventBus, Plugin, signal, untrack, useListener, usePlugin } from "@odoo/owl";
+import {
+    computed,
+    EventBus,
+    Plugin,
+    signal,
+    untrack,
+    useEffect,
+    useListener,
+    usePlugin,
+} from "@odoo/owl";
 
 /**
  * This hook will set the UI active element
@@ -54,55 +63,59 @@ export function useActiveElement(ref) {
         }
     }
 
-    // useLayoutEffect(
-    //     (el) => {
-    //         if (el) {
-    //             const [firstTabableEl] = getFirstAndLastTabableElements(el);
-    //             if (!firstTabableEl && !isFocusable(el)) {
-    //                 // no tabable elements: no need to trap focus nor become the UI active element
-    //                 return;
-    //             }
-    //             const oldActiveElement = document.activeElement;
-    //             uiService.activateElement(el);
-    //
-    //             el.addEventListener("keydown", trapFocus);
-    //
-    //             if (firstTabableEl) {
-    //                 if (!el.contains(document.activeElement)) {
-    //                     firstTabableEl.focus();
-    //                 }
-    //             } else if (el !== document.activeElement) {
-    //                 el.focus();
-    //             }
-    //             return async () => {
-    //                 // Components are destroyed from top to bottom, meaning that this cleanup is
-    //                 // called before the ones of children. As a consequence, event handlers added on
-    //                 // the current active element in children aren't removed yet, and can thus be
-    //                 // executed if we deactivate that active element right away (e.g. the blur and
-    //                 // change events could be triggered). For that reason, we wait for a micro-tick.
-    //                 await Promise.resolve();
-    //                 uiService.deactivateElement(el);
-    //                 el.removeEventListener("keydown", trapFocus);
-    //
-    //                 /**
-    //                  * In some cases, the current active element is not
-    //                  * anymore in el (e.g. with ConfirmationDialog, the
-    //                  * confirm button is disabled when clicked, so the
-    //                  * focus is lost). In that case, we also want to restore
-    //                  * the focus to the previous active element so we
-    //                  * check if the current active element is the body
-    //                  */
-    //                 if (
-    //                     el.contains(document.activeElement) ||
-    //                     document.activeElement === document.body
-    //                 ) {
-    //                     oldActiveElement.focus();
-    //                 }
-    //             };
-    //         }
-    //     },
-    //     () => [untrack(ref)]
-    // );
+    useEffect(() => {
+        const el = ref();
+        if (!el) {
+            return;
+        }
+        // `activateElement`/`deactivateElement` both read and write the `activeElems`
+        // signal; untrack the body so the effect only reacts to `ref` (as the OWL2
+        // `() => [untrack(ref)]` dep did) and doesn't self-trigger an infinite loop.
+        return untrack(() => {
+            const [firstTabableEl] = getFirstAndLastTabableElements(el);
+            if (!firstTabableEl && !isFocusable(el)) {
+                // no tabable elements: no need to trap focus nor become the UI active element
+                return;
+            }
+            const oldActiveElement = document.activeElement;
+            uiService.activateElement(el);
+
+            el.addEventListener("keydown", trapFocus);
+
+            if (firstTabableEl) {
+                if (!el.contains(document.activeElement)) {
+                    firstTabableEl.focus();
+                }
+            } else if (el !== document.activeElement) {
+                el.focus();
+            }
+            return async () => {
+                // Components are destroyed from top to bottom, meaning that this cleanup is
+                // called before the ones of children. As a consequence, event handlers added on
+                // the current active element in children aren't removed yet, and can thus be
+                // executed if we deactivate that active element right away (e.g. the blur and
+                // change events could be triggered). For that reason, we wait for a micro-tick.
+                await Promise.resolve();
+                uiService.deactivateElement(el);
+                el.removeEventListener("keydown", trapFocus);
+
+                /**
+                 * In some cases, the current active element is not
+                 * anymore in el (e.g. with ConfirmationDialog, the
+                 * confirm button is disabled when clicked, so the
+                 * focus is lost). In that case, we also want to restore
+                 * the focus to the previous active element so we
+                 * check if the current active element is the body
+                 */
+                if (
+                    el.contains(document.activeElement) ||
+                    document.activeElement === document.body
+                ) {
+                    oldActiveElement.focus();
+                }
+            };
+        });
+    });
 }
 
 export class UIPlugin extends Plugin {
