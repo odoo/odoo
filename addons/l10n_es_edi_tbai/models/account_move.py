@@ -139,6 +139,7 @@ class AccountMove(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+<<<<<<< 125e4abcc0ae4bcb530183d12311057c7d105dc7
     def _l10n_es_tbai_check_can_send(self):
         # Ensure the move is posted
         if self.state != 'posted':
@@ -147,6 +148,28 @@ class AccountMove(models.Model):
             return _("This entry has already been posted.")
         if self.company_id.l10n_es_tbai_tax_agency == 'bizkaia' and self.is_purchase_document() and not self.ref:
             return _("You need to fill in the Reference field as the invoice number from your vendor.")
+||||||| 02d3a1d847bb4c3f784e3b018b581ee4d8f3fe4e
+    def _l10n_es_tbai_is_in_chain(self):
+        """
+        True iff invoice has been posted to the chain and confirmed by govt.
+        Note that cancelled invoices remain part of the chain.
+        """
+        tbai_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')
+        return self.l10n_es_tbai_is_required \
+            and len(tbai_doc_ids) > 0 \
+            and not any(tbai_doc_ids.filtered(lambda d: d.state == 'to_send'))
+=======
+    def _l10n_es_tbai_is_in_chain(self):
+        """
+        True iff invoice has been posted to the chain and confirmed by govt.
+        Note that cancelled invoices remain part of the chain.
+        """
+        tbai_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')
+        return self.is_sale_document() \
+            and self.l10n_es_tbai_is_required \
+            and len(tbai_doc_ids) > 0 \
+            and not any(tbai_doc_ids.filtered(lambda d: d.state == 'to_send'))
+>>>>>>> 87d3740580ed0f4ebf47c0b8047c0b95c5f87675
 
 
     def _l10n_es_tbai_get_attachment_name(self, cancel=False):
