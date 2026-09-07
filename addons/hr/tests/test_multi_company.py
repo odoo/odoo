@@ -7,7 +7,7 @@ from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
 from odoo.fields import Command
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 
 
 class TestMultiCompanyReport(TestHrCommon):
@@ -249,3 +249,15 @@ class TestMultiCompany(TestHrCommon):
 
         # Fallback must pick the candidate of the matching company (company_b)
         self.assertEqual(account_unlinked.employee_id, employee_b)
+
+    def test_shared_calendar_write_other_company(self):
+        """A working schedule used by employees of an unselected company cannot be edited."""
+        calendar = self.env['resource.calendar'].create({'name': 'Shared calendar', 'company_id': False})
+        (self.employee_a | self.employee_b).resource_calendar_id = calendar
+
+        with self.assertRaises(ValidationError):
+            calendar.with_context(allowed_company_ids=self.company_a.ids).write({'calendar_type': 'variable'})
+        self.assertEqual(calendar.calendar_type, 'fixed')
+
+        calendar.with_context(allowed_company_ids=(self.company_a | self.company_b).ids).write({'calendar_type': 'variable'})
+        self.assertEqual(calendar.calendar_type, 'variable')
