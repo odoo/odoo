@@ -1,22 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+
+        <xpath expr="//t[@t-set='address']" position="inside">
+            <t t-if="o.company_id.country_code == 'IT'">
+                <t t-set="normalized_cf" t-value="o.partner_id._l10n_it_edi_normalized_codice_fiscale()"/>
+                <t t-set="normalized_vat" t-value="o.partner_id._l10n_it_edi_normalized_codice_fiscale(o.partner_id.vat)"/>
+
+                <div t-if="normalized_cf and (not o.partner_id.has_vat or normalized_cf != normalized_vat)">
+                    <strong>Fiscal Code: </strong><span t-out="normalized_cf"/>
+                </div>
+            </t>
+        </xpath>
+
         <div name="comment" position="before">
-            <t t-if="o.l10n_it_stamp_duty"><b>Stamp Duty: </b><span t-field="o.l10n_it_stamp_duty"></span><br/></t>
-            <t t-if="o.l10n_it_ddt_id"><b>Transport Document: </b><span t-field="o.l10n_it_ddt_id"></span><br/></t>
-            <div t-if="o.l10n_it_origin_document_type" name="pa_fields">
-                <b><span t-field="o.l10n_it_origin_document_type"/></b>: <span t-field="o.l10n_it_origin_document_name"/><br/>
-                <t t-if="o.l10n_it_origin_document_date"><b>Document Date: </b><span t-field="o.l10n_it_origin_document_date"/><br/></t>
-                <t t-if="o.l10n_it_cig"><b>CIG: </b><span t-field="o.l10n_it_cig"/><br/></t>
-                <t t-if="o.l10n_it_cup"><b>CUP: </b><span t-field="o.l10n_it_cup"/><br/></t>
-            </div>
+            <t t-if="o.l10n_it_origin_document_type">
+                <div class="col-7 mb-3">
+                    <div class="fw-bold pb-1 mb-1 border-bottom border-secondary fs-6">
+                        Reference Document
+                    </div>
+                    <div t-if="o.l10n_it_origin_document_type" name="pa_fields">
+                        <span class="fw-bold" t-field="o.l10n_it_origin_document_type"/>: <span t-field="o.l10n_it_origin_document_name"/><br/>
+                        <t t-if="o.l10n_it_origin_document_date">
+                            <span class="fw-bold">Issue Date: </span>
+                            <span t-field="o.l10n_it_origin_document_date"/><br/>
+                        </t>
+                        <t t-if="o.l10n_it_convention_code">
+                            <span class="fw-bold">Order or Convention Code: </span>
+                            <span t-field="o.l10n_it_convention_code"/><br/>
+                        </t>
+                        <t t-if="o.l10n_it_cig">
+                            <span class="fw-bold">CIG: </span>
+                            <span t-field="o.l10n_it_cig"/><br/>
+                        </t>
+                        <t t-if="o.l10n_it_cup">
+                            <span class="fw-bold">CUP: </span>
+                            <span t-field="o.l10n_it_cup"/><br/>
+                        </t>
+                    </div>
+                </div>
+            </t>
+
+            <t t-if="o.l10n_it_ddt_id">
+                <div class="col-7 mb-3">
+                    <div class="fw-bold pb-1 mb-1 border-bottom border-secondary fs-6">
+                        Additional information
+                    </div>
+                    <div>
+                        <span class="fw-bold">Transport Document(s): </span>
+                        <span t-field="o.l10n_it_ddt_id"></span><br/>
+                    </div>
+                </div>
+            </t>
         </div>
 
         <p name="payment_communication" position="inside">
-            <t t-if="o.country_code == 'IT'">
-                <t t-set="term_lines" t-value="o.line_ids.filtered(lambda line: line.display_type == 'payment_term')"/>
-                <br/><b>Payment Conditions:</b> <t t-if="len(term_lines) == 1">TP02 pagamento completo</t><t t-else="">TP01 pagamento a rate</t><br/>
+            <t t-if="o.l10n_it_payment_method">
+                <div class="mt-2">
+                    <span class="fw-bold">Via: </span>
+                    <span t-field="o.l10n_it_payment_method"/>
+                </div>
             </t>
         </p>
+    </template>
+    <template id="document_tax_totals_inherit_stamp_duty" inherit_id="account.document_tax_totals">
+        <xpath expr="//tr[hasclass('o_total')]" position="before">
+            <tr t-if="o.l10n_it_stamp_duty">
+                <td>Stamp duty</td>
+                <td class="text-end">
+                    <span t-field="o.l10n_it_stamp_duty"
+                        t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </td>
+            </tr>
+        </xpath>
     </template>
 </odoo>
