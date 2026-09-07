@@ -1,6 +1,7 @@
-import { Component, onWillStart, onWillUpdateProps, t, usePlugin, useProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, plugin, t, usePlugin, useProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cloneTree, connector, isTree, TRUE_TREE } from "@web/core/tree_editor/condition_tree";
@@ -39,7 +40,7 @@ export class TreeEditor extends Component {
 
     setup() {
         this.isTree = isTree;
-        this.fieldService = useService("field");
+        this.fieldService = plugin(FieldPlugin);
         this.treeProcessor = useService("tree_processor");
         this.hasTouch = hasTouch();
         onWillStart(() => this.onPropsUpdated(this.props));

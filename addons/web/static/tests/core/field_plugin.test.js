@@ -12,6 +12,7 @@ import {
 
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, proxy, useProps, xml } from "@odoo/owl";
+import { FieldPlugin } from "@web/core/field_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -199,7 +200,7 @@ test("loadPath", async () => {
         },
     ];
     for (const { resModel, path, expectedResult } of toTest) {
-        const result = await getService("field").loadPath(resModel, path);
+        const result = await getService(FieldPlugin).loadPath(resModel, path);
         expect(result).toEqual(expectedResult);
     }
 
@@ -211,7 +212,7 @@ test("loadPath", async () => {
 
     for (const { resModel, path } of errorToTest) {
         try {
-            await getService("field").loadPath(resModel, path);
+            await getService(FieldPlugin).loadPath(resModel, path);
         } catch {
             expect.step("error");
         }
@@ -326,7 +327,7 @@ test("loadPath follow relational properties", async () => {
         },
     ];
     for (const { resModel, path, expectedResult } of toTest) {
-        const result = await getService("field").loadPath(resModel, path, true);
+        const result = await getService(FieldPlugin).loadPath(resModel, path, true);
         expect(result).toEqual(expectedResult);
     }
 
@@ -338,7 +339,7 @@ test("loadPath follow relational properties", async () => {
 
     for (const { resModel, path } of errorToTest) {
         try {
-            await getService("field").loadPath(resModel, path, true);
+            await getService(FieldPlugin).loadPath(resModel, path, true);
         } catch {
             expect.step("error");
         }
@@ -353,8 +354,8 @@ test("store loadFields calls in cache in success", async () => {
 
     await makeTestApp();
 
-    await getService("field").loadFields("tortoise");
-    await getService("field").loadFields("tortoise");
+    await getService(FieldPlugin).loadFields("tortoise");
+    await getService(FieldPlugin).loadFields("tortoise");
 
     expect.verifySteps(["fields_get"]);
 });
@@ -366,8 +367,8 @@ test("does not store loadFields calls in cache when failed", async () => {
     });
 
     await makeTestApp();
-    await expect(getService("field").loadFields("take.five")).rejects.toThrow(/my little error/);
-    await expect(getService("field").loadFields("take.five")).rejects.toThrow(/my little error/);
+    await expect(getService(FieldPlugin).loadFields("take.five")).rejects.toThrow(/my little error/);
+    await expect(getService(FieldPlugin).loadFields("take.five")).rejects.toThrow(/my little error/);
 
     expect.verifySteps(["fields_get", "fields_get"]);
 });
