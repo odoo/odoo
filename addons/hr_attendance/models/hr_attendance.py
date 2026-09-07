@@ -210,7 +210,7 @@ class HrAttendance(models.Model):
             if attendance.check_in and attendance.check_out and attendance.break_duration:
                 total_hours = time_to_float(attendance.check_out - attendance.check_in)
                 if float_compare(attendance.break_duration, total_hours, precision_digits=4) > 0:
-                    raise ValidationError(self.env._("Break duration cannot exceed the attendance duration."))
+                    raise ValidationError(self.env._("Breaks cannot be longer than the attendance time"))
 
     @api.constrains('check_in', 'check_out')
     def _check_validity_check_in_check_out(self):

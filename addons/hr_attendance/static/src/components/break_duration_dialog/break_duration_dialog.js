@@ -9,6 +9,8 @@ export class BreakDurationDialog extends Component {
     static components = { Dialog };
     props = props({
         employeeName: t.string().optional(),
+        maxMinutes: t.number().optional(),
+        // Returning false keeps the dialog open, for a duration the employee can correct.
         onConfirm: t.function(),
         close: t.function(),
     });
@@ -39,7 +41,15 @@ export class BreakDurationDialog extends Component {
             });
             return;
         }
-        await this.props.onConfirm(minutes);
+        if (this.props.maxMinutes !== undefined && minutes > this.props.maxMinutes) {
+            this.notification.add(_t("Breaks cannot be longer than the attendance time"), {
+                type: "danger",
+            });
+            return;
+        }
+        if ((await this.props.onConfirm(minutes)) === false) {
+            return;
+        }
         this.props.close();
     }
 }
