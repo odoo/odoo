@@ -429,8 +429,8 @@ class PaymentProvider(models.Model):
 
     @api.constrains("capture_manually")
     def _check_manual_capture_supported_by_payment_methods(self):
-        if self.capture_manually:
-            incompatible_pms = self.payment_method_ids.filtered(
+        for provider in self.filtered("capture_manually"):
+            incompatible_pms = provider.payment_method_ids.filtered(
                 lambda method: (
                     method.active
                     and not method.primary_payment_method_id
@@ -540,15 +540,53 @@ class PaymentProvider(models.Model):
     def copy(self, default=None):
         """Override of `base` to copy the payment methods linked to the providers."""
         new_providers = super().copy(default=default)
-        for src_provider, new_provider in zip(self, new_providers):
-            src_primary_pms = src_provider.payment_method_ids.filtered("is_primary")
-            new_primary_pms = src_primary_pms.copy({"provider_id": new_provider.id})
-            for src_primary_pm, new_primary_pm in zip(src_primary_pms, new_primary_pms):
-                src_primary_pm.brand_ids.copy({
-                    "provider_id": new_provider.id,
+        self._copy_payment_methods(dict(zip(new_providers, self)))
+        return new_providers
+
+    def _copy_for_companies(self, companies):
+        """Copy the providers and their payment methods to ``companies`` in batches."""
+        providers_vals_list = []
+        source_providers = []
+        for company in companies:
+            providers_vals_list.extend(self.copy_data({"company_id": company.id}))
+            source_providers.extend(self)
+
+        if not providers_vals_list:
+            return self.browse()
+
+        new_providers = self.create(providers_vals_list)
+        self._copy_payment_methods(dict(zip(new_providers, source_providers)))
+        return new_providers
+
+    def _copy_payment_methods(self, source_provider_by_new_provider):
+        """Copy payment methods using an explicit mapping of new to source providers."""
+        PaymentMethod = self.env["payment.method"]
+        source_primary_pms = []
+        primary_payment_method_vals_list = []
+        for new_provider, source_provider in source_provider_by_new_provider.items():
+            for source_primary_pm in source_provider.payment_method_ids.filtered("is_primary"):
+                vals = source_primary_pm.copy_data()[0]
+                vals["provider_id"] = new_provider.id
+                source_primary_pms.append(source_primary_pm)
+                primary_payment_method_vals_list.append(vals)
+
+        if not primary_payment_method_vals_list:
+            return PaymentMethod
+
+        new_primary_pms = PaymentMethod.create(primary_payment_method_vals_list)
+
+        brand_vals_list = []
+        for source_primary_pm, new_primary_pm in zip(source_primary_pms, new_primary_pms):
+            for source_brand in source_primary_pm.brand_ids:
+                vals = source_brand.copy_data()[0]
+                vals.update({
+                    "provider_id": new_primary_pm.provider_id.id,
                     "primary_payment_method_id": new_primary_pm.id,
                 })
-        return new_providers
+                brand_vals_list.append(vals)
+
+        new_brands = PaymentMethod.create(brand_vals_list) if brand_vals_list else PaymentMethod
+        return new_primary_pms + new_brands
 
     def copy_data(self, default=None):
         default = dict(default or {})

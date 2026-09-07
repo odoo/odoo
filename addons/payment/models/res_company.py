@@ -55,9 +55,7 @@ class ResCompany(models.Model):
                 ("module_state", "=", "installed"),
             ])
         )
-        for company in companies:
-            for provider_sudo in providers_sudo:
-                provider_sudo.copy({"company_id": company.id})
+        providers_sudo._copy_for_companies(companies)
 
         return companies
 

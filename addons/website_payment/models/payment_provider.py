@@ -57,10 +57,12 @@ class PaymentProvider(models.Model):
             return iri_to_uri(request.httprequest.url_root)
         return super().get_base_url()
 
-    def copy(self, default=None):
-        res = super().copy(default=default)
-        if not default or 'website_id' not in default:
-            for src, copy in zip(self, res):
-                if src.website_id and src.company_id in copy.company_id.parent_ids:
-                    copy.website_id = src.website_id
-        return res
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        vals_list = super().copy_data(default=default)
+        if "website_id" not in default:
+            for provider, vals in zip(self, vals_list):
+                company = self.env["res.company"].browse(vals["company_id"])
+                if provider.website_id and provider.company_id in company.parent_ids:
+                    vals["website_id"] = provider.website_id.id
+        return vals_list
