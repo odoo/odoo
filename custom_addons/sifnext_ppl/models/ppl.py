@@ -314,7 +314,15 @@ class SifnextPPL(models.Model):
         }
 
     def _validate_rka_budget(self, payload):
-        """RKA extension point; raise ValidationError when budget is unavailable."""
+        """Validasi ketersediaan RKA secara langsung."""
+        for line in self.line_ids:
+            if not line.journal_account_id:
+                continue
+            if not line.rka_id:
+                raise ValidationError(_("RKA tidak ditemukan untuk COA %s pada tahun %s.") % (line.journal_account_id.name, self.request_date.year))
+            if line.rka_id.sisa_anggaran < line.subtotal:
+                line.write({"budget_status": "insufficient"})
+                raise ValidationError(_("Sisa anggaran pada RKA %s tidak mencukupi untuk item '%s'. Sisa: %s, Dibutuhkan: %s.") % (line.rka_id.name, line.description, line.rka_id.sisa_anggaran, line.subtotal))
         return True
 
     def _check_budget(self):
@@ -505,6 +513,29 @@ class SifnextPPLLine(models.Model):
         domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'expense')]",
         help="Sub-COA atau sub-sub-COA dari Master COA modul Keuangan.",
     )
+    rka_id = fields.Many2one(
+        "sif.rka.budget",
+        string="RKA Tahunan",
+        compute="_compute_rka_id",
+        store=True,
+    )
+    rka_anggaran = fields.Monetary(related="rka_id.nilai", string="Anggaran", readonly=True)
+    rka_realisasi = fields.Monetary(related="rka_id.realisasi", string="Realisasi", readonly=True)
+    rka_sisa = fields.Monetary(related="rka_id.sisa_anggaran", string="Sisa Anggaran", readonly=True)
+
+    @api.depends("journal_account_id", "ppl_id.request_date")
+    def _compute_rka_id(self):
+        for line in self:
+            if not line.journal_account_id or not line.ppl_id.request_date:
+                line.rka_id = False
+                continue
+            tahun = str(line.ppl_id.request_date.year)
+            rka = self.env["sif.rka.budget"].search([
+                ("account_id", "=", line.journal_account_id.id),
+                ("tahun", "=", tahun),
+            ], limit=1)
+            line.rka_id = rka
+
     budget_status = fields.Selection(
         [("unchecked", "Belum Dicek"), ("sufficient", "Cukup"), ("insufficient", "Tidak Cukup")],
         default="unchecked", readonly=True,

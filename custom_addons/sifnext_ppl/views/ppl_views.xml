@@ -125,6 +125,9 @@
                                     <field name="journal_account_id" string="COA"
                                            groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"
                                            options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="rka_anggaran" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
+                                    <field name="rka_realisasi" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
+                                    <field name="rka_sisa" optional="show" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="budget_status" string="Status Budget" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
@@ -142,6 +145,9 @@
                                     <field name="subtotal" readonly="True"/>
                                     <field name="journal_account_id" string="COA"
                                            options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="rka_anggaran" optional="hide"/>
+                                    <field name="rka_realisasi" optional="hide"/>
+                                    <field name="rka_sisa" optional="show"/>
                                     <field name="budget_status" string="Status Budget" readonly="True"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
@@ -159,6 +165,9 @@
                                     <field name="subtotal"/>
                                     <field name="journal_account_id" string="COA"
                                            groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
+                                    <field name="rka_anggaran" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
+                                    <field name="rka_realisasi" optional="hide" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
+                                    <field name="rka_sisa" optional="show" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="budget_status" string="Status Budget" groups="sifnext_ppl.group_ppl_finance,sifnext_ppl.group_ppl_approver"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="company_id" column_invisible="True"/>
