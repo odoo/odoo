@@ -4,6 +4,8 @@ from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__, default_lang="en_US")
 
+DEFAULT_SHOP_PRODUCTS_GRID_GAP = "16px"
+
 # Website configurator
 
 SHOP_PAGE_STYLE_MAPPING = {

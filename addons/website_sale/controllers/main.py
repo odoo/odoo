@@ -20,7 +20,11 @@ from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.sale.controllers import portal as sale_portal
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website_sale.const import MAX_EXPANDED_FILTER_SECTIONS, SHOP_PATH
+from odoo.addons.website_sale.const import (
+    DEFAULT_SHOP_PRODUCTS_GRID_GAP,
+    MAX_EXPANDED_FILTER_SECTIONS,
+    SHOP_PATH,
+)
 from odoo.addons.website_sale.models.website import PRICELIST_SELECTED_SESSION_CACHE_KEY
 
 _lt = LazyTranslate(__name__)
@@ -289,7 +293,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         ppg = website.shop_ppg or 21
         ppr = website.shop_ppr or 4
-        gap = website.shop_gap or "16px"
+        gap = website.shop_gap or DEFAULT_SHOP_PRODUCTS_GRID_GAP
 
         attribute_value_params = self._get_attribute_value_params(post)
         attribute_value_dict = self._get_attribute_value_dict(attribute_value_params)

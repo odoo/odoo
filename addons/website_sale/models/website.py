@@ -1257,12 +1257,18 @@ class Website(models.Model):
         query = urlencode([*parse_qsl(parsed.query), ("subject", subject)])
         return parsed._replace(query=query).geturl()
 
+    def _uses_shop_products_catalog_layout(self):
+        """Return whether the shop product design uses the catalog layout."""
+        return "o_wsale_products_opt_layout_catalog" in (
+            self.shop_opt_products_design_classes or ""
+        )
+
     def _get_shop_products_design_classes(self):
         """Return the website's design classes for the product cards, as configured on the
         shop page, falling back to the default catalog layout if not yet configured.
         """
         design_classes = self.shop_opt_products_design_classes or ""
-        if "o_wsale_products_opt_layout_catalog" not in design_classes:
+        if not self._uses_shop_products_catalog_layout():
             return (
                 "o_wsale_products_opt_name_color_regular "
                 "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
@@ -1274,6 +1280,12 @@ class Website(models.Model):
                 "o_wsale_products_opt_has_cta"
             )
         return design_classes
+
+    def _get_shop_products_grid_gap(self):
+        """Return the shop grid gap when its catalog design is reused by product snippets."""
+        if self._uses_shop_products_catalog_layout():
+            return self.shop_gap or const.DEFAULT_SHOP_PRODUCTS_GRID_GAP
+        return const.DEFAULT_SHOP_PRODUCTS_GRID_GAP
 
     def _get_product_image_ratio_classes(self):
         """Return the classes defining the product image aspect ratio from the website's design
