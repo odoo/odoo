@@ -8,7 +8,7 @@
                     <span class="input-group-text"><i class="oi-fw oi" data-icon="search" role="img" aria-label="Search Products" title="Search Products"/></span>
                     <input class="form-control form-control-lg" t-ref="this.autofocusRef"
                     t-model.proxy="this.state.searchInput" t-on-keydown="this.onSearchInputKeydown" t-on-keyup="this.onSearchInputKeyup" type="text" t-att-placeholder="this.props.placeholder" />
-                    <div t-if="this.state.showSearchFields and this.state.searchInput" class="fields z-1 bg-light">
+                    <div t-if="this.state.showSearchFields and this.state.searchInput" class="fields bg-light">
                         <ul class="py-1 px-0 small">
                             <t t-foreach="this.searchFieldsList" t-as="fieldName" t-key="fieldName" t-if="this.state.selectedFilter === 'SYNCED' or fieldName !== 'INVOICE_NUMBER'">
                                 <li class="ps-5 py-1 text-start"
