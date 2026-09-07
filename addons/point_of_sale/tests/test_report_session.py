@@ -71,6 +71,8 @@ class TestReportSession(TestPoSCommon):
         # self.assertEqual(bank_payment[0]['cash_moves'][0]['amount'], 40)  TODO WAN
         self.assertEqual(report['products_info']['total'], 100, "Total amount of products should be 100, as we want total without tax")
         self.assertEqual(report['products'][0]['products'][0]['base_amount'], 100, "Base amount of product should be 100, as we want price without tax")
+        self.assertEqual(report['products'][0]['total'], 100, "Category total should be 100, as it is tax excluded")
+        self.assertEqual(report['products'][0]['total_paid'], 110, "Category total paid should be 110, as it matches the price paid for its products")
 
     def test_report_session_2(self):
 

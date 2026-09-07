@@ -472,10 +472,14 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         for category_dict in categories:
             qty_cat = 0
             total_cat = 0
+            total_paid_cat = 0
             for product in category_dict['products']:
                 qty_cat += product['quantity']
                 total_cat += product['base_amount']
+                total_paid_cat += product['total_paid']
+            # `total` is always tax excluded, `total_paid` follows the price tax setting
             category_dict['total'] = round(total_cat, price_precision)
+            category_dict['total_paid'] = round(total_paid_cat, price_precision)
             category_dict['qty'] = round(qty_cat, qty_precision)
         # IMPROVEMENT: It would be better if the `products` are grouped by pos.order.line.id.
         unique_products = list({tuple(sorted(product.items())): product for category in categories for product in category['products']}.values())
