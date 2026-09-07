@@ -1109,6 +1109,7 @@ MISC_WHITELIST = {
 }
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
+    "action": ['ActionManagerPlugin', '@web/webclient/actions/action_plugin'],
     "assetsWatchdog": ['AssetsWatchdogPlugin', '@bus/services/assets_watchdog_plugin'],
     "bus.parameters": ['BusParametersPlugin', '@bus/bus_parameters_plugin'],
     "bus.monitoring_service": ['BusMonitoringPlugin', '@bus/services/bus_monitoring_plugin'],

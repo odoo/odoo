@@ -27,7 +27,7 @@ import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
  * @param {() => any} reload function to run to reload, if a button has data-reload-on-close
  */
 export function useActionLinks(resModel, reload) {
-    const { doAction } = useService("action");
+    const actionService = useService("action");
     const { keepLast } = useEnv();
     const orm = usePlugin(ORM);
 
@@ -47,14 +47,14 @@ export function useActionLinks(resModel, reload) {
             }
             const action = await keepLast.add(orm.call(data.model, data.method));
             if (action !== null) {
-                keepLast.add(Promise.resolve(doAction(action, options)));
+                keepLast.add(Promise.resolve(actionService.doAction(action, options)));
             }
         } else if (target.getAttribute("name")) {
             const options = {};
             if (data.context) {
                 options.additionalContext = evaluateExpr(data.context);
             }
-            keepLast.add(doAction(target.getAttribute("name"), options));
+            keepLast.add(actionService.doAction(target.getAttribute("name"), options));
         } else {
             let views;
             const resId = data.resid ? parseInt(data.resid, 10) : null;
@@ -84,7 +84,7 @@ export function useActionLinks(resModel, reload) {
             if (data.context) {
                 options.additionalContext = evaluateExpr(data.context);
             }
-            keepLast.add(doAction(action, options));
+            keepLast.add(actionService.doAction(action, options));
         }
     }
 

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "./action_service";
+import { standardActionServiceProps } from "./action_plugin";
 
 import { Component, onWillStart, useProps } from "@odoo/owl";
 
