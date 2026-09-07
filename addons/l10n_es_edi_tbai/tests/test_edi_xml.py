@@ -9,6 +9,7 @@ from lxml import etree
 
 from odoo.addons.l10n_es_edi_tbai.models.xml_utils import NS_MAP
 from odoo.tests import tagged
+from odoo import Command
 
 from .common import TestEsEdiTbaiCommon
 
@@ -210,6 +211,33 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             xml_doc = etree.fromstring(self.edi_format._l10n_es_tbai_get_invoice_content_edi(self.in_invoice))
             xml_expected = etree.fromstring(super().L10N_ES_TBAI_SAMPLE_XML_POST_IN_IC)
             self.assertXmlTreeEqual(xml_doc, xml_expected)
+
+    def test_in_invoice_report(self):
+        """Test that a Batuz vendor bill can be printed. As it is not part of the TicketBAI chain,
+           no TicketBAI ID/QR code should be rendered for it.
+        """
+        self._set_tax_agency('bizkaia')
+        in_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'ref': 'INV/5234',
+            'invoice_date': date(2022, 1, 1),
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
+            })],
+        })
+        in_invoice.action_post()
+        in_invoice.l10n_es_tbai_post_xml = b64encode(b"""<LROEPJ240FacturasRecibidasAltaModifPeticion>
+<CabeceraFactura><FechaExpedicionFactura>01-01-2022</FechaExpedicionFactura></CabeceraFactura>
+</LROEPJ240FacturasRecibidasAltaModifPeticion>""")
+        tbai_doc = in_invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')
+        self.assertTrue(tbai_doc)
+        tbai_doc.state = 'sent'
+
+        html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice', in_invoice.ids)[0]
+        self.assertNotIn(b'TBAI-', html)
 
     def test_xml_tree_cancel(self):
         self.out_invoice.l10n_es_tbai_post_xml = b64encode(b"""<TicketBAI>
