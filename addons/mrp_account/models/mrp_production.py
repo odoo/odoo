@@ -25,6 +25,14 @@ class MrpProduction(models.Model):
         for account in self:
             account.wip_move_count = len(account.wip_move_ids)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('bom_id'):
+                bom = self.env['mrp.bom'].browse(vals['bom_id'])
+                vals['extra_cost'] = bom.extra_cost
+        return super().create(vals_list)
+
     def write(self, vals):
         res = super().write(vals)
         for production in self.sudo():
@@ -59,7 +67,6 @@ class MrpProduction(models.Model):
         """Set a price unit on the finished move according to `consumed_moves`.
         """
         super()._cal_price(consumed_moves)
-
         work_center_cost = 0
         # A production can have several finished moves.
         finished_moves = self.move_finished_ids.filtered(
