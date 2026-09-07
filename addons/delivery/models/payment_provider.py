@@ -49,3 +49,7 @@ class PaymentProvider(models.Model):
             )
 
         return compatible_providers
+
+    @api.model
+    def _get_pay_on_delivery_provider_codes(self):
+        return {'cash_on_delivery'}
