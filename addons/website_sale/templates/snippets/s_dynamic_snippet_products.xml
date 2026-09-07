@@ -34,6 +34,7 @@
         <t t-call="website.s_dynamic_snippet_template"
             snippet_name="snippet_name"
             snippet_classes="'oe_website_sale o_dynamic_carousel_snippet s_dynamic_snippet_products o_carousel_multi_items ' + default_design_classes"
+            snippet_style.f="--o-wsale-products-grid-gap: {{env.website.shop_gap or '16px'}};"
             main_page_url.f="/shop">
             <t t-call="website_sale.s_dynamic_snippet_products_preview_data"/>
         </t>
