@@ -30,7 +30,10 @@ class SifnextPPL(models.Model):
         required=True, default="manual", tracking=True,
     )
     line_ids = fields.One2many("sifnext.ppl.line", "ppl_id", string="Detail", copy=True)
-    total_amount = fields.Monetary(compute="_compute_total_amount", store=True, tracking=True)
+    has_ppn = fields.Boolean(string="Dikenakan PPN", default=False, tracking=True)
+    ppn_percentage = fields.Float(string="Persentase PPN (%)", default=11.0, tracking=True)
+    ppn_amount = fields.Monetary(compute="_compute_total_amount", store=True, string="Nominal PPN")
+    total_amount = fields.Monetary(compute="_compute_total_amount", store=True, tracking=True, string="Total Akhir")
     currency_id = fields.Many2one(
         "res.currency", required=True,
         default=lambda self: self.env.company.currency_id,
@@ -64,6 +67,9 @@ class SifnextPPL(models.Model):
     )
     payment_date = fields.Date(string="Tanggal Pembayaran", tracking=True)
     payment_reference = fields.Char(string="Referensi Pembayaran", tracking=True)
+    payment_dest_bank = fields.Char(string="Bank Tujuan", tracking=True, help="Nama bank rekening penerima transfer.")
+    payment_dest_account_number = fields.Char(string="No Rekening Tujuan", tracking=True)
+    payment_dest_account_name = fields.Char(string="Atas Nama Rekening", tracking=True)
     submitted_by = fields.Many2one("res.users", readonly=True, copy=False)
     submitted_at = fields.Datetime(readonly=True, copy=False)
     verified_by = fields.Many2one("res.users", readonly=True, copy=False)
@@ -80,10 +86,15 @@ class SifnextPPL(models.Model):
         "Nomor PPL harus unik dalam satu perusahaan.",
     )
 
-    @api.depends("line_ids.subtotal")
+    @api.depends("line_ids.subtotal", "has_ppn", "ppn_percentage")
     def _compute_total_amount(self):
         for record in self:
-            record.total_amount = sum(record.line_ids.mapped("subtotal"))
+            subtotal = sum(record.line_ids.mapped("subtotal"))
+            if record.has_ppn:
+                record.ppn_amount = subtotal * (record.ppn_percentage / 100.0)
+            else:
+                record.ppn_amount = 0.0
+            record.total_amount = subtotal + record.ppn_amount
 
     @api.constrains("line_ids")
     def _check_positive_lines(self):
@@ -166,7 +177,10 @@ class SifnextPPL(models.Model):
         if "line_ids" in vals and any(record.state != "draft" for record in self):
             if not self._is_submitted_coa_update(vals["line_ids"]):
                 raise UserError(_("Detail kebutuhan hanya dapat diubah pada status Draft."))
-        payment_fields = {"payment_method", "payment_source_account_id", "payment_date", "payment_reference"}
+        payment_fields = {
+            "payment_method", "payment_source_account_id", "payment_date", "payment_reference",
+            "payment_dest_bank", "payment_dest_account_number", "payment_dest_account_name",
+        }
         if payment_fields.intersection(vals):
             if not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
                 raise AccessError(_("Hanya Keuangan yang dapat mengisi data pembayaran."))
@@ -234,10 +248,18 @@ class SifnextPPL(models.Model):
                     "name": self.currency_id.name,
                 },
                 "total_amount": self.total_amount,
+                "ppn": {
+                    "has_ppn": self.has_ppn,
+                    "percentage": self.ppn_percentage,
+                    "amount": self.ppn_amount,
+                },
                 "payment": {
                     "method": self.payment_method,
                     "date": fields.Date.to_string(self.payment_date),
                     "reference": self.payment_reference,
+                    "dest_bank": self.payment_dest_bank,
+                    "dest_account_number": self.payment_dest_account_number,
+                    "dest_account_name": self.payment_dest_account_name,
                     "paid_by_id": self.paid_by.id,
                     "paid_at": fields.Datetime.to_string(self.paid_at),
                     "source_account": {
@@ -307,6 +329,22 @@ class SifnextPPL(models.Model):
                     'debit': line['amount'],
                     'credit': 0.0,
                 })
+        if payload['ppl']['ppn']['has_ppn'] and payload['ppl']['ppn']['amount'] > 0:
+            # ponytail: Hardcode ke akun tipe asset atau cari berdasarkan nama PPN.
+            # Upgrade path: Tambahkan setting akun khusus PPN di modul konfigurasi PPL.
+            ppn_account = self.env['sif.coa'].search([
+                ('name', 'ilike', 'ppn'),
+                ('account_type', '=', 'asset')
+            ], limit=1)
+            if not ppn_account:
+                raise UserError(_("PPL memiliki PPN, tetapi Master COA untuk akun PPN tidak ditemukan."))
+            jurnal_lines.append({
+                'account_id': ppn_account.id,
+                'name': f"PPN {payload['ppl']['ppn']['percentage']}% - {payload['ppl']['number']}",
+                'debit': payload['ppl']['ppn']['amount'],
+                'credit': 0.0,
+            })
+        
         source_account = payload['ppl']['payment'].get('source_account')
         if not source_account or not source_account.get('id'):
             raise UserError(_("Sumber dana (kas/bank) pembayaran belum dipilih."))
