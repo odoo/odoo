@@ -105,11 +105,11 @@ class DiscussMessagingMenuController(WebclientController):
         store: Store,
         tab_id,
         limit,
-        filter_id=None,
+        filter_ids=None,
         exclude_ids=None,
         search_term=None,
     ):
-        domain = self._get_menu_load_more_domain(tab_id, filter_id, exclude_ids)
+        domain = self._get_menu_load_more_domain(tab_id, filter_ids, exclude_ids)
         if search_term:
             domain &= Domain("name", "ilike", search_term)
         # Favorites first, plus any tab specific priority.

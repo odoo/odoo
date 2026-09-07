@@ -15,10 +15,25 @@ export class MessagingMenuUIState extends Record {
         onUpdate() {
             // No tab to show while the menu is still being filled up.
             this.selectedFilter = this.activeTab?.defaultFilter;
+            this.pluginFilters = {};
         },
     });
-    /** @type {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter} */
+    /**
+     * The active chip filter (e.g. "Unread"), if any: rendered as a filter chip, sourced
+     * from `tab.filters`.
+     *
+     * @type {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter}
+     */
     selectedFilter;
+    /**
+     * Extra filters set by addons, keyed by an arbitrary string each addon picks for
+     * itself (e.g. `"ai.agent_scope"`). ANDed with the chip filter. Display is up to
+     * the addon.
+     *
+     * @type {Object<string,
+     * import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter>}
+     */
+    pluginFilters = fields.Attr({}, { asProxy: true });
     /** @type {string} */
     id;
     /**
@@ -30,13 +45,38 @@ export class MessagingMenuUIState extends Record {
             if (!this._isReadyForInitialLoad() || !this.activeTab) {
                 return null;
             }
-            return `${this.activeTab.id}::${this.selectedFilter?.id ?? ""}`;
+            const filterKey = this.activeTab._filterKey(
+                this.selectedFilter,
+                this.activePluginFilters
+            );
+            return `${this.activeTab.id}__${filterKey}`;
         },
         eager: true,
         onUpdate() {
             this._ensureTabOrFilterInitialLoad();
         },
     });
+
+    /** Currently active plugin filters, as an array. */
+    get activePluginFilters() {
+        return Object.values(this.pluginFilters).filter(Boolean);
+    }
+
+    /**
+     * Set or clear (pass `undefined` as the filter) the plugin filter under `key`. Meant
+     * for addon code with its own UI that needs to narrow a tab's content, keeping the
+     * chip filter.
+     *
+     * @param {string} key
+     * @param {?import("@mail/core/public_web/messaging_menu/messaging_menu_tab_model").MessagingMenuTabFilter} filter
+     */
+    setPluginFilter(key, filter) {
+        if (filter) {
+            this.pluginFilters[key] = filter;
+        } else {
+            delete this.pluginFilters[key];
+        }
+    }
 
     /**
      * Handles an explicit tab selection by the user.
@@ -61,8 +101,11 @@ export class MessagingMenuUIState extends Record {
     }
 
     _ensureTabOrFilterInitialLoad() {
-        if (this.activeTab.getLoadStatus(this.selectedFilter) === "new") {
-            this.activeTab.loadMore({ filter: this.selectedFilter });
+        if (this.activeTab.getLoadStatus(this.selectedFilter, this.activePluginFilters) === "new") {
+            this.activeTab.loadMore({
+                filter: this.selectedFilter,
+                pluginFilters: this.activePluginFilters,
+            });
         }
     }
 }

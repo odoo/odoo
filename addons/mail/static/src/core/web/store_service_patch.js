@@ -172,12 +172,15 @@ const StorePatch = {
     async markNeedactionMessagesAsRead() {
         const { orm, notification } = this.env.services;
         const readMessageIds = await orm.silent.call("mail.message", "mark_all_as_read");
-        // Everything was read: the "Unread" filter view is now empty and fully loaded.
+        // Everything was read: any filter combination including "notification_unread" is
+        // now empty and fully loaded.
         const notificationTab = this.store.messagingMenu.notificationTab;
-        notificationTab.loadStatusByFilterId = {
-            ...notificationTab.loadStatusByFilterId,
-            notification_unread: "loaded",
-        };
+        for (const key of Object.keys(notificationTab.loadStatusByFilterId)) {
+            if (key.split("__").includes("notification_unread")) {
+                notificationTab.loadStatusByFilterId[key] = "loaded";
+            }
+        }
+        notificationTab.loadStatusByFilterId.notification_unread = "loaded";
         const close = notification.add(
             readMessageIds.length === 1
                 ? _t("1 item marked as read")
