@@ -81,7 +81,7 @@
                        decoration-success="line_invoice_status == 'invoiced'"
                        decoration-info="line_invoice_status == 'to invoice'"
                        decoration-warning="line_invoice_status == 'upselling'"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- Required by price_unit/price_subtotal/price_total monetary widgets for currency formatting -->
             </list>
         </field>
     </record>

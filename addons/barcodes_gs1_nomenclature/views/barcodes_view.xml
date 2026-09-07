@@ -54,7 +54,7 @@
                     <field name="gs1_content_type" invisible="not is_gs1_nomenclature"/>
                     <field name="gs1_decimal_usage" invisible="not is_gs1_nomenclature or gs1_content_type != 'measure'"/>
                     <field name="associated_uom_id" invisible="not is_gs1_nomenclature or gs1_content_type != 'measure'"/>
-                    <field name="is_gs1_nomenclature" invisible="1"/>
+                    <field name="is_gs1_nomenclature" invisible="1"/> <!-- Drives the invisible of encoding attribute and gs1_content_type/gs1_decimal_usage/associated_uom_id fields in this xpath -->
                 </xpath>
             </field>
         </record>

@@ -68,8 +68,8 @@
                 <sheet>
                     <group>
                         <group>
-                            <field name="tracking" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
+                            <field name="tracking" invisible="1"/> <!-- used by lot_id readonly/required conditions in this view -->
+                            <field name="company_id" invisible="1"/> <!-- kept for onchange/compute of quantity and serial number check -->
                             <field name="product_id" readonly="0" options="{'no_create': True}"/>
                             <field name="location_id" readonly="0" options="{'no_create': True}"/>
                             <field name="lot_id" groups="stock.group_production_lot"
@@ -115,11 +115,11 @@
                 <header>
                     <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_quants'}"/>
                 </header>
-                <field name="create_date" column_invisible="True"/>
-                <field name="write_date" column_invisible="True"/>
-                <field name="id" column_invisible="True"/>
-                <field name="tracking" column_invisible="True"/>
-                <field name="company_id" column_invisible="True"/>
+                <field name="create_date" column_invisible="True"/> <!-- compared to write_date by InventoryReportListModel JS to detect duplicate quant creation -->
+                <field name="write_date" column_invisible="True"/> <!-- compared to create_date by InventoryReportListModel JS to detect duplicate quant creation -->
+                <field name="id" column_invisible="True"/> <!-- used by readonly conditions on sibling fields in this list -->
+                <field name="tracking" column_invisible="True"/> <!-- used by lot_id readonly condition in this list -->
+                <field name="company_id" column_invisible="True"/> <!-- kept for onchange/compute needing company_id -->
                 <field name="location_id"
                        column_invisible="context.get('hide_location', False)"
                        readonly="id"
@@ -253,10 +253,10 @@ in this location. That leads to a negative stock.
                 </div>
                 <group>
                     <group>
-                        <field name="location_id" invisible="1"/>
-                        <field name="company_id" invisible="1"/>
-                        <field name="product_id" invisible="1"/>
-                        <field name="product_id" force_save="1" invisible="1"/>
+                        <field name="location_id" invisible="1"/> <!-- holds default_location_id from context, read by lot_id/location_id below -->
+                        <field name="company_id" invisible="1"/> <!-- kept for onchange/compute needing company_id -->
+                        <field name="product_id" invisible="1"/> <!-- holds default_product_id from context, used by lot_id domain/context -->
+                        <field name="product_id" force_save="1" invisible="1"/> <!-- persisted via force_save so product_id is saved though never shown editable -->
                         <field name="lot_id" domain="[('product_id', '=', product_id)]"
                             groups="stock.group_production_lot" readonly="context.get('readonly_form')"
                             context="{'default_product_id': product_id, 'active_picking_id': context.get('active_picking_id')}"/>
@@ -286,14 +286,14 @@ in this location. That leads to a negative stock.
                     <button name="action_reset" type="object" string="Clear" groups="stock.group_stock_manager"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
                 </header>
-                <field name="create_date" column_invisible="True"/>
-                <field name="write_date" column_invisible="True"/>
-                <field name="id" column_invisible="True"/>
-                <field name="is_outdated" column_invisible="True"/>
-                <field name="sn_duplicated" column_invisible="True"/>
-                <field name="tracking" column_invisible="True"/>
-                <field name="inventory_quantity_set" column_invisible="True"/>
-                <field name="company_id" column_invisible="True"/>
+                <field name="create_date" column_invisible="True"/> <!-- compared to write_date by InventoryReportListModel JS to detect duplicate quant creation -->
+                <field name="write_date" column_invisible="True"/> <!-- compared to create_date by InventoryReportListModel JS to detect duplicate quant creation -->
+                <field name="id" column_invisible="True"/> <!-- used by readonly conditions on sibling fields in this list -->
+                <field name="is_outdated" column_invisible="True"/> <!-- drives decoration-warning on this list's rows -->
+                <field name="sn_duplicated" column_invisible="True"/> <!-- drives decoration-danger on lot_id in this list -->
+                <field name="tracking" column_invisible="True"/> <!-- used by lot_id readonly condition in this list -->
+                <field name="inventory_quantity_set" column_invisible="True"/> <!-- drives invisible on inventory_diff_quantity and the Apply/Clear buttons -->
+                <field name="company_id" column_invisible="True"/> <!-- kept for onchange/compute needing company_id -->
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False)" readonly="id" options="{'no_create': True}"/>
                 <field name="cyclic_inventory_frequency" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
                 <field name="product_id" readonly="context.get('single_product', False) or id" force_save="1" options="{'no_create': True}"/>
