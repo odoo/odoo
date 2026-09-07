@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime, timedelta
-from odoo import fields
+from odoo import _, fields
 from odoo.addons.sms.tests.common import SMSCase
 from odoo.tests.common import TransactionCase
 
@@ -114,3 +114,21 @@ class TestCalendarSms(TransactionCase, SMSCase):
                         content=self.sms_template_1h.body)
         self.assertSMS(self.partner_phone_2, self.partner_phone_2.phone_sanitized, 'sent',
                         content=self.sms_template_24h.body)
+
+    def test_sms_fallback_is_not_rendered(self):
+        event_name = "{{ 1 + 1 }}"
+        self.event_1h.name = event_name
+        self.alarm_1h.sms_template_id = False
+
+        with self.mockSMSGateway():
+            lastcall = fields.Datetime.now() - timedelta(hours=1)
+            self.env['calendar.alarm_manager'].with_context(
+                lastcall=lastcall,
+            )._send_reminder()
+
+        self.assertSMS(
+            self.partner_phone,
+            self.partner_phone.phone_sanitized,
+            'sent',
+            content=_("Event reminder: %(name)s, %(time)s.", name=event_name, time=self.event_1h.display_time),
+        )
