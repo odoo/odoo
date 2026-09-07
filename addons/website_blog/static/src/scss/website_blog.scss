@@ -9,6 +9,10 @@
 .website_blog {
     --Avatar-size: 2.5rem;
 
+    .o_sticky_reactive {
+        transition: top 0.2s;
+    }
+
     .text-wrap-pretty {
         text-wrap: pretty;
     }
@@ -21,7 +25,7 @@
             padding-top: $border-width;
             padding-left: $border-width;
         }
-        
+
         .o_wblog_bordered_grid_container {
             --border-color: #{$gray-300};
 
@@ -62,7 +66,7 @@
             }
 
             // Consider text-muted as text-white, so the muted elements are
-            // visible on the sticky cover. 
+            // visible on the sticky cover.
             .text-muted {
                 opacity: 0.75;
                 color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
@@ -166,7 +170,7 @@
 
                     &.active {
                         padding-left: #{$spacer};
-                    
+
                         // Active vertical bar
                         &::before {
                             content: "";
