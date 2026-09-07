@@ -51,8 +51,8 @@
                     <field name="use_in_tax_closing"
                            optional="hidden"
                            invisible="repartition_type == 'base'"/>
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="tag_ids_domain" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- provides check_company for account_id in this repartition list -->
+                    <field name="tag_ids_domain" column_invisible="True"/> <!-- feeds the domain="tag_ids_domain" on the tag_ids column above -->
                 </list>
             </field>
         </record>
@@ -192,7 +192,7 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <form string="Account Tax">
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- exposed for check_company on account/tax_group domains; the visible copy is behind groups="base.group_multi_company" -->
                     <sheet>
                     <group>
                         <group>
@@ -218,7 +218,7 @@
                     <notebook>
                         <page string="Definition" name="definition">
                             <group invisible="amount_type == 'group'">
-                                <field name="country_code" invisible="1"/>
+                                <field name="country_code" invisible="1"/> <!-- drives "country_code != 'XX'" modifiers in l10n tax-form inherits (l10n_in, l10n_it, l10n_ee, ...) -->
                                 <group string="Distribution for Invoices" class="mw-100">
                                     <field name="invoice_repartition_line_ids" nolabel="1" colspan="2" context="{'default_document_type': 'invoice'}"/>
                                 </group>
@@ -246,7 +246,7 @@
                                     <field name="country_id" required="True"/>
                                 </group>
                                 <group name="advanced_booleans">
-                                    <field name="price_include" invisible="1"/>
+                                    <field name="price_include" invisible="1"/> <!-- drives the "or price_include" part of is_base_affected's invisible modifier below -->
                                     <field name="price_include_override"
                                            invisible="amount_type == 'group' or has_negative_factor"
                                            placeholder="Default"
@@ -255,7 +255,7 @@
                                     <field name="is_base_affected"
                                            invisible="amount_type == 'group' or price_include"
                                            groups="base.group_no_one"/>
-                                    <field name="hide_tax_exigibility" invisible="1"/>
+                                    <field name="hide_tax_exigibility" invisible="1"/> <!-- drives the "not hide_tax_exigibility" part of tax_exigibility's invisible modifier below -->
                                     <field name="tax_exigibility" widget="radio" invisible="amount_type == 'group' or not hide_tax_exigibility"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" invisible="tax_exigibility == 'on_invoice'" required="tax_exigibility == 'on_payment'"/>
                                     <field name="active" widget="boolean_toggle"/>
@@ -310,9 +310,9 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="country_id"/>
-                    <field name="company_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- always-loaded copy of the record company; the visible column below is multi-company only -->
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="country_code" column_invisible="True"/>
+                    <field name="country_code" column_invisible="True"/> <!-- related country_id.code column kept available to inheriting tax-group lists -->
                     <field name="preceding_subtotal" optional="hide"/>
                 </list>
             </field>
@@ -323,7 +323,7 @@
             <field name="model">account.tax.group</field>
             <field name="arch" type="xml">
                 <form string="Account Tax Group">
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- exposed for check_company on the tax payable/receivable/advance accounts; the visible copy is behind groups="base.group_multi_company" -->
                     <sheet>
                         <group>
                             <group>

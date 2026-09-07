@@ -4926,8 +4926,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
     def test_uncommented_invisible_field(self):
         # NEVER add new name in this list ! The new addons must add comment for all always invisible field.
         only_log_modules = (
-            'account',
-            'account_accountant',
             'account_asset',
             'account_asset_fleet',
             'account_auto_transfer',
@@ -4943,14 +4941,9 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account_edi_proxy_client',
             'account_external_tax',
             'account_fleet',
-            'account_followup',
             'account_intrastat',
-            'account_invoice_extract',
-            'account_online_synchronization',
-            'account_payment',
             'account_peppol',
             'account_qr_code_emv',
-            'account_reports',
             'account_saft_import',
             'account_sepa',
             'analytic',

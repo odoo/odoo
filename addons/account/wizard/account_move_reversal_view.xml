@@ -6,11 +6,11 @@
             <field name="model">account.move.reversal</field>
             <field name="arch" type="xml">
                 <form string="Reverse Journal Entry">
-                    <field name="residual" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="move_ids" invisible="1"/>
-                    <field name="move_type" invisible="1"/>
-                    <field name="available_journal_ids" invisible="1"/>
+                    <field name="residual" invisible="1"/> <!-- computed remaining amount of the reversed move, kept available on the record -->
+                    <field name="company_id" invisible="1"/> <!-- feeds the country_code related field and the company domain of available_journal_ids -->
+                    <field name="move_ids" invisible="1"/> <!-- source field driving the available_journal_ids, residual and move_type computes -->
+                    <field name="move_type" invisible="1"/> <!-- drives the invisible modifier on the reason field and the "Reverse and Create Invoice" button -->
+                    <field name="available_journal_ids" invisible="1"/> <!-- drives the domain "[('id', 'in', available_journal_ids)]" on journal_id -->
                     <group>
                         <field name="reason" invisible="move_type == 'entry'"/>
                         <field name="journal_id" domain="[('id', 'in', available_journal_ids)]"/>

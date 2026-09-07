@@ -17,7 +17,6 @@
                     <sheet>
                         <group>
                             <field name="company_id" invisible="1"/>  <!-- Otherwise not present in the vals in the create -->
-                            <field name="opening_move_posted" invisible="1"/>
                             <field name="opening_date"/>
 
                             <label for="fiscalyear_last_month" string="Fiscal Year End"/>
@@ -103,7 +102,7 @@
                     </header>
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="company_ids" column_invisible="True"/>
+                    <field name="company_ids" column_invisible="True"/> <!-- account's company field; scopes the check_company=True domains (tax_ids, etc.) in this list -->
                     <field name="account_type" widget="account_type_selection"/>
                     <field name="reconcile" optional="hide" widget="boolean_toggle"/>
                     <field name="active" optional="show" widget="boolean_toggle"/>

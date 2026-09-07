@@ -7,7 +7,7 @@
             <field name="model">account.incoterms</field>
             <field name="arch" type="xml">
                 <list string="Incoterms" editable="bottom">
-                    <field name="active" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/> <!-- loaded so rows can be archived/unarchived from this editable list -->
                     <field name="code"/>
                     <field colspan="4" name="name"/>
                 </list>
@@ -22,7 +22,7 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives the invisible="active" modifier on the "Archived" web_ribbon above -->
                             <field name="name"/>
                             <field name="code"/>
                         </group>

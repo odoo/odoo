@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Account Lock Exception">
                     <header>
-                        <field name="active" invisible="True"/>
+                        <field name="active" invisible="True"/> <!-- drives invisible="not active" on the statusbar and invisible="active" on the "Revoked" web_ribbon -->
                         <field name="state" widget="statusbar" statusbar_visible="active,expired" invisible="not active"/>
                         <button string="Revoke" invisible="state != 'active'" class="btn-secondary"
                                 type="object" name="action_revoke"/>

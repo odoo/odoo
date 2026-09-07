@@ -19,10 +19,10 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
-                    <field name="country_code" invisible="1" groups="account.group_account_manager"/>
+                    <field name="country_code" invisible="1" groups="account.group_account_manager"/> <!-- drives the invisible modifier "country_code not in ('US', 'CA')" on the Checks setting -->
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
-                        <field name="has_chart_of_accounts" invisible="1"/>
-                        <field name="has_accounting_entries" invisible="1"/>
+                        <field name="has_chart_of_accounts" invisible="1"/> <!-- technical flag (computed from company chart_template) loaded for inherited localization settings -->
+                        <field name="has_accounting_entries" invisible="1"/> <!-- drives the readonly on chart_template and the Reload button invisible modifier -->
                         <block title="Initial Setup" name="fiscal_localization_setting_container" invisible="not is_root_company">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
                                 documentation="/applications/finance/fiscal_localizations.html">
@@ -132,7 +132,7 @@
                                     <div class="row mt16">
                                         <label for="currency_id" class="col-lg-3 o_light_label"/>
                                         <field name="currency_id" options="{'no_create_edit': True, 'no_open': True}" context="{'active_test': False}"/>
-                                        <field name="group_multi_currency" invisible="1"/>
+                                        <field name="group_multi_currency" invisible="1"/> <!-- drives the "not group_multi_currency" invisible modifier on the exchange-rate settings -->
                                     </div>
                                     <div class="mt8">
                                         <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="east"/>
@@ -186,7 +186,7 @@
                                         <div class="mt8" invisible="terms_type != 'html'">
                                             <button name="action_update_terms" icon="east" type="object" string="Update Terms" class="btn-link"/>
                                         </div>
-                                        <field name="preview_ready" invisible="1"/>
+                                        <field name="preview_ready" invisible="1"/> <!-- drives the "not preview_ready" invisible modifier on the terms Preview link -->
                                         <div class="mt4 ms-1" invisible="not preview_ready">
                                             <a class="btn-link" href="/terms" role="button">
                                                 <i class="oi" data-icon="east"/>
@@ -404,7 +404,7 @@
                                 <field name="restrictive_audit_trail"/>
                             </setting>
                         </block>
-                        <field name="is_account_peppol_eligible" invisible="1"/>
+                        <field name="is_account_peppol_eligible" invisible="1"/> <!-- drives the "not is_account_peppol_eligible" invisible modifier on the Electronic Invoicing block -->
                         <block title="Storno Accounting" id="storno" groups="account.group_account_user" invisible="not display_account_storno">
                             <setting id="enable_storno_accounting" company_dependent="1" help="Use negative numbers to reverse original entries">
                                 <field name="account_storno"/>
