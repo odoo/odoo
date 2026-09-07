@@ -868,7 +868,7 @@ class AccountMoveLine(models.Model):
             return SQL("1")
 
         date_from = self.env.context.get('date_from')
-        date_to = self.env.context['date_to']
+        date_to = self.env.context.get('date_to')
         historical, average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_from, date_to)
 
         raw_rates_alias = table._make_alias(f'raw_{currency_translation}')
