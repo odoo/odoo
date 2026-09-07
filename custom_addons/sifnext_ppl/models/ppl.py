@@ -9,6 +9,8 @@ class SifnextPPL(models.Model):
     _order = "request_date desc, id desc"
 
     name = fields.Char(default="New", readonly=True, copy=False, tracking=True, index=True)
+    project_code = fields.Char(string="Kode Proyek", default="0000", tracking=True, 
+                               help="Kode spesifik proyek. Gunakan '0000' untuk operasional biasa.")
     request_date = fields.Date(required=True, default=fields.Date.context_today, tracking=True)
     applicant_id = fields.Many2one(
         "res.users", required=True, default=lambda self: self.env.user,
@@ -218,6 +220,7 @@ class SifnextPPL(models.Model):
             "ppl": {
                 "id": self.id,
                 "number": self.name,
+                "project_code": self.project_code,
                 "state": self.state,
                 "source_type": self.source_type,
                 "request_date": fields.Date.to_string(self.request_date),
