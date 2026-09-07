@@ -1532,7 +1532,7 @@ describe("Should not convert blacklisted class to inline styles", () => {
         classToStyle(editable, getCSSRules(editable.ownerDocument));
 
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect" style="text-decoration: none; padding: 0rem 0.15rem; margin: 0rem 0.025rem; box-sizing: border-box; overflow-wrap: unset;">@Marc Demo</a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect" style="text-decoration:none;box-sizing:border-box;overflow-wrap:unset;">@Marc Demo</a> Testing!`,
             {
                 message: "blacklisted class styles should remain unconverted",
             }
@@ -1548,8 +1548,40 @@ describe("Should not convert blacklisted class to inline styles", () => {
         editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-style">@Marc Demo</a> Testing!`;
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect test-style" style="text-decoration: none; padding: 0rem 0.15rem; margin: 0rem 0.025rem; box-sizing: border-box; background-color: yellow; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-style" style="text-decoration:none;box-sizing:border-box;background-color:yellow;overflow-wrap:unset;"> @Marc Demo </a> Testing!`,
             { message: "styles marked !important should override blacklisted class restrictions" }
+        );
+    });
+
+    test("should not convert blacklisted class of an element in the document", async () => {
+        getFixture().append(editable);
+        editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect">@Marc Demo</a> Testing!`;
+
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+
+        const style = editable.querySelector("a").style;
+        const properties = [
+            "border-radius",
+            "display",
+            "font-weight",
+            "margin",
+            "outline-style",
+            "padding",
+            "text-decoration",
+        ];
+        expect(
+            Object.fromEntries(properties.map((name) => [name, style.getPropertyValue(name)]))
+        ).toEqual(
+            {
+                "border-radius": "",
+                display: "",
+                "font-weight": "",
+                margin: "",
+                "outline-style": "",
+                padding: "",
+                "text-decoration": "none",
+            },
+            { message: "only the styles of the blacklisted class should remain unconverted" }
         );
     });
 
@@ -1562,7 +1594,7 @@ describe("Should not convert blacklisted class to inline styles", () => {
         editable.innerHTML = `<a contenteditable="false" href="#" class="o_mail_redirect test-color">@Marc Demo</a> Testing!`;
         classToStyle(editable, getCSSRules(editable.ownerDocument));
         expect(editable).toHaveInnerHTML(
-            `<a contenteditable="false" href="#" class="o_mail_redirect test-color" style="text-decoration: none; padding: 0rem 0.15rem; margin: 0rem 0.025rem; box-sizing: border-box; overflow-wrap: unset;"> @Marc Demo </a> Testing!`,
+            `<a contenteditable="false" href="#" class="o_mail_redirect test-color" style="text-decoration:none;box-sizing:border-box;overflow-wrap:unset;"> @Marc Demo </a> Testing!`,
             {
                 message:
                     "should ignore styles from lower specificity class in favor of blacklisted class",
