@@ -84,7 +84,7 @@ according to the enabled options.
                                     <!-- Cover column -->
                                     <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"
                                         _link_classes.f="flex-basis-50 flex-shrink-0"
-                                        _ratio_classes.f="ratio ratio-4x3"/>
+                                        _cover_classes.f="ratio ratio-4x3"/>
                                     <!-- Content column -->
                                     <div class="d-flex flex-column justify-content-center flex-grow-1 p-4 p-md-5 p-xl-4">
                                         <!-- 'Unpublished' badge -->
@@ -180,7 +180,7 @@ according to the enabled options.
     <article t-attf-class="o_wblog_post #{articleClasses}" name="blog_post">
         <!-- Cover image -->
         <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"
-            _cover_classes.f="#{opt_blog_cards_design and 'card-img-top'} #{not opt_blog_cards_design and not opt_blog_bordered_grid_view and 'rounded mb-3'}">
+            _cover_classes.f="ratio ratio-16x9 #{opt_blog_cards_design and 'card-img-top'} #{not opt_blog_cards_design and not opt_blog_bordered_grid_view and 'h-auto rounded mb-3'}">
         </t>
         <div t-attf-class="#{opt_blog_cards_design and 'card-body'} #{opt_blog_bordered_grid_view and 'p-3'}">
             <!-- 'Unpublished' badge -->
@@ -230,7 +230,7 @@ according to the enabled options.
             <div t-attf-class="row #{opt_posts_loop_show_cover and opt_blog_large_list_view and 'flex-md-row-reverse'}">
                 <!-- Cover image -->
                 <div t-if="opt_posts_loop_show_cover" t-attf-class="#{opt_blog_list_view and 'col-4 pe-0 pe-lg-3' or 'col-4 col-md-6 col-lg-5 offset-lg-2'}">
-                    <t t-call="website_blog.post_cover_image" _cover_classes.f="rounded" _badge_classes.f="d-none d-md-inline"/>
+                    <t t-call="website_blog.post_cover_image" _cover_classes.f="h-auto ratio ratio-16x9 rounded" _badge_classes.f="d-none d-md-inline"/>
                 </div>
                 <!-- Contents -->
                 <t t-if="opt_posts_loop_show_cover" t-set="contentClasses" t-valuef="#{opt_blog_sidebar_show and opt_blog_list_view and 'col-8 px-3' or 'col-8 col-md-6 col-lg-5 px-3'}"/>
@@ -330,7 +330,7 @@ according to the enabled options.
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" t-attf-class="text-reset text-decoration-none #{_link_classes}">
         <t t-call="website.record_cover"
             _record="blog_post"
-            additionnal_classes.f="#{_ratio_classes or 'ratio ratio-16x9'} h-auto overflow-hidden #{_cover_classes}">
+            additionnal_classes.f="overflow-hidden #{_cover_classes}">
             <!-- 'Unpublished' badge -->
             <t t-call="website_blog.post_unpublished_badge" _badge_classes.f="o_wblog_unpublished mt-2 me-2 #{_badge_classes}"/>
         </t>
