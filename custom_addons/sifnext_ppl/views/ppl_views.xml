@@ -5,7 +5,6 @@
         <field name="arch" type="xml">
             <list decoration-info="state == 'submitted'" decoration-success="state in ('approved', 'paid', 'done')">
                 <field name="name"/>
-                <field name="project_code"/>
                 <field name="request_date"/>
                 <field name="applicant_id"/>
                 <field name="unit_id"/>
@@ -96,7 +95,6 @@
                     </div>
                     <group>
                         <group>
-                            <field name="project_code" readonly="state != 'draft'"/>
                             <field name="request_date" readonly="state != 'draft'"/>
                             <field name="applicant_id"/>
                             <field name="unit_id" required="True" readonly="state != 'draft'"/>
@@ -239,7 +237,6 @@
                     <group>
                         <group string="Informasi Utama">
                             <field name="name" readonly="1"/>
-                            <field name="project_code" readonly="1"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="total_amount" readonly="1"/>
                         </group>
@@ -280,7 +277,6 @@
             <list string="Rekap History Transfer" create="false" edit="false" delete="false" decoration-success="state == 'done'">
                 <field name="payment_date"/>
                 <field name="name" string="No PPL"/>
-                <field name="project_code"/>
                 <field name="partner_id" string="Penerima"/>
                 <field name="payment_dest_bank" string="Bank Tujuan"/>
                 <field name="payment_dest_account_number" string="No Rekening"/>
