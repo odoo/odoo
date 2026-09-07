@@ -1,0 +1,73 @@
+PRESENLY DEMO DATA RESET
+Date: 2026-09-05
+Database: odoo
+
+Backup before reset:
+- backups/presenly-migration/odoo-before-demo-reset-20260905.dump
+
+Removed transaction data:
+- hr.attendance
+- hr.leave
+- hr.leave.allocation
+- presenly.permission
+- presenly.attendance.event
+- presenly.approval.log
+- presenly.work.location.schedule
+- related Presenly selfie/permission attachments
+
+Removed demo HR master data:
+- 20 built-in demo employees (IDs 2 through 21)
+- dependent employee versions, resources, skills, resumes, followers, activities,
+  and employee-owned demo metadata through Odoo ORM lifecycle
+- manually-created Permission Type named "test"
+
+Retained:
+- Employee 1 Mitchell Admin because it is linked to the administrator account
+- Employee 42 Feri
+- Employee 43 Yusril Falih
+- system/public/portal/admin identities
+- operational company and Work Location configuration
+- shipped Permission Types and other policy configuration
+
+Demo login handling:
+- res.users ID 5 could not be physically deleted because Accounting, Sales,
+  Project, and audit records reference it.
+- It was safely archived, renamed to archived_demo_5, and assigned a random
+  unusable password. This preserves audit foreign keys while preventing login.
+
+Final transaction counts verified after module upgrade:
+- Attendance: 0
+- Time Off: 0
+- Time Off Allocation: 0
+- Permission: 0
+- Attendance Evidence: 0
+- Work Location Schedule: 0
+
+Final Employee records:
+- ID 1: Mitchell Admin (retained for administrator access)
+- ID 42: Feri
+- ID 43: Yusril Falih
+
+Scope clarification:
+- This reset covers Presenly and HR demo/transaction data.
+- Accounting, Sales, Project, and other application history was not deleted.
+- Native configuration records needed by installed Odoo applications were retained.
+
+Legacy cleanup:
+- Presenly upgraded to 19.0.5.0.0.
+- Retired presenly.unit and presenly.work.location models/tables removed.
+- Retired legacy foreign-key columns removed after guarded zero-reference checks.
+- API unit_id remains only as a temporary alias for hr.work.location ID.
+
+Validation:
+- Python compile, XML parse, shell syntax, and git diff check: passed.
+- Real HTTP smoke test: login, session cookie, Presenly attendance status,
+  logout, and expired-session rejection passed.
+- Isolated clone suite: 16 test cases / 24 test stats, 0 failures, 0 errors.
+- Test clone was deleted after validation.
+
+Restore command if rollback is required:
+  dropdb -h 127.0.0.1 -U root odoo
+  createdb -h 127.0.0.1 -U root odoo
+  pg_restore -h 127.0.0.1 -U root -d odoo \
+    backups/presenly-migration/odoo-before-demo-reset-20260905.dump

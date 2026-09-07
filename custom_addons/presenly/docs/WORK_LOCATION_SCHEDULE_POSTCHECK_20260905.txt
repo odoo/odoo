@@ -1,0 +1,74 @@
+PRESENLY WORK LOCATION SCHEDULE POST-CHECK
+Date: 2026-09-05
+Module version: 19.0.4.1.0
+
+ARCHITECTURE
+- Additional Work Location Assignment retired and removed.
+- Model metadata presenly.employee.assignment removed.
+- ACL, record rules, actions, views, smart button, and menu removed.
+- Empty physical table presenly_employee_assignment dropped by guarded migration.
+- Guarded migration preserves the table and logs a warning if another database contains rows.
+- New model: presenly.work.location.schedule.
+- Weekly slots support weekday, start/end hour, validity period, and check-in tolerance.
+- Specific Date slots override all Weekly slots for the employee on that date.
+- Overlapping slots for the same employee and schedule scope are rejected.
+
+LOCATION RESOLUTION PRIORITY
+1. Specific Date time slot.
+2. Weekly time slot.
+3. Native hr.employee.location exception.
+4. Native weekday Work Location.
+5. Employee primary Work Location fallback.
+- If slots exist for a day but none match the current time, check-in is rejected.
+- Check-out remains bound to the Work Location snapshot selected at check-in.
+
+UI
+- Active menu: Attendances > Configuration > Work Location Schedules.
+- Employee smart button: Location Schedules.
+- Attendance and Attendance Evidence expose the selected Schedule snapshot.
+- No active or compatibility Additional Work Location menu remains.
+
+API
+- Check-in resolves only the slot active in the employee effective timezone.
+- work_location_id may be supplied but must match the active schedule.
+- Check-in response includes schedule_id or false when using native fallback.
+- unit_id remains a transitional alias for native hr.work.location ID.
+
+DATA RECOVERY
+- A failed intermediate test run removed demo Employee 6 through test rollback/lifecycle side effects,
+  cascading to Attendance 13 and 18 and related employee records.
+- Safety backup created before recovery:
+  backups/presenly-migration/odoo-before-attendance-recovery-20260905.dump (8.4 MB).
+- Original records were recovered from:
+  backups/presenly-migration/odoo-before-hr-attendance-migration-20260905.dump.
+- Restored atomically: resource, employee, hr.version link, 2 attendance rows,
+  7 employee skill rows, 4 skill relations, 3 resume rows, and 1 permission link.
+- Recovery was verified against the source backup; Attendance differs only in intentional
+  new Presenly Company and native Work Location snapshot columns.
+- Final non-test upgrade retained all restored data.
+
+FINAL COUNTS (DATABASE odoo)
+- hr.attendance: 19
+- hr.leave: 12
+- presenly.permission: 4
+- Attendance missing Presenly Company: 0
+- Attendance missing Work Location: 0
+- Permission missing Work Location: 0
+- presenly.employee.assignment model: 0
+- presenly_employee_assignment table: absent
+- presenly.work.location.schedule model: present
+
+VALIDATION
+- Python compile: passed.
+- XML parse: passed.
+- git diff --check: passed.
+- Upgrade database odoo without tests: passed.
+- Test suite executed on separate recovery database: 16 test cases, 24 assertions,
+  0 failures, 0 errors.
+- Test database retained 19 Attendance and Employee 6 through upgrade and test.
+- Resolver smoke test: Monday morning School A, midday gap rejected, afternoon School B.
+- Multi-company schedule isolation: company outside allowed_company_ids not visible.
+
+BACKUPS
+- backups/presenly-migration/odoo-before-hr-attendance-migration-20260905.dump
+- backups/presenly-migration/odoo-before-attendance-recovery-20260905.dump

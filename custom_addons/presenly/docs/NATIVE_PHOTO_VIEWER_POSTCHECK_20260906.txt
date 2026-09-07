@@ -1,0 +1,90 @@
+PRESENLY NATIVE ATTENDANCE PHOTO VIEWER — POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.10.1.0
+
+REQUEST
+- Keep the Attendance evidence photo thumbnail small.
+- Open the full photo in a modal/overlay using native Odoo behavior.
+
+IMPLEMENTATION
+- Replaced the enlarged image fields with a small 240x240 attachment thumbnail.
+- Clicking the thumbnail or "View full photo" opens Odoo 19 core web.FileViewer.
+- The viewer is Odoo's native fullscreen attachment overlay, not a custom modal.
+- Native viewer capabilities include:
+  - zoom in/out and mouse-wheel zoom
+  - pan/drag
+  - rotate
+  - print
+  - download
+  - close button and Esc shortcut
+- The widget is used for:
+  - Attendance Check-In selfie
+  - Attendance Check-Out selfie
+  - Attendance Evidence selfie
+- Private attachment access continues through native /web/image and /web/content routes and Odoo access checks.
+- No new public photo endpoint was added.
+- No attachment contents were rewritten.
+
+FILES
+- custom_addons/presenly/static/src/fields/attachment_image_viewer/attachment_image_viewer.js
+- custom_addons/presenly/static/src/fields/attachment_image_viewer/attachment_image_viewer.xml
+- custom_addons/presenly/views/hr_attendance_integration_views.xml
+- custom_addons/presenly/views/presenly_attendance_views.xml
+- custom_addons/presenly/__manifest__.py
+- custom_addons/presenly/tests/test_attendance.py
+
+VIEW POST-CHECK
+- Attendance form viewer fields:
+  - presenly_selfie_in_attachment_id
+  - presenly_selfie_out_attachment_id
+- Attendance Evidence viewer field:
+  - selfie_attachment_id
+- Old enlarged binary image widgets rendered in Attendance form: 0
+- Thumbnail URL requests 240x240 rendering.
+- Backend asset bundle contains:
+  - presenly_attachment_image_viewer
+  - presenly.AttachmentImageViewer
+  - View full photo
+
+DATA PRESERVATION
+Business fingerprint before and after upgrade was identical:
+- hr.attendance: 2 records
+- Attendance ID sum: 3
+- Latest Attendance write_date: 2026-09-06 02:27:30.624382
+- presenly.attendance.event: 7 records
+- Evidence ID sum: 28
+- Referenced selfie attachments: 4
+- Selfie attachment ID sum: 670
+- Native Manage All Attendances user remains maulanasetyawan9@gmail.com
+- Existing Attendance IDs 1 and 2 remain color=10 (green).
+
+TESTING
+- Validation database: odoo_presenly_photo_viewer_test_20260906_030534
+- Final result: 34 test cases / 44 test stats
+- Failures: 0
+- Errors: 0
+- Backend asset generation completed without Owl, missing-template, or unknown-widget errors.
+- Composed Attendance and Evidence forms use the new viewer widget.
+- Validation clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 18 files passed.
+- JavaScript syntax: passed.
+- Shell syntax: passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-native-photo-viewer-20260906-030534.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.10.0.0
+- After: presenly 19.0.10.1.0
+- Main server PID: 3445
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, traceback, OwlError, missing-template, or unknown-widget error.
+
+NO COMMIT
+- No Git commit was created.
