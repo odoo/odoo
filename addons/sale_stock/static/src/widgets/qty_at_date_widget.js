@@ -62,6 +62,7 @@ export class QtyAtDateWidget extends Component {
             if (data.state === 'sale') {
                 calcData.will_be_fulfilled = data.free_qty_today >= data.qty_to_deliver;
             } else {
+                calcData.hasAvailableStock = data.free_qty_today >= data.qty_to_deliver;
                 calcData.will_be_fulfilled = data.virtual_available_at_date >= data.qty_to_deliver;
             }
             calcData.will_be_late = data.forecast_expected_date && data.forecast_expected_date > data.scheduled_date;
