@@ -1259,6 +1259,7 @@ class TestChatterTweaks(ThreadRecipients):
 
     def test_chatter_mail_notrack(self):
         """ Test disable of automatic value tracking at create and write """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         rec = self.env['mail.test.track'].with_user(self.user_employee).create({'name': 'Test', 'user_id': self.user_employee.id})
         self.flush_tracking()
         self.assertEqual(len(rec.message_ids), 1,
@@ -1280,6 +1281,7 @@ class TestChatterTweaks(ThreadRecipients):
 
     def test_chatter_tracking_disable(self):
         """ Test disable of all chatter features at create and write """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         rec = self.env['mail.test.track'].with_user(self.user_employee).with_context({'tracking_disable': True}).create({'name': 'Test', 'user_id': self.user_employee.id})
         self.flush_tracking()
         self.assertEqual(rec.sudo().message_ids, self.env['mail.message'])

@@ -533,6 +533,7 @@ class TestRecruitment(MailCase, TransactionCase):
         that partner's name & phone with the applicant's. Furthermore, theses changes should be logged on both
         the applicant and the partner views
         """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         partner = self.env['res.partner'].create({
             'name': 'A Partner',
             'email': 'a.partner@example.com',

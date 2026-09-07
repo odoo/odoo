@@ -344,6 +344,7 @@ class TestAccountLockException(AccountTestInvoicingCommon, MailCase):
           * Every active exception gets revoked and recreated with the new company lock date
           * Non-active exceptions are not affected
         """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.env['account.lock_exception'].search([]).sudo().unlink()
         for lock_date_field, move_type in self.soft_lock_date_info:
             with self.subTest(lock_date_field=lock_date_field, move_type=move_type), closing(self.cr.savepoint()):

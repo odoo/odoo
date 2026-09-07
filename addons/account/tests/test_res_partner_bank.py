@@ -68,6 +68,7 @@ class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
         self.assertFalse(self.partner_bank_a.duplicate_bank_partner_ids)
 
     def test_tracking(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         bank_a = self.partner_bank_a.with_user(self.env.user)
         with self.mock_mail_gateway(), self.mock_mail_app():
             bank_a.write({

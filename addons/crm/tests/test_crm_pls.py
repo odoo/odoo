@@ -876,6 +876,7 @@ class TestLeadLost(TestCrmCommon):
         """ Test setting a lead as lost using the wizard. Also check that an
         'html editor' void content used as feedback is not logged on the lead. """
         # Initial data
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.assertEqual(len(self.lead_1.message_ids), 1, 'Should contain creation message')
         creation_message = self.lead_1.message_ids[0]
         self.assertEqual(creation_message.subtype_id, self.env.ref('crm.mt_lead_create'))
@@ -945,6 +946,7 @@ class TestLeadLost(TestCrmCommon):
     def test_lead_lost_batch_wfeedback(self):
         """ Test setting leads as lost in batch using the wizard, including a log
         message. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         leads = self._create_leads_batch(lead_type='lead', count=10, probabilities=[10, 20, 30])
         self.assertEqual(len(leads), 10)
         self.flush_tracking()

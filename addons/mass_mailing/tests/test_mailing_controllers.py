@@ -182,6 +182,7 @@ class TestMailingControllers(TestMailingControllersCommon):
           * remove email from exclusion list;
           * re-add email to exclusion list;
         """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         opt_out_reasons = self.env['mailing.subscription.optout'].search([])
         test_mailing = self.test_mailing_on_documents.with_env(self.env)
         test_feedback = "My feedback"
@@ -383,6 +384,7 @@ class TestMailingControllers(TestMailingControllersCommon):
           * join List2 (with no feedback, as no opt-out / block list was done);
           * re-add email to exclusion list;
         """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         opt_out_reasons = self.env['mailing.subscription.optout'].search([])
         test_mailing = self.test_mailing_on_lists.with_env(self.env)
         test_feedback = "My feedback"
@@ -506,6 +508,7 @@ class TestMailingControllers(TestMailingControllersCommon):
           * add email in block list;
           * add feedback (as block list addition): First reason (hence no feedback);
         """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         test_feedback = "My feedback"
         portal_user = mail_new_test_user(
             self.env,

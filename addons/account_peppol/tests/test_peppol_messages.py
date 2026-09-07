@@ -142,6 +142,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         self.assertEqual(self._get_mail_message(move).preview, 'The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:')
 
     def test_send_peppol_alerts_not_valid_partner(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         move = self.create_move(self.invalid_partner)
         self.invalid_partner.invoice_edi_format = 'ubl_bis3'
         move.action_post()

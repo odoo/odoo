@@ -75,6 +75,7 @@ class TestPartner(MailCommon):
         return partner
 
     def test_address_tracking(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.env.company.name = 'YourCompany'
         company_partner = self.env.company.partner_id
         # use some wacky formatting to check inlining

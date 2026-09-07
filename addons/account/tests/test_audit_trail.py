@@ -82,6 +82,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             audit_trail.res_id = 0
 
     def test_cant_update_tracking_value(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.env.company.restrictive_audit_trail = True
         self.move.action_post()
         self.env.cr.precommit.run()
@@ -105,6 +106,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             audit_trail.unlink()
 
     def test_content(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         with self.mock_mail_gateway(), self.mock_mail_app():
             move = self.create_move()
             self.flush_tracking()
