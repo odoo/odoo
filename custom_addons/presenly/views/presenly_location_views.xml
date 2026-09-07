@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_work_location_list_presenly" model="ir.ui.view">
+        <field name="name">hr.work.location.list.presenly</field>
+        <field name="model">hr.work.location</field>
+        <field name="inherit_id" ref="hr.hr_work_location_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="presenly_is_geofence_ready" string="Geofence Ready" optional="show"/>
+                <field name="presenly_radius_meters" optional="show"/>
+                <field name="presenly_manager_id" optional="hide" widget="many2one_avatar_user"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_hr_work_location_form_presenly" model="ir.ui.view">
+        <field name="name">hr.work.location.form.presenly</field>
+        <field name="model">hr.work.location</field>
+        <field name="inherit_id" ref="hr.hr_work_location_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/group[1]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_presenly_approval_overrides" type="object"
+                            class="oe_stat_button" icon="fa-random"
+                            invisible="not id"
+                            groups="presenly.group_presenly_manager"
+                            help="Configure approval steps that override company defaults only at this Work Location.">
+                        <field name="presenly_approval_override_count" widget="statinfo" string="Ready Overrides"/>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <separator string="Presenly Mobile Attendance Policy"/>
+                <field name="presenly_is_geofence_ready" invisible="1"/>
+                <group name="presenly_mobile_attendance_policy">
+                    <group string="Geofence Validation">
+                        <field name="latitude"/>
+                        <field name="longitude"/>
+                        <field name="presenly_radius_meters"
+                               help="Maximum accepted distance from this location; default 150 meters."/>
+                        <field name="presenly_gps_accuracy_limit_meters"
+                               help="GPS readings less accurate than this limit are rejected."/>
+                    </group>
+                    <group string="Selfie Evidence">
+                        <field name="presenly_require_selfie_check_in"/>
+                        <field name="presenly_require_selfie_check_out"/>
+                    </group>
+                </group>
+                <div class="alert alert-warning" role="alert"
+                     invisible="presenly_is_geofence_ready">
+                    Geofence attendance is disabled until the work address has valid coordinates and positive radius and accuracy limits.
+                </div>
+                <separator string="Approval Routing"/>
+                <group name="presenly_location_approval_routing">
+                    <group>
+                        <field name="presenly_manager_id" widget="many2one_avatar_user"
+                               domain="[('active', '=', True), ('company_ids', 'in', company_id)]"
+                               help="Used only by Approval Steps whose Approver Source is Work Location Manager. The user must also have the Presenly Approver role."/>
+                    </group>
+                    <group>
+                        <div class="alert alert-info" role="alert">
+                            This manager is not an automatic approver. It is selected only when an Approval Step uses Work Location Manager. Use Approval Overrides only when this location needs a different route from the company default.
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Compatibility action now opens the native Odoo Work Location model. -->
+    <record id="action_presenly_location" model="ir.actions.act_window">
+        <field name="name">Work Locations</field>
+        <field name="res_model">hr.work.location</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

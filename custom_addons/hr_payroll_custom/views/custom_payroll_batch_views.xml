@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_custom_payroll_batch_form" model="ir.ui.view">
+        <field name="name">custom.payroll.batch.form</field>
+        <field name="model">custom.payroll.batch</field>
+        <field name="arch" type="xml">
+            <form string="Payroll Batch">
+                <header>
+                    <button name="action_generate_payslips" type="object" string="Generate Payslips"
+                            class="btn-primary" invisible="status != 'draft'"
+                            groups="hr_payroll_custom.group_payroll_user"/>
+                    <button name="action_submit_for_approval" type="object" string="Submit for Approval"
+                            class="btn-primary" invisible="status != 'draft'"
+                            groups="hr_payroll_custom.group_payroll_user"/>
+                    <button name="action_approve" type="object" string="Approve"
+                            class="btn-primary" invisible="status != 'submitted'"
+                            groups="hr_payroll_custom.group_payroll_manager"/>
+                    <button name="action_open_reject_wizard" type="object" string="Reject"
+                            invisible="status != 'submitted'"
+                            groups="hr_payroll_custom.group_payroll_manager"/>
+                    <button name="action_done" type="object" string="Done"
+                            class="btn-primary" invisible="status != 'approved'"
+                            groups="hr_payroll_custom.group_payroll_manager"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="status in ('done', 'cancelled')"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="status != 'cancelled'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,submitted,approved,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_slips" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Payslips</span>
+                                <span class="o_stat_value"><field name="slip_count"/></span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Period">
+                            <field name="periode_bulan"/>
+                            <field name="periode_tahun"/>
+                        </group>
+                        <group string="Information">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Approval Information"
+                           invisible="status in ('draft', 'cancelled')">
+                        <group>
+                            <field name="submitter_id" readonly="1"/>
+                            <field name="approver_id" readonly="1"/>
+                            <field name="approval_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="rejection_reason" readonly="1"
+                                   invisible="not rejection_reason"
+                                   placeholder="(none)"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Payslips" name="slips">
+                            <field name="slip_ids" readonly="status in ('done', 'cancelled')"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_custom_payroll_batch_list" model="ir.ui.view">
+        <field name="name">custom.payroll.batch.list</field>
+        <field name="model">custom.payroll.batch</field>
+        <field name="arch" type="xml">
+            <list string="Payroll Batches">
+                <field name="name"/>
+                <field name="periode_bulan"/>
+                <field name="periode_tahun"/>
+                <field name="slip_count" string="Payslips"/>
+                <field name="submitter_id" optional="show"/>
+                <field name="approver_id" optional="show"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_payroll_batch_search" model="ir.ui.view">
+        <field name="name">custom.payroll.batch.search</field>
+        <field name="model">custom.payroll.batch</field>
+        <field name="arch" type="xml">
+            <search string="Payroll Batches">
+                <field name="name"/>
+                <field name="periode_bulan"/>
+                <field name="periode_tahun"/>
+                <separator/>
+                <filter name="filter_draft" string="Draft" domain="[('status', '=', 'draft')]"/>
+                <filter name="filter_submitted" string="Submitted" domain="[('status', '=', 'submitted')]"/>
+                <filter name="filter_approved" string="Approved" domain="[('status', '=', 'approved')]"/>
+                <filter name="filter_done" string="Done" domain="[('status', '=', 'done')]"/>
+                <filter name="filter_cancelled" string="Cancelled" domain="[('status', '=', 'cancelled')]"/>
+                <separator/>
+                <group>
+                    <filter name="group_bulan" string="Month" context="{'group_by': 'periode_bulan'}"/>
+                    <filter name="group_tahun" string="Year" context="{'group_by': 'periode_tahun'}"/>
+                    <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                    <filter name="group_submitter" string="Submitter" context="{'group_by': 'submitter_id'}"/>
+                    <filter name="group_approver" string="Approver" context="{'group_by': 'approver_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_payroll_batch" model="ir.actions.act_window">
+        <field name="name">Payroll Batches</field>
+        <field name="res_model">custom.payroll.batch</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_custom_payroll_batch_search"/>
+        <field name="context">{'search_default_filter_submitted': 1, 'search_default_filter_approved': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first payroll batch.
+            </p>
+        </field>
+    </record>
+</odoo>
