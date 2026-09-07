@@ -5,16 +5,17 @@
             <field name="channel_type">livechat</field>
             <field name="livechat_lang_id" ref="base.lang_en"/>
             <field name="livechat_channel_id" ref="im_livechat_channel_data"/>
-            <field name="livechat_end_dt" eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=11)"/>
+            <field name="livechat_end_dt" eval="DateTime.today() + relativedelta(days=-5, minutes=11)"/>
             <field name="livechat_failure">no_failure</field>
-            <field name="name">Visitor #323, Marc Demo</field>
-            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-1)"/>
+            <field name="name">Returning Visitor, Marc Demo</field>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5)"/>
+            <field name="last_interest_dt" eval="DateTime.today() + relativedelta(days=-5, minutes=11)"/>
         </record>
         <record id="livechat_channel_session_2_history_member_demo" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="livechat_channel_session_2"/>
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="livechat_member_type">agent</field>
-            <field name="create_date" eval="DateTime.today() + relativedelta(months=-1, days=-1)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5)"/>
             <field name="response_time_hour" eval="8/60"/>
             <field name="message_count">2</field>
         </record>
@@ -22,34 +23,33 @@
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_2"/>
             <field name="unpin_dt" eval="DateTime.today()"/>
-            <field name="last_interest_dt" eval="DateTime.today() + relativedelta(months=-1)"/>
+            <field name="last_interest_dt" eval="DateTime.today() + relativedelta(days=-5)"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('livechat_channel_session_2_history_member_demo'))]"/>
-        </record>
-        <record id="im_livechat.livechat_channel_session_2_guest" model="mail.guest">
-            <field name="name">Visitor #323</field>
         </record>
         <record id="im_livechat.livechat_channel_session_2_history_guest" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="livechat_channel_session_2"/>
-            <field name="guest_id" ref="im_livechat.livechat_channel_session_2_guest"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="livechat_member_type">visitor</field>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5)"/>
         </record>
         <record id="im_livechat.livechat_channel_session_2_member_guest" model="discuss.channel.member">
-            <field name="guest_id" ref="im_livechat.livechat_channel_session_2_guest"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_2"/>
+            <field name="last_interest_dt" eval="DateTime.today() + relativedelta(days=-5, minutes=11)"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_2_history_guest'))]"/>
         </record>
 
         <record id="livechat_channel_session_2_message_2" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
-            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_2_guest"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="author_id"/>
             <field name="email_from">Visitor</field>
             <field name="body">I was wondering if Odoo has an application to easily manage social media for my business..</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1)" name="create_date"/>
+            <field name="date" eval="DateTime.today() + relativedelta(days=-5)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5)"/>
         </record>
         <record id="livechat_channel_session_2_message_3" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -58,20 +58,20 @@
             <field name="body">Yes, we just released a new application called Social Marketing that should fit your needs! Check it out :)</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=8)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=8)" name="create_date"/>
+            <field name="date" eval="DateTime.today() + relativedelta(days=-5, minutes=8)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5, minutes=8)"/>
         </record>
         <record id="livechat_channel_session_2_message_4" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
-            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_2_guest"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="author_id"/>
             <field name="email_from">Visitor</field>
             <field name="body">Awesome, thanks!</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=9)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=9)" name="create_date"/>
+            <field name="date" eval="DateTime.today() + relativedelta(days=-5, minutes=9)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5, minutes=9)"/>
         </record>
         <record id="livechat_channel_session_2_message_5" model="mail.message">
             <field name="model">discuss.channel</field>
@@ -80,23 +80,23 @@
             <field name="body">You're welcome, enjoy Odoo!</field>
             <field name="message_type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=10)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=10)" name="create_date"/>
+            <field name="date" eval="DateTime.today() + relativedelta(days=-5, minutes=10)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5, minutes=10)"/>
         </record>
         <record id="livechat_channel_session_2_message_call_notification" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
-            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_2_guest"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="author_id"/>
             <field name="body">&lt;div data-oe-type=&#34;call&#34; class=&#34;o_mail_notification&#34;&gt;&lt;/div&gt;</field>
             <field name="message_type">notification</field>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=6)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=6)" name="create_date"/>
+            <field name="date" eval="DateTime.today() + relativedelta(days=-5, minutes=6)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5, minutes=6)"/>
         </record>
         <record id="livechat_channel_session_2_call_1" model="discuss.call.history">
             <field name="channel_id" ref="im_livechat.livechat_channel_session_2"/>
-            <field name="start_dt" eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=8)"/>
-            <field name="end_dt" eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=10)"/>
+            <field name="start_dt" eval="DateTime.today() + relativedelta(days=-5, minutes=8)"/>
+            <field name="end_dt" eval="DateTime.today() + relativedelta(days=-5, minutes=10)"/>
             <field name="start_call_message_id" ref="livechat_channel_session_2_message_call_notification"/>
         </record>
         <function model="im_livechat.channel.member.history" name="write">
@@ -107,12 +107,12 @@
         <record id="livechat_channel_session_2_rating_message" model="mail.message">
             <field name="model">discuss.channel</field>
             <field name="res_id" ref="im_livechat.livechat_channel_session_2"/>
-            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_2_guest"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="author_id"/>
             <field name="subtype_id" ref="mail.mt_note"/>
             <field name="message_type">notification</field>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=11)" name="date"/>
-            <field eval="DateTime.today() + relativedelta(months=-1, days=-1, minutes=11)" name="create_date"/>
+            <field name="date" eval="DateTime.today() + relativedelta(days=-5, minutes=11)"/>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-5, minutes=11)"/>
         </record>
         <function model="discuss.channel" name="_apply_livechat_feedback"
             eval="([ref('im_livechat.livechat_channel_session_2')], 5, 'Super Job')"/>
