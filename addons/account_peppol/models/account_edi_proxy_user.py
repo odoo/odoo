@@ -221,23 +221,24 @@ class AccountEdiProxyClientUser(models.Model):
         )
 
     def _peppol_get_new_documents(self):
+        domain = {'errors': False, 'direction': 'incoming'}
+        return self._peppol_get_new_unacknowledged_messages(endpoint='get_all_documents', domain=domain)
+
+    def _peppol_get_new_unacknowledged_messages(self, endpoint, domain=None):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
         job_count = self._context.get('peppol_crons_job_count') or BATCH_SIZE
         need_retrigger = False
-        params = {
-            'domain': {
-                'direction': 'incoming',
-                'errors': False,
-            },
-            'limit': job_count,
-        }
+        params = {'limit': job_count}
+        if domain:
+            params['domain'] = domain
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
-            params['domain']['receiver_identifier'] = edi_user.edi_identification
+            if params.get('domain'):
+                params['domain']['receiver_identifier'] = edi_user.edi_identification
             try:
                 # request all messages that haven't been acknowledged
                 messages = edi_user._call_peppol_proxy(
-                    endpoint=edi_user._get_peppol_proxy_endpoint('1/get_all_documents'),
+                    endpoint=edi_user._get_peppol_proxy_endpoint(f'1/{endpoint}'),
                     params=params,
                 )
             except AccountEdiProxyError as e:
@@ -320,6 +321,7 @@ class AccountEdiProxyClientUser(models.Model):
         for uuid, content in messages.items():
             fileextension, mimetype = self._peppol_get_filetype(content)
             filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+            error = None
             attachment = self.env["ir.attachment"].create(
                 {
                     "name": f"{filename}.{fileextension}",
@@ -328,11 +330,34 @@ class AccountEdiProxyClientUser(models.Model):
                     "mimetype": mimetype,
                 }
             )
-            if move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
+            if (source_uuid := content.get('source_uuid')) is not None:
+                # This message is a Tax Data Document (TDD) that should be attached to an existing move
+                attachment.name = f"{content['document_type']}_{attachment.name}"
+
+                # When users send documents to themselves, we can't currently determine if the TDD should be attached
+                # to the customer invoice or to the vendor bill.
+                # We could add a key 'source_direction' in content (from the IAP side), but it doesn't seem worthwhile.
+                move = self.env['account.move'].search([
+                    ('peppol_message_uuid', '=', source_uuid),
+                    ('company_id', '=', self.company_id.id),
+                ], limit=1)
+                if move and source_uuid:
+                    attachment.write({'res_model': 'account.move', 'res_id': move.id})
+                    moves += move
+                    processed_uuids.append(uuid)
+                    if move.peppol_move_state != 'error':
+                        error = content.get('error')
+
+            elif move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
                 # Only acknowledge when we saved the document somewhere
                 processed_uuids.append(uuid)
                 if not isinstance(move, bool):
                     moves += move
+                error = content.get('error')
+
+            if error and error.get('code') != 702:
+                move._message_log(body=self._peppol_get_message_status_error_body(move, error))
+
         return processed_uuids, moves
 
     def _peppol_post_process_new_messages(self, moves):
