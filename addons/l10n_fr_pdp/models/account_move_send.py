@@ -26,6 +26,12 @@ class AccountMoveSend(models.AbstractModel):
             return 'ubl_21_fr'
         return super()._get_default_invoice_edi_format(move, **kwargs)
 
+    def _is_applicable_to_move(self, method, move, **move_data):
+        # EXTENDS 'account_peppol'
+        if method == 'peppol' and move.company_id._get_peppol_proxy_type() == 'pdp':
+            return super()._is_applicable_to_move(method, move, **move_data) and not move.pdp_is_sent
+        return super()._is_applicable_to_move(method, move, **move_data)
+
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'peppol' and company._get_peppol_proxy_type() == 'pdp':
