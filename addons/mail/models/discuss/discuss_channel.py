@@ -1674,6 +1674,7 @@ class DiscussChannel(models.Model):
         res.attr("meeting_start_dt", predicate=is_meeting)
         res.attr("meeting_stop_dt", predicate=is_meeting)
         res.attr("member_count")
+        res.attr("member_indices", predicate=lambda c: c.channel_type == "chat")
         res.attr("message_count", predicate=lambda c: c.parent_channel_id)
         res.attr("name")
         res.many(

@@ -216,7 +216,11 @@ export class DiscussChannel extends Record {
             // 2 members chat.
             return correspondents[0];
         }
-        if (correspondents.length === 0 && this.channel_member_ids.length === 1) {
+        if (
+            correspondents.length === 0 &&
+            this.channel_member_ids.length === 1 &&
+            !this.hasMissingMember
+        ) {
             // Self-chat.
             return this.channel_member_ids[0] ?? [];
         }
@@ -435,6 +439,12 @@ export class DiscussChannel extends Record {
     }
     /** @type {Number|undefined} */
     member_count;
+    /** @type {string|undefined} combination of members frozen at the creation of a chat */
+    member_indices;
+    /** Whether a member of the frozen combination of a chat is gone from the store. */
+    get hasMissingMember() {
+        return (this.member_indices?.split(",").length ?? 0) > this.channel_member_ids.length;
+    }
     /** @type {number} number of messages in a sub-channel */
     message_count;
     /** @type {string} */
@@ -503,7 +513,7 @@ export class DiscussChannel extends Record {
         const showTyping = !ignoreTyping && this.channel.hasOtherMembersTyping;
         return (
             (this.channel.channel_type === "chat" &&
-                (this.channel.correspondent.imStatusUI || showTyping)) ||
+                (this.channel.correspondent?.imStatusUI || showTyping)) ||
             (this.channel.channel_type === "channel" && !this.channel.group_public_id) ||
             (this.channel.channel_type === "group" && showTyping)
         );
