@@ -688,3 +688,25 @@ registry.category("web_tour.tours").add("test_paid_order_payment_method_drilldow
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_ticket_screen_search_suggestions", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            Chrome.clickOrders(),
+            {
+                content: "wait for the loading overlay to be gone before probing what is on top",
+                trigger: "body:not(:has(.pos-loader))",
+            },
+            {
+                content: "type a search term to display the search field suggestions",
+                trigger: ".pos-search-bar input",
+                run: "edit 001",
+            },
+            TicketScreen.suggestionIsOnTop("Receipt Number"),
+            TicketScreen.suggestionIsOnTop("Date"),
+            TicketScreen.suggestionIsOnTop("Customer"),
+        ].flat(),
+});
