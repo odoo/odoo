@@ -20,7 +20,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export function getFirstElementOfNode(node) {
     if (!node) {
@@ -179,10 +178,10 @@ export class Dropdown extends Component {
             })
         );
 
-        useLayoutEffect(
-            (target) => this.setTargetElement(target),
-            () => [this.target]
-        );
+        // useLayoutEffect(
+        //     (target) => this.setTargetElement(target),
+        //     () => [this.target]
+        // );
         useEffect(() => {
             if (this.props.disabled) {
                 this.closePopover();
