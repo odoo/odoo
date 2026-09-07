@@ -1405,21 +1405,7 @@ class HrLeave(models.Model):
 
         for holiday in holidays:
             if not self.env.context.get('leave_fast_create'):
-                # Everything that is done here must be done using sudo because we might
-                # have different create and write rights
-                # eg : holidays_user can create a leave request with validation_type = 'manager' for someone else
-                # but they can only write on it if they are leave_manager_id
-                holiday_sudo = holiday.sudo()
-                holiday_sudo.add_follower(holiday.employee_id.id)
-                if holiday.validation_type == 'manager':
-                    holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
-                if holiday.validation_type == 'no_validation' or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-                    # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
-                    holiday_sudo.action_approve()
-                    holiday_sudo.message_subscribe(partner_ids=holiday._get_responsible_for_approval().partner_id.ids)
-                    holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
-                elif not self.env.context.get('import_file'):
-                    holiday_sudo.activity_update()
+                holiday._process_auto_approve_activities()
         if employees_without_allocation:
             invalid_employee_names = ', '.join(self.env._('%s', employee.name) for employee in employees_without_allocation)
             self.env.user._bus_send('simple_notification', {
@@ -1432,6 +1418,24 @@ class HrLeave(models.Model):
                 'message': self.env._('The time off is outside the working schedule of the employee'),
             })
         return holidays
+
+    def _process_auto_approve_activities(self):
+        # Everything that is done here must be done using sudo because we might
+        # have different create and write rights
+        # eg : holidays_user can create a leave request with validation_type = 'manager' for someone else
+        # but they can only write on it if they are leave_manager_id
+        self.ensure_one()
+        holiday_sudo = self.sudo()
+        holiday_sudo.add_follower(self.employee_id.id)
+        if self.validation_type == 'manager':
+            holiday_sudo.message_subscribe(partner_ids=self.employee_id.leave_manager_id.partner_id.ids)
+        if self.validation_type == 'no_validation' or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
+            holiday_sudo.action_approve()
+            holiday_sudo.message_subscribe(partner_ids=self._get_responsible_for_approval().partner_id.ids)
+            holiday_sudo.message_post(body=self.env._("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment")  # Message from OdooBot (sudo)
+        elif not self.env.context.get('import_file'):
+            holiday_sudo.activity_update()
 
     def write(self, vals):
         values = vals
