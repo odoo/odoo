@@ -26,7 +26,6 @@
         <field name="context">{
             'create': False,
             'edit': False,
-            'delete': False,
             'search_default_groupby_name': 1,
             'search_default_employee': 2,
         }</field>
@@ -35,7 +34,6 @@
         <field name="context">{
             'create': False,
             'edit': False,
-            'delete': False,
             'search_default_to_approve': 1,
             'search_default_activeemployees': 1,
         }</field>
@@ -52,7 +50,7 @@
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="hr_attendance.hr_attendance_view_filter"/>
         <field name="domain">[('employee_id.user_id', '=', uid)]</field>
-        <field name="context">{'create': False, 'edit': False, 'delete': False, 'search_default_myattendances': 1}</field>
+        <field name="context">{'create': False, 'edit': False, 'search_default_myattendances': 1}</field>
         <field name="group_ids" eval="[(4, ref('presenly.group_presenly_employee'))]"/>
     </record>
     <menuitem id="menu_presenly_my_attendances" name="My Attendances"

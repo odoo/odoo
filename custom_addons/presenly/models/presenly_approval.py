@@ -405,7 +405,11 @@ class PresenlyApprovalRequest(models.Model):
         )
 
     def unlink(self):
-        raise UserError('Approval journeys cannot be deleted.')
+        # Only the internal cascade triggered while deleting a target request
+        # may remove an approval journey. Direct deletion is blocked.
+        if not self.env.context.get('presenly_cascade_delete') and not self.env.su:
+            raise UserError('Approval journeys cannot be deleted directly.')
+        return super().unlink()
 
     def _lock(self):
         self.ensure_one()
@@ -567,7 +571,11 @@ class PresenlyApprovalStep(models.Model):
         )
 
     def unlink(self):
-        raise UserError('Approval steps cannot be deleted.')
+        # Only the internal cascade triggered while deleting a target request
+        # may remove an approval step. Direct deletion is blocked.
+        if not self.env.context.get('presenly_cascade_delete') and not self.env.su:
+            raise UserError('Approval steps cannot be deleted directly.')
+        return super().unlink()
 
 
 class PresenlyApprovalLog(models.Model):
@@ -905,7 +913,8 @@ class HrLeaveTypePresenly(models.Model):
 
 
 class HrLeavePresenly(models.Model):
-    _inherit = 'hr.leave'
+    _name = 'hr.leave'
+    _inherit = ['hr.leave', 'presenly.deletion.log.mixin']
 
     presenly_work_location_id = fields.Many2one(
         'hr.work.location', string='Work Location', index=True, tracking=True,
@@ -1365,6 +1374,22 @@ class HrLeavePresenly(models.Model):
             'presenly_pending_approver_ids': [(5, 0, 0)],
         })
         return result
+
+    def unlink(self):
+        snapshots = self._presenly_delete_snapshot()
+        self._presenly_purge_approval(keep_logs=True)
+        result = super().unlink()
+        self._presenly_write_delete_log(snapshots)
+        return result
+
+    def action_presenly_delete(self):
+        """List header delete button for Time Off.
+
+        The native ``hr.leave`` ondelete guard already limits which states may
+        be deleted per role; our override purges the Presenly approval journey
+        and records the deletion audit entry.
+        """
+        return self.unlink()
 
     def action_approve(self, check_state=True):
         if self.filtered(lambda leave: leave.presenly_approval_engine == 'presenly'):

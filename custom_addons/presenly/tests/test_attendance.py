@@ -4,7 +4,7 @@ import pytz
 from lxml import etree
 
 from odoo import Command
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase
 
@@ -389,13 +389,74 @@ class TestPresenlyAttendanceFormSecurity(TransactionCase):
                 'employee_id': self.employee.id,
                 'check_in': '2030-01-03 08:00:00',
             })
-        with self.assertRaisesRegex(ValidationError, 'cannot be deleted'):
-            self.attendance.unlink()
+        # Any user without the Presenly HR/Administrator role cannot delete.
+        with self.assertRaisesRegex(ValidationError, 'Administrator or HR Officer'):
+            self.attendance.with_user(self.employee_user).unlink()
         with self.assertRaisesRegex(ValidationError, 'Presenly mobile application'):
             self.employee._attendance_action_change({'mode': 'systray'})
         with self.assertRaises(AccessError):
             from odoo.service.model import get_public_method
             get_public_method(self.env['hr.attendance'], '_presenly_mobile_create')
+
+    def test_admin_can_delete_and_purges_children(self):
+        event = self.env['presenly.attendance.event'].create({
+            'employee_id': self.employee.id,
+            'attendance_id': self.attendance.id,
+            'event_type': 'check_in',
+            'source': 'mobile',
+            'validation_status': 'success',
+        })
+        attendance_id = self.attendance.id
+        event_id = event.id
+        self.attendance.unlink()
+        self.assertFalse(self.attendance.exists())
+        self.assertFalse(event.exists())
+        logs = self.env['presenly.deletion.log'].search([
+            ('res_model', '=', 'hr.attendance'),
+            ('res_id', '=', attendance_id),
+        ])
+        self.assertEqual(len(logs), 1)
+        self.assertEqual(logs.deleted_by_id, self.env.user)
+
+    def test_hr_delete_limited_by_correction_window(self):
+        # Future check-in is inside the 31-day correction window: allowed.
+        self.attendance.with_user(self.hr_user).unlink()
+        self.assertFalse(self.attendance.exists())
+        # Records older than the window cannot be deleted by HR.
+        old = self.env['hr.attendance']._presenly_mobile_create({
+            'employee_id': self.employee.id,
+            'check_in': '2015-01-02 08:00:00',
+            'check_out': '2015-01-02 16:00:00',
+            'presenly_source': 'mobile',
+        })
+        with self.assertRaisesRegex(ValidationError, 'correction window'):
+            old.with_user(self.hr_user).unlink()
+        self.assertTrue(old.exists())
+
+    def test_hr_event_unlink_limited_to_failed_evidence(self):
+        success = self.env['presenly.attendance.event'].create({
+            'employee_id': self.employee.id,
+            'attendance_id': self.attendance.id,
+            'event_type': 'check_in',
+            'source': 'mobile',
+            'validation_status': 'success',
+        })
+        failed = self.env['presenly.attendance.event'].create({
+            'employee_id': self.employee.id,
+            'attendance_id': self.attendance.id,
+            'event_type': 'check_out',
+            'source': 'mobile',
+            'validation_status': 'failed',
+        })
+        with self.assertRaisesRegex(UserError, 'only delete failed evidence'):
+            success.with_user(self.hr_user).unlink()
+        with self.assertRaisesRegex(
+            UserError, 'Only a Presenly Administrator or HR Officer'
+        ):
+            failed.with_user(self.employee_user).unlink()
+        failed.with_user(self.hr_user).unlink()
+        self.assertFalse(failed.exists())
+        self.assertTrue(success.exists())
 
     def test_form_has_one_timestamp_summary_and_evidence_sections(self):
         result = self.env['hr.attendance'].with_user(self.employee_user).get_view(

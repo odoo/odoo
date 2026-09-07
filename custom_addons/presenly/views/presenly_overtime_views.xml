@@ -20,6 +20,10 @@
                         <button name="action_cancel" type="object" string="Cancel Request"
                                 invisible="not can_cancel"
                                 confirm="Cancel this overtime request and its pending approval journey?"/>
+                        <button name="action_delete_with_confirm" type="object" string="Delete"
+                                confirm="Delete this overtime request and its approval journey?\nThis action cannot be undone."
+                                groups="presenly.group_presenly_hr,presenly.group_presenly_manager"
+                                invisible="not id"/>
                     </div>
                     <div class="alert alert-info d-flex align-items-center my-2" role="alert"
                          invisible="state != 'draft'">

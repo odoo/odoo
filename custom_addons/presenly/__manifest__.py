@@ -1,6 +1,6 @@
 {
     'name': 'Presenly Attendance Tools',
-    'version': '19.0.13.6.0',
+    'version': '19.0.14.0.0',
     'category': 'Human Resources/Attendances',
     'summary': 'Attendance geofence, evidence, permissions and multilevel approvals',
     'description': """
@@ -33,6 +33,7 @@ and multilevel approvals.
         'views/hr_leave_report_calendar_views.xml',
         'views/hr_attendance_presenly_actions.xml',
         'views/presenly_menus.xml',
+        'views/presenly_deletion_log_views.xml',
     ],
     'assets': {
         'web.assets_backend': [

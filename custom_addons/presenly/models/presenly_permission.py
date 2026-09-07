@@ -77,7 +77,7 @@ class PresenlyPermissionType(models.Model):
 class PresenlyPermission(models.Model):
     _name = 'presenly.permission'
     _description = 'Presenly Permission / Dispensation Request'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'presenly.deletion.log.mixin']
     _order = 'create_date desc'
 
     def _default_employee(self):
@@ -294,6 +294,53 @@ class PresenlyPermission(models.Model):
             'res_model': 'presenly.permission.reject.wizard', 'view_mode': 'form',
             'target': 'new', 'context': {'default_permission_id': self.id},
         }
+
+    def unlink(self):
+        is_admin = self.env.su or self.env.user.has_group(
+            'presenly.group_presenly_manager'
+        )
+        if not is_admin:
+            if not self.env.user.has_group('presenly.group_presenly_hr'):
+                raise UserError(
+                    'Only a Presenly Administrator or HR Officer can delete '
+                    'permission requests.'
+                )
+            not_hr_ok = self.filtered(
+                lambda request: request.state not in
+                ('draft', 'rejected', 'cancelled')
+            )
+            if not_hr_ok:
+                raise UserError(
+                    'HR can only delete draft, rejected, or cancelled '
+                    'permission requests.'
+                )
+        for permission in self:
+            if permission.state == 'approved' and not self.env.context.get(
+                'presenly_confirm_delete'
+            ):
+                raise UserError(
+                    'Approved permission requests require explicit '
+                    'confirmation before they can be deleted.'
+                )
+        # Purge children BEFORE unlink so their FKs cannot block the row
+        # delete. Everything runs in one transaction: if super().unlink()
+        # fails, the whole purge is rolled back.
+        for permission in self:
+            permission._presenly_purge_approval(keep_logs=True)
+            self.env['mail.activity'].sudo().search([
+                ('res_model', '=', permission._name),
+                ('res_id', '=', permission.id),
+            ]).unlink()
+            permission.attachment_ids.sudo().unlink()
+        snapshots = self._presenly_delete_snapshot()
+        result = super().unlink()
+        self._presenly_write_delete_log(snapshots)
+        return result
+
+    def action_delete_with_confirm(self):
+        """Server wrapper for the delete button; carries the explicit
+        confirmation context required to remove approved requests."""
+        return self.with_context(presenly_confirm_delete=True).unlink()
 
     @api.constrains('date_from', 'date_to', 'hour_from', 'hour_to', 'request_mode', 'permission_type_id', 'state')
     def _check_dates(self):

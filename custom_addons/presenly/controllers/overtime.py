@@ -22,8 +22,12 @@ class PresenlyOvertimeController(http.Controller):
             return fields.Date.to_string(fields.Date.to_date(date_value))
         return False
 
-    def _overtime_hour(self, value, default=False):
-        """Parse a 24h hour value (float, int, or 'HH:MM')."""
+    def _overtime_hour(self, value, default=None):
+        """Parse a 24h hour value (float, int, or 'HH:MM').
+
+        Returns ``None`` when the value is absent so callers can distinguish
+        'missing' from a valid midnight hour (``0``/``0.0``).
+        """
         if value in (None, ''):
             return default
         try:
@@ -127,7 +131,7 @@ class PresenlyOvertimeController(http.Controller):
         hour_to = self._overtime_hour(payload.get('hour_to'))
         if not date:
             raise ValidationError('date is required.')
-        if hour_from in (False,) or hour_to in (False,):
+        if hour_from is None or hour_to is None:
             raise ValidationError('hour_from and hour_to are required.')
         try:
             overtime = request.env['presenly.overtime.request'].create({

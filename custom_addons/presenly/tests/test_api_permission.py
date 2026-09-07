@@ -100,6 +100,34 @@ class TestPresenlyPermissionApi(HttpCase):
         self.assertEqual(created['data']['state'], 'submitted')
         return created['data']['id']
 
+    def test_permission_api_types(self):
+        """permissions/types returns only active complete types for the company."""
+        other = self.env['presenly.permission.type'].create({
+            'name': 'Incomplete API Type',
+            'code': False,
+            'company_id': self.env.company.id,
+        })
+        inactive = self.env['presenly.permission.type'].create({
+            'name': 'Inactive API Type',
+            'code': 'PERM-API-INACTIVE',
+            'company_id': self.env.company.id,
+            'request_mode': 'both',
+            'paid_status': 'policy',
+            'active': False,
+        })
+        self.authenticate(self.login, self.password)
+        result = self.make_jsonrpc_request('/api/presenly/v1/permissions/types')
+        self.assertTrue(result['success'])
+        types = result['data']
+        self.assertTrue(any(
+            item['id'] == self.permission_type.id for item in types
+        ))
+        self.assertTrue(any(
+            item['code'] == 'PERM-API-ERRAND' for item in types
+        ))
+        self.assertFalse(any(item['id'] == other.id for item in types))
+        self.assertFalse(any(item['id'] == inactive.id for item in types))
+
     def test_permission_api_full_approval_flow(self):
         self.authenticate(self.login, self.password)
         permission_id = self._create_permission()

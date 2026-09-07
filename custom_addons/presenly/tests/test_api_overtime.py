@@ -203,3 +203,77 @@ class TestPresenlyOvertimeApi(HttpCase):
             self.assertTrue(item['can_approve'])
             self.assertTrue(item['can_reject'])
         self.assertEqual(batch['data']['unreadable_ids'], [])
+
+    def test_overtime_api_accepts_midnight_hour(self):
+        """Midnight (00:00) is a valid 24h hour, not a missing value."""
+        self.authenticate(self.login, self.password)
+        created = self.make_jsonrpc_request(
+            '/api/presenly/v1/overtime/requests', {
+                'date': '2030-08-01',
+                'hour_from': 0.0,
+                'hour_to': 4.0,
+                'reason': 'Night maintenance',
+            },
+        )
+        self.assertTrue(created['success'])
+        self.assertEqual(created['data']['hour_from'], 0.0)
+        self.assertEqual(created['data']['hour_to'], 4.0)
+        self.assertEqual(created['data']['duration_hours'], 4.0)
+
+    def test_overtime_api_cancel_by_owner(self):
+        """Owner can cancel a submitted overtime request."""
+        self.authenticate(self.login, self.password)
+        overtime_id = self._create_overtime('2030-08-06')['id']
+
+        # Approver cannot cancel (cancellation follows owner/manager rights).
+        self.authenticate(self.approver_login, self.approver_password)
+        approver_check = self.make_jsonrpc_request(
+            f'/api/presenly/v1/overtime/requests/{overtime_id}/can-approve',
+        )
+        self.assertFalse(approver_check['data']['can_cancel'])
+
+        # Owner cancels via the API.
+        self.authenticate(self.login, self.password)
+        cancelled = self.make_jsonrpc_request(
+            f'/api/presenly/v1/overtime/requests/{overtime_id}/cancel',
+        )
+        self.assertTrue(cancelled['success'])
+        self.assertEqual(cancelled['data']['state'], 'cancelled')
+
+        record = self.env['presenly.overtime.request'].sudo().browse(overtime_id)
+        self.assertEqual(record.state, 'cancelled')
+        self.assertEqual(
+            record.presenly_approval_request_id.state, 'cancelled',
+        )
+
+    def test_overtime_api_cannot_cancel_after_approval(self):
+        """A final (non-cancellable) request rejects cancel with an error."""
+        self.authenticate(self.login, self.password)
+        overtime_id = self._create_overtime('2030-08-03')['id']
+
+        self.authenticate(self.approver_login, self.approver_password)
+        approved = self.make_jsonrpc_request(
+            f'/api/presenly/v1/overtime/requests/{overtime_id}/approve',
+        )
+        self.assertTrue(approved['success'])
+        self.assertEqual(approved['data']['state'], 'approved')
+
+        # Approver is not the owner, so cancel is rejected.
+        with self.assertRaises(JsonRpcException):
+            self.make_jsonrpc_request(
+                f'/api/presenly/v1/overtime/requests/{overtime_id}/cancel',
+            )
+
+    def test_overtime_api_location_options(self):
+        """location-options returns the unique recommended location for a day."""
+        self.authenticate(self.login, self.password)
+        result = self.make_jsonrpc_request(
+            '/api/presenly/v1/overtime/requests/location-options',
+            {'date': '2030-08-01'},
+        )
+        self.assertTrue(result['success'])
+        self.assertTrue(result['data']['unique'])
+        self.assertEqual(result['data']['location_id'], self.location.id)
+        self.assertEqual(result['data']['locations'], [{
+            'id': self.location.id, 'name': self.location.name,
+        }])

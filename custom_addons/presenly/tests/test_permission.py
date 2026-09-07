@@ -140,3 +140,40 @@ class TestPresenlyPermission(TransactionCase):
         permission.work_location_id = other_location
         with self.assertRaises(ValidationError):
             permission.action_submit()
+
+    def test_delete_permission_policy(self):
+        draft = self._create_permission('2030-02-10')
+        approved = self._create_permission('2030-02-11')
+        approved.action_submit()
+        approved.with_user(self.manager_user).action_approve()
+
+        hr_user = self.env['res.users'].create({
+            'name': 'Permission HR',
+            'login': 'permission_hr_delete',
+            'group_ids': [(4, self.env.ref(
+                'presenly.group_presenly_hr'
+            ).id)],
+        })
+        # HR boleh menghapus draft/rejected/cancelled.
+        draft.with_user(hr_user).unlink()
+        self.assertFalse(draft.exists())
+        # HR tidak boleh menghapus approved.
+        with self.assertRaisesRegex(UserError, 'draft, rejected, or cancelled'):
+            approved.with_user(hr_user).unlink()
+        self.assertTrue(approved.exists())
+        # Employee tidak boleh menghapus sama sekali.
+        with self.assertRaisesRegex(UserError, 'Administrator or HR Officer'):
+            self._create_permission('2030-02-12').with_user(
+                self.employee_user
+            ).unlink()
+        # Journey ikut terhapus saat menghapus permission approved (dengan
+        # konfirmasi), dan approval log tetap tersimpan sebagai audit trail.
+        journey = approved.presenly_approval_request_id
+        approved.action_delete_with_confirm()
+        self.assertFalse(approved.exists())
+        self.assertFalse(journey.exists())
+        logs = self.env['presenly.approval.log'].search([
+            ('request_model', '=', 'presenly.permission'),
+            ('request_res_id', '=', approved.id),
+        ])
+        self.assertEqual(len(logs), 1)

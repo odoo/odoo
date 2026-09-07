@@ -5,7 +5,7 @@ from odoo.exceptions import UserError, ValidationError
 class PresenlyOvertimeRequest(models.Model):
     _name = 'presenly.overtime.request'
     _description = 'Presenly Overtime / Lembur Request'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'presenly.deletion.log.mixin']
     _order = 'create_date desc'
 
     def _default_employee(self):
@@ -453,3 +453,38 @@ class PresenlyOvertimeRequest(models.Model):
         )
         action['domain'] = [('id', 'in', pending.ids)]
         return action
+
+    def unlink(self):
+        is_admin = self.env.su or self.env.user.has_group(
+            'presenly.group_presenly_manager'
+        )
+        if not is_admin:
+            if not self.env.user.has_group('presenly.group_presenly_hr'):
+                raise UserError(
+                    'Only a Presenly Administrator or HR Officer can delete '
+                    'overtime requests.'
+                )
+            not_hr_ok = self.filtered(
+                lambda request: request.state not in
+                ('draft', 'rejected', 'cancelled')
+            )
+            if not_hr_ok:
+                raise UserError(
+                    'HR can only delete draft, rejected, or cancelled '
+                    'overtime requests.'
+                )
+        for overtime in self:
+            overtime._presenly_purge_approval(keep_logs=True)
+            self.env['mail.activity'].sudo().search([
+                ('res_model', '=', overtime._name),
+                ('res_id', '=', overtime.id),
+            ]).unlink()
+        snapshots = self._presenly_delete_snapshot()
+        result = super().unlink()
+        self._presenly_write_delete_log(snapshots)
+        return result
+
+    def action_delete_with_confirm(self):
+        """Server wrapper for the delete button; carries the explicit
+        confirmation context required to remove approved requests."""
+        return self.with_context(presenly_confirm_delete=True).unlink()

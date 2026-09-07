@@ -205,7 +205,7 @@ class PresenlyPermissionController(http.Controller):
 
     @http.route(
         '/api/presenly/v1/permissions/approval',
-        type='jsonrpc', auth='user', methods=['POST'],
+        type='jsonrpc', auth='user', methods=['POST'], readonly=True,
     )
     def approval_queue(self):
         employee = self._employee()

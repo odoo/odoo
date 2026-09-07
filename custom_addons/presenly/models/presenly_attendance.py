@@ -16,9 +16,15 @@ SELFIE_MIMETYPES = {
     'image/webp': 'webp',
 }
 
+# HR may hard-delete attendance records only inside this correction window
+# (days counted from check_in). Records outside the window must be archived
+# by an Administrator instead. Move to ir.config_parameter when policy is final.
+PRESENLY_CORRECTION_DAYS = 31
+
 
 class HrAttendance(models.Model):
-    _inherit = 'hr.attendance'
+    _name = 'hr.attendance'
+    _inherit = ['hr.attendance', 'presenly.deletion.log.mixin']
 
     presenly_company_id = fields.Many2one(
         'res.company', string='Operational Company', index=True, readonly=True,
@@ -53,6 +59,9 @@ class HrAttendance(models.Model):
     )
     presenly_can_change_employee = fields.Boolean(
         compute='_compute_presenly_can_change_employee',
+    )
+    presenly_can_delete = fields.Boolean(
+        compute='_compute_presenly_can_delete',
     )
     presenly_source = fields.Selection([
         ('mobile', 'Mobile'), ('web', 'Web'), ('manual', 'Manual'),
@@ -158,6 +167,12 @@ class HrAttendance(models.Model):
         for attendance in self:
             attendance.presenly_can_change_employee = allowed
 
+    @api.depends_context('uid')
+    def _compute_presenly_can_delete(self):
+        allowed = self._presenly_hr_or_admin_can_delete()
+        for attendance in self:
+            attendance.presenly_can_delete = allowed
+
     @api.depends('employee_id')
     def _compute_is_manager(self):
         super()._compute_is_manager()
@@ -253,7 +268,70 @@ class HrAttendance(models.Model):
         return super().write(values)
 
     def unlink(self):
-        raise ValidationError(_('Attendance history cannot be deleted.'))
+        if not self._presenly_hr_or_admin_can_delete():
+            raise ValidationError(_(
+                'Attendance history can only be deleted by a Presenly '
+                'Administrator or HR Officer within the correction window.'
+            ))
+        snapshots = self._presenly_delete_snapshot()
+        for attendance in self:
+            attendance._presenly_purge_children()
+        result = super().unlink()
+        self._presenly_write_delete_log(snapshots)
+        return result
+
+    def _presenly_hr_or_admin_can_delete(self):
+        """Admin can delete anything. HR is limited to a short correction
+        window (PRESENLY_CORRECTION_DAYS from check_in) and cannot delete
+        attendance that backs an overtime request."""
+        if self.env.su:
+            return True
+        user = self.env.user
+        if user.has_group('presenly.group_presenly_manager'):
+            return True
+        if not user.has_group('presenly.group_presenly_hr'):
+            return False
+        now = fields.Datetime.now()
+        for attendance in self:
+            if attendance.presenly_has_overtime_evidence():
+                return False
+            if attendance.check_in and (
+                now - attendance.check_in
+            ) > timedelta(days=PRESENLY_CORRECTION_DAYS):
+                return False
+        return True
+
+    def presenly_has_overtime_evidence(self):
+        self.ensure_one()
+        return bool(self.env['presenly.overtime.request'].sudo().search_count([
+            ('employee_id', '=', self.employee_id.id),
+            ('date', '=', self.check_in.date()),
+            ('state', 'in', ('submitted', 'approved')),
+        ], limit=1))
+
+    def _presenly_purge_children(self):
+        """Remove evidence events and their private selfie attachments so
+        no orphan records remain after the attendance row disappears."""
+        events = self.presenly_event_ids
+        attachments = (
+            events.mapped('selfie_attachment_id')
+            | self.presenly_selfie_in_attachment_id
+            | self.presenly_selfie_out_attachment_id
+        )
+        attachments.sudo().unlink()
+        events.sudo().with_context(
+            presenly_skip_deletion_log=True
+        ).unlink()
+
+    def action_presenly_delete(self):
+        """Form delete button for Attendance. The role-aware guard inside
+        ``unlink`` decides who may actually remove each record."""
+        if not self._presenly_hr_or_admin_can_delete():
+            raise ValidationError(_(
+                'Attendance history can only be deleted by a Presenly '
+                'Administrator or HR Officer within the correction window.'
+            ))
+        return self.unlink()
 
     def action_open_presenly_evidence(self):
         self.ensure_one()
@@ -272,7 +350,7 @@ class HrAttendance(models.Model):
 class PresenlyAttendanceEvent(models.Model):
     _name = 'presenly.attendance.event'
     _description = 'Presenly Attendance Evidence Event'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'presenly.deletion.log.mixin']
     _order = 'event_time desc'
 
     employee_id = fields.Many2one(
@@ -338,6 +416,34 @@ class PresenlyAttendanceEvent(models.Model):
                     ),
                     subtype_xmlid='mail.mt_note',
                 )
+        return result
+
+    def unlink(self):
+        is_admin = self.env.su or self.env.user.has_group(
+            'presenly.group_presenly_manager'
+        )
+        if not is_admin:
+            if not self.env.user.has_group('presenly.group_presenly_hr'):
+                raise UserError(
+                    'Only a Presenly Administrator or HR Officer can delete '
+                    'attendance evidence.'
+                )
+            forbidden = self.filtered(
+                lambda event: event.validation_status == 'success'
+                and event.attendance_id
+            )
+            if forbidden:
+                raise UserError(
+                    'HR can only delete failed evidence or evidence of a '
+                    'deleted attendance. Successful check-in/out evidence is '
+                    'kept; ask an Administrator to remove the attendance '
+                    'record instead.'
+                )
+        if self.env.context.get('presenly_skip_deletion_log'):
+            return super().unlink()
+        snapshots = self._presenly_delete_snapshot()
+        result = super().unlink()
+        self._presenly_write_delete_log(snapshots)
         return result
 
     @api.model

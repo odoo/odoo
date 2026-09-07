@@ -135,6 +135,15 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
         <field name="priority">90</field>
         <field name="arch" type="xml">
+            <!-- Delete button appears only for Presenly HR / Administrator.
+                 Server-side guards (native state rules + our journey purge)
+                 still protect all other paths. -->
+            <xpath expr="//header" position="inside">
+                <button name="action_presenly_delete" type="object"
+                        string="Delete" confirm="Delete this Time Off request and its approval journey?\nThis action cannot be undone."
+                        class="btn-danger"
+                        groups="presenly.group_presenly_hr,presenly.group_presenly_manager"/>
+            </xpath>
             <xpath expr="//button[@name='action_approve']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>

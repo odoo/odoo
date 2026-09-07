@@ -140,6 +140,10 @@
                     <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="not can_approve"/>
                     <button name="action_open_reject_wizard" type="object" string="Reject" invisible="not can_reject"/>
                     <button name="action_cancel" type="object" string="Cancel" invisible="not can_cancel or not id"/>
+                    <button name="action_delete_with_confirm" type="object" string="Delete"
+                            confirm="Delete this permission request and its approval journey?\nThis action cannot be undone."
+                            groups="presenly.group_presenly_hr,presenly.group_presenly_manager"
+                            invisible="not id"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
                 </header>
                 <sheet>
