@@ -742,6 +742,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
 
+    def test_ticket_screen_search_suggestions(self):
+        """The search field suggestions must stay above the order list, on mobile too."""
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_ticket_screen_search_suggestions')
+
     def test_product_information_screen_admin(self):
         '''Consider this test method to contain a test tour with miscellaneous tests/checks that require admin access.
         '''
