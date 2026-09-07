@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import deque
 
+from markupsafe import Markup
+
 from odoo import api, Command, fields, models, _
 from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
@@ -58,6 +60,18 @@ class StockMove(models.Model):
         if vals.get('date') and vals.get('state') != "done":
             self._set_date_planned(vals.get('date'))
         return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_purchase_line_id(self):
+        for move_line in self.filtered(lambda ml: ml.purchase_line_id and ml.picking_id):
+            move_line.picking_id.message_post(body=Markup("<strong>%(remove_message)s</strong><br/><ul><li>%(product_label)s: %(product_name)s</li><li>%(quantity_label)s: %(quantity)s</li></ul>") % {
+                "remove_message": _("The following demand has been removed from this transfer by %(user_name)s.", user_name=self.env.user.display_name),
+                "product_label": _("Product"),
+                "product_name": move_line.product_id.display_name,
+                "quantity_label": _("Quantity"),
+                "quantity": move_line.product_uom_qty,
+                "uom": move_line.uom_id.name,
+            })
 
     def _get_description(self):
         return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
