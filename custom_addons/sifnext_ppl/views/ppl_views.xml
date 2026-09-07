@@ -272,6 +272,35 @@
         <field name="search_view_id" ref="view_sifnext_ppl_search"/>
     </record>
 
+    <record id="view_ppl_history_transfer_tree" model="ir.ui.view">
+        <field name="name">sifnext.ppl.history.transfer.list</field>
+        <field name="model">sifnext.ppl</field>
+        <field name="arch" type="xml">
+            <list string="Rekap History Transfer" create="false" edit="false" delete="false" decoration-success="state == 'done'">
+                <field name="payment_date"/>
+                <field name="name" string="No PPL"/>
+                <field name="project_code"/>
+                <field name="partner_id" string="Penerima"/>
+                <field name="payment_dest_bank" string="Bank Tujuan"/>
+                <field name="payment_dest_account_number" string="No Rekening"/>
+                <field name="payment_dest_account_name" string="Atas Nama"/>
+                <field name="payment_source_account_id" string="Sumber Dana"/>
+                <field name="total_amount" sum="Total Nominal"/>
+                <field name="state" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ppl_history_transfer" model="ir.actions.act_window">
+        <field name="name">Rekap History Transfer</field>
+        <field name="res_model">sifnext.ppl</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', 'in', ('paid', 'done'))]</field>
+        <field name="view_id" ref="view_ppl_history_transfer_tree"/>
+        <field name="search_view_id" ref="view_sifnext_ppl_search"/>
+    </record>
+
     <menuitem id="menu_sifnext_finance_root" name="PPL" sequence="30" groups="base.group_user"/>
     <menuitem id="menu_sifnext_ppl" name="PPL" parent="menu_sifnext_finance_root" action="action_sifnext_ppl" sequence="10"/>
+    <menuitem id="menu_ppl_history_transfer" name="History Transfer" parent="menu_sifnext_finance_root" action="action_ppl_history_transfer" sequence="20"/>
 </odoo>
