@@ -13,7 +13,7 @@ class IrAttachment(models.Model):
         if not self.env.context.get('disable_product_documents_creation'):
             product_attachments = attachments.filtered(
                 lambda attachment:
-                    attachment.res_model in ('product.product', 'product.template')
+                    attachment.res_model in self._get_product_document_models()
                     and not attachment.res_field
             )
             if product_attachments:
@@ -24,3 +24,7 @@ class IrAttachment(models.Model):
                     for attachment in product_attachments
                 ])
         return attachments
+
+    @api.model
+    def _get_product_document_models(self):
+        return ['product.template', 'product.product']
