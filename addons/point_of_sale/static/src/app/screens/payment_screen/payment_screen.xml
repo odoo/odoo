@@ -120,7 +120,7 @@
                 </button>
                 <button class="button js_invoice btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 w-md-50 lh-lg"
                     t-att-class="{ 'highlight active': currentOrder.isToInvoice(), 'opacity-50': !pos.config.canInvoice }"
-                    t-on-click="toggleIsToInvoice" t-att-disabled="currentOrder.lines[0]?.refunded_orderline_id?.order_id?.isToInvoice()">
+                    t-on-click="toggleIsToInvoice" t-att-disabled="currentOrder?.refunded_order_id?.isToInvoice()">
                     <span>
                         <i class="fa fa-file-text-o me-2" />
                         <t t-if="pos.config.canInvoice">Invoice</t>
