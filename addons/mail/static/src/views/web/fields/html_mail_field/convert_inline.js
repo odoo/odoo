@@ -663,7 +663,10 @@ export function classToStyle(element, cssRules) {
                     node.style.setProperty(styleName, value);
                     if (value.includes("calc(")) {
                         // If value included a calc(), assign the node's computed style property value for Outlook compatibility
-                        node.style.setProperty(styleName, computedStyle.getPropertyValue(styleName));
+                        node.style.setProperty(
+                            styleName,
+                            computedStyle.getPropertyValue(styleName)
+                        );
                     }
                 }
             }
@@ -678,45 +681,6 @@ export function classToStyle(element, cssRules) {
                 const computedStyle = getComputedStyle(node);
                 for (const prop of propsToConvert) {
                     node.style.setProperty(prop, computedStyle[prop]);
-                }
-            }
-        });
-
-        const matchedBlacklistRules = nodeRules?.filter((rule) =>
-            CONVERT_INLINE_BLACKLIST_CLASSES.some(
-                (cls) => rule.selector.includes(cls) && node.classList.contains(cls)
-            )
-        );
-
-        const blacklistedStyles = {};
-        for (const rule of matchedBlacklistRules) {
-            for (const [key, value] of Object.entries(rule.style)) {
-                if (
-                    !blacklistedStyles[key] ||
-                    !blacklistedStyles[key].includes("important") ||
-                    value.includes("important")
-                ) {
-                    blacklistedStyles[key] = value;
-                }
-            }
-        }
-
-        for (const [key, value] of Object.entries(blacklistedStyles)) {
-            if (value && value.endsWith("important")) {
-                blacklistedStyles[key] = value.replace(/\s*!important\s*$/, "");
-            }
-        }
-
-        // Find styles to remove if they are from a blacklisted class and match
-        // existing styles.
-        const stylesToRemove = Object.fromEntries(
-            Object.entries(css).filter(([key, value]) => blacklistedStyles[key] === value)
-        );
-        // Remove style from blacklisted classes.
-        writes.push(() => {
-            for (const [key] of Object.entries(stylesToRemove)) {
-                if (node.style[key]) {
-                    node.style.removeProperty(key);
                 }
             }
         });
@@ -1852,7 +1816,18 @@ function _getMatchedCSSRules(node, cssRules) {
         node.msMatchesSelector ||
         node.oMatchesSelector;
 
-    const styles = cssRules.map((rule) => removeBlacklistedStyles(rule, node)).filter(Boolean);
+    const styles = cssRules
+        .map((rule) => {
+            if (matchesBlacklistedClass(rule, node)) {
+                const declaredStyle = {};
+                for (const styleName of rule.rawRule.style || []) {
+                    declaredStyle[styleName] = rule.style?.[styleName] || "";
+                }
+                return [declaredStyle, true];
+            }
+            return [removeBlacklistedStyles(rule, node), false];
+        })
+        .filter(([style]) => style);
 
     // Add inline styles at the highest specificity.
     if (node.style.length) {
@@ -1860,11 +1835,12 @@ function _getMatchedCSSRules(node, cssRules) {
         for (const styleName of node.style) {
             inlineStyles[styleName] = node.style[styleName];
         }
-        styles.push(inlineStyles);
+        styles.push([inlineStyles, false]);
     }
 
     const processedStyle = {};
-    for (const style of styles) {
+    const wonByBlacklistedClass = new Set();
+    for (const [style, isFromBlacklistedClass] of styles) {
         for (const [key, value] of Object.entries(style)) {
             if (
                 !processedStyle[key] ||
@@ -1872,8 +1848,17 @@ function _getMatchedCSSRules(node, cssRules) {
                 value.includes("important")
             ) {
                 processedStyle[key] = value;
+                if (isFromBlacklistedClass) {
+                    wonByBlacklistedClass.add(key);
+                } else {
+                    wonByBlacklistedClass.delete(key);
+                }
             }
         }
+    }
+
+    for (const key of wonByBlacklistedClass) {
+        delete processedStyle[key];
     }
 
     for (const [key, value] of Object.entries(processedStyle)) {
@@ -1900,6 +1885,9 @@ function _getMatchedCSSRules(node, cssRules) {
             continue;
         }
         for (const styleName of GROUPED_STYLES[groupName]) {
+            if (wonByBlacklistedClass.has(styleName)) {
+                continue;
+            }
             const styleValue = computedStyle.getPropertyValue(styleName);
             if (styleValue && typeof styleValue === "string" && styleValue.length) {
                 processedStyle[styleName] = styleValue;
@@ -2098,6 +2086,12 @@ function _wrap(element, wrapperTag, wrapperClass, wrapperStyle) {
     element.parentElement.insertBefore(wrapper, element);
     wrapper.append(element);
     return wrapper;
+}
+
+function matchesBlacklistedClass(rule, node) {
+    return CONVERT_INLINE_BLACKLIST_CLASSES.some(
+        (cls) => rule.selector.includes(cls) && node.classList.contains(cls)
+    );
 }
 
 function isBlacklistedStyle(node, selector, key) {
