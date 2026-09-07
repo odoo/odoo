@@ -57,7 +57,7 @@ patch(Activity.prototype, {
             payload: { id: this.res_id, model: this.res_model },
         });
     },
-    /** @returns {Promise<import("@web/webclient/actions/action_service").ActionDescription>} */
+    /** @returns {Promise<import("@web/webclient/actions/action_plugin").ActionDescription>} */
     async markAsDoneAndScheduleNext() {
         const action = await this.store.env.services.orm.call(
             "mail.activity",
