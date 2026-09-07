@@ -19,10 +19,12 @@ class CustomPayrollBatch(models.Model):
             if total_net <= 0:
                 raise UserError(_("Total gaji bersih untuk batch ini adalah 0 atau negatif. Tidak dapat membuat PPL."))
 
+            unit = self.env['sifnext.unit'].search([('company_id', '=', batch.company_id.id)], limit=1)
             # Buat dokumen PPL
             ppl_vals = {
                 'title': f"Pembayaran Gaji - {batch.name}",
                 'source_type': 'pegawai',
+                'unit_id': unit.id if unit else False,
                 'description': f"Tagihan Gaji untuk batch: {batch.name}",
                 'line_ids': [(0, 0, {
                     'description': f"Total Gaji Bersih {batch.name}",
