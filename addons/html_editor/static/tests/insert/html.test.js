@@ -438,11 +438,170 @@ describe("collapsed selection", () => {
         );
     });
 
+    test("insert block at the end of an inline element in a container block", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <div>
+                    <p>a</p>
+                    <span>b[]</span>
+                    <p>d</p>
+                </div>`)
+        );
+        insertHTML(`<div class="o-paragraph oe_unbreakable">c</div>`)(editor);
+        cleanHints(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div>
+                    <p>a</p>
+                    <span>b</span>
+                    <div class="o-paragraph oe_unbreakable">c[]</div>
+                    <p>d</p>
+                </div>
+                <p data-selection-placeholder=""><br></p>`)
+        );
+    });
+
+    test("insert block and inline at the end of an inline element in a container block", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <div>
+                    <p>a</p>
+                    <span>b[]</span>
+                    <p>e</p>
+                </div>`)
+        );
+        const nodes = [`<div class="o-paragraph oe_unbreakable">c</div>`, "<i>d</i>"];
+        insertHTML(nodes.join(""), nodes)(editor);
+        cleanHints(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div>
+                    <p>a</p>
+                    <span>b</span>
+                    <div class="o-paragraph oe_unbreakable">c</div>
+                    <i>d</i>[]
+                    <p>e</p>
+                </div>
+                <p data-selection-placeholder=""><br></p>`)
+        );
+    });
+
+    test("insert block, inline and other block at the end of an inline element in a container block", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <div>
+                    <p>a</p>
+                    <span>b[]</span>
+                    <p>f</p>
+                </div>`)
+        );
+        const nodes = [
+            `<div class="o-paragraph oe_unbreakable">c</div>`,
+            "<i>d</i>",
+            `<p class="oe_unbreakable">e</p>`,
+        ];
+        insertHTML(nodes.join(""), nodes)(editor);
+        cleanHints(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div>
+                    <p>a</p>
+                    <span>b</span>
+                    <div class="o-paragraph oe_unbreakable">c</div>
+                    <i>d</i>
+                    <p class="oe_unbreakable">e[]</p>
+                    <p>f</p>
+                </div>
+                <p data-selection-placeholder=""><br></p>`)
+        );
+    });
+
     test("insert block at the start of a paragraph", async () => {
         const { el, editor } = await setupEditor(`<p>[]b</p>`);
         insertHTML(`<div class="oe_unbreakable">a</div>`)(editor);
         expect(getContent(el)).toBe(
             `<p data-selection-placeholder=""><br></p><div class="oe_unbreakable">a</div><p>[]b</p>`
+        );
+    });
+
+    test("insert block at the start of an inline element in a container block", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <div>
+                    <p>a</p>
+                    <span>[]c</span>
+                    <p>d</p>
+                </div>`)
+        );
+        insertHTML(`<div class="o-paragraph oe_unbreakable">b</div>`)(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div>
+                    <p>a</p>
+                    <div class="o-paragraph oe_unbreakable">b[]</div>
+                    <span>c</span>
+                    <p>d</p>
+                </div>
+                <p data-selection-placeholder=""><br></p>`)
+        );
+    });
+
+    test("insert block and inline at the start of an inline element in a container block", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <div>
+                    <p>a</p>
+                    <span>[]d</span>
+                    <p>e</p>
+                </div>`)
+        );
+        const nodes = [`<div class="o-paragraph oe_unbreakable">b</div>`, "<i>c</i>"];
+        insertHTML(nodes.join(""), nodes)(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div>
+                    <p>a</p>
+                    <div class="o-paragraph oe_unbreakable">b</div>
+                    <i>c</i>[]
+                    <span>d</span>
+                    <p>e</p>
+                </div>
+                <p data-selection-placeholder=""><br></p>`)
+        );
+    });
+
+    test("insert block, inline and other block at the start of an inline element in a container block", async () => {
+        const { el, editor } = await setupEditor(
+            unformat(`
+                <div>
+                    <p>a</p>
+                    <span>[]e</span>
+                    <p>f</p>
+                </div>`)
+        );
+        const nodes = [
+            `<div class="o-paragraph oe_unbreakable">b</div>`,
+            "<i>c</i>",
+            `<p class="oe_unbreakable">d</p>`,
+        ];
+        insertHTML(nodes.join(""), nodes)(editor);
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div>
+                    <p>a</p>
+                    <div class="o-paragraph oe_unbreakable">b</div>
+                    <i>c</i>
+                    <p class="oe_unbreakable">d[]</p>
+                    <span>e</span>
+                    <p>f</p>
+                </div>
+                <p data-selection-placeholder=""><br></p>`)
         );
     });
 
