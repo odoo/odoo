@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    "name": "POS Self Order QRIS",
+    "name": "Indonesia - POS Self Order QRIS",
     "category": "Sales/Point of Sale",
     "sequence": 101,
     "summary": "Accept QRIS QR code payments in a kiosk.",
@@ -10,9 +10,9 @@
     "assets": {
         "pos_self_order.assets": [
             "point_of_sale/static/lib/qrcode.js",
-            "pos_self_order_qris/static/src/payment/payment_qris.js",
-            "pos_self_order_qris/static/src/payment/payment_page.js",
-            "pos_self_order_qris/static/src/payment/payment_page.xml",
+            "l10n_id_pos_self_order_qris/static/src/payment/payment_qris.js",
+            "l10n_id_pos_self_order_qris/static/src/payment/payment_page.js",
+            "l10n_id_pos_self_order_qris/static/src/payment/payment_page.xml",
         ],
     },
     "author": "Odoo S.A.",
