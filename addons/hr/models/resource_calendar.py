@@ -1,6 +1,7 @@
 
 from odoo import fields, models
 from odoo.fields import Domain
+from odoo.exceptions import ValidationError
 
 
 class ResourceCalendar(models.Model):
@@ -22,3 +23,14 @@ class ResourceCalendar(models.Model):
         self.env['resource.calendar.leaves'].search(domain).write({
             'calendar_id': other_calendar.id,
         })
+
+    def write(self, vals):
+        """Refuse to modify a calendar used by versions of companies the user has not selected.
+
+        :raise ValidationError: if a version using the calendar belongs to a
+            company outside ``env.companies``
+        """
+        versions = self.env['hr.version'].sudo().search([('resource_calendar_id', 'in', self.ids)])
+        if versions.company_id - self.env.companies:
+            raise ValidationError(self.env._("You can't change this working schedule, it's used by employees from other companies you don't have access to. Contact your admin or create a new working schedule."))
+        return super().write(vals)
