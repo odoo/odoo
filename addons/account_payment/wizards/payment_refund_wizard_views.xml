@@ -6,7 +6,7 @@
         <field name="model">payment.refund.wizard</field>
         <field name="arch" type="xml">
             <form string="Refund">
-                <field name="has_pending_refund" invisible="1"/>
+                <field name="has_pending_refund" invisible="1"/> <!-- drives the invisible modifier on the alert_draft_refund_tx warning below -->
                 <div class="alert alert-warning"
                      id="alert_draft_refund_tx"
                      role="alert"
@@ -19,10 +19,10 @@
                 </div>
                 <group>
                     <group>
-                        <field name="payment_id" invisible="1"/>
-                        <field name="transaction_id" invisible="1"/>
-                        <field name="currency_id" invisible="1"/>
-                        <field name="support_refund" invisible="1"/>
+                        <field name="payment_id" invisible="1"/> <!-- source record; related base for transaction_id/payment_amount and used by _compute_has_pending_refund -->
+                        <field name="transaction_id" invisible="1"/> <!-- related payment_id.payment_transaction_id; base for currency_id/support_refund and target of action_refund -->
+                        <field name="currency_id" invisible="1"/> <!-- Monetary currency for payment_amount/refunded_amount/amount_available_for_refund/amount_to_refund fields -->
+                        <field name="support_refund" invisible="1"/> <!-- drives the readonly modifier on amount_to_refund (== 'full_only') -->
                         <field name="payment_amount"/>
                         <field name="refunded_amount"
                                invisible="refunded_amount &lt;= 0"/>

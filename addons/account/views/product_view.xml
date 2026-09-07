@@ -64,7 +64,7 @@
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="fiscal_country_codes" invisible="1"/>
+                    <field name="fiscal_country_codes" invisible="1"/> <!-- feeds "'XX' not in fiscal_country_codes" modifiers added by l10n modules (e.g. l10n_gr_edi, l10n_hu_edi) -->
                 </xpath>
                 <page name="inventory" position="after">
                     <page string="Accounting" name="invoicing" groups="account.group_account_readonly">

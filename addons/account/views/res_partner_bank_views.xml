@@ -63,8 +63,8 @@
                 </xpath>
 
                 <xpath expr="//field[@name='allow_out_payment']" position="before">
-                    <field name="lock_trust_fields" invisible="1"/>
-                    <field name="user_has_group_validate_bank_account" invisible="1"/>
+                    <field name="lock_trust_fields" invisible="1"/> <!-- drives readonly="lock_trust_fields" on account_number/holder_name -->
+                    <field name="user_has_group_validate_bank_account" invisible="1"/> <!-- drives readonly="not user_has_group_validate_bank_account" on allow_out_payment -->
                 </xpath>
 
                 <xpath expr="//field[@name='allow_out_payment']" position="attributes">

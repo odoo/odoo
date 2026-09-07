@@ -6,11 +6,11 @@
             <field name="model">account.automatic.entry.wizard</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="account_type" invisible="1"/>
-                    <field name="company_id" invisible="1"/>
-                    <field name="move_line_ids" invisible="1"/>
-                    <field name="display_currency_helper" invisible="1"/>
-                    <field name="action" invisible="1"/>
+                    <field name="account_type" invisible="1"/> <!-- drives the invisible/required modifiers on the expense/revenue accrual account fields -->
+                    <field name="company_id" invisible="1"/> <!-- feeds company_currency_id related and drives the lock_date_message / currency computes -->
+                    <field name="move_line_ids" invisible="1"/> <!-- source field driving account_type, total_amount and preview_move_data computes -->
+                    <field name="display_currency_helper" invisible="1"/> <!-- drives the "not display_currency_helper" invisible modifier on the currency alert -->
+                    <field name="action" invisible="1"/> <!-- drives the invisible/readonly modifiers on the change_period / change_account groups -->
                     <div invisible="not display_currency_helper"  class="alert alert-info text-center" role="status">
                         The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing
                         the loss of any pre-existing foreign currency amount.

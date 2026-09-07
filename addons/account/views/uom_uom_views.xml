@@ -6,7 +6,7 @@
             <field name="inherit_id" ref="uom.uom_uom_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="before">
-                    <field name="fiscal_country_codes" invisible="1"/>
+                    <field name="fiscal_country_codes" invisible="1"/> <!-- feeds "'XX' not in fiscal_country_codes" modifiers added by l10n modules (e.g. l10n_ar, l10n_hu_edi) -->
                 </xpath>
             </field>
         </record>

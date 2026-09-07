@@ -6,7 +6,7 @@
             <field name="model">account.merge.wizard</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="disable_merge_button" invisible="1"/>
+                    <field name="disable_merge_button" invisible="1"/> <!-- drives the invisible modifiers on the two Merge footer buttons -->
                     <group>
                         <field name="is_group_by_name" />
                     </group>
@@ -21,10 +21,10 @@
                                 <field name="company_ids" widget="many2many_tags"/>
                                 <field name="info" decoration-danger="display_type == 'account'"/>
                                 <!-- needed to make onchange work -->
-                                <field name="sequence" column_invisible="1"/>
-                                <field name="grouping_key" column_invisible="1"/>
-                                <field name="display_type" column_invisible="1"/>
-                                <field name="account_has_hashed_entries" column_invisible="1"/>
+                                <field name="sequence" column_invisible="1"/> <!-- list ordering field (_order = 'sequence, id'), set by the line-generating onchange -->
+                                <field name="grouping_key" column_invisible="1"/> <!-- groups lines for the info and disable_merge_button computes; kept for onchange -->
+                                <field name="display_type" column_invisible="1"/> <!-- drives is_selected invisible and info decoration-danger modifiers in this list -->
+                                <field name="account_has_hashed_entries" column_invisible="1"/> <!-- used by the info compute and merge target selection; kept for onchange -->
                             </list>
                         </field>
                     </group>

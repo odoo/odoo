@@ -8,7 +8,7 @@
             <field name="model">validate.account.move</field>
             <field name="arch" type="xml">
                 <form string="Confirm Entries">
-                    <field name="move_ids" invisible="1"/>
+                    <field name="move_ids" invisible="1"/> <!-- records to post; drives the display_force_post/display_force_hash computes -->
                     <h4 class="mb-4">
                         The selected
                         <t invisible="not is_entries"> entries </t>
@@ -16,7 +16,7 @@
                         will be posted. Some of them may be future-dated or require hashing,</h4>
                     <h4>and will not be posted automatically.</h4>
                     <group invisible="not display_force_post">
-                        <field name="display_force_post" invisible="1"/>
+                        <field name="display_force_post" invisible="1"/> <!-- drives invisible="not display_force_post" on the enclosing group -->
                         <div colspan="2">
                             Future-dated
                             <t invisible="not is_entries"> entries </t>

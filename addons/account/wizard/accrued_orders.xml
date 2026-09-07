@@ -5,8 +5,8 @@
         <field name="model">account.accrued.orders.wizard</field>
         <field name="arch" type="xml">
             <form string="Make Accrual Entries">
-                <field name="company_id" invisible="1"/>
-                <field name="accrual_type" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- scopes the check_company=True domains of journal_id/account_id below -->
+                <field name="accrual_type" invisible="1"/> <!-- dependency of the preview_data compute, set from the action context -->
                 <group>
                     <div class="alert alert-warning" colspan="4" role="alert" invisible="not duplicate_entry_id">
                       <span>An accrual entry of </span>
@@ -25,7 +25,7 @@
                     <field name="journal_id"/>
                     <field name="account_id"/>
                     <field name="amount" invisible="not display_amount"/>
-                    <field name="display_amount" invisible="1"/>
+                    <field name="display_amount" invisible="1"/> <!-- drives invisible="not display_amount" on the info alert and the amount field -->
                   </group>
                   <group>
                     <field name="date"/>
