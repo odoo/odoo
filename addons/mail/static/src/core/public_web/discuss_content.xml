@@ -7,7 +7,11 @@
         <div t-if="this.thread" class="o-mail-DiscussContent-header d-flex flex-shrink-0 align-items-center gap-1 z-1 flex-grow-0">
             <div class="o-mail-DiscussContent-headerInfo position-relative flex-grow-1 min-w-0 d-flex" t-ref="this.headerInfoRef">
                 <div class="o-mail-DiscussContent-headerBox rounded-4 border position-absolute top-0 start-0 h-100 pe-none" t-att-style="this.headerBoxStyle()"/>
-                <div class="position-relative d-flex flex-grow-1 min-w-0 ps-3 pe-2 align-items-center" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }">
+                <!-- Hidden clone of the header content, mirrored automatically by `useHeaderBoxWidth` so the box can be shrink-to-fit. -->
+                <div class="o-mail-DiscussContent-headerGhost invisible pe-none position-absolute top-0 start-0 overflow-hidden" t-ref="this.headerGhostOuterRef">
+                    <div style="width: fit-content" t-ref="this.headerGhostRef"/>
+                </div>
+                <div class="o-mail-DiscussContent-headerContent position-relative d-flex flex-grow-1 min-w-0 ps-3 pe-2 align-items-center" t-att-class="{ 'py-1': !this.correspondentLocalDateTimeFormatted() }" t-ref="this.headerContentRef">
                     <div t-if="this.showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit" t-att-class="this.threadAvatarAttClass" t-ref="this.threadAvatarRef">
                         <DiscussAvatar record="this.thread" size="26"/>
                         <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
@@ -46,7 +50,7 @@
                                 />
                             </t>
                         </div>
-                        <div t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
+                        <span t-if="this.showsChatLocalDateTime" class="text-muted smaller ms-1" t-out="this.correspondentLocalDateTimeFormatted()"/>
                     </div>
                 </div>
             </div>

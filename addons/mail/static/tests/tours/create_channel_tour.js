@@ -7,7 +7,8 @@ registry.category("web_tour.tours").add("can_create_channel_from_form_view", {
             run: "click",
         },
         {
-            trigger: ".o-mail-DiscussContent-threadName[title='OdooBot']",
+            trigger:
+                ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='OdooBot']",
         },
         { trigger: ".o-mail-MessagingMenu-tab:has(:text('Channels'))", run: "click" },
         { trigger: "button[title='New channel']", run: "click" },

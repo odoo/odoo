@@ -112,7 +112,9 @@ test("sidebar: open pinned channel", async () => {
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
     await contains(".o-mail-Composer-input[placeholder='Message #General…']");
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName", {
+        value: "General",
+    });
 });
 
 test("sidebar: open channel and leave it", async () => {
@@ -126,7 +128,9 @@ test("sidebar: open channel and leave it", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName", {
+        value: "General",
+    });
     await expect.waitForSteps([]);
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Conversation')");
@@ -481,7 +485,10 @@ test("Update channel data via bus notification", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-MessagingMenuItem:has(:text('Sales'))`);
-    await insertText(`${env1.selector} .o-mail-DiscussContent-threadName`, "test");
+    await insertText(
+        `${env1.selector} .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName`,
+        "test"
+    );
     await triggerHotkey("Enter");
     await contains(`${env2.selector} .o-mail-MessagingMenuItem:has(:text('Salestest'))`);
 });

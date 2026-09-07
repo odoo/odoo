@@ -108,14 +108,22 @@ test("can change the thread name of #general", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-DiscussContent-threadName:value(general)");
-    await insertText("input.o-mail-DiscussContent-threadName:enabled", "special", {
-        replace: true,
-    });
+    await contains(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadName:value(general)"
+    );
+    await insertText(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadName:enabled",
+        "special",
+        {
+            replace: true,
+        }
+    );
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
     await contains(".o-mail-NotificationItem:has(:text('special'))");
-    await contains("input.o-mail-DiscussContent-threadName:value(special)");
+    await contains(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadName:value(special)"
+    );
 });
 
 test.tags("focus required");
@@ -133,11 +141,19 @@ test("should log notification when channel/thread is renamed", async () => {
     onRpc("discuss.channel", "channel_rename", ({ route }) => expect.step(route));
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussContent-threadName:value(general)");
-    await insertText(".o-mail-DiscussContent-threadName:enabled", "special", { replace: true });
+    await click(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:value(general)"
+    );
+    await insertText(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:enabled",
+        "special",
+        { replace: true }
+    );
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
-    await contains(".o-mail-DiscussContent-threadName:value(special)");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:value(special)"
+    );
     await contains(
         ".o-mail-NotificationMessage:has(:text('" +
             `${serverState.partnerName} changed the channel name to special` +
@@ -145,13 +161,21 @@ test("should log notification when channel/thread is renamed", async () => {
     );
 
     await click(".o-mail-NotificationItem:has(:text('test'))");
-    await click(".o-mail-DiscussContent-threadName:value(test)");
-    await insertText(".o-mail-DiscussContent-threadName:enabled", "specialThread", {
-        replace: true,
-    });
+    await click(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:value(test)"
+    );
+    await insertText(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:enabled",
+        "specialThread",
+        {
+            replace: true,
+        }
+    );
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_rename"]);
-    await contains(".o-mail-DiscussContent-threadName:value(specialThread)");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:value(specialThread)"
+    );
     await contains(
         ".o-mail-NotificationMessage:has(:text('" +
             `${serverState.partnerName} changed the thread name to specialThread` +
@@ -190,15 +214,19 @@ test("can change the thread description of #general", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await contains("input.o-mail-DiscussContent-threadDescription:value(General announcements...)");
+    await contains(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadDescription:value(General announcements...)"
+    );
     await insertText(
-        "input.o-mail-DiscussContent-threadDescription:enabled",
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadDescription:enabled",
         "I want a burger today!",
         { replace: true }
     );
     triggerHotkey("Enter");
     await expect.waitForSteps(["/web/dataset/call_kw/discuss.channel/channel_change_description"]);
-    await contains("input.o-mail-DiscussContent-threadDescription:value(I want a burger today!)");
+    await contains(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadDescription:value(I want a burger today!)"
+    );
 });
 
 /** @typedef {void} NudgeRegressionTest */
@@ -216,13 +244,17 @@ test("header card resizes to fit the thread description after switching channels
     ]);
     await start();
     await openDiscuss(shortChannelId);
-    await contains("input.o-mail-DiscussContent-threadDescription:value(Hi)");
+    await contains(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadDescription:value(Hi)"
+    );
     // Width adjustment is asynchronous. Wait for computed inline width to be set.
     await waitUntil(() => queryFirst(".o-mail-DiscussContent-headerBox[style*=width]"));
     const shortCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
 
     await click(".o-mail-NotificationItem:has(:text('Long'))");
-    await contains(`input.o-mail-DiscussContent-threadDescription:value(${longDescription})`);
+    await contains(
+        `.o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadDescription:value(${longDescription})`
+    );
     await waitUntil(() => {
         // Width recomputation is asynchronous still. Waits for header that should nudge ActionList.
         const headerBoxRect = queryRect(".o-mail-DiscussContent-headerBox");
@@ -230,6 +262,64 @@ test("header card resizes to fit the thread description after switching channels
         // This assumes up to 10px spacing. As of writing comment, they are separated by gap-1 so 4px.
         return actionsRect.x - headerBoxRect.right <= 10;
     });
+    const longCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
+    expect(longCardWidth).toBeGreaterThan(shortCardWidth);
+});
+
+test("Discuss header box has avatar properly rendered (ghost shouldn't duplicate avatar's SVG mask id)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "channel" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-headerGhost"); // Explicit showing of headerGhost implementation detail.
+    await contains(".o-mail-DiscussContent-threadAvatar mask", { count: 2 });
+    await contains(".o-mail-DiscussContent-headerGhost .o-mail-DiscussContent-threadAvatar mask");
+    const maskId = queryFirst(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadAvatar mask"
+    ).id;
+    await contains(`[id='${maskId}']`); // no clone of id, for good working of avatar SVG.
+});
+
+test("header card resizes to fit the correspondent local time subtitle after switching chats", async () => {
+    mockDate("2026-01-01 12:00:00");
+    const pyEnv = await startServer();
+    pyEnv["res.partner"].write([serverState.partnerId], { tz: "Europe/Brussels" });
+    // Same day as self: subtitle is a short time-only string ("17:30 local time").
+    const shortTzPartnerId = pyEnv["res.partner"].create({ name: "Short Tz", tz: "Asia/Kolkata" });
+    // 13h ahead of self: rolls over to the next day, so the subtitle includes
+    // the date on top of the time, making it a longer string.
+    const longTzPartnerId = pyEnv["res.partner"].create({
+        name: "Long Tz",
+        tz: "Pacific/Auckland",
+    });
+    const shortChatId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: shortTzPartnerId }),
+        ],
+    });
+    pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: longTzPartnerId }),
+        ],
+    });
+    await start();
+    await openDiscuss(shortChatId);
+    await contains(".o-mail-DiscussContent-header:has(:text('17:30 local time'))");
+    // Width adjustment is asynchronous. Wait for computed inline width to be set.
+    await waitUntil(() => queryFirst(".o-mail-DiscussContent-headerBox[style*=width]"));
+    const shortCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
+
+    await click(".o-mail-NotificationItem:has(:text('Long Tz'))");
+    await contains(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadName:value(Long Tz)"
+    );
+    await contains(".o-mail-DiscussContent-header:has(:contains('local time'))");
+    // Width recomputation is asynchronous. Wait for it to grow past the short card's width.
+    await waitUntil(() => queryRect(".o-mail-DiscussContent-headerBox").width > shortCardWidth);
     const longCardWidth = queryRect(".o-mail-DiscussContent-headerBox").width;
     expect(longCardWidth).toBeGreaterThan(shortCardWidth);
 });
@@ -692,7 +782,9 @@ test("basic top bar rendering", async () => {
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName", {
+        value: "General",
+    });
     await contains(".o-mail-DiscussContent-header button", { count: 8 });
     await contains(".o-mail-DiscussContent-header button[title='Start Video Call']");
     await contains(".o-mail-DiscussContent-header button[title='Start Call']");
@@ -812,7 +904,9 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     // Test Pinned Panel right-click doesn't show message actions
     await click(".o-mail-MessagingMenu-tab[data-id='channel']");
     await click(".o-mail-NotificationItem:has(:text('General'))");
-    await contains(".o-mail-DiscussContent-threadName:value('General')");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:value('General')"
+    );
     await click("button[title='Pinned Messages']");
     await contains(".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await rightClick(".o-discuss-PinnedMessagesPanel .o-mail-Message");
@@ -1389,7 +1483,9 @@ test("new message in tab title has precedence over action name", async () => {
     ]);
     await start();
     await openDiscuss(initialChannelId);
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" }); // wait for action name being Inbox
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName", {
+        value: "General",
+    }); // wait for action name being Inbox
     await expect.waitForSteps(["General"]);
     // simulate receiving a new message in chat 1 with odoo out-of-focused
     await withUser(bobUserId, () =>
@@ -1673,7 +1769,9 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar");
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadAvatar"
+    );
 });
 
 test("Thread avatar image is displayed in top bar of channels of type 'channel' not limited to any group", async () => {
@@ -1685,7 +1783,9 @@ test("Thread avatar image is displayed in top bar of channels of type 'channel' 
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar");
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadAvatar"
+    );
 });
 
 test("Partner IM status is displayed as thread icon in top bar of channels of type 'chat'", async () => {
@@ -1757,7 +1857,9 @@ test("Thread avatar image is displayed in top bar of channels of type 'group'", 
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "group" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-header .o-mail-DiscussContent-threadAvatar");
+    await contains(
+        ".o-mail-DiscussContent-header .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadAvatar"
+    );
 });
 
 test("Thread avatar is not editable in DM chat", async () => {
@@ -1776,11 +1878,20 @@ test("Thread avatar is not editable in DM chat", async () => {
     ]);
     await start();
     await openDiscuss(groupChatId);
-    await contains(".o-mail-DiscussContent-threadName[title='GroupChat']");
-    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='GroupChat']"
+    );
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadAvatar [data-icon='edit']"
+    );
     await click(".o-mail-NotificationItem:has(:text('Demo'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Demo']");
-    await contains(".o-mail-DiscussContent-threadAvatar [data-icon='edit']", { count: 0 });
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Demo']"
+    );
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadAvatar [data-icon='edit']",
+        { count: 0 }
+    );
 });
 
 test("Do not trigger channel name server update when it is unchanged", async () => {
@@ -1794,9 +1905,13 @@ test("Do not trigger channel name server update when it is unchanged", async () 
 
     await start();
     await openDiscuss(channelId);
-    await insertText("input.o-mail-DiscussContent-threadName:enabled", "General", {
-        replace: true,
-    });
+    await insertText(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadName:enabled",
+        "General",
+        {
+            replace: true,
+        }
+    );
     triggerHotkey("Enter");
     await expect.waitForSteps([]);
 });
@@ -1812,7 +1927,10 @@ test("Do not trigger channel description server update when channel has no descr
 
     await start();
     await openDiscuss(channelId);
-    await insertText("input.o-mail-DiscussContent-threadDescription", "");
+    await insertText(
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadDescription",
+        ""
+    );
     triggerHotkey("Enter");
     await expect.waitForSteps([]);
 });
@@ -2566,7 +2684,9 @@ test("do not show control panel without breadcrumbs", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName", {
+        value: "General",
+    });
     await contains(".o_control_panel", { count: 0 });
     await openFormView("res.partner", serverState.partnerId);
     await openDiscuss();

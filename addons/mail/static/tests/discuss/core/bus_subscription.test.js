@@ -88,7 +88,9 @@ test("bus subscription is refreshed when channel is joined", async () => {
         updateBusSubscription: () => expect.step("update_bus_subscription"),
     });
     await click(".o-mail-DiscussCommand:has(:text('Sales'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Sales']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Sales']"
+    );
     await click("button:text('Add People')");
     await click("[name='selectablePartnerName']:text('Mitchell Admin')");
     await click("button:text('Invite')");

@@ -282,12 +282,16 @@ test("info panel toggle state persists across chats", async () => {
     await click("button[name='livechat-info']");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
     await click(".o-mail-NotificationItem:has(:text('Visitor 2'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Visitor 2']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Visitor 2']"
+    );
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
     await click("button[name='livechat-info']");
     await contains(".o-livechat-ChannelInfoList");
     await click(".o-mail-NotificationItem:has(:text('Visitor 1'))");
-    await contains(".o-mail-DiscussContent-threadName[title='Visitor 1']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Visitor 1']"
+    );
     await contains(".o-livechat-ChannelInfoList");
 });
 

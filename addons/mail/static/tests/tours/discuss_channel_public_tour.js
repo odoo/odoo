@@ -9,7 +9,9 @@ const editedMessageSelector = ".o-mail-Message:has(.o-mail-Message-body:contains
 let openedConversation;
 
 function getConversationName() {
-    return document.querySelector(".o-mail-DiscussContent-threadName")?.value;
+    return document.querySelector(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName"
+    )?.value;
 }
 
 registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {

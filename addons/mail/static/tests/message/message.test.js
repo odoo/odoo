@@ -2747,11 +2747,15 @@ test("Clicking message link does not open a new tab", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-threadName[title='Channel']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Channel']"
+    );
     await insertText(".o-mail-Composer-input", `${url(`/mail/message/${messageId}`)}`);
     await press("Enter");
     await click(".o-mail-Message .o_message_redirect");
-    await contains(".o-mail-DiscussContent-threadName[title='Other Channel']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Other Channel']"
+    );
     await contains(".o-mail-Message:has(:text('Message on other channel'))");
 });
 

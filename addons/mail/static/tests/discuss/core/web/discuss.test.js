@@ -180,7 +180,9 @@ test("can create a group chat conversation", async () => {
     await openDiscuss();
     await triggerHotkey("control+k");
     await click(".o_command_name:text(Mario)");
-    await contains(".o-mail-DiscussContent-threadName[title='Mario']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Mario']"
+    );
     await click("[title='Invite People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
     await click("button:text('Create Group Chat')");
@@ -228,7 +230,9 @@ test("Auto-open OdooBot chat when opening discuss for the first time", async () 
     });
     await start();
     await openDiscuss();
-    await contains(".o-mail-DiscussContent-threadName", { value: "OdooBot" });
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName", {
+        value: "OdooBot",
+    });
 });
 
 test("no conversation selected when opening non-existing channel in discuss", async () => {
@@ -287,7 +291,9 @@ test("clicking chat correspondent avatars opens avatar card", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
-    await click(".o-mail-DiscussContent-threadAvatar.cursor-pointer");
+    await click(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadAvatar.cursor-pointer"
+    );
     await contains(".o_avatar_card");
     await contains(".o-mail-avatar-card-name:text('Mario')");
     await contains(".o_card_user_infos > a:text('mario@example.com')");
@@ -307,7 +313,9 @@ test("Preserve letter case and accents when creating channel from sidebar", asyn
     );
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
     await click("button:text(Create Channel)");
-    await contains(".o-mail-DiscussContent-threadName", { value: "Crème brûlée Fan Club" });
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName", {
+        value: "Crème brûlée Fan Club",
+    });
 });
 
 test("Create channel must have a name", async () => {

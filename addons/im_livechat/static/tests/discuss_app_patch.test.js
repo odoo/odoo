@@ -124,7 +124,7 @@ test("Conversation description works in livechat", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Composer-input:focus");
     await contains(
-        "input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...)"
+        ".o-mail-DiscussContent-headerContent input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...)"
     );
 });
 

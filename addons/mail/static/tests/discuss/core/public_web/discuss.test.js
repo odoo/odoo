@@ -30,13 +30,17 @@ test("open channel in discuss from push notification", async () => {
     ]);
     await start();
     await openDiscuss(salesId);
-    await contains(".o-mail-DiscussContent-threadName[title='Sales']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Sales']"
+    );
     navigator.serviceWorker.dispatchEvent(
         new MessageEvent("message", {
             data: { action: "OPEN_CHANNEL", data: { id: generalId } },
         })
     );
-    await contains(".o-mail-DiscussContent-threadName[title='General']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='General']"
+    );
 });
 
 test("notify message to user as non member", async () => {

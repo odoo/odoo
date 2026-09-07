@@ -44,11 +44,17 @@ test("Thread rename", async () => {
     const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
-    await insertText(`${env1.selector} .o-mail-DiscussContent-threadName:enabled`, "Sales", {
-        replace: true,
-    });
+    await insertText(
+        `${env1.selector} .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName:enabled`,
+        "Sales",
+        {
+            replace: true,
+        }
+    );
     triggerHotkey("Enter");
-    await contains(`${env2.selector} .o-mail-DiscussContent-threadName[title='Sales']`);
+    await contains(
+        `${env2.selector} .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Sales']`
+    );
     await contains(`${env2.selector} .o-mail-NotificationItem:has(:text('Sales'))`);
 });
 
@@ -64,7 +70,7 @@ test("Thread description update", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await insertText(
-        `${env1.selector} .o-mail-DiscussContent-threadDescription`,
+        `${env1.selector} .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadDescription`,
         "The very best channel",
         {
             replace: true,
@@ -72,7 +78,7 @@ test("Thread description update", async () => {
     );
     triggerHotkey("Enter");
     await contains(
-        `${env2.selector} .o-mail-DiscussContent-threadDescription[title='The very best channel']`
+        `${env2.selector} .o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadDescription[title='The very best channel']`
     );
 });
 

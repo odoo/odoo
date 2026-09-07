@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
         },
         {
             trigger:
-                ".o-mail-DiscussContent-header:has(.o-mail-DiscussContent-threadName[title='Visitor'])",
+                ".o-mail-DiscussContent-header:has(.o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Visitor'])",
             async run() {
                 await delay(1000);
                 history.back();
@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add("im_livechat_history_back_and_forth_tour
         },
         {
             trigger:
-                ".o-mail-DiscussContent-header:has(.o-mail-DiscussContent-threadName[title='Visitor'])",
+                ".o-mail-DiscussContent-header:has(.o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Visitor'])",
             async run() {
                 await delay(1000);
                 history.back();

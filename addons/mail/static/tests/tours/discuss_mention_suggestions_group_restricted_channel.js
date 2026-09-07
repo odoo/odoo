@@ -2,7 +2,10 @@ import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("discuss_mention_suggestions_group_restricted_channel.js", {
     steps: () => [
-        { trigger: ".o-mail-DiscussContent-threadName[title='R&D Channel']" },
+        {
+            trigger:
+                ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='R&D Channel']",
+        },
         { trigger: ".o-mail-Composer-input", run: "edit @Consultant User" },
         {
             content: "Suggest channel member not in R&D group",
@@ -19,7 +22,10 @@ registry.category("web_tour.tours").add("discuss_mention_suggestions_group_restr
             trigger: "body:not(:has(.o-mail-Composer-suggestion))",
         },
         { trigger: ".o-mail-NotificationItem:has(:text('Sales Channel'))", run: "click" },
-        { trigger: ".o-mail-DiscussContent-threadName[title='Sales Channel']" },
+        {
+            trigger:
+                ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Sales Channel']",
+        },
         { trigger: ".o-mail-Composer-input", run: "edit @Sales User" },
         {
             content: "Suggest Sales User where no group restricts the channel",

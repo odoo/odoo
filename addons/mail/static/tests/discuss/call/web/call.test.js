@@ -54,7 +54,9 @@ test("no auto-call on joining group chat", async () => {
     await openDiscuss();
     await triggerHotkey("control+k");
     await click(".o_command_name:text(Mario)");
-    await contains(".o-mail-DiscussContent-threadName[title='Mario']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Mario']"
+    );
     await click("[title='Invite People']");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text(Luigi))");
     await click("button:text('Create Group Chat')");

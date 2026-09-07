@@ -117,7 +117,7 @@ test("chat with member should be opened after clicking on channel member", async
     await contains(".o-mail-avatar-card-name:text('Demo')");
     await click(".o-discuss-ChannelMember:has(:text('Demo')).o-active");
     await click(".o_avatar_card button:text('Send message')");
-    await contains(".o-mail-AutoresizeInput[title='Demo']");
+    await contains(".o-mail-DiscussContent-headerContent .o-mail-AutoresizeInput[title='Demo']");
 });
 
 test("Avatar card shows local timezone", async () => {

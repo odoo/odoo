@@ -1016,7 +1016,9 @@ test("start call when accepting from push notification", async () => {
             data: { action: "OPEN_CHANNEL", data: { id: channelId, joinCall: true } },
         })
     );
-    await contains(".o-mail-DiscussContent-threadName[title=General]");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title=General]"
+    );
     await contains(`.o-discuss-CallParticipantCard[aria-label='${serverState.partnerName}']`);
 });
 
@@ -1334,7 +1336,9 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     rtc.microphonePermission = "denied";
     rtc.cameraPermission = "denied";
     await openDiscuss(channelId);
-    await contains(".o-mail-DiscussContent-threadName[title='General']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='General']"
+    );
     await click(".o-mail-MessagingMenu-tab[data-id='meeting']");
     await click("button:text('Meeting')");
     await click(".o-dropdown-item:text('Start Now')");
@@ -1639,14 +1643,20 @@ test("open conversation from call invitation (discuss app)", async () => {
     pyEnv["discuss.channel.member"].write(memberId, { rtc_inviting_session_id: rtcSessionId });
     await start();
     await openDiscuss(channelId2);
-    await contains(".o-mail-DiscussContent-threadName[title='Test']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title='Test']"
+    );
     await contains(".o-discuss-CallInvitation");
     await click(".o-mail-CallInvitation-avatar");
-    await contains(".o-mail-DiscussContent-threadName[title=General]");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title=General]"
+    );
     await click(".o-mail-NotificationItem:has(:text('Test'))");
     await contains(".o-discuss-CallInvitation");
     await click("[title='Join Call']");
-    await contains(".o-mail-DiscussContent-threadName[title=General]");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-DiscussContent-threadName[title=General]"
+    );
 });
 
 test("Meeting chat panel excludes call notifications for 'New Meeting' channels", async () => {
@@ -1891,7 +1901,9 @@ test("confirm before switching calls", async () => {
     await click("[title='Start Call']");
     await contains(".o-discuss-CallMenu-channelInfo:text('channel')");
     await click(".o-mail-NotificationItem-name:text('channel2')");
-    await contains(".o-mail-AutoresizeInput[title='channel2']");
+    await contains(
+        ".o-mail-DiscussContent-headerContent .o-mail-AutoresizeInput[title='channel2']"
+    );
     await click("[title='Start Call']");
     await contains(
         ".modal:has(:text('Switch to the other call? This will disconnect you from your ongoing call.'))"
