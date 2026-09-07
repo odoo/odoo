@@ -14,8 +14,22 @@
         <field name="group_ids" eval="[(4, ref('presenly.group_presenly_manager'))]"/>
     </record>
 
-    <!-- Keep Manage All Attendances/history available, but disable native
-         Kiosk/RFID entry points without changing company configuration. -->
+    <!-- Dashboard & Management are officer-level screens (they group by
+         employee and read attendance_manager_id). Employees should see only
+         their own attendances, so gate these menus to officer+ and hide the
+         dashboard group-by defaults to avoid AccessError. -->
+    <record id="hr_attendance.menu_hr_attendance_view_dashboard" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+    </record>
+    <!-- Management menu removed: the Dashboard (hr_attendance_action) already
+         gives HR Officers the same attendance list/detail handling. The native
+         action stays available via other entry points if ever needed. -->
+    <record id="hr_attendance.menu_hr_attendance_view_attendances_management" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
+    <record id="hr_attendance.menu_hr_attendance_attendance_reporting" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+    </record>
     <record id="hr_attendance.menu_action_open_form" model="ir.ui.menu">
         <field name="active" eval="False"/>
     </record>
@@ -27,14 +41,12 @@
             'create': False,
             'edit': False,
             'search_default_groupby_name': 1,
-            'search_default_employee': 2,
         }</field>
     </record>
     <record id="hr_attendance.hr_attendance_management_action" model="ir.actions.act_window">
         <field name="context">{
             'create': False,
             'edit': False,
-            'search_default_to_approve': 1,
             'search_default_activeemployees': 1,
         }</field>
     </record>

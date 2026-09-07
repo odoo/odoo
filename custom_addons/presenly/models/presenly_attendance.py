@@ -26,6 +26,19 @@ class HrAttendance(models.Model):
     _name = 'hr.attendance'
     _inherit = ['hr.attendance', 'presenly.deletion.log.mixin']
 
+    # The native related field inherits groups from
+    # ``hr.employee.attendance_manager_id`` (``group_hr_attendance_officer``),
+    # yet ``_compute_is_manager`` (native, called via super) and the
+    # group-expand ``_read_group_employee_id`` always read it. Without opening
+    # it, any Presenly employee who can see an attendance list triggers an
+    # AccessError on this field. Opening it to Presenly Employee keeps the
+    # self-service view working while preserving officer-level semantics.
+    attendance_manager_id = fields.Many2one(
+        'res.users',
+        related='employee_id.attendance_manager_id',
+        groups='presenly.group_presenly_employee,hr_attendance.group_hr_attendance_officer',
+    )
+
     presenly_company_id = fields.Many2one(
         'res.company', string='Operational Company', index=True, readonly=True,
     )
@@ -268,11 +281,9 @@ class HrAttendance(models.Model):
         return super().write(values)
 
     def unlink(self):
-        if not self._presenly_hr_or_admin_can_delete():
-            raise ValidationError(_(
-                'Attendance history can only be deleted by a Presenly '
-                'Administrator or HR Officer within the correction window.'
-            ))
+        blocked = self._presenly_delete_blocked_reason()
+        if blocked:
+            raise ValidationError(blocked)
         snapshots = self._presenly_delete_snapshot()
         for attendance in self:
             attendance._presenly_purge_children()
@@ -280,26 +291,47 @@ class HrAttendance(models.Model):
         self._presenly_write_delete_log(snapshots)
         return result
 
+    def _presenly_delete_blocked_reason(self):
+        """Return a human-readable reason when the current user cannot delete
+        these records, or an empty string when deletion is allowed.
+
+        Admin: allowed.
+        HR: allowed only inside the correction window and when the attendance
+        is not backing an approved overtime request.
+        """
+        if self.env.su:
+            return ''
+        user = self.env.user
+        if user.has_group('presenly.group_presenly_manager'):
+            return ''
+        if not user.has_group('presenly.group_presenly_hr'):
+            return _(
+                'Only a Presenly Administrator or HR Officer can delete '
+                'attendance history.'
+            )
+        now = fields.Datetime.now()
+        for attendance in self:
+            if attendance.presenly_has_overtime_evidence():
+                return _(
+                    'This attendance is the basis of an approved overtime '
+                    'request and cannot be deleted by HR. Ask an '
+                    'Administrator if the request is no longer needed.'
+                )
+            if attendance.check_in and (
+                now - attendance.check_in
+            ) > timedelta(days=PRESENLY_CORRECTION_DAYS):
+                return _(
+                    'This attendance is older than the %(days)d-day '
+                    'correction window.',
+                    days=PRESENLY_CORRECTION_DAYS,
+                )
+        return ''
+
     def _presenly_hr_or_admin_can_delete(self):
         """Admin can delete anything. HR is limited to a short correction
         window (PRESENLY_CORRECTION_DAYS from check_in) and cannot delete
         attendance that backs an overtime request."""
-        if self.env.su:
-            return True
-        user = self.env.user
-        if user.has_group('presenly.group_presenly_manager'):
-            return True
-        if not user.has_group('presenly.group_presenly_hr'):
-            return False
-        now = fields.Datetime.now()
-        for attendance in self:
-            if attendance.presenly_has_overtime_evidence():
-                return False
-            if attendance.check_in and (
-                now - attendance.check_in
-            ) > timedelta(days=PRESENLY_CORRECTION_DAYS):
-                return False
-        return True
+        return not bool(self._presenly_delete_blocked_reason())
 
     def presenly_has_overtime_evidence(self):
         self.ensure_one()
@@ -324,13 +356,12 @@ class HrAttendance(models.Model):
         ).unlink()
 
     def action_presenly_delete(self):
-        """Form delete button for Attendance. The role-aware guard inside
-        ``unlink`` decides who may actually remove each record."""
-        if not self._presenly_hr_or_admin_can_delete():
-            raise ValidationError(_(
-                'Attendance history can only be deleted by a Presenly '
-                'Administrator or HR Officer within the correction window.'
-            ))
+        """Form delete button for Attendance.
+
+        The button is always shown to HR/Administrator; ``unlink()`` answers
+        with a specific rejection reason when the record is outside policy
+        (e.g. older than the correction window or backing an overtime request).
+        """
         return self.unlink()
 
     def action_open_presenly_evidence(self):
