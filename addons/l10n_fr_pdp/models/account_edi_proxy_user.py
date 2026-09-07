@@ -514,6 +514,7 @@ class AccountEdiProxyClientUser(models.Model):
             return origin_move
 
         if content.get('error'):
+            origin_move.peppol_move_state = 'error'
             origin_move.pdp_ppf_move_state = 'error'
             self._pdp_log_einvoicing_chatter(
                 origin_move,
