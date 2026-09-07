@@ -3,7 +3,7 @@
     "version": "19.0.1.0.0",
     "category": "Operations",
     "summary": "Asset Management",
-    "depends": ["base", "mail"],
+    "depends": ["base", "mail", "sif_keuangan"],
     "data": [
         "security/ir.model.access.csv",
         "data/sequence.xml",

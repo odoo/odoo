@@ -1,7 +1,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class SifnextAsset(models.Model):
@@ -48,6 +48,11 @@ class SifnextAsset(models.Model):
         string="Referensi Dokumen",
     )
 
+    partner_id = fields.Many2one(
+        "res.partner",
+        string="Vendor",
+    )
+
     # =====================================================
     # INFORMASI PEROLEHAN
     # =====================================================
@@ -69,6 +74,37 @@ class SifnextAsset(models.Model):
         string="Mata Uang",
         required=True,
         default=lambda self: self.env.company.currency_id,
+    )
+
+    # =====================================================
+    # ACCOUNTING / FINANCE
+    # =====================================================
+
+    account_asset_id = fields.Many2one(
+        "sif.coa",
+        string="Akun Aset",
+    )
+
+    account_cash_id = fields.Many2one(
+        "sif.coa",
+        string="Akun Kas/Kewajiban",
+    )
+
+    account_dep_id = fields.Many2one(
+        "sif.coa",
+        string="Akun Akumulasi Penyusutan",
+    )
+
+    account_exp_id = fields.Many2one(
+        "sif.coa",
+        string="Akun Beban Penyusutan",
+    )
+
+    purchase_journal_id = fields.Many2one(
+        "sif.jurnal.entry",
+        string="Jurnal Perolehan",
+        readonly=True,
+        copy=False,
     )
 
     # =====================================================
@@ -120,7 +156,6 @@ class SifnextAsset(models.Model):
 
     book_value = fields.Monetary(
         string="Nilai Buku",
-        currency_field="currency_id",
         compute="_compute_book_value",
         store=True,
     )
@@ -139,6 +174,18 @@ class SifnextAsset(models.Model):
     # STATUS
     # =====================================================
 
+    state = fields.Selection(
+        [
+            ("draft", "Draft"),
+            ("acquired", "Acquired"),
+            ("depreciating", "Depreciating"),
+            ("fully_depreciated", "Fully Depreciated"),
+        ],
+        string="Status",
+        default="draft",
+        required=True,
+    )
+
     active = fields.Boolean(
         string="Aktif",
         default=True,
@@ -156,24 +203,21 @@ class SifnextAsset(models.Model):
     )
     def _compute_depreciation(self):
         for record in self:
-
             years = record.category_id.useful_life_years or 0
             months = years * 12
 
             record.useful_life_months = months
 
             if months > 0:
-
-                depreciable_value = (
+                depreciable_value = max(
                     record.acquisition_value
-                    - record.residual_value
-                )
-
-                record.depreciation_amount = max(
-                    depreciable_value / months,
+                    - record.residual_value,
                     0,
                 )
 
+                record.depreciation_amount = (
+                    depreciable_value / months
+                )
             else:
                 record.depreciation_amount = 0.0
 
@@ -184,14 +228,14 @@ class SifnextAsset(models.Model):
     @api.depends(
         "acquisition_value",
         "accumulated_depreciation",
+        "residual_value",
     )
     def _compute_book_value(self):
         for record in self:
-
             record.book_value = max(
                 record.acquisition_value
                 - record.accumulated_depreciation,
-                0,
+                record.residual_value,
             )
 
     # =====================================================
@@ -204,7 +248,6 @@ class SifnextAsset(models.Model):
         "accumulated_depreciation",
     )
     def _check_values(self):
-
         for record in self:
 
             if record.acquisition_value < 0:
@@ -245,9 +288,7 @@ class SifnextAsset(models.Model):
     def create(self, vals_list):
 
         for vals in vals_list:
-
             if vals.get("code", "New") == "New":
-
                 vals["code"] = (
                     self.env["ir.sequence"].next_by_code(
                         "sifnext.asset"
@@ -257,7 +298,6 @@ class SifnextAsset(models.Model):
 
         records = super().create(vals_list)
 
-        # Generate jadwal penyusutan otomatis
         for record in records:
             record._generate_depreciation_schedule()
 
@@ -283,11 +323,62 @@ class SifnextAsset(models.Model):
         result = super().write(vals)
 
         if regenerate_schedule:
-
             for record in self:
                 record._generate_depreciation_schedule()
 
         return result
+
+    # =====================================================
+    # POST PEROLEHAN KE FINANCE
+    # =====================================================
+
+    def action_post_acquisition(self):
+
+        for record in self:
+
+            if record.state != "draft":
+                raise UserError(
+                    "Aset ini sudah diproses dan tidak dapat "
+                    "diposting kembali."
+                )
+
+            if record.acquisition_value <= 0:
+                raise UserError(
+                    "Nilai perolehan harus lebih besar dari 0."
+                )
+
+            if not record.account_asset_id:
+                raise UserError(
+                    "Akun Aset belum dipilih."
+                )
+
+            if not record.account_cash_id:
+                raise UserError(
+                    "Akun Kas/Kewajiban belum dipilih."
+                )
+
+            journal = self.env[
+                "sif.jurnal.entry"
+            ].create_asset_purchase_journal(
+                asset_name=record.name,
+                asset_code=record.code,
+                amount=record.acquisition_value,
+                asset_account_id=record.account_asset_id.id,
+                credit_account_id=record.account_cash_id.id,
+                date=record.acquisition_date,
+                unit_name=record.owner_unit or "KANTOR",
+                vendor_name=(
+                    record.partner_id.name
+                    if record.partner_id
+                    else ""
+                ),
+                kwitansi=record.reference or "",
+            )
+
+            record.purchase_journal_id = journal.id
+            record.state = "acquired"
+
+        return True
 
     # =====================================================
     # GENERATE JADWAL PENYUSUTAN
@@ -295,12 +386,22 @@ class SifnextAsset(models.Model):
 
     def _generate_depreciation_schedule(self):
 
-        Depreciation = self.env["sifnext.asset.depreciation"]
+        Depreciation = self.env[
+            "sifnext.asset.depreciation"
+        ]
 
         for record in self:
 
-            # Hapus jadwal lama
-            record.depreciation_ids.unlink()
+            posted_lines = record.depreciation_ids.filtered(
+                lambda line: line.state == "posted"
+            )
+
+            draft_lines = record.depreciation_ids.filtered(
+                lambda line: line.state == "draft"
+            )
+
+            # Jangan pernah menghapus jadwal yang sudah posted
+            draft_lines.unlink()
 
             months = record.useful_life_months
 
@@ -311,44 +412,66 @@ class SifnextAsset(models.Model):
             ):
                 continue
 
-            depreciation_amount = record.depreciation_amount
-
             depreciable_value = max(
                 record.acquisition_value
                 - record.residual_value,
                 0,
             )
 
-            accumulated = 0.0
+            # Total yang sudah benar-benar diposting
+            accumulated = sum(
+                posted_lines.mapped(
+                    "depreciation_amount"
+                )
+            )
 
-            # Penyusutan dimulai bulan berikutnya
-            first_month = (
-                fields.Date.to_date(
-                    record.depreciation_start_date
-                ).replace(day=1)
+            accumulated = min(
+                accumulated,
+                depreciable_value,
+            )
+
+            # Jumlah bulan yang sudah posted
+            posted_count = len(posted_lines)
+
+            # Tanggal penyusutan pertama:
+            # akhir bulan dari depreciation_start_date
+            start_date = fields.Date.to_date(
+                record.depreciation_start_date
+            )
+
+            first_month_end = (
+                start_date.replace(day=1)
                 + relativedelta(months=1)
+                - relativedelta(days=1)
             )
 
             schedule_values = []
 
-            for month_index in range(months):
+            remaining_months = max(
+                months - posted_count,
+                0,
+            )
+
+            for index in range(remaining_months):
 
                 depreciation_date = (
-                    first_month
-                    + relativedelta(months=month_index + 1)
-                    - relativedelta(days=1)
+                    first_month_end
+                    + relativedelta(
+                        months=index + posted_count
+                    )
                 )
 
-                # Pastikan penyusutan terakhir tidak
-                # melebihi nilai yang dapat disusutkan
-                remaining_value = (
-                    depreciable_value
-                    - accumulated
+                remaining_value = max(
+                    depreciable_value - accumulated,
+                    0,
                 )
+
+                if remaining_value <= 0:
+                    break
 
                 current_depreciation = min(
-                    depreciation_amount,
-                    max(remaining_value, 0),
+                    record.depreciation_amount,
+                    remaining_value,
                 )
 
                 accumulated += current_depreciation
@@ -369,7 +492,9 @@ class SifnextAsset(models.Model):
                 })
 
             if schedule_values:
-                Depreciation.create(schedule_values)
+                Depreciation.create(
+                    schedule_values
+                )
 
     # =====================================================
     # MANUAL REGENERATE SCHEDULE
