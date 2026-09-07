@@ -190,7 +190,7 @@ class ResUsers(models.Model):
         """ The list of fields a user can write on their own user record.
         In order to add fields, please override this property on model extensions.
         """
-        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz', 'api_key_ids', 'phone']
+        return ['signature', 'action_id', 'company_id', 'email', 'name', 'image_1920', 'lang', 'tz', 'phone']
 
     @api.model
     @tools.ormcache(cache='stable')
