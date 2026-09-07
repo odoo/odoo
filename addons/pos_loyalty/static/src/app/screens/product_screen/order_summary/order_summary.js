@@ -77,4 +77,23 @@ patch(OrderSummary.prototype, {
             },
         });
     },
+    async onOrderlineLongPress(ev, orderline) {
+        const res = await super.onOrderlineLongPress(ev, orderline);
+        if (res && orderline.is_reward_line) {
+            const order = orderline.order_id;
+            const attribute_value_ids = orderline.attribute_value_ids;
+            const custom_attribute_value_ids = orderline.custom_attribute_value_ids;
+            const rewardObject = order.active_rewards.find(
+                (active_reward) => active_reward.reward_id === orderline.reward_id?.id
+            );
+            rewardObject.attribute_value_ids = attribute_value_ids.map((av) => av.id);
+            rewardObject.attribute_custom_values = [];
+            custom_attribute_value_ids.forEach((cav) => {
+                rewardObject.attribute_custom_values[
+                    cav.custom_product_template_attribute_value_id.id
+                ] = cav.custom_value;
+            });
+        }
+        return res;
+    },
 });
