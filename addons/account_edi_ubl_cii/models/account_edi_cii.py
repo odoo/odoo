@@ -36,7 +36,12 @@ class AccountEdiCii(models.AbstractModel):
             vals['supplier'], vals['customer'] = vals['customer'], vals['supplier']
             vals['partner_shipping'] = vals['customer'].child_ids.filtered(lambda p: p.type == 'delivery')[:1] or vals['customer']
 
-        self._cii_add_values_delivery_date(vals, invoice.delivery_date or invoice.invoice_date)
+        billing_start_date, billing_end_date = self._cii_get_billing_dates(invoice)
+        self._cii_add_values_billing_dates(vals, billing_start_date, billing_end_date)
+        self._cii_add_values_delivery_date(
+            vals,
+            None if billing_start_date else invoice.delivery_date or invoice.invoice_date,
+        )
 
         vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
 
@@ -55,6 +60,24 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_add_values_billing_dates(self, vals, start_date, end_date):
         vals['billing_start_date'] = start_date
         vals['billing_end_date'] = end_date
+
+    def _cii_get_billing_dates(self, invoice):
+        """ Compute the Invoicing period (BG-14) of the invoice.
+
+        The period is the envelope of the line periods (BT-134/BT-135) and is only reported
+        when every line defines one, otherwise it would advertise a duration for the lines
+        having none. The invoice date and the due date are payment information: they never
+        take part in the computation.
+
+        :return: (start date, end date)
+        """
+        lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
+        if not lines or 'deferred_start_date' not in lines._fields:
+            return None, None
+        deferred_lines = lines.filtered(lambda line: line.deferred_start_date and line.deferred_end_date)
+        if deferred_lines != lines:
+            return None, None
+        return min(lines.mapped('deferred_start_date')), max(lines.mapped('deferred_end_date'))
 
     def _cii_get_default_tax_grouping_key(self, base_line, tax_data, vals, currency):
         """ Give the values about the tax category for a given tax.
@@ -679,18 +702,8 @@ class AccountEdiCii(models.AbstractModel):
         }
 
     def _cii_get_billing_specified_period_node(self, vals):
-        invoice = vals['invoice']
-        billing_start_dates = [invoice.invoice_date] if invoice.invoice_date else []
-        billing_end_dates = [invoice.invoice_date_due] if invoice.invoice_date_due else []
-        if "deferred_start_date" in invoice.invoice_line_ids._fields:
-            # only checking the existence of the first of the enterprise fields
-            billing_start_dates += [move_line.deferred_start_date for move_line in invoice.invoice_line_ids if move_line.deferred_start_date]
-            billing_end_dates += [move_line.deferred_end_date for move_line in invoice.invoice_line_ids if move_line.deferred_end_date]
-        start_date = end_date = None
-        if billing_start_dates:
-            start_date = min(billing_start_dates)
-        if billing_end_dates:
-            end_date = max(billing_end_dates)
+        start_date = vals['billing_start_date']
+        end_date = vals['billing_end_date']
         return {
             'ram:StartDateTime': self._cii_get_date_time_string_node(vals, start_date) if start_date else None,
             'ram:EndDateTime': self._cii_get_date_time_string_node(vals, end_date) if end_date else None,
