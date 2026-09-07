@@ -17,6 +17,7 @@
 
             <t t-set-slot="content">
                 <div class="att_container d-flex flex-column">
+                    <t t-set="attendanceReviewDetails" t-value="this.attendanceDetails"/>
                     <div>
                         <div name="attendance_menu_header"
                             class="d-flex justify-content-between align-items-center gap-5 border-bottom p-2">
@@ -44,30 +45,15 @@
                     </div>
 
                     <div class="o_att_today_wrap px-2">
-                        <t t-set="attendanceReviewDetails" t-value="this.attendanceDetails"/>
                         <div t-if="attendanceReviewDetails" class="pt-2 w-100">
                             <t t-set="isEditingAttendance"
                                 t-value="this.state.editingAttendanceId === attendanceReviewDetails.id"/>
-                            <div class="d-flex justify-content-end text-end mb-2">
-                                <div>
-                                    <div class="d-flex align-items-baseline justify-content-end gap-2">
-                                        <span class="small text-muted">Worked</span>
-                                        <strong class="fs-5 lh-1">
-                                            <t t-out="attendanceReviewDetails.totalDisplay"/>
-                                        </strong>
-                                    </div>
-                                    <div t-if="this.state.breakManagementEnabled" class="small text-muted">
-                                        Break: <t t-out="attendanceReviewDetails.breakDisplay"/>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div t-if="attendanceReviewDetails.sessions.length"
-                                class="list-group rounded-2 overflow-hidden mb-2">
+                                class="list-group mb-2">
                                 <div t-foreach="attendanceReviewDetails.sessions"
                                      t-as="session"
                                      t-key="session.id"
-                                     class="list-group-item p-0"
+                                     class="list-group-item border-0 p-0"
                                      t-att-class="session.selected ? 'bg-body-tertiary' : 'list-group-item-action'">
                                     <div
                                         class="d-flex justify-content-between align-items-center gap-3 p-2 cursor-pointer"
@@ -88,15 +74,15 @@
                                             <t t-out="session.durationLabel"/>
                                         </strong>
                                     </div>
-                                    <div t-if="session.selected" class="border-top p-2">
+                                    <div t-if="session.selected" class="p-2 pt-0">
                                         <t t-if="isEditingAttendance">
                                             <Record t-props="this.attendanceRecordProps"
                                                 t-slot-scope="data" t-key="attendanceReviewDetails.id">
                                                 <AttendanceInlineForm
                                                     record="data.record"
                                                     onKeydown="this.onFormKeydown.bind(this)"
-                                                    onSave="this.saveAttendanceRecord.bind(this)"
-                                                    onDiscard="this.discardAttendanceRecord.bind(this)"
+                                                    onSave="this.saveReviewedAttendance.bind(this)"
+                                                    onDiscard="this.discardReviewedAttendance.bind(this)"
                                                     showBreak="this.state.breakManagementEnabled"
                                                 />
                                             </Record>
@@ -148,13 +134,27 @@
                         </div>
                     </div>
 
-                    <div class="o_wrap_btn_sign_out d-flex gap-3 align-items-stretch bottom-0 p-2 z-2">
+                    <div class="o_wrap_btn_sign_out d-flex gap-3 align-items-center bottom-0 p-2 z-2">
                         <button t-on-click="() => this.signInOut()"
                                 t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} flex-grow-1">
                             <span t-if="!this.state.checkedIn">Check in</span>
                             <span t-else="">Check out</span>
                             <i class="oi ms-1" t-attf-data-icon="{{ this.state.checkedIn ? 'logout' : 'login' }}"/>
                         </button>
+                        <t t-set="attendanceTotals"
+                            t-value="this.state.attendances.length > 1 and attendanceReviewDetails"/>
+                        <div t-if="attendanceTotals" name="attendance_totals" class="text-end text-nowrap ms-auto">
+                            <div class="d-flex align-items-baseline justify-content-end gap-2">
+                                <span class="small text-muted">Worked</span>
+                                <strong class="fs-5 lh-1">
+                                    <t t-out="attendanceTotals.totalDisplay"/>
+                                </strong>
+                            </div>
+                            <div t-if="this.state.breakManagementEnabled and attendanceTotals.breakDisplay"
+                                class="small text-muted">
+                                Break: <t t-out="attendanceTotals.breakDisplay"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </t>

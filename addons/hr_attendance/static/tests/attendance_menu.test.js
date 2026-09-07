@@ -18,7 +18,7 @@ import { ActivityMenu } from "@hr_attendance/components/attendance_menu/attendan
 class HrAttendance extends models.Model {
     _name = "hr.attendance";
 
-    check_in = fields.Datetime();
+    check_in = fields.Datetime({ required: true });
     check_out = fields.Datetime();
     break_duration = fields.Float();
     can_edit = fields.Boolean();
@@ -71,11 +71,95 @@ test("the attendance review keeps its dropdown open when using a datetime field"
     await mountWithCleanup(ActivityMenu);
 
     await contains("button:has(i[aria-label='Attendance'])").click();
+    await waitFor(".o_att_today_wrap .list-group-item");
+    expect(".o_att_today_wrap [data-field]").toHaveCount(0, {
+        message: "the attendances are folded when the review is opened",
+    });
+
+    await contains(".o_att_today_wrap .list-group-item .cursor-pointer").click();
     await waitFor(".o_att_today_wrap [data-field]");
     expect(".o_att_today_wrap [data-field]").toHaveCount(2);
+    expect(".o_att_today_wrap .o_field_widget[name='check_in']").toHaveClass(
+        "o_required_modifier",
+        { message: "the check in cannot be removed from an attendance" }
+    );
+    expect(".o_att_today_wrap button:contains(Save)").toHaveCount(1, {
+        message: "the save button shows up without waiting for a change",
+    });
     await contains(".o_att_today_wrap [data-field='check_in']").click();
     await waitFor(".o_datetime_picker");
     expect(".o_att_today_wrap").toHaveCount(1);
+});
+
+function mockCheckedOutEmployee(todayAttendances, breakToday = 0) {
+    mockService("lazy_session", () => ({
+        getValue(key, callback) {
+            if (key === "attendance_check_in_ability" || key === "attendance_break_management") {
+                callback(true);
+            } else if (key === "attendance_state") {
+                callback("checked_out");
+            } else {
+                callback(false);
+            }
+        },
+    }));
+    onRpc("/hr_attendance/attendance_user_data", () => ({
+        id: 7,
+        name: "Test Employee",
+        attendance_state: "checked_out",
+        last_attendance_worked_hours: 0,
+        break_today: breakToday,
+        today_attendance_ids: todayAttendances,
+    }));
+}
+
+const morningAttendance = {
+    id: 42,
+    check_in: "2026-08-27 09:00:00",
+    check_out: "2026-08-27 12:00:00",
+    worked_hours: 3,
+    break_duration: 0,
+    can_edit: true,
+};
+const afternoonAttendance = {
+    id: 43,
+    check_in: "2026-08-27 13:00:00",
+    check_out: "2026-08-27 17:00:00",
+    worked_hours: 4,
+    break_duration: 0,
+    can_edit: true,
+};
+
+test("the totals of the reviewed attendances are displayed next to the check in", async () => {
+    mockCheckedOutEmployee([morningAttendance, afternoonAttendance]);
+
+    await mountWithCleanup(ActivityMenu);
+
+    await contains("button:has(i[aria-label='Attendance'])").click();
+    await waitFor(".o_wrap_btn_sign_out [name='attendance_totals']");
+    expect(".o_wrap_btn_sign_out [name='attendance_totals']").toHaveText("Worked\n7:00", {
+        message: "a break of 0 hour is not displayed in the totals",
+    });
+});
+
+test("the totals display the break of the day once there is one", async () => {
+    mockCheckedOutEmployee([morningAttendance, afternoonAttendance], 0.5);
+
+    await mountWithCleanup(ActivityMenu);
+
+    await contains("button:has(i[aria-label='Attendance'])").click();
+    await waitFor(".o_wrap_btn_sign_out [name='attendance_totals']");
+    expect(".o_wrap_btn_sign_out [name='attendance_totals']").toHaveText("Worked\n7:00\nBreak: 0:30");
+});
+
+test("the totals are hidden when a single attendance is reviewed", async () => {
+    mockCheckedOutEmployee([morningAttendance]);
+
+    await mountWithCleanup(ActivityMenu);
+
+    await contains("button:has(i[aria-label='Attendance'])").click();
+    await waitFor(".o_att_today_wrap .list-group-item");
+    expect("[name='attendance_totals']").toHaveCount(0);
 });
 
 test("the displayed total sums the rounded attendance durations", () => {
@@ -132,23 +216,30 @@ test("the displayed break total sums the reviewed attendance breaks", () => {
     expect(details.breakDurationLabel).toBe("2:00");
 });
 
-test("opening the systray only edits the latest attendance from today", async () => {
+test("opening the systray reviews the latest attendance from today, folded", async () => {
     const attendanceMenu = Object.create(ActivityMenu.prototype);
     attendanceMenu.state = {
         employee: null,
         attendances: [],
         activeAttendance: null,
+        attendanceReviewExpanded: true,
+        editingAttendanceId: 41,
     };
     attendanceMenu.setStreamAvailable = () => {};
     attendanceMenu.searchReadEmployee = async () => {
-        attendanceMenu.state.attendances = [{ id: 42, can_edit: true }];
+        attendanceMenu.state.attendances = [
+            { id: 41, can_edit: true },
+            { id: 42, can_edit: true },
+        ];
     };
     attendanceMenu.startInlineEdit = (attendance) => expect.step(`edit ${attendance.id}`);
 
     await attendanceMenu.beforeDropdownOpen();
 
     expect(attendanceMenu.state.activeAttendance.id).toBe(42);
-    expect.verifySteps(["edit 42"]);
+    expect(attendanceMenu.state.attendanceReviewExpanded).toBe(false);
+    expect(attendanceMenu.state.editingAttendanceId).toBe(null);
+    expect.verifySteps([]);
 });
 
 test("opening the timesheet systray does not wait for attendance review data", async () => {
@@ -277,6 +368,40 @@ test("a rejected attendance record save reports the error", async () => {
 
     expect(await attendanceMenu.saveAttendanceRecord(record)).toBe(false);
     expect.verifySteps(["notified"]);
+});
+
+test("saving the reviewed attendance folds it back", async () => {
+    const attendanceMenu = Object.create(ActivityMenu.prototype);
+    attendanceMenu.state = { attendanceReviewExpanded: true, editingAttendanceId: 42 };
+    attendanceMenu.saveAttendanceRecord = async () => true;
+
+    await attendanceMenu.saveReviewedAttendance();
+
+    expect(attendanceMenu.state.attendanceReviewExpanded).toBe(false);
+    expect(attendanceMenu.state.editingAttendanceId).toBe(null);
+});
+
+test("a refused save leaves the reviewed attendance unfolded", async () => {
+    const attendanceMenu = Object.create(ActivityMenu.prototype);
+    attendanceMenu.state = { attendanceReviewExpanded: true, editingAttendanceId: 42 };
+    attendanceMenu.saveAttendanceRecord = async () => false;
+
+    await attendanceMenu.saveReviewedAttendance();
+
+    expect(attendanceMenu.state.attendanceReviewExpanded).toBe(true);
+    expect(attendanceMenu.state.editingAttendanceId).toBe(42);
+});
+
+test("discarding the reviewed attendance folds it back", async () => {
+    const attendanceMenu = Object.create(ActivityMenu.prototype);
+    attendanceMenu.state = { attendanceReviewExpanded: true, editingAttendanceId: 42 };
+    attendanceMenu.discardAttendanceRecord = async () => expect.step("discard");
+
+    await attendanceMenu.discardReviewedAttendance();
+
+    expect(attendanceMenu.state.attendanceReviewExpanded).toBe(false);
+    expect(attendanceMenu.state.editingAttendanceId).toBe(null);
+    expect.verifySteps(["discard"]);
 });
 
 test("check-out saves pending attendance changes", async () => {
