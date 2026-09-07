@@ -72,7 +72,17 @@ registry.category("web_tour.tours").add('event_tour', {
     content: _t("Save the ticket."),
     trigger: '.o_dialog .o_form_button_save',
     run: "click",
-}, stepUtils.autoExpandMoreButtons(), {
+}, {
+    isActive: ["auto"],
+    content: `autoExpandMoreButtons`,
+    trigger: ".o-form-buttonbox",
+    async run({ queryFirst, click }) {
+        const more = queryFirst(".o-form-buttonbox .o_button_more");
+        if (more) {
+            await click(more);
+        }
+    },
+}, {
     isActive: ["mobile"],
     trigger: ".o-form-buttonbox:has(.o_button_more) .o_button_more",
     run: "click",

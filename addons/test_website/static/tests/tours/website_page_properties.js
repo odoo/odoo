@@ -3,7 +3,15 @@ import {
     getClientActionUrl,
     registerWebsitePreviewTour,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
+
+function goToUrl(url) {
+    return {
+        content: `Navigate to ${url}`,
+        trigger: "body",
+        run: `goToUrl ${url}`,
+        expectUnloadPage: true,
+    };
+}
 
 const openPagePropertiesDialog = [
     {
@@ -129,9 +137,9 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
                 content: "Verify is in menu",
                 trigger: `:visible :iframe #top_menu a[href="${modifiedUrl}"]`,
             },
-            stepUtils.goToUrl(getClientActionUrl("/")),
+            goToUrl(getClientActionUrl("/")),
             ...assertPageCanonicalUrlIs("/"),
-            stepUtils.goToUrl(getClientActionUrl(modifiedUrl)),
+            goToUrl(getClientActionUrl(modifiedUrl)),
         ],
         teardown: [
             {
@@ -150,9 +158,9 @@ function testCommonProperties(url, canPublish, modifiedUrl = undefined) {
                 content: "Verify is not in menu",
                 trigger: `:visible :iframe #top_menu:not(:has(a[href="${url}"]))`,
             },
-            stepUtils.goToUrl(getClientActionUrl("/")),
+            goToUrl(getClientActionUrl("/")),
             ...assertPageCanonicalUrlIs("/"),
-            stepUtils.goToUrl(getClientActionUrl(url)),
+            goToUrl(getClientActionUrl(url)),
         ],
         finalize() {
             return [
@@ -253,7 +261,7 @@ function testWebsitePageProperties() {
             trigger: ":iframe head:hidden title:contains(/Cool Page/)",
         },
         ...assertPageCanonicalUrlIs("/"),
-        stepUtils.goToUrl(getClientActionUrl("/new-page")),
+        goToUrl(getClientActionUrl("/new-page")),
         {
             content: "Verify no index",
             trigger: ':iframe head:hidden meta[name="robots"][content="noindex"]',
@@ -298,7 +306,7 @@ function testWebsitePageProperties() {
             trigger: ":iframe head:hidden title:contains(/New Page/)",
         },
         ...assertPageCanonicalUrlIs("/new-page"),
-        stepUtils.goToUrl(getClientActionUrl("/new-page")),
+        goToUrl(getClientActionUrl("/new-page")),
         {
             content: "Verify is indexed",
             trigger: ':iframe head:hidden:not(:has(meta[name="robots"][content="noindex"]))',
