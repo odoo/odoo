@@ -5,8 +5,8 @@
         <field name="model">stock.replenishment.info</field>
         <field name="arch" type="xml">
             <form class="o_stock_replenishment_info">
-                <field name="orderpoint_id" invisible="1"/>
-                <field name="qty_to_order" invisible="1"/>
+                <field name="orderpoint_id" invisible="1"/> <!-- source record all the related fields below (product_min_qty, daily_demand, warehouseinfo_ids...) are related to -->
+                <field name="qty_to_order" invisible="1"/> <!-- related source for stock.replenishment.option.qty_to_order on the child wh_replenishment_option_ids rows -->
                 <group>
                     <group style="grid-template-columns: max-content;">
                         <field nolabel="1" name="json_lead_days" colspan="2" widget="lead_days_widget"/>
@@ -51,7 +51,7 @@
                     </group>
                 </group>
                 <notebook>
-                    <field name="warehouseinfo_ids" invisible="1"/>
+                    <field name="warehouseinfo_ids" invisible="1"/> <!-- drives invisible on the Warehouses page below -->
                     <page string="Warehouses" name="page_warehouses" invisible="not warehouseinfo_ids">
                         <field name="wh_replenishment_option_ids"/>
                     </page>
@@ -78,7 +78,7 @@
         <field name="model">stock.replenishment.option</field>
         <field name="arch" type="xml">
             <list>
-                <field name="qty_to_order" column_invisible="True"/>
+                <field name="qty_to_order" column_invisible="True"/> <!-- drives the decoration-danger on free_qty below -->
                 <field name="warehouse_id" string="Warehouse"/>
                 <field name="location_id" string="Warehouse Location"/>
                 <field name="free_qty" decoration-danger="free_qty &lt; qty_to_order" string="Available Quantity"/>

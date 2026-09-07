@@ -5,12 +5,12 @@
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <form string="Stock Batch Transfer">
-                <field name="company_id" invisible="1"/>
-                <field name="show_check_availability" invisible="1"/>
-                <field name="show_allocation" invisible="1"/>
-                <field name="picking_type_code" invisible="1"/>
-                <field name="is_wave" invisible="1"/>
-                <field name="show_lots_text" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- read by action_batch_detailed_operations for default_company_id context -->
+                <field name="show_check_availability" invisible="1"/> <!-- drives invisible on the Validate/Reserve header buttons -->
+                <field name="show_allocation" invisible="1"/> <!-- drives invisible on the Allocation stat button -->
+                <field name="picking_type_code" invisible="1"/> <!-- read by action_batch_detailed_operations for picking_code context -->
+                <field name="is_wave" invisible="1"/> <!-- drives invisible on the picking_ids widgets in the Transfers page -->
+                <field name="show_lots_text" invisible="1"/> <!-- read by action_batch_detailed_operations context -->
                 <header>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
@@ -69,9 +69,7 @@
                             <button class="oe_highlight float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Transfers" name="page_transfers">
-                            <field name="allowed_picking_ids" invisible="1"/>
-                            <field name="picking_type_id" invisible="1"/>
-                            <field name="picking_type_code" invisible="1"/>
+                            <field name="allowed_picking_ids" invisible="1"/> <!-- feeds the domain of picking_ids -->
                             <field name="picking_ids" widget="stock_picking_many2many" mode="list,kanban" invisible="not is_wave"
                                 context="{
                                     'form_view_ref': 'stock.stock_picking_view_form_from_batch',
@@ -101,7 +99,7 @@
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
             <list string="Stock Batch Transfer" multi_edit="1" sample="1" class="oe_stock_picking_batch">
-                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- kept to feed the visible optional company_id column's groups toggle -->
                 <field name="priority" optional="show" widget="priority" nolabel="1"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="description"/>

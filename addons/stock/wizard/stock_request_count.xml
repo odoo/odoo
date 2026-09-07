@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="quant_ids" invisible="1"/>
+                    <field name="quant_ids" invisible="1"/> <!-- Populated via default_quant_ids context; read by _get_quants_to_count -->
                     <field name="user_id" placeholder="Anyone" widget="many2one_avatar_user"/>
                     <field name="inventory_date"/>
                     <field name="show_expected_quantity"/>

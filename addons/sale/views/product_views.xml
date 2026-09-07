@@ -10,8 +10,8 @@
                 <attribute name="invisible" remove="1" separator="or"/>
             </page>
             <field name="product_variant_count" position="after">
-                <field name="service_type" widget="radio" invisible="True"/>
-                <field name="visible_reinvoice_policy" invisible="1"/>
+                <field name="service_type" widget="radio" invisible="True"/> <!-- kept for onchange/compute of service_policy and service_tracking in sale_project/sale_timesheet -->
+                <field name="visible_reinvoice_policy" invisible="1"/> <!-- drives the invisible on the expense_info group below -->
             </field>
             <field name="type" position="after">
                 <field

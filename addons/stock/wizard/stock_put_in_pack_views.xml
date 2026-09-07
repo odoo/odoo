@@ -26,7 +26,7 @@
                            widget="package_m2o"
                            placeholder="Leave empty to create new"
                     />
-                    <field name="move_line_ids" invisible="1"/>
+                    <field name="move_line_ids" invisible="1"/> <!-- Source recordset feeding the wizard's computes and passed to action_put_in_pack -->
                 </group>
                 <footer>
                     <button name="action_put_in_pack" type="object" string="Put in Pack" class="btn-primary" data-hotkey="q"/>

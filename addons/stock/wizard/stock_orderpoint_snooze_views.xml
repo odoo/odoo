@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Snooze">
                 <group>
-                    <field name="orderpoint_ids" invisible="1"/>
+                    <field name="orderpoint_ids" invisible="1"/> <!-- Required in view to reach the server: read by action_snooze() to write snoozed_until -->
                     <field name="predefined_date" widget="radio"/>
                     <field name="snoozed_until" readonly="predefined_date != 'custom'" force_save="1"/>
                 </group>
