@@ -58,6 +58,23 @@ class TestPPLWorkflow(TransactionCase):
             "account_type": "expense",
             "parent_id": cls.journal_account_parent.id,
         })
+        cls.payment_account_parent = cls.env["sif.coa"].create({
+            "name": "Sumber Dana Test PPL",
+            "code": "PPL-PAYMENT-PARENT",
+            "account_type": "asset",
+        })
+        cls.kas_account = cls.env["sif.coa"].create({
+            "name": "Kas Besar Test PPL",
+            "code": "PPL-PAYMENT-KAS",
+            "account_type": "asset",
+            "parent_id": cls.payment_account_parent.id,
+        })
+        cls.bank_account = cls.env["sif.coa"].create({
+            "name": "Bank Operasional Test PPL",
+            "code": "PPL-PAYMENT-BANK",
+            "account_type": "asset",
+            "parent_id": cls.payment_account_parent.id,
+        })
 
     def _create_ppl(self):
         return self.env["sifnext.ppl"].with_user(self.user).create({
@@ -373,6 +390,7 @@ class TestPPLWorkflow(TransactionCase):
             ppl.with_user(self.finance).action_pay()
         ppl.with_user(self.finance).write({
             "payment_method": "bank",
+            "payment_source_account_id": self.bank_account.id,
             "payment_date": "2026-09-05",
             "payment_reference": "TRX-PPL-001",
         })
@@ -395,6 +413,7 @@ class TestPPLWorkflow(TransactionCase):
         ppl.with_user(self.director).action_approve()
         ppl.with_user(self.finance).write({
             "payment_method": "bank",
+            "payment_source_account_id": self.bank_account.id,
             "payment_date": "2026-09-05",
             "payment_reference": "TRX-PPL-CONTRACT",
         })
@@ -428,6 +447,8 @@ class TestPPLWorkflow(TransactionCase):
         self.assertEqual(payload["ppl"]["state"], "paid")
         self.assertEqual(payload["ppl"]["total_amount"], 100_000)
         self.assertEqual(payload["ppl"]["payment"]["reference"], "TRX-PPL-CONTRACT")
+        self.assertEqual(payload["ppl"]["payment"]["source_account"]["id"], self.bank_account.id)
+        self.assertEqual(payload["ppl"]["payment"]["source_account"]["code"], self.bank_account.code)
         self.assertEqual(payload["ppl"]["lines"][0]["account"]["code"], self.journal_account.code)
         self.assertNotIn("attachments", payload["ppl"]["lines"][0])
         with self.assertRaises(UserError):
@@ -440,7 +461,8 @@ class TestPPLWorkflow(TransactionCase):
         def fail_general_ledger(record, payload):
             raise ValidationError("Jurnal Besar tidak tersedia")
 
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        exception_message = "Jurnal Besar tidak tersedia"
+        with self.assertRaisesRegex(ValidationError, exception_message), self.cr.savepoint():
             with patch.object(type(ppl), "_notify_general_ledger_paid", fail_general_ledger):
                 ppl.with_user(self.finance).action_pay()
 
@@ -474,6 +496,42 @@ class TestPPLWorkflow(TransactionCase):
             ppl.with_user(self.user).write({"payment_reference": "INVALID"})
         with self.assertRaises(UserError):
             ppl.with_user(self.finance).write({"payment_reference": "TOO-EARLY"})
+        with self.assertRaises(AccessError):
+            ppl.with_user(self.user).write({"payment_source_account_id": self.bank_account.id})
+        with self.assertRaises(UserError):
+            ppl.with_user(self.finance).write({"payment_source_account_id": self.bank_account.id})
+
+    def test_pay_requires_source_account(self):
+        ppl = self._prepare_approved_ppl()
+        ppl.with_user(self.finance).write({"payment_source_account_id": False})
+        with self.assertRaises(ValidationError):
+            ppl.with_user(self.finance).action_pay()
+        ppl.with_user(self.finance).write({"payment_source_account_id": self.kas_account.id})
+        ppl.with_user(self.finance).action_pay()
+        self.assertEqual(ppl.state, "paid")
+        self.assertEqual(ppl.payment_source_account_id, self.kas_account)
+
+    def test_paid_journal_credit_follows_selected_source_account(self):
+        ppl = self._prepare_approved_ppl()
+        ppl.unit_id.sudo().journal_unit_dept = "sma"
+        captured = []
+
+        def create_from_ppl(record, data):
+            captured.append(data)
+            return True
+
+        with patch.object(type(self.env["sif.jurnal.entry"]), "create_journal_from_ppl", create_from_ppl):
+            ppl.with_user(self.finance).action_pay()
+
+        self.assertEqual(len(captured), 1)
+        self.assertEqual(captured[0]["unit_dept"], "sma")
+        credit_lines = [line for line in captured[0]["lines"] if line["credit"]]
+        debit_lines = [line for line in captured[0]["lines"] if line["debit"]]
+        self.assertEqual(len(credit_lines), 1)
+        self.assertEqual(credit_lines[0]["account_id"], self.bank_account.id)
+        self.assertEqual(credit_lines[0]["credit"], 100_000)
+        self.assertEqual(debit_lines[0]["account_id"], self.journal_account.id)
+        self.assertEqual(debit_lines[0]["debit"], 100_000)
 
     def test_return_requires_reason(self):
         ppl = self._create_ppl()

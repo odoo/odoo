@@ -54,6 +54,14 @@ class SifnextPPL(models.Model):
     payment_method = fields.Selection(
         [("cash", "Kas"), ("bank", "Bank")], string="Metode Pembayaran", tracking=True,
     )
+    payment_source_account_id = fields.Many2one(
+        "sif.coa",
+        string="Sumber Dana (Kas/Bank)",
+        tracking=True,
+        domain="[('active', '=', True), ('parent_id', '!=', False), ('account_type', '=', 'asset'),"
+        " '|', ('name', 'ilike', 'kas'), ('name', 'ilike', 'bank')]",
+        help="Akun kas/bank sumber dana pembayaran; sisi Kredit jurnal mengikuti akun ini.",
+    )
     payment_date = fields.Date(string="Tanggal Pembayaran", tracking=True)
     payment_reference = fields.Char(string="Referensi Pembayaran", tracking=True)
     submitted_by = fields.Many2one("res.users", readonly=True, copy=False)
@@ -158,7 +166,7 @@ class SifnextPPL(models.Model):
         if "line_ids" in vals and any(record.state != "draft" for record in self):
             if not self._is_submitted_coa_update(vals["line_ids"]):
                 raise UserError(_("Detail kebutuhan hanya dapat diubah pada status Draft."))
-        payment_fields = {"payment_method", "payment_date", "payment_reference"}
+        payment_fields = {"payment_method", "payment_source_account_id", "payment_date", "payment_reference"}
         if payment_fields.intersection(vals):
             if not self.env.user.has_group("sifnext_ppl.group_ppl_finance"):
                 raise AccessError(_("Hanya Keuangan yang dapat mengisi data pembayaran."))
@@ -232,6 +240,11 @@ class SifnextPPL(models.Model):
                     "reference": self.payment_reference,
                     "paid_by_id": self.paid_by.id,
                     "paid_at": fields.Datetime.to_string(self.paid_at),
+                    "source_account": {
+                        "id": self.payment_source_account_id.id,
+                        "code": self.payment_source_account_id.code,
+                        "name": self.payment_source_account_id.name,
+                    } if self.payment_source_account_id else None,
                 },
                 "lines": [{
                     "id": line.id,
@@ -294,10 +307,11 @@ class SifnextPPL(models.Model):
                     'debit': line['amount'],
                     'credit': 0.0,
                 })
-        kas_account = self.env['sif.coa'].search([('level', '>', 1), ('name', 'ilike', 'kas')], limit=1)
-        kredit_account_id = kas_account.id if kas_account else 1
+        source_account = payload['ppl']['payment'].get('source_account')
+        if not source_account or not source_account.get('id'):
+            raise UserError(_("Sumber dana (kas/bank) pembayaran belum dipilih."))
         jurnal_lines.append({
-            'account_id': kredit_account_id,
+            'account_id': source_account['id'],
             'name': f"Pembayaran {payload['ppl']['number']}",
             'debit': 0.0,
             'credit': payload['ppl']['total_amount'],
@@ -306,8 +320,8 @@ class SifnextPPL(models.Model):
             'date': payload['ppl']['payment']['date'],
             'reference': payload['ppl']['title'],
             'source_document': payload['ppl']['number'],
-            'unit_dept': 'pusat',
-            'lines': jurnal_lines
+            'unit_dept': self.unit_id.journal_unit_dept if self.unit_id else 'pusat',
+            'lines': jurnal_lines,
         })
         return True
 
@@ -375,8 +389,9 @@ class SifnextPPL(models.Model):
         for record in self:
             if record.state != "approved":
                 raise UserError(_("Hanya PPL Disetujui yang dapat dibayar."))
-            if not record.payment_method or not record.payment_date or not record.payment_reference:
-                raise ValidationError(_("Metode, tanggal, dan referensi pembayaran wajib diisi."))
+            if not record.payment_method or not record.payment_date or not record.payment_reference \
+                    or not record.payment_source_account_id:
+                raise ValidationError(_("Metode, tanggal, referensi, dan sumber dana pembayaran wajib diisi."))
             record._check_budget()
         self._workflow_write({
             "state": "paid",

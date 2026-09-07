@@ -22,6 +22,13 @@ class SifnextUnit(models.Model):
         "Kode Unit harus unik dalam satu perusahaan.",
     )
 
+    journal_unit_dept = fields.Selection(
+        [("tpa", "TPA"), ("sd", "SD"), ("smp", "SMP"), ("sma", "SMA"),
+         ("univ", "Universitas"), ("pusat", "Yayasan / Kantor Pusat")],
+        string="Unit Jurnal", default="pusat", required=True,
+        help="Mapping unit ke kolom Unit/Departemen pada Jurnal Besar.",
+    )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
