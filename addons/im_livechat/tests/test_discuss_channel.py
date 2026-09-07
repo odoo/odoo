@@ -433,3 +433,105 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertTrue(channel.livechat_looking_for_help_since_dt)
         channel.livechat_end_dt = fields.Datetime.now()
         self.assertFalse(channel.livechat_looking_for_help_since_dt)
+
+    @freeze_time("2026-07-06 06:07:00")
+    def test_store_recent_channels(self):
+        now = fields.Datetime.now()
+        (
+            ongoing_older_interest,
+            ongoing_same_interest_older_id,
+            ongoing_same_interest_newer_id,
+            closed_newer_end,
+            closed_older_end,
+            outside_window,
+            partner_source,
+        ) = self.env["discuss.channel"].create([
+            {
+                "name": "Partner Conversation",
+                "channel_type": "livechat",
+                "last_interest_dt": last_interest_dt,
+                "livechat_end_dt": livechat_end_dt,
+                "livechat_channel_member_history_ids": [
+                    Command.create({"livechat_member_type": "visitor", "partner_id": self.visitor_user.partner_id.id}),
+                ],
+            }
+            for last_interest_dt, livechat_end_dt in [
+                (now - timedelta(hours=2), False),
+                (now - timedelta(hours=1), False),
+                (now - timedelta(hours=1), False),
+                # Ended later but went idle earlier than the next one (e.g. the visitor left the
+                # window open before closing it): ended conversations are sorted on their end date,
+                # which is the date displayed.
+                (now - timedelta(hours=3), now - timedelta(hours=1)),
+                (now - timedelta(hours=2), now - timedelta(hours=1, minutes=30)),
+                (now - timedelta(days=8), False),
+                (now, False),
+            ]
+        ])
+        guest = self.env["mail.guest"].create({"name": "Guest Visitor"})
+        guest_channels = self.env["discuss.channel"].create([
+            {
+                "name": f"Guest Conversation {index}",
+                "channel_type": "livechat",
+                "livechat_channel_member_history_ids": [
+                    Command.create({"guest_id": guest.id, "livechat_member_type": "visitor"}),
+                ],
+            }
+            for index in range(7)
+        ])
+        guest_source = guest_channels[0]
+        sources = partner_source | guest_source
+        data = Store().add(sources, "_store_livechat_extra_fields")._build_result()
+        stored_channels = {channel["id"]: channel for channel in data["discuss.channel"]}
+        self.assertEqual(
+            stored_channels[partner_source.id]["recent_channel_ids"],
+            [
+                ongoing_same_interest_newer_id.id,
+                ongoing_same_interest_older_id.id,
+                ongoing_older_interest.id,
+                closed_newer_end.id,
+                closed_older_end.id,
+            ],
+        )
+        self.assertNotIn(outside_window.id, stored_channels[partner_source.id]["recent_channel_ids"])
+        self.assertFalse(stored_channels[partner_source.id]["has_more_recent_channels"])
+        self.assertEqual(
+            stored_channels[guest_source.id]["recent_channel_ids"],
+            list(reversed(guest_channels[-5:].ids)),
+        )
+        self.assertTrue(stored_channels[guest_source.id]["has_more_recent_channels"])
+        self.assertEqual(
+            self.env["discuss.channel"].search(guest_source.action_recent_channels()["domain"]),
+            guest_channels[1:],
+        )
+
+    def test_store_recent_channels_non_livechat_user(self):
+        partner = self.env["res.partner"].create({"name": "Partner Visitor"})
+        guest = self.env["mail.guest"].create({"name": "Guest Visitor"})
+        source, partner_channel, guest_channel, unreadable_channel = self.env["discuss.channel"].create([
+            {
+                "name": name,
+                "channel_type": "livechat",
+                "livechat_channel_member_history_ids": [
+                    Command.create({"livechat_member_type": "visitor", **visitor_vals})
+                    for visitor_vals in visitors
+                ],
+            }
+            for name, visitors in [
+                ("Source", [{"partner_id": partner.id}, {"guest_id": guest.id}]),
+                ("Partner Conversation", [{"partner_id": partner.id}]),
+                ("Guest Conversation", [{"guest_id": guest.id}]),
+                ("Unreadable Conversation", [{"guest_id": guest.id}]),
+            ]
+        ])
+        user = new_test_user(self.env, "internal_not_livechat", groups="base.group_user")
+        (source | partner_channel | guest_channel)._add_members(users=user)
+        source = source.with_user(user)
+        data = Store().add(source, "_store_livechat_extra_fields")._build_result()
+        stored_channels = {channel["id"]: channel for channel in data["discuss.channel"]}
+        self.assertEqual(stored_channels[source.id]["recent_channel_ids"], (guest_channel | partner_channel).ids)
+        self.assertEqual(
+            source.env["discuss.channel"].search(source.action_recent_channels()["domain"]),
+            partner_channel | guest_channel,
+        )
+        self.assertFalse(unreadable_channel.with_user(user).has_access("read"))

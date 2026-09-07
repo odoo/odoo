@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <record id="livechat_channel_session_11" model="discuss.channel">
-            <field name="name">Visitor, Mitchell Admin</field>
+            <field name="name">Returning Visitor, Mitchell Admin</field>
             <field name="livechat_lang_id" ref="base.lang_en"/>
             <field name="livechat_status">need_help</field>
             <field name="livechat_looking_for_help_since_dt" eval="datetime.now()"/>
@@ -11,6 +11,7 @@
             <field name="livechat_failure">no_failure</field>
             <field name="channel_type">livechat</field>
             <field name="country_id" ref="base.us"/>
+            <field name="last_interest_dt" eval="datetime.now() + timedelta(seconds=25)"/>
         </record>
         <record id="im_livechat.livechat_channel_session_11_history_member_admin" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="livechat_channel_session_11"/>
@@ -24,22 +25,20 @@
             <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_11_history_member_admin'))]"/>
         </record>
-        <record id="im_livechat.livechat_channel_session_11_guest" model="mail.guest">
-            <field name="name">Visitor</field>
-        </record>
         <record id="im_livechat.livechat_channel_session_11_history_member_guest" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="livechat_channel_session_11"/>
-            <field name="guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="livechat_member_type">visitor</field>
         </record>
         <record id="im_livechat.livechat_channel_session_11_member_guest" model="discuss.channel.member">
-            <field name="guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="channel_id" ref="im_livechat.livechat_channel_session_11"/>
+            <field name="last_interest_dt" eval="datetime.now() + timedelta(seconds=25)"/>
             <field name="livechat_member_history_ids" eval="[(4, ref('im_livechat.livechat_channel_session_11_history_member_guest'))]"/>
         </record>
 
         <record id="livechat_channel_session_11_message_1" model="mail.message">
-            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="author_id"/>
             <field name="date" eval="datetime.now()"/>
             <field name="create_date" eval="datetime.now()"/>
@@ -63,7 +62,7 @@
             <field name="model">discuss.channel</field>
         </record>
         <record id="livechat_channel_session_11_message_3" model="mail.message">
-            <field name="author_guest_id" ref="im_livechat.livechat_channel_session_11_guest"/>
+            <field name="author_guest_id" ref="im_livechat.returning_visitor_guest_demo"/>
             <field name="author_id"/>
             <field name="date" eval="datetime.now() - timedelta(seconds=-25)"/>
             <field name="create_date" eval="datetime.now() - timedelta(seconds=-25)"/>

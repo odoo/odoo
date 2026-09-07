@@ -88,6 +88,9 @@ const discussChannelPatch = {
         });
         /** @type {import("@web/core/network/rpc").RPCError|import("@web/core/network/rpc").ConnectionLostError|import("@web/core/network/rpc").ConnectionAbortedError|undefined} */
         this.chatbotTriggerFailedError = undefined;
+        /** @type {boolean|undefined} */
+        this.has_more_recent_channels = undefined;
+        this.recent_channel_ids = fields.Many("discuss.channel");
     },
     get allowDescriptionTypes() {
         return [...super.allowDescriptionTypes, "livechat"];
