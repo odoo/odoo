@@ -562,9 +562,15 @@ export class CalendarModel extends Model {
     /**
      * @protected
      */
+    getBaseDomain() {
+        return this.meta.domain;
+    }
+    /**
+     * @protected
+     */
     computeDomain(data) {
         return [
-            ...this.meta.domain,
+            ...this.getBaseDomain(),
             ...this.computeRangeDomain(data),
             ...this.computeFiltersDomain(data),
         ];
@@ -645,7 +651,7 @@ export class CalendarModel extends Model {
     computeEventsToScheduleDomain(data) {
         const { date_start, date_stop } = this.meta.fieldMapping;
         const domain = Domain.removeDomainLeaves(
-            Domain.and([this.meta.domain, this.computeFiltersDomain(data)]),
+            Domain.and([this.getBaseDomain(), this.computeFiltersDomain(data)]),
             [date_start, date_stop]
         );
         if (date_start === date_stop) {
