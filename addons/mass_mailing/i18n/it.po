@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 12:40+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Italian <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-31 17:13+0000\n"
+"Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
+"Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-4/"
 "mass_mailing/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mass_mailing
 #. odoo-python
@@ -36,6 +36,10 @@ msgid ""
 "currently matches your rules!</p>\n"
 "            "
 msgstr ""
+"\n"
+"               <p class=\"o_view_nocontent_smiling_face\"> Al momento non ci "
+"sono risultati che corrispondono alle tue regole!</p>\n"
+"            "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -107,7 +111,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__recipients_count
 msgid "# Of Recipients"
-msgstr ""
+msgstr "Numero di destinatari"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -146,25 +150,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s added"
-msgstr ""
+msgstr "%(count)s aggiunti"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s already subscribed"
-msgstr ""
+msgstr "%(count)s già iscritti"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s ignored (no email)"
-msgstr ""
+msgstr "%(count)s ignorati (nessuna e-mail)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s opted out"
-msgstr ""
+msgstr "%(count)s esclusi"
 
 #. module: mass_mailing
 #. odoo-python
@@ -193,7 +197,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "%(record_name)s created from %(link)s"
-msgstr ""
+msgstr "%(record_name)s creato da %(link)s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
@@ -417,7 +421,7 @@ msgstr "7 segreti di design delle case più belle del mondo"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "8.00am - 12.00pm"
-msgstr ""
+msgstr "8:00 - 12:00"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -579,7 +583,7 @@ msgstr "<i class=\"oi\" data-icon=\"east\"></i> Configura ragioni opt out"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "<i>e.g. \"Recent shoppers\" or \"B2B leads in Canada\"</i>"
-msgstr ""
+msgstr "<i>ad es. \"Acquirenti recenti\" o \"Contatti B2B in Canada\"</i>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -606,6 +610,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"mailing_contact_ids.length == 1\">Mailing Contacts</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"mailing_contact_ids.length != "
+"1\">Indirizzo e-mail</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"mailing_contact_ids.length == 1\">Indirizzi e-mail</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -651,12 +659,12 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Created by</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">Creato da</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Recipients</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">Destinatari</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -667,7 +675,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span invisible=\"not scheduled or not process\">, </span>"
-msgstr ""
+msgstr "<span invisible=\"not scheduled or not process\">, </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -690,6 +698,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"process_text\">emails are being processed</span>"
 msgstr ""
+"<span name=\"process_text\">le e-mail sono in corso di elaborazione</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -705,6 +714,8 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent soon</"
 "span>"
 msgstr ""
+"<span name=\"scheduled_text\">e-mail sono in coda e verranno inviate a "
+"breve</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
@@ -714,12 +725,12 @@ msgstr "<span style=\"color: #878d97;\">Disattiva resoconti e-mail</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>.</span>"
-msgstr ""
+msgstr "<span>.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>Recipients</span>"
-msgstr ""
+msgstr "<span>Destinatari</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -756,6 +767,7 @@ msgstr ""
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "A fallback font will be used for some email clients"
 msgstr ""
+"Per alcuni client di posta elettronica verrà utilizzato un font di riserva"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -958,7 +970,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add (Mailing) Contacts to Mailing List"
-msgstr ""
+msgstr "Aggiungi contatti (e-mail) alla mailing list"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -970,12 +982,12 @@ msgstr "Aggiungi attività"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/snippet_visibility_option.xml:0
 msgid "Add Conditions"
-msgstr ""
+msgstr "Aggiungi condizioni"
 
 #. module: mass_mailing
 #: model:ir.actions.client,name:mass_mailing.res_partner_to_list_results_action
 msgid "Add Contacts to Mailing List results"
-msgstr ""
+msgstr "Aggiungi contatti ai risultati della mailing list"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -986,7 +998,7 @@ msgstr "Aggiungi link personalizzato"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
 msgid "Add Mailing Contacts to a Mailing List"
-msgstr ""
+msgstr "Aggiungi contatti di posta a una mailing list"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1026,18 +1038,18 @@ msgstr "aggiungi alla lista"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Add to Lists"
-msgstr ""
+msgstr "Aggiungi agli elenchi"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.res_partner_to_list_action
 msgid "Add to Mailing List"
-msgstr ""
+msgstr "Aggiungi alla mailing list"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "Added to Mailing Lists"
-msgstr ""
+msgstr "Aggiunto alle mailing list"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1663,7 +1675,7 @@ msgstr "Annullata"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__canceled_ratio
 msgid "Cancelled Ratio"
-msgstr ""
+msgstr "Tasso cancellazioni"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1672,6 +1684,8 @@ msgid ""
 "Cannot set an owner on '%(server)s': it is configured as the dedicated Email "
 "Marketing server."
 msgstr ""
+"Impossibile impostare un proprietario su '%(server)s': è configurato come "
+"server dedicato all’e-mail marketing."
 
 #. module: mass_mailing
 #. odoo-python
@@ -1679,6 +1693,8 @@ msgstr ""
 msgid ""
 "Cannot set an owner on '%(server)s': it is used by mailing '%(mailing)s'."
 msgstr ""
+"Impossibile impostare un proprietario su '%(server)s': è utilizzato dalla "
+"mailing list '%(mailing)s'."
 
 #. module: mass_mailing
 #. odoo-python
@@ -1686,6 +1702,8 @@ msgstr ""
 msgid ""
 "Cannot use the model %s to send a mailing. Only mailing models can be used."
 msgstr ""
+"Non è possibile utilizzare il modello %s per inviare un'e-mail. È possibile "
+"utilizzare solo modelli di mailing."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1801,7 +1819,7 @@ msgstr "Con clic"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 msgid "Clicked By"
-msgstr ""
+msgstr "Persone che hanno fatto clic"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
@@ -1813,7 +1831,7 @@ msgstr "Cliccato il"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__clicks_ratio
 msgid "Clicks Ratio"
-msgstr ""
+msgstr "Tasso di clic"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1825,7 +1843,7 @@ msgstr "Testimonianze clienti"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1957,7 +1975,7 @@ msgstr "Configura i link ai social media per %s"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 msgid "Configure your social media links."
-msgstr ""
+msgstr "Configura i link ai social media."
 
 #. module: mass_mailing
 #: model_terms:web_tour.tour,rainbow_man_message:mass_mailing.mass_mailing_tour
@@ -2088,7 +2106,7 @@ msgstr "Crea cliente"
 #: model:ir.actions.act_window,name:mass_mailing.action_mailing_filter_quick_create
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "Create a Dynamic List"
-msgstr ""
+msgstr "Crea un elenco dinamico"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
@@ -2125,7 +2143,7 @@ msgstr "Crea una versione alternativa"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "Created"
-msgstr ""
+msgstr "Creato"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
@@ -2302,7 +2320,7 @@ msgstr "Consegnate"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Delivered On"
-msgstr ""
+msgstr "Consegnato il"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2528,7 +2546,7 @@ msgstr "Bozza"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/plugins/mass_mailing_setup_plugin.js:0
 msgid "Drag blocks here"
-msgstr ""
+msgstr "Trascina i blocchi qui"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_social_media
@@ -2559,19 +2577,19 @@ msgstr "E-mail duplicata"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Dynamic List saved!"
-msgstr ""
+msgstr "Elenco dinamico salvato!"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_filter_action
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_ids
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_dynamic_lists
 msgid "Dynamic Lists"
-msgstr ""
+msgstr "Elenchi dinamici"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Dynamic Lists:"
-msgstr ""
+msgstr "Elenchi dinamici:"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -2580,6 +2598,10 @@ msgid ""
 "                Define your rules to automatically target recipients who "
 "match specific conditions."
 msgstr ""
+"Gli elenchi dinamici sono elenchi intelligenti che si aggiornano "
+"automaticamente.\n"
+"                Definisci le tue regole per selezionare automaticamente i "
+"destinatari che soddisfano condizioni specifiche."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2619,13 +2641,13 @@ msgstr "Modifica"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/snippet_visibility_option.xml:0
 msgid "Edit Conditions"
-msgstr ""
+msgstr "Modifica condizioni"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/iframe/mass_mailing_iframe.js:0
 msgid "Edit Design"
-msgstr ""
+msgstr "Modifica design"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2716,7 +2738,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "Email-safe fonts"
-msgstr ""
+msgstr "Font compatibili con e-mail"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2789,7 +2811,7 @@ msgstr "Escludi e-mail in lista nera"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Exclude Blacklisted Recipients"
-msgstr ""
+msgstr "Escludi i destinatari nella lista nera"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -3606,7 +3628,7 @@ msgstr "Lingua"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_clicked_datetime
 msgid "Last Clicked On"
-msgstr ""
+msgstr "Ultimo clic il"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_name
@@ -3616,12 +3638,12 @@ msgstr "Cognome"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_opened_datetime
 msgid "Last Opened On"
-msgstr ""
+msgstr "Ultima apertura il"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_replied_datetime
 msgid "Last Replied On"
-msgstr ""
+msgstr "Ultima risposta il"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -3708,7 +3730,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "Limited-support fonts"
-msgstr ""
+msgstr "Font con contabilità limitata"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3720,7 +3742,7 @@ msgstr "Link"
 #. odoo-python
 #: code:addons/mass_mailing/models/link_tracker.py:0
 msgid "Link Clicks"
-msgstr ""
+msgstr "Clic sul link"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3769,7 +3791,7 @@ msgstr "Account LinkedIn"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_list_simplified
 msgid "Links Clicks"
-msgstr ""
+msgstr "Clic sui link"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_ids
@@ -3790,7 +3812,7 @@ msgstr "Liste"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "Lists that are created by me"
-msgstr ""
+msgstr "Elenchi creati da me"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__mail_mail_id
@@ -3923,7 +3945,7 @@ msgstr "Contatti e-mail"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Dynamic List"
-msgstr ""
+msgstr "Elenco dinamico e-mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__is_mailing_enabled
@@ -4287,7 +4309,7 @@ msgstr "Modello"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Model id"
-msgstr ""
+msgstr "ID modello"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4327,7 +4349,7 @@ msgstr "Scadenza mie attività"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "My Lists"
-msgstr ""
+msgstr "I miei elenchi"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -4445,31 +4467,31 @@ msgstr "Ancora nessun dato sulle mailing list!"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient address bounced yet!"
-msgstr ""
+msgstr "Nessun indirizzo del destinatario è stato ancora respinto!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/link_tracker.py:0
 msgid "No Recipient clicked your mailing yet!"
-msgstr ""
+msgstr "Nessun destinatario ha ancora cliccato sulla tua e-mail!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient opened your mailing yet!"
-msgstr ""
+msgstr "Nessun destinatario ha ancora aperto la tua e-mail!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient received your mailing yet!"
-msgstr ""
+msgstr "Nessun destinatario ha ancora ricevuto la tua e-mail!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient replied to your mailing yet!"
-msgstr ""
+msgstr "Nessun destinatario ha ancora risposto alla tua e-mail!"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4786,6 +4808,9 @@ msgid ""
 "Oops! You can't add more than %(count)s contacts to a Mailing List at once.\n"
 "Please reduce your selection and try again."
 msgstr ""
+"Ops! Non è possibile aggiungere più di %(count)s contatti alla volta a una "
+"mailing list.\n"
+"Riduci la selezione e riprova."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__opened
@@ -4816,7 +4841,7 @@ msgstr "Percentuale apertura"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/editor/plugins/mass_mailing_link_plugin.js:0
 msgid "Opens the link in a new browser tab"
-msgstr ""
+msgstr "Apre il link in una nuova scheda del browser"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5134,7 +5159,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/editor/plugins/mass_mailing_link_plugin.js:0
 msgid "Prevents the new page from accessing the original window (security)"
-msgstr ""
+msgstr "Evita che la nuova pagina acceda alla finestra originale (sicurezza)"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__preview
@@ -5153,7 +5178,7 @@ msgstr "Anteprima corpo"
 #: code:addons/mass_mailing/models/mailing.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Preview Mailing"
-msgstr ""
+msgstr "Anteprima e-mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__preview_text
@@ -5265,7 +5290,7 @@ msgstr "Motivo"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "Received"
-msgstr ""
+msgstr "Ricevuto"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__received_ratio
@@ -5358,7 +5383,7 @@ msgstr "Rimuovi dai modelli"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/editor/plugins/mass_mailing_link_plugin.js:0
 msgid "Removes referrer information sent to the target site"
-msgstr ""
+msgstr "Elimina le informazioni del referente inviate al sito target"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__render_model
@@ -5510,31 +5535,31 @@ msgstr "Salva"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_filter_form_view_dialog/mailing_filter_form_view_dialog.xml:0
 msgid "Save & Apply"
-msgstr ""
+msgstr "Salva e applica"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/mass_mailing_builder.xml:0
 msgid "Save & Quit"
-msgstr ""
+msgstr "Salva ed esci"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Save As a Dynamic List"
-msgstr ""
+msgstr "Salva come elenco dinamico"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Save as a Dynamic List"
-msgstr ""
+msgstr "Salva come elenco dinamico"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_filter_form_view_dialog/mailing_filter_form_view_dialog.xml:0
 msgid "Save for later"
-msgstr ""
+msgstr "Salva per dopo"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5662,12 +5687,12 @@ msgstr "Seleziona e rimuovi i blocchi per eliminare funzionalità."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select dynamic lists..."
-msgstr ""
+msgstr "Seleziona elenchi dinamici..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Select lists..."
-msgstr ""
+msgstr "Seleziona elenchi..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -5731,7 +5756,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_send_test_form
 msgid "Send a sample mailing for testing purpose to the address below."
-msgstr ""
+msgstr "Invia un campione di posta a scopo di test all'indirizzo qui sotto."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_view_generic
@@ -5758,13 +5783,13 @@ msgstr "Invia il"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_send_test_form
 msgid "Send test"
-msgstr ""
+msgstr "Invia test"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mass_mailing_link_popover/mass_mailing_link_popover.js:0
 msgid "Send the original url instead of wrapping it into a tracking url."
-msgstr ""
+msgstr "Invia l'URL originale invece di inserirlo in un URL di tracciamento."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -5883,7 +5908,7 @@ msgstr "Acquista ora"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 msgid "Show \"View in Browser\""
-msgstr ""
+msgstr "Mostra \"Visualizza nel browser\""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__is_public
@@ -5994,7 +6019,7 @@ msgstr "Quadrato"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/iframe/mass_mailing_iframe.js:0
 msgid "Start Designing"
-msgstr ""
+msgstr "Inizia a progettare"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
@@ -6162,7 +6187,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "Supported by most popular email clients"
-msgstr ""
+msgstr "Supportato dai client di posta elettronica più diffusi"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6211,7 +6236,7 @@ msgstr "Modello"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "Template for Mailing Contacts"
-msgstr ""
+msgstr "Modello per i contatti e-mail"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -6223,7 +6248,7 @@ msgstr "Prova"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "Test Mailing"
-msgstr ""
+msgstr "Prova invio e-mail"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -6336,7 +6361,7 @@ msgstr "Il contenuto di queste e-mail non è rilevante per me"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_link_tracker_click__email
 msgid "The email address of the entity that clicked the link"
-msgstr ""
+msgstr "L'indirizzo e-mail dell'entità che ha cliccato sul link"
 
 #. module: mass_mailing
 #. odoo-python
@@ -6360,6 +6385,8 @@ msgid ""
 "The saved filters target different recipients and are incompatible with this "
 "mailing."
 msgstr ""
+"I filtri salvati sono destinati a destinatari diversi e non sono compatibili "
+"con questa mailing."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -6404,6 +6431,7 @@ msgstr "Questo"
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "This action should be used with a single kind of Contacts as input."
 msgstr ""
+"Quest'azione deve essere utilizzata con un unico tipo di contatto come input."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6651,7 +6679,7 @@ msgstr "Tipo di attività eccezione sul record."
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__url
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
@@ -6842,7 +6870,7 @@ msgstr "Visualizza"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_headers_snippets.xml:0
 msgid "View in Browser"
-msgstr ""
+msgstr "Apri nel browser"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_ui_view__technical_usage
@@ -7291,7 +7319,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/xml/mailing_portal_subscription_form.xml:0
 msgid "Your email is currently"
-msgstr ""
+msgstr "La tua e-mail è attualmente"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -7334,7 +7362,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "close"
-msgstr ""
+msgstr "chiudi"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -7402,6 +7430,8 @@ msgid ""
 "email1@example.com\n"
 "email2@example.com"
 msgstr ""
+"email1@esempio.com\n"
+"email2@esempio.com"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7592,859 +7622,9 @@ msgstr ""
 msgid "✉ Blacklisted"
 msgstr "✉ Nella lista nera"
 
-#~ msgid "%s (copy)"
-#~ msgstr "%s (copia)"
-
-#~ msgid "4 out of 5 stars"
-#~ msgstr "4 stelle su 5"
-
-#~ msgid ""
-#~ "<a href=\"https://www.example.com\" class=\"btn btn-secondary "
-#~ "o_translate_inline\">Learn more</a>"
-#~ msgstr ""
-#~ "<a href=\"https://www.example.com\" class=\"btn btn-secondary "
-#~ "o_translate_inline\">Scopri di più</a>"
-
-#~ msgid "<em>Customer Service</em>"
-#~ msgstr "<em>Servizio clienti</em>"
-
-#~ msgid "<font class=\"h5-fs\">Aline Turner</font>"
-#~ msgstr "<font class=\"h5-fs\">Aline Turner</font>"
-
-#~ msgid "<font class=\"h5-fs\">Iris Joe</font>"
-#~ msgstr "<font class=\"h5-fs\">Iris Joe</font>"
-
-#~ msgid "<font class=\"h5-fs\">Mich Stark</font>"
-#~ msgstr "<font class=\"h5-fs\">Mich Stark</font>"
-
-#~ msgid "<font class=\"h5-fs\">Tony Fred</font>"
-#~ msgstr "<font class=\"h5-fs\">Tony Fred</font>"
-
-#~ msgid ""
-#~ "<font class=\"text-white\">Put the focus on what you have to say!</font>"
-#~ msgstr ""
-#~ "<font class=\"text-white\">Concentrati su ciò che hai da dire!</font>"
-
-#~ msgid "<font class=\"text-white\">Reaching new heights together</font>"
-#~ msgstr "<font class=\"text-white\">Raggiungere insieme nuove vette</font>"
-
-#~ msgid "<font class=\"text-white\">Text Highlight</font>"
-#~ msgstr "<font class=\"text-white\">Testo in evidenza</font>"
-
-#~ msgid "<font class=\"text-white\">Where ideas come to life</font>"
-#~ msgstr "<font class=\"text-white\">Dove le idee prendono vita</font>"
-
-#~ msgid ""
-#~ "<font class=\"text-white\">Write one or two paragraphs describing your "
-#~ "product, services or a specific feature.<br/> To be successful your "
-#~ "content needs to be useful to your readers.</font>"
-#~ msgstr ""
-#~ "<font class=\"text-white\">Scrivi uno o due paragrafi che descrivono il "
-#~ "tuo prodotti, i tuoi servizi oppure una funzionalità specifica.<br/> Per "
-#~ "avere successo, il contenuto deve essere utile ai lettori.</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white\"><strong>If you're ready to transform your "
-#~ "website into a high-converting asset</strong>, <em>hit reply and let's "
-#~ "work together.</em></font>"
-#~ msgstr ""
-#~ "<font style=\"color: white\"><strong>Se sei pronto a trasformare il tuo "
-#~ "sito web in una risorsa ad alta conversione</strong>, <em>rispondi a "
-#~ "questa e-mail e iniziamo a lavorare insieme.</em></font>"
-
-#~ msgid "<font style=\"color: white\">A great title</font>"
-#~ msgstr "<font style=\"color: white\">Un bel titolo</font>"
-
-#~ msgid "<font style=\"color: white\">And a great subtitle</font>"
-#~ msgstr "<font style=\"color: white\">E un bel sottotitolo</font>"
-
-#~ msgid "<font style=\"color: white\">Head of Design</font>"
-#~ msgstr "<font style=\"color: white\">Responsabile del design</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white\">Hi there, I'm <strong>John Doe</strong>, a "
-#~ "design expert specializing in responsive web and mobile app interfaces. "
-#~ "<strong>For over 13 years</strong>, I've focused on creating elegant, "
-#~ "user-centric designs that are both scalable and easy to maintain.</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white\">Ciao, sono <strong>John Doe</strong>, un "
-#~ "esperto di design specializzato in interfacce responsive per siti web e "
-#~ "app mobili. <strong>Da oltre 13 anni</strong>, mi occupo di creare design "
-#~ "eleganti e incentrati sull'utente, che siano sia scalabili che facili da "
-#~ "mantenere.</font>"
-
-#~ msgid "<font style=\"color: white\">Julian Thorne</font>"
-#~ msgstr "<font style=\"color: white\">Julian Thorne</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white;\"><strong>50,000+ companies</strong> run Odoo."
-#~ "</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white;\"><strong>+ di 50.000 aziende</strong> "
-#~ "utilizzano Odoo.</font>"
-
-#~ msgid "<font style=\"color: white;\">Beautiful snippets</font>"
-#~ msgstr "<font style=\"color: white;\">Snippet bellissimi</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white;\">Join us and make your company a better "
-#~ "place.</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white;\">Unisciti a noi e rendi la tua azienda un "
-#~ "posto migliore.</font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">A color block</span></"
-#~ "font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">Un blocco di colore</"
-#~ "span></font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">Another color block</"
-#~ "span></font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">Un altro blocco di "
-#~ "colore</span></font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\">Color blocks are a simple and effective way "
-#~ "to <strong>present and highlight your content</strong>. Choose an image "
-#~ "or a color for the background. You can even resize and duplicate the "
-#~ "blocks to create your own layout. Add images or icons to customize the "
-#~ "blocks.</font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\">I blocchi di colore rappresentano un metodo "
-#~ "semplice ed efficace per <strong>presentare ed evidenziare il contenuto</"
-#~ "strong>. Scegli un'immagine o un colore per lo sfondo. Puoi anche "
-#~ "ridimensionare e duplicare i blocchi per creare la tua struttura. "
-#~ "Aggiungi immagini o icone per personalizzare i blocchi.</font>"
-
-#~ msgid "<font style=\"color:white;\">More Details</font>"
-#~ msgstr "<font style=\"color:white;\">Maggiori dettagli</font>"
-
-#~ msgid ""
-#~ "<font style=\"font-size: 12px;\">Where innovation meets performance</font>"
-#~ msgstr ""
-#~ "<font style=\"font-size: 12px;\">Dove l'innovazione incontra la "
-#~ "prestazione</font>"
-
-#~ msgid "<span class=\"display-3-fs\">Discover our main three benefits</span>"
-#~ msgstr ""
-#~ "<span class=\"display-3-fs\">Scopri i nostri tre principali vantaggi</"
-#~ "span>"
-
-#~ msgid "<span class=\"display-4-fs\">1</span>"
-#~ msgstr "<span class=\"display-4-fs\">1</span>"
-
-#~ msgid "<span class=\"display-4-fs\">2</span>"
-#~ msgstr "<span class=\"display-4-fs\">2</span>"
-
-#~ msgid "<span class=\"display-4-fs\">3</span>"
-#~ msgstr "<span class=\"display-4-fs\">3</span>"
-
-#~ msgid ""
-#~ "<span class=\"h2-fs\"><strong>$ 15.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ month</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"h2-fs\"><strong>15,00 $</strong></span> <span "
-#~ "class=\"o_small-fs\"> /mese</span>"
-
-#~ msgid ""
-#~ "<span class=\"h2-fs\"><strong>$ 25.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ month</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"h2-fs\"><strong>25,00 $</strong></span> <span "
-#~ "class=\"o_small-fs\"> /mese</span>"
-
-#~ msgid "<span class=\"h3-fs\">Our finest selection</span>"
-#~ msgstr "<span class=\"h3-fs\">La nostra selezione</span>"
-
-#~ msgid "<span class=\"h5-fs\">Aline Turner</span>"
-#~ msgstr "<span class=\"h5-fs\">Aline Turner</span>"
-
-#~ msgid "<span class=\"h5-fs\">Balanced</span>"
-#~ msgstr "<span class=\"h5-fs\">Equilibrato</span>"
-
-#~ msgid "<span class=\"h5-fs\">Elegant</span>"
-#~ msgstr "<span class=\"h5-fs\">Elegante</span>"
-
-#~ msgid "<span class=\"h5-fs\">Iris Joe</span>"
-#~ msgstr "<span class=\"h5-fs\">Iris Joe</span>"
-
-#~ msgid "<span class=\"h5-fs\">Mich Stark</span>"
-#~ msgstr "<span class=\"h5-fs\">Mich Stark</span>"
-
-#~ msgid "<span class=\"h5-fs\">Pete Bluestork</span>"
-#~ msgstr "<span class=\"h5-fs\">Pete Bluestork</span>"
-
-#~ msgid "<span class=\"h5-fs\">Simple</span>"
-#~ msgstr "<span class=\"h5-fs\">Semplice</span>"
-
-#~ msgid "<span class=\"h5-fs\">Sophia Langston</span>"
-#~ msgstr "<span class=\"h5-fs\">Sophia Langston</span>"
-
-#~ msgid "<span class=\"h5-fs\">Tony Fred</span>"
-#~ msgstr "<span class=\"h5-fs\">Tony Fred</span>"
-
-#~ msgid ""
-#~ "<span class=\"o_small-fs\">Instant setup, satisfied or reimbursed.</span>"
-#~ msgstr ""
-#~ "<span class=\"o_small-fs\">Configurazione rapida, soddisfatti o "
-#~ "rimborsati.</span>"
-
-#~ msgid ""
-#~ "<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
-#~ ">What We Offer"
-#~ msgstr ""
-#~ "<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
-#~ ">Cosa offriamo"
-
-#~ msgid ""
-#~ "<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">Your "
-#~ "journey starts here</font></strong></span>"
-#~ msgstr ""
-#~ "<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">La "
-#~ "tua avventura inizia qui</font></strong></span>"
-
-#~ msgid "<span><font style=\"font-weight: bolder;\">GET $20 OFF</font></span>"
-#~ msgstr ""
-#~ "<span><font style=\"font-weight: bolder;\">OTTIENI 20 € DI SCONTO</font></"
-#~ "span>"
-
-#~ msgid "<strong>18h30:</strong>"
-#~ msgstr "<strong>18:30:</strong>"
-
-#~ msgid "<strong>19h00:</strong>"
-#~ msgstr "<strong>19:00:</strong>"
-
-#~ msgid "<strong>19h30: </strong>"
-#~ msgstr "<strong>19:30: </strong>"
-
-#~ msgid "<strong>8h:</strong>"
-#~ msgstr "<strong>8:00:</strong>"
-
-#~ msgid "<strong><font class=\"text-white\">Innovation Hub</font></strong>"
-#~ msgstr ""
-#~ "<strong><font class=\"text-white\">Centro di innovazione</font></strong>"
-
-#~ msgid "<strong><font class=\"text-white\">Key Milestone</font></strong>"
-#~ msgstr ""
-#~ "<strong><font class=\"text-white\">Tappa fondamentale</font></strong>"
-
-#~ msgid ""
-#~ "<strong><font style=\"font-size: 48px; color: white;\">45</font></strong>"
-#~ msgstr ""
-#~ "<strong><font style=\"font-size: 48px; color: white;\">45</font></strong>"
-
-#~ msgid "<strong><font style=\"font-size: 48px;\">12</font></strong>"
-#~ msgstr "<strong><font style=\"font-size: 48px;\">12</font></strong>"
-
-#~ msgid "<strong><font style=\"font-size: 48px;\">8</font></strong>"
-#~ msgstr "<strong><font style=\"font-size: 48px;\">8</font></strong>"
-
-#~ msgid "<strong>A Breath of Fresh Air</strong>"
-#~ msgstr "<strong>Una boccata d'aria fresca</strong>"
-
-#~ msgid "<strong>About our product line</strong>"
-#~ msgstr "<strong>Informazioni sulla nostra linea di prodotti</strong>"
-
-#~ msgid "<strong>Easy returns</strong>"
-#~ msgstr "<strong>Resi facili</strong>"
-
-#~ msgid ""
-#~ "<strong>Emil Foster</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Creative "
-#~ "Director</span>"
-#~ msgstr ""
-#~ "<strong>Emil Foster</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Direttore "
-#~ "creativo</span>"
-
-#~ msgid "<strong>Free shipping</strong>"
-#~ msgstr "<strong>Spedizione gratuita</strong>"
-
-#~ msgid ""
-#~ "<strong>James Carter</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Chief "
-#~ "Technical Officer</span>"
-#~ msgstr ""
-#~ "<strong>James Carter</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Direttore "
-#~ "tecnico</span>"
-
-#~ msgid "<strong>Jane DOE</strong><br/>CEO of MyCompany"
-#~ msgstr "<strong>Jane DOE</strong><br/>Amministratore delegato di MyCompany"
-
-#~ msgid ""
-#~ "<strong>Jody Roberts</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Chief "
-#~ "Financial Officer</span>"
-#~ msgstr ""
-#~ "<strong>Jody Roberts</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Direttore "
-#~ "finanziario</span>"
-
-#~ msgid "<strong>John DOE</strong><br/>"
-#~ msgstr "<strong>John DOE</strong><br/>"
-
-#~ msgid ""
-#~ "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
-#~ "class=\"text-600\">CEO of MyCompany</font></span>"
-#~ msgstr ""
-#~ "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
-#~ "class=\"text-600\"> Amministratore delegato di MyCompany</font></span>"
-
-#~ msgid "<strong>Networking: Walking Dinner &amp; Drinks</strong>"
-#~ msgstr "<strong>Networking: cena e drink</strong>"
-
-#~ msgid "<strong>Rating</strong>"
-#~ msgstr "<strong>Valutazione</strong>"
-
-#~ msgid ""
-#~ "<strong>Replace this block with the authentic, singular story of your "
-#~ "product.</strong> Focus on the unique spark that gave it personality. "
-#~ "<strong>Be short, be specific, and let your brand's voice shine</strong> "
-#~ "through unique work choices. This explains the <em>soul</em> behind the "
-#~ "product, inspiring a deeper connection beyond simple features."
-#~ msgstr ""
-#~ "<strong>Sostituisci questo blocco con la storia autentica e unica del tuo "
-#~ "prodotto.</strong> Concentrati sulla scintilla unica che gli ha dato "
-#~ "personalità. <strong>Sii conciso, specifico e lascia che la voce del tuo "
-#~ "marchio risplenda</strong> attraverso scelte di lavoro uniche. Questo "
-#~ "spiega <em>l'anima</em> dietro al prodotto, ispirando una connessione più "
-#~ "profonda che va oltre le semplici caratteristiche."
-
-#~ msgid "<strong>Secure payment</strong>"
-#~ msgstr "<strong>Pagamento sicuro</strong>"
-
-#~ msgid "<strong>Stay Ahead with weekly insights &amp; updates</strong>"
-#~ msgstr ""
-#~ "<strong>Rimani aggiornato con approfondimenti settimanali e "
-#~ "&amp;aggiornamenti</strong>"
-
-#~ msgid "<strong>Stay in the Loop !<br/>Get the latest updates</strong>"
-#~ msgstr ""
-#~ "<strong>Rimani aggiornato!<br/>Ricevi gli ultimi aggiornamenti</strong>"
-
-#~ msgid "<strong>Step Up Your Game</strong>"
-#~ msgstr "<strong>Migliora il tuo gioco</strong>"
-
-#~ msgid ""
-#~ "<strong>Sullivan Mitchell</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Marketing "
-#~ "Director</span>"
-#~ msgstr ""
-#~ "<strong>Sullivan Mitchell</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Direttore "
-#~ "marketing</span>"
-
-#~ msgid "<strong>Table Ronde</strong>"
-#~ msgstr "<strong>Tavola rotonda</strong>"
-
-#~ msgid "<strong>The Innovation Behind Our Product</strong>"
-#~ msgstr "<strong>L'innovazione alla base del nostro prodotto</strong>"
-
-#~ msgid "<strong>Timeless Design</strong>"
-#~ msgstr "<strong>Design senza tempo</strong>"
-
-#~ msgid "<strong>Unveil Our Exclusive Collections</strong>"
-#~ msgstr "<strong>Scopri le nostre collezioni esclusive</strong>"
-
-#~ msgid "<strong>Welcome</strong>"
-#~ msgstr "<strong>Benvenuto</strong>"
-
-#~ msgid ""
-#~ "<strong>Why settle for a generic solution?</strong><br/>We don't just "
-#~ "offer tools; we provide a competitive advantage. Our platform is "
-#~ "engineered to streamline your workflow, eliminate bottlenecks, and help "
-#~ "you scale faster than ever before."
-#~ msgstr ""
-#~ "<strong>Perché accontentarsi di una soluzione generica?</strong><br/>Non "
-#~ "offriamo solo strumenti, ma anche un vantaggio competitivo. La nostra "
-#~ "piattaforma è progettata per semplificare il flusso di lavoro, eliminare "
-#~ "i colli di bottiglia e aiutarti a crescere più rapidamente che mai."
-
-#~ msgid "<strong>[speaker] &amp; [speaker]'s conference</strong>"
-#~ msgstr "<strong> conferenza con [speaker] e [speaker]</strong>"
-
-#~ msgid "<u>Friday</u>"
-#~ msgstr "<u>Venerdì</u>"
-
-#~ msgid "<u>Monday</u>"
-#~ msgstr "<u>Lunedì</u>"
-
-#~ msgid "<u>Saturday</u>"
-#~ msgstr "<u>Sabato</u>"
-
-#~ msgid "<u>Sunday</u>"
-#~ msgstr "<u>Domenica</u>"
-
-#~ msgid "<u>Thursday</u>"
-#~ msgstr "<u>Giovedì</u>"
-
-#~ msgid "<u>Tuesday</u>"
-#~ msgstr "<u>Martedì</u>"
-
-#~ msgid "<u>Wednesday</u>"
-#~ msgstr "<u>Mercoledì</u>"
-
-#~ msgid ""
-#~ "A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, "
-#~ "all on a bed of mozzarella and tomato sauce."
-#~ msgstr ""
-#~ "Un delizioso mix di quattro condimenti: funghi, carciofi, prosciutto e "
-#~ "olive, il tutto su un letto di mozzarella e salsa di pomodoro."
-
-#~ msgid "Alert"
-#~ msgstr "Avviso"
-
-#~ msgid "Author"
-#~ msgstr "Autore"
-
-#~ msgid "Badge"
-#~ msgstr "Badge"
-
-#~ msgid "Benefits"
-#~ msgstr "Benefici"
-
-#~ msgid "Big Boxes"
-#~ msgstr "Riquadri grandi"
-
-#~ msgid "Blockquote"
-#~ msgstr "Blocco-citazione"
-
-#~ msgid "Blog Title"
-#~ msgstr "Titolo blog"
-
-#~ msgid "Built to Last: The Beauty of Choosing Quality Materials"
-#~ msgstr "Costruito per durare: il fascino di scegliere materiali di qualità"
-
-#~ msgid "CTA Badge"
-#~ msgstr "Badge CTA"
-
-#~ msgid "Call To Action"
-#~ msgstr "Call To Action"
-
-#~ msgid "Call To Action Card"
-#~ msgstr "Scheda Call To Action"
-
-#~ msgid "Call To Action Text (center)"
-#~ msgstr "Testo Call To Action (al centro)"
-
-#~ msgid "Call To Action Text (left)"
-#~ msgstr "Testo Call To Action (sinistra)"
-
-#~ msgid "Categories"
-#~ msgstr "Categorie"
-
-#~ msgid "Centered CTA"
-#~ msgstr "CTA centrato"
-
-#~ msgid "Centered Logo"
-#~ msgstr "Logo centrato"
-
-#~ msgid ""
-#~ "Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil "
-#~ "leaves, drizzled with extra virgin olive oil."
-#~ msgstr ""
-#~ "Pizza classica con mozzarella fresca, pomodori San Marzano e foglie di "
-#~ "basilico, condita con olio extravergine di oliva."
-
-#~ msgid "Columns"
-#~ msgstr "Colonne"
-
-#~ msgid "Comparisons"
-#~ msgstr "Confronti"
-
-#~ msgid "Content Card"
-#~ msgstr "Scheda contenuto"
-
-#~ msgid "Cover"
-#~ msgstr "Coperto"
-
-#~ msgid "Customer Quote"
-#~ msgstr "Citazione cliente"
-
-#~ msgid "Customer testimonials"
-#~ msgstr "Customer testimonial"
-
-#~ msgid ""
-#~ "Delete the above image or replace it with a picture that illustrates your "
-#~ "message. Click on the picture to change its <em>rounded corner</em> style."
-#~ msgstr ""
-#~ "Elimina l'immagine qui sopra o sostituiscila con una foto che illustri il "
-#~ "messaggio. Fai clic sull'immagine per cambiarne lo stile <em>angolo "
-#~ "arrotondato</em>."
-
-#~ msgid ""
-#~ "Design for the Soul: Why Your Home Should Be a Reflection of Your Best "
-#~ "Self"
-#~ msgstr ""
-#~ "Design per l'anima: perché la tua casa dovrebbe riflettere il meglio di "
-#~ "te stesso"
-
-#~ msgid "Diavola"
-#~ msgstr "Diavola"
-
-#~ msgid "Discover New <strong>Opportunities</strong>"
-#~ msgstr "Scopri nuove <strong>opportunità</strong>"
-
-#~ msgid ""
-#~ "Discover the thrill of a home that truly reflects your soul. It's more "
-#~ "than just decor; it's about creating a space so vibrant and curated that "
-#~ "<strong>you'll beam with pride</strong> every time you step inside."
-#~ msgstr ""
-#~ "Scopri l'emozione di una casa che riflette davvero la tua anima. Non si "
-#~ "tratta solo di arredamento, ma di creare uno spazio così vivace e curato "
-#~ "che <strong>ti riempirà di orgoglio</strong> ogni volta che entrerai."
-
-#~ msgid "Enhance Your <strong>Experience</strong>"
-#~ msgstr "Ottimizza la tua <strong>esperienza</strong>"
-
-#~ msgid ""
-#~ "Experience the perfect harmony of form and function. Each piece is "
-#~ "meticulously designed with <strong>premium materials</strong>, ensuring "
-#~ "that your interior reflects a sophisticated yet inviting atmosphere."
-#~ msgstr ""
-#~ "Scopri la perfetta armonia tra forma e funzionalità. Ogni pezzo è "
-#~ "progettato meticolosamente con <strong>materiali di alta qualità</"
-#~ "strong> , per garantire che i tuoi interni riflettano un'atmosfera "
-#~ "sofisticata ma accogliente."
-
-#~ msgid ""
-#~ "Experience unparalleled comfort, cutting-edge design, and performance-"
-#~ "enhancing<br/>technology with this latest innovation, crafted to elevate "
-#~ "every athlete's journey."
-#~ msgstr ""
-#~ "Sperimenta un comfort impareggiabile, un design all'avanguardia e una "
-#~ "tecnologia che migliora le prestazioni<br/>con quest'ultima innovazione, "
-#~ "realizzata per elevare il percorso di ogni atleta."
-
-#~ msgid ""
-#~ "Explain the benefits you offer. <br/>Don't write about products or "
-#~ "services here, write about solutions."
-#~ msgstr ""
-#~ "Spiega i vantaggi della tua offerta. <br/>Non citare prodotti o servizi, "
-#~ "ma parla delle soluzioni che proponi."
-
-#~ msgid "Features Column"
-#~ msgstr "Colonna caratteristiche"
-
-#~ msgid "Features Showcase"
-#~ msgstr "Vetrina funzionalità"
-
-#~ msgid "Footers"
-#~ msgstr "Piè di pagina"
-
-#~ msgid ""
-#~ "Great stories are <strong>for everyone</strong> even when only written "
-#~ "<strong>for just one person</strong>. If you try to write with a wide, "
-#~ "general audience in mind, your story will sound fake and lack emotion. No "
-#~ "one will be interested. Write for one person. If it's genuine for the "
-#~ "one, it's genuine for the rest."
-#~ msgstr ""
-#~ "Le grandi storie sono <strong>per tutti</strong>, anche se sono scritte "
-#~ "<strong>per una sola persona</strong>. Se cerchi di scrivere per un "
-#~ "pubblico ampio e generico, la tua storia suonerà finta e senza emozione. "
-#~ "Nessuno sarà interessato. Scrivila per una persona. Se è autentica per "
-#~ "una persona, sarà autentica per tutti."
-
-#~ msgid ""
-#~ "Great stories have a <strong>personality</strong>. Consider telling a "
-#~ "great story that provides personality. Writing a story with personality "
-#~ "for potential clients will assist with making a relationship connection. "
-#~ "This shows up in small quirks like word choices or phrases. Write from "
-#~ "your point of view, not from someone else's experience."
-#~ msgstr ""
-#~ "Le grandi storie hanno <strong>personalità</strong>. Valuta l'opportunità "
-#~ "di raccontare una grande storia che esprime carattere. Scrivere per i "
-#~ "potenziali clienti una storia con personalità aiuta a stabilire una "
-#~ "relazione. Questo si evidenzia nei piccoli dettagli come la scelta delle "
-#~ "parole o delle frasi. Scrivi usando il tuo punto di vista, non "
-#~ "l'esperienza di qualcun altro."
-
-#~ msgid "Headers"
-#~ msgstr "Intestazioni"
-
-#~ msgid "Horizontal Attributes"
-#~ msgstr "Attributi orizzontali"
-
-#~ msgid "Image"
-#~ msgstr "Immagine"
-
-#~ msgid "Image - Text"
-#~ msgstr "Immagine - Testo"
-
-#~ msgid ""
-#~ "In a fast-paced world, your home should be your ultimate escape—a private "
-#~ "place that brings you a sense of calm and clarity. Our collection focuses "
-#~ "on clean lines and comfortable shapes, providing a sophisticated backdrop "
-#~ "for your most important moments. We believe your surroundings should be a "
-#~ "testament to your taste, offering the perfect l ease you need to unwind."
-#~ msgstr ""
-#~ "In un mondo frenetico, la tua casa dovrebbe essere il tuo rifugio ideale, "
-#~ "un luogo privato che ti regala un senso di calma e serenità. La nostra "
-#~ "collezione punta su linee pulite e forme confortevoli, creando uno sfondo "
-#~ "sofisticato per i tuoi momenti più importanti. Crediamo che l'ambiente "
-#~ "che ti circonda debba riflettere il tuo gusto personale, offrendoti il "
-#~ "relax perfetto di cui hai bisogno per distenderti."
-
-#~ msgid "Inner Content"
-#~ msgstr "Contenuto interno"
-
-#~ msgid "Issue<br/><strong>#42</strong>"
-#~ msgstr "Problema<br/><strong>#42</strong>"
-
-#~ msgid "Items"
-#~ msgstr "Movimenti"
-
-#~ msgid "Lasagna al Forno"
-#~ msgstr "Lasagna al forno"
-
-#~ msgid ""
-#~ "Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, "
-#~ "baked to perfection."
-#~ msgstr ""
-#~ "Strati di pasta, ricco ragu di carne, besciamella e mozzarella fusa, "
-#~ "cottq al forno alla perfezione."
-
-#~ msgid "Left Logo"
-#~ msgstr "Logo a sinistra"
-
-#~ msgid "Links List"
-#~ msgstr "Elenco link"
-
-#~ msgid "Logo + Button"
-#~ msgstr "Logo + pulsante"
-
-#~ msgid "Logo + Inline Menu"
-#~ msgstr "Logo + menu in linea"
-
-#~ msgid "Logo + Stacked Menu"
-#~ msgstr "Logo + menu a più livelli"
-
-#~ msgid "Margherita"
-#~ msgstr "Pizza margherita"
-
-#~ msgid "Masonry"
-#~ msgstr "Muro"
-
-#~ msgid "Media List"
-#~ msgstr "Elenco contenuti"
-
-#~ msgid "Membership"
-#~ msgstr "Abbonamento"
-
-#~ msgid "Menu"
-#~ msgstr "Menu"
-
-#~ msgid "Name + Button"
-#~ msgstr "Nome + pulsante"
-
-#~ msgid "Name + Inline Menu"
-#~ msgstr "Nome + menu in linea"
-
-#~ msgid "Name + Social"
-#~ msgstr "Nome + social"
-
-#~ msgid "Numbers"
-#~ msgstr "Numeri"
-
-#~ msgid "Penne all'Arrabbiata"
-#~ msgstr "Penne all'arrabbiata"
-
-#~ msgid ""
-#~ "Penne pasta tossed in a spicy tomato and garlic sauce with a hint of "
-#~ "chili peppers, finished with fresh parsley."
-#~ msgstr ""
-#~ "Penne saltate in una salsa piccante di pomodoro e aglio con un pizzico di "
-#~ "peperoncino, rifinite con prezzemolo fresco."
-
-#~ msgid "People"
-#~ msgstr "Persone"
-
-#~ msgid "Picture"
-#~ msgstr "Immagine"
-
-#~ msgid "Pricelist Boxed"
-#~ msgstr "Listino prezzi in box"
-
-#~ msgid "Product Description"
-#~ msgstr "Descrizione prodotto"
-
-#~ msgid "Product Showcase"
-#~ msgstr "Vetrina prodotti"
-
-#~ msgid "Promo Code"
-#~ msgstr "Codice promozionale"
-
-#~ msgid "Quality"
-#~ msgstr "Qualità"
-
-#~ msgid "Quattro Stagioni"
-#~ msgstr "Quattro stagioni"
-
-#~ msgid "Rating"
-#~ msgstr "Valutazione"
-
-#~ msgid ""
-#~ "Redefine your daily rituals with interiors that inspire. From the moment "
-#~ "you walk through the door, our pieces evoke a sense of <strong>pure "
-#~ "delight</strong>, turning every corner of your home into a sanctuary of "
-#~ "happiness and ease."
-#~ msgstr ""
-#~ "Ridefinisci le tue abitudini quotidiane con interni che ispirano. Dal "
-#~ "momento in cui varchi la soglia, i nostri articoli evocano un senso di "
-#~ "<strong>puro piacere</strong>, trasformando ogni angolo della tua casa in "
-#~ "un rifugio di felicità e tranquillità."
-
-#~ msgid "References"
-#~ msgstr "Referenze"
-
-#~ msgid ""
-#~ "Savor our fresh, local cuisine with a modern twist.<br/>Deliciously "
-#~ "crafted for every taste!"
-#~ msgstr ""
-#~ "Assapora la nostra cucina fresca e locale con un tocco moderno.<br/"
-#~ ">Deliziosa per ogni gusto!"
-
-#~ msgid "Section Mobile"
-#~ msgstr "Sezione mobile"
-
-#~ msgid "Separator Title"
-#~ msgstr "Titolo separatore"
-
-#~ msgid "Showcase"
-#~ msgstr "Vetrina"
-
-#~ msgid "Social + Footer"
-#~ msgstr "Social + piè di pagina"
-
-#~ msgid "Social + Footer + Separator"
-#~ msgstr "Social + piè di pagina + separatore"
-
-#~ msgid "Social + Logo"
-#~ msgstr "Social + logo"
-
-#~ msgid "Social Media"
-#~ msgstr "Social media"
-
-#~ msgid "Spaghetti Carbonara"
-#~ msgstr "Carbonara"
-
-#~ msgid ""
-#~ "Speakers from all over the world will join our experts to give inspiring "
-#~ "talks on various topics. Stay on top of the latest business management "
-#~ "trends &amp; technologies"
-#~ msgstr ""
-#~ "Relatori da tutto il mondo si uniranno ai nostri esperti per tenere "
-#~ "presentazioni stimolanti su vari argomenti. Stai al passo con le ultime "
-#~ "tendenze e tecnologie per la gestione aziendale."
-
-#~ msgid "Special Offer CTA"
-#~ msgstr "CTA offerta speciale"
-
-#~ msgid ""
-#~ "Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato "
-#~ "sauce for a flavorful kick."
-#~ msgstr ""
-#~ "Salamino piccante abbinato a fiocchi di peperoncino, mozzarella e salsa "
-#~ "di pomodoro per un'esplosione di gusto."
-
-#~ msgid "Subtitle"
-#~ msgstr "Sottotitolo"
-
-#~ msgid "Team"
-#~ msgstr "Team"
-
-#~ msgid "Team shapes"
-#~ msgstr "Forme team"
-
-#~ msgid "Text - Image"
-#~ msgstr "Testo - Immagine"
-
-#~ msgid "Text Card"
-#~ msgstr "Scheda testo"
-
-#~ msgid "The Art of the Escape: Creating a Quiet Sanctuary in a Busy World"
-#~ msgstr ""
-#~ "L'arte della fuga: creare un rifugio tranquillo in un mondo frenetico"
-
-#~ msgid "Title"
-#~ msgstr "Titolo"
-
-#~ msgid "Title + Side Text"
-#~ msgstr "Titolo + testo laterale"
-
-#~ msgid ""
-#~ "Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino "
-#~ "Romano, topped with black pepper."
-#~ msgstr ""
-#~ "Piatto della tradizione romana con crema d'uova, guanciale, pecorino "
-#~ "romano e pepe."
-
-#~ msgid ""
-#~ "True elegance is something you can feel, rooted in high-quality materials "
-#~ "that only get better with time. By using the finest woods and textiles, "
-#~ "we create furniture that doesn't just sit in a room—it grows with it. "
-#~ "These pieces are designed to be your home's future heirlooms, crafted "
-#~ "with such care that they will remain as beautiful and relevant years from "
-#~ "now as they are today."
-#~ msgstr ""
-#~ "La vera eleganza è qualcosa che si percepisce, radicata in materiali di "
-#~ "alta qualità che migliorano con il tempo. Utilizzando i legni e i tessuti "
-#~ "più pregiati, creiamo mobili che non si limitano a stare in una stanza, "
-#~ "ma crescono insieme ad essa. Questi pezzi sono progettati per diventare i "
-#~ "futuri cimeli della tua casa, realizzati con tanta cura da rimanere belli "
-#~ "e attuali anche tra molti anni."
-
-#~ msgid ""
-#~ "True luxury is measured in decades.<br/>We blend heritage craft with the "
-#~ "finest materials.<br/>Discover pieces that age beautifully."
-#~ msgstr ""
-#~ "Il vero lusso si misura in decenni.<br/>Uniamo l'artigianato tradizionale "
-#~ "ai materiali più pregiati.<br/>Scopri pezzi che invecchiano "
-#~ "magnificamente."
-
-#~ msgid ""
-#~ "True luxury is more rewarding as a member.<br/>Join our inner circle for "
-#~ "exclusive benefits and early access.<br/>Elevate your home today."
-#~ msgstr ""
-#~ "Il vero lusso è più gratificante come membro.<br/>Entra a far parte della "
-#~ "nostra cerchia ristretta per ottenere vantaggi esclusivi e accesso "
-#~ "anticipato.<br/>Migliora la tua casa oggi stesso."
-
-#~ msgid ""
-#~ "Use this snippet to build various types of components that feature a "
-#~ "left- or right-aligned image alongside textual content. Duplicate the "
-#~ "element to create a list that fits your needs.\n"
-#~ "                            <br/>"
-#~ msgstr ""
-#~ "Usa questo snippet per costruire componenti di vario tipo composti da una "
-#~ "immagine allineata a destra o a sinistra affiancata da un testo. Duplica "
-#~ "l'elemento per creare un elenco che si adatti alle tue esigenze.\n"
-#~ "                            <br/>"
-
-#~ msgid "Video"
-#~ msgstr "Video"
-
-#~ msgid "Website"
-#~ msgstr "Sito web"
-
-#~ msgid "✽  Pastas"
-#~ msgstr "✽  Pasta"
-
-#~ msgid "✽  Pizzas"
-#~ msgstr "✽  Pizza"
-
-#~ msgid ""
-#~ "Test email sent to %(success)s recipient(s), could not send to %(failed)s."
-#~ msgstr ""
-#~ "E-mail di prova inviata a %(success)s destinatari, impossibile inviare a %"
-#~ "(failed)s."
-
-#~ msgid "Test email sent to %(success)s recipient(s)."
-#~ msgstr "E-mail di prova inviata a %(success)s destinatari."
+msgid ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">What We Offer"
+msgstr ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">Cosa offriamo"

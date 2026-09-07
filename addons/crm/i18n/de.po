@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 20:07+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/crm/"
-"de/>\n"
+"PO-Revision-Date: 2026-09-04 14:11+0000\n"
+"Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-s19-4/crm/de/"
+">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -108,7 +108,7 @@ msgstr "1 Lead wurde umgewandelt"
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "<b>Create your first opportunity.</b>"
-msgstr "<b>Erstellen Sie Ihre erste Chance.</b>"
+msgstr "<b>Erstellen Sie Ihre erste Verkaufschance.</b>"
 
 #. module: crm
 #. odoo-javascript
@@ -117,7 +117,7 @@ msgid ""
 "<b>Drag &amp; drop opportunities</b> between columns as you progress in your "
 "sales cycle."
 msgstr ""
-"<b>Verschieben Sie Verkaufschancen per Drag-and-Drop</b> zwischen den "
+"<b>Verschieben Sie Verkaufschancen per Drag and Drop</b> zwischen den "
 "Spalten, während Sie in Ihrem Verkaufszyklus weiter voranschreiten."
 
 #. module: crm
@@ -125,8 +125,8 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "<b>Write a few letters</b> to look for a company, or create a new one."
 msgstr ""
-"<b>Schreiben Sie ein paar Buchstaben</b>, um ein Unternehmen zu suchen oder "
-"ein neues Unternehmen zu erstellen."
+"<b>Schreiben Sie ein paar Buchstaben</b>, um nach einem Unternehmen zu "
+"suchen oder ein neues zu erstellen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -311,14 +311,16 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span>Weisen Sie Leads regelmäßig anhand von Prioritäten und Filtern zu.</"
-"span><br/> <span invisible=\"not crm_use_auto_assignment\"> Alle "
-"Verkaufsteams verwenden diese Einstellung standardmäßig.\n"
+"span><br/>\n"
+"                               <span invisible=\"not "
+"crm_use_auto_assignment\"> Alle Verkaufsteams verwenden diese Einstellung "
+"standardmäßig.\n"
 "                               </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "<span>days</span>"
-msgstr "<span>Tage</span>"
+msgstr "<span>Tag(en)</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -413,8 +415,8 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
 msgstr ""
-"Ein Lead in einer „Gewonnen“-Phase kann auch verloren gehen. Verschieben Sie "
-"es zunächst in eine andere Phase."
+"Ein Lead in der „Gewonnen“-Phase kann auch verloren gehen. Verschieben Sie "
+"ihn zunächst in eine andere Phase."
 
 #. module: crm
 #. odoo-javascript
@@ -449,7 +451,7 @@ msgstr "Zugriffsanfrage für „%s“"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
 msgid "Action Needed"
-msgstr "Aktion notwendig"
+msgstr "Aktion erforderlich"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__active
@@ -506,7 +508,7 @@ msgstr "Aktivitätsbeschreibung"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitätsausnahme-Dekoration"
+msgstr "Kennzeichnung von Aktivitätsausnahmen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_plans_ids
@@ -549,7 +551,7 @@ msgid ""
 msgstr ""
 "Aktivitätspläne werden verwendet, um eine Liste von Aktivitäten mit nur "
 "wenigen Klicks zuzuweisen\n"
-"                    (z. B. „Demo-Vorbereitungsprozess“, „Qualifizierung“...)"
+"                    (z. B. „Demo-Vorbereitungsprozess“, „Qualifizierung“ …)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -649,7 +651,7 @@ msgstr "Alles bereit. <b>Planen</b> wir sie."
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__unlimited
 msgid "Always in rotation"
-msgstr "Immer im Wechsel"
+msgstr "Immer reihum"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -674,7 +676,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.xml:0
 msgid "Ask your Team Leader to get access"
-msgstr "Bitten Sie Ihren Teamleiter um Zugriff."
+msgstr "Bitten Sie Ihren Teamleiter um Zugriff"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -684,7 +686,7 @@ msgstr "Leads zuweisen"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign salespersons into multiple Sales Teams."
-msgstr "Ordnen Sie Vertriebsmitarbeiter mehreren Verkaufsteams zu."
+msgstr "Weisen Sie Vertriebsmitarbeiter mehreren Verkaufsteams zu."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -717,7 +719,7 @@ msgstr "Zuweisungsregeln"
 #. odoo-python
 #: code:addons/crm/models/crm_team.py:0
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr "Zuständigkeitsbereich für Team %(team)s ist falsch formatiert"
+msgstr "Zuweisungsdomain für das Team %(team)s ist falsch formatiert"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
@@ -846,9 +848,9 @@ msgid ""
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
 msgstr ""
-"Die Änderung des Werts von „Ist ‚Gewonnen‘-Phase?“ kann eine große Anzahl "
-"von Vorgängen auslösen, da die Wahrscheinlichkeiten von Gelegenheiten in "
-"dieser Phase beim Speichern neu berechnet werden."
+"Wenn Sie den Wert von „Ist ‚Gewonnen‘-Phase?“ ändern, kann dies eine große "
+"Anzahl von Vorgängen auslösen, da die Wahrscheinlichkeit der Verkaufschancen "
+"in dieser Phase beim Speichern neu berechnet wird."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -1030,7 +1032,7 @@ msgstr "Kontaktdaten:"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact Email"
-msgstr "Kontakt-E-Mail"
+msgstr "E-Mail-Adresse des Kontakts"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1045,7 +1047,7 @@ msgstr "Name des Kontakts"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact Phone"
-msgstr "Kontakttelefon"
+msgstr "Telefonnummer des Kontakts"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1153,22 +1155,22 @@ msgstr "Kunden erstellen"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr "Einen Lead erstellen"
+msgstr "Lead erstellen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.mail_activity_plan_action_lead
 msgid "Create a Lead Activity Plan"
-msgstr "Einen Aktivitätsplan für Leads erstellen"
+msgstr "Aktivitätsplan für Leads erstellen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
 msgid "Create a Lost Reason"
-msgstr "Einen Verlustgrund erstellen"
+msgstr "Verlustgrund erstellen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
 msgid "Create a Recurring Plan"
-msgstr "Einen wiederkehrenden Plan erstellen"
+msgstr "Wiederkehrenden Plan erstellen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
@@ -1195,7 +1197,7 @@ msgstr "Verkaufschance erstellen"
 #: code:addons/crm/models/crm_lead.py:0
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Create an opportunity to start playing with your pipeline."
-msgstr "Schaffen Sie eine Möglichkeit, mit Ihrer Pipeline zu spielen."
+msgstr "Erstellen Sie eine Verkaufschance, um mit Ihrer Pipeline zu spielen."
 
 #. module: crm
 #. odoo-javascript
@@ -1350,7 +1352,7 @@ msgid ""
 "company size, business information, social media accounts, etc."
 msgstr ""
 "Wussten Sie, dass Sie ein Unternehmen nach Name oder USt-IdNr. suchen "
-"können, um sofort alle Daten einzugeben? Odoo vervollständigt alles "
+"können, um sofort alle Daten eingeben zu können? Odoo vervollständigt alles "
 "automatisch für Sie: Logo, Adresse, Unternehmensgröße, "
 "Geschäftsinformationen, Konten in sozialen Medien usw."
 
@@ -1363,7 +1365,7 @@ msgid ""
 msgstr ""
 "Wussten Sie, dass Sie eine Liste von Verkaufschancen in eine Kartenansicht "
 "verwandeln können, indem Sie das Kartensymbol oben rechts verwenden? Viele "
-"Bildschirme in Odoo können in eine Karte umgewandelt werden: Aufgaben, "
+"Ansichten in Odoo können in eine Karte umgewandelt werden: Aufgaben, "
 "Kontakte, Lieferaufträge usw."
 
 #. module: crm
@@ -1405,7 +1407,7 @@ msgstr "Anzeigename"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Display your partners on a dedicated website page."
-msgstr "Präsentieren Sie Ihre Partner auf einer eigenen Website."
+msgstr "Präsentieren Sie Ihre Partner auf einer eigenen Webseite."
 
 #. module: crm
 #. odoo-python
@@ -1441,8 +1443,8 @@ msgstr "Domain"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats!"
 msgstr ""
-"Ziehen Sie Ihre Verkaufschance auf <b>Gewonnen</b>, wenn der Deal "
-"abgeschlossen wurde. Glückwunsch!"
+"Ziehen Sie Ihre Verkaufschance in die Phase <b>Gewonnen</b>, sobald der Deal "
+"abgeschlossen ist. Glückwunsch!"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__duplicated_lead_ids
@@ -1504,7 +1506,7 @@ msgstr "E-Mail-Qualität"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr "E-Mail-Domain z. B. 'beispiel.com' in 'odoo@beispiel.com'"
+msgstr "E-Mail-Domain z. B. „beispiel.de“ in „odoo@beispiel.de“"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1539,8 +1541,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
 msgstr ""
-"Reichern Sie Ihre Leads mit Unternehmensdaten basierend auf ihrer E-Mail-"
-"Adresse an."
+"Reichern Sie Ihre Leads automatisch anhand ihrer E-Mail-Adresse mit "
+"Unternehmensdaten an."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1549,8 +1551,8 @@ msgid ""
 "customer). It will appear as a tooltip over the stage's name."
 msgstr ""
 "Erfassen Sie hier die internen Anforderungen für diese Phase (z. B. Angebot "
-"wurde an Kunde versendet). Über der Bezeichnung dieser Phase erscheint "
-"dieser Text als Hinweis."
+"wurde an den Kunden versendet). Über der Bezeichnung dieser Phase erscheint "
+"dann ein Hinweis mit den Anforderungen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__date_deadline
@@ -1587,7 +1589,7 @@ msgstr "Erwarteter Abschluss:"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected MRR"
-msgstr "Erwartete MRR"
+msgstr "Erwarteter MRR"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
@@ -1770,7 +1772,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Give priority if"
-msgstr "Priorität wenn"
+msgstr "Priorität, wenn"
 
 #. module: crm
 #. odoo-javascript
@@ -1782,12 +1784,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Go, go, go! Congrats for your first deal."
-msgstr "Geschafft! Glückwunsch zu Ihrem ersten Abschluss."
+msgstr "Geschafft! Glückwunsch zu Ihrem ersten Deal."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__has_message
 msgid "Has Message"
-msgstr "Hat eine Nachricht"
+msgstr "Hat Nachricht"
 
 #. module: crm
 #. odoo-javascript
@@ -1810,8 +1812,8 @@ msgstr ""
 "Heben Sie Verkaufschancen hervor, die seit dieser Anzahl von Tagen nicht "
 "aktualisiert wurden.         Setzen Sie den Wert auf 0, um diese Funktion zu "
 "deaktivieren. Eine Änderung dieses Parameters hat keinen Einfluss auf den "
-"Verfallsstatus/das Verfallsdatum von Ressourcen, die vor dieser Änderung "
-"zuletzt aktualisiert wurden."
+"Verfallsstatus bzw. das Verfallsdatum von Ressourcen, die vor dieser "
+"Änderung zuletzt aktualisiert wurden."
 
 #. module: crm
 #. odoo-javascript
@@ -1911,24 +1913,24 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
 msgid "Import & Synchronize"
-msgstr "Importieren & Synchronisieren"
+msgstr "Importieren & synchronisieren"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Import leads from CSV"
-msgstr "Leads aus CSV importieren"
+msgstr "Leads aus einer CSV-Datei importieren"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Import leads from a CSV or Excel file"
-msgstr "Leads aus eine CSV- oder Excel-Datei importieren"
+msgstr "Leads aus einer CSV- oder Excel-Datei importieren"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__limited
 msgid "In rotation, with a limit"
-msgstr "Im Wechsel, mit einem Limit"
+msgstr "Reihum, mit einem Limit"
 
 #. module: crm
 #. odoo-javascript
@@ -2047,12 +2049,12 @@ msgstr "Aktuelle Benutzer beibehalten"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr "KPI CRM Lead Erstellter Wert"
+msgstr "KPI-Wert für erstellte CRM-Leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
 msgid "Kpi Crm Opportunities Won Value"
-msgstr "KPI CRM Verkaufschancen Gewonnener Wert"
+msgstr "KPI-Wert für gewonnene CRM-Verkaufschancen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_active_count
@@ -2309,7 +2311,7 @@ msgstr "Zugewiesene Leads"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr "Anzahl der Leads"
+msgstr "Anzahl Leads"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
@@ -2320,7 +2322,8 @@ msgstr "Lead-Generierung"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Leads are the qualification step before the creation of an opportunity."
 msgstr ""
-"Leads sind der Qualifizierungsschritt vor der Schaffung einer Verkaufschance."
+"Leads sind der Qualifizierungsschritt vor der Erstellung einer "
+"Verkaufschance."
 
 #. module: crm
 #. odoo-python
@@ -2404,7 +2407,7 @@ msgid ""
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "Verknüpfter Kunde (optional). Normalerweise erfolgt dies bei der Umwandlung "
-"eines Leads. Sie können den Partner anhand seines Namen, seiner Steuer-ID, E-"
+"eines Leads. Sie können den Partner anhand seines Namen, seiner USt-IdNr., E-"
 "Mail-Adresse oder einer internen Referenz suchen."
 
 #. module: crm
@@ -2793,7 +2796,7 @@ msgid ""
 "unassigned lead matches its domain."
 msgstr ""
 "Dem Team %(team_name)s und seinen Vertriebsmitarbeitern wurden keine Leads "
-"zugewiesen, da kein nicht zugewiesener Lead zu seinem Zuständigkeitsbereich "
+"zugewiesen, da kein nicht zugewiesener Lead zu deren Zuständigkeitsbereich "
 "passt."
 
 #. module: crm
@@ -2803,8 +2806,8 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
-"Dem Team %(team_name)s werden keine Leads zugewiesen, weil es keine "
-"Kapazitäten hat. Fügen Sie den Vertriebsmitarbeitern Kapazität hinzu."
+"Dem Team %(team_name)s werden keine Leads zugewiesen, da es keine "
+"Kapazitäten hat. Fügen Sie den Vertriebsmitarbeitern Kapazität zu."
 
 #. module: crm
 #. odoo-python
@@ -2842,8 +2845,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
-"Keine Zuweisung von Leads an Vertriebsmitarbeiter, da keine "
-"nichtzugewiesenen Leads zu ihren Zuständigkeitsbereichen passen."
+"Keine Zuweisung von Leads an Vertriebsmitarbeiter, da keine nicht "
+"zugewiesenen Leads zu deren Zuständigkeitsbereichen passen."
 
 #. module: crm
 #. odoo-python
@@ -2852,8 +2855,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
-"Dem Team %(team_name)s wurde kein neuer Lead zugewiesen, da kein "
-"nichtzugewiesener Lead zu seinem Zuständigkeitsbereich passt."
+"Dem Team %(team_name)s wurde kein neuer Lead zugewiesen, da kein nicht "
+"zugewiesener Lead zu dessen Zuständigkeitsbereich passt."
 
 #. module: crm
 #. odoo-python
@@ -2866,7 +2869,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "No opportunity to display!"
-msgstr "Kein Verkaufschance anzuzeigen!"
+msgstr "Keine anzuzeigende Verkaufschance!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2881,7 +2884,7 @@ msgstr "Normalisierte E-Mail"
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
 msgid "Not enough stock"
-msgstr "Nicht ausreichend Lagerbestand"
+msgstr "Bestand nicht ausreichend"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2910,7 +2913,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Anzahl der Aktionen"
+msgstr "Anzahl Aktionen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunity_count
@@ -2920,7 +2923,7 @@ msgstr "Anzahl zugewiesener Verkaufschancen"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_error_counter
 msgid "Number of errors"
-msgstr "Anzahl der Fehler"
+msgstr "Anzahl Fehler"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_number
@@ -2935,7 +2938,7 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
 msgid "Number of leads and opportunities assigned this last month."
 msgstr ""
-"Anzahl der Leads und Verkaufschancen, die im letzten Monat zugewiesen wurden."
+"Anzahl Leads und Verkaufschancen, die im letzten Monat zugewiesen wurden."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_day_count
@@ -2960,7 +2963,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
+msgstr "Anzahl Nachrichten mit Zustellungsfehler"
 
 #. module: crm
 #: model:ir.module.module,description:base.module_crm
@@ -3102,11 +3105,11 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
-"Die künstliche Intelligenz von Odoo sagt die Erfolgsrate jeder "
-"Verkaufschance basierend auf Ihrer Historie voraus. Sie können die "
-"Erfolgsrate immer manuell aktualisieren, aber wenn Sie Odoo die Arbeit "
-"machen lassen, wird die Punktzahl aktualisiert, während sich die "
-"Verkaufschance in Ihrem Verkaufszyklus vorwärts bewegt."
+"Die künstliche Intelligenz von Odoo prognostiziert die Erfolgsquote jeder "
+"Verkaufschance auf Basis der Historie. Sie können die Erfolgsquote immer "
+"manuell aktualisieren, aber wenn Sie Odoo die Arbeit machen lassen, wird die "
+"Bewertung aktualisiert, während sich die Verkaufschance in Ihrem "
+"Verkaufszyklus vorwärts bewegt."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3161,11 +3164,11 @@ msgid ""
 "channels of the sales pipeline."
 msgstr ""
 "Verkaufschancenanalyse bietet Ihnen sofortigen Zugang zu Ihren "
-"Verkaufschancen mit Informationen, wie der erwartete Umsatz, die "
-"eingeplanten Kosten, verpasste Fristen oder die Anzahl der Interaktionen pro "
-"Verkaufschance. Diese Berichte werden vorrangig von Vertriebsmanagern "
-"verwendet, um regelmäßige Berichte mit den Kanälen der Verkaufspipeline zu "
-"erstellen."
+"Verkaufschancen mit Informationen wie dem erwarteten Umsatz, den "
+"eingeplanten Kosten, den verpassten Fristen oder der Anzahl der "
+"Interaktionen pro Verkaufschance. Diese Berichte werden vorrangig von "
+"Vertriebsmanagern verwendet, um regelmäßig Berichte zu den Kanälen der "
+"Verkaufspipeline zu erstellen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph_forecast
@@ -3258,14 +3261,14 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Optionale ID eines Threads (Datensatz), dem alle eingehenden Nachrichten "
-"zugeordnet werden, auch wenn auf sie nicht geantwortet wird. Wenn gesetzt, "
+"Optionale ID eines Threads (Datensatzes), dem alle eingehenden Nachrichten "
+"zugeordnet werden, auch wenn darauf nicht geantwortet wird. Wenn gesetzt, "
 "verhindert dies die Anlage neuer Datensätze vollständig."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_team_member__assignment_rules__opt-out
 msgid "Out of rotation"
-msgstr "Nicht im Wechsel"
+msgstr "Nicht reihum"
 
 #. module: crm
 #. odoo-javascript
@@ -3457,7 +3460,7 @@ msgstr "Feldbezeichnungen der voraussichtlichen Lead-Bewertung"
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
 msgstr ""
-"Voraussichtliche Lead-Bewertung: Automatisierte Wahrscheinlichkeiten neu "
+"Voraussichtliche Lead-Bewertung: automatisierte Wahrscheinlichkeiten neu "
 "berechnen"
 
 #. module: crm
@@ -3490,7 +3493,7 @@ msgstr "Wahrscheinlichkeit"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Probability (%)"
-msgstr "Wahrscheinl. (%)"
+msgstr "Wahrscheinlichkeit (%)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3513,7 +3516,7 @@ msgstr "Umsatzprognose"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
 msgid "Prorated MRR"
-msgstr "Anteilige MRR"
+msgstr "Anteilig berechneter MRR"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_prorated
@@ -3657,7 +3660,7 @@ msgstr "Regelbasierte Zuweisung"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Running"
-msgstr "Laufend"
+msgstr "Ausführung"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
@@ -3764,7 +3767,7 @@ msgstr "KI-berechnete Einzelheiten zu Gewinnchancen ansehen"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Select a Lost Reason..."
-msgstr "Einen Verlustgrund auswählen ..."
+msgstr "Verlustgrund auswählen …"
 
 #. module: crm
 #. odoo-python
@@ -3777,13 +3780,13 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Select or create a contact..."
-msgstr "Kontakt auswählen oder erstellen..."
+msgstr "Kontakt auswählen oder erstellen …"
 
 #. module: crm
 #. odoo-javascript
 #: code:addons/crm/static/src/components/lead_generation_dropdown/lead_generation_dropdown.js:0
 msgid "Send an email and get leads from replies"
-msgstr "Senden Sie eine E-Mail und erhalten Sie Leads aus den Antworten."
+msgstr "E-Mail senden und Leads aus den Antworten gewinnen"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
@@ -3833,7 +3836,7 @@ msgstr "Lead-Menü anzeigen"
 #. module: crm
 #: model:res.groups,name:crm.group_use_recurring_revenues
 msgid "Show Recurring Revenues Menu"
-msgstr "Menü für Wiederkehrende Umsätze anzeigen"
+msgstr "Menü für wiederkehrende Umsätze anzeigen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3845,7 +3848,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Show only lead"
-msgstr "Nur Leads anzeigen"
+msgstr "Nur Lead anzeigen"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -3871,7 +3874,7 @@ msgstr "Allen Teams anzeigen"
 #. odoo-python
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
 msgid "Something went wrong, please try again later"
-msgstr "Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut"
+msgstr "Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__source_id
@@ -3879,7 +3882,7 @@ msgstr "Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Source"
-msgstr "Herkunft"
+msgstr "Quelle"
 
 #. module: crm
 #. odoo-javascript
@@ -4079,15 +4082,15 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
-"Die E-Mail-Adresse, die mit diesem Kanal verbunden ist. Eingehende E-Mails "
-"erzeugen automatisch neue Leads, die dem Kanal zugewiesen sind."
+"Die E-Mail-Adresse, die mit diesem Kanal verknüpft ist. Eingehende E-Mails "
+"erzeugen automatisch neue Leads, die dem Kanal zugewiesen werden."
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "The lead %s cannot be won and lost at the same time."
 msgstr ""
-"Der Lead %s kann nicht gleichzeitig als gewonnen und verloren markiert "
+"Der Lead %s kann nicht gleichzeitig als gewonnen und als verloren markiert "
 "werden."
 
 #. module: crm
@@ -4099,7 +4102,7 @@ msgid ""
 msgstr ""
 "Das Modell (Odoo-Dokumentart), auf das sich der Alias bezieht. Alle "
 "eingehenden E-Mails ohne Bezug zu einer bereits vorhandenen E-Mail führen "
-"üblicherweise zur Erstellung eines neuen Datensatz dieses Modells (z. B. "
+"üblicherweise zur Erstellung eines neuen Datensatzes dieses Modells (z. B. "
 "Projektaufgabe)."
 
 #. module: crm
@@ -4129,8 +4132,8 @@ msgstr "Die Anzahl der Monate darf nicht negativ sein."
 #: model:ir.model.constraint,message:crm.constraint_crm_lead_check_probability
 msgid "The probability of closing the deal should be between 0% and 100%!"
 msgstr ""
-"Die Wahrscheinlichkeit eines erfolgreichen Abschluss liegt zwischen 0 % und "
-"100 %!"
+"Die Wahrscheinlichkeit eines erfolgreichen Abschlusses liegt zwischen 0 % "
+"und 100 %!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4143,21 +4146,21 @@ msgid ""
 "The success rate is computed based on the stage, but you can add more fields "
 "in the statistical analysis."
 msgstr ""
-"Die Erfolgsrate wird anhand der Phase berechnet, aber Sie können in der "
+"Die Erfolgsquote wird pro Phase berechnet, aber Sie können in der "
 "statistischen Analyse weitere Felder hinzufügen."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr "Diese Analyse zeigt Ihnen, wie viele Leads pro Monat erzeugt wurden."
+msgstr "Diese Analyse zeigt Ihnen, wie viele Leads pro Monat generiert wurden."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
-"Diese Anzeige erlaubt es Verkaufschancen basierend auf geplanten Aktivitäten "
-"zu filtern."
+"Diese Anzeige ermöglicht es, Verkaufschancen anhand geplanter Aktivitäten zu "
+"filtern."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4165,7 +4168,7 @@ msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
 msgstr ""
-"Dies kann dazu verwendet werden, Leads anhand von Regeln automatisch "
+"Dies kann verwendet werden, um Leads anhand von Regeln automatisch "
 "Vertriebsmitarbeitern zuzuweisen."
 
 #. module: crm
@@ -4247,7 +4250,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Diese Phase ist zugeklappt, wenn es keine anzuzeigenden Daten in dieser "
+"Diese Phase ist eingeklappt, wenn es keine anzuzeigenden Daten in dieser "
 "Phase gibt."
 
 #. module: crm
@@ -4459,7 +4462,7 @@ msgstr "Bevorstehende Abschlüsse"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Update"
-msgstr "Aktualisierung"
+msgstr "Aktualisieren"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_pls_update_action
@@ -4645,7 +4648,7 @@ msgstr "Was ist schiefgelaufen?"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.js:0
 msgid "Without activities scheduled"
-msgstr ""
+msgstr "Ohne geplante Aktivitäten"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4
@@ -4728,7 +4731,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You just beat your personal record for the past 7 days."
 msgstr ""
-"Sie haben soeben Ihren persönlichen Rekord der letzten 7 Tage übertroffen."
+"Sie haben soeben Ihren persönlichen Rekord der letzten 7 Tage geschlagen."
 
 #. module: crm
 #. odoo-python
@@ -4753,7 +4756,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "You're on a winning streak. 3 deals in 3 days, congrats!"
 msgstr ""
-"Sie sind auf der Überholspur. 3 Deals in 3 Tagen, herzlichen Glückwunsch!"
+"Sie sind auf der Überholspur. 3 Deals in 3 Tagen. Herzlichen Glückwunsch!"
 
 #. module: crm
 #. odoo-python
@@ -4797,7 +4800,7 @@ msgstr "z. B. „Monatlich“"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. (555) 555-0199"
-msgstr "z. B. (555) 555-0199"
+msgstr "z. B. (0221) 555199"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -4822,12 +4825,12 @@ msgstr "z. B. https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "e.g. john.doe@email.com"
-msgstr "z. B. john.doe@email.com"
+msgstr "z. B. max.mustermann@email.de"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "e.g. mycompany.com"
-msgstr "z. B. meinunternehmen.com"
+msgstr "z. B. meinunternehmen.de"
 
 #. module: crm
 #. odoo-javascript
@@ -4940,43 +4943,9 @@ msgstr "gültige E-Mail-Adresse"
 msgid "valid phone number"
 msgstr "gültige Telefonnummer"
 
-#~ msgid ""
-#~ "As you are a member of no Sales Team, you are showed the Pipeline of the "
-#~ "<b>first team by default.</b>"
-#~ msgstr ""
-#~ "Da Sie keinem Verkaufsteam angehören, wird Ihnen standardmäßig die "
-#~ "Pipeline <b>des ersten Teams angezeigt.</b>"
-
-#~ msgid "Mark as lost"
-#~ msgstr "Als verloren markieren"
-
-#~ msgid "Mark as won"
-#~ msgstr "Als gewonnen markieren"
-
-#~ msgid ""
-#~ "To work with the CRM, you should <a name=\"%d\" type=\"action\" "
-#~ "tabindex=\"-1\">join a team.</a>"
-#~ msgstr ""
-#~ "Um mit dem CRM zu arbeiten, sollten Sie <a name=\"%d\" type=\"action\" "
-#~ "tabindex=\"-1\">einem Team beitreten.</a>"
-
-#~ msgid "To work with the CRM, you should join a team."
-#~ msgstr "Um mit dem CRM zu arbeiten, sollten Sie einem Team beitreten."
-
-#~ msgid ""
-#~ "<i class=\"oi\" data-icon=\"east\"/>\n"
-#~ "                                Install Extension"
-#~ msgstr ""
-#~ "<i class=\"oi\" data-icon=\"east\"/>\n"
-#~ "                                Erweiterung installieren"
-
-#~ msgid ""
-#~ "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
-#~ "messages, and get AI-powered transcripts of your conversations."
-#~ msgstr ""
-#~ "Tätigen und empfangen Sie Anrufe von Odoo aus mit dem Wählprogramm von "
-#~ "Ringover. Verfolgen Sie Anrufe und SMS-Nachrichten und erhalten Sie KI-"
-#~ "gestützte Transkripte Ihrer Unterhaltungen."
-
-#~ msgid "Ringover VOIP Phone"
-#~ msgstr "VOIP-Telefon von Ringover"
+msgid ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                                Install Extension"
+msgstr ""
+"<i class=\"oi\" data-icon=\"east\"/>\n"
+"                                Erweiterung installieren"

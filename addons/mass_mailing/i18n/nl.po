@@ -16,16 +16,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-06-20 01:12+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-08-31 17:14+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-4/"
 "mass_mailing/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mass_mailing
 #. odoo-python
@@ -36,6 +36,10 @@ msgid ""
 "currently matches your rules!</p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">Momenteel voldoet "
+"geen enkel record aan je regels!</p>\n"
+"            "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -108,7 +112,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__recipients_count
 msgid "# Of Recipients"
-msgstr ""
+msgstr "# Ontvangers"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -147,25 +151,25 @@ msgstr "%(contact_name)s heeft zich afgemeld voor de volgende mailinglijst(en)"
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s added"
-msgstr ""
+msgstr "%(count)s toegevoegd"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s already subscribed"
-msgstr ""
+msgstr "%(count)s al geabonneerd"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s ignored (no email)"
-msgstr ""
+msgstr "%(count)s genegeerd (geen e-mail)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s opted out"
-msgstr ""
+msgstr "%(count)s afgemeld"
 
 #. module: mass_mailing
 #. odoo-python
@@ -195,7 +199,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "%(record_name)s created from %(link)s"
-msgstr ""
+msgstr "%(record_name)s gemaakt vanuit %(link)s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
@@ -579,7 +583,7 @@ msgstr "<i class=\"oi\" data-icon=\"east\"></i> Opt-out redenen configureren"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "<i>e.g. \"Recent shoppers\" or \"B2B leads in Canada\"</i>"
-msgstr ""
+msgstr "<i>e.g. \"Recente shoppers\" of \"B2B-leads in Canada\"</i>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -606,6 +610,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"mailing_contact_ids.length == 1\">Mailing Contacts</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"mailing_contact_ids.length != "
+"1\">Mailingcontact</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"mailing_contact_ids.length == 1\">Mailingcontacten</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -651,12 +659,12 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Created by</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">Aangemaakt door</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Recipients</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">Ontvangers</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -666,7 +674,7 @@ msgstr "<span invisible=\"not mailing_on_mailing_list\">Mailcontact</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span invisible=\"not scheduled or not process\">, </span>"
-msgstr ""
+msgstr "<span invisible=\"not scheduled or not process\">, </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -687,7 +695,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"process_text\">emails are being processed</span>"
-msgstr ""
+msgstr "<span name=\"process_text\">e-mails worden verwerkt</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -704,6 +712,8 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent soon</"
 "span>"
 msgstr ""
+"<span name=\"scheduled_text\">e-mails staan in de wachtrij en worden "
+"binnenkort verzonden</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
@@ -713,12 +723,12 @@ msgstr "<span style=\"color: #878d97;\">E-mailrapportages uitschakelen</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>.</span>"
-msgstr ""
+msgstr "<span>.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>Recipients</span>"
-msgstr ""
+msgstr "<span>Ontvangers</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -752,7 +762,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "A fallback font will be used for some email clients"
-msgstr ""
+msgstr "Voor sommige e-mailclients wordt een fallback-lettertype gebruikt"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -956,7 +966,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add (Mailing) Contacts to Mailing List"
-msgstr ""
+msgstr "(Mailing-)contacten toevoegen aan mailinglijst"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -973,7 +983,7 @@ msgstr "Voorwaarden toevoegen"
 #. module: mass_mailing
 #: model:ir.actions.client,name:mass_mailing.res_partner_to_list_results_action
 msgid "Add Contacts to Mailing List results"
-msgstr ""
+msgstr "Contacten toevoegen aan mailinglijstresultaten"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -984,7 +994,7 @@ msgstr "Aangepaste link toevoegen"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
 msgid "Add Mailing Contacts to a Mailing List"
-msgstr ""
+msgstr "Mailingcontacten toevoegen aan een mailinglijst"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1024,18 +1034,18 @@ msgstr "Toevoegen aan lijst"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Add to Lists"
-msgstr ""
+msgstr "Toevoegen aan lijsten"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.res_partner_to_list_action
 msgid "Add to Mailing List"
-msgstr ""
+msgstr "Toevoegen aan mailinglijst"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "Added to Mailing Lists"
-msgstr ""
+msgstr "Toegevoegd aan mailinglijsten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1661,7 +1671,7 @@ msgstr "Geannuleerd"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__canceled_ratio
 msgid "Cancelled Ratio"
-msgstr ""
+msgstr "Percentage geannuleerd"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1670,6 +1680,8 @@ msgid ""
 "Cannot set an owner on '%(server)s': it is configured as the dedicated Email "
 "Marketing server."
 msgstr ""
+"Kan geen eigenaar instellen voor '%(server)s': die is geconfigureerd als de "
+"speciale server voor E-mailmarketing."
 
 #. module: mass_mailing
 #. odoo-python
@@ -1677,6 +1689,8 @@ msgstr ""
 msgid ""
 "Cannot set an owner on '%(server)s': it is used by mailing '%(mailing)s'."
 msgstr ""
+"Kan geen eigenaar instellen voor '%(server)s': die wordt gebruikt door de "
+"mailinglijst '%(mailing)s'."
 
 #. module: mass_mailing
 #. odoo-python
@@ -1684,6 +1698,8 @@ msgstr ""
 msgid ""
 "Cannot use the model %s to send a mailing. Only mailing models can be used."
 msgstr ""
+"Het model %s kan niet worden gebruikt om een mailing te versturen. Alleen "
+"mailingmodellen kunnen worden gebruikt."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1799,7 +1815,7 @@ msgstr "Geklikt"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 msgid "Clicked By"
-msgstr ""
+msgstr "Aangeklikt door"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
@@ -1811,7 +1827,7 @@ msgstr "Geklikt op"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__clicks_ratio
 msgid "Clicks Ratio"
-msgstr ""
+msgstr "Klikratio"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1823,7 +1839,7 @@ msgstr "Getuigenissen van klanten"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2088,7 +2104,7 @@ msgstr "Een klant aanmaken"
 #: model:ir.actions.act_window,name:mass_mailing.action_mailing_filter_quick_create
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "Create a Dynamic List"
-msgstr ""
+msgstr "Maak een dynamische lijst"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
@@ -2125,7 +2141,7 @@ msgstr "Een alternatieve versie maken"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "Created"
-msgstr ""
+msgstr "Aangemaakt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
@@ -2302,7 +2318,7 @@ msgstr "Geleverd"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Delivered On"
-msgstr ""
+msgstr "Geleverd op"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2529,7 +2545,7 @@ msgstr "Concept"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/plugins/mass_mailing_setup_plugin.js:0
 msgid "Drag blocks here"
-msgstr ""
+msgstr "Sleep blokken hierheen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_social_media
@@ -2560,19 +2576,19 @@ msgstr "Dubbele e-mail"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Dynamic List saved!"
-msgstr ""
+msgstr "Dynamische lijst opgeslagen!"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_filter_action
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_ids
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_dynamic_lists
 msgid "Dynamic Lists"
-msgstr ""
+msgstr "Dynamische lijsten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Dynamic Lists:"
-msgstr ""
+msgstr "Dynamische lijsten:"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -2581,6 +2597,9 @@ msgid ""
 "                Define your rules to automatically target recipients who "
 "match specific conditions."
 msgstr ""
+"Dynamische lijsten zijn slimme lijsten die zichzelf bijwerken. Stel regels "
+"in om automatisch ontvangers te selecteren die aan specifieke voorwaarden "
+"voldoen."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2626,7 +2645,7 @@ msgstr "Voorwaarden bewerken"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/iframe/mass_mailing_iframe.js:0
 msgid "Edit Design"
-msgstr ""
+msgstr "Ontwerp bewerken"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2717,7 +2736,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "Email-safe fonts"
-msgstr ""
+msgstr "E-mailcompatibele lettertypen"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2790,7 +2809,7 @@ msgstr "Blacklisted e-mails uitsluiten"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Exclude Blacklisted Recipients"
-msgstr ""
+msgstr "Ontvangers op de zwarte lijst uitsluiten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -3604,7 +3623,7 @@ msgstr "Taal"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_clicked_datetime
 msgid "Last Clicked On"
-msgstr ""
+msgstr "Laatst geklikt op"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_name
@@ -3614,12 +3633,12 @@ msgstr "Achternaam"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_opened_datetime
 msgid "Last Opened On"
-msgstr ""
+msgstr "Laatst geopend op"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__last_replied_datetime
 msgid "Last Replied On"
-msgstr ""
+msgstr "Laatst geantwoord op"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -3706,7 +3725,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "Limited-support fonts"
-msgstr ""
+msgstr "Lettertypen met beperkte ondersteuning"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3718,7 +3737,7 @@ msgstr "Link"
 #. odoo-python
 #: code:addons/mass_mailing/models/link_tracker.py:0
 msgid "Link Clicks"
-msgstr ""
+msgstr "Link klikken"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3766,7 +3785,7 @@ msgstr "LinkedInaccount"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_list_simplified
 msgid "Links Clicks"
-msgstr ""
+msgstr "Link klikken"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_ids
@@ -3787,7 +3806,7 @@ msgstr "Lijsten"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "Lists that are created by me"
-msgstr ""
+msgstr "Lijsten die door mij zijn aangemaakt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__mail_mail_id
@@ -3920,7 +3939,7 @@ msgstr "Mailing Contacten"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_filter
 msgid "Mailing Dynamic List"
-msgstr ""
+msgstr "Dynamische mailinglijst"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_model__is_mailing_enabled
@@ -4286,7 +4305,7 @@ msgstr "Model"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Model id"
-msgstr ""
+msgstr "Model-id"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4326,7 +4345,7 @@ msgstr "Mijn activiteit deadline"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_search
 msgid "My Lists"
-msgstr ""
+msgstr "Mijn lijsten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
@@ -4444,31 +4463,31 @@ msgstr "Er zijn nog geen mailinggegevens!"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient address bounced yet!"
-msgstr ""
+msgstr "Er zijn nog geen ontvangeradressen ongeldig bevonden!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/link_tracker.py:0
 msgid "No Recipient clicked your mailing yet!"
-msgstr ""
+msgstr "Er heeft nog geen ontvanger op je mailing geklikt!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient opened your mailing yet!"
-msgstr ""
+msgstr "Er heeft nog geen ontvanger je mailing geopend!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient received your mailing yet!"
-msgstr ""
+msgstr "Er heeft nog geen ontvanger je mailing ontvangen!"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_trace.py:0
 msgid "No Recipient replied to your mailing yet!"
-msgstr ""
+msgstr "Er heeft nog geen ontvanger op je mailing gereageerd!"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4785,6 +4804,9 @@ msgid ""
 "Oops! You can't add more than %(count)s contacts to a Mailing List at once.\n"
 "Please reduce your selection and try again."
 msgstr ""
+"Oeps! Je kunt niet meer dan %(count)s contacten tegelijk aan een "
+"Mailinglijst toevoegen.\n"
+"Beperk je selectie en probeer het opnieuw."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__opened
@@ -5150,7 +5172,7 @@ msgstr "Voorbeeld inhoud"
 #: code:addons/mass_mailing/models/mailing.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Preview Mailing"
-msgstr ""
+msgstr "Mailingvoorbeeld"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__preview_text
@@ -5262,7 +5284,7 @@ msgstr "Reden"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "Received"
-msgstr ""
+msgstr "Ontvangen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__received_ratio
@@ -5355,7 +5377,7 @@ msgstr "Verwijderen uit sjablonen"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/editor/plugins/mass_mailing_link_plugin.js:0
 msgid "Removes referrer information sent to the target site"
-msgstr ""
+msgstr "Verwijdert verwijzingsinformatie die naar de doelsite wordt verzonden"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__render_model
@@ -5397,7 +5419,7 @@ msgstr "Beantwoord ratio"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__reply_to
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_test__reply_to
 msgid "Reply To"
-msgstr "Antwoorden aan"
+msgstr "Antwoorden naar"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__reply_to_mode
@@ -5507,31 +5529,31 @@ msgstr "Opslaan"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_filter_form_view_dialog/mailing_filter_form_view_dialog.xml:0
 msgid "Save & Apply"
-msgstr ""
+msgstr "Opslaan en toepassen"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/mass_mailing_builder.xml:0
 msgid "Save & Quit"
-msgstr ""
+msgstr "Opslaan & sluiten"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Save As a Dynamic List"
-msgstr ""
+msgstr "Opslaan als dynamische lijst"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Save as a Dynamic List"
-msgstr ""
+msgstr "Opslaan als dynamische lijst"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_filter_form_view_dialog/mailing_filter_form_view_dialog.xml:0
 msgid "Save for later"
-msgstr ""
+msgstr "Bewaren voor later"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -5659,12 +5681,12 @@ msgstr "Selecteer en verwijder blokken om de opties te verwijderen."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select dynamic lists..."
-msgstr ""
+msgstr "Selecteer dynamische lijsten..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Select lists..."
-msgstr ""
+msgstr "Selecteer lijsten..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -5728,7 +5750,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_send_test_form
 msgid "Send a sample mailing for testing purpose to the address below."
-msgstr ""
+msgstr "Stuur voor testdoeleinden een voorbeeldmailing naar onderstaand adres."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_view_generic
@@ -5754,13 +5776,14 @@ msgstr "Verzend op"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_send_test_form
 msgid "Send test"
-msgstr ""
+msgstr "Test verzenden"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mass_mailing_link_popover/mass_mailing_link_popover.js:0
 msgid "Send the original url instead of wrapping it into a tracking url."
 msgstr ""
+"Stuur de originele URL in plaats van deze in een tracking-URL te verpakken."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -5879,7 +5902,7 @@ msgstr "Nu kopen"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/tabs/design_tab.xml:0
 msgid "Show \"View in Browser\""
-msgstr ""
+msgstr "Toon \"Bekijken in browser\""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__is_public
@@ -5990,7 +6013,7 @@ msgstr "Vierkant"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/iframe/mass_mailing_iframe.js:0
 msgid "Start Designing"
-msgstr ""
+msgstr "Begin met ontwerpen"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_themes
@@ -6160,7 +6183,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "Supported by most popular email clients"
-msgstr ""
+msgstr "Ondersteund door de meeste populaire e-mailclients"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6209,7 +6232,7 @@ msgstr "Sjabloon"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "Template for Mailing Contacts"
-msgstr ""
+msgstr "Sjabloon voor mailingcontacten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -6221,7 +6244,7 @@ msgstr "Testen"
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 msgid "Test Mailing"
-msgstr ""
+msgstr "Testmailing"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
@@ -6336,7 +6359,7 @@ msgstr "De inhoud van deze e-mails is voor mij niet relevant"
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_link_tracker_click__email
 msgid "The email address of the entity that clicked the link"
-msgstr ""
+msgstr "Het e-mailadres van de entiteit die op de link heeft geklikt"
 
 #. module: mass_mailing
 #. odoo-python
@@ -6360,6 +6383,8 @@ msgid ""
 "The saved filters target different recipients and are incompatible with this "
 "mailing."
 msgstr ""
+"De opgeslagen filters zijn gericht op verschillende ontvangers en zijn niet "
+"compatibel met deze mailing."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -6403,7 +6428,7 @@ msgstr "Deze"
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "This action should be used with a single kind of Contacts as input."
-msgstr ""
+msgstr "Deze actie moet worden gebruikt met één soort Contacten als invoer."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6651,7 +6676,7 @@ msgstr "Type van de geregistreerde uitzonderingsactiviteit."
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_link_tracker_click__url
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_utm_campaign
@@ -6839,7 +6864,7 @@ msgstr "Weergave"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_headers_snippets.xml:0
 msgid "View in Browser"
-msgstr ""
+msgstr "Bekijken in browser"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_ir_ui_view__technical_usage
@@ -7331,7 +7356,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "close"
-msgstr ""
+msgstr "sluiten"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_form
@@ -7399,6 +7424,8 @@ msgid ""
 "email1@example.com\n"
 "email2@example.com"
 msgstr ""
+"email1@voorbeeld.com\n"
+"email2@voorbeeld.com"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7589,863 +7616,9 @@ msgstr ""
 msgid "✉ Blacklisted"
 msgstr "✉ Geblacklist"
 
-#~ msgid "%s (copy)"
-#~ msgstr "%s (kopie)"
-
-#~ msgid "4 out of 5 stars"
-#~ msgstr "4 van de 5 sterren"
-
-#~ msgid ""
-#~ "<a href=\"https://www.example.com\" class=\"btn btn-secondary "
-#~ "o_translate_inline\">Learn more</a>"
-#~ msgstr ""
-#~ "<a href=\"https://www.example.com\" class=\"btn btn-secondary "
-#~ "o_translate_inline\">Meer ontdekken</a>"
-
-#~ msgid "<em>Customer Service</em>"
-#~ msgstr "<em>Klantenservice</em>"
-
-#~ msgid "<font class=\"h5-fs\">Aline Turner</font>"
-#~ msgstr "<font class=\"h5-fs\">Aline Turner</font>"
-
-#~ msgid "<font class=\"h5-fs\">Iris Joe</font>"
-#~ msgstr "<font class=\"h5-fs\">Iris Joe</font>"
-
-#~ msgid "<font class=\"h5-fs\">Mich Stark</font>"
-#~ msgstr "<font class=\"h5-fs\">Mich Stark</font>"
-
-#~ msgid "<font class=\"h5-fs\">Tony Fred</font>"
-#~ msgstr "<font class=\"h5-fs\">Tony Fred</font>"
-
-#~ msgid ""
-#~ "<font class=\"text-white\">Put the focus on what you have to say!</font>"
-#~ msgstr ""
-#~ "<font class=\"text-white\">Leg de nadruk op wat je te zeggen hebt!</font>"
-
-#~ msgid "<font class=\"text-white\">Reaching new heights together</font>"
-#~ msgstr "<font class=\"text-white\">Samen nieuwe hoogten bereiken</font>"
-
-#~ msgid "<font class=\"text-white\">Text Highlight</font>"
-#~ msgstr "<font class=\"text-white\">Tekst markeren</font>"
-
-#~ msgid "<font class=\"text-white\">Where ideas come to life</font>"
-#~ msgstr "<font class=\"text-white\">Waar ideeën tot leven komen</font>"
-
-#~ msgid ""
-#~ "<font class=\"text-white\">Write one or two paragraphs describing your "
-#~ "product, services or a specific feature.<br/> To be successful your "
-#~ "content needs to be useful to your readers.</font>"
-#~ msgstr ""
-#~ "<font class=\"text-white\">Schrijf één of twee alinea's waarin je je "
-#~ "product, diensten of een specifieke functie beschrijft.<br/> Om succesvol "
-#~ "te zijn moet je inhoud nuttig zijn voor je lezers.</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white\"><strong>If you're ready to transform your "
-#~ "website into a high-converting asset</strong>, <em>hit reply and let's "
-#~ "work together.</em></font>"
-#~ msgstr ""
-#~ "<font style=\"color: white\"><strong>Als je klaar bent om van je website "
-#~ "een optimale conversietool te maken</strong>, <em>klik dan op "
-#~ "'antwoorden' om met ons samen te werken.</em></font>"
-
-#~ msgid "<font style=\"color: white\">A great title</font>"
-#~ msgstr "<font style=\"color: white\">Een geweldige titel</font>"
-
-#~ msgid "<font style=\"color: white\">And a great subtitle</font>"
-#~ msgstr "<font style=\"color: white\">En een geweldige ondertitel</font>"
-
-#~ msgid "<font style=\"color: white\">Head of Design</font>"
-#~ msgstr "<font style=\"color: white\">Hoofd Ontwerp</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white\">Hi there, I'm <strong>John Doe</strong>, a "
-#~ "design expert specializing in responsive web and mobile app interfaces. "
-#~ "<strong>For over 13 years</strong>, I've focused on creating elegant, "
-#~ "user-centric designs that are both scalable and easy to maintain.</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white\">Hallo, ik ben <strong>John Doe</strong>, een "
-#~ "designexpert gespecialiseerd in responsieve webinterfaces en mobiele app-"
-#~ "interfaces. <strong>Al meer dan 13 jaar</strong> creëer ik elegante, "
-#~ "gebruikersgerichte ontwerpen die zowel schaalbaar als gemakkelijk te "
-#~ "onderhouden zijn.</font>"
-
-#~ msgid "<font style=\"color: white\">Julian Thorne</font>"
-#~ msgstr "<font style=\"color: white\">Julian Thorne</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white;\"><strong>50,000+ companies</strong> run Odoo."
-#~ "</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white;\"><strong>Meer dan 50.000 bedrijven</strong> "
-#~ "gebruiken Odoo.</font>"
-
-#~ msgid "<font style=\"color: white;\">Beautiful snippets</font>"
-#~ msgstr "<font style=\"color: white;\">Prachtige snippets</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white;\">Join us and make your company a better "
-#~ "place.</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white;\">Sluit je bij ons aan en maak van je bedrijf "
-#~ "een betere plek.</font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">A color block</span></"
-#~ "font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">Een kleurblok</span></"
-#~ "font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">Another color block</"
-#~ "span></font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">Een ander kleurblok</"
-#~ "span></font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\">Color blocks are a simple and effective way "
-#~ "to <strong>present and highlight your content</strong>. Choose an image "
-#~ "or a color for the background. You can even resize and duplicate the "
-#~ "blocks to create your own layout. Add images or icons to customize the "
-#~ "blocks.</font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\">Kleurblokken zijn een eenvoudige en "
-#~ "effectieve manier om <strong>je inhoud te presenteren en te benadrukken</"
-#~ "strong>. Kies een afbeelding of een kleur voor de achtergrond. Je kan "
-#~ "zelfs het formaat van de blokken aanpassen en ze dupliceren om je eigen "
-#~ "lay-out te maken. Voeg afbeeldingen of iconen toe om de blokken aan te "
-#~ "passen.</font>"
-
-#~ msgid "<font style=\"color:white;\">More Details</font>"
-#~ msgstr "<font style=\"color:white;\">Meer details</font>"
-
-#~ msgid ""
-#~ "<font style=\"font-size: 12px;\">Where innovation meets performance</font>"
-#~ msgstr ""
-#~ "<font style=\"font-size: 12px;\">Waar innovatie en prestatie elkaar "
-#~ "ontmoeten</font>"
-
-#~ msgid "<span class=\"display-3-fs\">Discover our main three benefits</span>"
-#~ msgstr ""
-#~ "<span class=\"display-3-fs\">Ontdek onze drie belangrijkste voordelen</"
-#~ "span>"
-
-#~ msgid "<span class=\"display-4-fs\">1</span>"
-#~ msgstr "<span class=\"display-4-fs\">1</span>"
-
-#~ msgid "<span class=\"display-4-fs\">2</span>"
-#~ msgstr "<span class=\"display-4-fs\">2</span>"
-
-#~ msgid "<span class=\"display-4-fs\">3</span>"
-#~ msgstr "<span class=\"display-4-fs\">3</span>"
-
-#~ msgid ""
-#~ "<span class=\"h2-fs\"><strong>$ 15.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ month</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"h2-fs\"><strong>€ 15,00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ maand</"
-#~ "span>"
-
-#~ msgid ""
-#~ "<span class=\"h2-fs\"><strong>$ 25.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ month</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"h2-fs\"><strong>€ 25,00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ maand</"
-#~ "span>"
-
-#~ msgid "<span class=\"h3-fs\">Our finest selection</span>"
-#~ msgstr "<span class=\"h3-fs\">Onze beste selectie</span>"
-
-#~ msgid "<span class=\"h5-fs\">Aline Turner</span>"
-#~ msgstr "<span class=\"h5-fs\">Aline Turner</span>"
-
-#~ msgid "<span class=\"h5-fs\">Balanced</span>"
-#~ msgstr "<span class=\"h5-fs\">Evenwichtig</span>"
-
-#~ msgid "<span class=\"h5-fs\">Elegant</span>"
-#~ msgstr "<span class=\"h5-fs\">Elegant</span>"
-
-#~ msgid "<span class=\"h5-fs\">Iris Joe</span>"
-#~ msgstr "<span class=\"h5-fs\">Iris Joe</span>"
-
-#~ msgid "<span class=\"h5-fs\">Mich Stark</span>"
-#~ msgstr "<span class=\"h5-fs\">Mich Stark</span>"
-
-#~ msgid "<span class=\"h5-fs\">Pete Bluestork</span>"
-#~ msgstr "<span class=\"h5-fs\">Pete Bluestork</span>"
-
-#~ msgid "<span class=\"h5-fs\">Simple</span>"
-#~ msgstr "<span class=\"h5-fs\">Eenvoudig</span>"
-
-#~ msgid "<span class=\"h5-fs\">Sophia Langston</span>"
-#~ msgstr "<span class=\"h5-fs\">Sophia Langston</span>"
-
-#~ msgid "<span class=\"h5-fs\">Tony Fred</span>"
-#~ msgstr "<span class=\"h5-fs\">Tony Fred</span>"
-
-#~ msgid ""
-#~ "<span class=\"o_small-fs\">Instant setup, satisfied or reimbursed.</span>"
-#~ msgstr ""
-#~ "<span class=\"o_small-fs\">Snelle installatie. Niet tevreden? Geld terug."
-#~ "</span>"
-
-#~ msgid ""
-#~ "<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
-#~ ">What We Offer"
-#~ msgstr ""
-#~ "<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
-#~ ">Ons aanbod"
-
-#~ msgid ""
-#~ "<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">Your "
-#~ "journey starts here</font></strong></span>"
-#~ msgstr ""
-#~ "<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">Jouw "
-#~ "reis begint hier</font></strong></span>"
-
-#~ msgid "<span><font style=\"font-weight: bolder;\">GET $20 OFF</font></span>"
-#~ msgstr ""
-#~ "<span><font style=\"font-weight: bolder;\"> € 20 KORTING</font></span>"
-
-#~ msgid "<strong>18h30:</strong>"
-#~ msgstr "<strong>18u30:</strong>"
-
-#~ msgid "<strong>19h00:</strong>"
-#~ msgstr "<strong>19u00</strong>"
-
-#~ msgid "<strong>19h30: </strong>"
-#~ msgstr "<strong>19u30: </strong>"
-
-#~ msgid "<strong>8h:</strong>"
-#~ msgstr "<strong>8u:</strong>"
-
-#~ msgid "<strong><font class=\"text-white\">Innovation Hub</font></strong>"
-#~ msgstr "<strong><font class=\"text-white\">Innovatiecentrum</font></strong>"
-
-#~ msgid "<strong><font class=\"text-white\">Key Milestone</font></strong>"
-#~ msgstr ""
-#~ "<strong><font class=\"text-white\">Belangrijke mijlpaal</font></strong>"
-
-#~ msgid ""
-#~ "<strong><font style=\"font-size: 48px; color: white;\">45</font></strong>"
-#~ msgstr ""
-#~ "<strong><font style=\"font-size: 48px; color: white;\">45</font></strong>"
-
-#~ msgid "<strong><font style=\"font-size: 48px;\">12</font></strong>"
-#~ msgstr "<strong><font style=\"font-size: 48px;\">12</font></strong>"
-
-#~ msgid "<strong><font style=\"font-size: 48px;\">8</font></strong>"
-#~ msgstr "<strong><font style=\"font-size: 48px;\">8</font></strong>"
-
-#~ msgid "<strong>A Breath of Fresh Air</strong>"
-#~ msgstr "<strong>Een frisse wind</strong>"
-
-#~ msgid "<strong>About our product line</strong>"
-#~ msgstr "<strong>Over ons assortiment</strong>"
-
-#~ msgid "<strong>Easy returns</strong>"
-#~ msgstr "<strong>Eenvoudig retourneren</strong>"
-
-#~ msgid ""
-#~ "<strong>Emil Foster</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Creative "
-#~ "Director</span>"
-#~ msgstr ""
-#~ "<strong>Emil Foster</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Artistiek "
-#~ "directeur</span>"
-
-#~ msgid "<strong>Free shipping</strong>"
-#~ msgstr "<strong>Gratis verzending</strong>"
-
-#~ msgid ""
-#~ "<strong>James Carter</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Chief "
-#~ "Technical Officer</span>"
-#~ msgstr ""
-#~ "<strong>James Carter</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Technisch "
-#~ "directeur</span>"
-
-#~ msgid "<strong>Jane DOE</strong><br/>CEO of MyCompany"
-#~ msgstr "<strong>Jane DOE</strong><br/>CEO van MijnBedrijf"
-
-#~ msgid ""
-#~ "<strong>Jody Roberts</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Chief "
-#~ "Financial Officer</span>"
-#~ msgstr ""
-#~ "<strong>Jody Roberts</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Financieel "
-#~ "directeur</span>"
-
-#~ msgid "<strong>John DOE</strong><br/>"
-#~ msgstr "<strong>John DOE</strong><br/>"
-
-#~ msgid ""
-#~ "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
-#~ "class=\"text-600\">CEO of MyCompany</font></span>"
-#~ msgstr ""
-#~ "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
-#~ "class=\"text-600\">CEO van MijnBedrijf</font></span>"
-
-#~ msgid "<strong>Networking: Walking Dinner &amp; Drinks</strong>"
-#~ msgstr "<strong>Netwerken: Walking Dinner &amp; Drinks</strong>"
-
-#~ msgid "<strong>Rating</strong>"
-#~ msgstr "<strong>Beoordeling</strong>"
-
-#~ msgid ""
-#~ "<strong>Replace this block with the authentic, singular story of your "
-#~ "product.</strong> Focus on the unique spark that gave it personality. "
-#~ "<strong>Be short, be specific, and let your brand's voice shine</strong> "
-#~ "through unique work choices. This explains the <em>soul</em> behind the "
-#~ "product, inspiring a deeper connection beyond simple features."
-#~ msgstr ""
-#~ "<strong>Vervang dit blok door het authentieke, unieke verhaal van je "
-#~ "product.</strong> Focus op wat het product uniek maakt. <strong>Wees "
-#~ "beknopt, wees specifiek en laat de stem van je merk horen</strong> door "
-#~ "een unieke aanpak te benadrukken. Dit toont de <em>ziel</em> van het "
-#~ "product en zorgt voor een diepere verbinding die verder gaat dan alleen "
-#~ "de functies."
-
-#~ msgid "<strong>Secure payment</strong>"
-#~ msgstr "<strong>Veilig betalen</strong>"
-
-#~ msgid "<strong>Stay Ahead with weekly insights &amp; updates</strong>"
-#~ msgstr ""
-#~ "<strong>Blijf op de hoogte met wekelijkse inzichten &amp; updates</strong>"
-
-#~ msgid "<strong>Stay in the Loop !<br/>Get the latest updates</strong>"
-#~ msgstr "<strong>Blijf op de hoogte!<br/>Ontvang de laatste updates</strong>"
-
-#~ msgid "<strong>Step Up Your Game</strong>"
-#~ msgstr "<strong>Verleg je grenzen</strong>"
-
-#~ msgid ""
-#~ "<strong>Sullivan Mitchell</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Marketing "
-#~ "Director</span>"
-#~ msgstr ""
-#~ "<strong>Sullivan Mitchell</strong><br/>\n"
-#~ "                                    <span class=\"text-"
-#~ "muted\">Marketingdirecteur</span>"
-
-#~ msgid "<strong>Table Ronde</strong>"
-#~ msgstr "<strong>Tafelronde</strong>"
-
-#~ msgid "<strong>The Innovation Behind Our Product</strong>"
-#~ msgstr "<strong>De innovatie achter ons product</strong>"
-
-#~ msgid "<strong>Timeless Design</strong>"
-#~ msgstr "<strong>Tijdloos ontwerp</strong>"
-
-#~ msgid "<strong>Unveil Our Exclusive Collections</strong>"
-#~ msgstr "<strong>Ontdek onze exclusieve collecties</strong>"
-
-#~ msgid "<strong>Welcome</strong>"
-#~ msgstr "<strong>Welkom</strong>"
-
-#~ msgid ""
-#~ "<strong>Why settle for a generic solution?</strong><br/>We don't just "
-#~ "offer tools; we provide a competitive advantage. Our platform is "
-#~ "engineered to streamline your workflow, eliminate bottlenecks, and help "
-#~ "you scale faster than ever before."
-#~ msgstr ""
-#~ "<strong>Waarom zou je genoegen nemen met ene generieke oplossing?</"
-#~ "strong><br/>We bieden niet gewoon tools, maar een concurrentievoordeel. "
-#~ "Ons platform is ontworpen om je workflow te stroomlijnen, knelpunten weg "
-#~ "te werken en sneller dan ooit te groeien."
-
-#~ msgid "<strong>[speaker] &amp; [speaker]'s conference</strong>"
-#~ msgstr "<strong>conferentie van [spreker] &amp; [spreker]</strong>"
-
-#~ msgid "<u>Friday</u>"
-#~ msgstr "<u>Vrijdag</u>"
-
-#~ msgid "<u>Monday</u>"
-#~ msgstr "<u>Maandag</u>"
-
-#~ msgid "<u>Saturday</u>"
-#~ msgstr "<u>Zaterdag</u>"
-
-#~ msgid "<u>Sunday</u>"
-#~ msgstr "<u>Zondag</u>"
-
-#~ msgid "<u>Thursday</u>"
-#~ msgstr "<u>Donderdag</u>"
-
-#~ msgid "<u>Tuesday</u>"
-#~ msgstr "<u>Dinsdag</u>"
-
-#~ msgid "<u>Wednesday</u>"
-#~ msgstr "<u>Woensdag</u>"
-
-#~ msgid ""
-#~ "A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, "
-#~ "all on a bed of mozzarella and tomato sauce."
-#~ msgstr ""
-#~ "Een heerlijke mix van vier toppings: champignons, artisjokken, ham en "
-#~ "olijven, op een bedje van mozzarella en tomatensaus."
-
-#~ msgid "Alert"
-#~ msgstr "Waarschuwing"
-
-#~ msgid "Author"
-#~ msgstr "Auteur"
-
-#~ msgid "Badge"
-#~ msgstr "Badge"
-
-#~ msgid "Benefits"
-#~ msgstr "Voordelen"
-
-#~ msgid "Big Boxes"
-#~ msgstr "Grote blokken"
-
-#~ msgid "Blockquote"
-#~ msgstr "Blokcitaat"
-
-#~ msgid "Blog Title"
-#~ msgstr "Blogtitel"
-
-#~ msgid "Built to Last: The Beauty of Choosing Quality Materials"
-#~ msgstr ""
-#~ "Gebouwd om lang mee te gaan: Het voordeel van hoogwaardige materialen"
-
-#~ msgid "CTA Badge"
-#~ msgstr "CTA-badge"
-
-#~ msgid "Call To Action"
-#~ msgstr "Call To Action"
-
-#~ msgid "Call To Action Card"
-#~ msgstr "Call To Action-kaart"
-
-#~ msgid "Call To Action Text (center)"
-#~ msgstr "Call To Action-tekst (centraal)"
-
-#~ msgid "Call To Action Text (left)"
-#~ msgstr "Call To Action-tekst (links)"
-
-#~ msgid "Categories"
-#~ msgstr "Categorieën"
-
-#~ msgid "Centered CTA"
-#~ msgstr "Centrale CTA"
-
-#~ msgid "Centered Logo"
-#~ msgstr "Gecentreerd logo"
-
-#~ msgid ""
-#~ "Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil "
-#~ "leaves, drizzled with extra virgin olive oil."
-#~ msgstr ""
-#~ "Klassieke pizza met verse mozzarella, San Marzanotomaten en "
-#~ "basilicumblaadjes, besprenkeld met extra vierge olijfolie."
-
-#~ msgid "Columns"
-#~ msgstr "Kolommen"
-
-#~ msgid "Comparisons"
-#~ msgstr "Vergelijkingen"
-
-#~ msgid "Content Card"
-#~ msgstr "Inhoudskaart"
-
-#~ msgid "Cover"
-#~ msgstr "Omslag"
-
-#~ msgid "Customer Quote"
-#~ msgstr "Citaat van klant"
-
-#~ msgid "Customer testimonials"
-#~ msgstr "Getuigenissen van klanten"
-
-#~ msgid ""
-#~ "Delete the above image or replace it with a picture that illustrates your "
-#~ "message. Click on the picture to change its <em>rounded corner</em> style."
-#~ msgstr ""
-#~ "Verwijder de bovenstaande afbeelding of vervang ze door een afbeelding "
-#~ "die je bericht illustreert. Klik op de afbeelding om de <em>afgeronden "
-#~ "hoeken</em> hun stijl te wijzigen."
-
-#~ msgid ""
-#~ "Design for the Soul: Why Your Home Should Be a Reflection of Your Best "
-#~ "Self"
-#~ msgstr ""
-#~ "Design voor de ziel: waarom je huis een weerspiegeling moet zijn van je "
-#~ "beste zelf"
-
-#~ msgid "Diavola"
-#~ msgstr "Diavola"
-
-#~ msgid "Discover New <strong>Opportunities</strong>"
-#~ msgstr "Ontdek nieuwe <strong>kansen</strong>"
-
-#~ msgid ""
-#~ "Discover the thrill of a home that truly reflects your soul. It's more "
-#~ "than just decor; it's about creating a space so vibrant and curated that "
-#~ "<strong>you'll beam with pride</strong> every time you step inside."
-#~ msgstr ""
-#~ "Ontdek het geweldige gevoel van een thuis die echt je ziel weerspiegelt. "
-#~ "Het gaat om meer dan alleen decoratie. Het gaat om het creëren van een "
-#~ "ruimte die zo levendig en zorgvuldig is samengesteld dat <strong>je elke "
-#~ "keer dat je binnenkomt straalt van trots</strong>."
-
-#~ msgid "Enhance Your <strong>Experience</strong>"
-#~ msgstr "Verbeter je <strong>ervaring</strong>"
-
-#~ msgid ""
-#~ "Experience the perfect harmony of form and function. Each piece is "
-#~ "meticulously designed with <strong>premium materials</strong>, ensuring "
-#~ "that your interior reflects a sophisticated yet inviting atmosphere."
-#~ msgstr ""
-#~ "Ervaar de perfecte balans tussen vorm en functie. Elk stuk is zorgvuldig "
-#~ "ontworpen met <strong>hoogwaardige materialen</strong>, zodat je "
-#~ "interieur een verfijnde, maar uitnodigende sfeer uitstraalt."
-
-#~ msgid ""
-#~ "Experience unparalleled comfort, cutting-edge design, and performance-"
-#~ "enhancing<br/>technology with this latest innovation, crafted to elevate "
-#~ "every athlete's journey."
-#~ msgstr ""
-#~ "Ervaar ongeëvenaard comfort, ultramodern design en prestatieverhogende<br/"
-#~ ">technologie met deze nieuwste innovatie, ontworpen om het pad van elke "
-#~ "sporter te verbeteren."
-
-#~ msgid ""
-#~ "Explain the benefits you offer. <br/>Don't write about products or "
-#~ "services here, write about solutions."
-#~ msgstr ""
-#~ "Leg uit welke voordelen je biedt. <br/>Schrijf hier niet over producten "
-#~ "of diensten, maar over oplossingen."
-
-#~ msgid "Features Column"
-#~ msgstr "Kolom met functies"
-
-#~ msgid "Features Showcase"
-#~ msgstr "Presentatie van functies"
-
-#~ msgid "Footers"
-#~ msgstr "Voetteksten"
-
-#~ msgid ""
-#~ "Great stories are <strong>for everyone</strong> even when only written "
-#~ "<strong>for just one person</strong>. If you try to write with a wide, "
-#~ "general audience in mind, your story will sound fake and lack emotion. No "
-#~ "one will be interested. Write for one person. If it's genuine for the "
-#~ "one, it's genuine for the rest."
-#~ msgstr ""
-#~ "Goede verhalen zijn <strong>voor iedereen</strong>, zelfs als ze maar "
-#~ "<strong>voor één persoon </strong>geschreven zijn. Als je probeert te "
-#~ "schrijven voor een breed, algemeen publiek, klinkt je verhaal vaak onecht "
-#~ "en emotieloos, en dan raakt het niemand. Schrijf voor één persoon. Wat "
-#~ "oprecht is voor die ene, is oprecht voor de rest."
-
-#~ msgid ""
-#~ "Great stories have a <strong>personality</strong>. Consider telling a "
-#~ "great story that provides personality. Writing a story with personality "
-#~ "for potential clients will assist with making a relationship connection. "
-#~ "This shows up in small quirks like word choices or phrases. Write from "
-#~ "your point of view, not from someone else's experience."
-#~ msgstr ""
-#~ "Geweldige verhalen hebben een <strong>persoonlijk karakter</strong>. "
-#~ "Vertel een sterk verhaal dat persoonlijkheid uitstraalt, dat helpt je om "
-#~ "een echte band op te bouwen met potentiële klanten. Laat jouw eigen stem "
-#~ "en stijl doorklinken in kleine details, zoals woordkeuze en "
-#~ "formuleringen. Schrijf vanuit jouw eigen perspectief, niet vanuit "
-#~ "andermans ervaring."
-
-#~ msgid "Headers"
-#~ msgstr "Kopteksten"
-
-#~ msgid "Horizontal Attributes"
-#~ msgstr "Horizontale kenmerken"
-
-#~ msgid "Image"
-#~ msgstr "Afbeelding"
-
-#~ msgid "Image - Text"
-#~ msgstr "Afbeelding - Tekst"
-
-#~ msgid ""
-#~ "In a fast-paced world, your home should be your ultimate escape—a private "
-#~ "place that brings you a sense of calm and clarity. Our collection focuses "
-#~ "on clean lines and comfortable shapes, providing a sophisticated backdrop "
-#~ "for your most important moments. We believe your surroundings should be a "
-#~ "testament to your taste, offering the perfect l ease you need to unwind."
-#~ msgstr ""
-#~ "In een gehaaste wereld moet je huis je ultieme toevluchtsoord zijn: een "
-#~ "privéplek die je rust en helderheid geeft. Onze collectie is gericht op "
-#~ "strakke lijnen en comfortabele vormen en biedt een verfijnde achtergrond "
-#~ "voor de momenten die er echt toe doen. Wij vinden dat je omgeving een "
-#~ "weerspiegeling moet zijn van je smaak en je de rust moet bieden waarnaar "
-#~ "je zo verlangt."
-
-#~ msgid "Inner Content"
-#~ msgstr "Interne inhoud"
-
-#~ msgid "Issue<br/><strong>#42</strong>"
-#~ msgstr "Editie<br/><strong>#42</strong>"
-
-#~ msgid "Items"
-#~ msgstr "Items"
-
-#~ msgid "Lasagna al Forno"
-#~ msgstr "Lasagna al Forno"
-
-#~ msgid ""
-#~ "Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, "
-#~ "baked to perfection."
-#~ msgstr ""
-#~ "Lagen pasta, rijke vleesragu, béchamelsaus en gesmolten mozzarella, "
-#~ "perfect gebakken."
-
-#~ msgid "Left Logo"
-#~ msgstr "Logo links"
-
-#~ msgid "Links List"
-#~ msgstr "Lijst met links"
-
-#~ msgid "Logo + Button"
-#~ msgstr "Logo + knop"
-
-#~ msgid "Logo + Inline Menu"
-#~ msgstr "Logo + Inline-menu"
-
-#~ msgid "Logo + Stacked Menu"
-#~ msgstr "Logo + gestapeld menu"
-
-#~ msgid "Margherita"
-#~ msgstr "Margherita"
-
-#~ msgid "Masonry"
-#~ msgstr "Metselwerk"
-
-#~ msgid "Media List"
-#~ msgstr "Media lijst"
-
-#~ msgid "Membership"
-#~ msgstr "Lidmaatschap"
-
-#~ msgid "Menu"
-#~ msgstr "Menu"
-
-#~ msgid "Name + Button"
-#~ msgstr "Naam + knop"
-
-#~ msgid "Name + Inline Menu"
-#~ msgstr "Naam + inline-menu"
-
-#~ msgid "Name + Social"
-#~ msgstr "Naam + sociale media"
-
-#~ msgid "Numbers"
-#~ msgstr "Getallen"
-
-#~ msgid "Penne all'Arrabbiata"
-#~ msgstr "Penne all'Arrabbiata"
-
-#~ msgid ""
-#~ "Penne pasta tossed in a spicy tomato and garlic sauce with a hint of "
-#~ "chili peppers, finished with fresh parsley."
-#~ msgstr ""
-#~ "Penne in een pittige tomaat-knoflooksaus met een vleugje chilipeper, "
-#~ "afgewerkt met verse peterselie."
-
-#~ msgid "People"
-#~ msgstr "Mensen"
-
-#~ msgid "Picture"
-#~ msgstr "Afbeelding"
-
-#~ msgid "Pricelist Boxed"
-#~ msgstr "Prijslijst in vakjes"
-
-#~ msgid "Product Description"
-#~ msgstr "Productomschrijving"
-
-#~ msgid "Product Showcase"
-#~ msgstr "Presentatie van producten"
-
-#~ msgid "Promo Code"
-#~ msgstr "Promotiecode"
-
-#~ msgid "Quality"
-#~ msgstr "Kwaliteit"
-
-#~ msgid "Quattro Stagioni"
-#~ msgstr "Quattro Stagioni"
-
-#~ msgid "Rating"
-#~ msgstr "Beoordeling"
-
-#~ msgid ""
-#~ "Redefine your daily rituals with interiors that inspire. From the moment "
-#~ "you walk through the door, our pieces evoke a sense of <strong>pure "
-#~ "delight</strong>, turning every corner of your home into a sanctuary of "
-#~ "happiness and ease."
-#~ msgstr ""
-#~ "Creëer nieuwe dagelijkse rituelen met interieurs die je inspireren. Vanaf "
-#~ "het moment dat je binnenkomt, roepen onze meubels <strong>pure vreugde</"
-#~ "strong> op, waardoor elke hoek van je huis verandert in een oase van "
-#~ "geluk en rust."
-
-#~ msgid "References"
-#~ msgstr "Referenties"
-
-#~ msgid ""
-#~ "Savor our fresh, local cuisine with a modern twist.<br/>Deliciously "
-#~ "crafted for every taste!"
-#~ msgstr ""
-#~ "Geniet van onze verse, lokale keuken met een moderne twist.<br/>Heerlijk "
-#~ "gemaakt voor ieders smaak!"
-
-#~ msgid "Section Mobile"
-#~ msgstr "Sectie Mobiel"
-
-#~ msgid "Separator Title"
-#~ msgstr "Scheidingstitel"
-
-#~ msgid "Showcase"
-#~ msgstr "Presentatie"
-
-#~ msgid "Social + Footer"
-#~ msgstr "Sociale media + Footer"
-
-#~ msgid "Social + Footer + Separator"
-#~ msgstr "Sociale media + footer + scheiding"
-
-#~ msgid "Social + Logo"
-#~ msgstr "Sociale media + logo"
-
-#~ msgid "Social Media"
-#~ msgstr "Sociale media"
-
-#~ msgid "Spaghetti Carbonara"
-#~ msgstr "Spaghetti Carbonara"
-
-#~ msgid ""
-#~ "Speakers from all over the world will join our experts to give inspiring "
-#~ "talks on various topics. Stay on top of the latest business management "
-#~ "trends &amp; technologies"
-#~ msgstr ""
-#~ "Sprekers van over de hele wereld zullen zich bij onze experts voegen om "
-#~ "inspirerende presentaties te geven over verschillende onderwerpen. Blijf "
-#~ "op de hoogte van de nieuwste trends &amp; technologieën voor business "
-#~ "management"
-
-#~ msgid "Special Offer CTA"
-#~ msgstr "Speciale aanbieding CTA"
-
-#~ msgid ""
-#~ "Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato "
-#~ "sauce for a flavorful kick."
-#~ msgstr ""
-#~ "Pittige pepperoni gecombineerd met pittige chilivlokken, mozzarella en "
-#~ "tomatensaus voor een smaakvolle kick."
-
-#~ msgid "Subtitle"
-#~ msgstr "Subtitel"
-
-#~ msgid "Team"
-#~ msgstr "Team"
-
-#~ msgid "Team shapes"
-#~ msgstr "Team: vormen"
-
-#~ msgid "Text - Image"
-#~ msgstr "Tekst - Afbeelding"
-
-#~ msgid "Text Card"
-#~ msgstr "Tekstkaart"
-
-#~ msgid "The Art of the Escape: Creating a Quiet Sanctuary in a Busy World"
-#~ msgstr ""
-#~ "De kunst van het ontsnappen: Zorgen voor een rustig toevluchtsoord in een "
-#~ "drukke wereld"
-
-#~ msgid "Title"
-#~ msgstr "Titel"
-
-#~ msgid "Title + Side Text"
-#~ msgstr "Titel + zijtekst"
-
-#~ msgid ""
-#~ "Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino "
-#~ "Romano, topped with black pepper."
-#~ msgstr ""
-#~ "Traditioneel Romeins gerecht met romig ei, knapperige pancetta en "
-#~ "Pecorino Romano, afgewerkt met zwarte peper."
-
-#~ msgid ""
-#~ "True elegance is something you can feel, rooted in high-quality materials "
-#~ "that only get better with time. By using the finest woods and textiles, "
-#~ "we create furniture that doesn't just sit in a room—it grows with it. "
-#~ "These pieces are designed to be your home's future heirlooms, crafted "
-#~ "with such care that they will remain as beautiful and relevant years from "
-#~ "now as they are today."
-#~ msgstr ""
-#~ "Echte elegantie is iets wat je kunt voelen, geworteld in hoogwaardige "
-#~ "materialen die mettertijd alleen maar beter worden. Met de beste "
-#~ "houtsoorten en stoffen creëren we meubels die niet alleen in een kamer "
-#~ "staan, maar ermee meegroeien. Deze meubels zijn ontworpen om de "
-#~ "toekomstige erfstukken van je huis te worden en zijn met zoveel zorg "
-#~ "vervaardigd dat ze over jaren nog net zo mooi en relevant zijn als "
-#~ "vandaag."
-
-#~ msgid ""
-#~ "True luxury is measured in decades.<br/>We blend heritage craft with the "
-#~ "finest materials.<br/>Discover pieces that age beautifully."
-#~ msgstr ""
-#~ "Echte luxe wordt gemeten in decennia.<br/>We combineren traditioneel "
-#~ "vakmanschap met de beste materialen.<br/>Ontdek stukken die mooi "
-#~ "verouderen."
-
-#~ msgid ""
-#~ "True luxury is more rewarding as a member.<br/>Join our inner circle for "
-#~ "exclusive benefits and early access.<br/>Elevate your home today."
-#~ msgstr ""
-#~ "Als lid geniet je nog meer van echte luxe.<br/>Word lid van onze inner "
-#~ "circle voor exclusieve voordelen en vroege toegang tot producten.<br/"
-#~ ">Geef je huis vandaag nog een upgrade."
-
-#~ msgid ""
-#~ "Use this snippet to build various types of components that feature a "
-#~ "left- or right-aligned image alongside textual content. Duplicate the "
-#~ "element to create a list that fits your needs.\n"
-#~ "                            <br/>"
-#~ msgstr ""
-#~ "Gebruik deze snippet om verschillende soorten onderdelen te bouwen met "
-#~ "een links- of rechtsuitgelijnde afbeelding naast tekstuele inhoud. "
-#~ "Dupliceer het element om een lijst te maken die aan je behoeften "
-#~ "voldoet.\n"
-#~ "                           <br/>"
-
-#~ msgid "Video"
-#~ msgstr "Video"
-
-#~ msgid "Website"
-#~ msgstr "Website"
-
-#~ msgid "✽  Pastas"
-#~ msgstr "✽  Pasta's"
-
-#~ msgid "✽  Pizzas"
-#~ msgstr "✽  Pizza’s"
-
-#~ msgid ""
-#~ "Test email sent to %(success)s recipient(s), could not send to %(failed)s."
-#~ msgstr ""
-#~ "Test-e-mail verzonden naar %(success)s ontvanger(s), kon niet worden "
-#~ "verzonden naar %(failed)s."
-
-#~ msgid "Test email sent to %(success)s recipient(s)."
-#~ msgstr "Test-e-mail verzonden naar %(success)s ontvanger(s)."
+msgid ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">What We Offer"
+msgstr ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">Ons aanbod"

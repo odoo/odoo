@@ -43,16 +43,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-06-20 11:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-09-03 07:44+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-4/"
 "point_of_sale/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -234,7 +234,7 @@ msgstr "(KOPIO!)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "(Replace [printer_ip] with the printer IP address)"
-msgstr ""
+msgstr "(Korvaa [printer_ip] tulostimen IP-osoitteella)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -246,7 +246,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 msgid "+ Add"
-msgstr ""
+msgstr "+ Lisää"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -257,7 +257,7 @@ msgstr "+ Uusi kauppa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ", you can skip the system parameter section."
-msgstr ""
+msgstr ", voit ohittaa järjestelmäparametrejä koskevan osion."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -281,7 +281,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "19.1 or above"
-msgstr ""
+msgstr "19.1 tai uudempi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -349,6 +349,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hei <t t-"
+"out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
+"                        <t t-else=\"\">Hei,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Kiitos ostoksestasi <t t-"
+"out=\"store_name\">Myymälän nimi</t>!</div>\n"
+"                    <div>Löydät liitteenä kuitin ostoksestasi <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> <t "
+"t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">aika</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Ystävällisin terveisin,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -978,7 +1008,7 @@ msgstr "Lisää yksi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Add system parameter"
-msgstr ""
+msgstr "Lisää järjestelmäparametri"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -989,7 +1019,7 @@ msgstr "Lisää tippi maksun jälkeen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 msgid "Add to order"
-msgstr ""
+msgstr "Lisää tilaukseen"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1068,7 +1098,7 @@ msgstr "Adyen-maksupääte"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "After 19.1:"
-msgstr ""
+msgstr "19.1 jälkeen:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1080,7 +1110,7 @@ msgstr "Iltapäivä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "All Orders"
-msgstr ""
+msgstr "Kaikki tilaukset"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__all_providers_installed
@@ -1140,7 +1170,7 @@ msgstr "Kaikki myyntirivit"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Allow"
-msgstr ""
+msgstr "Salli"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1236,7 +1266,7 @@ msgstr "Kokonaissumma"
 #: code:addons/point_of_sale/static/src/app/components/popups/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Amount:"
-msgstr ""
+msgstr "Summa:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1683,7 +1713,7 @@ msgstr "Viivakoodi sääntö"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Barcode Scanner"
-msgstr ""
+msgstr "Viivakoodinlukija"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1705,13 +1735,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Be aware that it works only on chromium based browser:"
-msgstr ""
+msgstr "Huomaa, että tämä toimii vain Chromium-pohjaisilla selaimilla:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Before 19.1:"
-msgstr ""
+msgstr "Ennen 19.1:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_printbill
@@ -1783,7 +1813,7 @@ msgstr "Leivät"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Browser LNA Prompt"
-msgstr ""
+msgstr "Selaimen LNA-kehote"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_combo_choice_action
@@ -1990,7 +2020,7 @@ msgstr "Käteinen, huonekalukauppa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 msgid "Cash In"
-msgstr ""
+msgstr "Käteinen sisään"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2031,7 +2061,7 @@ msgstr "Käteisvarojen avaaminen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/cash_move_popup/cash_move_popup.xml:0
 msgid "Cash Out"
-msgstr ""
+msgstr "Käteinen ulos"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2047,7 +2077,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
-msgstr ""
+msgstr "Käteisen pyöristäminen:"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2213,7 +2243,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Check if"
-msgstr ""
+msgstr "Tarkista:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -2232,13 +2262,13 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Check list"
-msgstr ""
+msgstr "Tarkistuslista"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Check printer reachability:"
-msgstr ""
+msgstr "Tarkista tulostimen saavutettavuus:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -2653,7 +2683,7 @@ msgstr "Määritykset &gt; Asetukset"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Configure"
-msgstr ""
+msgstr "Määritä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_l10n_at_pos
@@ -2715,7 +2745,7 @@ msgstr "Yhdistä valmistelutulostimet Kassajärjestelmääsi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Connect printer to internet (Ethernet cable recommended)"
-msgstr ""
+msgstr "Yhdistä tulostin internetiin (suosittelemme Ethernet-kaapelia)"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2847,7 +2877,7 @@ msgstr "Hinta:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Count"
-msgstr ""
+msgstr "Määrä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_config
@@ -2939,7 +2969,7 @@ msgstr "Luo kumppani"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Create Product"
-msgstr ""
+msgstr "Luo tuote"
 
 #. module: point_of_sale
 #: model:ir.model,website_form_label:point_of_sale.model_res_partner
@@ -3239,7 +3269,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Daily Sale"
-msgstr ""
+msgstr "Päivittäinen myynti"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3270,7 +3300,7 @@ msgstr "Työpöytä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Database Connection Lost"
-msgstr ""
+msgstr "Yhteys tietokantaan katkesi"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3285,7 +3315,7 @@ msgstr "Päivämäärä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Days"
-msgstr ""
+msgstr "Päivää"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_decimal_precision
@@ -3493,7 +3523,7 @@ msgstr "Määritä näyttöjärjestys Kassajärjestelmän maksupäätteellä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Device ID:"
-msgstr ""
+msgstr "Laitteen tunnus:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__device_seq_id
@@ -3523,13 +3553,13 @@ msgstr "Syö paikan päällä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Disable"
-msgstr ""
+msgstr "Poista käytöstä"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Disable \"Redirect HTTP to HTTPS\""
-msgstr ""
+msgstr "Poista käytöstä \"Uudelleenohjaa HTTP:stä HTTPS:ään\""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3664,7 +3694,7 @@ msgstr "Näyttönimi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "Display QR"
-msgstr ""
+msgstr "Näytä QR-koodi"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3725,13 +3755,13 @@ msgstr "Lataa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Download IDB Errors"
-msgstr ""
+msgstr "Lataa IDB-virheet"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Download IndexedDB error logs from localStorage"
-msgstr ""
+msgstr "Lataa IndexedDB-virhelokit localStorage:sta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_download_invoice
@@ -3743,7 +3773,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Download Logs"
-msgstr ""
+msgstr "Lataa lokit"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3766,7 +3796,7 @@ msgstr "Lataa lokit"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "EAN-13"
-msgstr ""
+msgstr "EAN-13"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3788,7 +3818,7 @@ msgstr "Muokkaa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
-msgstr ""
+msgstr "Muokkaa tietoja"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3864,7 +3894,7 @@ msgstr "Tyhjä tilaus"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Enable LNA on your database"
-msgstr ""
+msgstr "Ota LNA käyttöön tietokannassasi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__use_fast_payment
@@ -3879,6 +3909,8 @@ msgid ""
 "Enable the “Use Local Network Access” checkbox directly on the printer "
 "configuration."
 msgstr ""
+"Ruksi ”Käytä paikallisverkkoyhteyttä” -valintaruutu suoraan tulostimen "
+"asetuksista."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
@@ -3926,7 +3958,7 @@ msgstr "Lisää"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Environment check"
-msgstr ""
+msgstr "Ympäristön tarkistus"
 
 #. module: point_of_sale
 #. odoo-python
@@ -3971,7 +4003,7 @@ msgstr "Vie kassajärjestelmän tiedot"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Export data"
-msgstr ""
+msgstr "Vie tiedot"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -4181,7 +4213,7 @@ msgstr "Ilmainen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/product_info_banner/product_info_banner.xml:0
 msgid "Free To Use:"
-msgstr ""
+msgstr "Vapaasti käytettävissä:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_free
@@ -4237,7 +4269,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Get Weight"
-msgstr ""
+msgstr "Hae paino"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -4279,7 +4311,7 @@ msgstr "Takaisin"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Google chrome, Microsoft Edge, Brave, Opera, Arc and others"
-msgstr ""
+msgstr "Google Chrome, Microsoft Edge, Brave, Opera, Arc ja muut"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4413,13 +4445,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "How to configure my devices properly:"
-msgstr ""
+msgstr "Miten määrittää laitteeni asetukset oikein:"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "How to configure my printers"
-msgstr ""
+msgstr "Miten määritän tulostimeni asetukset"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4431,12 +4463,15 @@ msgstr "Miten hallita verollisia hintoja"
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "I have access to my router configuration (To fix device IP addresses)"
 msgstr ""
+"Minulla on pääsy reitittimen asetuksiin (laitteiden IP-osoitteiden "
+"korjaamiseksi)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "I use an Epson printer (Check supported printers in Odoo documentation)"
 msgstr ""
+"Käytän Epson-tulostinta (tarkista tuetut tulostimet Odoo-dokumentaatiosta)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_account__id
@@ -4544,6 +4579,7 @@ msgid ""
 "If everything is correct, the Local Network Access status icon will turn "
 "green:"
 msgstr ""
+"Jos kaikki on oikein, paikallisverkkoyhteyden tilakuvake muuttuu vihreäksi:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4551,6 +4587,8 @@ msgstr ""
 msgid ""
 "If the permission is denied, refreshing the PoS will show this notification:"
 msgstr ""
+"Jos käyttöoikeus evätään, kassajärjestelmän päivittäminen näyttää tämän "
+"ilmoituksen:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4559,6 +4597,8 @@ msgid ""
 "If the system parameter is set, but the browser doesn't support LNA, the PoS "
 "will show this notification:"
 msgstr ""
+"Jos järjestelmäparametri on määritetty mutta selain ei tue LNA:ta, "
+"kassajärjestelmä näyttää tämän ilmoituksen:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4591,13 +4631,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "If you have the secure printing setting, disable it"
-msgstr ""
+msgstr "Jos sinulla on suojattu tulostusasetus, poista se käytöstä"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "If your database is version"
-msgstr ""
+msgstr "Jos tietokantasi versio on"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_512
@@ -4616,7 +4656,7 @@ msgstr "Kuva 128"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Import data"
-msgstr ""
+msgstr "Tuo tiedot"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4676,7 +4716,7 @@ msgstr "Tietoa tuotteestasi."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Install App"
-msgstr ""
+msgstr "Asenna sovellus"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_method_form
@@ -4956,7 +4996,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ""
 "Keep TLS settings enabled, otherwise the printer will not work with HTTPS."
-msgstr ""
+msgstr "Pidä TLS-asetukset käytössä, muuten tulostin ei toimi HTTPS:n kanssa."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4984,7 +5024,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "LNA Green Status"
-msgstr ""
+msgstr "Vihreä LNA-tila"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4996,13 +5036,13 @@ msgstr "Paikallisverkon käyttöoikeuden tila"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "LNA not supported message"
-msgstr ""
+msgstr "LNA ei tuettu -viesti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__name
 msgid "Label"
-msgstr "Otsikko"
+msgstr "Nimike"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_lang
@@ -5179,7 +5219,7 @@ msgstr "Yhteys tuotteiden ja niiden mittayksiköiden (UoM) välillä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Link your printers to your POS (ePOS)"
-msgstr ""
+msgstr "Yhdistä tulostimesi kassajärjestelmään (ePOS)"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5254,6 +5294,11 @@ msgid ""
 "browser communicate with \n"
 "                your devices without the need for importing certificates."
 msgstr ""
+"Paikallisverkkoyhteys (LNA) on Chrome-ominaisuus, jonka avulla selaimesi voi "
+"kommunikoida \n"
+"                suoraan paikallisverkkosi kanssa. Tämä tarkoittaa, että voit "
+"saada selaimesi kommunikoimaan \n"
+"                laitteidesi kanssa ilman varmenteiden tuomista."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5490,7 +5535,7 @@ msgstr "Viesti"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__message_has_error
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
 msgid "Message Delivery error"
-msgstr "Ongelma viestin toimituksessa"
+msgstr "Viestin toimitusvirhe"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5596,19 +5641,19 @@ msgstr "Omat istuntoni"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "My browser is above version 142"
-msgstr ""
+msgstr "Selainversioni on uudempi kuin 142"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "My browser is chromium based (Chrome, Edge, Brave, etc.)"
-msgstr ""
+msgstr "Selaimeni on chromium-pohjainen (Chrome, Edge, Brave, jne.)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "My printer can be connected through ethernet cables (recommended)"
-msgstr ""
+msgstr "Tulostimeni voi liittää ethernet-kaapeleilla (suositeltava)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5740,7 +5785,7 @@ msgstr "Seuraava tilausluettelo"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Next number:"
-msgstr ""
+msgstr "Seuraava numero:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5872,7 +5917,7 @@ msgstr "Muita tuotteita ei löytynyt tuotteelle \"%s\"."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "No products found for"
-msgstr ""
+msgstr "Tuotteita ei löytynyt"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5896,7 +5941,7 @@ msgstr "Istuntoja ei löytynyt"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 msgid "No slot available for this day"
-msgstr ""
+msgstr "Ei vapaita aikoja tälle päivälle"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5950,7 +5995,7 @@ msgstr "Ei laskutettu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Not implemented"
-msgstr ""
+msgstr "Ei toteutettu"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_preset__identification__none
@@ -5983,7 +6028,7 @@ msgstr "Muistiinpanot"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Now your printer is properly configured to work with LNA"
-msgstr ""
+msgstr "Tulostimesi on nyt määritetty toimimaan LNA:n kanssa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6065,7 +6110,7 @@ msgstr "Tapahtumien määrä:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Number stack:"
-msgstr ""
+msgstr "Numerosarja:"
 
 #. module: point_of_sale
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -6245,7 +6290,7 @@ msgstr "Yhden klikkauksen maksu"
 #: code:addons/point_of_sale/static/src/app/components/order_tracker_dropdown/order_tracker_dropdown.xml:0
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Ongoing"
-msgstr "Jatkuva"
+msgstr "Käynnissä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_appointment
@@ -6325,7 +6370,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Oops!"
-msgstr ""
+msgstr "Hups!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6343,7 +6388,7 @@ msgstr "Avaa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "Open Cashbox"
-msgstr ""
+msgstr "Avaa kassalipas"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6386,7 +6431,7 @@ msgstr "Avaa ponnahdusikkuna rahan tiedot"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Open your POS and try to print a ticket"
-msgstr ""
+msgstr "Avaa kassajärjestelmäsi ja yritä tulostaa kuitti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__user_id
@@ -6457,7 +6502,7 @@ msgstr "Avausmerkintä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 msgid "Optional Products"
-msgstr "Lisätuotteet"
+msgstr "Valinnaiset tuotteet"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6571,7 +6616,7 @@ msgstr "Tilauksen viite"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/order_details_dialog/order_details_dialog.js:0
 msgid "Order Reference"
-msgstr "Tilauksen viite"
+msgstr "Tilausviite"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__order_seq_id
@@ -6723,7 +6768,7 @@ msgstr "Kassajärjestelmän asetukset"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "POS LNA denied message"
-msgstr ""
+msgstr "Kassajärjestelmän LNA hylätty -viesti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__pos_optional_product_ids
@@ -7094,7 +7139,7 @@ msgstr "Maksutavat"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "Payments in"
-msgstr ""
+msgstr "Maksut sisään"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_pecan_pie_product_template
@@ -7151,7 +7196,7 @@ msgstr "Pine Labs -maksupääte"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Please"
-msgstr ""
+msgstr "Ole hyvä"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7233,7 +7278,7 @@ msgstr "Täytä kaikki vaaditut kentät."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_status/payment_status.xml:0
 msgid "Please select a payment method"
-msgstr ""
+msgstr "Valitse maksutapa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7496,7 +7541,7 @@ msgstr "Kassajärjestelmä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Point of sale configuration:"
-msgstr ""
+msgstr "Kassajärjestelmän asetukset:"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_crocheted_poncho_unisize_product_template
@@ -7616,7 +7661,7 @@ msgstr "Kirjattu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "Powered by"
-msgstr ""
+msgstr "Järjestelmää pyörittää"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_footer
@@ -7816,7 +7861,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Print Report"
-msgstr ""
+msgstr "Tulosta raportti"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7899,7 +7944,7 @@ msgstr "Tulostetut tuoteryhmät"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Printer Checkbox"
-msgstr ""
+msgstr "Tulostimen valintaruutu"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_ip
@@ -7921,7 +7966,7 @@ msgstr "Tulostimen nimi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Printer Password Location"
-msgstr ""
+msgstr "Tulostimen salasanan sijainti"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__printer_type
@@ -7992,7 +8037,7 @@ msgstr "Jatka joka tapauksessa"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/feedback_payment_summary/feedback_payment_summary.xml:0
 msgid "Processing..."
-msgstr ""
+msgstr "Käsitellään..."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
@@ -8102,7 +8147,7 @@ msgstr "Tuotetunnisteet"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_tmpl_id
 msgid "Product Template"
-msgstr "Tuotemalli"
+msgstr "Tuotepohja"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template_attribute_line
@@ -8127,7 +8172,7 @@ msgstr "Tuotteen yksikkö"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_product
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.pos_product_attribute_action
@@ -8256,7 +8301,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__rating_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvostelut"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8421,7 +8466,7 @@ msgstr "Hyvitys käsittelyssä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Refunded"
-msgstr ""
+msgstr "Hyvitetty"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8472,7 +8517,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Reload"
-msgstr ""
+msgstr "Lataa uudelleen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8577,7 +8622,7 @@ msgstr "Rajoita hintojen muokkaaminen esimiehille"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Retail"
-msgstr "Jälleenmyynti"
+msgstr "Vähittäiskauppa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8695,6 +8740,8 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/tour_selector_popup/tour_selector_popup.xml:0
 msgid "Running a fake tour will create random orders. Use at your own risk."
 msgstr ""
+"Testikierroksen suorittaminen luo satunnaisia tilauksia. Käytä omalla "
+"vastuullasi."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_rye_bread_product_template
@@ -8722,13 +8769,13 @@ msgstr "MYYTY:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "SSL Settings"
-msgstr ""
+msgstr "SSL-asetukset"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "SSL/TLS > Basic"
-msgstr ""
+msgstr "SSL/TLS > Perus"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -8800,7 +8847,7 @@ msgstr "Tallenna tämä sivu ja palaa tähän, kun haluat määrittää ominaisu
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.js:0
 msgid "Scale error"
-msgstr ""
+msgstr "Vaakavirhe"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8818,7 +8865,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Scan"
-msgstr ""
+msgstr "Skannaa"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8889,7 +8936,7 @@ msgstr "Etsi tuotteita..."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Secure printing"
-msgstr ""
+msgstr "Suojattu tulostus"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8949,7 +8996,7 @@ msgstr "Valitse hinnasto"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select the product(s) to refund and set the quantity"
-msgstr ""
+msgstr "Valitse palautettava tuote tai tuotteet ja aseta määrä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -9026,7 +9073,7 @@ msgstr "Lähetä tekstiviestikuitti tekstiviestillä"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "Sending"
-msgstr ""
+msgstr "Lähetetään"
 
 #. module: point_of_sale
 #: model:mail.template,description:point_of_sale.email_template_pos_receipt
@@ -9039,7 +9086,7 @@ msgstr "Lähetetty asiakkaille, kuitti liitteenä"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
@@ -9415,6 +9462,8 @@ msgid ""
 "Some paid orders have not been synced to the server yet. Closing or "
 "reloading now may cause data loss."
 msgstr ""
+"Joitakin maksettuja tilauksia ei ole vielä synkronoitu palvelimelle. "
+"Sulkeminen tai uudelleenlataaminen nyt voi aiheuttaa tietojen menetyksen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9599,7 +9648,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "System Parameter Setup"
-msgstr ""
+msgstr "Järjestelmäparametrien asetukset"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.t_shirt_slim_product_template
@@ -9676,7 +9725,7 @@ msgstr "Nouto / Toimitus / Jäsenet"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Tare"
-msgstr ""
+msgstr "Taara"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9699,7 +9748,7 @@ msgstr "Veron näyttäminen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal
 msgid "Tax Excl."
-msgstr "Veroton."
+msgstr "Veroton"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_price_inclusion_wizard_form
@@ -9720,7 +9769,7 @@ msgstr "Verotunnus"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_subtotal_incl
 msgid "Tax Incl."
-msgstr "Vero sis."
+msgstr "sis. verot"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_price_inclusion_wizard_form
@@ -9919,6 +9968,8 @@ msgid ""
 "The connection to the local database was lost. Reloading the page will "
 "restore it and prevent any loss of unsaved orders."
 msgstr ""
+"Yhteys paikalliseen tietokantaan katkesi. Sivun uudelleenlataaminen "
+"palauttaa yhteyden ja estää tallentamattomien tilausten menettämisen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__foreign_currency_id
@@ -10073,7 +10124,7 @@ msgstr "Yhdistelmän enimmäismäärän on oltava vähintään 1."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "The message will appear from the browser."
-msgstr ""
+msgstr "Viesti tulee näkyviin selaimessa."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10120,7 +10171,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "The password is located on the back of the printer (remove covers)."
-msgstr ""
+msgstr "Salasana on tulostimen takana (poista suojukset)."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10183,7 +10234,7 @@ msgstr "Tulostimeen ei saada yhteyttä."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "The printers are properly configured and the LNA is activated."
-msgstr ""
+msgstr "Tulostimet on määritetty oikein ja LNA on aktivoitu."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_after
@@ -10508,7 +10559,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/customer_display/customer_display_qr_code_popup.xml:0
 msgid "This device"
-msgstr ""
+msgstr "Tämä laite"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -10599,6 +10650,7 @@ msgstr ""
 msgid ""
 "This order is currently syncing, please wait a moment before loading it."
 msgstr ""
+"Tätä tilausta synkronoidaan parhaillaan, odota hetki ennen sen lataamista."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11073,13 +11125,13 @@ msgstr "Tuntematon virhe"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/scale/scale_interface.js:0
 msgid "Unnamed Product"
-msgstr ""
+msgstr "Nimeämätön tuote"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Unpaid"
-msgstr ""
+msgstr "Maksamaton"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11106,7 +11158,7 @@ msgstr "Odoon kassa toimii rajoitetusti, kunnes yhteys on palautettu."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Update the printer firmware"
-msgstr ""
+msgstr "Päivitä tulostimen laiteohjelmisto"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_upper
@@ -11217,6 +11269,8 @@ msgid ""
 "Validation Error: You cannot assign the same Cash payment method to multiple "
 "POS Shops. Please create a separate Cash payment method for each shop."
 msgstr ""
+"Vahvistusvirhe: Et voi määrittää samaa käteismaksutapaa useille "
+"Kassajärjestelmän kaupoille. Luo kullekin kaupalle oma käteismaksutapa."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
@@ -11296,7 +11350,7 @@ msgstr "Varoitus, maksettu summa on suurempi kuin kokonaissumma. (Ero: %s)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "We duly advise you to use Chrome or Brave browser."
-msgstr ""
+msgstr "Suosittelemme käyttämään Chrome- tai Brave-selainta."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__custom_website
@@ -11331,7 +11385,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "What is it?"
-msgstr ""
+msgstr "Mikä se on?"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__is_margins_costs_accessible_to_every_user
@@ -11395,7 +11449,7 @@ msgstr "Haluatko jatkaa ilman tulostamista vai yrittää uudelleen?"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
@@ -11687,7 +11741,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You don't have the access rights to perform a cash in/out."
-msgstr ""
+msgstr "Sinulla ei ole käyttöoikeutta käteisnoston/-lisäyksen suorittamiseksi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11743,7 +11797,7 @@ msgstr "Sinun tulee määrittää istunnolle kassa."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "You still have"
-msgstr ""
+msgstr "Sinulla on vielä"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11780,7 +11834,7 @@ msgstr "Sinun {{ object.config_id.name }} kuittisi"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
@@ -11801,7 +11855,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "access"
-msgstr ""
+msgstr "pääsy"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -11840,7 +11894,7 @@ msgstr "default_preset_id"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "discount off on"
-msgstr ""
+msgstr "alennus tuotteesta"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11907,19 +11961,19 @@ msgstr "esim. virvoitusjuomat"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePOS print enabled"
-msgstr ""
+msgstr "ePOS-tulostus käytössä"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePOS printers (Epson) configuration"
-msgstr ""
+msgstr "ePOS-tulostimien (Epson) asetukset"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePOS-print"
-msgstr ""
+msgstr "ePOS-print"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_printer__printer_type__epson_epos
@@ -11930,7 +11984,7 @@ msgstr "ePoS"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "ePoS Printer Service"
-msgstr ""
+msgstr "ePoS-tulostinpalvelu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -11952,7 +12006,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "failed. Please try again"
-msgstr ""
+msgstr "epäonnistui. Yritä uudelleen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -11974,7 +12028,7 @@ msgstr "tilauksesta, jonka suuruus on"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "from"
-msgstr ""
+msgstr "alkaen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -11985,13 +12039,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer"
-msgstr ""
+msgstr "http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "iOS devices (iPad, iPhones) are not compatible yet."
-msgstr ""
+msgstr "iOS-laitteet (iPad, iPhone) eivät ole vielä yhteensopivia."
 
 #. module: point_of_sale
 #. odoo-python
@@ -12004,19 +12058,19 @@ msgstr "tunniste"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/send_receipt_popup/send_receipt_popup.xml:0
 msgid "in progress"
-msgstr ""
+msgstr "työn alla"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "in this category."
-msgstr ""
+msgstr "tässä kategoriassa."
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/combo_configurator_popup/combo_configurator_popup.xml:0
 msgid "included"
-msgstr ""
+msgstr "sisältyy"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12028,7 +12082,7 @@ msgstr "asenna tilikartta"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "is enabled"
-msgstr ""
+msgstr "on käytössä"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12040,7 +12094,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
-msgstr ""
+msgstr "kohdetta"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -12061,7 +12115,7 @@ msgstr "huom"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt
 msgid "on"
-msgstr ""
+msgstr "on"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12084,7 +12138,7 @@ msgstr "tilauksia per"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 msgid "orders:"
-msgstr ""
+msgstr "tilaukset:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__custom_phone_placeholder
@@ -12095,7 +12149,7 @@ msgstr "puhelimen paikkamerkki"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "point_of_sale.use_lna"
-msgstr ""
+msgstr "point_of_sale.use_lna"
 
 #. module: point_of_sale
 #. odoo-python
@@ -12124,7 +12178,7 @@ msgstr "terminaali"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "to activate the buttons."
-msgstr ""
+msgstr "painikkeiden aktivoimiseksi."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12141,7 +12195,7 @@ msgstr "käyttäen"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "with a value of"
-msgstr ""
+msgstr "arvolla"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12149,68 +12203,4 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
-msgstr ""
-
-#~ msgid "%s (copy)"
-#~ msgstr "%s (kopio)"
-
-#~ msgid "2-03-2000 9:00 AM"
-#~ msgstr "2-03-2000 09:00"
-
-#~ msgid "<strong>Config names</strong>"
-#~ msgstr "<strong>Asetusten nimet</strong>"
-
-#~ msgid "Demo 3-03-2000 5:00 PM"
-#~ msgstr "Demo 3-03-2000 5:00 PM"
-
-#~ msgid "Sample Config Name"
-#~ msgstr "Esimerkki asetuksen nimestä"
-
-#~ msgid "Auto-generated session for orphan orders, ignored in constraints"
-#~ msgstr ""
-#~ "Automaattisesti luotu istunto orpoja tilauksia varten, jätetään huomiotta "
-#~ "rajoituksissa"
-
-#~ msgid "Be aware that reloading data will delete unsaved orders."
-#~ msgstr ""
-#~ "Huomaa, että tietojen uudelleenlataaminen poistaa tallentamattomat "
-#~ "tilaukset."
-
-#~ msgid "Full"
-#~ msgstr "Täysi"
-
-#~ msgid "Full Synchronization:"
-#~ msgstr "Täysi synkronointi:"
-
-#~ msgid "Limited"
-#~ msgstr "Rajoitettu"
-
-#~ msgid "Limited Synchronization:"
-#~ msgstr "Rajoitettu synkronointi:"
-
-#~ msgid "Module"
-#~ msgstr "Moduuli"
-
-#~ msgid "Number of Rescue Session"
-#~ msgstr "Pelastusistuntojen lukumäärä"
-
-#~ msgid "PoS Customer Display opened in a new window"
-#~ msgstr "Kassan asiakasnäyttö on avattu uuteen ikkunaan"
-
-#~ msgid "Recovery Session"
-#~ msgstr "Toipumisistunto"
-
-#~ msgid "Rescue Sessions"
-#~ msgstr "Pelastusistunnot"
-
-#~ msgid "Store edited orders in the backend"
-#~ msgstr "Tallenna muokatut tilaukset backendiin"
-
-#~ msgid "Track orders edits"
-#~ msgstr "Seuraa tilausten muokkauksia"
-
-#~ msgid "You can update it by selecting one of the following options:"
-#~ msgstr "Voit päivittää sen valitsemalla jonkin seuraavista vaihtoehdoista:"
-
-#~ msgid "outstanding rescue session"
-#~ msgstr "avoin pelastusistunto"
+msgstr "x"

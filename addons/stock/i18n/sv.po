@@ -21,23 +21,23 @@
 # Simon S, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 14:42+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-master/"
-"stock/sv/>\n"
+"PO-Revision-Date: 2026-08-31 21:19+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/stock/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: stock
 #. odoo-python
@@ -427,8 +427,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "/day"
-msgstr ""
+msgstr "/dag"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -720,8 +721,9 @@ msgstr "<span class=\"o_stat_text\">Rutiner</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Scraps</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kasserade</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -745,15 +747,19 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
+#, fuzzy
 msgid ""
 "<span class=\"text-muted small\"> Available</span>\n"
 "                            <span> / </span>"
 msgstr ""
+"<span class=\"text-muted small\"> Tillgänglig</span>\n"
+"                            <span> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
+#, fuzzy
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\"> I lager</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -883,8 +889,9 @@ msgstr "<strong>Från</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Instructions:</strong>"
-msgstr ""
+msgstr "<strong>Instruktioner:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking_batch
@@ -1014,8 +1021,9 @@ msgstr "<strong>Lageradress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Warehouse:</strong>"
-msgstr ""
+msgstr "<strong>Lagerlokal:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -1132,21 +1140,21 @@ msgstr "Aktiviteter för"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitet undantaget dekoration"
+msgstr "Stilmarkeringar för undantagsaktiviteter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_plans_ids
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Aktivitetsplaner"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_state
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_state
 msgid "Activity State"
-msgstr "Aktivitetsläge"
+msgstr "Aktivitetsstatus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
@@ -1571,7 +1579,7 @@ msgstr "april"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
-msgstr "Arkiverad"
+msgstr "Arkiverade"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1674,7 +1682,7 @@ msgstr "augusti"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__auto
 msgid "Auto"
-msgstr "Bil"
+msgstr "Automatisk"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__auto_print_delivery_slip
@@ -2377,7 +2385,7 @@ msgstr "Inställningar"
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Configuration"
-msgstr "Konfiguration"
+msgstr "Inställningar"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2420,13 +2428,15 @@ msgstr "Bekräfta"
 
 #. module: stock
 #: model:res.company,free_order_label:stock.res_company_1
+#, fuzzy
 msgid "Confirm Order"
-msgstr ""
+msgstr "Bekräfta order"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Confirmation Email"
-msgstr ""
+msgstr "E-postbekräftelse"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
@@ -2480,8 +2490,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_package__parent_package_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_add_list
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list
+#, fuzzy
 msgid "Container"
-msgstr ""
+msgstr "Container"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_ids
@@ -3462,8 +3473,9 @@ msgstr "Skillnad"
 
 #. module: stock
 #: model:ir.model,name:stock.model_digest_digest
+#, fuzzy
 msgid "Digest"
-msgstr ""
+msgstr "Sammanställning"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3790,14 +3802,16 @@ msgstr "Undantag:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Exchange"
-msgstr ""
+msgstr "Växling"
 
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#, fuzzy
 msgid "Exp"
-msgstr ""
+msgstr "Förväntad"
 
 #. module: stock
 #. odoo-python
@@ -4397,7 +4411,9 @@ msgstr "Om alla produkter är likadana"
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
+msgstr ""
+"Om rutan är markerad, så finns det nya meddelanden som kräver din "
+"uppmärksamhet."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_has_error
@@ -4407,7 +4423,7 @@ msgstr "Om markerat, nya meddelanden kräver din uppmärksamhet."
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__message_has_error
 #: model:ir.model.fields,help:stock.field_stock_picking_batch__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad, några meddelanden har leveransfel."
+msgstr "Om rutan är markerad, så har vissa meddelanden leveransfel."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_cancel
@@ -5700,8 +5716,9 @@ msgstr "Parti/Serialnummer Flyttad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_scrap_move_form
+#, fuzzy
 msgid "Lot/Serial Numbers"
-msgstr ""
+msgstr "Parti- / serienummer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
@@ -6096,8 +6113,9 @@ msgstr "Flerstegsrutter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+#, fuzzy
 msgid "Multiple"
-msgstr ""
+msgstr "Multipel"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -6120,7 +6138,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
-msgstr "Mina aktivieteter"
+msgstr "Mina aktiviteter"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
@@ -6234,14 +6252,14 @@ msgstr "Nästa Kalenderhändelse för aktivitet"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nästa slutdatum för aktivitet"
+msgstr "Tidsgräns för nästa aktivitet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_summary
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_summary
 #: model:ir.model.fields,field_description:stock.field_stock_picking_batch__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanställning"
+msgstr "Sammanfattning av nästa aktivitet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_id
@@ -6407,8 +6425,9 @@ msgstr "Ingen överföring hittades. Låt oss skapa en!"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid "None"
-msgstr ""
+msgstr "Inga"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
@@ -6439,7 +6458,7 @@ msgstr "Anteckning"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__note
 msgid "Notes"
-msgstr "Noter"
+msgstr "Anteckningar"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
@@ -6509,6 +6528,7 @@ msgstr "oktober"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#, fuzzy
 msgid ""
 "Odoo opens a PDF preview by default. If you (Enterprise users only) want to "
 "print instantly,\n"
@@ -6517,6 +6537,12 @@ msgid ""
 "                                        barcode operator and configure the "
 "routing of the reports."
 msgstr ""
+"Odoo öppnar en PDF-förhandsgranskning som standard. Om du (endast Enterprise-"
+"användare) vill skriva ut direkt,\n"
+"                                        installera IoT-appen på en dator som "
+"är ansluten till samma lokala nätverk som streckkodsoperatören\n"
+"                                        streckkodsoperatören och konfigurera "
+"routningen av rapporterna."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -7235,8 +7261,9 @@ msgstr ""
 
 #. module: stock
 #: model:res.company,pay_now_label:stock.res_company_1
+#, fuzzy
 msgid "Pay now"
-msgstr ""
+msgstr "Betala direkt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_suggest__percent_factor
@@ -7319,8 +7346,9 @@ msgstr "Plockåtgärder"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__picking_policy
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__picking_policy
+#, fuzzy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Plockningspolicy"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__picking_properties_definition
@@ -7374,8 +7402,9 @@ msgstr ""
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "Preceding operations"
-msgstr ""
+msgstr "Föregående operationer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_id
@@ -7390,8 +7419,9 @@ msgstr "Föredragen rutt"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence_code
+#, fuzzy
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Prefix för löpnumret"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -8490,7 +8520,7 @@ msgstr "Fel vid utskrift av rapport"
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapporter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -8519,8 +8549,9 @@ msgstr "Bokningsmetod"
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
+#, fuzzy
 msgid "Reserve"
-msgstr ""
+msgstr "Reservera"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_category__packaging_reserve_method__full
@@ -8684,8 +8715,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_move_line
+#, fuzzy
 msgid "Revert"
-msgstr ""
+msgstr "Återgång"
 
 #. module: stock
 #. odoo-python
@@ -8859,8 +8891,9 @@ msgstr "Provuppgifter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "Save"
-msgstr ""
+msgstr "Spara"
 
 #. module: stock
 #. odoo-python
@@ -8977,8 +9010,9 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
+#, fuzzy
 msgid "Scrapped"
-msgstr ""
+msgstr "Skrotad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_form
@@ -9425,8 +9459,9 @@ msgstr "Visa alla poster vars nästa aktivitetsdatum är passerat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
+#, fuzzy
 msgid "Show details"
-msgstr ""
+msgstr "Visa detaljer"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -9657,10 +9692,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Status baserad på aktiviteter\n"
-"Försenade: Leveranstidpunkten har passerat\n"
-"Idag: Aktivitetsdatum är idag\n"
-"Kommande: Framtida aktiviteter."
+"Status baserat på aktivitetsdatum:\n"
+"Försenade: Aktivitetsdatum har redan passerat.\n"
+"Idag: Aktivitetsdatum är dagens datum.\n"
+"Planerade: Kommande aktiviteter."
 
 #. module: stock
 #. odoo-python
@@ -11002,7 +11037,7 @@ msgstr "Spåra dina lagerkvantiteter genom att skapa lagringsbara produkter."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_view_inherit_stock
 msgid "Tracked Stock"
-msgstr ""
+msgstr "Spårat lager"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking
@@ -11125,7 +11160,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger"
-msgstr "Utlösare"
+msgstr "Trigger"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
@@ -11368,8 +11403,9 @@ msgstr "Validera"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/xml/inventory_lines.xml:0
+#, fuzzy
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Bekräfta inventering"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__supplier
@@ -11561,8 +11597,9 @@ msgstr "Lagerrutt"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_warehouse_filter.xml:0
+#, fuzzy
 msgid "Warehouse:"
-msgstr ""
+msgstr "Lagerplats:"
 
 #. module: stock
 #. odoo-javascript
@@ -11791,8 +11828,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "When to start shipping"
-msgstr ""
+msgstr "När ska leveranser påbörjas"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__create_backorder
@@ -12521,8 +12559,9 @@ msgstr "av"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/stock_rescheduling_popover.xml:0
+#, fuzzy
 msgid "planned on"
-msgstr ""
+msgstr "planerad på"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -12597,8 +12636,9 @@ msgstr "enheter"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
@@ -12607,267 +12647,218 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Leveransorder (Ref {{ object.name or 'n/a' }})"
 
-#~ msgid "Delivery orders of %s"
-#~ msgstr "Leveransorder på %s"
+msgid "Andrwep"
+msgstr "Andrwep"
 
-#~ msgid ""
-#~ "If this checkbox is ticked, the pickings lines will represent detailed "
-#~ "stock operations. If not, the picking lines will represent an aggregate "
-#~ "of detailed stock operations."
-#~ msgstr ""
-#~ "Om den här kryssrutan är markerad kommer plockraderna att representera "
-#~ "detaljerade lagertransaktioner. Om inte, kommer plockraderna att "
-#~ "representera ett aggregat av detaljerade lagertransaktioner."
+msgid "DEMO_DATE"
+msgstr "DEMO_DATE"
 
-#~ msgid "Show Detailed Operations"
-#~ msgstr "Visa detaljerade operationer"
+msgid "DEMO_ORIGIN_DISPLAY_NAME"
+msgstr "DEMO_ORIGIN_DISPLAY_NAME"
 
-#~ msgid "+ %d day(s)"
-#~ msgstr "+ %d dag(ar)"
+msgid "DEMO_PARTNER_NAME"
+msgstr "DEMO_PARTNER_NAMN"
 
-#~ msgid "Close"
-#~ msgstr "Stäng"
+msgid "DEMO_PRODUCT_DISPLAY_NAME"
+msgstr "DEMO_PRODUKT_DISPLAY_NAMN"
 
-#~ msgid ""
-#~ "Creation date of this move line until updated due to: quantity being "
-#~ "increased, 'picked' status has updated, or move line is done."
-#~ msgstr ""
-#~ "Skapandedatum för denna flyttlinje tills den uppdateras på grund av att: "
-#~ "kvantiteten har ökat, statusen \"plockad\" har uppdaterats eller "
-#~ "flyttlinjen är klar."
+msgid "DEMO_QUANTITY"
+msgstr "DEMO_QUANTITY"
 
-#~ msgid "Font awesome icon e.g. fa-tasks"
-#~ msgstr "Font Awesome-ikon t.ex. fa-tasks"
+msgid "DEMO_SOURCE_DISPLAY_NAME"
+msgstr "DEMO_SOURCE_DISPLAY_NAME"
 
-#~ msgid "Stock supplier replenishment information"
-#~ msgstr "Information om påfyllning av lager"
+msgid "DEMO_UOM"
+msgstr "DEMO_UOM"
 
-#~ msgid "Choose your date"
-#~ msgstr "Välj ditt datum"
+msgid "Demo Display Name"
+msgstr "Demo Display Namn"
 
-#~ msgid "Location Barcode"
-#~ msgstr "Plats Streckkod"
+msgid "Dispatch Management System"
+msgstr "System för hantering av sändningar"
 
-#~ msgid "Product Catalog Mixin"
-#~ msgstr "Produktkatalog Mixin"
+msgid "Expected Delivery:"
+msgstr "Förväntad leverans:"
 
-#~ msgid "Stock Quantity History"
-#~ msgstr "Historik över lagerkvantitet"
+msgid ""
+"If this checkbox is ticked, Odoo will automatically show the reception "
+"report (if there are moves to allocate to) when validating."
+msgstr ""
+"Om denna kryssruta är markerad kommer Odoo automatiskt att visa "
+"mottagningsrapporten (om det finns flyttar att fördela till) vid validering."
 
-#~ msgid "Andrwep"
-#~ msgstr "Andrwep"
+msgid "No %s selected or a delivery order selected"
+msgstr "Ingen %s vald eller en leveransorder vald"
 
-#~ msgid "DEMO_DATE"
-#~ msgstr "DEMO_DATE"
+msgid "Print Label"
+msgstr "Skriv ut etikett"
 
-#~ msgid "DEMO_ORIGIN_DISPLAY_NAME"
-#~ msgstr "DEMO_ORIGIN_DISPLAY_NAME"
+msgid "Reason"
+msgstr "Anledning"
 
-#~ msgid "DEMO_PARTNER_NAME"
-#~ msgstr "DEMO_PARTNER_NAMN"
+msgid "Show Reception Report at Validation"
+msgstr "Visa mottagningsrapport vid validering"
 
-#~ msgid "DEMO_PRODUCT_DISPLAY_NAME"
-#~ msgstr "DEMO_PRODUKT_DISPLAY_NAMN"
+msgid "Stock Reception Report"
+msgstr "Rapport om mottagande av aktier"
 
-#~ msgid "DEMO_QUANTITY"
-#~ msgstr "DEMO_QUANTITY"
+msgid "This report cannot be used for done and not done %s at the same time"
+msgstr "Denna rapport kan inte användas för done och not done %s på samma gång"
 
-#~ msgid "DEMO_SOURCE_DISPLAY_NAME"
-#~ msgstr "DEMO_SOURCE_DISPLAY_NAME"
+msgid "Transport management: organize packs in your fleet, or carriers."
+msgstr ""
+"Transporthantering: organisera förpackningar i din flotta eller "
+"transportörer."
 
-#~ msgid "DEMO_UOM"
-#~ msgstr "DEMO_UOM"
+msgid "Use Reception Report"
+msgstr "Använd mottagningsrapport"
 
-#~ msgid "Demo Display Name"
-#~ msgstr "Demo Display Namn"
+msgid ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                All products could not be reserved. Click on "
+"the \"Check Availability\" button to try to reserve products."
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Alla produkter kunde inte reserveras. Klicka "
+"på knappen \"Kontrollera tillgänglighet\" för att försöka reservera "
+"produkter."
 
-#~ msgid "Dispatch Management System"
-#~ msgstr "System för hantering av sändningar"
+msgid "Check Availability"
+msgstr "Kontrollera tillgänglighet"
 
-#~ msgid "Expected Delivery:"
-#~ msgstr "Förväntad leverans:"
+msgid "Click or press enter to add a description"
+msgstr "Klicka eller tryck på Enter för att lägga till en beskrivning"
 
-#~ msgid ""
-#~ "If this checkbox is ticked, Odoo will automatically show the reception "
-#~ "report (if there are moves to allocate to) when validating."
-#~ msgstr ""
-#~ "Om denna kryssruta är markerad kommer Odoo automatiskt att visa "
-#~ "mottagningsrapporten (om det finns flyttar att fördela till) vid "
-#~ "validering."
+msgid "Compute shipping costs and ship with DHL"
+msgstr "Beräkna leveranskostnad och skicka med DHL"
 
-#~ msgid "No %s selected or a delivery order selected"
-#~ msgstr "Ingen %s vald eller en leveransorder vald"
+msgid ""
+"Compute shipping costs and ship with DHL<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Beräkna fraktkostnader och skicka med DHL<br/>\n"
+"                                    <strong>(Gå till Hem > Appar för att "
+"installera.)</strong>"
 
-#~ msgid "Print Label"
-#~ msgstr "Skriv ut etikett"
+msgid "Compute shipping costs and ship with Easypost"
+msgstr "Beräkna fraktkostnad och skicka med Easypost"
 
-#~ msgid "Reason"
-#~ msgstr "Anledning"
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "Beräkna leveranskostnad och skicka med FedEx"
 
-#~ msgid "Show Reception Report at Validation"
-#~ msgstr "Visa mottagningsrapport vid validering"
+msgid ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
+msgstr ""
+"Compute shipping costs and ship with FedEx<br/>\n"
+"                                    <strong>(please go to Home&gt;Apps to "
+"install)</strong>"
 
-#~ msgid "Stock Reception Report"
-#~ msgstr "Rapport om mottagande av aktier"
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Beräkna leveranskostnad och skicka med Sendcloud"
 
-#~ msgid "This report cannot be used for done and not done %s at the same time"
-#~ msgstr ""
-#~ "Denna rapport kan inte användas för done och not done %s på samma gång"
-
-#~ msgid "Transport management: organize packs in your fleet, or carriers."
-#~ msgstr ""
-#~ "Transporthantering: organisera förpackningar i din flotta eller "
-#~ "transportörer."
+msgid "Compute shipping costs and ship with Shiprocket"
+msgstr "Beräkna fraktkostnader och skicka med Shiprocket"
 
-#~ msgid "Use Reception Report"
-#~ msgstr "Använd mottagningsrapport"
+msgid "Compute shipping costs and ship with Starshipit"
+msgstr "Beräkna fraktkostnader och skicka med Starshipit"
 
-#~ msgid ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                All products could not be reserved. Click "
-#~ "on the \"Check Availability\" button to try to reserve products."
-#~ msgstr ""
-#~ "<i class=\"fa fa-exclamation-triangle\"/>\n"
-#~ "                                Alla produkter kunde inte reserveras. "
-#~ "Klicka på knappen \"Kontrollera tillgänglighet\" för att försöka "
-#~ "reservera produkter."
+msgid "Compute shipping costs and ship with UPS"
+msgstr "Beräkna leveranskostnad och skicka med UPS"
 
-#~ msgid "Check Availability"
-#~ msgstr "Kontrollera tillgänglighet"
+msgid "Compute shipping costs and ship with USPS"
+msgstr "Beräkna leveranskostnad och skicka med USPS"
 
-#~ msgid "Click or press enter to add a description"
-#~ msgstr "Klicka eller tryck på Enter för att lägga till en beskrivning"
+msgid "Compute shipping costs and ship with bpost"
+msgstr "Beräkna leveranskostnad och skicka med bpost"
 
-#~ msgid "Compute shipping costs and ship with DHL"
-#~ msgstr "Beräkna leveranskostnad och skicka med DHL"
+msgid "DHL Express Connector"
+msgstr "DHL Express kontakt"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with DHL<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Beräkna fraktkostnader och skicka med DHL<br/>\n"
-#~ "                                    <strong>(Gå till Hem > Appar för att "
-#~ "installera.)</strong>"
+msgid "Default Return Name"
+msgstr "Standard Returnamn"
 
-#~ msgid "Compute shipping costs and ship with Easypost"
-#~ msgstr "Beräkna fraktkostnad och skicka med Easypost"
+msgid "Demo Address and Name"
+msgstr "Demoadress och namn"
 
-#~ msgid "Compute shipping costs and ship with FedEx"
-#~ msgstr "Beräkna leveranskostnad och skicka med FedEx"
+msgid "Easypost Connector"
+msgstr "Anslutning för Easypost"
 
-#~ msgid ""
-#~ "Compute shipping costs and ship with FedEx<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
-#~ msgstr ""
-#~ "Compute shipping costs and ship with FedEx<br/>\n"
-#~ "                                    <strong>(please go to Home&gt;Apps to "
-#~ "install)</strong>"
+msgid "FedEx Connector"
+msgstr "Anslutning för FedEx"
 
-#~ msgid "Compute shipping costs and ship with Sendcloud"
-#~ msgstr "Beräkna leveranskostnad och skicka med Sendcloud"
+msgid "Generate Serials/Lots"
+msgstr "Generera serier/lotter"
 
-#~ msgid "Compute shipping costs and ship with Shiprocket"
-#~ msgstr "Beräkna fraktkostnader och skicka med Shiprocket"
+msgid "Import Serials/Lots"
+msgstr "Importera serier/partier"
 
-#~ msgid "Compute shipping costs and ship with Starshipit"
-#~ msgstr "Beräkna fraktkostnader och skicka med Starshipit"
+msgid "Nothing to check the availability for."
+msgstr "Ingenting att att kontrollera tillgängligheten för."
 
-#~ msgid "Compute shipping costs and ship with UPS"
-#~ msgstr "Beräkna leveranskostnad och skicka med UPS"
+msgid ""
+"Please put this document inside your return parcel.<br/>\n"
+"                                Your parcel must be sent to this address:"
+msgstr ""
+"Vänligen lägg detta dokument i ditt returpaket.<br/>\n"
+"                                Ditt paket måste skickas till den här "
+"adressen:"
 
-#~ msgid "Compute shipping costs and ship with USPS"
-#~ msgstr "Beräkna leveranskostnad och skicka med USPS"
+msgid "Sendcloud Connector"
+msgstr "Sendcloud Connector"
 
-#~ msgid "Compute shipping costs and ship with bpost"
-#~ msgstr "Beräkna leveranskostnad och skicka med bpost"
+msgid "Shipping Connectors"
+msgstr "Fraktkopplingar"
 
-#~ msgid "DHL Express Connector"
-#~ msgstr "DHL Express kontakt"
+msgid "Shiprocket Connector"
+msgstr "Anslutning för skeppsrobotar"
 
-#~ msgid "Default Return Name"
-#~ msgstr "Standard Returnamn"
+msgid "Starshipit Connector"
+msgstr "Starshipit Anslutning"
 
-#~ msgid "Demo Address and Name"
-#~ msgstr "Demoadress och namn"
+msgid ""
+"Technical field used to compute whether the button \"Check Availability\" "
+"should be displayed."
+msgstr ""
+"Tekniskt fält använt för att beräkna om knappen \"Kontrollera "
+"tillgänglighet\" borde visas."
 
-#~ msgid "Easypost Connector"
-#~ msgstr "Anslutning för Easypost"
+msgid "UPS Connector"
+msgstr "UPS Connector"
 
-#~ msgid "FedEx Connector"
-#~ msgstr "Anslutning för FedEx"
+msgid "USPS Connector"
+msgstr "USPS Connector"
 
-#~ msgid "Generate Serials/Lots"
-#~ msgstr "Generera serier/lotter"
+msgid "Website Messages"
+msgstr "Webbplatsmeddelanden"
 
-#~ msgid "Import Serials/Lots"
-#~ msgstr "Importera serier/partier"
+msgid "Website communication history"
+msgstr "Webbplatsens kommunikationshistorik"
 
-#~ msgid "Nothing to check the availability for."
-#~ msgstr "Ingenting att att kontrollera tillgängligheten för."
+msgid "bpost Connector"
+msgstr "bpost-anslutning"
 
-#~ msgid ""
-#~ "Please put this document inside your return parcel.<br/>\n"
-#~ "                                Your parcel must be sent to this address:"
-#~ msgstr ""
-#~ "Vänligen lägg detta dokument i ditt returpaket.<br/>\n"
-#~ "                                Ditt paket måste skickas till den här "
-#~ "adressen:"
+msgid "Demo Lot/SN"
+msgstr "Demo parti/SN"
 
-#~ msgid "Sendcloud Connector"
-#~ msgstr "Sendcloud Connector"
+msgid "Demo Product"
+msgstr "Demo produkt"
 
-#~ msgid "Shipping Connectors"
-#~ msgstr "Fraktkopplingar"
+msgid "Final Location"
+msgstr "Slutlig placering"
 
-#~ msgid "Shiprocket Connector"
-#~ msgstr "Anslutning för skeppsrobotar"
+msgid ""
+"The operation brings the products to the intermediate location.But this "
+"operation is part of a chain of operations targeting the final location."
+msgstr ""
+"Verksamheten för produkterna till den mellanliggande platsen, men denna "
+"verksamhet är en del av en kedja av verksamheter som är inriktade på den "
+"slutliga platsen."
 
-#~ msgid "Starshipit Connector"
-#~ msgstr "Starshipit Anslutning"
+msgid "On hand:"
+msgstr "I lager:"
 
-#~ msgid ""
-#~ "Technical field used to compute whether the button \"Check Availability\" "
-#~ "should be displayed."
-#~ msgstr ""
-#~ "Tekniskt fält använt för att beräkna om knappen \"Kontrollera "
-#~ "tillgänglighet\" borde visas."
-
-#~ msgid "UPS Connector"
-#~ msgstr "UPS Connector"
-
-#~ msgid "USPS Connector"
-#~ msgstr "USPS Connector"
-
-#~ msgid "Website Messages"
-#~ msgstr "Webbplatsmeddelanden"
-
-#~ msgid "Website communication history"
-#~ msgstr "Webbplatsens kommunikationshistorik"
-
-#~ msgid "bpost Connector"
-#~ msgstr "bpost-anslutning"
-
-#~ msgid "Demo Lot/SN"
-#~ msgstr "Demo parti/SN"
-
-#~ msgid "Demo Product"
-#~ msgstr "Demo produkt"
-
-#~ msgid "Final Location"
-#~ msgstr "Slutlig placering"
-
-#~ msgid ""
-#~ "The operation brings the products to the intermediate location.But this "
-#~ "operation is part of a chain of operations targeting the final location."
-#~ msgstr ""
-#~ "Verksamheten för produkterna till den mellanliggande platsen, men denna "
-#~ "verksamhet är en del av en kedja av verksamheter som är inriktade på den "
-#~ "slutliga platsen."
-
-#~ msgid "On hand:"
-#~ msgstr "I lager:"
-
-#~ msgid "Real Quantity"
-#~ msgstr "Verkligt antal"
+msgid "Real Quantity"
+msgstr "Verkligt antal"
