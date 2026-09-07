@@ -2631,3 +2631,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         """ Overridden in stock_picking_batch to return the move of the batch
         """
         return self.env['stock.move']
+
+    def _is_location_outgoing(self):
+        self.ensure_one()
+        return self.location_id._is_outgoing()
