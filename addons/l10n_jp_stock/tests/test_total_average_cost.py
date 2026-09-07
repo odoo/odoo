@@ -62,6 +62,32 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self.assertEqual(self.product.standard_price, first_cost)
         self.assertEqual(action['params']['type'], 'info')
 
+    def test_worthless_stock_skipped(self):
+        self._create_move(10, 0, self.today, self.supplier_loc, self.stock_loc)
+        action = self._run_category_wizard()
+        # the quantity at hand is positive but nothing was ever paid for it
+        self.assertEqual(self.product.standard_price, 100)
+        self.assertEqual(action['params']['type'], 'warning')
+
+    def test_customer_return_of_a_sale_on_the_period_start(self):
+        # a sale on the first day is inside the period, so its return reverses an issue
+        self._add_opening_stock(qty=10)
+        sale = self._create_move(10, 0, self.today - timedelta(days=2), self.stock_loc, self.customer_loc)
+        return_move = self._create_move(10, 0, self.today, self.customer_loc, self.stock_loc)
+        return_move.origin_returned_move_id = sale.id
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, (10 * 100 + 10 * 200) / 20, places=2)
+
+    def test_dropship_return_of_a_dropship_on_the_period_start(self):
+        # the drop-ship it cancels is inside the period, so the acquisition goes back out
+        dropship = self._create_move(20, 20, self.today - timedelta(days=2), self.supplier_loc, self.customer_loc)
+        self._create_move(10, 10, self.today, self.supplier_loc, self.stock_loc)
+        return_move = self._create_move(5, 0, self.today, self.customer_loc, self.supplier_loc)
+        return_move.origin_returned_move_id = dropship.id
+        self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, (10 * 10 + 20 * 20 - 5 * 20) / 25, places=2)
+
     def test_lot_valuated_product_refused(self):
         # valuing each lot separately is 個別法, a different elected method
         self.product.write({'tracking': 'lot', 'lot_valuated': True})

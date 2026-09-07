@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import models
 
 
@@ -11,6 +13,38 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             ('unbuild_id', '=', False),
         ]
 
+    def _get_evaluation_batches(self, products, moves):
+        """
+        Group the products by how deep they sit in the manufacturing of the period.
+
+        What an order's output cost is read off the value of the moves that issued
+        its components, so those components must already be evaluated, and their
+        moves corrected, by the time the good made out of them is valued. The
+        orders themselves say what came out of what, which a BoM only approximates
+        and a by-product is missing from entirely.
+        """
+        issued_for = defaultdict(lambda: self.env['product.product'])
+        for production in moves.production_id | moves.raw_material_production_id:
+            issued = production.move_raw_ids.product_id
+            # a by-product leaves the same order, so it costs those same components
+            for produced in production.move_finished_ids.product_id:
+                issued_for[produced] |= issued
+
+        depths = {}
+
+        def depth(product):
+            if product not in depths:
+                # an order making a product out of itself has no bottom to start from
+                depths[product] = 0
+                depths[product] = 1 + max(
+                    (depth(component) for component in issued_for[product]),
+                    default=-1,
+                )
+            return depths[product]
+
+        batches = products.grouped(depth)
+        return [batches[level] for level in sorted(batches)]
+
     def _get_production_move_values(self, moves):
         """
         Value an MO's output at its 製造原価.
@@ -21,33 +55,29 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         """
         values = super()._get_production_move_values(moves)
 
-        def allocate(output_moves, value):
-            # the order is valued once, so a second output move re-counts nothing
-            for index, move in enumerate(output_moves):
-                values[move.id] = value if index == 0 else 0.0
+        def allocate(order_moves, value):
+            # the order is valued once and spread over all it produced, not per period
+            order_qty = sum(order_moves.mapped('quantity_product_uom'))
+            share = value / order_qty if order_qty else 0.0
+            for move in order_moves & moves:
+                values[move.id] = share * move.quantity_product_uom
 
-        for production, outputs in moves.grouped('production_id').items():
-            if not production:
-                continue
+        for production in moves.production_id:
             # the shares come from the order, so they do not depend on which of its
             # outputs the evaluation happens to cover
             byproducts = production.move_byproduct_ids.filtered(lambda m: m.state == 'done')
             byproducts_by_product = byproducts.grouped('product_id')
-            finished_qty = sum(
-                production.move_finished_ids
-                .filtered(lambda m: m.state == 'done' and m.product_id == production.product_id)
-                .mapped('quantity_product_uom'),
+            finished_moves = production.move_finished_ids.filtered(
+                lambda m: m.state == 'done' and m.product_id == production.product_id,
             )
+            finished_qty = sum(finished_moves.mapped('quantity_product_uom'))
             total_cost = abs(sum(production.move_raw_ids.mapped('value')))
-            total_cost += sum(order._cal_cost() for order in production.workorder_ids)
+            total_cost += production.workorder_ids._cal_cost()
             total_cost += production.extra_cost * finished_qty
             byproduct_share = sum(
                 product_moves[0].cost_share for product_moves in byproducts_by_product.values()
             )
             for product, product_moves in byproducts_by_product.items():
-                allocate(outputs & product_moves, total_cost * product_moves[0].cost_share / 100)
-            allocate(
-                outputs.filtered(lambda m: m.product_id == production.product_id),
-                total_cost * (1 - byproduct_share / 100),
-            )
+                allocate(product_moves, total_cost * product_moves[0].cost_share / 100)
+            allocate(finished_moves, total_cost * (1 - byproduct_share / 100))
         return values

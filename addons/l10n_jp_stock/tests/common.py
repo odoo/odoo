@@ -22,7 +22,7 @@ class TestTotalAverageCostCommon(TransactionCase):
         cls.stock_loc = cls.env.ref('stock.stock_location_stock')
         cls.customer_loc = cls.env.ref('stock.stock_location_customers')
 
-    def _create_move(self, qty, price, date, src_loc, dest_loc, purchase_line_id=None, product=None, company=None):
+    def _create_move(self, qty, price, date, src_loc, dest_loc, purchase_line_id=None, product=None, company=None, **values):
         move = self.env['stock.move'].with_company(company or self.env.company).create({
             'product_id': (product or self.product).id,
             'product_uom_qty': qty,
@@ -32,6 +32,7 @@ class TestTotalAverageCostCommon(TransactionCase):
             'date': date,
             # purchase_stock is not a dependency, so the field may not be there
             **({'purchase_line_id': purchase_line_id} if purchase_line_id else {}),
+            **values,
         })
         move._action_confirm()
         move._action_assign()

@@ -61,7 +61,6 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 ),
             )
         updated_count = 0
-        revalued = self.env['product.product']
         price_precision = self.env['decimal.precision'].precision_get('Product Price')
         unchanged_count = 0
         tz = self.env.tz
@@ -78,110 +77,114 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 ),
             )
         # sudo: nor the moves, purchase lines and orders feeding the evaluation
-        moves = self.env['stock.move'].sudo().search_fetch(
+        moves = self.env['stock.move'].sudo().search(
             self._get_move_domain(products, period_start, period_end),
-            [
-                'product_id',
-                'date',
-                'quantity_product_uom',
-                'location_id',
-                'location_dest_id',
-                'origin_returned_move_id',
-                'price_unit',
-                'is_dropship',
-                'restrict_partner_id',
-                'company_id',
-                'move_orig_ids',
-            ],
         )
         moves_by_product = moves.grouped('product_id')
-        production_values = self._get_production_move_values(moves.filtered(
-            lambda m: m.location_id.usage == 'production' and m.location_dest_id.usage == 'internal',
-        ))
         before_period = period_start - timedelta(seconds=1)
         opening_values = products._get_last_product_value(before_period)
-        for product in products:
-            # sudo: the quantity at hand is computed from those same moves
-            init_qty = product.sudo().with_context(
-                allowed_company_ids=self.env.company.ids,
-            )._with_valuation_context().with_context(to_date=before_period).qty_available
-            purchases_qty = purchases_val = returns_qty = returns_val = 0.0
-            # 施行令28条1項1号ハ averages acquisitions only
-            for move in moves_by_product.get(product, ()):
-                if move._should_exclude_for_valuation():
-                    continue
-                qty = move.quantity_product_uom
-                origin_usage = move.location_id.usage
-                dest_usage = move.location_dest_id.usage
-                if move.is_dropship:
-                    # a drop-ship is a purchase and a sale for JGAAP even though it never enters stock
-                    returned_move = move.origin_returned_move_id
-                    if dest_usage != 'supplier':
+        # sudo: the quantity at hand is computed from those same moves
+        opening_stock = products.sudo().with_context(
+            allowed_company_ids=self.env.company.ids,
+        )._with_valuation_context().with_context(to_date=before_period)
+        init_qty_by_product = {product.id: product.qty_available for product in opening_stock}
+        production_moves = moves.filtered(
+            lambda m: m.location_id.usage == 'production' and m.location_dest_id.usage == 'internal',
+        ).grouped('product_id')
+        # a manufactured good is valued off its components, so each level is corrected first
+        for batch in self._get_evaluation_batches(products, moves):
+            production_values = self._get_production_move_values(moves.browse([
+                move.id for product in batch for move in production_moves.get(product, ())
+            ]))
+            batch_revalued = self.env['product.product']
+            for product in batch:
+                init_qty = init_qty_by_product[product.id]
+                # 施行令28条1項1号ハ averages acquisitions only
+                purchases_qty = purchases_val = returns_qty = returns_val = 0.0
+                for move in moves_by_product.get(product, ()):
+                    if move._should_exclude_for_valuation():
+                        continue
+                    qty = move.quantity_product_uom
+                    origin_usage = move.location_id.usage
+                    dest_usage = move.location_dest_id.usage
+                    if move.is_dropship:
+                        # a drop-ship is a purchase and a sale for JGAAP even though it never enters stock
+                        returned_move = move.origin_returned_move_id
+                        if dest_usage != 'supplier':
+                            purchases_qty += qty
+                            purchases_val += self._get_acquisition_value(move, qty)
+                        elif returned_move and self._move_date_local(returned_move) >= self.date_from:
+                            returns_qty += qty
+                            returns_val += self._get_acquisition_value(returned_move, qty)
+                    elif (origin_usage in ('supplier', 'transit') and dest_usage == 'internal'):
+                        if origin_usage == 'transit' and any(
+                            m.company_id == move.company_id and m.location_id.usage == 'internal'
+                            for m in move.move_orig_ids
+                        ):
+                            continue
                         purchases_qty += qty
                         purchases_val += self._get_acquisition_value(move, qty)
-                    elif returned_move and self._move_date_local(returned_move) >= self.date_from:
-                        returns_qty += qty
-                        returns_val += self._get_acquisition_value(returned_move, qty)
-                elif (origin_usage in ('supplier', 'transit') and dest_usage == 'internal'):
-                    if origin_usage == 'transit' and any(
-                        m.company_id == move.company_id and m.location_id.usage == 'internal'
-                        for m in move.move_orig_ids
-                    ):
-                        continue
-                    purchases_qty += qty
-                    purchases_val += self._get_acquisition_value(move, qty)
-                elif (origin_usage == 'internal' and dest_usage == 'supplier'):
-                    returned_move = move.origin_returned_move_id
-                    if (not returned_move or self._move_date_local(returned_move) >= self.date_from):
-                        returns_qty += qty
-                        returns_val += (
-                            self._get_acquisition_value(returned_move, qty) if returned_move
-                            else qty * (move.price_unit or product.standard_price)
-                        )
-                elif (origin_usage == 'production' and dest_usage == 'internal'):
-                    purchases_qty += qty
-                    purchases_val += production_values.get(move.id, 0.0)
-                elif (origin_usage == 'customer' and dest_usage == 'internal'):
-                    # prior-period sale return re-enters at sale-time cost (法人税法基本通達2-2-16)
-                    returned_move = move.origin_returned_move_id
-                    if (not returned_move or self._move_date_local(returned_move) < self.date_from):
+                    elif (origin_usage == 'internal' and dest_usage == 'supplier'):
+                        returned_move = move.origin_returned_move_id
+                        if (not returned_move or self._move_date_local(returned_move) >= self.date_from):
+                            returns_qty += qty
+                            returns_val += (
+                                self._get_acquisition_value(returned_move, qty) if returned_move
+                                else qty * (move.price_unit or product.standard_price)
+                            )
+                    elif (origin_usage == 'production' and dest_usage == 'internal'):
                         purchases_qty += qty
-                        returned = move._get_value_from_returns(qty)
-                        purchases_val += returned['value']
-                        if (remaining := qty - returned['quantity']) > 0:
-                            purchases_val += self._get_acquisition_value(move, remaining)
-
-            opening_cost = opening_values[product].value if product in opening_values else product.standard_price
-            init_val = init_qty * opening_cost
-            tot_qty = init_qty + purchases_qty - returns_qty
-            tot_val = init_val + purchases_val - returns_val
-            if product.uom_id.compare(tot_qty, 0) > 0 and product.currency_id.compare_amounts(tot_val, 0) > 0:
-                new_cost = float_round(tot_val / tot_qty, precision_digits=price_precision)
-                if float_compare(new_cost, old_price := product.standard_price, precision_digits=price_precision):
-                    product.with_context(disable_auto_revaluation=True).standard_price = new_cost
-                    product._change_standard_price({product: old_price}, valuation_date=period_start)
-                    # sudo: core created this history record elevated too
-                    product_value = self.env['product.value'].sudo().search(
-                        [('product_id', '=', product.id), ('move_id', '=', False)],
-                        order='id desc', limit=1,
-                    )
-                    if product_value:
-                        product_value.description = self.env._(
-                            'Total average cost evaluation %(date_from)s → %(date_to)s: '
-                            'opening %(opening)s, purchases +%(purchases)s, reductions −%(reductions)s → cost %(cost)s',
-                            date_from=self.date_from, date_to=self.date_to, opening=init_qty,
-                            purchases=purchases_qty, reductions=returns_qty, cost=new_cost,
+                        purchases_val += production_values.get(move.id, 0.0)
+                    elif (origin_usage == 'customer' and dest_usage == 'internal'):
+                        # prior-period sale return re-enters at sale-time cost (法人税法基本通達2-2-16)
+                        returned_move = move.origin_returned_move_id
+                        if (not returned_move or self._move_date_local(returned_move) < self.date_from):
+                            purchases_qty += qty
+                            returned = move._get_value_from_returns(qty)
+                            purchases_val += returned['value']
+                            if (remaining := qty - returned['quantity']) > 0:
+                                purchases_val += self._get_acquisition_value(move, remaining)
+                opening_cost = opening_values[product].value if product in opening_values else product.standard_price
+                init_val = init_qty * opening_cost
+                tot_qty = init_qty + purchases_qty - returns_qty
+                tot_val = init_val + purchases_val - returns_val
+                if product.uom_id.compare(tot_qty, 0) > 0 and product.currency_id.compare_amounts(tot_val, 0) > 0:
+                    new_cost = float_round(tot_val / tot_qty, precision_digits=price_precision)
+                    if float_compare(new_cost, old_price := product.standard_price, precision_digits=price_precision):
+                        product.with_context(disable_auto_revaluation=True).standard_price = new_cost
+                        product._change_standard_price({product: old_price}, valuation_date=period_start)
+                        # sudo: core created this history record elevated too
+                        product_value = self.env['product.value'].sudo().search(
+                            [
+                                ('product_id', '=', product.id),
+                                ('move_id', '=', False),
+                                ('date', '=', period_start),
+                            ],
+                            order='id desc', limit=1,
                         )
-                    updated_count += 1
-                    revalued |= product
-                else:
-                    unchanged_count += 1
-        if revalued:
-            # the issues of the period must leave at the average it produced, so the
-            # closing entry is built on it (施行令28条1項1号ハ)
-            # sudo: replaying the valuation writes the value of every move it covers
-            revalued.sudo()._correct_inventory_valuation(period_start)
-        if updated_count:
+                        if product_value:
+                            product_value.description = self.env._(
+                                'Total average cost evaluation %(date_from)s → %(date_to)s: '
+                                'opening %(opening)s, purchases +%(purchases)s, reductions −%(reductions)s → cost %(cost)s',
+                                date_from=self.date_from, date_to=self.date_to, opening=init_qty,
+                                purchases=purchases_qty, reductions=returns_qty, cost=new_cost,
+                            )
+                        updated_count += 1
+                        batch_revalued |= product
+                    else:
+                        unchanged_count += 1
+            if batch_revalued:
+                # the issues leave at the average it produced (施行令28条1項1号ハ), which the batch above reads
+                # sudo: replaying the valuation writes the value of every move it covers
+                batch_revalued.sudo()._correct_inventory_valuation(period_start)
+        if updated_count and unchanged_count:
+            message = self.env._(
+                'Updated the standard price of %(updated)s products; %(unchanged)s already '
+                'matched the evaluated cost.',
+                updated=updated_count, unchanged=unchanged_count,
+            )
+            notification_type = 'success'
+        elif updated_count:
             message = self.env._('Updated the standard price of %s products.', updated_count)
             notification_type = 'success'
         elif unchanged_count:
@@ -208,12 +211,22 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             },
         }
 
+    def _get_evaluation_batches(self, products, moves):
+        """
+        Return the products to evaluate, grouped in the order their costs depend on each other.
+
+        Without `mrp` nothing is made out of anything, so a single batch holds them
+        all; `l10n_jp_mrp` splits the manufactured goods from the components they
+        consumed, which have to be evaluated and corrected first.
+        """
+        return [products]
+
     def _get_production_move_values(self, moves):
         """
         Return the acquisition value of each manufacturing receipt, by move id.
 
-        Without ``mrp`` a receipt from a production location is valued at its own
-        unit price; ``l10n_jp_mrp`` values the order's output at the materials
+        Without `mrp` a receipt from a production location is valued at its own
+        unit price; `l10n_jp_mrp` values the order's output at the components
         it consumed instead (法人税法施行令 28条1項1号ハ).
         """
         return {
