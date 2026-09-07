@@ -22,6 +22,8 @@ function reapplyCollapseTransition() {
     `);
 }
 
+const ONE_ROW_HEIGHT = 32; // $o-hb-row-min-height (28px) + the row's 4px padding-top.
+
 describe.current.tags("desktop");
 
 test("show row title", async () => {
@@ -262,14 +264,22 @@ describe("BuilderRow with collapse content", () => {
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
         expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
         expect(".options-container button[data-class-action='b']").toBeVisible();
+        const contentEl = queryOne(".options-container .hb-collapse-content");
+        expect(contentEl.style.height).toBe(`${ONE_ROW_HEIGHT}px`);
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBeLessThan(ONE_ROW_HEIGHT);
+        // Collapsing pins the measured height, then targets 0 for the CSS transition.
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
+        expect(contentEl.style.height).toBe("0px");
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBeGreaterThan(0);
         advanceTime(400); // wait for the collapse transition to be over
         await animationFrame();
         expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
         expect(".options-container button[data-class-action='b']").toHaveCount(0);
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBe(NaN);
     });
 
     test("Click on toggler collapses / expands the BuilderRow (with observeCollapseContent)", async () => {
+        reapplyCollapseTransition();
         addBuilderOption({
             selector: ".test-options-target",
             template: collapseOptionTemplate({ observeCollapseContent: true }),
@@ -279,9 +289,14 @@ describe("BuilderRow with collapse content", () => {
         expect(".options-container").toBeVisible();
         expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
         expect(".options-container button[data-class-action='b']").not.toBeVisible();
+        // The content is never unmounted here, only hidden: it starts collapsed at 0.
+        const contentEl = queryOne(".options-container .hb-collapse-content");
+        expect(contentEl.style.height).toBe("0px");
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
         expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
         expect(".options-container button[data-class-action='b']").toBeVisible();
+        expect(contentEl.style.height).toBe(`${ONE_ROW_HEIGHT}px`);
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBeLessThan(ONE_ROW_HEIGHT);
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
         expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
         advanceTime(400); // wait for the collapse transition to be over
