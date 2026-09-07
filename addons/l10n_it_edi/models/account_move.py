@@ -673,22 +673,6 @@ class AccountMove(models.Model):
         )
         return not skip
 
-    def _prepare_product_base_line_for_taxes_computation(self, product_line):
-        """
-            Prepares tax base line. Rounding lines must appear in the XML,
-            so they are converted to regular lines with tax exemption code ('N2.2').
-        """
-        base_line = super()._prepare_product_base_line_for_taxes_computation(product_line)
-
-        if product_line.display_type == 'rounding':
-            base_line.update({
-                'quantity': 1,
-                'price_unit': -product_line.amount_currency,
-                'tax_ids': self._l10n_it_edi_search_tax_for_import(self.company_id, 0.0, l10n_it_exempt_reason='N2.2'),
-            })
-
-        return base_line
-
     def _l10n_it_edi_get_oss_line_values(self, aml, base_line, vat_tax, n7_tax, n22_tax):
         base_line['tax_ids'] = n7_tax
         tax_amount = (base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))) * (vat_tax.amount / 100.0)
@@ -757,7 +741,7 @@ class AccountMove(models.Model):
         convert_to_euros = self.currency_id.name != 'EUR'
 
         # Base lines.
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' or x.display_type == 'rounding')
+        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product')
 
         n7_tax = self.env['account.chart.template'].ref('00ex7', raise_if_not_found=False)
         n22_tax = self.env['account.chart.template'].ref('00ex', raise_if_not_found=False)
@@ -770,6 +754,14 @@ class AccountMove(models.Model):
                 base_lines += self._l10n_it_edi_get_oss_line_values(aml, base_line, vat_tax, n7_tax, n22_tax)
             else:
                 base_lines.append(base_line)
+
+        cash_rounding_tax_exempt = self._l10n_it_edi_search_tax_for_import(self.company_id, 0.0, l10n_it_exempt_reason='N2.2')
+        for aml in self.line_ids.filtered(lambda x: x.display_type == 'rounding'):
+            base_line = self._prepare_cash_rounding_base_line_for_taxes_computation(aml)
+            if cash_rounding_tax_exempt:
+                base_line['tax_ids'] |= cash_rounding_tax_exempt
+            base_lines.append(base_line)
+
         tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
 
