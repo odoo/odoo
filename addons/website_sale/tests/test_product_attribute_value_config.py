@@ -123,8 +123,16 @@ class TestWebsiteSaleProductAttributeValueConfig(
 
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
-        self.assertEqual(combination_info["price"], 575, "500$ + 15% tax")
-        self.assertEqual(combination_info["list_price"], 575, "500$ + 15% tax (2)")
+        self.assertEqual(
+            combination_info["price"],
+            805,
+            "700$ (500 fixed price + 200 attribute extra price) + 15% tax",
+        )
+        self.assertEqual(
+            combination_info["list_price"],
+            805,
+            "700$ (500 fixed price + 200 attribute extra price) + 15% tax (2)",
+        )
 
         # Setup fiscal position 15% => 0%.
         jp_country = self.env.ref("base.jp")
@@ -144,9 +152,9 @@ class TestWebsiteSaleProductAttributeValueConfig(
         self.env.user.partner_id.country_id = jp_country
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
-        self.assertEqual(combination_info["price"], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
+        self.assertEqual(combination_info["price"], 700, "700$ + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(
-            combination_info["list_price"], 500, "500% + 0% tax (mapped from fp 15% -> 0%)"
+            combination_info["list_price"], 700, "700$ + 0% tax (mapped from fp 15% -> 0%)"
         )
 
         # Try same flow with tax included
@@ -156,8 +164,8 @@ class TestWebsiteSaleProductAttributeValueConfig(
         self.env.user.partner_id.country_id = None
         with MockRequest(product.env, website=website):
             combination_info = product._get_combination_info()
-        self.assertEqual(combination_info["price"], 500, "434.78$ + 15% tax")
-        self.assertEqual(combination_info["list_price"], 500, "434.78$ + 15% tax (2)")
+        self.assertEqual(combination_info["price"], 700, "608.70$ + 15% tax")
+        self.assertEqual(combination_info["list_price"], 700, "608.70$ + 15% tax (2)")
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = jp_country.id
@@ -165,13 +173,13 @@ class TestWebsiteSaleProductAttributeValueConfig(
             combination_info = product._get_combination_info()
         self.assertEqual(
             round(combination_info["price"], 2),
-            434.78,
-            "434.78$ + 0% tax (mapped from fp 15% -> 0%)",
+            608.7,
+            "608.70$ + 0% tax (mapped from fp 15% -> 0%)",
         )
         self.assertEqual(
             round(combination_info["list_price"], 2),
-            434.78,
-            "434.78$ + 0% tax (mapped from fp 15% -> 0%)",
+            608.7,
+            "608.70$ + 0% tax (mapped from fp 15% -> 0%)",
         )
 
         # Try same flow with tax included for apply tax
@@ -180,13 +188,13 @@ class TestWebsiteSaleProductAttributeValueConfig(
             combination_info = product._get_combination_info()
         self.assertEqual(
             round(combination_info["price"], 2),
-            456.52,
-            "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)",
+            639.13,
+            "608.70$ + 5% tax (mapped from fp 15% -> 5% for BE)",
         )
         self.assertEqual(
             round(combination_info["list_price"], 2),
-            456.52,
-            "434.78$ + 5% tax (mapped from fp 15% -> 5% for BE)",
+            639.13,
+            "608.70$ + 5% tax (mapped from fp 15% -> 5% for BE)",
         )
 
     def test_hide_attribute_value_without_matching_product_variant(self):

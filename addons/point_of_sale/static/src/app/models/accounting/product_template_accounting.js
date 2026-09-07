@@ -80,6 +80,8 @@ export class ProductTemplateAccounting extends Base {
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
         let price = basePrice + (price_extra || 0);
+        const variantExtraPrice = variant ? variant.lst_price - productTmpl.list_price : 0;
+        const attributesExtraPrice = variantExtraPrice + (price_extra || 0);
 
         if (!pricelist) {
             return price;
@@ -93,11 +95,13 @@ export class ProductTemplateAccounting extends Base {
         }
 
         let rule = null;
+        let isVariantSpecificRule = false;
 
         // 1. Variant Rules
         if (product) {
             const productRules = pricelist.getRulesByProductId(product.id);
             rule = pricelist.findBestRule(productRules, quantity);
+            isVariantSpecificRule = Boolean(rule);
         }
 
         // 2. Template Rules
@@ -148,6 +152,14 @@ export class ProductTemplateAccounting extends Base {
 
         if (rule.compute_price === "fixed") {
             price = rule.fixed_price;
+            const fixedPriceExtraPrice = isVariantSpecificRule
+                ? price_extra || 0
+                : attributesExtraPrice;
+            if (fixedPriceExtraPrice) {
+                price += needsCurrencyConversion
+                    ? fixedPriceExtraPrice * (pricelistCurrency.rate / posCurrency.rate)
+                    : fixedPriceExtraPrice;
+            }
         } else if (rule.compute_price === "percentage") {
             price = price - price * ((rule.percent_price || 0) / 100);
         } else {
