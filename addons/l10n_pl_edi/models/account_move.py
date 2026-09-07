@@ -819,6 +819,10 @@ class AccountMove(models.Model):
         retriggered, retrigger = False, info['retrigger']
         for batch in Attachment._l10n_pl_edi_get_batches():
             batch_data = json.loads(batch.raw.decode())
+            # Remove stale batches, files are not there anymore
+            if (date_expiry := batch_data.get('date_expiry')) and date_expiry < today_datetime:
+                batch.unlink()
+                continue
             encryption_data = batch_data['encryption_data']
             is_old = batch.create_date < today_datetime()
             retriggered |= not is_old
