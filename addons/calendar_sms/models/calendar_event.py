@@ -18,12 +18,18 @@ class CalendarEvent(models.Model):
                 )
                 if event.user_id and not alarm.notify_responsible:
                     partners -= event.user_id.partner_id
-                event._message_sms_with_template(
-                    template=alarm.sms_template_id,
-                    template_fallback=_("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
-                    partner_ids=partners.ids,
-                    put_in_queue=False
-                )
+                if alarm.sms_template_id:
+                    event._message_sms_with_template(
+                        template=alarm.sms_template_id,
+                        partner_ids=partners.ids,
+                        put_in_queue=False,
+                    )
+                else:
+                    event._message_sms(
+                        body=_("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
+                        partner_ids=partners.ids,
+                        put_in_queue=False,
+                    )
 
     def action_send_sms(self):
         if not self.partner_ids:
