@@ -60,7 +60,6 @@ class SifJurnalEntry(models.Model):
         store=True
     )
 
-    # Helper Periode Bulanan
     period_month = fields.Integer(
         string='Bulan Periode',
         compute='_compute_period',
@@ -138,11 +137,6 @@ class SifJurnalEntry(models.Model):
     # -------------------------------------------------------------------------
     @api.model
     def create_journal_from_ppl(self, vals):
-        """
-        RPC Method untuk pencatatan otomatis transaksi PPL saat dibayar / dicairkan.
-        Menerima payload dictionary maupun objek recordset PPL.
-        """
-        # Penanganan jika parameter berupa objek recordset PPL
         if hasattr(vals, '_name'):
             ppl = vals
             vals = {
@@ -153,7 +147,6 @@ class SifJurnalEntry(models.Model):
                 'source_type': 'ppl',
                 'lines': []
             }
-            # Ambil data nominal dan akun jika tersedia di model PPL
             dpp = getattr(ppl, 'amount_untaxed', 0.0) or getattr(ppl, 'amount_dpp', 0.0)
             ppn = getattr(ppl, 'amount_tax', 0.0) or getattr(ppl, 'amount_ppn', 0.0)
             total = getattr(ppl, 'amount_total', 0.0) or (dpp + ppn)
@@ -186,7 +179,6 @@ class SifJurnalEntry(models.Model):
                 })
                 vals['lines'] = lines
 
-        # Pemrosesan jika parameter dictionary
         lines_command = []
         raw_lines = vals.get('lines', [])
         for l in raw_lines:
@@ -219,11 +211,6 @@ class SifJurnalEntry(models.Model):
                                      asset_account_id, credit_account_id,
                                      date=False, unit_name='KANTOR',
                                      vendor_name='', kwitansi=''):
-        """
-        Pencatatan Jurnal Perolehan / Pembelian Aset Tetap.
-        Debet : Akun Aset Tetap
-        Kredit: Akun Kas / Bank / Hutang Pembelian
-        """
         txn_date = date or fields.Date.today()
         ref_label = f"Perolehan Aset: [{asset_code}] {asset_name}"
         if vendor_name:
@@ -259,11 +246,6 @@ class SifJurnalEntry(models.Model):
     def create_asset_depreciation_journal(self, asset_name, asset_code, amount,
                                          dep_account_id, exp_account_id,
                                          date, period_name, unit_name='KANTOR'):
-        """
-        Pencatatan Jurnal Depresiasi / Penyusutan Berkala Aset.
-        Debet : Akun Beban Penyusutan
-        Kredit: Akun Akumulasi Penyusutan (Akun Kontra Aset)
-        """
         desc = f"Penyusutan [{asset_code}] {asset_name} - Periode {period_name}"
         lines = [
             (0, 0, {
@@ -411,7 +393,9 @@ class SifBukuBesarWizard(models.TransientModel):
         if self.unit_name:
             domain.append(('unit_name', 'ilike', self.unit_name))
 
-        return {
+        tree_view = self.env.ref('sif_keuangan.view_sif_buku_besar_list', raise_if_not_found=False)
+
+        res = {
             'name': _('Buku Besar: {} s/d {}').format(
                 self.date_from.strftime('%d/%m/%Y'),
                 self.date_to.strftime('%d/%m/%Y')
@@ -419,7 +403,10 @@ class SifBukuBesarWizard(models.TransientModel):
             'type': 'ir.actions.act_window',
             'res_model': 'sif.jurnal.line',
             'view_mode': 'list,form',
-            'view_id': self.env.ref('sif_keuangan.sif_jurnal_line_tree_view').id,
             'domain': domain,
             'target': 'current',
         }
+        if tree_view:
+            res['views'] = [(tree_view.id, 'list'), (False, 'form')]
+            res['view_id'] = tree_view.id
+        return res
