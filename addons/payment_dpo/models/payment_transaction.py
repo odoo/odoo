@@ -79,7 +79,10 @@ class PaymentTransaction(models.Model):
         except ValidationError as e:
             self._set_error(str(e))
             return None
-        return transaction_data.get('TransToken')
+        else:
+            # Save the provider reference now, as the `verifyToken` request doesn't return it later
+            self.provider_reference = transaction_data.get('TransToken')
+            return self.provider_reference
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -104,9 +107,6 @@ class PaymentTransaction(models.Model):
         """Override of `payment` to update the transaction based on the payment data."""
         if self.provider_code != 'dpo':
             return super()._apply_updates(payment_data)
-
-        # Update the provider reference.
-        self.provider_reference = payment_data.get('TransID')
 
         # Update the payment state.
         status_code = payment_data.get('Result')
