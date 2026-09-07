@@ -146,6 +146,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         }])
 
     def test_track_pdp_verification_display_state(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         partner = self.partner_a
         messages_before = partner.message_ids
 
@@ -164,6 +165,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCase):
         })
 
     def test_validate_partner_fr_b2g(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         partner = self.partner_a
         self.assertTrue(partner.l10n_fr_is_pdp)
         with mock_pdp_annuaire_lookup():  # not in the annuaire

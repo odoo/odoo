@@ -98,6 +98,7 @@ class TestMailTracking(MailCommon):
         """ Quick sanity check on mail.tracking.values creatien when posting
         a message with tracking values, now that base behavior is to have them
         as html. Other tests are defined in 'test_mail' module. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.test_partner = self.env['res.partner'].create({
             'country_id': self.env.ref('base.be').id,
             'email': 'test.partner@test.example.com',
@@ -152,6 +153,7 @@ class TestMailTracking(MailCommon):
 
     @users('employee')
     def test_message_copy(self):
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         partner = self.env['res.partner'].create({'name': 'Test'})
         self.flush_tracking()
 

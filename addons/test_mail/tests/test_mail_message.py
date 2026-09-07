@@ -167,6 +167,7 @@ class TestMessageValues(MailCommon):
         Check _update_content behavior when voiding messages (cleanup side
         records: stars, notifications).
         """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         note_subtype = self.env.ref('mail.mt_note')
         _attach_1 = self.env['ir.attachment'].with_user(self.user_employee).create({
             'name': 'Attach1',

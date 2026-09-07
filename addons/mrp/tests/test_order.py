@@ -223,6 +223,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
     @freeze_time('2022-06-28 08:00')
     def test_end_date(self):
         """ End date must be the day the MO is done (regardless of lead times)"""
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         mo, bom_id, _p_final, _p1, _p2 = self.generate_mo(qty_base_1=10, qty_final=1, qty_base_2=1)
         bom_id.produce_delay = 5
         mo.button_mark_done()

@@ -80,6 +80,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_logging_of_tax_update_when_tax_is_used(self):
         """ Modifications of a used tax should be logged. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.set_up_and_use_tax()
         self.flush_tracking()
 
@@ -117,6 +118,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_logging_of_repartition_lines_addition_when_tax_is_used(self):
         """ Adding repartition lines in a used tax should be logged. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.set_up_and_use_tax()
         self.flush_tracking()
 
@@ -162,6 +164,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_logging_of_repartition_lines_update_when_tax_is_used(self):
         """ Updating repartition lines in a used tax should be logged. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.set_up_and_use_tax()
         self.flush_tracking()
 
@@ -215,6 +218,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_logging_of_repartition_lines_reordering_when_tax_is_used(self):
         """ Reordering repartition lines in a used tax should be logged. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.set_up_and_use_tax()
         self.flush_tracking()
 
@@ -292,6 +296,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_logging_of_repartition_lines_removal_when_tax_is_used(self):
         """ Deleting repartition lines in a used tax should be logged. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         self.set_up_and_use_tax()
         self.flush_tracking()
 
@@ -338,6 +343,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
     def test_message_log(self):
         """ Somehow assert people did not break primitives of mail.thread """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
         new_tax = self.env['account.tax'].create({
             'name': 'default_tax',
             'amount_type': 'fixed',
