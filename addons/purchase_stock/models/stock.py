@@ -45,8 +45,9 @@ class StockPicking(models.Model):
 
     def _prepare_return_move_default_values(self, move_id):
         vals = super()._prepare_return_move_default_values(move_id)
-        if self.location_id.usage == "supplier":
-            vals['purchase_line_id'], vals['partner_id'] = move_id._get_purchase_line_and_partner_from_chain()
+        purchase_line, partner_id = move_id._get_purchase_line_and_partner_from_chain()
+        if purchase_line and partner_id:
+            vals['purchase_line_id'], vals['partner_id'] = purchase_line, partner_id
         return vals
 
     def _action_done(self):
