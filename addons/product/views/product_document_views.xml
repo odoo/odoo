@@ -56,6 +56,16 @@
                     </t>
                     <t t-name="card" class="o_kanban_attachment flex-row">
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <t t-set="previewable" t-value="record.type.raw_value === 'binary' and new RegExp('(image|video|application/pdf|text)').test(record.mimetype.value)"/>
+                        <aside class="o_kanban_image m-2">
+                            <div t-attf-class="o_kanban_image_wrapper d-flex align-items-center justify-content-center #{previewable ? 'o_kanban_previewer' : ''}">
+                                <div t-if="record.type.raw_value == 'url'" class="oi oi-3x text-muted" data-icon="link" title="Link"/>
+                                <img t-elif="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"
+                                    t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}/80x80"
+                                    t-att-alt="record.name.value" class="o_attachment_image object-fit-contain"/>
+                                <div t-else="" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
+                            </div>
+                        </aside>
                         <main class="ms-2 p-2">
                             <field name="name" class="fw-bolder fs-5"/>
                             <field  t-if="record.type.raw_value == 'url'" name="url" widget="url"/>
