@@ -460,8 +460,8 @@ export class DiscussChannel extends models.ServerModel {
         // mock: keep the relational computes fresh, mirroring `self.fetch(["self_member_id"])`.
         this._compute_self_member_id();
         this._compute_invited_member_ids();
-        res.attr("avatar_cache_key", undefined, { predicate: isChannelOrGroup });
-        res.attr("avatar_128_access_token", (c) => c.id, { predicate: isChannelOrGroup });
+        res.attr("avatar_cache_key");
+        res.attr("avatar_128_access_token", (c) => c.id);
         // sudo: discuss.category - guests can read categories of accessible channels
         res.one("discuss_category_id", "_store_category_fields", { sudo: true });
         res.attr("channel_type");
