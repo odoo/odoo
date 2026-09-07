@@ -407,6 +407,24 @@ export class Field extends Component {
         return this.props.type || this.props.record.fields[this.props.name].type;
     }
 
+    get isReadonly() {
+        const record = this.props.record;
+        let readonly = this.props.readonly || false;
+        if (this.props.fieldInfo) {
+            readonly =
+                readonly ||
+                evaluateBooleanExpr(this.props.fieldInfo.readonly, record.evalContextWithVirtualIds);
+        }
+        return readonly || !record.isInEdition;
+    }
+
+    get ariaLabelledby() {
+        if (this.isReadonly && this.props.id) {
+            return `${this.props.id}_label`;
+        }
+        return false;
+    }
+
     get fieldComponentProps() {
         const record = this.props.record;
         let readonly = this.props.readonly || false;

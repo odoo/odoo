@@ -2190,6 +2190,87 @@ test(`input ids for multiple occurrences of fields in form view`, async () => {
     expect(fieldIdAttrs).toEqual(labelForAttrs);
 });
 
+test(`readonly field label uses aria-labelledby instead of dangling for`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="foo" readonly="1"/>
+                </group>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_form_label`).toHaveAttribute("id", "foo_0_label");
+    expect(`.o_form_label`).not.toHaveAttribute("for");
+    expect(`.o_field_widget[name=foo]`).toHaveAttribute("aria-labelledby", "foo_0_label");
+    expect(`.o_field_widget[name=foo] input`).toHaveCount(0);
+    expect(`#foo_0`).toHaveCount(0);
+});
+
+test(`form not in edition associates labels via aria-labelledby`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form edit="0">
+                <group>
+                    <field name="foo"/>
+                </group>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_form_readonly`).toHaveCount(1);
+    expect(`.o_form_label`).toHaveAttribute("id", "foo_0_label");
+    expect(`.o_form_label`).not.toHaveAttribute("for");
+    expect(`.o_field_widget[name=foo]`).toHaveAttribute("aria-labelledby", "foo_0_label");
+    expect(`.o_field_widget[name=foo] input`).toHaveCount(0);
+});
+
+test(`readonly boolean label does not duplicate field id`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="bar" readonly="1"/>
+                </group>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_form_label`).toHaveAttribute("id", "bar_0_label");
+    expect(`.o_form_label`).not.toHaveAttribute("for");
+    expect(`.o_field_widget[name=bar]`).toHaveAttribute("aria-labelledby", "bar_0_label");
+    expect(`.o_field_widget[name=bar] input`).toHaveAttribute("id", "bar_0");
+    expect(`#bar_0`).toHaveCount(1);
+    expect(`#bar_0_label`).toHaveCount(1);
+});
+
+test(`editable field labels still match input ids via for`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="foo"/>
+                    <field name="float_field"/>
+                </group>
+            </form>
+        `,
+    });
+    const fieldIdAttrs = queryAllAttributes(`.o_field_widget input`, "id");
+    const labelForAttrs = queryAllAttributes(`.o_form_label`, "for");
+    expect(fieldIdAttrs).toEqual(labelForAttrs);
+    expect(`.o_form_label`).not.toHaveAttribute("id");
+    expect(`.o_field_widget[name=foo]`).not.toHaveAttribute("aria-labelledby");
+});
+
 test(`input ids for multiple occurrences of fields in sub form view (inline)`, async () => {
     // A same field can occur several times in the view, but its id must be
     // unique by occurrence, otherwise there is a warning in the console (in
@@ -8622,7 +8703,8 @@ test(`form rendering innergroup: separator should take one line`, async () => {
     });
     expect(`.o_inner_group > .o_cell`).toHaveCount(3);
     expect(`.o_inner_group > .o_cell:first-child .o_horizontal_separator`).toHaveCount(1);
-    expect(`.o_inner_group > .o_cell:nth-child(2) label[for=display_name_0]`).toHaveCount(1);
+    // display_name is readonly, so the label uses id + aria-labelledby instead of for=
+    expect(`.o_inner_group > .o_cell:nth-child(2) label#display_name_0_label`).toHaveCount(1);
     expect(`.o_inner_group > .o_cell:last-child div[name=display_name]`).toHaveCount(1);
 });
 
