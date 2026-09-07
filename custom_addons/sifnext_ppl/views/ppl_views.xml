@@ -275,6 +275,7 @@
     <record id="view_ppl_history_transfer_tree" model="ir.ui.view">
         <field name="name">sifnext.ppl.history.transfer.list</field>
         <field name="model">sifnext.ppl</field>
+        <field name="priority" eval="99"/>
         <field name="arch" type="xml">
             <list string="Rekap History Transfer" create="false" edit="false" delete="false" decoration-success="state == 'done'">
                 <field name="payment_date"/>
