@@ -34,19 +34,6 @@
         groups="base.group_system"
         sequence="1"
     />
-    <menuitem name="Notifications"
-        id="mail.menu_notification_settings"
-        parent="mail.menu_configuration"
-        action="mail.discuss_notification_settings_action"
-        sequence="2"
-    />
-    <menuitem
-        id="mail.menu_call_settings"
-        name="Voice &amp; Video"
-        parent="mail.menu_configuration"
-        action="mail.discuss_call_settings_action"
-        sequence="5"
-    />
     <menuitem name="Categories"
         id="mail.menu_discuss_category"
         parent="mail.menu_configuration"
@@ -64,6 +51,25 @@
         parent="mail.menu_configuration"
         action="mail.res_role_action"
         sequence="25"
+    />
+    <menuitem
+        id="mail.menu_discuss_user_settings"
+        name="User Settings"
+        parent="mail.menu_configuration"
+        sequence="90"
+    />
+    <menuitem name="Notifications"
+        id="mail.menu_notification_settings"
+        parent="mail.menu_discuss_user_settings"
+        action="mail.discuss_notification_settings_action"
+        sequence="1"
+    />
+    <menuitem
+        id="mail.menu_call_settings"
+        name="Voice &amp; Video"
+        parent="mail.menu_discuss_user_settings"
+        action="mail.discuss_call_settings_action"
+        sequence="2"
     />
 
     <record id="base.menu_email" model="ir.ui.menu">
