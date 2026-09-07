@@ -38,7 +38,7 @@ class ConsolidationRateMixin(models.AbstractModel):
         if len(self.env.companies.currency_id) == 1:
             return SQL("1")
 
-        date_to = fields.Date.to_date(self.env.context['date_to'])
+        date_to = fields.Date.to_date(self.env.context.get('date_to'))
         _historical, _average, current = self.env['res.currency']._get_parsed_rates(self.env.companies - self.env.company, date_to, date_to)
 
         raw_rates_alias = table._make_alias('raw_currencies')
