@@ -98,7 +98,10 @@ class AccountJournal(models.Model):
             else 'current'
         )
 
-        balances = dict(self.env['account.move.line'].sudo().with_context(currency_translation=currency_translation)._read_group(
+        balances = dict(self.env['account.move.line'].sudo().with_context(
+            currency_translation=currency_translation,
+            date_to=today,
+        )._read_group(
             domain=[
                 ('parent_state', '=', 'posted'),
                 ('date', '>=', fiscal_year['date_from']),
