@@ -987,9 +987,13 @@ class SaleOrder(models.Model):
             self.set_delivery_line(delivery_method, rate["price"])
 
             if delivery_method.enable_delivery_estimate and (
-                estimated_delivery_date := delivery_method._get_estimate_delivery_days()
+                estimated_delivery_days := delivery_method._get_estimate_delivery_days()
             ):
-                self.commitment_date = estimated_delivery_date[0]
+                if (
+                    not self.commitment_date
+                    or self.commitment_date.date().isoformat() not in estimated_delivery_days
+                ):
+                    self.commitment_date = estimated_delivery_days[0]
             else:
                 # reset `commitment_date` if it doesn't have an estimated delivery date set
                 self.commitment_date = None
