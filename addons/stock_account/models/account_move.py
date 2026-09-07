@@ -39,7 +39,9 @@ class AccountMove(models.Model):
         # Post entries.
         res = super()._post(soft)
 
-        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in or m.is_dropship)._set_value()
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in or m.is_dropship).with_context(
+            extra_value_by_product=True,
+        )._set_value()
 
         return res
 

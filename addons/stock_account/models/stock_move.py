@@ -183,7 +183,10 @@ class StockMove(models.Model):
         moves = super()._action_done(cancel_backorder=cancel_backorder)
         moves_out = moves_out.exists()
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
-        moves_in.with_context(std_price_incremental_recompute=not moves_out)._set_value()
+        moves_in.with_context(
+            extra_value_by_product=not moves_out,
+            extra_qty_by_product=not moves_out,
+        )._set_value()
         moves._create_account_move()
         # Update standard price on outgoing fifo or lot valuated average products
         moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo' or (p.cost_method == 'average' and p.lot_valuated))._update_standard_price()
@@ -319,11 +322,14 @@ class StockMove(models.Model):
                                 move.product_id.display_name))
                         lots_to_recompute.update(move.move_line_ids.lot_id.ids)
                 if move.is_in:
+                    previous_value = move.value
                     move.value = move.sudo()._get_value()
-                    if self.env.context.get('std_price_incremental_recompute') and move.product_id.is_storable:
+                    if move.product_id.is_storable:
                         # fast path: add extra_value/extra_qty to standard price (only realtime)
-                        extra_value_by_product[move.product_id] += move.value
-                        extra_qty_by_product[move.product_id] += move._get_valued_qty()
+                        if self.env.context.get('extra_value_by_product'):
+                            extra_value_by_product[move.product_id] += move.value - previous_value
+                        if self.env.context.get('extra_qty_by_product'):
+                            extra_qty_by_product[move.product_id] += move._get_valued_qty()
                     continue
                 # Outgoing moves
                 if not move._is_out():
