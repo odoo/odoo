@@ -7,8 +7,8 @@
             <form string="Share Document">
                 <p class="alert alert-warning" invisible="access_warning == ''" role="alert"><field name="access_warning"/></p>
                 <group name="share_link">
-                    <field name="res_model" invisible="1"/>
-                    <field name="res_id" invisible="1"/>
+                    <field name="res_model" invisible="1"/> <!-- kept for compute of resource_ref/access_warning and used in action_send_mail -->
+                    <field name="res_id" invisible="1"/> <!-- kept for compute of resource_ref/access_warning and used in action_send_mail -->
                     <field name="share_link" widget="CopyClipboardChar" options="{'string': 'Copy Link'}"/>
                     <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to share the document..."/>
                     <field name="note" placeholder="Add a note"/>

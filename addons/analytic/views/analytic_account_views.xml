@@ -5,7 +5,7 @@
             <field name="model">account.analytic.account</field>
             <field name="arch" type="xml">
                 <form string="Analytic Account">
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- keeps company_id loaded for non group_multi_company users, since the visible field below is group-gated -->
                     <sheet string="Analytic Account">
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" type="action" name="%(account_analytic_line_action)d" icon="attach_money">
@@ -27,7 +27,7 @@
                         <div name="project"/>
                         <group name="main">
                             <group>
-                                <field name="active" invisible="1"/>
+                                <field name="active" invisible="1"/> <!-- drives invisible="active" on the Archived web_ribbon widget above -->
                                 <field name="partner_id"/>
                                 <field name="code"/>
                             </group>
@@ -50,16 +50,16 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <list string="Analytic Accounts" multi_edit="1">
-                    <field name="company_id" column_invisible="True"/>
-                    <field name="currency_id" column_invisible="True"/>
+                    <field name="company_id" column_invisible="True"/> <!-- needed client-side for partner_id's check_company=True domain -->
+                    <field name="currency_id" column_invisible="True"/> <!-- currency for the debit/credit/balance monetary columns (they default to currency_id) -->
                     <field name="name" string="Name"/>
                     <field name="code"/>
                     <field name="partner_id"/>
                     <field name="plan_id"/>
-                    <field name="active" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/> <!-- framework reads active field on the record to enable archive/unarchive actions -->
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="debit" sum="Debit" column_invisible="True"/>
-                    <field name="credit" sum="Credit" column_invisible="True"/>
+                    <field name="debit" sum="Debit" column_invisible="True"/> <!-- shares _compute_debit_credit_balance with balance; loaded so that compute runs and its sum aggregate is available -->
+                    <field name="credit" sum="Credit" column_invisible="True"/> <!-- shares _compute_debit_credit_balance with balance; loaded so that compute runs and its sum aggregate is available -->
                     <field name="balance" sum="Balance"/>
                 </list>
             </field>

@@ -23,7 +23,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="current_progress_id" invisible="1"/>
+                    <field name="current_progress_id" invisible="1"/> <!-- drives invisible on the toggle_visibility button below -->
                     <button name="action_toggle_visibility" type="object" string="Toggle visibility"
                             invisible="not current_progress_id"/>
                 </header>
@@ -84,7 +84,7 @@
                                 <field name="button_text"/>
                                 <field name="done_text"/>
                                 <field name="done_icon"/>
-                                <field name="step_image_filename" invisible="1"/>
+                                <field name="step_image_filename" invisible="1"/> <!-- provides the filename for the step_image binary field below -->
                                 <field name="step_image" filename="step_image_filename"/>
                                 <field name="step_image_alt"/>
                             </group>

@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <field name="res_model" invisible="True"/>
+                    <field name="res_model" invisible="True"/> <!-- drives invisible on res_name and variant_attribute_value_ids below -->
                     <h1>
                         <field name="name" class="w-75" readonly="not raw and type != 'url'"/>
                     </h1>
@@ -90,7 +90,7 @@
         <field name="model">product.document</field>
         <field name="arch" type="xml">
             <list editable="top" multi_edit="true">
-                <field name="res_model" column_invisible="True"/>
+                <field name="res_model" column_invisible="True"/> <!-- drives invisible on variant_attribute_value_ids below -->
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field

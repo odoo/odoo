@@ -6,10 +6,10 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <list string="Product" multi_edit="1" sample="1">
-                <field name="product_variant_count" column_invisible="True"/>
-                <field name="sale_ok" column_invisible="True"/>
-                <field name="currency_id" column_invisible="True"/>
-                <field name="cost_currency_id" column_invisible="True"/>
+                <field name="product_variant_count" column_invisible="True"/> <!-- drives readonly on barcode and invisible on other columns below -->
+                <field name="sale_ok" column_invisible="True"/> <!-- drives decoration-muted on list_price below -->
+                <field name="currency_id" column_invisible="True"/> <!-- drives currency_field on list_price monetary widget below -->
+                <field name="cost_currency_id" column_invisible="True"/> <!-- drives currency_field on standard_price monetary widget below -->
                 <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
@@ -23,7 +23,7 @@
                 <field name="categ_id" optional="hide"/>
                 <field name="type" optional="hide" readonly="1"/>
                 <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
-                <field name="active" column_invisible="True"/>
+                <field name="active" column_invisible="True"/> <!-- enables the Archive/Unarchive action in this list -->
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </list>
         </field>
@@ -77,7 +77,6 @@
 
             <field name="categ_id" position="after">
                 <field name="default_code" string="Reference"/>
-                <field name="valid_product_template_attribute_line_ids" invisible="1"/>
                 <field name="barcode" invisible="type in ['service', 'combo']"/>
             </field>
 
@@ -99,7 +98,7 @@
                 >
                     <field name="attribute_line_ids" widget="one2many" context="{'show_attribute': False}" force_save="1">
                         <list string="Variants" editable="bottom" decoration-info="value_count &lt;= 1">
-                            <field name="value_count" column_invisible="True"/>
+                            <field name="value_count" column_invisible="True"/> <!-- drives decoration-info on this list -->
                             <field name="sequence" widget="handle"/>
                             <field name="attribute_id" placeholder="Attribute name (e.g. Color, Size, ... )" readonly="id"/>
                             <field

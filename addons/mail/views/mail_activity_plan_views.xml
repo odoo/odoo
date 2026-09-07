@@ -46,8 +46,8 @@
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Planning">
-                    <field name="company_id" invisible="1"/>
-                    <field name="active" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- needed client-side for check_company on responsible_id in template_ids list -->
+                    <field name="active" invisible="1"/> <!-- drives invisible on the Archived web_ribbon widget -->
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
@@ -69,8 +69,8 @@
                                 <!-- Pass on the model to ensure the correct dynamic selection (in e.g. hr) on unsaved plans -->
                                 <field name="template_ids" nolabel="1" context="{'default_res_model': res_model}">
                                     <list>
-                                        <field name="company_id" column_invisible="1"/>
-                                        <field name="note" column_invisible="1"/>
+                                        <field name="company_id" column_invisible="1"/> <!-- needed client-side for check_company on responsible_id column -->
+                                        <field name="note" column_invisible="1"/> <!-- loaded so it stays in sync via _compute_note when activity_type_id changes -->
                                         <field name="sequence" widget="handle"/>
                                         <field name="activity_type_id"
                                                options="{'no_quick_create': True}"/>

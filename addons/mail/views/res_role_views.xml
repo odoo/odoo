@@ -35,7 +35,7 @@
                     <sheet>
                         <group>
                             <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives the invisible on the Archived ribbon -->
                             <field name="name" string="Role"/>
                             <field name="user_ids" widget="many2many_avatar_user" options="{'no_create': True}"
                                 required="1"/>

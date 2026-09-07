@@ -10,8 +10,8 @@
                         <div class="alert alert-danger" role="alert" invisible="not error_msg">
                             <field name="error_msg" widget="text"/>
                         </div>
-                        <field name="model_id" invisible="1"/>
-                        <field name="mail_template_id" invisible="1"/>
+                        <field name="model_id" invisible="1"/> <!-- used as model_field option for resource_ref widget -->
+                        <field name="mail_template_id" invisible="1"/> <!-- required source template, read by computes (email_from, subject, body_html, etc.) -->
 
                         <group class="align-items-stretch mx-0">
                             <group class="px-0">

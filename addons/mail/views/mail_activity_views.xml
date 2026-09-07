@@ -13,7 +13,7 @@
                     </div>
                     <group>
                         <group name="activity_details">
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible on the Archived web_ribbon widget -->
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"
                                    widget="many2one_avatar_user"/>
@@ -139,10 +139,10 @@
                         </button>
                     </div>
                     <group invisible="1">
-                        <field name="activity_category" invisible="1" />
-                        <field name="res_model" invisible="1"/>
-                        <field name="res_model_id" invisible="1"/>
-                        <field name="res_id" invisible="1"/>
+                        <field name="activity_category" invisible="1" /> <!-- read by JS Activity widgets for upload_file category checks -->
+                        <field name="res_model" invisible="1"/> <!-- drives invisible on Open Document button and required on user_id, read by activity_model_selector JS -->
+                        <field name="res_model_id" invisible="1"/> <!-- base field res_model is related/precomputed from, needed on create -->
+                        <field name="res_id" invisible="1"/> <!-- drives invisible on Open Document button -->
                     </group>
                     <field name="activity_type_id"
                         class="mb-3"
@@ -182,7 +182,7 @@
                         </div>
                     </div>
                     <footer>
-                        <field name="id" invisible="1"/>
+                        <field name="id" invisible="1"/> <!-- drives invisible on Schedule/Save/Delete buttons to detect new vs existing record -->
                         <button id="mail_activity_schedule" string="Schedule" close="1" name="action_close_dialog" type="object" class="btn-primary"
                             invisible="id" data-hotkey="q"/>
                         <button id="mail_activity_save" string="Save" name="action_close_dialog" type="object" class="btn-primary"
@@ -226,7 +226,7 @@
                             name="action_done_redirect_to_other" type="object"/>
                 </header>
                 <sheet string="Activity">
-                    <field name="display_name" invisible="1"/>
+                    <field name="display_name" invisible="1"/> <!-- loaded so the web client can show it in the breadcrumb/window title -->
                     <group>
                         <field name="activity_type_id" required="1"
                         widget="badges_many2one" options="{'related_icon_field': 'icon'}" nolabel="1"/>

@@ -5,7 +5,7 @@
         <field name="model">base.module.install.request</field>
         <field name="arch" type="xml">
             <form disable_autofocus="1">
-                <field name="module_id" invisible="1"/>
+                <field name="module_id" invisible="1"/> <!-- required field set via default_module_id context, needed by action_send_request -->
                 <label for="user_ids" string="To:" class="me-1"/>
                 <field colspan="2" name="user_ids" widget="many2many_tags" nolabel="1" class="mb-4"/>
                 <field colspan="2" name="body_html" nolabel="1" placeholder="Why do you need this module?"
@@ -23,8 +23,8 @@
         <field name="model">base.module.install.review</field>
         <field name="arch" type="xml">
             <form>
-                <field name="module_id" invisible="1"/>
-                <field name="module_ids" widget="many2many_tags" invisible="1"/>
+                <field name="module_id" invisible="1"/> <!-- required field set via default_module_id context, needed by action_install_module and _compute_modules_description -->
+                <field name="module_ids" widget="many2many_tags" invisible="1"/> <!-- shares _compute_modules_description with the displayed modules_description Html field -->
                 <field name="modules_description"/>
                 <footer>
                     <button string="Install App" class="btn-primary" type="object" name="action_install_module" data-hotkey="q"/>

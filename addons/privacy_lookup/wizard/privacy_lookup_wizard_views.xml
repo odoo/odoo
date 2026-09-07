@@ -22,11 +22,11 @@
                         <group>
                             <field name="email" readonly="line_ids"/>
                             <field name="name" readonly="line_ids"/>
-                            <field name="records_description" invisible="1"/>
+                            <field name="records_description" invisible="1"/> <!-- used by action_lookup to populate the privacy.log -->
                             <field name="execution_details" invisible="execution_details == ''"/>
-                            <field name="log_id" invisible="1"/>
+                            <field name="log_id" invisible="1"/> <!-- used by action_lookup to avoid recreating an existing privacy.log -->
                         </group>
-                        <field name="line_ids" options="{'no_open': True, 'no_create': True}" invisible="1"/>
+                        <field name="line_ids" options="{'no_open': True, 'no_create': True}" invisible="1"/> <!-- drives invisible on the Lookup button and readonly on email/name -->
                     </group>
                 </sheet>
            </form>
@@ -47,15 +47,15 @@
         <field name="arch" type="xml">
             <list create="0">
                 <field name="res_model_id"/>
-                <field name="res_name" column_invisible="True"/>
-                <field name="res_model" column_invisible="True"/>
+                <field name="res_name" column_invisible="True"/> <!-- computed display name of the resource, not shown as a column but loaded for reference -->
+                <field name="res_model" column_invisible="True"/> <!-- drives resource_ref computation and invisible="not resource_ref" on resource_ref/button -->
                 <field name="resource_ref" options="{'model_field': 'res_model_id', 'no_create': True}" invisible="not resource_ref"/>
                 <button name="action_open_record" type="object" icon="open_in_new" invisible="not resource_ref" title="Open Record"/>
                 <field name="res_id" string="ID"/>
-                <field name="has_active" column_invisible="True"/>
-                <field name="execution_details" column_invisible="True"/>
+                <field name="has_active" column_invisible="True"/> <!-- drives invisible="not has_active" on is_active and the archived filter -->
+                <field name="execution_details" column_invisible="True"/> <!-- used by privacy_lookup_wizard.execution_details compute, not shown as a column -->
                 <field name="is_active" widget="boolean_toggle" invisible="is_unlinked or not has_active"/>
-                <field name="is_unlinked" column_invisible="True"/>
+                <field name="is_unlinked" column_invisible="True"/> <!-- drives invisible on is_active and the Delete button -->
                 <button name="action_unlink" string="Delete" type="object" icon="delete" icon_class="oi-filled" invisible="is_unlinked" confirm="This operation is irreversible. Do you wish to proceed to the record deletion?"/>
             </list>
         </field>

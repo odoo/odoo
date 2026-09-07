@@ -18,7 +18,7 @@
         <field name="model">product.attribute</field>
         <field name="arch" type="xml">
             <form string="Product Attribute">
-            <field name="number_related_products" invisible="1"/>
+            <field name="number_related_products" invisible="1"/> <!-- drives invisible/readonly on button_box, create_variant and value_ids buttons below -->
             <sheet>
                 <widget
                     name="web_ribbon"
@@ -59,7 +59,7 @@
                             <list string="Values" editable="bottom">
                                 <field name="sequence" widget="handle"/>
                                 <field name="name"/>
-                                <field name="display_type" column_invisible="True"/>
+                                <field name="display_type" column_invisible="True"/> <!-- drives column_invisible on is_custom/html_color/image via parent.display_type -->
                                 <field name="is_custom" width="120px"
                                        column_invisible="parent.display_type == 'multi'"/>
                                 <field name="html_color"
@@ -139,7 +139,7 @@
                 <field name="excluded_value_ids" widget="many2many_tags" options="{'no_create': True}" />
                 <field name="ptav_active" optional="hide"/>
                 <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- needed by the monetary widget on price_extra above -->
                 <field name="show_price_extra" optional="hide"/>
                 <button
                     string="Configure" class="float-end btn-secondary"
@@ -158,12 +158,12 @@
                     <group>
                         <field name="ptav_active" readonly="1" invisible="ptav_active"/>
                         <field name="name"/>
-                        <field name="display_type" invisible="1"/>
+                        <field name="display_type" invisible="1"/> <!-- drives invisible on html_color/image below -->
                         <field name="html_color" invisible="display_type != 'color' or image"/>
                         <field name="image" invisible="display_type != 'color' or not image" widget="image" options="{'size': [70, 70]}"/>
                         <field name="excluded_value_ids" widget="many2many_tags" options="{'no_create': True}" />
                         <field name="price_extra" widget="monetary" options="{'field_digits': True}"/>
-                        <field name="currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- needed by the monetary widget on price_extra above -->
                     </group>
                 </sheet>
             </form>

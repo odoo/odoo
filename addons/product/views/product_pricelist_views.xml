@@ -74,7 +74,7 @@
                     <group>
                         <group name="pricelist_settings">
                             <field name="currency_id" groups="base.group_multi_currency"/>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible on web_ribbon widget above -->
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                         </group>
                         <group>
@@ -89,7 +89,7 @@
                         <page name="pricelist_rules" string="Rules">
                             <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
                                 <list string="Pricelist Rules">
-                                    <field name="product_tmpl_id" column_invisible="True"/>
+                                    <field name="product_tmpl_id" column_invisible="True"/> <!-- dependency of computed name/price columns below -->
                                     <field name="name" string="Apply on"/>
                                     <field name="min_quantity"/>
                                     <field
@@ -107,11 +107,11 @@
                                         optional="show"
                                     />
                                     <field name="price"/>
-                                    <field name="base" column_invisible="True"/>
-                                    <field name="price_discount" column_invisible="True"/>
-                                    <field name="applied_on" column_invisible="True"/>
-                                    <field name="compute_price" column_invisible="True"/>
-                                    <field name="categ_id" column_invisible="True"/>
+                                    <field name="base" column_invisible="True"/> <!-- dependency of computed price column above -->
+                                    <field name="price_discount" column_invisible="True"/> <!-- dependency of computed price column above -->
+                                    <field name="applied_on" column_invisible="True"/> <!-- dependency of computed name column above -->
+                                    <field name="compute_price" column_invisible="True"/> <!-- dependency of computed price column above -->
+                                    <field name="categ_id" column_invisible="True"/> <!-- dependency of computed name column above -->
                                 </list>
                             </field>
                         </page>

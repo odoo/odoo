@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
-                <field name="iap_enrich_auto_done" invisible="1"/>
+                <field name="iap_enrich_auto_done" invisible="1"/> <!-- loaded so saving the form doesn't reset the IAP enrich-done flag read by ir_http session_info -->
             </xpath>
             <xpath expr="//field[@name='additional_identifiers' and @widget='additional_identifiers_list']" position="attributes">
                 <attribute name="widget">additional_identifiers_list_partner_autocomplete</attribute>
