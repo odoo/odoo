@@ -675,3 +675,79 @@ registry.category("web_tour.tours").add("test_not_available_pricelist_not_set_on
             FeedbackScreen.isShown(),
         ].flat(),
 });
+<<<<<<< 6c78ff3823fe8169c19bf1fd9ef044182bbfd549
+||||||| 9cbd3f022b4ca60026fdf64ecbd538d51682d19f
+
+registry.category("web_tour.tours").add("test_paid_order_payment_method_drilldown", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("Paid"),
+            ProductScreen.clickReview(),
+            selectButton("Details"),
+            BackendUtils.clickNotebookTab("Payments"),
+            BackendUtils.openListRowFormView("payment_ids"),
+            BackendUtils.followMany2oneLink("payment_method_id"),
+            {
+                content: "The payment method form is displayed without crashing",
+                trigger: ".o_form_view .o_field_widget[name=payment_method_type]",
+            },
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("test_paid_order_payment_method_drilldown", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.clickNextOrder(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("Paid"),
+            ProductScreen.clickReview(),
+            selectButton("Details"),
+            BackendUtils.clickNotebookTab("Payments"),
+            BackendUtils.openListRowFormView("payment_ids"),
+            BackendUtils.followMany2oneLink("payment_method_id"),
+            {
+                content: "The payment method form is displayed without crashing",
+                trigger: ".o_form_view .o_field_widget[name=payment_method_type]",
+            },
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_ticket_screen_search_suggestions", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            Chrome.clickOrders(),
+            {
+                content: "wait for the loading overlay to be gone before probing what is on top",
+                trigger: "body:not(:has(.pos-loader))",
+            },
+            {
+                content: "type a search term to display the search field suggestions",
+                trigger: ".pos-search-bar input",
+                run: "edit 001",
+            },
+            TicketScreen.suggestionIsOnTop("Receipt Number"),
+            TicketScreen.suggestionIsOnTop("Date"),
+            TicketScreen.suggestionIsOnTop("Customer"),
+        ].flat(),
+});
+>>>>>>> f9624591e11ac14fa4612efac67755222154b051
