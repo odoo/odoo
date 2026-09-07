@@ -73,12 +73,18 @@ export class PaymentScreen extends Component {
         }
 
         //Activate the invoice option for refund orders if the original order was invoiced.
-        if (
-            this.currentOrder.isRefund &&
-            this.currentOrder.lines[0].refunded_orderline_id?.order_id?.isToInvoice()
-        ) {
-            this.currentOrder.setToInvoice(true);
+        const currentOrder = this.currentOrder;
+        if (currentOrder.isRefund) {
+            return this.pos.ensureRefundedOrderLoaded(currentOrder).then(() => {
+                if (this.shouldInvoiceRefund(currentOrder)) {
+                    currentOrder.setToInvoice(true);
+                }
+            });
         }
+    }
+
+    shouldInvoiceRefund(order) {
+        return Boolean(order.refunded_order_id?.isToInvoice());
     }
 
     getNumpadButtons() {
