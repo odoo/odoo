@@ -1,4 +1,5 @@
 from . import common
+from . import test_discuss_channel
 from . import test_ui
 from . import test_chatbot_ui
 from . import test_cors_livechat
