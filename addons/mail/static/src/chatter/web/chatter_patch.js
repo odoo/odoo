@@ -423,6 +423,9 @@ const chatterPatch = {
     },
 
     async reloadParentView() {
+        if (status(this) === "destroyed") {
+            return;
+        }
         await this.webChatterProps.saveRecord?.();
         if (this.webChatterProps.record) {
             await this.webChatterProps.record.load();
