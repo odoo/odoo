@@ -1,0 +1,12 @@
+<odoo>
+    <record id="rka_company_rule" model="ir.rule">
+        <field name="name">RKA multi-company</field>
+        <field name="model_id" ref="model_sifnext_rka"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+    <record id="rka_realization_company_rule" model="ir.rule">
+        <field name="name">Realisasi RKA multi-company</field>
+        <field name="model_id" ref="model_sifnext_rka_realization"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

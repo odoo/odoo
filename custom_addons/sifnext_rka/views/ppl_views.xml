@@ -1,0 +1,22 @@
+<odoo>
+    <record id="view_sifnext_ppl_form_rka" model="ir.ui.view">
+        <field name="name">sifnext.ppl.form.rka</field>
+        <field name="model">sifnext.ppl</field>
+        <field name="inherit_id" ref="sifnext_ppl.view_sifnext_ppl_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']/list/field[@name='account_id']" position="after">
+                <field name="ppl_unit_id" column_invisible="True"/>
+                <field name="request_year" column_invisible="True"/>
+                <field name="rka_id" groups="sifnext_ppl.group_ppl_finance"/>
+                <field name="budget_available" string="Sisa RKA" groups="sifnext_ppl.group_ppl_finance" optional="show"/>
+            </xpath>
+            <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="before">
+                <group string="Ringkasan Anggaran" groups="sifnext_ppl.group_ppl_finance">
+                    <field name="budget_total"/>
+                    <field name="budget_realization"/>
+                    <field name="budget_remaining"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

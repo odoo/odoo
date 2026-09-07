@@ -1,0 +1,89 @@
+<odoo>
+    <record id="view_sifnext_rka_list" model="ir.ui.view">
+        <field name="name">sifnext.rka.list</field>
+        <field name="model">sifnext.rka</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'approved'" decoration-muted="state == 'closed'">
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="year"/>
+                <field name="account_id" string="COA"/>
+                <field name="budget_amount" sum="Total Anggaran"/>
+                <field name="realization_amount" sum="Total Realisasi"/>
+                <field name="remaining_amount" sum="Total Sisa"/>
+                <field name="state" widget="badge"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_sifnext_rka_form" model="ir.ui.view">
+        <field name="name">sifnext.rka.form</field>
+        <field name="model">sifnext.rka</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_approve" type="object" string="Setujui" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_close" type="object" string="Tutup" invisible="state != 'approved'"/>
+                    <button name="action_reset_draft" type="object" string="Kembali ke Draft" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title"><h1><field name="name" readonly="True"/></h1></div>
+                    <group>
+                        <group>
+                            <field name="unit_id" readonly="state != 'draft'"/>
+                            <field name="year" readonly="state != 'draft'"/>
+                            <field name="account_id" readonly="state != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="budget_amount" readonly="state != 'draft'"/>
+                            <field name="realization_amount"/>
+                            <field name="remaining_amount"/>
+                            <field name="currency_id" invisible="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Realisasi">
+                            <field name="realization_ids" readonly="True">
+                                <list create="false" delete="false" edit="false">
+                                    <field name="realization_date"/>
+                                    <field name="ppl_id"/>
+                                    <field name="ppl_line_id"/>
+                                    <field name="amount"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="view_sifnext_rka_search" model="ir.ui.view">
+        <field name="name">sifnext.rka.search</field>
+        <field name="model">sifnext.rka</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="unit_id"/>
+                <field name="year"/>
+                <field name="account_id"/>
+                <filter name="approved" string="Disetujui" domain="[('state', '=', 'approved')]"/>
+                <separator/>
+                <filter name="group_unit" string="Unit" context="{'group_by': 'unit_id'}"/>
+                <filter name="group_year" string="Tahun" context="{'group_by': 'year'}"/>
+                <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="action_sifnext_rka" model="ir.actions.act_window">
+        <field name="name">RKA</field>
+        <field name="res_model">sifnext.rka</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_sifnext_rka_search"/>
+    </record>
+    <menuitem id="menu_sifnext_rka" name="RKA" parent="sifnext_ppl.menu_sifnext_finance_root" action="action_sifnext_rka" sequence="20"/>
+</odoo>
