@@ -42,14 +42,18 @@ function camelToPascal(name) {
  * @param {T} type
  * @param {{
  *  aggregator?: Aggregator;
- *  requiredKeys?: R[];
+ *  requiredKeys?: (keyof FieldDefinitionsByType[T])[];
+ *  copy?: boolean;
  * }} params
  */
-function makeFieldGenerator(type, { aggregator, requiredKeys = [] } = {}) {
+function makeFieldGenerator(type, { aggregator, requiredKeys = [], copy } = {}) {
     const constructorFnName = camelToPascal(type);
     const defaultDef = { ...DEFAULT_FIELD_PROPERTIES };
     if (aggregator) {
         defaultDef.aggregator = aggregator;
+    }
+    if (copy !== undefined) {
+        defaultDef.copy = copy;
     }
     if (type !== "generic") {
         defaultDef.type = type;
@@ -165,6 +169,7 @@ export const DEFAULT_FIELD_VALUES = {
 };
 
 export const DEFAULT_FIELD_PROPERTIES = {
+    copy: true,
     readonly: false,
     required: false,
     searchable: true,
@@ -221,6 +226,7 @@ export const Monetary = makeFieldGenerator("monetary", {
 
 export const One2many = makeFieldGenerator("one2many", {
     requiredKeys: ["relation"],
+    copy: false, // o2m are not copied by default, matching Field.copy in odoo/orm/fields_relational.py
 });
 
 export const Properties = makeFieldGenerator("properties", {

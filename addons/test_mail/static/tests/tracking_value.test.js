@@ -7,11 +7,9 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
+import { beforeEach, describe, expect, mockDate, mockTimeZone, test } from "@odoo/hoot";
 import { defineTestMailModels, editSelect } from "@test_mail/../tests/test_mail_test_helpers";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { currencies } from "@web/core/currency";
+import { serverState } from "@web/../tests/web_test_helpers";
 
 const archs = {
     "mail.test.track.all,false,form": `
@@ -122,14 +120,18 @@ test("rendering of tracked field of type integer: from 0 to non-0", async () => 
 });
 
 test("rendering of tracked field of type monetary: from non-0 to 0", async () => {
+    const testCurrencyId = 1;
+    serverState.currencies = [
+        {
+            id: testCurrencyId,
+            name: "ECU",
+            position: "after",
+            symbol: "§",
+            digits: [69, 2],
+        },
+    ];
+
     const pyEnv = await startServer();
-
-    const testCurrencyId = pyEnv["res.currency"].create({ name: "ECU", symbol: "§" });
-    // need to patch currencies as they're passed via cookies, not through the orm
-    patchWithCleanup(currencies, {
-        [testCurrencyId]: { digits: [69, 2], position: "after", symbol: "§" },
-    });
-
     const mailTestTrackAllId1 = pyEnv["mail.test.track.all"].create({
         currency_id: testCurrencyId,
         monetary_field: 1,

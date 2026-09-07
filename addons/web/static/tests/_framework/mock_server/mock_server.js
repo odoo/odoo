@@ -772,6 +772,39 @@ export class MockServer {
     }
 
     /**
+     * @param {Model} model
+     * @param {FieldDefinition} field
+     */
+    _getRelatedFieldChain(model, field) {
+        /** @type {[Model, FieldDefinition][]} */
+        const fieldChain = [[model, field]];
+        const fieldNames = safeSplit(field.related, ".");
+        const lastFieldName = fieldNames.pop();
+        let currentModel = model;
+        let currentField = field;
+        for (const fieldName of fieldNames) {
+            currentField = currentModel._fields[fieldName];
+            if (!currentField) {
+                break;
+            }
+            fieldChain.push([currentModel, currentField]);
+            const modelName = currentField.relation;
+            currentModel = this._models[modelName];
+            if (!currentModel) {
+                break;
+            }
+        }
+        if (currentModel) {
+            const lastField = currentModel._fields[lastFieldName];
+            if (lastField) {
+                fieldChain.push([currentModel, lastField]);
+                return fieldChain;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @private
      * @param {string | URL} input
      * @param {RequestInit} init
@@ -955,7 +988,7 @@ export class MockServer {
             this._models[model._name] = model;
         }
 
-        // Second iteration: model inheritance +
+        // Second iteration: model inheritance + basic field informations
         for (const model of models) {
             // Apply inherited fields
             for (const modelName of safeSplit(model._inherit)) {
@@ -998,7 +1031,12 @@ export class MockServer {
                 if (typeof onChange === "function") {
                     model._onChanges[fieldName] ||= onChange.bind(model);
                 }
+            }
+        }
 
+        // Third iteration: computed & related fields
+        for (const model of models) {
+            for (const [fieldName, field] of Object.entries(model._fields)) {
                 // Computed & related fields
                 if (field.compute) {
                     // Computed field
@@ -1016,7 +1054,20 @@ export class MockServer {
                     model._computes[fieldName] = computeFn;
                 } else if (field.related) {
                     // Related field
-                    model._related.add(fieldName);
+                    const fieldChain = this._getRelatedFieldChain(model, field);
+                    if (fieldChain) {
+                        model._relatedDepencencies.set(fieldName, fieldChain);
+                        for (let i = 1; i < fieldChain.length; i++) {
+                            const [fieldModel, relatedField] = fieldChain[i];
+                            if (!fieldModel._relatedInverse.has(relatedField.name)) {
+                                fieldModel._relatedInverse.set(relatedField.name, []);
+                            }
+                            fieldModel._relatedInverse.get(relatedField.name).push([model, field]);
+                        }
+                    } else {
+                        // Incomplete field chain: remove 'related' attribute
+                        delete field.related;
+                    }
                 }
             }
 
@@ -1063,7 +1114,7 @@ export class MockServer {
             for (const record of model) {
                 model._applyDefaults(record);
             }
-            model._applyComputesAndValidate();
+            model._applyComputesAndValidate({ force: true });
         }
 
         // creation of the ir.model.fields records, required for tracked fields
