@@ -17,10 +17,10 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="balance_start"/>
                     <field name="balance_end_real"/>
-                    <field name="balance_end" column_invisible="True"/>
-                    <field name="currency_id" column_invisible="True"/>
-                    <field name="is_complete" column_invisible="True"/>
-                    <field name="is_valid" column_invisible="True"/>
+                    <field name="balance_end" column_invisible="True"/> <!-- input of the is_complete/is_valid computes that drive the row decorations -->
+                    <field name="currency_id" column_invisible="True"/> <!-- currency for the balance monetary columns and the is_complete compute -->
+                    <field name="is_complete" column_invisible="True"/> <!-- drives decoration-danger on the list rows -->
+                    <field name="is_valid" column_invisible="True"/> <!-- drives decoration-danger on the list rows -->
                 </list>
             </field>
         </record>

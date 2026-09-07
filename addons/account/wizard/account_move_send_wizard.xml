@@ -6,9 +6,9 @@
         <field name="model">account.move.send.wizard</field>
         <field name="arch" type="xml">
             <form class="o_account_move_send_wizard">
-                <field name="move_id" invisible="1"/>
-                <field name="attachments_not_supported" invisible="1"/>
-                <field name="can_edit_body" invisible="1"/>  <!-- needed for the `mail_composer_template_selector` widget -->
+                <field name="move_id" invisible="1"/> <!-- read by account_move_send_attachments_selector.js and drives all move-based computes -->
+                <field name="attachments_not_supported" invisible="1"/> <!-- read by mail_attachments.js widget -->
+                <field name="can_edit_body" invisible="1"/> <!-- needed for the `mail_composer_template_selector` widget -->
 
                 <!-- Warnings -->
                 <div class="m-0" id="alerts" invisible="not alerts">
@@ -22,16 +22,16 @@
                 </div>
 
                 <!-- PDF template -->
-                <field name="pdf_report_id" invisible="1"/>
+                <field name="pdf_report_id" invisible="1"/> <!-- keeps the value loaded when both conditional pdf_report_id groups below are hidden -->
                 <group invisible="not display_pdf_report_id or 'email' in sending_methods">
                     <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}"/>
                 </group>
 
                 <!-- Mail composer -->
                 <div invisible="'email' not in sending_methods">
-                    <field name="model" invisible="1"/>
-                    <field name="res_ids" invisible="1"/>
-                    <field name="render_model" invisible="1"/>
+                    <field name="model" invisible="1"/> <!-- read by mail_composer_form.js and mail_composer_template_selector.js -->
+                    <field name="res_ids" invisible="1"/> <!-- read by mail_composer_form.js to build the composer context -->
+                    <field name="render_model" invisible="1"/> <!-- read by mail_composer_template_selector.js to filter templates -->
 
                     <group>
                         <field name="pdf_report_id" options="{'no_create': True, 'no_edit': True}" invisible="not display_pdf_report_id"/>

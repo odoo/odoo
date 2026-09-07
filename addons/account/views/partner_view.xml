@@ -36,12 +36,12 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <group>
                         <group>
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
-                            <field name="states_count" invisible="1"/>
-                            <field name="company_country_id" invisible="1"/>
-                            <field name="fiscal_country_codes" invisible="1"/>
-                            <field name="foreign_vat_header_mode" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives the web_ribbon "Archived" invisible="active" modifier above -->
+                            <field name="company_id" invisible="1"/> <!-- feeds the parent.company_id domains on account_src_id/account_dest_id in the Account Mapping list/form -->
+                            <field name="states_count" invisible="1"/> <!-- drives the "states_count == 0" part of state_ids' invisible modifier -->
+                            <field name="company_country_id" invisible="1"/> <!-- related company fiscal country kept available to inheriting fiscal-position views -->
+                            <field name="fiscal_country_codes" invisible="1"/> <!-- drives "'XX' not in fiscal_country_codes" modifiers in l10n fiscal-position inherits (l10n_ar, l10n_gr_edi, ...) -->
+                            <field name="foreign_vat_header_mode" invisible="1"/> <!-- drives the foreign-VAT alert div's invisible modifiers at the top of the form -->
                             <field name="name"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
@@ -140,7 +140,7 @@
                         context="{'default_partner_id': id}">
                         <div class="o_form_field o_stat_info">
                             <span class="o_stat_value">
-                                <field name="currency_id" invisible="1"/>
+                                <field name="currency_id" invisible="1"/> <!-- currency_field for the total_invoiced monetary widget below -->
                                 <field name="total_invoiced" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </span>
                             <span class="o_stat_text">Invoiced</span>
@@ -159,8 +159,8 @@
                 </div>
 
                 <label for="vat" position="before">
-                    <field name="partner_vat_placeholder" invisible="1"/>
-                    <field name="country_code" invisible="1"/>
+                    <field name="partner_vat_placeholder" invisible="1"/> <!-- feeds the placeholder_field option set on vat below -->
+                    <field name="country_code" invisible="1"/> <!-- drives "country_code != 'XX'" modifiers in l10n partner-form inherits (l10n_in, l10n_hu_edi, l10n_tr, ...) -->
                 </label>
                 <field name="vat" position="attributes">
                     <attribute name="options">{'placeholder_field': 'partner_vat_placeholder'}</attribute>
@@ -204,7 +204,7 @@
             <field name="inherit_id" ref="product.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="fiscal_country_codes" invisible="1"/>
+                    <field name="fiscal_country_codes" invisible="1"/> <!-- drives "'XX' not in fiscal_country_codes" modifiers in l10n partner inherits (l10n_ca, l10n_br, l10n_ar, ...) -->
                 </xpath>
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" invisible="not is_company and parent_id" groups="account.group_account_invoice,account.group_account_readonly">
@@ -290,7 +290,7 @@
                 <xpath expr="//field[@name='vat']" position="after">
                     <field name="invoice_sending_method" optional="hide" groups="base.group_no_one"/>
                     <field name="invoice_edi_format" string="EDI Format" optional="hide" groups="base.group_no_one"/>
-                    <field name="currency_id" column_invisible="True"/>
+                    <field name="currency_id" column_invisible="True"/> <!-- technical currency column available as currency_field for any monetary column added by inheriting partner lists -->
                 </xpath>
             </field>
         </record>
@@ -301,7 +301,7 @@
             <field name="inherit_id" ref="base.view_res_partner_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='inactive']" position="before">
-                   <field name="fiscal_country_codes" invisible="1"/>
+                   <field name="fiscal_country_codes" invisible="1"/> <!-- loaded so l10n search-view inherits can add "'XX' not in fiscal_country_codes" filter modifiers -->
                    <filter string="Customer Invoices" name="customer" domain="[('customer_rank','>', 0)]"/>
                    <filter string="Vendor Bills" name="supplier" domain="[('supplier_rank','>', 0)]"/>
                    <separator/>

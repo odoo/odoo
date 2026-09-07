@@ -6,9 +6,9 @@
             <field name="model">account.resequence.wizard</field>
             <field name="arch" type="xml">
             <form string="Re-Sequence">
-                <field name="move_ids" invisible="1"/>
-                <field name="new_values" invisible="1"/>
-                <field name="sequence_number_reset" invisible="1"/>
+                <field name="move_ids" invisible="1"/> <!-- target records the resequence button operates on; drives first_name/new_values computes -->
+                <field name="new_values" invisible="1"/> <!-- computed JSON consumed by the account_resequence_widget preview -->
+                <field name="sequence_number_reset" invisible="1"/> <!-- computed reset mode used by the preview_moves compute -->
                 <group>
                     <group>
                         <field name="ordering" widget="radio"/>

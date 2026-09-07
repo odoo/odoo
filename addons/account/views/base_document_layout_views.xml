@@ -8,7 +8,7 @@
             <field name="mode">primary</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='paperformat_id']" position="after">
-                    <field name="from_invoice" invisible="1"/>
+                    <field name="from_invoice" invisible="1"/> <!-- drives invisible="not from_invoice" on the qr_code field below -->
                     <field name="vat"/>
                     <field name="account_number" string="Bank Account" required="qr_code" placeholder="BE71096123456769"/>
                     <field name="qr_code" string="QR Code" invisible="not from_invoice"/>

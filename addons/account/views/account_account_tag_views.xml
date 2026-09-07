@@ -10,7 +10,7 @@
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives the invisible="active" modifier on the "Archived" web_ribbon above -->
                             <field name="name"/>
                             <field name="applicability"/>
                             <field name="country_id" options="{'no_open': True, 'no_create': True}" invisible="applicability != 'taxes'"/>
