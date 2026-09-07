@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <odoo>
 
+    <!-- ===================================================== -->
+    <!-- LIST VIEW -->
+    <!-- ===================================================== -->
+
     <record id="view_sifnext_asset_depreciation_list" model="ir.ui.view">
+
         <field name="name">sifnext.asset.depreciation.list</field>
+
         <field name="model">sifnext.asset.depreciation</field>
+
         <field name="arch" type="xml">
 
             <list string="Jadwal Penyusutan">
@@ -13,33 +19,86 @@
                 <field name="accumulated_depreciation"/>
                 <field name="book_value"/>
                 <field name="state"/>
+                <field name="journal_entry_id"/>
+
+                <button
+                    name="action_post_depreciation"
+                    type="object"
+                    string="Post Penyusutan"
+                    class="btn-primary"
+                    invisible="state != 'draft'"
+                />
             </list>
 
         </field>
+
     </record>
 
+
+    <!-- ===================================================== -->
+    <!-- FORM VIEW -->
+    <!-- ===================================================== -->
+
     <record id="view_sifnext_asset_depreciation_form" model="ir.ui.view">
+
         <field name="name">sifnext.asset.depreciation.form</field>
+
         <field name="model">sifnext.asset.depreciation</field>
+
         <field name="arch" type="xml">
 
             <form string="Jadwal Penyusutan">
+
+                <header>
+
+                    <button
+                        name="action_post_depreciation"
+                        type="object"
+                        string="Post Penyusutan"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,posted"
+                    />
+
+                </header>
+
                 <sheet>
 
                     <group>
+
                         <field name="asset_id"/>
+
                         <field name="depreciation_date"/>
+
                         <field name="depreciation_amount"/>
+
                         <field name="accumulated_depreciation"/>
+
                         <field name="book_value"/>
-                        <field name="currency_id"/>
-                        <field name="state"/>
+
+                        <field
+                            name="currency_id"
+                            invisible="1"
+                        />
+
+                        <field
+                            name="journal_entry_id"
+                            readonly="1"
+                        />
+
                     </group>
 
                 </sheet>
+
             </form>
 
         </field>
+
     </record>
 
 </odoo>

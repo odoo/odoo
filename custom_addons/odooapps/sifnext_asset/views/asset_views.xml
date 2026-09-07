@@ -10,40 +10,14 @@
         <field name="model">sifnext.asset</field>
         <field name="arch" type="xml">
 
-            <list
-                string="Data Aset"
-                decoration-muted="not active"
-            >
+            <list string="Data Aset" decoration-muted="not active">
 
-                <field
-                    name="code"
-                    string="Kode Aset"
-                />
-
-                <field
-                    name="name"
-                    string="Nama Aset"
-                />
-
-                <field
-                    name="category_id"
-                    string="Kategori"
-                />
-
-                <field
-                    name="owner_unit"
-                    string="Unit Pemilik"
-                />
-
-                <field
-                    name="project_code"
-                    string="Kode Proyek"
-                />
-
-                <field
-                    name="acquisition_date"
-                    string="Tanggal Perolehan"
-                />
+                <field name="code" string="Kode Aset"/>
+                <field name="name" string="Nama Aset"/>
+                <field name="category_id" string="Kategori"/>
+                <field name="owner_unit" string="Unit Pemilik"/>
+                <field name="project_code" string="Kode Proyek"/>
+                <field name="acquisition_date" string="Tanggal Perolehan"/>
 
                 <field
                     name="acquisition_value"
@@ -59,11 +33,8 @@
                     options="{'currency_field': 'currency_id'}"
                 />
 
-                <field
-                    name="active"
-                    string="Status"
-                    widget="boolean"
-                />
+                <field name="state" string="Status"/>
+                <field name="active" string="Aktif" widget="boolean"/>
 
             </list>
 
@@ -82,10 +53,33 @@
 
             <form string="Data Aset">
 
+                <!-- ================================================= -->
+                <!-- HEADER -->
+                <!-- ================================================= -->
+
+                <header>
+
+                    <button
+                        name="action_post_acquisition"
+                        type="object"
+                        string="Post Perolehan"
+                        class="btn-primary"
+                        invisible="state != 'draft'"
+                    />
+
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,acquired,depreciating,fully_depreciated"
+                    />
+
+                </header>
+
+
                 <sheet>
 
                     <!-- ================================================= -->
-                    <!-- HEADER -->
+                    <!-- TITLE -->
                     <!-- ================================================= -->
 
                     <div class="oe_title">
@@ -108,7 +102,7 @@
 
 
                     <!-- ================================================= -->
-                    <!-- STATUS -->
+                    <!-- ACTION ARCHIVE -->
                     <!-- ================================================= -->
 
                     <div class="oe_button_box">
@@ -139,35 +133,23 @@
 
                         <group>
 
-                            <field
-                                name="code"
-                                readonly="1"
-                            />
+                            <field name="code" readonly="1"/>
 
-                            <field
-                                name="category_id"
-                            />
+                            <field name="category_id"/>
 
-                            <field
-                                name="owner_unit"
-                            />
+                            <field name="owner_unit"/>
+
+                            <field name="partner_id" string="Vendor"/>
 
                         </group>
 
                         <group>
 
-                            <field
-                                name="project_code"
-                            />
+                            <field name="project_code"/>
 
-                            <field
-                                name="reference"
-                            />
+                            <field name="reference"/>
 
-                            <field
-                                name="active"
-                                widget="boolean_toggle"
-                            />
+                            <field name="active" widget="boolean_toggle"/>
 
                         </group>
 
@@ -182,9 +164,7 @@
 
                         <group>
 
-                            <field
-                                name="acquisition_date"
-                            />
+                            <field name="acquisition_date"/>
 
                             <field
                                 name="acquisition_value"
@@ -201,9 +181,7 @@
 
                         <group>
 
-                            <field
-                                name="depreciation_start_date"
-                            />
+                            <field name="depreciation_start_date"/>
 
                             <field
                                 name="residual_value"
@@ -217,6 +195,42 @@
 
 
                     <!-- ================================================= -->
+                    <!-- AKUN FINANCE -->
+                    <!-- ================================================= -->
+
+                    <group string="Integrasi Finance">
+
+                        <group>
+
+                            <field name="account_asset_id"/>
+
+                            <field name="account_cash_id"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="account_dep_id"/>
+
+                            <field name="account_exp_id"/>
+
+                        </group>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- JURNAL PEROLEHAN -->
+                    <!-- ================================================= -->
+
+                    <group string="Jurnal Perolehan">
+
+                        <field name="purchase_journal_id"/>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
                     <!-- INFORMASI PENYUSUTAN -->
                     <!-- ================================================= -->
 
@@ -224,17 +238,11 @@
 
                         <group>
 
-                            <field
-                                name="useful_life_years"
-                            />
+                            <field name="useful_life_years"/>
 
-                            <field
-                                name="useful_life_months"
-                            />
+                            <field name="useful_life_months"/>
 
-                            <field
-                                name="depreciation_method"
-                            />
+                            <field name="depreciation_method"/>
 
                         </group>
 
@@ -342,6 +350,11 @@
                                         string="Status"
                                     />
 
+                                    <field
+                                        name="journal_entry_id"
+                                        string="Jurnal Finance"
+                                    />
+
                                 </list>
 
                             </field>
@@ -375,8 +388,6 @@
                 <field name="owner_unit"/>
                 <field name="project_code"/>
 
-                <!-- FILTER -->
-
                 <filter
                     name="filter_active"
                     string="Aktif"
@@ -390,8 +401,6 @@
                 />
 
                 <separator/>
-
-                <!-- GROUP -->
 
                 <filter
                     name="group_category"
@@ -422,10 +431,18 @@
     <!-- ===================================================== -->
 
     <record id="action_sifnext_asset" model="ir.actions.act_window">
+
         <field name="name">Data Aset</field>
+
         <field name="res_model">sifnext.asset</field>
+
         <field name="view_mode">list,form</field>
-        <field name="view_id" ref="view_sifnext_asset_list"/>
+
+        <field
+            name="view_id"
+            ref="view_sifnext_asset_list"
+        />
+
     </record>
 
 
