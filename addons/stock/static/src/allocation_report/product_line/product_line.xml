@@ -11,7 +11,7 @@
                 <div t-out="this.props.name"/>
                 <div class="fw-bold w-100">
                     <t t-out="this.props.totalQty"/> <t t-out="this.props.uom.display_name"/>
-                    <button class="btn btn-link fa fa-area-chart"
+                    <button class="btn btn-link oi" data-icon="area_chart"
                             t-on-click="() => this.onClickForecast()"
                             name="forecasted_report_link"/>
                 </div>

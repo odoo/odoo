@@ -26,7 +26,7 @@
                             <span t-if="this.favorite()" class="o_field_widget ms-2">
                                 <span class="o_priority">
                                     <span
-                                        class="o_priority_star fa fa-star"
+                                        class="o_priority_star oi oi-filled" data-icon="star"
                                         tabindex="0"
                                         t-att-checked="this.favorite()"
                                     />
@@ -45,7 +45,7 @@
                         <span class="o_field_widget me-2">
                             <span class="o_priority">
                                 <span
-                                    class="o_priority_star fa fa-star"
+                                    class="o_priority_star oi oi-filled" data-icon="star"
                                     t-att-class="this.favorite() ? '' : 'opacity-0'"
                                     tabindex="0"
                                     t-att-checked="this.favorite()"
@@ -61,7 +61,7 @@
             </div>
             <div class="col-2 px-0">
                 <button t-if="this.props.allocatedQuantity()"
-                        class="btn btn-secondary fa fa-print"
+                        class="btn btn-secondary oi" data-icon="print"
                         t-on-click.prevent="() => this.onPrintLabels()"/>
                 <button t-else="" class="btn btn-secondary opacity-0"/>
             </div>
