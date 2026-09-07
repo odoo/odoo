@@ -18,8 +18,8 @@ const ORM_AUTOMATIC_FIELDS = new Set([
 export class ResUsersSettings extends models.ServerModel {
     _name = "res.users.settings";
 
-    is_discuss_sidebar_category_channel_open = fields.Generic({ default: true });
-    is_discuss_sidebar_category_chat_open = fields.Generic({ default: true });
+    is_discuss_sidebar_category_channel_open = fields.Boolean({ default: true });
+    is_discuss_sidebar_category_chat_open = fields.Boolean({ default: true });
 
     /** @param {number|number[]} userIdOrIds */
     _find_or_create_for_user(userIdOrIds) {

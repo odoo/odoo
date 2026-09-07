@@ -33,13 +33,9 @@ export class DiscussChannel extends models.ServerModel {
         string: "Members",
         default: () => [Command.create({ partner_id: serverState.partnerId })],
     });
-    channel_type = fields.Generic({ default: "channel" });
-    group_public_id = fields.Generic({
-        default: () => serverState.groupId,
-    });
-    uuid = fields.Generic({
-        default: () => uniqueId("discuss.channel_uuid-"),
-    });
+    channel_type = fields.Selection({ default: "channel" });
+    group_public_id = fields.Many2one({ default: () => serverState.groupId });
+    uuid = fields.Char({ default: () => uniqueId("discuss.channel_uuid-") });
     last_interest_dt = fields.Datetime({ string: "Last Interest" });
 
     /** @param {number[]} ids */
