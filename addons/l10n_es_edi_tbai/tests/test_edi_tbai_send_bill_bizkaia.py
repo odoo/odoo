@@ -28,6 +28,8 @@ class TestSendBillEdiBizkaia(TestEsEdiTbaiCommonBizkaia):
         # No chain index for vendor bills
         self.assertFalse(bill.l10n_es_tbai_chain_index)
         self.assertTrue(bill.l10n_es_tbai_post_document_id.xml_attachment_id)
+        html = self.env['ir.actions.report']._render_qweb_html('account.report_invoice', bill.ids)[0]
+        self.assertNotIn(b'l10n_es_tbai_qrcode', html)
 
         self.assertEqual(bill.state, 'posted')
         self.assertFalse(bill.l10n_es_tbai_cancel_document_id.xml_attachment_id)
