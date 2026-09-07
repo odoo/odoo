@@ -152,13 +152,13 @@ async function convertToWebpFormat(env, { attachmentRecord }) {
     // to be applied on both sides.
     // Generate alternate sizes and format for reports.
     const variants = await generateImageVariants({
-        source: { data: attachmentRecord.raw, mimetype: attachmentRecord.mimetype },
+        source: { data: attachmentRecord.raw.content, mimetype: attachmentRecord.mimetype },
         name: attachmentRecord.name,
         sizes: [1024, 512, 256, 128],
     });
     await env.services.orm.call("ir.attachment", "web_create_image_variants", [variants]);
     const webpData = variants[0]?.images?.[0]?.raw;
-    attachmentRecord.raw = webpData;
+    attachmentRecord.raw.content = webpData;
     attachmentRecord.mimetype = "image/webp";
     attachmentRecord.name = attachmentRecord.name.replace(/\.[^/.]+$/, ".webp");
 }
