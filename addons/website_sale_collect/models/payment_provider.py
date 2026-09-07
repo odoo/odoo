@@ -81,3 +81,9 @@ class PaymentProvider(models.Model):
             )
 
         return available_providers
+
+    @api.model
+    def _get_pay_on_delivery_provider_codes(self):
+        codes = super()._get_pay_on_delivery_provider_codes()
+        codes.add('on_site')
+        return codes

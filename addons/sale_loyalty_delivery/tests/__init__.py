@@ -1,3 +1,3 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import test_free_shipping_reward, test_loyalty_delivery
+from . import test_free_shipping_reward, test_loyalty_delivery, test_payment_provider
