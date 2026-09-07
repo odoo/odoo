@@ -116,6 +116,7 @@
                                 <list editable="bottom" open_form_view="True">
                                     <field name="sequence" widget="handle"/>
                                     <field name="description"/>
+                                    <field name="has_ppn"/>
                                     <field name="attachment_count" string="Lampiran" readonly="True" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
@@ -133,6 +134,7 @@
                                 <list editable="bottom" create="false" delete="false" open_form_view="True">
                                     <field name="sequence" readonly="True"/>
                                     <field name="description" readonly="True"/>
+                                    <field name="has_ppn" readonly="True"/>
                                     <field name="attachment_count" string="Lampiran" readonly="True" optional="show"/>
                                     <field name="quantity" readonly="True"/>
                                     <field name="unit_price" readonly="True"/>
@@ -149,6 +151,7 @@
                                 <list create="false" delete="false" edit="false" open_form_view="True">
                                     <field name="sequence"/>
                                     <field name="description"/>
+                                    <field name="has_ppn"/>
                                     <field name="attachment_count" string="Lampiran" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
@@ -165,6 +168,7 @@
                                 <list create="false" delete="false" edit="false" open_form_view="True">
                                     <field name="sequence"/>
                                     <field name="description"/>
+                                    <field name="has_ppn"/>
                                     <field name="attachment_count" string="Lampiran" optional="show"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
@@ -174,14 +178,24 @@
                                 </list>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
+                                <field name="ppn_percentage" readonly="state != 'draft'" invisible="ppn_amount == 0"/>
+                                <field name="ppn_amount" invisible="ppn_amount == 0"/>
                                 <field name="total_amount"/>
                             </group>
                         </page>
                         <page string="Pembayaran" groups="sifnext_ppl.group_ppl_finance">
                             <group>
-                                <field name="payment_method" readonly="state != 'approved'"/>
-                                <field name="payment_date" readonly="state != 'approved'"/>
-                                <field name="payment_reference" readonly="state != 'approved'"/>
+                                <group string="Sumber Dana">
+                                    <field name="payment_method" readonly="state != 'approved'"/>
+                                    <field name="payment_source_account_id" readonly="state != 'approved'" options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="payment_date" readonly="state != 'approved'"/>
+                                    <field name="payment_reference" readonly="state != 'approved'"/>
+                                </group>
+                                <group string="Rekening Penerima / History Transfer">
+                                    <field name="payment_dest_bank" readonly="state != 'approved'"/>
+                                    <field name="payment_dest_account_number" readonly="state != 'approved'"/>
+                                    <field name="payment_dest_account_name" readonly="state != 'approved'"/>
+                                </group>
                             </group>
                             <div class="text-muted">PPL hanya mencatat pembayaran administratif. Jurnal transaksi dikelola modul Jurnal Besar.</div>
                         </page>

@@ -30,7 +30,6 @@ class SifnextPPL(models.Model):
         required=True, default="manual", tracking=True,
     )
     line_ids = fields.One2many("sifnext.ppl.line", "ppl_id", string="Detail", copy=True)
-    has_ppn = fields.Boolean(string="Dikenakan PPN", default=False, tracking=True)
     ppn_percentage = fields.Float(string="Persentase PPN (%)", default=11.0, tracking=True)
     ppn_amount = fields.Monetary(compute="_compute_total_amount", store=True, string="Nominal PPN")
     total_amount = fields.Monetary(compute="_compute_total_amount", store=True, tracking=True, string="Total Akhir")
@@ -86,14 +85,12 @@ class SifnextPPL(models.Model):
         "Nomor PPL harus unik dalam satu perusahaan.",
     )
 
-    @api.depends("line_ids.subtotal", "has_ppn", "ppn_percentage")
+    @api.depends("line_ids.subtotal", "line_ids.has_ppn", "ppn_percentage")
     def _compute_total_amount(self):
         for record in self:
             subtotal = sum(record.line_ids.mapped("subtotal"))
-            if record.has_ppn:
-                record.ppn_amount = subtotal * (record.ppn_percentage / 100.0)
-            else:
-                record.ppn_amount = 0.0
+            ppn_base = sum(line.subtotal for line in record.line_ids if line.has_ppn)
+            record.ppn_amount = ppn_base * (record.ppn_percentage / 100.0)
             record.total_amount = subtotal + record.ppn_amount
 
     @api.constrains("line_ids")
@@ -249,7 +246,7 @@ class SifnextPPL(models.Model):
                 },
                 "total_amount": self.total_amount,
                 "ppn": {
-                    "has_ppn": self.has_ppn,
+                    "has_ppn": self.ppn_amount > 0,
                     "percentage": self.ppn_percentage,
                     "amount": self.ppn_amount,
                 },
@@ -469,6 +466,7 @@ class SifnextPPLLine(models.Model):
     sequence = fields.Integer(default=10)
     ppl_id = fields.Many2one("sifnext.ppl", required=True, ondelete="cascade", index=True)
     description = fields.Char(required=True)
+    has_ppn = fields.Boolean(string="Kena PPN", default=False)
     quantity = fields.Float(required=True, default=1)
     unit_price = fields.Monetary(required=True)
     subtotal = fields.Monetary(compute="_compute_subtotal", store=True)
