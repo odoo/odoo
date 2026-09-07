@@ -705,15 +705,10 @@ export function classToStyle(element, cssRules) {
             }
         }
 
-        // Find styles to remove if they are from a blacklisted class and match
-        // existing styles.
-        const stylesToRemove = Object.fromEntries(
-            Object.entries(css).filter(([key, value]) => blacklistedStyles[key] === value)
-        );
         // Remove style from blacklisted classes.
         writes.push(() => {
-            for (const [key] of Object.entries(stylesToRemove)) {
-                if (node.style[key]) {
+            for (const [key, value] of Object.entries(blacklistedStyles)) {
+                if (node.style.getPropertyValue(key) === value) {
                     node.style.removeProperty(key);
                 }
             }
