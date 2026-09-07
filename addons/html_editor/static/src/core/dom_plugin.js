@@ -483,45 +483,36 @@ export class DomPlugin extends Plugin {
                     const wasBeforeFakeLineBreak = next?.nodeName === "BR" && isFakeLineBreak(next);
                     const isInsertingBlock = isBlock(node);
                     let target = marker;
-                    let parent = marker.parentElement;
-                    let shouldSkip = false;
-                    if (isInsertingBlock && !this.canInsertBlockAt(node, parent)) {
-                        if (this.isAtBlockEdge(marker, "start")) {
-                            // TODO AGE: should probably not check block
-                            // edge but just whether edge of parent. Would
-                            // likely involve loop to insert before parent while
-                            // checking if can insert.
-                            target = closestBlock(marker);
-                        } else if (this.isAtBlockEdge(marker, "end")) {
-                            // TODO AGE: should probably not check block edge
-                            // but just whether edge of parent.
-                            // At the end of the block, we try to insert after
-                            // it.
-                            closestBlock(marker).after(marker);
+                    while (
+                        isInsertingBlock &&
+                        target &&
+                        !this.canInsertBlockAt(node, target.parentElement)
+                    ) {
+                        const parent = marker.parentElement;
+                        if (this.isAtParentEdge(marker, "start")) {
+                            parent.before(marker);
+                        } else if (this.isAtParentEdge(marker, "end")) {
+                            parent.after(marker);
+                        } else if (this.dependencies.split.isUnsplittable(parent)) {
+                            // We can't insert the node but we also can't split.
+                            target = null;
                         } else {
-                            let offset = childNodeIndex(marker);
-                            while (parent && !shouldSkip && !this.canInsertBlockAt(node, parent)) {
-                                if (this.dependencies.split.isUnsplittable(parent)) {
-                                    // We can't insert the node but we also
-                                    // can't split. Nothing we can do ¯\_(ツ)_/¯
-                                    shouldSkip = true;
-                                } else {
-                                    target = this.dependencies.split.splitElement(
-                                        parent,
-                                        offset
-                                    )[1];
-                                    offset = childNodeIndex(target);
-                                    parent = target.parentElement;
-                                }
+                            target = this.dependencies.split.splitElement(
+                                parent,
+                                childNodeIndex(target)
+                            )[1];
+                            if (isEmptyBlock(target)) {
+                                target.before(marker);
+                                target.remove();
+                                target = marker;
                             }
                         }
-                    }
-                    if (!shouldSkip) {
-                        target.before(node);
-                        if (isInsertingBlock && isEmptyBlock(target)) {
-                            target.before(marker);
-                            target.remove();
+                        if (!parent.contains(target) && isEmptyBlock(parent)) {
+                            parent.remove();
                         }
+                    }
+                    if (target) {
+                        target.before(node);
                     }
                     insertedNodes.push(node);
                     const didInsertBlock = isBlock(node);
@@ -610,30 +601,25 @@ export class DomPlugin extends Plugin {
     }
 
     /**
-     * Return true if the given node is at the given edge of its closest
-     * block, false otherwise.
+     * Return true if the given node is at the given edge of its parent, false
+     * otherwise.
      *
      * @param {Node} node
      * @param {"start"|"end"} edge
      * @returns {boolean}
      */
-    isAtBlockEdge(node, edge) {
-        const parentBlock = closestBlock(node);
-        while (node !== parentBlock) {
-            const index = childNodeIndex(node);
-            const parent = node.parentElement;
-            // Search for the first/last visible child.
-            let visibleChild = parent[`${edge === "start" ? "first" : "last"}Child`];
-            while (visibleChild && !isVisible(visibleChild)) {
-                visibleChild = visibleChild[`${edge === "start" ? "next" : "previous"}Sibling`];
+    isAtParentEdge(node, edge) {
+        const index = childNodeIndex(node);
+        // Search for the first/last visible child.
+        let visibleChild = node.parentElement[`${edge === "start" ? "first" : "last"}Child`];
+        while (visibleChild && !isVisible(visibleChild)) {
+            visibleChild = visibleChild[`${edge === "start" ? "next" : "previous"}Sibling`];
+        }
+        if (visibleChild) {
+            const visibleIndex = childNodeIndex(visibleChild);
+            if (edge === "start" ? index > visibleIndex : index < visibleIndex) {
+                return false;
             }
-            if (visibleChild) {
-                const visibleIndex = childNodeIndex(visibleChild);
-                if (edge === "start" ? index > visibleIndex : index < visibleIndex) {
-                    return false;
-                }
-            }
-            node = parent;
         }
         return true;
     }
