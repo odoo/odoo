@@ -3,7 +3,7 @@
 # * mass_mailing
 #
 # Translators:
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023, 2026.
 # Noma Yuki, 2023
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
@@ -15,16 +15,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:44+0000\n"
-"PO-Revision-Date: 2026-06-21 11:52+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-master/"
+"PO-Revision-Date: 2026-09-04 05:11+0000\n"
+"Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-4/"
 "mass_mailing/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: mass_mailing
 #. odoo-python
@@ -35,6 +35,10 @@ msgid ""
 "currently matches your rules!</p>\n"
 "            "
 msgstr ""
+"\n"
+"               <p class=\"o_view_nocontent_smiling_face\"> 現在、設定したルー"
+"ルに該当するレコードはありません。</p>\n"
+"            "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -106,7 +110,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__recipients_count
 msgid "# Of Recipients"
-msgstr ""
+msgstr "受信者数"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -144,25 +148,25 @@ msgstr "%(contact_name)sは以下のメーリングリストから登録解除�
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s added"
-msgstr ""
+msgstr "%(count)s件が追加されました"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s already subscribed"
-msgstr ""
+msgstr "%(count)s 件が登録済み"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s ignored (no email)"
-msgstr ""
+msgstr "%(count)s件を無視 (メールなし)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "%(count)s opted out"
-msgstr ""
+msgstr "%(count)s 件が配信停止"
 
 #. module: mass_mailing
 #. odoo-python
@@ -192,7 +196,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 msgid "%(record_name)s created from %(link)s"
-msgstr ""
+msgstr "%(link)s から %(record_name)s が作成されました"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mass_mailing_kpi_link_trackers
@@ -416,7 +420,7 @@ msgstr "世界で最も美しい家のデザインの秘訣7選"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "8.00am - 12.00pm"
-msgstr ""
+msgstr "午前8時～午後12時"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -577,7 +581,7 @@ msgstr "<i class=\"oi\" data-icon=\"east\"></i> オプトアウト理由を設�
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "<i>e.g. \"Recent shoppers\" or \"B2B leads in Canada\"</i>"
-msgstr ""
+msgstr "<i>例：「最近の購入者」または「カナダのB2Bリード」</i>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -604,6 +608,10 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"mailing_contact_ids.length == 1\">Mailing Contacts</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"mailing_contact_ids.length != 1\">"
+"メール配信連絡先</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"mailing_contact_ids.length == 1\">メール配信連絡先一覧</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_form
@@ -649,12 +657,12 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Created by</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">作成者</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "<span class=\"text-muted fs-6\">Recipients</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fs-6\">受信者</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -664,7 +672,7 @@ msgstr "<span invisible=\"not mailing_on_mailing_list\">メール連絡先</span
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span invisible=\"not scheduled or not process\">, </span>"
-msgstr ""
+msgstr "<span invisible=\"not scheduled or not process\">,</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -685,7 +693,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"process_text\">emails are being processed</span>"
-msgstr ""
+msgstr "<span name=\"process_text\">メールが処理中です</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -701,6 +709,8 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent soon</"
 "span>"
 msgstr ""
+"<span name=\"scheduled_text\">メールは送信予約済みで、まもなく送信されます。"
+"</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.digest_mail_main
@@ -710,12 +720,12 @@ msgstr "<span style=\"color: #878d97;\">メール送信レポートを停止</sp
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>.</span>"
-msgstr ""
+msgstr "<span>。</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span>Recipients</span>"
-msgstr ""
+msgstr "<span>受信者</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -749,7 +759,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "A fallback font will be used for some email clients"
-msgstr ""
+msgstr "一部のメールクライアントでは代替フォントが使用されます"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -943,13 +953,13 @@ msgid ""
 "Adapt these three columns to fit your design need. To duplicate, delete or "
 "move columns, select the column and use the top icons to perform your action."
 msgstr ""
-"3つのカラムを設計のニーズに合わせて調整ます。カラムを複製、削除又は移動するに"
-"は、カラムを選択し、上部のアイコンを使用してアクションを実行してください。"
+"3つの列を設計のニーズに合わせて調整ます。列を複製、削除又は移動するには、列を"
+"選択し、上部のアイコンを使用してアクションを実行してください。"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add (Mailing) Contacts to Mailing List"
-msgstr ""
+msgstr "メーリングリストに(配信先)連絡先を追加"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -961,12 +971,12 @@ msgstr "活動を追加"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/snippet_visibility_option.xml:0
 msgid "Add Conditions"
-msgstr ""
+msgstr "条件を追加"
 
 #. module: mass_mailing
 #: model:ir.actions.client,name:mass_mailing.res_partner_to_list_results_action
 msgid "Add Contacts to Mailing List results"
-msgstr ""
+msgstr "メーリングリストへの連絡先追加結果"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -977,7 +987,7 @@ msgstr "カスタムリンクを追加"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
 msgid "Add Mailing Contacts to a Mailing List"
-msgstr ""
+msgstr "メール配信リストに連絡先を追加"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1017,18 +1027,18 @@ msgstr "リストに追加"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_to_list_view_form
 msgid "Add to Lists"
-msgstr ""
+msgstr "リストに追加"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.res_partner_to_list_action
 msgid "Add to Mailing List"
-msgstr ""
+msgstr "メール配信リストに追加"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/wizard/mailing_contact_to_list.py:0
 msgid "Added to Mailing Lists"
-msgstr ""
+msgstr "メール配信リストに追加済"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1438,7 +1448,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
 msgid "Body"
-msgstr "表示文"
+msgstr "本文"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1648,7 +1658,7 @@ msgstr "キャンセル済"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__canceled_ratio
 msgid "Cancelled Ratio"
-msgstr ""
+msgstr "キャンセル率"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1657,6 +1667,8 @@ msgid ""
 "Cannot set an owner on '%(server)s': it is configured as the dedicated Email "
 "Marketing server."
 msgstr ""
+"'%(server)s' に所有者を設定できません: メールマーケティング専用サーバーとして"
+"構成されています。"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1664,6 +1676,8 @@ msgstr ""
 msgid ""
 "Cannot set an owner on '%(server)s': it is used by mailing '%(mailing)s'."
 msgstr ""
+"'%(server)s' に所有者を設定できません: メール配信 '%(mailing)s' で使用されて"
+"います。"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1671,6 +1685,8 @@ msgstr ""
 msgid ""
 "Cannot use the model %s to send a mailing. Only mailing models can be used."
 msgstr ""
+"モデル「%s 」を使用してメール配信を行うことはできません。メール配信には、メー"
+"ル配信専用モデルのみを使用できます。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1740,7 +1756,7 @@ msgstr "最高技術責任者"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 msgid "Choose a <b>template</b>."
-msgstr ""
+msgstr "<b>テンプレート</b>を選択してください。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
@@ -1765,12 +1781,13 @@ msgstr "円形"
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 msgid "Click on the star to add this mailing to your templates."
 msgstr ""
+"星マークをクリックして、このメール配信をテンプレートに追加してください。"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 msgid "Click on this block to edit it."
-msgstr ""
+msgstr "このブロックをクリックして編集してください。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__clicked
@@ -1786,7 +1803,7 @@ msgstr "クリック済"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.link_tracker_click_view_search
 msgid "Clicked By"
-msgstr ""
+msgstr "クリック者："
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__links_click_datetime
@@ -1798,7 +1815,7 @@ msgstr "クリック日"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__clicks_ratio
 msgid "Clicks Ratio"
-msgstr ""
+msgstr "クリック率"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1810,13 +1827,13 @@ msgstr "顧客の声"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_iframe/mailing_preview_iframe.xml:0
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "Closed"
-msgstr ""
+msgstr "クローズ済"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1941,7 +1958,7 @@ msgstr "%s用のソーシャルメディアリンクを設定"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/social_media_links.xml:0
 msgid "Configure your social media links."
-msgstr ""
+msgstr "ソーシャルメディアリンクを設定してください。"
 
 #. module: mass_mailing
 #: model_terms:web_tour.tour,rainbow_man_message:mass_mailing.mass_mailing_tour
@@ -1960,6 +1977,8 @@ msgid ""
 "Consistent performance and uptime ensure efficient, reliable service with "
 "minimal interruptions and quick response times."
 msgstr ""
+"安定したパフォーマンスと稼働率により、中断が最小限に抑えられ、迅速な応答時間"
+"で効率的かつ信頼性の高いサービスが保証されます。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -1995,7 +2014,7 @@ msgstr "連絡先命名"
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_headers_snippets.xml:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_logo_and_stacked_menu
 msgid "Contact Us"
-msgstr ""
+msgstr "お問い合わせ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_import__contact_list
@@ -2020,7 +2039,7 @@ msgstr "連絡先"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/company_team_options.xml:0
 msgid "Content Width"
-msgstr ""
+msgstr "コンテンツ幅"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2059,7 +2078,7 @@ msgstr "メール配信リストを作成"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__mass_mailing_create
 msgid "Create Mass Mailing"
-msgstr ""
+msgstr "メール一括配信の作成"
 
 #. module: mass_mailing
 #: model:ir.model,website_form_label:mass_mailing.model_res_partner
@@ -2070,7 +2089,7 @@ msgstr "顧客を作成"
 #: model:ir.actions.act_window,name:mass_mailing.action_mailing_filter_quick_create
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
 msgid "Create a Dynamic List"
-msgstr ""
+msgstr "動的リストを作成"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
@@ -2107,7 +2126,7 @@ msgstr "代替バージョンを作成"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_filter_view_kanban
 msgid "Created"
-msgstr ""
+msgstr "作成日"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
@@ -2282,7 +2301,7 @@ msgstr "配信済"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_view_search
 msgid "Delivered On"
-msgstr ""
+msgstr "配信日"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2317,13 +2336,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "Designed for You"
-msgstr ""
+msgstr "あなただけの特別なデザイン"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/components/mailing_preview_mode_toggle/mailing_preview_mode_toggle.xml:0
 msgid "Desktop Preview"
-msgstr ""
+msgstr "デスクトッププレビュー"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_spam
@@ -2356,7 +2375,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Discover all features"
-msgstr ""
+msgstr "すべての機能を見る"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2462,6 +2481,8 @@ msgid ""
 "Don't settle for the ordinary. Our artisans obsess over every detail to "
 "create the perfection your home demands. Own a masterpiece today."
 msgstr ""
+"妥協のない美しさを、あなたの家に。職人が細部までこだわり抜いた、至高の名作。"
+"今すぐ、あなただけの特別な1点をお迎えください。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2503,7 +2524,7 @@ msgstr "ドラフト"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/plugins/mass_mailing_setup_plugin.js:0
 msgid "Drag blocks here"
-msgstr ""
+msgstr "ブロックをここにドラッグ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_social_media
@@ -2523,7 +2544,7 @@ msgstr "複製"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 msgid "Duplicate blocks and columns to add more features."
-msgstr "ブロックとカラムを複製して、特徴を追加します。"
+msgstr "ブロックと列を複製して、特徴を追加します。"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_dup
@@ -2534,19 +2555,19 @@ msgstr "重複したEメール"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/fields/domain_savable_field/domain_savable_field.js:0
 msgid "Dynamic List saved!"
-msgstr ""
+msgstr "動的リストが保存されました!"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_filter_action
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_filter_ids
 #: model:ir.ui.menu,name:mass_mailing.menu_email_mass_mailing_dynamic_lists
 msgid "Dynamic Lists"
-msgstr ""
+msgstr "動的リスト"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Dynamic Lists:"
-msgstr ""
+msgstr "動的リスト："
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_filter_action
@@ -2555,6 +2576,9 @@ msgid ""
 "                Define your rules to automatically target recipients who "
 "match specific conditions."
 msgstr ""
+"動的リストとは、自動的に更新されるスマートリストのことです。\n"
+"                ルールを定義することで、特定の条件に一致する受信者を自動的に"
+"ターゲットに設定できます。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2569,6 +2593,8 @@ msgid ""
 "Each piece is more than just furniture; it's a recognized masterpiece of "
 "craftsmanship and style."
 msgstr ""
+"どの家具も、単なる道具としての枠を超え、職人技と洗練されたスタイルが結晶し"
+"た、至高の名作です。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2592,13 +2618,13 @@ msgstr "編集"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/options/snippet_visibility_option.xml:0
 msgid "Edit Conditions"
-msgstr ""
+msgstr "条件を編集"
 
 #. module: mass_mailing
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/iframe/mass_mailing_iframe.js:0
 msgid "Edit Design"
-msgstr ""
+msgstr "デザインを編集"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2610,7 +2636,7 @@ msgstr "スタイルを編集"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_images_snippets.xml:0
 msgid "Elegance That Inspires"
-msgstr ""
+msgstr "インスピレーションを与える洗練"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2689,7 +2715,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/builder/fontfamily_picker.js:0
 msgid "Email-safe fonts"
-msgstr ""
+msgstr "メールで安全に使えるフォント"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2733,7 +2759,7 @@ msgstr ""
 msgid ""
 "Enhance your experience with our user-focused designs, ensuring you get the "
 "best value."
-msgstr ""
+msgstr "ユーザー目線のデザインで体験を向上させ、最高の価値をお届けします。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__error
@@ -2760,7 +2786,7 @@ msgstr "ブラックリスト済のEメールを除く"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Exclude Blacklisted Recipients"
-msgstr ""
+msgstr "ブラックリストに登録された受信者を除外"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe_form
@@ -2842,7 +2868,7 @@ msgstr "失敗種別"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "Fair pricing"
-msgstr ""
+msgstr "透明性のある料金設定"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__favorite
@@ -2877,7 +2903,7 @@ msgstr "特徴の二"
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_columns_snippets.xml:0
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_marketing_snippets.xml:0
 msgid "Features showcase"
-msgstr "機能ショーケース"
+msgstr "機能紹介"
 
 #. module: mass_mailing
 #. odoo-python
@@ -2985,7 +3011,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "Gain real-time insights."
-msgstr ""
+msgstr "リアルタイムでインサイトを取得。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__is_test_trace
@@ -3020,7 +3046,7 @@ msgstr "GitHubアカウント"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_website_snippets.xml:0
 msgid "Google Play Store"
-msgstr ""
+msgstr "Google Playストア"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3038,6 +3064,11 @@ msgid ""
 "traditional craftsmanship. Every detail is a deliberate choice, intended to "
 "turn your house into a personal gallery where you can truly relax in style."
 msgstr ""
+"素晴らしいデザインとは、単に部屋を家具で埋めることではありません。上質であり"
+"ながら、心豊かな暮らしそのものを創り出すことです。現代的なセンスと伝統的な職"
+"人技の温もりを融合させ、空間に命を吹き込むプロダクトを丁寧に仕立てました。細"
+"部までこだわり抜いたデザインが、ご自宅を自分らしく寛げるプライベートギャラ"
+"リーへと変身させます。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3058,6 +3089,8 @@ msgid ""
 "Growth capability is a system's ability to scale and adapt, meeting "
 "increasing demands and evolving needs for long-term success."
 msgstr ""
+"拡張性(グロースキャパシティ)とは、システムが拡大・適応し、増大する要求や変化"
+"するニーズに対応することで長期的な成功をもたらす能力です。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3132,7 +3165,7 @@ msgstr "主要属性をハイライト"
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_text_snippets.xml:0
 msgid "How is your data secured?"
-msgstr ""
+msgstr "データのセキュリティ対策はどのように行われていますか?"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4800,7 +4833,7 @@ msgstr "オプトアウト (%)"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_blacklist__opt_out_reason_id
 msgid "Opt-out Reason"
-msgstr "アウトプット理由"
+msgstr "オプトアウト理由"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_optout
@@ -5951,7 +5984,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mass_mailing/static/src/snippets/mass_mailing_images_snippets.xml:0
 msgid "Start with the customer - find out what they want and give it to them."
-msgstr "お客様を第一に – 顧客が望むものを見極めて提供しましょう。"
+msgstr "お客様のニーズを起点に。求めるものを把握し、最適な形でお届けします。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -6444,9 +6477,9 @@ msgid ""
 "right icon of each block. Then, duplicate one of the columns to create a new "
 "one as a copy."
 msgstr ""
-"4つ目のカラムを追加するには、各ブロックの右のアイコンを使用して、これらの3つ"
-"のカラムのサイズを縮小します。次に、カラムの1つを複製して、新しいカラムをコ"
-"ピーとして作成します。"
+"4つ目の列を追加するには、各ブロックの右のアイコンを使用して、これらの3つの列"
+"のサイズを縮小します。次に、列の1つを複製して、新しい列をコピーとして作成しま"
+"す。"
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -7486,663 +7519,9 @@ msgstr ""
 msgid "✉ Blacklisted"
 msgstr ""
 
-#~ msgid "%s (copy)"
-#~ msgstr "%s (コピー)"
-
-#~ msgid "4 out of 5 stars"
-#~ msgstr "4/5個の星評価"
-
-#~ msgid ""
-#~ "<a href=\"https://www.example.com\" class=\"btn btn-secondary "
-#~ "o_translate_inline\">Learn more</a>"
-#~ msgstr ""
-#~ "<a href=\"https://www.example.com\" class=\"btn btn-secondary "
-#~ "o_translate_inline\">さらに詳しく</a>"
-
-#~ msgid "<em>Customer Service</em>"
-#~ msgstr "<em>顧客サービス</em>"
-
-#~ msgid "<font class=\"h5-fs\">Aline Turner</font>"
-#~ msgstr "<font class=\"h5-fs\">アライン・ターナー</font>"
-
-#~ msgid "<font class=\"h5-fs\">Iris Joe</font>"
-#~ msgstr "<font class=\"h5-fs\">アイリス・ジョー</font>"
-
-#~ msgid "<font class=\"h5-fs\">Mich Stark</font>"
-#~ msgstr "<font class=\"h5-fs\">ミハエル・スターク</font>"
-
-#~ msgid "<font class=\"h5-fs\">Tony Fred</font>"
-#~ msgstr "<font class=\"h5-fs\">トニー・フレッド</font>"
-
-#~ msgid ""
-#~ "<font class=\"text-white\">Put the focus on what you have to say!</font>"
-#~ msgstr ""
-#~ "<font class=\"text-white\">本当に伝えたいことにフォーカスしましょう!</"
-#~ "font>"
-
-#~ msgid "<font class=\"text-white\">Reaching new heights together</font>"
-#~ msgstr "<font class=\"text-white\">共に新たな高みへ</font>"
-
-#~ msgid "<font class=\"text-white\">Text Highlight</font>"
-#~ msgstr "<font class=\"text-white\">テキストハイライト</font>"
-
-#~ msgid "<font class=\"text-white\">Where ideas come to life</font>"
-#~ msgstr "<font class=\"text-white\">アイデアが形になる場所</font>"
-
-#~ msgid ""
-#~ "<font class=\"text-white\">Write one or two paragraphs describing your "
-#~ "product, services or a specific feature.<br/> To be successful your "
-#~ "content needs to be useful to your readers.</font>"
-#~ msgstr ""
-#~ "<font class=\"text-white\">製品、サービス、または特定の機能について、1～2"
-#~ "段落で説明しましょう。<br/> ポイントは、読者にとって有益なコンテンツを提供"
-#~ "することです。</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white\"><strong>If you're ready to transform your "
-#~ "website into a high-converting asset</strong>, <em>hit reply and let's "
-#~ "work together.</em></font>"
-#~ msgstr ""
-#~ "<font style=\"color: white\"><strong>ウェブサイトを高い成果につながる資産"
-#~ "へと変えたい方は</strong>、<em>このまま返信してご連絡ください。一緒に進め"
-#~ "ましょう。</em></font>"
-
-#~ msgid "<font style=\"color: white\">A great title</font>"
-#~ msgstr "<font style=\"color: white\">素晴らしいタイトル</font>"
-
-#~ msgid "<font style=\"color: white\">And a great subtitle</font>"
-#~ msgstr "<font style=\"color: white\">そして魅力的なサブタイトル</font>"
-
-#~ msgid "<font style=\"color: white\">Head of Design</font>"
-#~ msgstr "<font style=\"color: white\">デザイン責任者</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white\">Hi there, I'm <strong>John Doe</strong>, a "
-#~ "design expert specializing in responsive web and mobile app interfaces. "
-#~ "<strong>For over 13 years</strong>, I've focused on creating elegant, "
-#~ "user-centric designs that are both scalable and easy to maintain.</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white\">はじめまして。<strong>John Doe</strong>と申し"
-#~ "ます。レスポンシブウェブやモバイルアプリのUIに特化したデザインの専門家で"
-#~ "す。<strong>13年以上</strong>にわたり、拡張性が高く保守しやすい、洗練され"
-#~ "たユーザー中心のデザインを手がけてきました。</font>"
-
-#~ msgid "<font style=\"color: white\">Julian Thorne</font>"
-#~ msgstr "<font style=\"color: white\">Julian Thorne</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white;\"><strong>50,000+ companies</strong> run Odoo."
-#~ "</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white;\"><strong>50,000社以上の企業様</strong> にOdoo"
-#~ "をご利用いただいています。</font>"
-
-#~ msgid "<font style=\"color: white;\">Beautiful snippets</font>"
-#~ msgstr "<font style=\"color: white;\">魅力的なスニペット</font>"
-
-#~ msgid ""
-#~ "<font style=\"color: white;\">Join us and make your company a better "
-#~ "place.</font>"
-#~ msgstr ""
-#~ "<font style=\"color: white;\">会社をより良い環境に。私たちがお手伝いしま"
-#~ "す。</font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">A color block</span></"
-#~ "font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">カラーブロック</span></"
-#~ "font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">Another color block</"
-#~ "span></font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\"><span class=\"h3-fs\">もう１つのカラーブロッ"
-#~ "ク</span></font>"
-
-#~ msgid ""
-#~ "<font style=\"color:white;\">Color blocks are a simple and effective way "
-#~ "to <strong>present and highlight your content</strong>. Choose an image "
-#~ "or a color for the background. You can even resize and duplicate the "
-#~ "blocks to create your own layout. Add images or icons to customize the "
-#~ "blocks.</font>"
-#~ msgstr ""
-#~ "<font style=\"color:white;\">カラーブロックは、<strong>コンテンツを提示"
-#~ "し、強調表示するシンプルかつ効果的な方法です</strong> 。画像または背景色を"
-#~ "選択します。ブロックのサイズを変更したり、複製して独自のレイアウトを作成す"
-#~ "ることもできます。画像やアイコンを追加して、ブロックをカスタマイズできま"
-#~ "す。</font>"
-
-#~ msgid "<font style=\"color:white;\">More Details</font>"
-#~ msgstr "<font style=\"color:white;\">詳細</font>"
-
-#~ msgid ""
-#~ "<font style=\"font-size: 12px;\">Where innovation meets performance</font>"
-#~ msgstr ""
-#~ "<font style=\"font-size: 12px;\">イノベーションとパフォーマンスの融合</"
-#~ "font>"
-
-#~ msgid "<span class=\"display-3-fs\">Discover our main three benefits</span>"
-#~ msgstr "<span class=\"display-3-fs\">主な3つの特長をご紹介します</span>"
-
-#~ msgid "<span class=\"display-4-fs\">1</span>"
-#~ msgstr "<span class=\"display-4-fs\">1</span>"
-
-#~ msgid "<span class=\"display-4-fs\">2</span>"
-#~ msgstr "<span class=\"display-4-fs\">2</span>"
-
-#~ msgid "<span class=\"display-4-fs\">3</span>"
-#~ msgstr "<span class=\"display-4-fs\">3</span>"
-
-#~ msgid ""
-#~ "<span class=\"h2-fs\"><strong>$ 15.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ month</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"h2-fs\"><strong>$ 15.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ 月</span>"
-
-#~ msgid ""
-#~ "<span class=\"h2-fs\"><strong>$ 25.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ month</"
-#~ "span>"
-#~ msgstr ""
-#~ "<span class=\"h2-fs\"><strong>$ 25.00</strong></span>\n"
-#~ "                                    <span class=\"o_small-fs\">/ 月</span>"
-
-#~ msgid "<span class=\"h3-fs\">Our finest selection</span>"
-#~ msgstr "<span class=\"h3-fs\">こだわりのセレクション</span>"
-
-#~ msgid "<span class=\"h5-fs\">Aline Turner</span>"
-#~ msgstr "<span class=\"h5-fs\">アライン・ターナー</span>"
-
-#~ msgid "<span class=\"h5-fs\">Balanced</span>"
-#~ msgstr "<span class=\"h5-fs\">バランス</span>"
-
-#~ msgid "<span class=\"h5-fs\">Elegant</span>"
-#~ msgstr "<span class=\"h5-fs\">エレガント</span>"
-
-#~ msgid "<span class=\"h5-fs\">Iris Joe</span>"
-#~ msgstr "<span class=\"h5-fs\">アイリス・ジョー</span>"
-
-#~ msgid "<span class=\"h5-fs\">Mich Stark</span>"
-#~ msgstr "<span class=\"h5-fs\">ミッチ・スターク</span>"
-
-#~ msgid "<span class=\"h5-fs\">Pete Bluestork</span>"
-#~ msgstr "<span class=\"h5-fs\">ピート・ブルーストーク</span>"
-
-#~ msgid "<span class=\"h5-fs\">Simple</span>"
-#~ msgstr "<span class=\"h5-fs\">シンプル</span>"
-
-#~ msgid "<span class=\"h5-fs\">Sophia Langston</span>"
-#~ msgstr "<span class=\"h5-fs\">ソフィア・ラングストン</span>"
-
-#~ msgid "<span class=\"h5-fs\">Tony Fred</span>"
-#~ msgstr "<span class=\"h5-fs\">トニー・フレッド</span>"
-
-#~ msgid ""
-#~ "<span class=\"o_small-fs\">Instant setup, satisfied or reimbursed.</span>"
-#~ msgstr ""
-#~ "<span class=\"o_small-fs\">即時設定、ご満足いただけない場合は返金いたしま"
-#~ "す。</span>"
-
-#~ msgid ""
-#~ "<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
-#~ ">What We Offer"
-#~ msgstr ""
-#~ "<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
-#~ ">ご提供内容"
-
-#~ msgid ""
-#~ "<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">Your "
-#~ "journey starts here</font></strong></span>"
-#~ msgstr ""
-#~ "<span style=\"font-size: 62px;\"><strong><font class=\"text-white\">あなた"
-#~ "の旅はここから始まります</font></strong></span>"
-
-#~ msgid "<span><font style=\"font-weight: bolder;\">GET $20 OFF</font></span>"
-#~ msgstr ""
-#~ "<span><font style=\"font-weight: bolder;\">$20 OFFをゲット!</font></span>"
-
-#~ msgid "<strong>18h30:</strong>"
-#~ msgstr "<strong>18時30分：</strong>"
-
-#~ msgid "<strong>19h00:</strong>"
-#~ msgstr "<strong>19h00:</strong>"
-
-#~ msgid "<strong>19h30: </strong>"
-#~ msgstr "<strong>19h30: </strong>"
-
-#~ msgid "<strong>8h:</strong>"
-#~ msgstr "<strong>8時間:</strong>"
-
-#~ msgid "<strong><font class=\"text-white\">Innovation Hub</font></strong>"
-#~ msgstr ""
-#~ "<strong><font class=\"text-white\">イノベーション・ハブ</font></strong>"
-
-#~ msgid "<strong><font class=\"text-white\">Key Milestone</font></strong>"
-#~ msgstr ""
-#~ "<strong><font class=\"text-white\">主要なマイルストン</font></strong>"
-
-#~ msgid ""
-#~ "<strong><font style=\"font-size: 48px; color: white;\">45</font></strong>"
-#~ msgstr ""
-#~ "<strong><font style=\"font-size: 48px; color: white;\">45</font></strong>"
-
-#~ msgid "<strong><font style=\"font-size: 48px;\">12</font></strong>"
-#~ msgstr "<strong><font style=\"font-size: 48px;\">12</font></strong>"
-
-#~ msgid "<strong><font style=\"font-size: 48px;\">8</font></strong>"
-#~ msgstr "<strong><font style=\"font-size: 48px;\">8</font></strong>"
-
-#~ msgid "<strong>A Breath of Fresh Air</strong>"
-#~ msgstr "<strong>新鮮な風</strong>"
-
-#~ msgid "<strong>About our product line</strong>"
-#~ msgstr "<strong>当社のプロダクトラインについて</strong>"
-
-#~ msgid "<strong>Easy returns</strong>"
-#~ msgstr "<strong>簡単に返品</strong>"
-
-#~ msgid ""
-#~ "<strong>Emil Foster</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Creative "
-#~ "Director</span>"
-#~ msgstr ""
-#~ "<strong>エミール・フォスター</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">クリエイ"
-#~ "ティブディレクター</span>"
-
-#~ msgid "<strong>Free shipping</strong>"
-#~ msgstr "<strong>送料無料</strong>"
-
-#~ msgid ""
-#~ "<strong>James Carter</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Chief "
-#~ "Technical Officer</span>"
-#~ msgstr ""
-#~ "<strong>ジェームス・カーター</strong><br/>\n"
-#~ "                                <span class=\"text-muted\">最高技術責任者"
-#~ "</span>"
-
-#~ msgid "<strong>Jane DOE</strong><br/>CEO of MyCompany"
-#~ msgstr "<strong>Jane DOE</strong><br/>MyCompany CEO"
-
-#~ msgid ""
-#~ "<strong>Jody Roberts</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Chief "
-#~ "Financial Officer</span>"
-#~ msgstr ""
-#~ "<strong>ジョディ・ロバーツ\n"
-#~ "</strong><br/>\n"
-#~ "                                <span class=\"text-muted\">最高財務責任者"
-#~ "</span>"
-
-#~ msgid "<strong>John DOE</strong><br/>"
-#~ msgstr "<strong>John DOE</strong><br/>"
-
-#~ msgid ""
-#~ "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
-#~ "class=\"text-600\">CEO of MyCompany</font></span>"
-#~ msgstr ""
-#~ "<strong>John DOE</strong><br/><span class=\"h6-fs\"><font "
-#~ "class=\"text-600\"> MyCompany CEO</font></span>"
-
-#~ msgid "<strong>Networking: Walking Dinner &amp; Drinks</strong>"
-#~ msgstr "<strong>ネットワーキング：立食形式の夕食会&amp; ドリンク</strong>"
-
-#~ msgid "<strong>Rating</strong>"
-#~ msgstr "<strong>評価</strong>"
-
-#~ msgid ""
-#~ "<strong>Replace this block with the authentic, singular story of your "
-#~ "product.</strong> Focus on the unique spark that gave it personality. "
-#~ "<strong>Be short, be specific, and let your brand's voice shine</strong> "
-#~ "through unique work choices. This explains the <em>soul</em> behind the "
-#~ "product, inspiring a deeper connection beyond simple features."
-#~ msgstr ""
-#~ "<strong>この箇所には、あなたのプロダクトならではの物語を綴ってください。</"
-#~ "strong>なぜこの製品が生まれたのか、その原点にある情熱に焦点を当てましょ"
-#~ "う。<strong>簡潔かつ具体的に、ブランドらしい言葉</strong>で語りかけるので"
-#~ "す。機能の紹介だけでは伝えきれないプロダクトの<em>魂</em>を込めることで、"
-#~ "ユーザーとの間に深い絆が生まれます。"
-
-#~ msgid "<strong>Secure payment</strong>"
-#~ msgstr "<strong>安全な決済</strong>"
-
-#~ msgid "<strong>Stay Ahead with weekly insights &amp; updates</strong>"
-#~ msgstr "<strong>週刊インサイトと最新情報で、常に一歩先へ</strong>"
-
-#~ msgid "<strong>Stay in the Loop !<br/>Get the latest updates</strong>"
-#~ msgstr "<strong>最新情報をお見逃しなく!<br/>最新アップデートを入手</strong>"
-
-#~ msgid "<strong>Step Up Your Game</strong>"
-#~ msgstr "<strong>ワンランク上の成果を</strong>"
-
-#~ msgid ""
-#~ "<strong>Sullivan Mitchell</strong><br/>\n"
-#~ "                                    <span class=\"text-muted\">Marketing "
-#~ "Director</span>"
-#~ msgstr ""
-#~ "<strong></strong>サリバン・ミッチェル<br/>\n"
-#~ "                                    <span class=\"text-muted\">マーケティ"
-#~ "ングディレクター</span>"
-
-#~ msgid "<strong>Table Ronde</strong>"
-#~ msgstr "<strong>円卓会議</strong>"
-
-#~ msgid "<strong>The Innovation Behind Our Product</strong>"
-#~ msgstr "<strong>当社のプロダクトを支えるイノベーション</strong>"
-
-#~ msgid "<strong>Timeless Design</strong>"
-#~ msgstr "<strong>タイムレスなデザイン</strong>"
-
-#~ msgid "<strong>Unveil Our Exclusive Collections</strong>"
-#~ msgstr "<strong>限定コレクションを公開</strong>"
-
-#~ msgid "<strong>Welcome</strong>"
-#~ msgstr "<strong>ようこそ</strong>"
-
-#~ msgid ""
-#~ "<strong>Why settle for a generic solution?</strong><br/>We don't just "
-#~ "offer tools; we provide a competitive advantage. Our platform is "
-#~ "engineered to streamline your workflow, eliminate bottlenecks, and help "
-#~ "you scale faster than ever before."
-#~ msgstr ""
-#~ "<strong>ありきたりなソリューションで妥協する必要はありません。</"
-#~ "strong><br/>私たちが提供するのは単なるツールではなく、競争力そのものです。"
-#~ "このプラットフォームは、業務フローを効率化し、ボトルネックを解消し、これま"
-#~ "で以上のスピードで事業をスケールできるよう設計されています。"
-
-#~ msgid "<strong>[speaker] &amp; [speaker]'s conference</strong>"
-#~ msgstr "<strong>[speaker]&amp; [speaker]のコンフェランス</strong>"
-
-#~ msgid "<u>Friday</u>"
-#~ msgstr "<u>金曜日</u>"
-
-#~ msgid "<u>Monday</u>"
-#~ msgstr "<u>月曜日</u>"
-
-#~ msgid "<u>Saturday</u>"
-#~ msgstr "<u>土曜日</u>"
-
-#~ msgid "<u>Sunday</u>"
-#~ msgstr "<u>日曜日</u>"
-
-#~ msgid "<u>Thursday</u>"
-#~ msgstr "<u>木曜日</u>"
-
-#~ msgid "<u>Tuesday</u>"
-#~ msgstr "<u>火曜日</u>"
-
-#~ msgid "<u>Wednesday</u>"
-#~ msgstr "<u>水曜日</u>"
-
-#~ msgid ""
-#~ "A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, "
-#~ "all on a bed of mozzarella and tomato sauce."
-#~ msgstr ""
-#~ "モッツァレラチーズとトマトソースの上に、マッシュルーム、アーティチョーク、"
-#~ "ハム、オリーブの4種類のトッピングをミックスしました。"
-
-#~ msgid "Alert"
-#~ msgstr "アラート"
-
-#~ msgid "Author"
-#~ msgstr "作成者"
-
-#~ msgid "Badge"
-#~ msgstr "バッジ"
-
-#~ msgid "Benefits"
-#~ msgstr "メリット"
-
-#~ msgid "Big Boxes"
-#~ msgstr "Bigボックス"
-
-#~ msgid "Blockquote"
-#~ msgstr "Blockquote"
-
-#~ msgid "Blog Title"
-#~ msgstr "ブログタイトル"
-
-#~ msgid "Built to Last: The Beauty of Choosing Quality Materials"
-#~ msgstr "永く愛せる理由：品質の高い素材選びの美学"
-
-#~ msgid "CTA Badge"
-#~ msgstr "CTA バッジ"
-
-#~ msgid "Call To Action"
-#~ msgstr "CTA"
-
-#~ msgid "Call To Action Card"
-#~ msgstr "行動喚起カード"
-
-#~ msgid "Call To Action Text (center)"
-#~ msgstr "CTAテキスト(中央)"
-
-#~ msgid "Call To Action Text (left)"
-#~ msgstr "CTAテキスト(左)"
-
-#~ msgid "Categories"
-#~ msgstr "カテゴリ"
-
-#~ msgid "Centered Logo"
-#~ msgstr "中央揃えロゴ"
-
-#~ msgid ""
-#~ "Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil "
-#~ "leaves, drizzled with extra virgin olive oil."
-#~ msgstr ""
-#~ "新鮮なモッツァレラチーズ、サンマルツァーノ・トマト、バジルを乗せたクラシッ"
-#~ "クなピザに、エクストラバージン・オリーブオイルをかけました。"
-
-#~ msgid "Columns"
-#~ msgstr "カラム"
-
-#~ msgid "Comparisons"
-#~ msgstr "比較"
-
-#~ msgid "Cover"
-#~ msgstr "カバー"
-
-#~ msgid "Customer testimonials"
-#~ msgstr "お客様の声"
-
-#~ msgid ""
-#~ "Delete the above image or replace it with a picture that illustrates your "
-#~ "message. Click on the picture to change its <em>rounded corner</em> style."
-#~ msgstr ""
-#~ "上の画像を削除するか、メッセージを説明する画像で置き換えます。画像をクリッ"
-#~ "クして<em>丸コーナー</em>のスタイルを変更します。"
-
-#~ msgid "Diavola"
-#~ msgstr "Diavola"
-
-#~ msgid ""
-#~ "Experience unparalleled comfort, cutting-edge design, and performance-"
-#~ "enhancing<br/>technology with this latest innovation, crafted to elevate "
-#~ "every athlete's journey."
-#~ msgstr ""
-#~ "この最新技術は、あらゆるアスリートの旅を向上させるために作られたもので、"
-#~ "<br/> 比類のない快適性、最先端のデザイン、パフォーマンス向上テクノロジーを"
-#~ "体験できます。"
-
-#~ msgid ""
-#~ "Explain the benefits you offer. <br/>Don't write about products or "
-#~ "services here, write about solutions."
-#~ msgstr ""
-#~ "提供するメリットを説明。<br/>ここで製品やサービスについて書かないで、ソ"
-#~ "リューションを書きましょう。"
-
-#~ msgid "Footers"
-#~ msgstr "フッタ"
-
-#~ msgid ""
-#~ "Great stories are <strong>for everyone</strong> even when only written "
-#~ "<strong>for just one person</strong>. If you try to write with a wide, "
-#~ "general audience in mind, your story will sound fake and lack emotion. No "
-#~ "one will be interested. Write for one person. If it's genuine for the "
-#~ "one, it's genuine for the rest."
-#~ msgstr ""
-#~ "優れたストーリーは、たとえ<strong>一人のため</strong>に書かれたものであっ"
-#~ "ても、<strong>多くの人の心に届きます</strong>。不特定多数を意識しすぎる"
-#~ "と、言葉は薄まり、感情が伝わりません。一人に向けて書いてください。その想い"
-#~ "が本物であれば、きっと他の人にも響きます。"
-
-#~ msgid ""
-#~ "Great stories have a <strong>personality</strong>. Consider telling a "
-#~ "great story that provides personality. Writing a story with personality "
-#~ "for potential clients will assist with making a relationship connection. "
-#~ "This shows up in small quirks like word choices or phrases. Write from "
-#~ "your point of view, not from someone else's experience."
-#~ msgstr ""
-#~ "優れたストーリーには、<strong>個性</strong>があります。あなたらしさが伝わ"
-#~ "る物語を語ってみましょう。個性のあるストーリーは、見込み顧客との距離を縮"
-#~ "め、関係性を築くきっかけになります。その個性は、言葉選びや言い回しといった"
-#~ "小さな工夫に表れます。誰かの体験ではなく、あなた自身の視点から書いてくださ"
-#~ "い。"
-
-#~ msgid "Headers"
-#~ msgstr "ヘッダ"
-
-#~ msgid "Horizontal Attributes"
-#~ msgstr "横並びの属性"
-
-#~ msgid "Image"
-#~ msgstr "画像"
-
-#~ msgid "Image - Text"
-#~ msgstr "画像 - テキスト"
-
-#~ msgid "Inner Content"
-#~ msgstr "内部コンテンツ"
-
-#~ msgid "Items"
-#~ msgstr "項目"
-
-#~ msgid "Lasagna al Forno"
-#~ msgstr "ラザニア・アル・フォルノ"
-
-#~ msgid ""
-#~ "Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, "
-#~ "baked to perfection."
-#~ msgstr "何層にも重ねたパスタ、濃厚なミートソース、ベシャメル"
-
-#~ msgid "Left Logo"
-#~ msgstr "左ロゴ"
-
-#~ msgid "Links List"
-#~ msgstr "リンク一覧"
-
-#~ msgid "Margherita"
-#~ msgstr "マルゲリータ"
-
-#~ msgid "Masonry"
-#~ msgstr "石積み"
-
-#~ msgid "Media List"
-#~ msgstr "メディアリスト"
-
-#~ msgid "Numbers"
-#~ msgstr "数字"
-
-#~ msgid "Penne all'Arrabbiata"
-#~ msgstr "ペンネアラビアータ"
-
-#~ msgid ""
-#~ "Penne pasta tossed in a spicy tomato and garlic sauce with a hint of "
-#~ "chili peppers, finished with fresh parsley."
-#~ msgstr ""
-#~ "唐辛子をほのかに効かせたスパイシートマトとガーリックソースで和えたペンネパ"
-#~ "スタ。仕上げにフレッシュパセリを添えて。"
-
-#~ msgid "People"
-#~ msgstr "メンバー"
-
-#~ msgid "Picture"
-#~ msgstr "画像"
-
-#~ msgid "Pricelist Boxed"
-#~ msgstr "価格表 ボックス"
-
-#~ msgid "Promo Code"
-#~ msgstr "プロモコード"
-
-#~ msgid "Quality"
-#~ msgstr "品質"
-
-#~ msgid "Quattro Stagioni"
-#~ msgstr "クアトロ・スタジオーニ"
-
-#~ msgid "Rating"
-#~ msgstr "評価"
-
-#~ msgid "References"
-#~ msgstr "参照"
-
-#~ msgid ""
-#~ "Savor our fresh, local cuisine with a modern twist.<br/>Deliciously "
-#~ "crafted for every taste!"
-#~ msgstr ""
-#~ "モダンなアレンジを加えた新鮮な地元料理をお楽しみ下さい。<br/> あらゆる味を"
-#~ "美味しく仕上げました!"
-
-#~ msgid "Separator Title"
-#~ msgstr "区切りタイトル"
-
-#~ msgid "Showcase"
-#~ msgstr "ショーケース"
-
-#~ msgid "Social Media"
-#~ msgstr "ソーシャルメディア"
-
-#~ msgid "Spaghetti Carbonara"
-#~ msgstr "スパゲティカルボナーラ"
-
-#~ msgid ""
-#~ "Speakers from all over the world will join our experts to give inspiring "
-#~ "talks on various topics. Stay on top of the latest business management "
-#~ "trends &amp; technologies"
-#~ msgstr ""
-#~ "世界中の講演者は私たちのエキスパートと一緒に、様々なトピックについて語りま"
-#~ "す。最新のビジネス管理トレンドやテクノロジーを常に把握しましょう"
-
-#~ msgid ""
-#~ "Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato "
-#~ "sauce for a flavorful kick."
-#~ msgstr ""
-#~ "スパイシーなペパロニと唐辛子フレーク、モッツァレラチーズ、トマトソースを組"
-#~ "み合わせた、風味豊かな一品です。"
-
-#~ msgid "Subtitle"
-#~ msgstr "サブタイトル"
-
-#~ msgid "Team"
-#~ msgstr "チーム"
-
-#~ msgid "Team shapes"
-#~ msgstr "チーム用シェイプ"
-
-#~ msgid "Text - Image"
-#~ msgstr "テキスト - 画像"
-
-#~ msgid "Title"
-#~ msgstr "タイトル"
-
-#~ msgid ""
-#~ "Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino "
-#~ "Romano, topped with black pepper."
-#~ msgstr ""
-#~ "伝統的なローマ料理で、クリーミーな卵、カリカリのパンチェッタ、ペコリーノ・"
-#~ "ロマーノチーズをトッピングし、黒胡椒をかけた一品です。"
-
-#~ msgid "Video"
-#~ msgstr "動画"
-
-#~ msgid "✽  Pastas"
-#~ msgstr "✽  パスタ"
-
-#~ msgid "✽  Pizzas"
-#~ msgstr "✽  ピザ"
+msgid ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/"
+">What We Offer"
+msgstr ""
+"<span class=\"oi me-2\" data-icon=\"emergency\" contenteditable=\"false\"/>ご"
+"提供内容"

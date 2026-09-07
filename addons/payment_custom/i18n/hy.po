@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"POT-Creation-Date: 2026-08-28 17:44+0000\n"
 "PO-Revision-Date: 2015-09-19 08:18+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Armenian (http://www.transifex.com/odoo/odoo-9/language/hy/)\n"
@@ -18,27 +18,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Amount:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Bank Account:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Beneficiary:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
+msgid "<b>Communication:</b>"
+msgstr ""
+
+#. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid ""
-"<small class=\"text-center text-wrap lh-sm\">Scan me in your banking app</"
-"small>"
+"<small class=\"text-center text-wrap lh-sm\">\n"
+"                            Scan me in your banking app\n"
+"                        </small>"
 msgstr ""
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
-msgid "<strong class=\"mt-auto\">Communication: </strong>"
+#: model:ir.module.module,summary:base.module_payment_custom
+msgid "A payment provider for custom flows like wire transfers."
 msgstr ""
 
 #. module: payment_custom
-#. odoo-python
-#: code:addons/payment_custom/models/payment_provider.py:0
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__partner_bank_id
 msgid "Bank Account"
-msgstr "Բանկային հաշիվներ"
-
-#. module: payment_custom
-#. odoo-python
-#: code:addons/payment_custom/models/payment_provider.py:0
-msgid "Bank Accounts"
 msgstr "Բանկային հաշիվներ"
 
 #. module: payment_custom
@@ -57,6 +71,7 @@ msgid "Custom Mode"
 msgstr ""
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__display_name
 msgid "Display Name"
@@ -79,13 +94,14 @@ msgid "Finalize your payment"
 msgstr ""
 
 #. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_method__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_custom.field_payment_transaction__id
 msgid "ID"
 msgstr ""
 
 #. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.custom_state_header
+#: model_terms:ir.ui.view,arch_db:payment_custom.custom_payment_transfer_details
 msgid "OR"
 msgstr ""
 
@@ -95,24 +111,39 @@ msgid "Only custom providers should have a custom mode."
 msgstr ""
 
 #. module: payment_custom
+#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
+msgid "Others"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields,field_description:payment_custom.field_payment_provider__company_partner_id
+msgid "Partner"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model.fields.selection,name:payment_custom.selection__payment_provider__custom_mode__pay_on_invoice
+#: model:payment.method,name:payment_custom.payment_method_pay_on_invoice
+msgid "Pay on Invoice"
+msgstr ""
+
+#. module: payment_custom
+#: model:ir.model,name:payment_custom.model_payment_method
+msgid "Payment Method"
+msgstr ""
+
+#. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_provider
 msgid "Payment Provider"
 msgstr ""
 
 #. module: payment_custom
+#: model:ir.module.module,shortdesc:base.module_payment_custom
+msgid "Payment Provider: Custom Payment Modes"
+msgstr ""
+
+#. module: payment_custom
 #: model:ir.model,name:payment_custom.model_payment_transaction
 msgid "Payment Transaction"
-msgstr ""
-
-#. module: payment_custom
-#. odoo-python
-#: code:addons/payment_custom/models/payment_provider.py:0
-msgid "Please use the following transfer details"
-msgstr ""
-
-#. module: payment_custom
-#: model_terms:ir.ui.view,arch_db:payment_custom.payment_provider_form
-msgid "Reload Pending Message"
 msgstr ""
 
 #. module: payment_custom
