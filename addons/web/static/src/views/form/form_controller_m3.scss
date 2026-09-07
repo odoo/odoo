@@ -71,7 +71,7 @@
             :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)) {
                 @extend %-o-field-box;
 
-                a:has(i.oi), button.fa, .o_external_button, .o_phone_form_link {
+                a:has(i.oi), .o_external_button, .o_phone_form_link {
                     height: calc(3 * var(--field-spacing-unit));
                     min-width: calc(3 * var(--field-spacing-unit));
                     color: var(--body-color);
@@ -150,16 +150,6 @@
 
             &:has(+ .o_outlined .o_required_modifier:not(.o_readonly_modifier)) {
                 font-weight: $font-weight-semibold;
-            }
-        }
-
-        button.fa.o_priority_star {
-            --secondary-bg: transparent;
-            &[data-icon='star'] {
-                --body-color: #{ $o-main-favorite-color };
-            }
-            &[data-icon='star'] {
-                --body-color: #{ $o-main-color-muted };
             }
         }
     }
