@@ -1,19 +1,21 @@
+# -*- coding: utf-8 -*-
 {
-    'name': 'SIF Keuangan - Jurnal Besar (MVP)',
+    'name': 'SIFNEXT Jurnal Besar',
     'version': '1.0',
-    'summary': 'Master COA, Jurnal Transaksi Dasar, Buku Besar Bulanan, dan Integrasi PPL',
-    'category': 'Accounting/Finance',
-    'author': 'ERP SIFNEXT - Squad Keuangan',
-    'license': 'LGPL-3',
+    'category': 'Accounting',
+    'summary': 'Pusat Jurnal & Buku Besar Terintegrasi PPL dan Aset',
+    'author': 'SIFNEXT',
     'depends': ['base'],
     'data': [
         'security/security_groups.xml',
         'security/ir.model.access.csv',
-        'data/sif_coa_data.xml',  
+        'data/sequence_data.xml',
+        'data/sif_coa_data.xml',
         'views/coa_views.xml',
         'views/jurnal_views.xml',
         'views/menu_views.xml',
     ],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_sif_keuangan_root" name="Keuangan" sequence="10"/>
 
-    <menuitem id="menu_sif_jurnal_besar_sub" name="Jurnal Besar" parent="menu_sif_keuangan_root" sequence="1"/>
-    <menuitem id="menu_sif_jurnal_entry_act" name="Input Jurnal Dasar" parent="menu_sif_jurnal_besar_sub" action="action_sif_jurnal_entry" sequence="1"/>
-    <menuitem id="menu_sif_buku_besar_act" name="Buku Besar" parent="menu_sif_jurnal_besar_sub" action="action_sif_buku_besar" sequence="2"/>
+    <!-- Menu Utama Modul SIFNEXT Keuangan -->
+    <menuitem id="menu_sif_keuangan_root" 
+              name="SIFNEXT Jurnal Besar" 
+              sequence="20" 
+              web_icon="sif_keuangan,static/description/icon.png"/>
 
-    <menuitem id="menu_sif_master_keuangan_sub" name="Konfigurasi" parent="menu_sif_keuangan_root" sequence="99"/>
-    <menuitem id="menu_sif_coa_act" name="Master COA" parent="menu_sif_master_keuangan_sub" action="action_sif_coa" sequence="1"/>
+    <!-- Kategori 1: Transaksi -->
+    <menuitem id="menu_sif_transaksi" 
+              name="Transaksi" 
+              parent="menu_sif_keuangan_root" 
+              sequence="10"/>
+
+    <menuitem id="menu_sif_jurnal_entry_sub" 
+              name="Jurnal Transaksi" 
+              parent="menu_sif_transaksi" 
+              action="action_sif_jurnal_entry" 
+              sequence="10"/>
+
+    <!-- Kategori 2: Laporan (Membuka Wizard Filter Tanggal) -->
+    <menuitem id="menu_sif_laporan" 
+              name="Laporan" 
+              parent="menu_sif_keuangan_root" 
+              sequence="20"/>
+
+    <menuitem id="menu_sif_buku_besar_sub" 
+              name="Buku Besar" 
+              parent="menu_sif_laporan" 
+              action="action_sif_buku_besar_wizard" 
+              sequence="10"/>
+
+    <!-- Kategori 3: Master Data -->
+    <menuitem id="menu_sif_master" 
+              name="Master Data" 
+              parent="menu_sif_keuangan_root" 
+              sequence="30"/>
+
+    <menuitem id="menu_sif_coa_sub" 
+              name="Chart of Accounts (COA)" 
+              parent="menu_sif_master" 
+              action="action_sif_coa" 
+              sequence="10"/>
+
 </odoo>
