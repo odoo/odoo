@@ -1,8 +1,9 @@
 import { Plugin } from "@html_editor/plugin";
+import { getImageSrc } from "@html_editor/utils/image";
 import { registry } from "@web/core/registry";
+import { MEDIAS_BREAKPOINTS, SIZES } from "@web/core/ui/ui_utils";
 import { delay } from "@web/core/utils/concurrency";
-import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
-import { SIZES, MEDIAS_BREAKPOINTS } from "@web/core/ui/ui_utils";
+import { DEVICE_HIDDEN_APPLIED_SELECTOR } from "./options/website_page_config_option_plugin";
 
 const DESKTOP_LCP_VIEWPORT_WIDTH = MEDIAS_BREAKPOINTS[SIZES["LG"]]["maxWidth"];
 const MOBILE_LCP_VIEWPORT_WIDTH = MEDIAS_BREAKPOINTS[SIZES["MD"]]["maxWidth"];
@@ -17,8 +18,6 @@ const MOBILE_LCP_VIEWPORT_SIZE = {
     height: Math.round(MOBILE_LCP_VIEWPORT_WIDTH * 1.7777), // aspect ratio (9:16)
 };
 
-const DEVICE_HIDDEN_SELECTOR =
-    ".o_snippet_mobile_invisible[data-invisible], .o_snippet_desktop_invisible[data-invisible]";
 const PRIORITY_IMAGE_SELECTOR = "img[fetchpriority='high']";
 const IMAGE_FIELD_SRC_ATTRIBUTE = "data-lcp-image-field-src";
 const LCP_QUIET_DELAY = 200;
@@ -35,6 +34,9 @@ export class LcpMarkingPlugin extends Plugin {
 
     async startLcpMeasurement() {
         const record = this.lcpRecord();
+        // `isDesigner` check is used to handle cases where a user may have privileges to edit a
+        // custom HTML field but not the `ir.ui.view` model. Such users will still be allowed to
+        // save the page without LCP measurements.
         if (!this.editable || !record || !this.services.website.isDesigner) {
             return;
         }
@@ -44,7 +46,7 @@ export class LcpMarkingPlugin extends Plugin {
     snapshotEditable() {
         const editableCloneEl = this.editable.cloneNode(true);
         editableCloneEl.removeAttribute("contenteditable");
-        for (const hiddenEl of editableCloneEl.querySelectorAll(DEVICE_HIDDEN_SELECTOR)) {
+        for (const hiddenEl of editableCloneEl.querySelectorAll(DEVICE_HIDDEN_APPLIED_SELECTOR)) {
             hiddenEl.removeAttribute("data-invisible");
             hiddenEl.classList.remove("o_snippet_override_invisible");
         }
@@ -70,7 +72,10 @@ export class LcpMarkingPlugin extends Plugin {
             return;
         }
         await this.services.orm.write(record.model, [record.id], values, {
-            context: { website_id: this.services.website.currentWebsite.id },
+            context: {
+                lang: this.services.website.currentWebsite.metadata.lang,
+                website_id: this.services.website.currentWebsite.id,
+            },
         });
     }
 
@@ -122,10 +127,7 @@ export class LcpMarkingPlugin extends Plugin {
     }
 
     imageUrl(el) {
-        const source =
-            el.tagName === "IMG"
-                ? el.getAttribute(IMAGE_FIELD_SRC_ATTRIBUTE) || el.getAttribute("src")
-                : getBgImageURLFromEl(el);
+        const source = el.getAttribute(IMAGE_FIELD_SRC_ATTRIBUTE) || getImageSrc(el);
         if (!source) {
             return false;
         }
@@ -224,3 +226,4 @@ export class LcpMarkingPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(LcpMarkingPlugin.id, LcpMarkingPlugin);
+registry.category("translation-plugins").add(LcpMarkingPlugin.id, LcpMarkingPlugin);
