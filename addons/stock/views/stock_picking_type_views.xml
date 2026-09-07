@@ -173,15 +173,15 @@
                                                 <field name="batch_group_by_src_loc"/>
                                                 <label for="batch_group_by_src_loc" string="General Source Location"/>
                                             </div>
-                                            <div name="batch_dest_subloc" class="o_row" invisible="batch_creation_type == 'manual' or not default_location_dest_id" groups="stock.group_stock_multi_locations">
-                                                <field name="batch_group_by_dest_loc"/>
-                                                <label for="batch_group_by_dest_loc" string="Destination Location"/>
-                                            </div>
                                             <div name="wave_location" class="o_row" invisible="batch_creation_type == 'manual'" groups="stock.group_stock_multi_locations">
                                                 <field name="wave_group_by_location"/>
                                                 <label for="wave_group_by_location" string="Product Source Location"/>
                                                 <field name="wave_location_ids" widget="many2many_tags" placeholder="Select locations you want to group"
                                                     invisible="not wave_group_by_location" required="wave_group_by_location"/>
+                                            </div>
+                                            <div name="batch_dest_subloc" class="o_row" invisible="batch_creation_type == 'manual' or not default_location_dest_id" groups="stock.group_stock_multi_locations">
+                                                <field name="batch_group_by_dest_loc"/>
+                                                <label for="batch_group_by_dest_loc" string="Destination Location"/>
                                             </div>
                                             <div name="wave_date" class="o_row" invisible="batch_creation_type == 'manual'">
                                                 <field name="wave_group_by_date"/>
