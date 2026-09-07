@@ -22,11 +22,9 @@ class PaymentProvider(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        if self.custom_mode != "on_site":
-            return vals_list
-
-        for vals in vals_list:
-            vals["is_live"] = True
+        for provider, vals in zip(self, vals_list):
+            if provider.custom_mode == "on_site":
+                vals["is_live"] = True
         return vals_list
 
     # === BUSINESS METHODS === #
