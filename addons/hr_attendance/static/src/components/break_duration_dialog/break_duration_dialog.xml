@@ -16,6 +16,7 @@
                                 type="number"
                                 min="0"
                                 step="1"
+                                t-att-max="this.props.maxMinutes"
                                 t-att-value="this.state.minutes"
                                 t-on-input="(ev) => this.state.minutes = ev.target.value"
                                 required="1"

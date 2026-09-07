@@ -71,6 +71,48 @@ test("break duration dialog validates and submits whole minutes", async () => {
     expect.verifySteps(["confirmed 10", "closed"]);
 });
 
+test("break duration dialog stays open until the break fits in the attendance", async () => {
+    await mountWithCleanup(BreakDurationDialog, {
+        props: {
+            employeeName: "Mitchell Admin",
+            maxMinutes: 120,
+            onConfirm: (minutes) => expect.step(`confirmed ${minutes}`),
+            close: () => expect.step("closed"),
+        },
+        noMainContainer: true,
+    });
+
+    await contains("#o_break_duration_minutes").edit("121", { instantly: true });
+    await contains(".modal-footer .btn-primary").click();
+
+    expect.verifySteps([]);
+    expect(".modal").toHaveCount(1);
+
+    await contains("#o_break_duration_minutes").edit("120");
+    await contains(".modal-footer .btn-primary").click();
+
+    expect.verifySteps(["confirmed 120", "closed"]);
+});
+
+test("break duration dialog stays open when the break could not be saved", async () => {
+    await mountWithCleanup(BreakDurationDialog, {
+        props: {
+            onConfirm: () => {
+                expect.step("confirmed");
+                return false;
+            },
+            close: () => expect.step("closed"),
+        },
+        noMainContainer: true,
+    });
+
+    await contains("#o_break_duration_minutes").edit("10", { instantly: true });
+    await contains(".modal-footer .btn-primary").click();
+
+    expect.verifySteps(["confirmed"]);
+    expect(".modal").toHaveCount(1);
+});
+
 test("checkout greeting can continue to break entry", async () => {
     await mountWithCleanup(KioskGreetings, {
         props: {
