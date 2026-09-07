@@ -48,9 +48,9 @@
                         </div>
                         <group>
                             <group>
-                                <field name="active" invisible="1"/>
-                                <field name="company_id" invisible="1"/>
-                                <field name="picking_type_code_domain" invisible="1"/>
+                                <field name="active" invisible="1"/> <!-- drives invisible on web_ribbon widget above -->
+                                <field name="company_id" invisible="1"/> <!-- kept for context to filter/default company-dependent fields below -->
+                                <field name="picking_type_code_domain" invisible="1"/> <!-- feeds domain of picking_type_id above -->
                                 <field name="action"/>
                                 <field name="picking_type_id" options="{'no_quick_create': True}"/>
                                 <field name="location_src_id" options="{'no_create': True}" required="action in ['pull', 'push', 'pull_push']"/>
@@ -72,7 +72,7 @@
                             <group name="apply_on" string="Applicability">
                                 <field name="route_id"/>
                                 <field name="warehouse_id" invisible="action == 'push'" groups="base.group_no_one"/>
-                                <field name="route_company_id" invisible="1"/>
+                                <field name="route_company_id" invisible="1"/> <!-- drives domain of route_id above -->
                                 <field name="company_id" options="{'no_create': True}" required="action == 'push'" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                             </group>
@@ -102,7 +102,7 @@
                     <attribute name="groups">base.group_multi_company,base.group_no_one</attribute>
                 </xpath>
                 <xpath expr="//form" position="inside">
-                    <field name="route_company_id" invisible="1"/>
+                    <field name="route_company_id" invisible="1"/> <!-- drives domain of route_id on the primary route form -->
                 </xpath>
             </field>
         </record>

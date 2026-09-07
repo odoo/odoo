@@ -62,11 +62,11 @@
             <list string="Operation Types">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="active" column_invisible="True"/>
+                <field name="active" column_invisible="True"/> <!-- used to allow displaying archived picking types via the Archived filter -->
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="sequence_id" groups="base.group_no_one"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
+                <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/> <!-- kept present for single-company users while hidden -->
             </list>
         </field>
     </record>
@@ -85,10 +85,10 @@
                             <group name="first">
                                 <group>
                                     <field name="code"/>
-                                    <field name="active" invisible="1"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="hide_reservation_method" invisible="1"/>
-                                    <field name="show_picking_type" invisible="1"/>
+                                    <field name="active" invisible="1"/> <!-- drives web_ribbon invisible -->
+                                    <field name="company_id" invisible="1"/> <!-- used as options domain context and shown conditionally below -->
+                                    <field name="hide_reservation_method" invisible="1"/> <!-- drives invisible on reservation_method field -->
+                                    <field name="show_picking_type" invisible="1"/> <!-- read by kanban template to conditionally render the card -->
                                     <field name="sequence_id" groups="base.group_no_one"/>
                                     <field name="sequence_code" required="1"/>
                                     <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>

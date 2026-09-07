@@ -21,13 +21,13 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='currency_id']" position="after">
-                <field name="is_shipped" invisible="1"/>
+                <field name="is_shipped" invisible="1"/> <!-- used in the invisible condition of the Receive header button -->
             </xpath>
             <xpath expr="//field[@name='order_line']/list//field[@name='date_planned']" position="after">
-                <field name="move_dest_ids" column_invisible="True"/>
+                <field name="move_dest_ids" column_invisible="True"/> <!-- loaded on the line record for downstream move tracking used in create/write logic -->
             </xpath>
             <xpath expr="//page/field[@name='order_line']/list/field[@name='product_qty']" position="after">
-                <field name="forecasted_issue" column_invisible="True"/>
+                <field name="forecasted_issue" column_invisible="True"/> <!-- drives invisible on the two forecast-report buttons right after it -->
                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="not id or not forecasted_issue or not is_storable" class="text-danger"/>
                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="area_chart" invisible="not id or forecasted_issue or not is_storable"/>
             </xpath>
@@ -59,7 +59,7 @@
                 <attribute name="readonly">product_type == 'consu'</attribute>
             </xpath>
             <xpath expr="//field[@name='fiscal_position_id']" position="after">
-                <field name="default_location_dest_id_usage" invisible="1"/>
+                <field name="default_location_dest_id_usage" invisible="1"/> <!-- drives invisible/required on the dest_address_id drop-ship field below -->
             </xpath>
             <xpath expr="//group[@name='purchase_info']/field[@name='date_approve']" position="after">
                 <field name="date_promised" invisible="state not in ('purchase', 'cancel')"/>

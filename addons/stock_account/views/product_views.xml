@@ -33,7 +33,7 @@
                     <field name="cost_method" optional="hide"/>
                 </field>
                 <field name="free_qty" position="after">
-                    <field name="company_currency_id" column_invisible="True"/>
+                    <field name="company_currency_id" column_invisible="True"/> <!-- currency_field for the avg_cost monetary widget below -->
                     <field name="avg_cost"
                         string="Unit Cost" optional="show" widget='stock_action_field'
                         options="{

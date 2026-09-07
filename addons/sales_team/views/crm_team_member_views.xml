@@ -87,12 +87,12 @@
         <field name="model">crm.team.member</field>
         <field name="arch" type="xml">
             <form string="Sales Men" js_class="crm_team_form">
-                <field name="active" invisible="1"/>
-                <field name="company_id" invisible="1"/>
-                <field name="is_membership_multi" invisible="1"/>
-                <field name="member_warning" invisible="1"/>
-                <field name="user_in_teams_ids" invisible="1"/>
-                <field name="user_company_ids" invisible="1"/>
+                <field name="active" invisible="1"/> <!-- drives invisible on web_ribbon widget and other conditions in this view -->
+                <field name="company_id" invisible="1"/> <!-- shown read-only below via a duplicate field tag, kept here for early load in the header -->
+                <field name="is_membership_multi" invisible="1"/> <!-- used by _compute_member_warning to decide whether to show the warning -->
+                <field name="member_warning" invisible="1"/> <!-- drives invisible on the multi-team warning alert; displayed value shown via duplicate field tag -->
+                <field name="user_in_teams_ids" invisible="1"/> <!-- used by user_id domain in this view -->
+                <field name="user_company_ids" invisible="1"/> <!-- used by user_id domain in this view -->
                 <sheet>
                     <div class="alert alert-info text-center d-flex flex-wrap justify-content-center gap-1" role="alert"
                         invisible="not member_warning">

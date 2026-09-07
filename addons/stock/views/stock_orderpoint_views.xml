@@ -26,11 +26,11 @@
         <field name="model">stock.warehouse.orderpoint</field>
         <field name="arch" type="xml">
             <list string="Reordering Rules" editable="bottom" js_class="stock_orderpoint_list" sample="1" multi_edit="1" export_xlsx="0">
-                <field name="active" column_invisible="True"/>
-                <field name="company_id" column_invisible="True"/>
-                <field name="product_category_id" column_invisible="True"/>
-                <field name="product_tmpl_id" column_invisible="True"/>
-                <field name="unwanted_replenish" column_invisible="True"/>
+                <field name="active" column_invisible="True"/> <!-- needed so archived records loaded via the Archived filter behave correctly in this editable list -->
+                <field name="company_id" column_invisible="True"/> <!-- used by check_company domain restrictions on location_id/route_id/product_id -->
+                <field name="product_category_id" column_invisible="True"/> <!-- needed to render group headers when the list is grouped by Category -->
+                <field name="product_tmpl_id" column_invisible="True"/> <!-- related field kept loaded for product_id domain/consistency, not directly displayed -->
+                <field name="unwanted_replenish" column_invisible="True"/> <!-- drives invisible on the two action_product_forecast_report buttons -->
                 <field name="route_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
                 <field name="replenishment_uom_id_placeholder" column_invisible="True"/> <!-- Needed for the placeholder widget -->
                 <field name="product_id" readonly="product_id" force_save="1" context="{'default_is_storable': True}"/>
@@ -49,7 +49,7 @@
                 <field name="replenishment_uom_id" widget="stock.forced_placeholder" options="{'no_create': True, 'placeholder_field': 'replenishment_uom_id_placeholder'}" optional="hide" decoration-muted="not replenishment_uom_id"/>
                 <field name="qty_to_order_to_max" column_invisible="true"/>
                 <field name="qty_to_order" widget="stock.max_qty_to_order" readonly="trigger == 'auto'" width="60"/>
-                <field name="qty_to_order_manual" column_invisible="True"/>
+                <field name="qty_to_order_manual" column_invisible="True"/> <!-- drives invisible on the two action_remove_manual_qty_to_order buttons -->
                 <button name="action_remove_manual_qty_to_order" type="object" icon="undo" title="Remove manually entered value and replace by the quantity to order based on the forecasted quantities" invisible="not qty_to_order_manual"/>
                 <button name="action_remove_manual_qty_to_order" type="object" icon="undo" title="-" class="disabled opacity-0" invisible="qty_to_order_manual"/>
                 <field name="product_uom_name" string="Unit" groups="uom.group_uom"/>
@@ -133,9 +133,9 @@
                     </div>
                     <group>
                         <group>
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
-                            <field name="route_id" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives invisible on the web_ribbon widget -->
+                            <field name="company_id" invisible="1"/> <!-- dependency of allowed_location_ids compute, which drives domain on location_id -->
+                            <field name="route_id" invisible="1"/> <!-- kept loaded so its value is not lost on save, edited via the list view's route_id column -->
                             <field name="product_id"/>
                             <label for="product_min_qty"/>
                             <div class="o_row">
@@ -151,7 +151,7 @@
                             <field name="replenishment_uom_id" options="{'no_create': True}"/>
                         </group>
                         <group>
-                            <field name="allowed_location_ids" invisible="1"/>
+                            <field name="allowed_location_ids" invisible="1"/> <!-- drives domain on location_id -->
                             <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_stock_multi_locations"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
