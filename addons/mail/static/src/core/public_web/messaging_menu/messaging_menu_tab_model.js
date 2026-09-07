@@ -54,7 +54,7 @@ import { _t } from "@web/core/l10n/translation";
  *   plugin) results.
  * - Add its `id` to `_get_menu_tab_priority_domain` to load specific records first.
  *
- * Tabs or filters without matching server-side cases receive no data.
+ * Tabs or filters without matching server-side cases raise a `BadRequest.
  */
 export class MessagingMenuTab extends Record {
     static id = "id";
@@ -111,6 +111,13 @@ export class MessagingMenuTab extends Record {
      * @type {MessagingMenuTabFilter}
      */
     filters = [];
+    /**
+     * Whether this tab is part of the app wide messaging menu: listed in the messaging
+     * menu dropdown/discuss sidebar and counted in `globalCounter`. `false` for a tab
+     * scoped to a specific context (displayed through its own dedicated UI). Context
+     * specific tabs still benefit from lazy-load and counter.
+     */
+    appWide = true;
     /** Hide the tab from the devtools if really bothered. */
     hidden = this.localStorage(false);
     hideWhenZeroCounter = false;
@@ -144,11 +151,22 @@ export class MessagingMenuTab extends Record {
             return this.store.messagingMenu;
         },
         eager: true,
+        onUpdate() {
+            if (this.messagingMenuAsTab?.initializeCountersFetcher.status === "not_fetched") {
+                return;
+            }
+            // Dynamic tab missed `initializeCountersFetcher`, catch-up now.
+            this.store.fetchStoreData("/mail/messaging_menu/initialize_counters", {
+                filter_id_by_tab_id_by_record_type: {
+                    [this.recordType]: { [this.id]: this.defaultFilter?.id ?? null },
+                },
+            });
+        },
     });
     messagingMenuAsVisibleTabs = fields.One("MessagingMenu", {
         inverse: "visibleTabs",
         compute() {
-            if (!this.isShown) {
+            if (!this.appWide || !this.canBeShown) {
                 return;
             }
             return this.store.messagingMenu;
@@ -184,7 +202,8 @@ export class MessagingMenuTab extends Record {
         return this.messages.map((m) => m.id);
     }
 
-    get isShown() {
+    /** Whether `hidden`/`hideWhenZeroCounter` allow this tab to be shown. */
+    get canBeShown() {
         return !this.hidden && (!this.hideWhenZeroCounter || this.counter > 0);
     }
 

@@ -6,7 +6,7 @@ export class MessagingMenuUIState extends Record {
 
     activeTab = fields.One("MessagingMenuTab", {
         compute() {
-            if (this.activeTab?.isShown) {
+            if (this.activeTab?.canBeShown) {
                 return this.activeTab;
             }
             return this.store.messagingMenu?.sortedVisibleTabs[0];
