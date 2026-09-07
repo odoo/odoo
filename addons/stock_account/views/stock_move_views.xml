@@ -25,7 +25,7 @@
                 <attribute name="js_class">stock_account_move_list</attribute>
             </list>
             <field name="state" position="after">
-                <field name="company_currency_id" column_invisible="1"/>
+                <field name="company_currency_id" column_invisible="1"/> <!-- drives currency_field option on value monetary widget below -->
                 <field name="value" string="Value" readonly="1" sum="Total" optional="hide"/>
                 <field name="remaining_qty" sum="Total" readonly="1" optional="hide"/>
                 <field name="remaining_value" sum="Total" readonly="1" optional="hide"/>
@@ -63,7 +63,7 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <list default_order="date desc, id desc">
-                <field name="company_currency_id" column_invisible="1"/>
+                <field name="company_currency_id" column_invisible="1"/> <!-- drives currency_field option on value, standard_price, remaining_value monetary widgets -->
                 <field name="reference" width="300px"/>
                 <field name="date"/>
                 <field name="quantity"/>

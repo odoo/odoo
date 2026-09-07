@@ -6,9 +6,9 @@
         <field name="model">sale.mass.cancel.orders</field>
         <field name="arch" type="xml">
             <form string="Cancel quotations">
-                <field name="sale_order_ids" invisible="1"/>
-                <field name="sale_orders_count" invisible="1"/>
-                <field name="has_confirmed_order" invisible="1"/>
+                <field name="sale_order_ids" invisible="1"/> <!-- used by action_mass_cancel to cancel the selected orders -->
+                <field name="sale_orders_count" invisible="1"/> <!-- drives invisible on the confirmation dialog divs below -->
+                <field name="has_confirmed_order" invisible="1"/> <!-- drives invisible on the warning alert div below -->
                 <div invisible="not has_confirmed_order">
                     <p class="alert alert-warning fw-bold" role="alert">
                         Some confirmed orders are selected. Their related documents might be

@@ -6,8 +6,8 @@
         <field name="arch" type="xml">
             <form string="Product Routes Report">
                 <group>
-                    <field name="product_tmpl_id" invisible="1" />
-                    <field name="product_has_variants" invisible="1" />
+                    <field name="product_tmpl_id" invisible="1" /> <!-- supplies domain filter on product_id below -->
+                    <field name="product_has_variants" invisible="1" /> <!-- drives readonly on product_id below -->
                     <field name="product_id"
                         domain="[('product_tmpl_id', '=', product_tmpl_id)]"
                         readonly="not product_has_variants" options="{'no_create': True}"/>

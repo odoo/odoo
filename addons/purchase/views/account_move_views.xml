@@ -11,7 +11,7 @@
             <!-- Auto-complete could be done from either a bill either a purchase order -->
             <field name="tax_cash_basis_origin_move_id" position="after">
                 <t groups="purchase.group_purchase_user">
-                    <field name="purchase_id" invisible="1" readonly="state != 'draft'"/>
+                    <field name="purchase_id" invisible="1" readonly="state != 'draft'"/> <!-- kept for onchange in account_invoice.py that loads PO lines when set -->
                     <field name="purchase_vendor_bill_id"
                         string="Auto-Complete"
                         invisible="state != 'draft' or move_type not in ('in_invoice', 'in_refund')"
@@ -39,7 +39,7 @@
                        context="{'display_order_name': True, 'partner_id': parent.partner_id, 'list_view_ref': 'purchase.purchase_order_line_list_invoice', 'invoice_qty': quantity, 'invoice_price_unit': price_unit}"/>
             </xpath>
             <xpath expr="//field[@name='line_ids']/list/field[@name='company_id']" position="after">
-                <field name="purchase_line_id" groups="purchase.group_purchase_user" column_invisible="True"/>
+                <field name="purchase_line_id" groups="purchase.group_purchase_user" column_invisible="True"/> <!-- kept on journal_items list for decoration-warning based on purchase_line_warn_msg linkage -->
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <button class="oe_stat_button"

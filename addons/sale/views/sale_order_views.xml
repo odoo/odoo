@@ -129,8 +129,8 @@
                         type="action"
                         class="btn-secondary"/>
                 </header>
-                <field name="message_needaction" column_invisible="True"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="message_needaction" column_invisible="True"/> <!-- Kept as a technical field so the needaction is tracked for the record's activity/messaging status -->
+                <field name="currency_id" column_invisible="True"/> <!-- Needed by monetary widgets in this list to display the currency symbol -->
 
                 <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                 <field name="date_order" optional="show" readonly="state in ['cancel', 'sale']"/>
@@ -149,7 +149,7 @@
                 <field name="partner_id" widget="many2one_avatar" readonly="1"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide"/>
                 <field name="team_id" optional="hide"/>
-                <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
+                <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/> <!-- Kept so the field is fetched even in single-company mode, where the visible duplicate below is hidden by groups -->
                 <field name="company_id"
                        groups="base.group_multi_company"
                        optional="hide"
@@ -506,12 +506,12 @@
                                 readonly="state in ['cancel', 'sale']"
                             />
                         </div>
-                        <field name="currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- Needed by monetary widgets on this order to display the currency symbol -->
                         <field
                             name="pricelist_id"
                             invisible="1"
                             readonly="state in ['cancel', 'sale']"
-                            groups="!product.group_product_pricelist"/>
+                            groups="!product.group_product_pricelist"/> <!-- Kept so pricelist_id is saved when the pricelist group is disabled, mirroring the visible field above -->
                         <field
                             name="payment_term_id"
                             placeholder="Immediate"
@@ -557,7 +557,7 @@
                                 -->
                                 <field name="sequence" invisible="1"/>
                                 <!-- Display_type must be specified as non readonly (which would be the case with the default field added by ORM) -->
-                                <field name="display_type" invisible="1"/>
+                                <field name="display_type" invisible="1"/> <!-- Drives the invisible of the surrounding groups/labels in this sub-form (e.g. invisible="display_type") -->
                                 <group>
                                     <group invisible="display_type">
                                         <label for="product_id"/>
@@ -678,25 +678,25 @@
 
                                 <!-- Non readonly invisible fields, must be specified manually, because fields added automatically by the ORM
                                     are readonly, widgets fieldDependencies too -->
-                                <field name="display_type" column_invisible="True"/>
-                                <field name="product_custom_attribute_value_ids" column_invisible="1" >
+                                <field name="display_type" column_invisible="True"/> <!-- Drives invisible/required conditions on sibling columns/widgets in this list (e.g. invisible="display_type") -->
+                                <field name="product_custom_attribute_value_ids" column_invisible="1" ><!-- Read by sale_order_line_field.js and needed for onchange/compute of the line's custom attribute values -->
                                     <list>
                                         <field name="custom_product_template_attribute_value_id" />
                                         <field name="custom_value" />
                                     </list>
                                 </field>
-                                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>
-                                <field name="technical_price_unit" column_invisible="1"/>
-                                <field name="linked_line_id" column_invisible="1"/>
-                                <field name="combo_item_id" column_invisible="1"/>
-                                <field name="selected_combo_items" column_invisible="1"/>
-                                <field name="virtual_id" column_invisible="1"/>
-                                <field name="linked_virtual_id" column_invisible="1"/>
-                                <field name="collapse_composition" column_invisible="1"/>
+                                <field name="product_no_variant_attribute_value_ids" column_invisible="1"/> <!-- Kept for onchange/compute of no-variant attribute values used when adding the line's product -->
+                                <field name="technical_price_unit" column_invisible="1"/> <!-- Kept for onchange/compute of price_unit, read internally without being shown as a column -->
+                                <field name="linked_line_id" column_invisible="1"/> <!-- Read by sale_order_line_field.js to resolve combo/linked line relationships -->
+                                <field name="combo_item_id" column_invisible="1"/> <!-- Read by sale_order_line_field.js to detect combo item lines -->
+                                <field name="selected_combo_items" column_invisible="1"/> <!-- Read/updated by sale_order_line_field.js when configuring combo products -->
+                                <field name="virtual_id" column_invisible="1"/> <!-- Read by sale_order_line_field.js to match not-yet-saved combo lines via linked_virtual_id -->
+                                <field name="linked_virtual_id" column_invisible="1"/> <!-- Read by sale_order_line_field.js to resolve combo lines before they are saved -->
+                                <field name="collapse_composition" column_invisible="1"/> <!-- Kept for onchange/compute of composition display on section/subsection lines -->
                                 <field name="collapse_prices" column_invisible="1"/>
 
                                 <!-- Currency, needed for monetary widgets to display the currency symbol -->
-                                <field name="currency_id" column_invisible="True"/>
+                                <field name="currency_id" column_invisible="True"/> <!-- Needed by monetary widgets in this list to display the currency symbol -->
 
                                 <!-- Standard fields -->
                                 <field name="sequence" invisible="combo_item_id" widget="handle"/>
@@ -1059,11 +1059,11 @@
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                                 </div>
                                 <field name="preferred_payment_method_line_id"/>
-                                <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/>
+                                <field name="partner_invoice_id" groups="!account.group_delivery_invoice_address" invisible="1"/> <!-- Kept so partner_invoice_id is saved when the delivery/invoice address group is disabled, mirroring the visible field above -->
                                 <field name="journal_id" groups="base.group_no_one" readonly="invoice_count != 0 and state == 'sale'"/>
                                 <field name="invoice_status" invisible="state != 'sale'" groups="base.group_no_one"/>
                                 <!-- test_event_configurator -->
-                                <field name="invoice_status" invisible="1" groups="!base.group_no_one"/>
+                                <field name="invoice_status" invisible="1" groups="!base.group_no_one"/> <!-- Kept so invoice_status is saved/available when group_no_one is disabled, mirroring the visible field above -->
                             </group>
                             <group name="sale_shipping" string="Shipping">
                                 <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>

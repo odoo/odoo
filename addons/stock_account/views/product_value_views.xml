@@ -6,9 +6,9 @@
         <field name="arch" type="xml">
             <form string="Adjust Valuation">
                 <sheet>
-                <field name="move_id" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="company_id" invisible="1" force_save="1"/>
+                <field name="move_id" invisible="1"/> <!-- kept for onchange/compute of current_value, current_value_details, current_value_description -->
+                <field name="currency_id" invisible="1"/> <!-- drives currency_field option on current_value and value monetary widgets -->
+                <field name="company_id" invisible="1" force_save="1"/> <!-- computed company saved with the record; source of the related currency_id above -->
                 <group>
                     <group>
                         <label for="current_value" class="oe_inline"/>

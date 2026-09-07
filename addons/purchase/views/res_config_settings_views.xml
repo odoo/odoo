@@ -9,9 +9,9 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Purchase" string="Purchase" name="purchase" groups="purchase.group_purchase_manager">
-                    <field name="po_double_validation" invisible="1"/>
-                    <field name="company_currency_id" invisible="1"/>
-                    <field name="po_lock" invisible="1"/>
+                    <field name="po_double_validation" invisible="1"/> <!-- loaded to compare against po_order_approval in set_values() -->
+                    <field name="company_currency_id" invisible="1"/> <!-- used as currency_field for the po_double_validation_amount Monetary widget -->
+                    <field name="po_lock" invisible="1"/> <!-- loaded to compare against lock_confirmed_po in set_values() -->
                     <block title="Orders" name="purchase_setting_container">
                         <setting id="po_order_approval" company_dependent="1" help="Request managers to approve orders above a minimum amount">
                             <field name="po_order_approval"/>

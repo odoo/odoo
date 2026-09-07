@@ -27,7 +27,7 @@
                 <field name="partner_id"/>
                 <field name="date"/>
                 <field name="amount"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- kept for _compute_display_name to format amount with the right currency -->
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
             </list>
         </field>
@@ -43,7 +43,7 @@
                 <field name="partner_id" optional="hide"/>
                 <field name="date"/>
                 <field name="amount"/>
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- kept for _compute_display_name to format amount with the right currency -->
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="hide"/>
             </list>
         </field>

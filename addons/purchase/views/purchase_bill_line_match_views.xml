@@ -25,7 +25,7 @@
                 <field name="product_uom_price" widget="monetary" string="Unit Price" optional="show"/>
                 <field name="billed_amount_untaxed" widget="monetary_no_zero" sum="Total Billed" string="Billed"/>
                 <field name="purchase_amount_untaxed" widget="monetary_no_zero" sum="Total Purchased" string="Purchased"/>
-                <field name="currency_id" column_invisible="1"/>
+                <field name="currency_id" column_invisible="1"/> <!-- currency_field for the monetary widgets on this list -->
             </list>
         </field>
     </record>

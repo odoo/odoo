@@ -13,7 +13,7 @@
         <field name="model">stock.location</field>
         <field name="arch" type="xml">
             <form string="Stock Location">
-                <field name="company_id" invisible="1"/>
+                <field name="company_id" invisible="1"/> <!-- used in button context and to condition Cyclic Counting/Logistics groups invisible -->
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button string="Putaway Rules"
@@ -36,7 +36,7 @@
 
                     <group>
                         <group string="Additional Information" name="additional_info">
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives web_ribbon invisible and the next_inventory_date invisible -->
                             <field name="usage"/>
                             <field name="storage_category_id" invisible="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
@@ -104,8 +104,8 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <list string="Stock Location" decoration-info="usage=='view'" multi_edit="1">
-                <field name="company_id" column_invisible="True"/>
-                <field name="active" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- kept to feed the visible company_id column's groups toggle -->
+                <field name="active" column_invisible="True"/> <!-- used to allow displaying archived locations in this editable list -->
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
                 <field name="is_empty" optional="hide" invisible="usage not in ['internal', 'transit']"/>
@@ -179,7 +179,7 @@
                 <list string="Routes">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
-                    <field name="active" column_invisible="True"/>
+                    <field name="active" column_invisible="True"/> <!-- used to allow displaying archived routes via the Archived filter -->
                     <field name="company_id" groups="base.group_multi_company"/>
                 </list>
             </field>
@@ -191,7 +191,7 @@
             <field eval="7" name="priority" />
             <field name="arch" type="xml">
                 <form string="Route">
-                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- used as default_company_id context for rule_ids and shown conditionally below -->
                     <sheet>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <div class="oe_title">
@@ -202,7 +202,7 @@
                         <group>
                             <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                             <field name="supplied_wh_id" groups="base.group_no_one"/>
-                            <field name="active" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- drives web_ribbon invisible -->
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" placeholder="Visible to all"/>
                         </group>
                     </group>
@@ -217,7 +217,7 @@
                             <label for="warehouse_selectable" string="Warehouses"/>
                             <div class="o_row">
                                 <field name="warehouse_selectable" class="oe_inline" nolabel="1"/>
-                                <field name="warehouse_domain_ids" invisible="1"/>
+                                <field name="warehouse_domain_ids" invisible="1"/> <!-- feeds the domain of warehouse_ids -->
                                 <field name="warehouse_ids" widget="many2many_tags" class="o_field_highlighted" placeholder="All Warehouses" nolabel="1" invisible="not warehouse_selectable"/>
                             </div>
                         </group>

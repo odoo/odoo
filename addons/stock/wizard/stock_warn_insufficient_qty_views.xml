@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form>
                 <!-- Invisible field to trigger compute -->
-                <field name="product_id" invisible="True"/>
+                <field name="product_id" invisible="True"/> <!-- Kept to trigger quant_ids compute, which depends on product_id -->
                 <div>
                     The product is not available in sufficient quantity
                     <span class="oe_inline" groups="stock.group_stock_multi_locations"> in

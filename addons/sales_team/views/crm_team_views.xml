@@ -43,13 +43,13 @@
                     </div>
                     <group>
                         <group name="left" string="Team Details">
-                            <field name="active" invisible="1"/>
-                            <field name="sequence" invisible="1"/>
-                            <field name="is_membership_multi" invisible="1"/>
+                            <field name="active" invisible="1"/> <!-- Drives the web_ribbon "Archived" invisible above -->
+                            <field name="sequence" invisible="1"/> <!-- Kept so sequence (used by the handle widget in the list view) is not lost when saving from the form -->
+                            <field name="is_membership_multi" invisible="1"/> <!-- Drives the invisible of the multi-team alert and crm_team_member_ids notebook field below -->
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" placeholder="Visible to all"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="member_company_ids" invisible="1"/>
+                            <field name="currency_id" invisible="1"/> <!-- Kept for onchange/compute relying on the team's related currency -->
+                            <field name="member_company_ids" invisible="1"/> <!-- Drives the domain on user_id above (company_ids in member_company_ids) -->
                         </group>
                         <group name="right">
                         </group>
@@ -99,7 +99,7 @@
             <list string="Sales Team" sample="1" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name" readonly="1"/>
-                <field name="active" column_invisible="True"/>
+                <field name="active" column_invisible="True"/> <!-- Kept so the record's active state is loaded for Archive/Unarchive actions in this multi_edit list -->
                 <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
