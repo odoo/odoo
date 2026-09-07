@@ -1,4 +1,4 @@
-import { onWillDestroy, useListener } from "@odoo/owl";
+import { onWillDestroy, useEffect, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { scrollTo } from "@web/core/utils/scrolling";
@@ -445,19 +445,17 @@ export function useNavigation(containerRef, options = {}) {
     const navigator = new Navigator(newOptions, hotkeyService);
     const observer = new MutationObserver(() => navigator.update());
 
-    // useLayoutEffect(
-    //     (containerEl) => {
-    //         if (containerEl) {
-    //             navigator.update();
-    //             observer.observe(containerEl, {
-    //                 childList: true,
-    //                 subtree: true,
-    //             });
-    //         }
-    //         return () => observer.disconnect();
-    //     },
-    //     () => [getContainerEl()]
-    // );
+    useEffect(() => {
+        const containerEl = getContainerEl();
+        if (containerEl) {
+            navigator.update();
+            observer.observe(containerEl, {
+                childList: true,
+                subtree: true,
+            });
+        }
+        return () => observer.disconnect();
+    });
 
     useListener(browser, "focus", ({ target }) => navigator._checkFocus(target), true);
     onWillDestroy(() => navigator._destroy());
