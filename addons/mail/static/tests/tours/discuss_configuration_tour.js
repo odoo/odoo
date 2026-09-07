@@ -9,23 +9,26 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: ".o_main_navbar button:contains('Configuration')",
+            trigger: ".o_main_navbar button:text('Configuration')",
             run: "click",
         },
         {
-            trigger: ".dropdown-menu a:contains('Notification')",
+            trigger: ".dropdown-menu .dropdown-header:text('User Settings')",
+        },
+        {
+            trigger: ".dropdown-menu .dropdown-item:text('Notifications')",
             run: "click",
         },
         {
-            trigger: "button:contains('All Messages')",
+            trigger: "button:text('All Messages')",
             run: "click",
         },
         {
-            trigger: "button:contains('Mentions Only')",
+            trigger: "button:text('Mentions Only')",
             run: "click",
         },
         {
-            trigger: "button:contains('Nothing')",
+            trigger: "button:text('Nothing')",
             run: "click",
         },
         {
@@ -33,11 +36,14 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: ".o_main_navbar button:contains('Configuration')",
+            trigger: ".o_main_navbar button:text('Configuration')",
             run: "click",
         },
         {
-            trigger: ".dropdown-menu a:contains('Voice & Video')",
+            trigger: ".dropdown-menu .dropdown-header:text('User Settings')",
+        },
+        {
+            trigger: ".dropdown-menu .dropdown-item:text('Voice & Video')",
             run: "click",
         },
         {
@@ -51,7 +57,7 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: "span:contains('Click the button below to register a new shortcut.')",
+            trigger: "span:text('Click the button below to register a new shortcut.')",
         },
         {
             trigger: "input[title='Delay after releasing push-to-talk']",
@@ -75,11 +81,11 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: ".o_main_navbar button:contains('Configuration')",
+            trigger: ".o_main_navbar button:text('Configuration')",
             run: "click",
         },
         {
-            trigger: ".dropdown-menu a:contains('Settings')",
+            trigger: ".dropdown-menu a:text('Settings')",
             expectUnloadPage: true,
             run: "click",
         },
