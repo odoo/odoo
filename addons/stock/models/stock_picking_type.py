@@ -503,9 +503,7 @@ class StockPickingType(models.Model):
             del action["mobile_view_mode"]
             del action["views"]
             action["view_mode"] = self.env.context["view_mode"]
-        if action["view_mode"] == "gantt":
-            action["context"].pop("group_by", None)
-        if action["context"].get("search_default_group_by_picking_type_id") and len(self) == 1:
+        if (action["context"].get("search_default_group_by_picking_type_id") and len(self) == 1) or action["view_mode"] == "gantt":
             action["context"]["search_default_group_by_picking_type_id"] = False
         return action
 
