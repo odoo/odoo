@@ -15,8 +15,10 @@
 }
 
 .o-mail-MessagingMenu-tabCounter {
-    left: 50%;
-    transform: translate(50%, 25%) !important;
+    min-width: $o-badge-min-width;
+    left: auto;
+    right: calc(50% - #{$o-badge-min-width} * 1.5);
+    transform: translate(0, 25%);
 }
 
 .o-mail-MessagingMenu-tabUnread {
