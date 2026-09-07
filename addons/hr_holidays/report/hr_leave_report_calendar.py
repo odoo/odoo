@@ -18,7 +18,7 @@ class HrLeaveReportCalendar(models.Model):
     duration_display = fields.Char(related='leave_id.duration_display', readonly=True)
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
     duration = fields.Float(string='Duration', readonly=True)
-    employee_id = fields.Many2one('hr.employee', readonly=True)
+    employee_id = fields.Many2one('hr.employee', readonly=True, required=True)
     user_id = fields.Many2one('res.users', readonly=True)
     department_id = fields.Many2one('hr.department', readonly=True)
     job_id = fields.Many2one('hr.job', readonly=True)
