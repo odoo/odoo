@@ -4,7 +4,11 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import { registry } from "@web/core/registry";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import { negateStep, refresh } from "@point_of_sale/../tests/generic_helpers/utils";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
+import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
+import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import { inLeftSide } from "./utils/common";
 
 registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
@@ -92,5 +96,25 @@ registry.category("web_tour.tours").add("PaymentScreenInvoiceOrder", {
             PaymentScreen.clickValidate(),
             // Edit payment button shouldn't be available for posted orders
             negateStep({ trigger: ".feedback-screen .edit-order-payment:contains(Edit Payment)" }),
+            Chrome.clickOrders(),
+            TicketScreen.isReady(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.selectOrder("001"),
+            inLeftSide([
+                ...Order.hasLine({ productName: "Product Test", withClass: ".selected" }),
+                Numpad.click("1"),
+            ]),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.isShown(),
+            {
+                content: "invoice button is disabled for refund of an invoiced order",
+                trigger: ".js_invoice[disabled]",
+            },
+            refresh(),
+            PaymentScreen.isShown(),
+            {
+                content: "invoice button is still disabled after refresh",
+                trigger: ".js_invoice[disabled]",
+            },
         ].flat(),
 });
