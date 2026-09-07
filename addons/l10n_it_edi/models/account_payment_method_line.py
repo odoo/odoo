@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 L10N_IT_PAYMENT_METHOD_SELECTION = [
     ('MP01', "MP01 - Cash"),
@@ -26,6 +26,12 @@ L10N_IT_PAYMENT_METHOD_SELECTION = [
     ('MP23', "MP23 - PagoPA"),
 ]
 
+L10N_IT_PAYMENT_METHOD_MAPPING = {
+    'riba': 'MP12',
+    'sdd': 'MP19',
+    'check_printing': 'MP02',
+}
+
 
 class AccountPaymentMethodLine(models.Model):
     _inherit = "account.payment.method.line"
@@ -33,8 +39,15 @@ class AccountPaymentMethodLine(models.Model):
     l10n_it_payment_method = fields.Selection(
         selection=L10N_IT_PAYMENT_METHOD_SELECTION,
         string="Italian Payment Method",
-        default='MP05',
+        compute='_compute_l10n_it_payment_method',
+        store=True,
+        readonly=False,
     )
+
+    @api.depends('payment_method_id', 'company_id')
+    def _compute_l10n_it_payment_method(self):
+        for line in self.filtered(lambda line: line.company_id.country_code == 'IT'):
+            line.l10n_it_payment_method = L10N_IT_PAYMENT_METHOD_MAPPING.get(line.payment_method_id.code, 'MP05')
 
     def _get_l10n_it_payment_method_selection_code(self):
         return [payment_method[0] for payment_method in L10N_IT_PAYMENT_METHOD_SELECTION]

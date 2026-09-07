@@ -297,6 +297,7 @@ class TestItEdiExport(TestItEdi):
             'invoice_date_due': '2022-03-24',
             'partner_id': self.italian_partner_a.id,
             'partner_bank_id': self.test_bank.id,
+            'l10n_it_payment_method': 'MP05',
             'invoice_line_ids': [
                 Command.create({
                     'name': "Product A",

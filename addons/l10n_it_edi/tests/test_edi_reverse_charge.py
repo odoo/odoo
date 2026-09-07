@@ -170,6 +170,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'date': '2022-04-01',
             'partner_id': self.french_partner.id,
             'partner_bank_id': self.test_bank.id,
+            'l10n_it_payment_method': 'MP05',
             'invoice_line_ids': [
                 Command.create({
                     'name': name,
@@ -191,6 +192,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'date': '2022-04-01',
             'move_type': 'in_refund',
             'partner_id': self.french_partner.id,
+            'l10n_it_payment_method': 'MP05',
             'invoice_line_ids': [
                 Command.create({
                     'name': "Product A",
@@ -219,6 +221,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'date': '2022-04-01',
             'partner_id': self.french_partner.id,
             'partner_bank_id': self.test_bank.id,
+            'l10n_it_payment_method': 'MP05',
             'invoice_line_ids': [
                 Command.create({
                     'name': "Product A",
@@ -245,6 +248,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'invoice_date_due': '2022-03-24',
             'partner_id': self.san_marino_partner.id,
             'partner_bank_id': self.test_bank.id,
+            'l10n_it_payment_method': 'MP05',
             'invoice_line_ids': [
                 Command.create({
                     'name': "Product A",
@@ -313,6 +317,7 @@ class TestItEdiReverseCharge(TestItEdi):
             'date': '2022-04-01',
             'partner_id': self.eu_partner.id,
             'l10n_it_document_type': dt_18.id,
+            'l10n_it_payment_method': 'MP05',
             'invoice_line_ids': [
                 Command.create({
                     'name': "Product A",
