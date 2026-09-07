@@ -39,7 +39,9 @@ class TestHrAttendanceSelfEdit(TransactionCase):
         })
 
     def test_01_self_edit_own_attendance(self):
-        """ Test a user with 'own' group can create and edit their own record """
+        """
+        Test a user with 'own' group can create and edit their own record, even as a fully flexible employee.
+        """
         attendance = self.env['hr.attendance'].with_user(self.user_self_edit).create({
             'employee_id': self.emp_self_edit.id,
             'check_in': datetime(2023, 1, 1, 8, 0),
@@ -51,6 +53,16 @@ class TestHrAttendanceSelfEdit(TransactionCase):
 
         attendance.write({'check_out': datetime(2023, 1, 1, 17, 0)})
         self.assertEqual(attendance.check_out, datetime(2023, 1, 1, 17, 0))
+
+        self.emp_self_edit.resource_calendar_id = False
+        attendance_fully_flexi = self.env['hr.attendance'].with_user(self.user_self_edit).create({
+            'employee_id': self.emp_self_edit.id,
+            'check_in': datetime(2026, 9, 8, 8, 0),
+            'check_out': datetime(2026, 9, 8, 16, 0),
+        })
+
+        attendance_fully_flexi.with_user(self.user_self_edit).check_out = datetime(2026, 9, 8, 17, 0)
+        self.assertEqual(attendance_fully_flexi.check_out, datetime(2026, 9, 8, 17, 0))
 
     def test_02_restrict_other_attendance(self):
         """ Test a user with 'own' group cannot edit someone else's attendance """
