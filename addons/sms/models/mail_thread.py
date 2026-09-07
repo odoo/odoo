@@ -81,8 +81,8 @@ class MailThread(models.AbstractModel):
 
         :param template: a valid sms.template record;
         :param template_xmlid: XML ID of an sms.template (if no template given);
-        :param template_fallback: plaintext (inline_template-enabled) in case template
-          and template xml id are falsy (for example due to deleted data);
+        :param template_fallback: plaintext used when the template and template
+          XML ID are falsy (for example due to deleted data);
         """
         self.ensure_one()
         if not template and template_xmlid:
@@ -90,7 +90,7 @@ class MailThread(models.AbstractModel):
         if template:
             body = template._render_field('body', self.ids, compute_lang=True)[self.id]
         else:
-            body = self.env['sms.template']._render_template(template_fallback, self._name, self.ids)[self.id]
+            body = template_fallback
         return self._message_sms(body, partner_ids=partner_ids, **kwargs)
 
     def _message_sms(self, body, subtype_id=False, partner_ids=False, number_field=False,

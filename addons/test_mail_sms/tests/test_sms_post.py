@@ -276,9 +276,30 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
         with self.with_user('employee'):
             with self.mockSMSGateway():
                 test_record = self.env['mail.test.sms'].browse(self.test_record.id)
-                messages = test_record._message_sms_with_template(template_xmlid='test_mail_full.this_should_not_exists', template_fallback='Fallback for {{ object.id }}')
+                messages = test_record._message_sms_with_template(
+                    template_xmlid='test_mail_full.this_should_not_exists',
+                    template_fallback=f'Fallback for {test_record.name}',
+                )
 
-        self.assertSMSNotification([{'partner': self.partner_1, 'number': self.test_numbers_san[1]}], 'Fallback for %s' % self.test_record.id, messages)
+        self.assertSMSNotification(
+            [{'partner': self.partner_1, 'number': self.test_numbers_san[1]}],
+            f'Fallback for {self.test_record.name}',
+            messages,
+        )
+
+        with self.with_user('employee'):
+            with self.mockSMSGateway():
+                test_record = self.env['mail.test.sms'].browse(self.test_record.id)
+                messages = test_record._message_sms_with_template(
+                    template_xmlid='test_mail_full.this_should_not_exists',
+                    template_fallback='Fallback for {{ object.id }}',
+                )
+
+        self.assertSMSNotification(
+            [{'partner': self.partner_1, 'number': self.test_numbers_san[1]}],
+            'Fallback for {{ object.id }}',
+            messages,
+        )
 
     def test_message_sms_with_template_xmlid(self):
         sms_template = self.env['sms.template'].create({
