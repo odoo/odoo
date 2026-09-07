@@ -50,6 +50,7 @@ export class DiscussChannel extends models.ServerModel {
         compute: "_compute_invited_member_ids",
     });
     is_readonly = fields.Boolean({ string: "Read-only" });
+    member_indices = fields.Char({ string: "Member Indices" });
     self_member_id = fields.Many2one({
         relation: "discuss.channel.member",
         compute: "_compute_self_member_id",
@@ -71,7 +72,23 @@ export class DiscussChannel extends models.ServerModel {
                 }
             }
         }
-        return super.create(...arguments);
+        const ids = super.create(...arguments);
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
+        // py: member_indices is precomputed, so it is frozen at the creation of a chat.
+        for (const channel of this.browse(ensureArray(ids))) {
+            if (channel.channel_type !== "chat" || channel.member_indices) {
+                continue;
+            }
+            const members = DiscussChannelMember.browse(channel.channel_member_ids);
+            const partnerIds = members.map((m) => m.partner_id).filter(Boolean);
+            const guestIds = members.map((m) => m.guest_id).filter(Boolean);
+            channel.member_indices = [
+                ...partnerIds.sort((id1, id2) => id1 - id2).map((id) => `p${id}`),
+                ...guestIds.sort((id1, id2) => id1 - id2).map((id) => `g${id}`),
+            ].join(",");
+        }
+        return ids;
     }
 
     _compute_channel_name_member_ids() {
@@ -478,6 +495,9 @@ export class DiscussChannel extends models.ServerModel {
         res.attr("member_count", (channel) =>
             DiscussChannelMember.search_count([["channel_id", "=", channel.id]])
         );
+        res.attr("member_indices", undefined, {
+            predicate: (channel) => channel.channel_type === "chat",
+        });
         res.attr(
             "message_count",
             (channel) =>
