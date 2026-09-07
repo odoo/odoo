@@ -121,7 +121,8 @@ class AccountMove(models.Model):
         Note that cancelled invoices remain part of the chain.
         """
         tbai_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')
-        return self.l10n_es_tbai_is_required \
+        return self.is_sale_document() \
+            and self.l10n_es_tbai_is_required \
             and len(tbai_doc_ids) > 0 \
             and not any(tbai_doc_ids.filtered(lambda d: d.state == 'to_send'))
 
