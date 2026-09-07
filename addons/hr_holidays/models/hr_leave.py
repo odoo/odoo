@@ -651,6 +651,12 @@ Versions:
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                elif (
+                    leave.request_unit_half
+                    and leave.request_date_from != leave.request_date_to
+                    and calendar.duration_based
+                ):
+                    days, hours = leave._get_duration_based_half_day_duration(calendar)
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
@@ -667,6 +673,64 @@ Versions:
                 days = float_round(days, precision_rounding=0.5)
             result[leave.id] = (days, hours)
         return result
+
+    def _get_duration_based_half_day_duration(self, calendar):
+        self.ensure_one()
+        total_days = 0.0
+        total_hours = 0.0
+        leave_intervals = Intervals([(self.date_from, self.date_to, self)])
+
+        if not self.holiday_status_id.include_public_holidays_in_duration:
+            public_holidays = self.env['resource.calendar.leaves'].search([
+                ('resource_id', '=', False),
+                ('date_from', '<', self.date_to),
+                ('date_to', '>', self.date_from),
+                ('calendar_id', 'in', [False, calendar.id]),
+                ('company_id', '=', self.company_id.id),
+            ])
+
+            public_holiday_intervals = Intervals([
+              (ph.date_from, ph.date_to, ph)
+              for ph in public_holidays
+            ])
+            leave_intervals -= public_holiday_intervals
+
+        start_date = self.request_date_from
+        end_date = self.request_date_to
+
+        # Start date
+        start_day_start = datetime.combine(start_date, time.min)
+        if leave_intervals & Intervals([(start_day_start, start_day_start + timedelta(days=1), self)]):
+            start_day_hours = sum(calendar._get_duration_based_day_attendances(start_date).mapped('duration_hours'))
+            total_hours += 0.5 * start_day_hours if self.request_date_from_period == 'pm' else start_day_hours
+            total_days += 0.5 if self.request_date_from_period == 'pm' else 1.0
+
+        # Middle dates
+        middle_start_date = start_date + timedelta(days=1)
+        middle_end_date = end_date - timedelta(days=1)
+
+        if middle_start_date <= middle_end_date:
+            tz = pytz.timezone(calendar.tz)
+            middle_start_datetime = tz.localize(datetime.combine(middle_start_date, time.min))
+            middle_end_datetime = tz.localize(datetime.combine(end_date, time.min))
+
+            duration_data = calendar.get_work_duration_data(
+                middle_start_datetime,
+                middle_end_datetime,
+                compute_leaves=not self.holiday_status_id.include_public_holidays_in_duration,
+            )
+
+            total_days += duration_data['days']
+            total_hours += duration_data['hours']
+
+        # End date
+        end_day_start = datetime.combine(end_date, time.min)
+        if leave_intervals & Intervals([(end_day_start, end_day_start + timedelta(days=1), self)]):
+            end_day_hours = sum(calendar._get_duration_based_day_attendances(end_date).mapped('duration_hours'))
+            total_hours += 0.5 * end_day_hours if self.request_date_to_period == 'am' else end_day_hours
+            total_days += 0.5 if self.request_date_to_period == 'am' else 1.0
+
+        return total_days, total_hours
 
     @api.depends('date_from', 'date_to', 'resource_calendar_id', 'holiday_status_id.request_unit')
     def _compute_duration(self):

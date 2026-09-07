@@ -210,6 +210,74 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertEqual(sum(paid_leave_entry.mapped('duration')), 32, "The combined duration of the work entries for flexible employee should "
                                                                         "be number of days * hours per day")
 
+    def test_create_work_entry_for_duration_based_employee_leave(self):
+        entry_type_paid = self.env['hr.work.entry.type'].create([
+            {'name': 'Paid leave', 'code': 'PAID', 'is_leave': True},
+        ])
+
+        leave_type_paid = self.env['hr.leave.type'].create({
+            'name': 'Paid leave type',
+            'requires_allocation': False,
+            'request_unit': 'hour',
+            'work_entry_type_id': entry_type_paid.id,
+        })
+        duration_based_calendar = self.jules_emp.resource_calendar_id
+
+        # 35 hrs working_schedule
+        duration_based_calendar.write({
+            'duration_based': True,
+        })
+
+        leave_outside_window = self.env['hr.leave'].create({
+            'name': 'Leave outside window',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type_paid.id,
+            'request_date_from': datetime(2024, 9, 10),
+            'request_date_to': datetime(2024, 9, 10),
+            'request_hour_from': 18,
+            'request_hour_to': 20,
+        })
+        leave_outside_window.with_user(SUPERUSER_ID)._action_validate()
+
+        entries = self.jules_emp.generate_work_entries(date(2024, 9, 10), date(2024, 9, 10))
+        leave_entries = entries.filtered_domain([('work_entry_type_id', '=', entry_type_paid.id)])
+        attendance_entries = entries - leave_entries
+        self.assertEqual(leave_entries.duration, 2, "The leave work entry should reflect the real requested duration, even outside the synthetic window")
+        self.assertEqual(sum(attendance_entries.mapped('duration')), 5,
+                          "The attendance entry should be reduced by the leave's full duration (7 - 2), even though it doesn't overlap the synthetic window")
+
+        leave_type_half_day = self.env['hr.leave.type'].create({
+            'name': 'Half day type',
+            'requires_allocation': False,
+            'request_unit': 'half_day',
+            'work_entry_type_id': entry_type_paid.id,
+        })
+        # Monday (pm) -> Tuesday (pm): Monday is a half day, Tuesday is a full day
+        multi_day_half_leave = self.env['hr.leave'].create({
+            'name': 'Half day Monday + full day Tuesday',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type_half_day.id,
+            'request_date_from': date(2024, 9, 16),
+            'request_date_to': date(2024, 9, 17),
+            'request_date_from_period': 'pm',
+            'request_date_to_period': 'pm',
+        })
+        multi_day_half_leave.with_user(SUPERUSER_ID)._action_validate()
+
+        entries = self.jules_emp.generate_work_entries(date(2024, 9, 16), date(2024, 9, 17))
+
+        monday_entries = entries.filtered_domain([('date', '=', date(2024, 9, 16))])
+        monday_leave = monday_entries.filtered_domain([('work_entry_type_id', '=', entry_type_paid.id)])
+        monday_attendance = monday_entries - monday_leave
+        self.assertEqual(sum(monday_leave.mapped('duration')), 3.5, "Monday (half day, pm start) should be half of the day's budget")
+        self.assertEqual(sum(monday_attendance.mapped('duration')), 3.5, "The other half of Monday should remain as attendance")
+
+        tuesday_entries = entries.filtered_domain([('date', '=', date(2024, 9, 17))])
+        tuesday_leave = tuesday_entries.filtered_domain([('work_entry_type_id', '=', entry_type_paid.id)])
+        tuesday_attendance = tuesday_entries - tuesday_leave
+        self.assertEqual(sum(tuesday_leave.mapped('duration')), 7, "Tuesday (full day) should be entirely leave")
+        self.assertFalse(tuesday_attendance, "No attendance should remain on the full-day leave")
+
     def test_leave_change_working_schedule(self):
         calendar_20h = self.env['resource.calendar'].create({
             'name': '20h calendar',
