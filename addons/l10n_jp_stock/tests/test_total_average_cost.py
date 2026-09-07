@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from odoo import fields
@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.l10n_jp_stock.tests.common import TestTotalAverageCostCommon
+from odoo.addons.stock_account.models.res_company import ResCompany
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -83,7 +84,7 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
         closing_date = fields.Datetime.to_datetime(self.today)
         with patch.object(
-            type(self.env.company), '_get_last_closing_date', return_value=closing_date,
+            ResCompany, '_get_last_closing_date', return_value=closing_date,
         ), self.assertRaises(UserError):
             self._run_category_wizard()
 
@@ -106,6 +107,29 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._run_category_wizard()
         # the order promised 100, the posted bill says 150 (法人税法施行令 32条1項1号)
         self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 150) / 110, places=2)
+
+    def test_consigned_receipt_ignored(self):
+        self._add_opening_stock()
+        consigned = self._create_move(50, 200, self.today, self.supplier_loc, self.stock_loc)
+        consigned.restrict_partner_id = self.env['res.partner'].create({'name': 'JP Consignor'})
+        action = self._run_category_wizard()
+        # core values a consignor's goods at nothing, so they are not acquisitions either
+        self.assertAlmostEqual(self.product.standard_price, 100, places=2)
+        self.assertEqual(action['params']['type'], 'info')
+
+    def test_period_boundaries_follow_the_user_timezone(self):
+        self._add_opening_stock()
+        # 16:00 UTC is already the next day in Tokyo, 14:00 UTC is not
+        self._create_move(10, 200, datetime(2026, 1, 14, 16, 0), self.supplier_loc, self.stock_loc)
+        self._create_move(5, 300, datetime(2026, 1, 14, 14, 0), self.supplier_loc, self.stock_loc)
+        wizard = self.env['l10n_jp_stock.total.average.cost.wizard'].with_context(tz='Asia/Tokyo').create({
+            'category_id': self.category.id,
+            'date_from': self.today,
+            'date_to': self.today,
+        })
+        wizard.action_apply_total_average_cost()
+        # only the first is acquired in the period; the second opened it
+        self.assertAlmostEqual(self.product.standard_price, (105 * 100 + 10 * 200) / 115, places=2)
 
     def test_basic_calculation(self):
         self._add_opening_stock()
@@ -208,7 +232,10 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         )
         # the evaluated cost takes effect at the start of the period it covers, so
         # the period's own issues leave at it, not on the day the wizard was run
-        self.assertEqual(product_value.date.date(), self.today - timedelta(days=2))
+        self.assertEqual(
+            fields.Datetime.context_timestamp(self, product_value.date).date(),
+            self.today - timedelta(days=2),
+        )
         self.assertEqual(product_value.value, self.product.standard_price)
         self.assertIn('Total average cost evaluation', product_value.description)
 

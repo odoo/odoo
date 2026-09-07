@@ -6,7 +6,6 @@
     'depends': [
         'l10n_jp',
         'stock_account',
-        'purchase_stock',
     ],
     'data': [
         'security/ir.access.csv',
@@ -14,4 +13,5 @@
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'auto_install': True,
 }
