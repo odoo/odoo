@@ -1,10 +1,16 @@
 from datetime import timedelta
+from unittest import SkipTest
 
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
 
 class TestTotalAverageCostCommon(TransactionCase):
+    @classmethod
+    def ensure_installed(cls, module_name):
+        if cls.env['ir.module.module']._get(module_name).state != 'installed':
+            raise SkipTest(f"Module required for the test is not installed ({module_name})")
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -22,8 +28,9 @@ class TestTotalAverageCostCommon(TransactionCase):
             'location_id': src_loc.id,
             'location_dest_id': dest_loc.id,
             'price_unit': price,
-            'purchase_line_id': purchase_line_id,
             'date': date,
+            # purchase_stock is not a dependency, so the field may not be there
+            **({'purchase_line_id': purchase_line_id} if purchase_line_id else {}),
         })
         move._action_confirm()
         move._action_assign()
@@ -36,7 +43,8 @@ class TestTotalAverageCostCommon(TransactionCase):
         return self._create_move(qty, price, self.today - timedelta(days=days), self.supplier_loc, self.stock_loc)
 
     def _set_standard_price(self, price, date, product=None):
-        """Change the cost with an effective date, the way the wizard does.
+        """
+        Change the cost with an effective date, the way the wizard does.
 
         A plain write stamps the history at wall-clock now, which is after every
         back-dated move a test creates, so the moves would not see the new cost.
@@ -47,11 +55,12 @@ class TestTotalAverageCostCommon(TransactionCase):
         product._change_standard_price({product: old_price}, valuation_date=fields.Datetime.to_datetime(date))
 
     def _create_po_line(self, currency, qty, price_unit):
-        order = self.env['purchase.order'].create({
+        self.ensure_installed('purchase_stock')
+        order = self.env['purchase.order'].create({  # noqa: OLS03001
             'partner_id': self.env['res.partner'].create({'name': 'JP Foreign Supplier'}).id,
             'currency_id': currency.id,
         })
-        return self.env['purchase.order.line'].create({
+        return self.env['purchase.order.line'].create({  # noqa: OLS03001
             'order_id': order.id,
             'product_id': self.product.id,
             'product_qty': qty,
