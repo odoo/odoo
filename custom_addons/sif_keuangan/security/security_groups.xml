@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_sif_keuangan_user" model="res.groups">
+        <field name="name">Keuangan SIFNEXT: Staf</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_sif_keuangan_manager" model="res.groups">
+        <field name="name">Keuangan SIFNEXT: Super User</field>
+        <field name="implied_ids" eval="[(4, ref('group_sif_keuangan_user'))]"/>
+    </record>
+</odoo>

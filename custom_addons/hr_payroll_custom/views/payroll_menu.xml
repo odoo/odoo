@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <record id="menu_payroll_root" model="ir.ui.menu">
+        <field name="name">Payroll</field>
+        <field name="sequence">96</field>
+        <field name="web_icon" eval="False"/>
+        <field name="group_ids" eval="[(4, ref('hr_payroll_custom.group_payroll_employee'))]"/>
+    </record>
+
+    <!-- Payroll Sub Menu -->
+    <menuitem id="menu_payroll_payroll"
+              name="Payroll"
+              parent="menu_payroll_root"
+              sequence="10"
+              groups="hr_payroll_custom.group_payroll_user"/>
+
+    <menuitem id="menu_payroll_my_slips"
+              name="My Payslips"
+              parent="menu_payroll_root"
+              action="action_custom_payroll_my_slip"
+              sequence="5"
+              groups="hr_payroll_custom.group_payroll_employee"/>
+
+    <menuitem id="menu_payroll_batch"
+              name="Batches"
+              parent="menu_payroll_payroll"
+              action="action_custom_payroll_batch"
+              sequence="10"/>
+
+    <menuitem id="menu_payroll_slip"
+              name="Payslips"
+              parent="menu_payroll_payroll"
+              action="action_custom_payroll_slip"
+              sequence="20"/>
+
+    <menuitem id="menu_payroll_slip_detail"
+              name="Slip Details"
+              parent="menu_payroll_payroll"
+              action="action_custom_payroll_slip_detail"
+              sequence="30"/>
+
+    <!-- Configuration Sub Menu -->
+    <menuitem id="menu_payroll_configuration"
+              name="Configuration"
+              parent="menu_payroll_root"
+              sequence="20"
+              groups="hr_payroll_custom.group_payroll_manager"/>
+
+    <menuitem id="menu_payroll_tunjangan"
+              name="Allowances"
+              parent="menu_payroll_configuration"
+              action="action_custom_payroll_tunjangan"
+              sequence="10"/>
+
+    <menuitem id="menu_payroll_bpjs"
+              name="BPJS"
+              parent="menu_payroll_configuration"
+              action="action_custom_payroll_bpjs"
+              sequence="20"/>
+
+    <menuitem id="menu_payroll_potongan_tetap"
+              name="Fixed Deductions"
+              parent="menu_payroll_configuration"
+              action="action_custom_payroll_potongan_tetap"
+              sequence="25"/>
+
+    <menuitem id="menu_payroll_rule"
+              name="Salary Rules"
+              parent="menu_payroll_configuration"
+              action="action_custom_payroll_rule"
+              sequence="30"/>
+
+    <menuitem id="menu_payroll_rule_category"
+              name="Rule Categories"
+              parent="menu_payroll_configuration"
+              action="action_custom_payroll_rule_category"
+              sequence="40"/>
+</odoo>

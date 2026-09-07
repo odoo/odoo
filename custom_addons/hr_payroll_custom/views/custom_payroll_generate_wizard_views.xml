@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_custom_payroll_generate_wizard_form" model="ir.ui.view">
+        <field name="name">custom.payroll.generate.wizard.form</field>
+        <field name="model">custom.payroll.generate.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Payslips">
+                <group>
+                    <group string="Target Batch">
+                        <field name="payroll_batch_id" readonly="1"/>
+                        <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                    <group string="Filters">
+                        <field name="department_id"/>
+                        <field name="job_id"/>
+                        <field name="employee_ids" widget="many2many_tags"
+                               placeholder="Leave empty to include all matching employees"/>
+                    </group>
+                </group>
+                <group string="Options">
+                    <field name="skip_existing"/>
+                    <field name="auto_create_basic"/>
+                    <field name="auto_populate_bpjs"/>
+                </group>
+                <group col="2">
+                    <separator string="Preview" colspan="2"/>
+                    <div class="o_row" colspan="2">
+                        <field name="preview_count" nolabel="1" class="oe_inline"/>
+                        <span>Employees to Process</span>
+                    </div>
+                    <field name="preview_line_ids" nolabel="1" readonly="1" colspan="2">
+                        <list string="Preview" decoration-muted="will_skip == True">
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                            <field name="job_id"/>
+                            <field name="contract_wage" widget="monetary"/>
+                            <field name="will_skip" string="Will Skip"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button name="action_generate" type="object" string="Generate Payslips"
+                            class="btn-primary" confirm="Are you sure you want to generate payslips for the selected employees?"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
