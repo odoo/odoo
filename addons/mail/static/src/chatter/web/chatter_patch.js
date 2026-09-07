@@ -429,6 +429,9 @@ const chatterPatch = {
     },
 
     async reloadParentView() {
+        if (status(this) === "destroyed") {
+            return;
+        }
         await this.props.saveRecord?.();
         if (this.props.record) {
             await this.props.record.load();
