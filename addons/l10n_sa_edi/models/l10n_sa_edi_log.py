@@ -27,6 +27,9 @@ class L10nSaEdiLog(models.Model):
         if resource._l10n_sa_get_alerts() or not resource._l10n_sa_is_phase_2_applicable():
             return self.l10n_sa_edi_document_id.resource._l10n_sa_handle_alerts()
 
+        if self.document_state == 'rejected':
+            self.document_state = 'to_send'
+
         return self.l10n_sa_edi_document_id._l10n_sa_post_zatca_edi(True)
 
     def action_open_chain_head(self):
