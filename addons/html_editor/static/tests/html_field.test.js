@@ -979,7 +979,7 @@ test("Embed video by pasting video URL", async () => {
     await animationFrame();
     const videoIframe = queryOne("div[data-embedded='video']");
     expect(videoIframe.nextElementSibling).toHaveOuterHTML(
-        `<p o-we-hint-text="Type &quot;/&quot; for commands" class="o-we-hint"><br></p>`
+        `<div class="o-paragraph o-we-hint" o-we-hint-text="Type &quot;/&quot; for commands"><br></div>`
     );
     expect(
         `div[data-embedded='video'] iframe[data-src="https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0"]`
