@@ -20,12 +20,11 @@
                         </group>
                         <group string="Filter Tambahan (Opsional)">
                             <field name="account_id" string="Account"/>
-                            <field name="project_code" string="Kode Proyek"/>
                             <field name="unit_name" string="Unit Kerja"/>
                         </group>
                     </group>
                     <footer>
-                        <button name="action_open_buku_besar" string="Tampilkan Buku Besar" type="object" class="btn-primary"/>
+                        <button name="action_tampilkan_buku_besar" string="Tampilkan Buku Besar" type="object" class="btn-primary"/>
                         <button string="Batal" class="btn-secondary" special="cancel"/>
                     </footer>
                 </sheet>
@@ -41,7 +40,7 @@
     </record>
 
     <!-- ================================================================= -->
-    <!-- 2. VIEW BUKU BESAR (SEPERTI SISKEU LAMA + UNIT KERJA)             -->
+    <!-- 2. VIEW BUKU BESAR (FLAT VIEW STANDAR SISKEU SIF)                -->
     <!-- ================================================================= -->
     <record id="view_sif_buku_besar_list" model="ir.ui.view">
         <field name="name">sif.jurnal.line.list</field>
@@ -52,7 +51,6 @@
                     <button name="%(action_sif_buku_besar_wizard)d" string="Ganti Periode Tanggal" type="action" class="btn-primary"/>
                 </header>
                 <field name="date" string="Tanggal"/>
-                <field name="project_code" string="Kode Proy"/>
                 <field name="unit_name" string="Unit Kerja"/>
                 <field name="entry_number" string="Bukti / Nomer"/>
                 <field name="kwitansi_ref" string="Kwitansi" optional="show"/>
@@ -71,7 +69,6 @@
         <field name="arch" type="xml">
             <search string="Pencarian Buku Besar">
                 <field name="entry_number" string="Bukti / Nomer"/>
-                <field name="project_code" string="Kode Proyek"/>
                 <field name="unit_name" string="Unit Kerja"/>
                 <field name="account_id" string="Account"/>
                 <field name="name" string="Keterangan"/>
@@ -80,7 +77,6 @@
                         domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
                 <separator/>
                 <filter string="Per Akun (Buku Besar)" name="group_by_account" context="{'group_by':'account_id'}"/>
-                <filter string="Per Kode Proyek" name="group_by_project" context="{'group_by':'project_code'}"/>
                 <filter string="Per Unit Kerja" name="group_by_unit" context="{'group_by':'unit_name'}"/>
                 <filter string="Per Tanggal" name="group_by_date" context="{'group_by':'date:month'}"/>
             </search>
@@ -105,10 +101,8 @@
             <list string="Jurnal Transaksi">
                 <field name="name" string="Nomor Bukti"/>
                 <field name="date" string="Tanggal"/>
-                <field name="project_code" string="Kode Proy"/>
                 <field name="unit_name" string="Unit Kerja"/>
                 <field name="ref" string="Referensi / Dokumen"/>
-                <field name="narration" string="Keterangan"/>
                 <field name="source_type" string="Sumber" widget="badge"
                        decoration-info="source_type == 'ppl'"
                        decoration-warning="source_type in ('asset_buy', 'asset_depr')"/>
@@ -148,9 +142,7 @@
                             <field name="kwitansi_ref"/>
                         </group>
                         <group>
-                            <field name="project_code"/>
                             <field name="unit_name"/>
-                            <field name="partner_name"/>
                             <field name="source_type" readonly="1"/>
                         </group>
                     </group>
@@ -160,7 +152,6 @@
                                 <list editable="bottom">
                                     <field name="account_id"/>
                                     <field name="name" string="Keterangan"/>
-                                    <field name="project_code" string="Kode Proy"/>
                                     <field name="unit_name" string="Unit Kerja"/>
                                     <field name="debit" sum="Total Debet"/>
                                     <field name="credit" sum="Total Kredit"/>
@@ -170,9 +161,6 @@
                                 <field name="total_debit"/>
                                 <field name="total_credit"/>
                             </group>
-                        </page>
-                        <page string="Catatan Transaksi">
-                            <field name="narration" placeholder="Catatan tambahan transaksi..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -186,10 +174,8 @@
         <field name="arch" type="xml">
             <search string="Pencarian Jurnal Transaksi">
                 <field name="name" string="Nomor Bukti"/>
-                <field name="project_code" string="Kode Proyek"/>
                 <field name="unit_name" string="Unit Kerja"/>
                 <field name="ref" string="No. Referensi / PPL / Aset"/>
-                <field name="partner_name" string="Vendor / Pihak Ketiga"/>
                 <separator/>
                 <filter string="Posted" name="filter_posted" domain="[('state', '=', 'posted')]"/>
                 <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
@@ -197,7 +183,6 @@
                 <filter string="Dari PPL" name="filter_source_ppl" domain="[('source_type', '=', 'ppl')]"/>
                 <filter string="Dari Aset" name="filter_source_asset" domain="[('source_type', 'in', ('asset_buy', 'asset_depr'))]"/>
                 <separator/>
-                <filter string="Per Kode Proyek" name="group_project" context="{'group_by':'project_code'}"/>
                 <filter string="Per Unit Kerja" name="group_unit" context="{'group_by':'unit_name'}"/>
                 <filter string="Per Sumber Transaksi" name="group_source" context="{'group_by':'source_type'}"/>
                 <filter string="Per Tanggal" name="group_date" context="{'group_by':'date:month'}"/>

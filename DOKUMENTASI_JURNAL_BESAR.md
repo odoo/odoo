@@ -8,7 +8,7 @@ Basis: Odoo 19 Community
 ## 1. Tampilan Siskeu SIF & Laporan
 
 * **Buku Besar (`sif.jurnal.line`):** Tampil mendatar (*flat list*, tanpa lipatan *accordion*).
-  * Kolom: `Tanggal`, `Kode Proy` (default '000'), `Unit Kerja`, `Bukti / Nomer` (JYYMMxxxx), `Kwitansi`, `Keterangan`, `Account`, `Nama Account`, `Debet`, `Kredit` (dilengkapi baris total di bawah).
+  * Kolom: `Tanggal`, `Unit Kerja`, `Bukti / Nomer` (JYYMMxxxx), `Kwitansi`, `Keterangan`, `Account`, `Nama Account`, `Debet`, `Kredit` (dilengkapi baris total di bawah).
 * **Filter Periode Tanggal (`sif.buku.besar.wizard`):**
   * Pop-up dialog otomatis saat menu Buku Besar diklik (input Tanggal Awal & Tanggal Akhir).
   * Tersedia tombol **"Ganti Periode Tanggal"** di header tabel.
@@ -35,4 +35,3 @@ Basis: Odoo 19 Community
   * Debit: Beban Penyusutan | Kredit: Akumulasi Penyusutan (Akun Kontra 24007).
 
 ---
-

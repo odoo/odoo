@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError, ValidationError
 
 
 class SifJurnalEntry(models.Model):
     _name = 'sif.jurnal.entry'
-    _description = 'Entri Jurnal Keuangan'
+    _description = 'Dokumen Jurnal Transaksi Keuangan'
     _order = 'date desc, id desc'
 
     name = fields.Char(
@@ -13,54 +13,81 @@ class SifJurnalEntry(models.Model):
         required=True,
         copy=False,
         readonly=True,
-        default='Draft'
+        default=lambda self: _('New')
     )
     date = fields.Date(
         string='Tanggal',
         required=True,
         default=fields.Date.context_today
     )
-
-    # Sinkronisasi ganda field agar aman di seluruh tampilan
-    ref = fields.Char(string='Referensi / No. Dokumen')
-    reference = fields.Char(string='Referensi')
-
-    kwitansi_ref = fields.Char(string='No. Kwitansi')
-    project_code = fields.Char(string='Kode Proyek', default='000')
-    project_name = fields.Char(string='Nama Proyek', default='KANTOR')
-    unit_name = fields.Char(string='Unit Kerja')
-    partner_name = fields.Char(string='Pihak Ketiga / Vendor')
-    narration = fields.Text(string='Keterangan Transaksi')
-
+    ref = fields.Char(
+        string='Referensi / Dokumen Sumber'
+    )
+    kwitansi_ref = fields.Char(
+        string='No. Kwitansi / Bukti Fisik'
+    )
+    unit_name = fields.Char(
+        string='Unit Kerja',
+        default='KANTOR'
+    )
     source_type = fields.Selection([
-        ('manual', 'Manual'),
-        ('ppl', 'PPL (Pengadaan)'),
+        ('manual', 'Input Manual'),
+        ('ppl', 'PPL / Pengadaan'),
         ('asset_buy', 'Perolehan Aset'),
-        ('asset_depr', 'Penyusutan Aset'),
-    ], string='Sumber Transaksi', default='manual')
-
-    line_ids = fields.One2many(
-        'sif.jurnal.line', 
-        'entry_id', 
-        string='Baris Jurnal'
-    )
-
-    total_debit = fields.Float(
-        string='Total Debet', 
-        compute='_compute_totals', 
-        store=True
-    )
-    total_credit = fields.Float(
-        string='Total Kredit', 
-        compute='_compute_totals', 
-        store=True
-    )
+        ('asset_depr', 'Depresiasi Aset'),
+    ], string='Sumber Transaksi', default='manual', required=True)
 
     state = fields.Selection([
         ('draft', 'Draft'),
         ('posted', 'Posted'),
-        ('cancel', 'Dibatalkan')
-    ], string='Status', default='posted')
+        ('cancel', 'Dibatalkan'),
+    ], string='Status', default='draft', required=True, tracking=True)
+
+    line_ids = fields.One2many(
+        'sif.jurnal.line',
+        'entry_id',
+        string='Baris Jurnal'
+    )
+
+    total_debit = fields.Float(
+        string='Total Debet',
+        compute='_compute_totals',
+        store=True
+    )
+    total_credit = fields.Float(
+        string='Total Kredit',
+        compute='_compute_totals',
+        store=True
+    )
+
+    # Helper Periode Bulanan
+    period_month = fields.Integer(
+        string='Bulan Periode',
+        compute='_compute_period',
+        store=True
+    )
+    period_year = fields.Integer(
+        string='Tahun Periode',
+        compute='_compute_period',
+        store=True
+    )
+    period_key = fields.Char(
+        string='Kunci Periode',
+        compute='_compute_period',
+        store=True
+    )
+
+    @api.depends('date')
+    def _compute_period(self):
+        for rec in self:
+            if rec.date:
+                rec.period_month = rec.date.month
+                rec.period_year = rec.date.year
+                rec.period_key = rec.date.strftime('%Y-%m')
+            else:
+                rec.period_month = 0
+                rec.period_year = 0
+                rec.period_key = ''
 
     @api.depends('line_ids.debit', 'line_ids.credit')
     def _compute_totals(self):
@@ -71,33 +98,33 @@ class SifJurnalEntry(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('reference') and not vals.get('ref'):
-                vals['ref'] = vals['reference']
-            elif vals.get('ref') and not vals.get('reference'):
-                vals['reference'] = vals['ref']
-
-            if vals.get('name', 'Draft') == 'Draft':
-                seq = self.env['ir.sequence'].next_by_code('sif.jurnal.number')
+            if vals.get('name', _('New')) == _('New'):
+                seq = self.env['ir.sequence'].next_by_code('sif.jurnal.entry')
                 if seq:
                     vals['name'] = seq
                 else:
-                    prefix = 'J' + fields.Date.today().strftime('%y%m')
-                    vals['name'] = f"{prefix}0001"
-        return super().create(vals_list)
-
-    def write(self, vals):
-        if vals.get('reference') and 'ref' not in vals:
-            vals['ref'] = vals['reference']
-        elif vals.get('ref') and 'reference' not in vals:
-            vals['reference'] = vals['ref']
-        return super().write(vals)
+                    date_val = fields.Date.to_date(vals.get('date')) or fields.Date.today()
+                    prefix = f"J{date_val.strftime('%y%m')}"
+                    last_rec = self.search([('name', '=like', f"{prefix}%")], order='id desc', limit=1)
+                    next_num = 1
+                    if last_rec and len(last_rec.name) >= 10:
+                        try:
+                            next_num = int(last_rec.name[-4:]) + 1
+                        except ValueError:
+                            next_num = 1
+                    vals['name'] = f"{prefix}{next_num:04d}"
+        return super(SifJurnalEntry, self).create(vals_list)
 
     def action_post(self):
         for rec in self:
             if not rec.line_ids:
-                raise UserError("Rincian baris jurnal tidak boleh kosong!")
+                raise UserError(_('Transaksi jurnal tidak memiliki baris rincian debet/kredit.'))
+            if len(rec.line_ids) < 2:
+                raise UserError(_('Jurnal harus memiliki minimal 2 baris (Debet dan Kredit).'))
             if round(rec.total_debit, 2) != round(rec.total_credit, 2):
-                raise UserError(f"Jurnal tidak seimbang! Total Debet (Rp {rec.total_debit:,.2f}) != Total Kredit (Rp {rec.total_credit:,.2f}).")
+                raise ValidationError(_(
+                    'Jurnal tidak balance!\nTotal Debet: {:,.2f}\nTotal Kredit: {:,.2f}'
+                ).format(rec.total_debit, rec.total_credit))
             rec.state = 'posted'
 
     def action_draft(self):
@@ -106,289 +133,293 @@ class SifJurnalEntry(models.Model):
     def action_cancel(self):
         self.write({'state': 'cancel'})
 
-    # =========================================================================
-    # INTEGRASI MODUL PPL
-    # =========================================================================
+    # -------------------------------------------------------------------------
+    # INTEGRASI RPC MODUL PPL
+    # -------------------------------------------------------------------------
     @api.model
     def create_journal_from_ppl(self, vals):
-        """Penerima pemanggilan action_pay langsung dari modul PPL"""
-        if not isinstance(vals, dict):
-            return self.create_ppl_journal(vals)
+        """
+        RPC Method untuk pencatatan otomatis transaksi PPL saat dibayar / dicairkan.
+        Menerima payload dictionary maupun objek recordset PPL.
+        """
+        # Penanganan jika parameter berupa objek recordset PPL
+        if hasattr(vals, '_name'):
+            ppl = vals
+            vals = {
+                'date': ppl.payment_date if hasattr(ppl, 'payment_date') and ppl.payment_date else fields.Date.today(),
+                'ref': ppl.name if hasattr(ppl, 'name') else 'PPL',
+                'kwitansi_ref': getattr(ppl, 'kwitansi_ref', '') or getattr(ppl, 'receipt_number', ''),
+                'unit_name': getattr(ppl, 'unit_name', '') or (ppl.department_id.name if hasattr(ppl, 'department_id') and ppl.department_id else 'KANTOR'),
+                'source_type': 'ppl',
+                'lines': []
+            }
+            # Ambil data nominal dan akun jika tersedia di model PPL
+            dpp = getattr(ppl, 'amount_untaxed', 0.0) or getattr(ppl, 'amount_dpp', 0.0)
+            ppn = getattr(ppl, 'amount_tax', 0.0) or getattr(ppl, 'amount_ppn', 0.0)
+            total = getattr(ppl, 'amount_total', 0.0) or (dpp + ppn)
 
-        ppl_id = vals.get('ppl_id') or vals.get('id')
-        if ppl_id and 'sifnext.ppl' in self.env:
-            ppl_doc = self.env['sifnext.ppl'].browse(ppl_id)
-            if ppl_doc.exists():
-                return self.create_ppl_journal(ppl_doc)
+            exp_acc = getattr(ppl, 'expense_account_id', False)
+            ppn_acc = getattr(ppl, 'tax_account_id', False) or getattr(ppl, 'ppn_account_id', False)
+            pay_acc = getattr(ppl, 'payment_account_id', False) or getattr(ppl, 'bank_account_id', False)
 
-        lines = []
-        raw_lines = vals.get('line_ids') or vals.get('lines') or []
-        for line in raw_lines:
-            if isinstance(line, (list, tuple)) and len(line) == 3:
-                lines.append(line)
-            elif isinstance(line, dict):
-                lines.append((0, 0, line))
-
-        unit_str = (
-            vals.get('unit_name') or 
-            vals.get('unit') or 
-            vals.get('department_name') or 
-            ''
-        )
-        kwitansi_str = (
-            vals.get('kwitansi_ref') or 
-            vals.get('kwitansi') or 
-            vals.get('receipt_no') or 
-            vals.get('payment_ref') or 
-            ''
-        )
-        proj_code = vals.get('project_code') or '000'
-        proj_name = vals.get('project_name') or 'KANTOR'
-
-        if not lines:
-            debit_acc = vals.get('expense_account_id') or vals.get('debit_account_id') or vals.get('account_id')
-            credit_acc = vals.get('payment_account_id') or vals.get('credit_account_id')
-            amount = vals.get('amount') or vals.get('total_amount', 0.0)
-            desc = vals.get('narration') or vals.get('description') or vals.get('name', 'Realisasi PPL')
-
-            if debit_acc and credit_acc:
-                lines = [
-                    (0, 0, {
-                        'name': desc,
-                        'account_id': debit_acc if isinstance(debit_acc, int) else debit_acc.id,
-                        'debit': amount,
-                        'credit': 0.0,
-                        'unit_name': unit_str,
-                        'project_code': proj_code,
-                    }),
-                    (0, 0, {
-                        'name': f"Pembayaran {desc}",
-                        'account_id': credit_acc if isinstance(credit_acc, int) else credit_acc.id,
-                        'debit': 0.0,
-                        'credit': amount,
-                        'unit_name': unit_str,
-                        'project_code': proj_code,
+            if exp_acc and pay_acc:
+                lines = []
+                if dpp > 0:
+                    lines.append({
+                        'account_id': exp_acc.id,
+                        'name': f"Biaya Pengadaan {vals['ref']}",
+                        'debit': dpp,
+                        'credit': 0.0
                     })
-                ]
+                if ppn > 0 and ppn_acc:
+                    lines.append({
+                        'account_id': ppn_acc.id,
+                        'name': f"PPN Masukan (Aset) {vals['ref']}",
+                        'debit': ppn,
+                        'credit': 0.0
+                    })
+                lines.append({
+                    'account_id': pay_acc.id,
+                    'name': f"Pembayaran {vals['ref']}",
+                    'debit': 0.0,
+                    'credit': total
+                })
+                vals['lines'] = lines
 
-        judul_ppl = vals.get('title') or vals.get('subject') or vals.get('name') or ''
-        narration_text = vals.get('narration') or vals.get('description') or (f"Realisasi Belanja PPL: {judul_ppl}" if judul_ppl else "Realisasi Belanja PPL")
-
-        entry_vals = {
-            'date': vals.get('date') or vals.get('payment_date') or fields.Date.today(),
-            'ref': vals.get('ref') or vals.get('reference') or vals.get('name', ''),
-            'reference': vals.get('reference') or vals.get('ref') or vals.get('name', ''),
-            'kwitansi_ref': kwitansi_str,
-            'project_code': proj_code,
-            'project_name': proj_name,
-            'unit_name': unit_str,
-            'partner_name': vals.get('partner_name') or vals.get('vendor_name', ''),
-            'narration': narration_text,
-            'source_type': 'ppl',
-            'state': 'posted',
-        }
-        if lines:
-            entry_vals['line_ids'] = lines
-
-        return self.create(entry_vals)
-
-    @api.model
-    def create_ppl_journal(self, ppl_doc):
-        """Membuat jurnal otomatis dari objek recordset PPL"""
-        payment_acc = getattr(ppl_doc, 'payment_account_id', False)
-        if not payment_acc:
-            raise UserError(f"Gagal memproses jurnal: Akun Kas/Bank pembayar pada PPL {ppl_doc.name} belum dipilih!")
-
-        details = getattr(ppl_doc, 'detail_ids', [])
-        if not details:
-            raise UserError(f"Gagal memproses jurnal: Dokumen PPL {ppl_doc.name} tidak memiliki rincian kebutuhan!")
-
-        unit_str = ppl_doc.unit_id.name if hasattr(ppl_doc, 'unit_id') and ppl_doc.unit_id else ''
-        partner_str = ppl_doc.vendor_id.name if hasattr(ppl_doc, 'vendor_id') and ppl_doc.vendor_id else ''
-        proj_code = getattr(ppl_doc, 'project_code', '000') or '000'
-        proj_name = getattr(ppl_doc, 'project_name', 'KANTOR') or 'KANTOR'
-        kwitansi_str = getattr(ppl_doc, 'payment_ref', getattr(ppl_doc, 'kwitansi_ref', ''))
-
-        lines = []
-        for line in details:
-            if not line.account_id:
-                raise UserError(f"Akun COA pada item '{line.name}' di PPL {ppl_doc.name} belum diisi!")
-            subtotal = getattr(line, 'subtotal', getattr(line, 'total_price', 0.0))
-            lines.append((0, 0, {
-                'name': f"PPL: {line.name}",
-                'account_id': line.account_id.id,
-                'debit': subtotal,
-                'credit': 0.0,
-                'project_code': proj_code,
-                'unit_name': unit_str,
+        # Pemrosesan jika parameter dictionary
+        lines_command = []
+        raw_lines = vals.get('lines', [])
+        for l in raw_lines:
+            lines_command.append((0, 0, {
+                'account_id': l.get('account_id'),
+                'name': l.get('name', 'Transaksi PPL'),
+                'debit': l.get('debit', 0.0),
+                'credit': l.get('credit', 0.0),
             }))
 
-        lines.append((0, 0, {
-            'name': f"Pembayaran PPL {ppl_doc.name}",
-            'account_id': payment_acc.id,
-            'debit': 0.0,
-            'credit': ppl_doc.total_amount,
-            'project_code': proj_code,
-            'unit_name': unit_str,
-        }))
-
-        entry = self.create({
-            'date': getattr(ppl_doc, 'payment_date', fields.Date.today()),
-            'ref': ppl_doc.name,
-            'reference': ppl_doc.name,
-            'kwitansi_ref': kwitansi_str,
-            'project_code': proj_code,
-            'project_name': proj_name,
-            'unit_name': unit_str,
-            'partner_name': partner_str,
-            'narration': f"Realisasi Belanja PPL: {ppl_doc.name} - {getattr(ppl_doc, 'title', '')}",
+        entry_vals = {
+            'date': vals.get('date', fields.Date.today()),
+            'ref': vals.get('ref', 'PPL'),
+            'kwitansi_ref': vals.get('kwitansi_ref', ''),
+            'unit_name': vals.get('unit_name', 'KANTOR'),
             'source_type': 'ppl',
-            'state': 'posted',
-            'line_ids': lines,
-        })
+            'line_ids': lines_command,
+        }
+
+        entry = self.sudo().create(entry_vals)
+        if entry.line_ids:
+            entry.action_post()
         return entry
 
-    # =========================================================================
-    # INTEGRASI MODUL ASET
-    # =========================================================================
+    # -------------------------------------------------------------------------
+    # INTEGRASI RPC MODUL ASET
+    # -------------------------------------------------------------------------
     @api.model
-    def create_asset_purchase_journal(self, asset_name, asset_code, amount, asset_account_id, credit_account_id, date=False, unit_name='KANTOR', project_code='000', vendor_name='', kwitansi=''):
-        """1. Transaksi Perolehan Aset Baru: Debit Aset Tetap, Kredit Hutang Usaha / Kas"""
-        keterangan = f"Perolehan Aset: {asset_name} ({asset_code})"
+    def create_asset_purchase_journal(self, asset_name, asset_code, amount,
+                                     asset_account_id, credit_account_id,
+                                     date=False, unit_name='KANTOR',
+                                     vendor_name='', kwitansi=''):
+        """
+        Pencatatan Jurnal Perolehan / Pembelian Aset Tetap.
+        Debet : Akun Aset Tetap
+        Kredit: Akun Kas / Bank / Hutang Pembelian
+        """
+        txn_date = date or fields.Date.today()
+        ref_label = f"Perolehan Aset: [{asset_code}] {asset_name}"
+        if vendor_name:
+            ref_label += f" - Vendor: {vendor_name}"
+
         lines = [
             (0, 0, {
-                'name': keterangan,
                 'account_id': asset_account_id,
+                'name': f"Perolehan [{asset_code}] {asset_name}",
                 'debit': amount,
                 'credit': 0.0,
-                'project_code': project_code,
-                'unit_name': unit_name,
             }),
             (0, 0, {
-                'name': f"Hutang/Kas Pengadaan: {asset_name}",
                 'account_id': credit_account_id,
+                'name': f"Pembayaran / Kewajiban Perolehan [{asset_code}]",
                 'debit': 0.0,
                 'credit': amount,
-                'project_code': project_code,
-                'unit_name': unit_name,
             })
         ]
-        return self.create({
-            'date': date or fields.Date.today(),
-            'ref': asset_code,
-            'reference': asset_code,
+
+        entry = self.sudo().create({
+            'date': txn_date,
+            'ref': f"AST-BUY/{asset_code}",
             'kwitansi_ref': kwitansi,
-            'project_code': project_code,
             'unit_name': unit_name,
-            'partner_name': vendor_name,
-            'narration': keterangan,
             'source_type': 'asset_buy',
-            'state': 'posted',
             'line_ids': lines,
         })
+        entry.action_post()
+        return entry
 
     @api.model
-    def create_asset_depreciation_journal(self, asset_name, asset_code, amount, dep_account_id, exp_account_id, date, period_name, unit_name='KANTOR', project_code='000'):
-        """2. Transaksi Depresiasi Bulanan: Debit Beban Penyusutan, Kredit Akumulasi Penyusutan (24007)"""
-        keterangan = f"Akumulasi Penyusutan {asset_name} {period_name}"
+    def create_asset_depreciation_journal(self, asset_name, asset_code, amount,
+                                         dep_account_id, exp_account_id,
+                                         date, period_name, unit_name='KANTOR'):
+        """
+        Pencatatan Jurnal Depresiasi / Penyusutan Berkala Aset.
+        Debet : Akun Beban Penyusutan
+        Kredit: Akun Akumulasi Penyusutan (Akun Kontra Aset)
+        """
+        desc = f"Penyusutan [{asset_code}] {asset_name} - Periode {period_name}"
         lines = [
             (0, 0, {
-                'name': keterangan,
                 'account_id': exp_account_id,
+                'name': desc,
                 'debit': amount,
                 'credit': 0.0,
-                'project_code': project_code,
-                'unit_name': unit_name,
             }),
             (0, 0, {
-                'name': keterangan,
                 'account_id': dep_account_id,
+                'name': desc,
                 'debit': 0.0,
                 'credit': amount,
-                'project_code': project_code,
-                'unit_name': unit_name,
             })
         ]
-        return self.create({
-            'date': date,
-            'ref': asset_code,
-            'reference': asset_code,
-            'project_code': project_code,
+
+        entry = self.sudo().create({
+            'date': date or fields.Date.today(),
+            'ref': f"DEP/{asset_code}/{period_name}",
+            'kwitansi_ref': '',
             'unit_name': unit_name,
-            'narration': keterangan,
             'source_type': 'asset_depr',
-            'state': 'posted',
             'line_ids': lines,
         })
+        entry.action_post()
+        return entry
 
 
 class SifJurnalLine(models.Model):
     _name = 'sif.jurnal.line'
-    _description = 'Baris Jurnal Buku Besar'
+    _description = 'Baris Jurnal Transaksi / Buku Besar'
     _order = 'date desc, id desc'
 
-    entry_id = fields.Many2one('sif.jurnal.entry', string='Jurnal Bukti', ondelete='cascade')
-    date = fields.Date(related='entry_id.date', string='Tanggal', store=True, index=True)
-    entry_number = fields.Char(related='entry_id.name', string='Nomor Bukti', store=True, index=True)
-    ref = fields.Char(related='entry_id.ref', string='Referensi', store=True)
-    reference = fields.Char(related='entry_id.reference', string='Referensi', store=True)
-    kwitansi_ref = fields.Char(related='entry_id.kwitansi_ref', string='Kwitansi', store=True)
+    entry_id = fields.Many2one(
+        'sif.jurnal.entry',
+        string='Voucher Jurnal',
+        ondelete='cascade',
+        required=True
+    )
+    entry_number = fields.Char(
+        related='entry_id.name',
+        string='Bukti / Nomer',
+        store=True
+    )
+    date = fields.Date(
+        related='entry_id.date',
+        string='Tanggal',
+        store=True,
+        index=True
+    )
+    unit_name = fields.Char(
+        related='entry_id.unit_name',
+        string='Unit Kerja',
+        store=True
+    )
+    kwitansi_ref = fields.Char(
+        related='entry_id.kwitansi_ref',
+        string='Kwitansi',
+        store=True
+    )
+    state = fields.Selection(
+        related='entry_id.state',
+        string='Status',
+        store=True
+    )
 
-    project_code = fields.Char(related='entry_id.project_code', string='Kode Proy', store=True, index=True)
-    project_name = fields.Char(related='entry_id.project_name', string='Nama Proj', store=True)
-    unit_name = fields.Char(related='entry_id.unit_name', string='Unit Kerja', store=True, index=True)
-    partner_name = fields.Char(related='entry_id.partner_name', string='Pihak Ketiga', store=True)
+    account_id = fields.Many2one(
+        'sif.coa',
+        string='Account',
+        required=True,
+        index=True
+    )
+    account_code = fields.Char(
+        related='account_id.code',
+        string='Kode Akun',
+        store=True
+    )
+    account_name = fields.Char(
+        related='account_id.name',
+        string='Nama Account',
+        store=True
+    )
 
-    account_id = fields.Many2one('sif.coa', string='Account', required=True, index=True)
-    account_code = fields.Char(related='account_id.code', string='Kode Akun', store=True)
-    account_name = fields.Char(related='account_id.name', string='Nama Akun', store=True)
+    name = fields.Char(
+        string='Keterangan',
+        required=True
+    )
+    debit = fields.Float(
+        string='Debet',
+        default=0.0
+    )
+    credit = fields.Float(
+        string='Kredit',
+        default=0.0
+    )
+    balance = fields.Float(
+        string='Saldo Mutasi',
+        compute='_compute_balance',
+        store=True
+    )
+    period_key = fields.Char(
+        related='entry_id.period_key',
+        string='Periode',
+        store=True
+    )
 
-    name = fields.Char(string='Keterangan', required=True)
-    debit = fields.Float(string='Debet', default=0.0)
-    credit = fields.Float(string='Kredit', default=0.0)
+    @api.depends('debit', 'credit')
+    def _compute_balance(self):
+        for rec in self:
+            rec.balance = (rec.debit or 0.0) - (rec.credit or 0.0)
 
 
 class SifBukuBesarWizard(models.TransientModel):
     _name = 'sif.buku.besar.wizard'
-    _description = 'Filter Periode Buku Besar'
+    _description = 'Wizard Filter Periode Buku Besar'
 
     date_from = fields.Date(
-        string='Tanggal Awal', 
-        required=True, 
-        default=lambda self: fields.Date.context_today(self).replace(day=1)
+        string='Tanggal Awal',
+        required=True,
+        default=lambda self: fields.Date.today().replace(day=1)
     )
     date_to = fields.Date(
-        string='Tanggal Akhir', 
-        required=True, 
+        string='Tanggal Akhir',
+        required=True,
         default=fields.Date.context_today
     )
-    account_id = fields.Many2one('sif.coa', string='Account (Opsional)')
-    project_code = fields.Char(string='Kode Proyek (Opsional)')
-    unit_name = fields.Char(string='Unit Kerja (Opsional)')
+    account_id = fields.Many2one(
+        'sif.coa',
+        string='Akun (Opsional)'
+    )
+    unit_name = fields.Char(
+        string='Unit Kerja (Opsional)'
+    )
 
-    def action_open_buku_besar(self):
+    def action_tampilkan_buku_besar(self):
         self.ensure_one()
         domain = [
             ('date', '>=', self.date_from),
             ('date', '<=', self.date_to),
+            ('state', '=', 'posted'),
         ]
+
         if self.account_id:
             domain.append(('account_id', '=', self.account_id.id))
-        if self.project_code:
-            domain.append(('project_code', '=', self.project_code))
         if self.unit_name:
             domain.append(('unit_name', 'ilike', self.unit_name))
 
-        tgl_awal = self.date_from.strftime('%d/%m/%Y')
-        tgl_akhir = self.date_to.strftime('%d/%m/%Y')
-
         return {
-            'name': f"Buku Besar ({tgl_awal} s/d {tgl_akhir})",
+            'name': _('Buku Besar: {} s/d {}').format(
+                self.date_from.strftime('%d/%m/%Y'),
+                self.date_to.strftime('%d/%m/%Y')
+            ),
             'type': 'ir.actions.act_window',
             'res_model': 'sif.jurnal.line',
-            'view_mode': 'list',
-            'views': [(self.env.ref('sif_keuangan.view_sif_buku_besar_list').id, 'list')],
+            'view_mode': 'list,form',
+            'view_id': self.env.ref('sif_keuangan.sif_jurnal_line_tree_view').id,
             'domain': domain,
-            'context': {},
             'target': 'current',
         }
