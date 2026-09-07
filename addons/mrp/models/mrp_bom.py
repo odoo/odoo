@@ -427,7 +427,8 @@ class MrpBom(models.Model):
         product_boms = {}
         def update_product_boms():
             products = self.env['product.product'].browse(product_ids)
-            product_boms.update(self._bom_find(products, picking_type=picking_type or self.picking_type_id,
+            product_boms.update(self._bom_find(products.filtered(lambda b: b.bom_ids),
+                picking_type=picking_type or self.picking_type_id,
                 company_id=self.company_id.id, bom_type='phantom'))
             # Set missing keys to default value
             for product in products:
