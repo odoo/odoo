@@ -1,6 +1,7 @@
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.sale_project.tests.common import TestSaleProjectCommon
 
@@ -136,3 +137,61 @@ class TestSaleProjectServices(TestSaleProjectCommon):
             {"name": "Update", "project_id": project.id, "status": "on_track"}
         )
         self.assertTrue(update.exists())
+
+    def test_sale_line_picker_spans_the_commercial_entity(self):
+        """The project's Sales Order Item picker must span the commercial entity.
+
+        ``project.task._domain_sale_line_id`` has offered the whole commercial
+        entity for a while (``models/project_task.py``); the project's own
+        picker still restricted to the exact partner, so a project billed to a
+        parent company never offered the items of its contacts' orders -- and
+        the other way round.
+        """
+        contact = self.env["res.partner"].create(
+            {"name": "Contact of the customer", "parent_id": self.partner_a.id}
+        )
+        customer_order, contact_order, stranger_order = self.env["sale.order"].create(
+            [
+                {
+                    "partner_id": partner.id,
+                    "line_ids": [
+                        Command.create(
+                            {
+                                "product_id": self.product_service_ordered_prepaid.id,
+                                "product_qty": 5,
+                                "tax_ids": False,
+                            }
+                        ),
+                    ],
+                }
+                for partner in (self.partner_a, contact, self.partner_b)
+            ]
+        )
+        (customer_order | contact_order | stranger_order).action_confirm()
+
+        def offered_to(partner):
+            """Evaluate the field's own domain the way the web client does."""
+            domain = safe_eval(
+                str(self.project_global._domain_sale_line_id()),
+                {"partner_id": partner.id},
+            )
+            return self.env["sale.order.line"].search(domain)
+
+        # Anchor: the customer's own item is offered before and after.
+        self.assertIn(customer_order.line_ids, offered_to(self.partner_a))
+
+        self.assertIn(
+            contact_order.line_ids,
+            offered_to(self.partner_a),
+            "A project billed to the customer must offer its contacts' items.",
+        )
+        self.assertIn(
+            customer_order.line_ids,
+            offered_to(contact),
+            "A project billed to a contact must offer the customer's items.",
+        )
+        self.assertNotIn(
+            stranger_order.line_ids,
+            offered_to(self.partner_a),
+            "An unrelated customer's items must not leak into the picker.",
+        )

@@ -21,6 +21,12 @@ class ProjectProject(models.Model):
                 self.env["sale.order.line"]._get_domain_lines_sellable(),
                 self.env["sale.order.line"]._domain_sale_line_service(),
                 [
+                    "|",
+                    (
+                        "partner_id.commercial_partner_id.id",
+                        "parent_of",
+                        unquote("partner_id if partner_id else []"),
+                    ),
                     ("partner_id", "=?", unquote("partner_id")),
                 ],
             ]
