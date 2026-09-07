@@ -42,10 +42,16 @@ export function isCommand(data) {
  * - A command.
  * - An array of commands.
  * - An array of raw values: interpreted as a replace.
- * @returns {Array<[string, any[]]>} Normalized list of `[mode, value]` arrays.
+ * @returns {Array<[string, any[]]|[string, any[], string]>} Normalized list of
+ * `[mode, value]` or `[mode, value, version]` arrays (see `ManyFieldVersion`). `version`
+ * covers the whole command, except for ADD, which carries one per value instead, inside
+ * each value's own `__version__`.
  */
 export function normalizeManyCommands(command) {
-    const ensureArrayValue = (cmd) => [cmd[0], Array.isArray(cmd[1]) ? cmd[1] : [cmd[1]]];
+    const ensureArrayValue = (cmd) =>
+        cmd.length > 2
+            ? [cmd[0], Array.isArray(cmd[1]) ? cmd[1] : [cmd[1]], cmd[2]]
+            : [cmd[0], Array.isArray(cmd[1]) ? cmd[1] : [cmd[1]]];
     if (!command || (Array.isArray(command) && command.length === 0)) {
         return [["REPLACE", []]];
     }

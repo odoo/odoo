@@ -23,6 +23,71 @@ from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
 from ..models.bus import channel_with_db, dispatch, hashable, json_dump
 
 
+MANY_COMMANDS = ("ADD", "DELETE", "REPLACE")
+
+
+def pop_store_version(source: dict | list | None):
+    """Deep pop of the versioning added by ``Store``, from record data and from x2many
+    values and commands. A value left with only an ``id`` key collapses to a bare id, and a
+    relation left with a single ``REPLACE`` collapses to a bare values array. A dict shaped
+    like a set of Store records (mapping a model name to a list of that model's records, at
+    any nesting depth, e.g. under a ``store_data`` key) never has its records themselves
+    collapsed to a bare id, even when a record only carries an ``id``: only relation field
+    values nested inside a record can collapse.
+    """
+    if not source:
+        return source
+    return _transform(source)
+
+
+def _is_store(value):
+    """Return whether `value` has the shape of a set of Store records: a non-empty mapping
+    from model name (always dotted, unlike a field name) to a list of that model's records."""
+    return isinstance(value, dict) and bool(value) and all(
+        isinstance(key, str) and "." in key and isinstance(val, list) for key, val in value.items()
+    )
+
+
+def _transform(value):
+    """Return `value` with versioning stripped and collapsed. Always returns a (possibly
+    new) value, since a tuple can't be mutated in place like a dict or list."""
+    if isinstance(value, dict):
+        had_version = "__version__" in value
+        value.pop("__version__", None)
+        if _is_store(value):
+            for records in value.values():
+                for record in records:
+                    if isinstance(record, dict):
+                        record.pop("__version__", None)
+                        for field in list(record):
+                            record[field] = _transform(record[field])
+            return value
+        if had_version and set(value) == {"id"}:
+            return value["id"]
+        for key in list(value):
+            value[key] = _transform(value[key])
+        return value
+    if isinstance(value, (list, tuple)):
+        if _is_command(value) and len(value) == 3:
+            value = (value[0], value[1])
+        if _is_command_list(value) and len(value) == 1 and value[0][0] == "REPLACE":
+            return _transform(list(value[0][1]))
+        if isinstance(value, tuple):
+            return tuple(_transform(item) for item in value)
+        for index, item in enumerate(value):
+            value[index] = _transform(item)
+        return value
+    return value
+
+
+def _is_command(value):
+    return isinstance(value, (list, tuple)) and len(value) >= 2 and value[0] in MANY_COMMANDS
+
+
+def _is_command_list(value):
+    return isinstance(value, (list, tuple)) and bool(value) and all(map(_is_command, value))
+
+
 class BusResult:
     """Descriptor for an expected bus notification.
     :param channel: the bus channel
@@ -95,16 +160,8 @@ class BusResult:
     def to_tuple(self, *, show_store_versioning):
         payload = json.loads(json_dump(self.payload)) if self.payload is not None else None
         if not show_store_versioning:
-            BusResult._pop_store_version(payload)
+            pop_store_version(payload)
         return (self._normalized_channel(), self.type, payload)
-
-    @staticmethod
-    def _pop_store_version(data):
-        if not isinstance(data, dict):
-            return
-        data.pop("__store_version__", False)
-        for value in data.values():
-            BusResult._pop_store_version(value)
 
     def _normalized_channel(self):
         if isinstance(self.channel, str):
@@ -118,7 +175,7 @@ class BusResult:
         if self.payload is not None:
             message["payload"] = self.payload
             if not show_store_versioning:
-                BusResult._pop_store_version(message["payload"])
+                pop_store_version(message["payload"])
         return json.loads(json_dump(message)) if message else None
 
 

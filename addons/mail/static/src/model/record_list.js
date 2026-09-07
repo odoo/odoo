@@ -143,13 +143,14 @@ export class RecordListInternal {
                 })
             );
             const inverse = getInverse(recordList);
+            const version = self.owner._.fieldsVersion.get(self.name)?.lastWriteDate;
             for (const oldRecord of oldRecords) {
                 if (oldRecord.notIn(newRecords)) {
                     oldRecord._.uses.delete(recordList);
                     store._.ADD_QUEUE("onDelete", self.owner, self.name, oldRecord);
                     if (inverse) {
                         store._.updateFields(oldRecord, {
-                            [inverse]: [["DELETE", self.owner]],
+                            [inverse]: [["DELETE", self.owner, version]],
                         });
                     }
                 }
@@ -211,7 +212,6 @@ export class RecordListInternal {
      *   comes from deletion, we want to "DELETE".
      */
     insert(recordList, val, fn, { inv = true, mode = "ADD" } = {}) {
-        const inverse = getInverse(recordList);
         const targetModel = getTargetModel(recordList);
         if (typeof val !== "object") {
             if (Array.isArray(recordList._store[targetModel].id)) {
@@ -224,10 +224,20 @@ export class RecordListInternal {
             // single-id data
             val = { [recordList._store[targetModel].id]: val };
         }
-        if (inverse && inv) {
-            // special command to call addNoinv/deleteNoInv, to prevent infinite loop
+        const inverse = inv && getInverse(recordList);
+        if (inverse) {
             const target = isRecord(val) && val._raw === val ? val._proxy : val;
-            target[inverse] = [[mode === "ADD" ? "ADD.noinv" : "DELETE.noinv", recordList._.owner]];
+            const cmd = mode === "ADD" ? "ADD.noinv" : "DELETE.noinv";
+            const version = recordList._.owner._.fieldsVersion.get(
+                recordList._.name
+            )?.lastWriteDate;
+            if (isRecord(val) && val._raw === val) {
+                recordList._store._.updateFields(toRaw(target)._raw, {
+                    [inverse]: [[cmd, recordList._.owner, version]],
+                });
+            } else {
+                target[inverse] = [[cmd, recordList._.owner, version]];
+            }
         }
         /** @type {R} */
         let newRecordProxy;

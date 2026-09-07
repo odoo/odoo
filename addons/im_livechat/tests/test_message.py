@@ -6,7 +6,7 @@ from markupsafe import Markup
 from odoo import Command, fields
 from odoo.exceptions import AccessError
 from odoo.tests.common import users
-from odoo.addons.bus.tests.common import BusResult
+from odoo.addons.bus.tests.common import BusResult, pop_store_version
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
@@ -74,8 +74,10 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         )
         chatbot_message = discuss_channel.chatbot_message_ids.mail_message_id[:1]
         store = Store().add(chatbot_message, "_store_message_fields")
+        data = store._build_result()
+        pop_store_version(data)
         self.assertEqual(
-            store._build_result()["mail.message"],
+            data["mail.message"],
             self._filter_messages_fields(
                 {
                     "attachment_ids": [],
@@ -139,8 +141,10 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "<img src='/rating/static/src/img/rating_5.png' alt='5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>Amazing services"
             ),
         )
+        data = Store().add(message, "_store_message_fields")._build_result()
+        pop_store_version(data)
         self.assertEqual(
-            Store().add(message, "_store_message_fields")._build_result(),
+            data,
             {
                 "mail.message": self._filter_messages_fields(
                     {
