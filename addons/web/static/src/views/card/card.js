@@ -44,7 +44,7 @@ export class Card extends Component {
         this.key = signal(1);
         useViewButtons(rootRef, {
             reload: () => {
-                this.key.set(this.key + 1);
+                this.key.set(this.key() + 1);
             },
         });
     }
