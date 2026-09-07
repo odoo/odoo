@@ -29,12 +29,48 @@ class SifnextOperationalVehicleBooking(models.Model):
         readonly=True,
         tracking=True,
     )
+    
+    borrower_unit = fields.Char(
+        string="Unit/Divisi Peminjam",
+        required=True,
+        tracking=True,
+    )
 
     vehicle_id = fields.Many2one(
         "sifnext.operational.vehicle",
         string="Kendaraan",
         required=True,
         tracking=True,
+    )
+    
+    vehicle_license_plate = fields.Char(
+        string="Nomor Polisi",
+        related="vehicle_id.license_plate",
+        readonly=True,
+    )
+
+    vehicle_type = fields.Selection(
+        related="vehicle_id.vehicle_type",
+        string="Jenis Kendaraan",
+        readonly=True,
+    )
+
+    vehicle_brand = fields.Char(
+        string="Merk",
+        related="vehicle_id.brand",
+        readonly=True,
+    )
+
+    vehicle_capacity = fields.Integer(
+        string="Kapasitas",
+        related="vehicle_id.capacity",
+        readonly=True,
+    )
+
+    vehicle_description = fields.Text(
+        string="Keterangan",
+        related="vehicle_id.description",
+        readonly=True,
     )
 
     purpose = fields.Text(

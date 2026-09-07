@@ -6,7 +6,7 @@ class SifnextRoleController(http.Controller):
 
     @http.route(
         "/sifnext_operational/switch_role",
-        type="json",
+        type="jsonrpc",
         auth="user",
         methods=["POST"],
     )

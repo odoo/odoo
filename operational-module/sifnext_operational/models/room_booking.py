@@ -29,12 +29,36 @@ class SifnextOperationalRoomBooking(models.Model):
         readonly=True,
         tracking=True,
     )
+    
+    borrower_unit = fields.Char(
+        string="Unit/Divisi Peminjam",
+        required=True,
+        tracking=True,
+    )
 
     room_id = fields.Many2one(
         "sifnext.operational.room",
         string="Ruangan",
         required=True,
         tracking=True,
+    )
+    
+    room_location = fields.Char(
+        string="Lokasi",
+        related="room_id.location",
+        readonly=True,
+    )
+
+    room_capacity = fields.Integer(
+        string="Kapasitas",
+        related="room_id.capacity",
+        readonly=True,
+    )
+
+    room_facilities = fields.Text(
+        string="Fasilitas",
+        related="room_id.facilities",
+        readonly=True,
     )
 
     purpose = fields.Text(
