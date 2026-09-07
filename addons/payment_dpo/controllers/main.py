@@ -37,6 +37,10 @@ class DPOController(http.Controller):
         if not tx_sudo:
             return
 
+        if data.get("TransactionToken") != tx_sudo.provider_reference:
+            _logger.warning("Received payment data with mismatching token.")
+            return
+
         try:
             # Verify the payment data.
             payload = (
@@ -44,7 +48,7 @@ class DPOController(http.Controller):
                 f"<API3G>"
                 f"<CompanyToken>{tx_sudo.provider_id.dpo_company_token}</CompanyToken>"
                 f"<Request>verifyToken</Request>"
-                f"<TransactionToken>{data.get('TransID')}</TransactionToken>"
+                f"<TransactionToken>{tx_sudo.provider_reference}</TransactionToken>"
                 f"</API3G>"
             )
             verified_data = tx_sudo._send_api_request("POST", "", data=payload)
