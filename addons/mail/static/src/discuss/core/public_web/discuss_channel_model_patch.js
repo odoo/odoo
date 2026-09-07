@@ -25,7 +25,12 @@ const discussChannelPatch = {
             },
             eager: true,
         });
-        this.primaryMessagingMenuTab = this.computed(() => this.messagingMenuTabs[0]);
+        this.primaryMessagingMenuTab = this.computed(
+            () =>
+                // A context specific tab only exists within its context: it wins over the
+                // app wide tab claiming the same channel.
+                this.messagingMenuTabs.find((t) => !t.appWide) ?? this.messagingMenuTabs[0]
+        );
         this.messagingMenuTabsWithCounter = fields.Many("MessagingMenuTab", {
             inverse: "channelsWithCounter",
             /** @this {import("models").DiscussChannel} */
