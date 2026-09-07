@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.Poll">
-        <div class="o-mail-Poll card border-secondary rounded w-100" t-att-class="{'o-ongoing': !this.props.poll.end_message_id, 'o-isShowingResults': this.isShowingResults}" t-ref="this.rootRef">
+        <div class="o-mail-Poll card border-secondary rounded-4 w-100" t-att-class="{'o-ongoing': !this.props.poll.end_message_id, 'o-isShowingResults': this.isShowingResults}" t-ref="this.rootRef">
             <div class="card-body d-flex flex-column gap-1 o-px-2_5 o-py-1_5">
                 <p class="card-title text-start fw-bold mb-0" t-att-class="{ 'me-1': this.props.poll.end_message_id }" t-out="this.props.poll.poll_question"/>
                 <p t-if="!this.props.poll.end_message_id" class="card-subtitle mb-1 text-muted smaller">
                     <t t-if="this.props.poll.allow_multiple_options">Select one or more options</t>
                     <t t-else="">Select one option</t>
                 </p>
-                <div class="o-mail-PollOption rounded p-1" t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="this.percentageAttStyle(option)" t-att-class="{'o-selected': this.state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(this.props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
+                <div class="o-mail-PollOption rounded-4 p-1" t-foreach="this.props.poll.option_ids" t-as="option" t-key="option.id" t-att-style="this.percentageAttStyle(option)" t-att-class="{'o-selected': this.state.selectedOptionIds.has(option.id), 'o-winningOption': option.eq(this.props.poll.winning_option_id), 'o-hasVotes': option.number_of_votes > 0 }">
                     <div t-if="this.isShowingResults" class="d-flex align-items-center p-2">
                         <span t-if="option.option_emoji" class="fs-2 lh-1 me-2" t-out="option.option_emoji"/>
                         <span class="fw-bold me-1 text-truncate flex-grow-1" t-out="option.option_label"/>
