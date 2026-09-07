@@ -37,7 +37,7 @@ class PosPaymentMethod(models.Model):
         whitelisted_fields = {'dpopay_bearer_token', 'dpopay_payment_mode'}
         return super()._is_write_forbidden(fields - whitelisted_fields)
 
-    def _get_transaction_type(self):
+    def _get_dpopay_transaction_type(self):
         if self.dpopay_payment_mode == 'momo':
             return 'pushPaymentDpoMomoSale'
         return 'pushPaymentSale'
@@ -45,7 +45,7 @@ class PosPaymentMethod(models.Model):
     def send_dpopay_request(self, data, endpoint):
         self.ensure_one()
         if endpoint == 'start-transaction':
-            data['transactionType'] = self._get_transaction_type()
+            data['transactionType'] = self._get_dpopay_transaction_type()
         return self._execute_dpopay_api_request(data, endpoint)
 
     def _get_dpopay_base_url(self, is_token=False):
@@ -93,7 +93,7 @@ class PosPaymentMethod(models.Model):
         try:
             def _send_request(token_expired=False):
                 headers = self._dpopay_headers(token_expired)
-                _logger.info('Sending request to %s | Mode: %s | Headers: %s | Source ID: %s', url, mode, list(headers.keys()), payload.get('sourceId'))
+                _logger.info('Sending request to %s | Mode: %s | Headers: %s | Source ID: %s | Transaction Type: %s', url, mode, list(headers.keys()), payload.get('sourceId'), payload.get('transactionType'))
                 response = requests.post(url, json=payload, headers=headers, timeout=DPOPAY_DEFAULT_TIMEOUT)
                 response_json = response.json()
                 return response, response_json
@@ -109,15 +109,15 @@ class PosPaymentMethod(models.Model):
             return response_json
 
         except HTTPError as error:
-            _logger.warning('HTTPError: %s | Mode: %s | Source ID: %s', error, mode, payload.get('sourceId'))
+            _logger.warning('HTTPError: %s | Mode: %s | Source ID: %s | Transaction Type: %s', error, mode, payload.get('sourceId'), payload.get('transactionType'))
             error_json = error.response.json()
             error_code = str(error_json.get('error_code') or error_json.get('errorCode') or error_json.get('resultCode'))
             error_message = error_json.get('errorMessage') or error_json.get('error_description') or error_json.get('resultDescription') or str(error_json)
 
-            if error_code == "403":
-                error_message = _("Please ensure the device is online and confirm that the Merchant ID (MID) and Terminal ID (TID) are correct. %s", error_message)
+            if error_code == '403' and error_message == 'Terminal not ready':
+                error_message = _("%s. Please ensure the device is online and confirm that the Merchant ID (MID) and Terminal ID (TID) are correct.", error_message)
 
-            if error_code == "999911":
+            if error_code == '999911':
                 error_message = _("Invalid Chain ID. Please verify the configuration. %s", error_message)
 
             return {'errorMessage': error_message}
