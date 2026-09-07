@@ -78,13 +78,6 @@ export class DiscussContent extends Component {
         );
     }
 
-    get showThreadAvatar() {
-        return (
-            ["channel", "group"].includes(this.thread.channel?.channel_type) ||
-            this.thread.channel?.hasCorrespondentAvatar
-        );
-    }
-
     get isThreadAvatarEditable() {
         return (
             !this.thread.channel?.parent_channel_id &&
