@@ -75,7 +75,7 @@ export class GeneratePrinterData {
                     category_name: productCat.name,
                     total_quantity: productCat.qty,
                     products: productsList,
-                    total: this.formatCurrency(productCat.total),
+                    total: this.formatCurrency(productCat.total_paid),
                 });
             }
 
