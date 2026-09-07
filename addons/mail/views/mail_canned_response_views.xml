@@ -28,8 +28,8 @@
                     <field name="create_uid" widget="many2one_avatar_user" optional="hide"/>
                     <field name="group_ids" widget="many2many_falsy_value_label" readonly="not is_editable" optional="hide"/>
                     <field name="last_used" readonly="1" optional="hide"/>
-                    <field name="is_editable" column_invisible="True"/>
-                    <field name="is_shared" column_invisible="True"/>
+                    <field name="is_editable" column_invisible="True"/> <!-- drives the readonly on source/substitution/group_ids in this list -->
+                    <field name="is_shared" column_invisible="True"/> <!-- kept for default_order="is_shared" on this list -->
                 </list>
             </field>
         </record>
@@ -44,7 +44,7 @@
                             <field name="source" widget="shortcut" readonly="not is_editable"/>
                             <field name="substitution" placeholder="e.g. Hello, how may I help you?" readonly="not is_editable"/>
                             <field name="group_ids" widget="many2many_falsy_value_label" readonly="not is_editable"/>
-                            <field name="is_editable" invisible="True"/>
+                            <field name="is_editable" invisible="True"/> <!-- drives the readonly on source/substitution/group_ids in this form -->
                         </group>
                     </sheet>
                 </form>

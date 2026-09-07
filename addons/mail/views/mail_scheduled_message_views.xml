@@ -8,12 +8,11 @@
                 <form string="Scheduled Message" js_class="mail_composer_form">
                     <sheet>
                         <group>
-                            <field name="composition_comment_option" invisible="1"/>
+                            <field name="composition_comment_option" invisible="1"/> <!-- read by record.data in mail_composer_form.js and html_composer_message_field.js -->
                             <label for="partner_ids" string="To" invisible="is_note"/>
                             <div invisible="is_note" class="d-flex gap-3">
-                                <!-- used in MailComposerAttachmentSelector when uploading files -->
-                                <field name="res_id" invisible="1"/>
-                                <field name="model" invisible="1"/>
+                                <field name="res_id" invisible="1"/> <!-- used in MailComposerAttachmentSelector when uploading files -->
+                                <field name="model" invisible="1"/> <!-- used in MailComposerAttachmentSelector when uploading files -->
                                 <field name="partner_ids" widget="many2many_tags_email" class="w-auto flex-grow-1"
                                     placeholder="Add contacts to notify..."
                                     options="{'on_tag_click': 'open_form'}"

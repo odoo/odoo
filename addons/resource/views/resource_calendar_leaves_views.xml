@@ -36,7 +36,7 @@
         <field name="model">resource.calendar.leaves</field>
         <field name="arch" type="xml">
             <form string="Time Off Detail">
-            <field name="company_id" invisible="1"/>
+            <field name="company_id" invisible="1"/> <!-- ensures value is loaded for resource_id's company_id domain even without multi-company group -->
             <sheet>
                 <group>
                     <group name="leave_details">

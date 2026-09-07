@@ -11,7 +11,7 @@
                 <field name="is_mail_blacklist" readonly="state != 'manual'" groups="base.group_no_one"/>
             </field>
             <xpath expr="//field[@name='field_id']//field[@name='copied']" position="after">
-                <field name="state" invisible="1"/>
+                <field name="state" invisible="1"/> <!-- drives the readonly on is_mail_thread/is_mail_activity/is_mail_blacklist/tracking -->
                 <field name="tracking" readonly="state != 'manual'"/>
             </xpath>
         </field>
@@ -34,7 +34,7 @@
         <field name="inherit_id" ref="base.view_model_fields_form"/>
         <field name="arch" type="xml">
             <field name="copied" position="after">
-                <field name="state" invisible="1"/>
+                <field name="state" invisible="1"/> <!-- drives the readonly on tracking -->
                 <field name="tracking" invisible="ttype in ['binary', 'html']" readonly="state != 'manual'"/>
             </field>
         </field>
