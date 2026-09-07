@@ -6,6 +6,17 @@
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr auto;
 
+    // Text input vertical padding, used to derive the single-line pill radius below.
+    --o-mail-Composer-vPadding: 10px;
+
+    &.o-chatWindow, &.o-isUiSmall {
+        --o-mail-Composer-vPadding: 7px;
+    }
+
+    &.o-isUiSmall:not(.o-editing) {
+        --o-mail-Composer-vPadding: 12px;
+    }
+
     &.o-hasSelfAvatar {
         grid-template-columns: $o-mail-Message-sidebarWidth 1fr;
     }
@@ -119,10 +130,13 @@
 }
 
 .o-mail-Composer-inputStyle, .o-mail-Composer-html {
-    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
-    padding-bottom: 10px;
+    padding-top: var(--o-mail-Composer-vPadding);
+    padding-bottom: var(--o-mail-Composer-vPadding);
     padding-left: map-get($spacers, 1);
     padding-right: map-get($spacers, 1);
+
+    // Half the single-line box height: pill radius, see .o-mail-Composer-inputContainer.
+    border-radius: calc(var(--o-mail-Composer-vPadding) + 11px);
 
     line-height: 1.42857143 !important; // so that input is rounded to 20px = 14px (base font) * 1.42857143 (line-height)
 
@@ -134,23 +148,13 @@
     .o-mail-Composer.o-extended & {
         padding-left: map-get($spacers, 2) + map-get($spacers, 1);
         padding-right: map-get($spacers, 2);
+        // Always multi-line: pill radius would look out of place, use rounded-3 instead.
+        border-radius: $border-radius-lg;
     }
 
     .o-mail-Composer.o-chatWindow & {
-        padding-top: 7px;
-        padding-bottom: 7px;
         padding-left: map-get($spacers, 1) / 2;
         padding-right: map-get($spacers, 1) / 2;
-    }
-
-    .o-mail-Composer.o-isUiSmall & {
-        padding-top: 7px;
-        padding-bottom: 7px;
-    }
-
-    .o-mail-Composer.o-isUiSmall:not(.o-editing) & {
-        padding-top: 12px;
-        padding-bottom: 12px;
     }
 }
 
@@ -210,6 +214,14 @@
 
 .o-mail-Composer-inputContainer {
     --border-color: #{rgba($dark, var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2))};
+
+    // Fixed radius = half the single-line box height, so the composer is
+    // pill-shaped on one line and keeps that roundness across line changes.
+    border-radius: calc(var(--o-mail-Composer-vPadding) + 11px);
+
+    .o-mail-Composer.o-extended & {
+        border-radius: $border-radius-lg;
+    }
 
     &:has(textarea:focus) {
         --border-color: #{rgba($o-component-active-border, .65)};
