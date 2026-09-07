@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Project Stock Account',
-    'summary': 'Handle analytics in Stock pickings with Project',
+    'name': 'Project Inventory Analytics',
+    'summary': 'Generate analytic costs for inventory transfers linked to your projects',
     'category': 'Services/Project',
     'depends': ['stock_account', 'project_stock'],
     'data': [

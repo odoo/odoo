@@ -2,7 +2,7 @@
 
 {
     'name': 'Project Stock',
-    'summary': 'Link Stock pickings to Project',
+    'summary': 'Link inventory transfers to your projects.',
     'category': 'Services/Project',
     'depends': ['stock', 'project'],
     'data': [
