@@ -130,3 +130,7 @@ class TestTaxesGlobalDiscountPOS(TestTaxCommonPOS, TestTaxesGlobalDiscount):
         self.assertAlmostEqual(pos_order.lines[0].margin_percent, 0.6667)
         self.assertAlmostEqual(pos_order.margin, 1.85)
         self.assertAlmostEqual(pos_order.margin_percent, 0.6491)
+
+    def test_pos_global_discount_line_display(self):
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_pos_global_discount_line_display')

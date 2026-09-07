@@ -114,6 +114,7 @@ patch(PosStore.prototype, {
             if (existingLine) {
                 existingLine.extra_tax_data = extra_tax_data;
                 existingLine.price_unit = baseLine.price_unit;
+                existingLine.setFullProductName();
                 delete discountLinesMap[key];
             } else {
                 lastDiscountLine = await this.addLineToOrder(

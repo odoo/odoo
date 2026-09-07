@@ -21,43 +21,6 @@ export function uuidv4() {
     });
 }
 
-export function constructAttributeString(line) {
-    let attributeString = "";
-
-    if (line.attribute_value_ids && line.attribute_value_ids.length > 0) {
-        for (const value of line.attribute_value_ids) {
-            if (value.is_custom) {
-                const customValue = line.custom_attribute_value_ids.find(
-                    (cus) =>
-                        cus.custom_product_template_attribute_value_id?.id == parseInt(value.id)
-                );
-                if (customValue) {
-                    attributeString += `${value.attribute_id.name}: ${value.name}: ${customValue.custom_value}, `;
-                }
-            } else {
-                attributeString += `${value.name}, `;
-            }
-        }
-
-        attributeString = attributeString.slice(0, -2);
-    } else if (
-        attributeString === "" &&
-        line?.product_id?.product_template_variant_value_ids?.length > 0
-    ) {
-        attributeString = line.product_id.product_template_variant_value_ids
-            ?.map((attr) => attr.name)
-            .join(", ");
-    }
-
-    return attributeString;
-}
-
-export function constructFullProductName(line) {
-    const attributeString = constructAttributeString(line);
-    return attributeString
-        ? `${line?.product_id?.name} (${attributeString})`
-        : `${line?.product_id?.name}`;
-}
 /**
  * Returns a random 5 digits alphanumeric code
  * @returns {string}

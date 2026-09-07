@@ -6,5 +6,11 @@
                 <attribute name="t-if">not (line['product_id'] == config['discount_product_id'] and conditions['basic_receipt'])</attribute>
             </xpath>
         </template>
+
+        <template id="pos_discount.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
+            <xpath expr="//span[@name='standard-unit-price']" position="attributes">
+                <attribute name="t-if" separator=" and " add="not line['is_discount_line']"/>
+            </xpath>
+        </template>
     </data>
 </odoo>
