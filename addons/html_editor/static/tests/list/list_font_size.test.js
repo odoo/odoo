@@ -389,3 +389,12 @@ test("should remove font-size and its classes from partially selected list item 
         contentAfter: `<ol><li class="h2-fs">a<span class="o_default_font_size">[bc</span></li><li>def</li><li class="h2-fs"><span class="o_default_font_size">gh]</span>i</li></ol>`,
     });
 });
+
+test.tags("desktop");
+test("should properly pad list from header block", async () => {
+    await testEditor({
+        contentBefore: `<h4><span class="display-1-fs">[awdawd]</span></h4>`,
+        stepFunction: toggleUnorderedList,
+        contentAfter: `<ul style="padding-inline-start: 54px;"><li class="display-1-fs"><h4>[awdawd]</h4></li></ul>`,
+    });
+});
