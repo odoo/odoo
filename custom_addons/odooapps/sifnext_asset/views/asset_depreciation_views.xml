@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="view_sifnext_asset_depreciation_list" model="ir.ui.view">
+        <field name="name">sifnext.asset.depreciation.list</field>
+        <field name="model">sifnext.asset.depreciation</field>
+        <field name="arch" type="xml">
+
+            <list string="Jadwal Penyusutan">
+                <field name="depreciation_date"/>
+                <field name="depreciation_amount"/>
+                <field name="accumulated_depreciation"/>
+                <field name="book_value"/>
+                <field name="state"/>
+            </list>
+
+        </field>
+    </record>
+
+    <record id="view_sifnext_asset_depreciation_form" model="ir.ui.view">
+        <field name="name">sifnext.asset.depreciation.form</field>
+        <field name="model">sifnext.asset.depreciation</field>
+        <field name="arch" type="xml">
+
+            <form string="Jadwal Penyusutan">
+                <sheet>
+
+                    <group>
+                        <field name="asset_id"/>
+                        <field name="depreciation_date"/>
+                        <field name="depreciation_amount"/>
+                        <field name="accumulated_depreciation"/>
+                        <field name="book_value"/>
+                        <field name="currency_id"/>
+                        <field name="state"/>
+                    </group>
+
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+</odoo>
