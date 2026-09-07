@@ -136,6 +136,8 @@
         </field>
     </record>
 
+    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_overview" action="hr_employee_attendance_action_kanban" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
+
     <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
         <field name="name">hr.employee.list.leave</field>
         <field name="model">hr.employee</field>
