@@ -9,7 +9,7 @@
                 <sheet>
                     <group>
                         <group name="vendor" string="Vendor">
-                            <field name="product_variant_count" invisible="1"/>
+                            <field name="product_variant_count" invisible="1"/> <!-- dependency of _compute_product_id -->
                             <field name="partner_id" context="{'res_partner_search_mode': 'supplier'}"/>
                             <field name="product_name"/>
                             <field name="product_code"/>
@@ -21,7 +21,7 @@
                         <group string="Pricelist">
                             <field name="product_tmpl_id" string="Product" invisible="context.get('visible_product_tmpl_id', True)"/>
                             <field name="product_id" groups="product.group_product_variant" options="{'no_create': True}"/>
-                            <field name="product_id" groups="!product.group_product_variant" invisible="1"/>
+                            <field name="product_id" groups="!product.group_product_variant" invisible="1"/> <!-- keeps product_id value loaded/saved when the group_product_variant field above is hidden -->
                             <label for="min_qty"/>
                             <div class="o_row">
                                 <field name="min_qty"/>

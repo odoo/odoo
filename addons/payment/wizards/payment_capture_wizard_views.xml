@@ -6,12 +6,12 @@
         <field name="model">payment.capture.wizard</field>
         <field name="arch" type="xml">
             <form string="Capture">
-                <field name="transaction_ids" invisible="1"/>
-                <field name="is_amount_to_capture_valid" invisible="1"/>
-                <field name="currency_id" invisible="1"/>
-                <field name="support_partial_capture" invisible="1"/>
-                <field name="has_draft_children" invisible="1"/>
-                <field name="has_remaining_amount" invisible="1"/>
+                <field name="transaction_ids" invisible="1"/> <!-- Source records; every compute in this wizard depends on it -->
+                <field name="is_amount_to_capture_valid" invisible="1"/> <!-- Drives the invisible modifier of the above-authorized-amount warning alert -->
+                <field name="currency_id" invisible="1"/> <!-- currency_field of the monetary amounts shown in this form -->
+                <field name="support_partial_capture" invisible="1"/> <!-- Drives the readonly on amount_to_capture and the full-only info icon modifier -->
+                <field name="has_draft_children" invisible="1"/> <!-- Drives the invisible modifier of the pending-partial-capture warning alert -->
+                <field name="has_remaining_amount" invisible="1"/> <!-- Drives the readonly modifier of the void_remaining_amount field -->
                 <div id="alert_draft_capture_tx"
                      role="alert"
                      class="alert alert-warning"

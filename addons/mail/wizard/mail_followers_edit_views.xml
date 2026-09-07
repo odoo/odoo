@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <form string="Add/Remove Followers">
                     <group>
-                        <field name="res_model" invisible="1"/>
-                        <field name="res_ids" invisible="1"/>
+                        <field name="res_model" invisible="1"/> <!-- read by mail_followers_edit.py to resolve the target records -->
+                        <field name="res_ids" invisible="1"/> <!-- read by mail_followers_edit.py to resolve the target records -->
                         <field name="operation" widget="radio" options="{'horizontal': true}"/>
                         <field name="partner_ids" widget="many2many_tags_email"
                                 placeholder="Add contacts" options="{'warning': 'future', 'on_tag_click': 'open_form'}"

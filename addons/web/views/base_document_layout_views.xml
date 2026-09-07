@@ -8,10 +8,10 @@
                 <form class="o_document_layout">
                     <group>
                         <group class="o_document_layout_company">
-                            <field name="company_id" invisible="1"/>
-                            <field name="external_report_layout_id" invisible="1" />
-                            <field name="logo_primary_color" invisible="1" />
-                            <field name="logo_secondary_color" invisible="1" />
+                            <field name="company_id" invisible="1"/> <!-- triggers _onchange_company_id which fills logo, colors, layout fields on this form -->
+                            <field name="external_report_layout_id" invisible="1" /> <!-- set by _onchange_report_layout_id, persisted to company_id.external_report_layout_id on save -->
+                            <field name="logo_primary_color" invisible="1" /> <!-- computed from logo, read by _onchange_logo to set primary_color -->
+                            <field name="logo_secondary_color" invisible="1" /> <!-- computed from logo, read by _onchange_logo to set secondary_color -->
                             <field name="report_layout_id" string="Layout" widget="badges_many2one" required="1"/>
                             <field name="report_tables_id" string="Tables" widget="badges_selection" required="1"/>
                             <field name="font" string="Text" widget="selection" required="1"/>

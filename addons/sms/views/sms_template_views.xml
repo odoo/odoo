@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="SMS Templates">
                 <header>
-                    <field name="template_fs" invisible="1"/>
+                    <field name="template_fs" invisible="1"/> <!-- drives invisible on Reset Template button -->
                     <button string="Reset Template"
                             name="%(sms_template_reset_action)d" type="action"
                             groups="base.group_system"
@@ -14,7 +14,7 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <field name="sidebar_action_id" invisible="1"/>
+                        <field name="sidebar_action_id" invisible="1"/> <!-- drives invisible on Add/Remove Context Action buttons -->
                         <button name="action_create_sidebar_action" type="object"
                                 groups="base.group_no_one"
                                 class="oe_stat_button"
@@ -46,7 +46,7 @@
                         <h1><field name="name" placeholder="e.g. Calendar Reminder" required="1"/></h1>
                         <group>
                             <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
-                            <field name="model" invisible="1"/>
+                            <field name="model" invisible="1"/> <!-- kept for compute of render_model used by mail.render.mixin body rendering -->
                             <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or {{ object.partner_id.lang }}"/>
                         </group>
                     </div>

@@ -6,8 +6,8 @@
         <field name="model">update.product.attribute.value</field>
         <field name="arch" type="xml">
             <form>
-                <field name="product_count" invisible="1"/>
-                <field name="mode" invisible="1"/>
+                <field name="product_count" invisible="1"/> <!-- dependency of _compute_message for the message field below -->
+                <field name="mode" invisible="1"/> <!-- dependency of _compute_message and action_confirm behavior -->
                 <field name="message"/>
                 <footer>
                     <button special="cancel"/>
