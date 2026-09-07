@@ -21,8 +21,8 @@
             <field name="model">mail.activity.plan.template</field>
             <field name="arch" type="xml">
                 <form string="Activity">
-                    <field name="company_id" invisible="1"/>
-                    <field name="res_model" invisible="1"/>
+                    <field name="company_id" invisible="1"/> <!-- needed client-side for check_company on responsible_id/role_id -->
+                    <field name="res_model" invisible="1"/> <!-- used by activity_type_id domain to filter by model -->
                     <sheet>
                         <group>
                             <field name="activity_type_id"/>

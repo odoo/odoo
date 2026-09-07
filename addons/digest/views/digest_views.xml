@@ -18,7 +18,7 @@
         <field name="model">digest.digest</field>
         <field name="arch" type="xml">
             <form string="KPI Digest">
-                <field name="is_subscribed" invisible="1"/>
+                <field name="is_subscribed" invisible="1"/> <!-- loads compute so the record's subscription status is available client-side -->
                 <header>
                     <button type="object" name="action_activate" string="Activate"
                         class="oe_highlight"
@@ -41,7 +41,7 @@
                     <group>
                         <group>
                             <field name="periodicity" widget="radio" options="{'horizontal': true}"/>
-                            <field name="company_id" options="{'no_create': True}" invisible="1"/>
+                            <field name="company_id" options="{'no_create': True}" invisible="1"/> <!-- kept for onchange/compute of currency_id (related company_id.currency_id) -->
                         </group>
                         <group>
                             <field name="next_run_date" groups="base.group_system"/>

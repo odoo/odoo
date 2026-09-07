@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='email']" position="before">
-                    <field name="is_blacklisted" invisible="1"/>
+                    <field name="is_blacklisted" invisible="1"/> <!-- drives the invisible on the unblacklist button -->
                     <button name="mail_action_blacklist_remove" class="oi text-danger" data-icon="block"
                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                         type="object" context="{'default_email': email}" groups="base.group_user"

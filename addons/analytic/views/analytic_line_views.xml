@@ -5,7 +5,7 @@
         <field name="model">account.analytic.line</field>
         <field name="arch" type="xml">
             <list string="Analytic Items" multi_edit="1" js_class="analytic_list">
-                <field name="company_id" column_invisible="True"/>
+                <field name="company_id" column_invisible="True"/> <!-- provides currency_id (related=company_id.currency_id) for the amount monetary column; visible copy is gated on group_multi_company -->
                 <field name="date" optional="show"/>
                 <field name="name"/>
                 <field name="account_id" optional="show"/>
@@ -14,7 +14,7 @@
                        optional="hide"
                        options="{'multi_edit': true}"
                 />
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- currency for the amount monetary column (amount Monetary defaults to currency_id) -->
                 <field name="unit_amount" sum="Quantity" optional="hide"/>
                 <field name="product_uom_id" optional="hide"/>
                 <field name="partner_id" optional="hide"/>
@@ -73,7 +73,7 @@
         <field name="priority">1</field>
         <field name="arch" type="xml">
             <form string="Analytic Item">
-            <field name="company_id" invisible="1"/>
+            <field name="company_id" invisible="1"/> <!-- provides currency_id (related=company_id.currency_id) for the amount monetary field; visible copy is gated on group_multi_company -->
             <sheet>
                 <group>
                     <group name="analytic_item" string="Analytic Item">
@@ -86,7 +86,7 @@
                         <field name="amount"/>
                         <field name="unit_amount"/>
                         <field name="product_uom_id" class="oe_inline"/>
-                        <field name="currency_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/> <!-- currency for the amount monetary field (amount Monetary defaults to currency_id) -->
                     </group>
                 </group>
             </sheet>

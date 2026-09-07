@@ -21,13 +21,13 @@
                 </div>
                 <group>
                     <group name="payment_info">
-                        <field name="res_id" invisible="1"/>
-                        <field name="res_model" invisible="1"/>
-                        <field name="partner_id" invisible="1"/>
-                        <field name="partner_email" invisible="1"/>
+                        <field name="res_id" invisible="1"/> <!-- Required technical field feeding the link/company/warning computes; set from context in default_get -->
+                        <field name="res_model" invisible="1"/> <!-- Required technical field feeding the link/company/warning computes; set from context in default_get -->
+                        <field name="partner_id" invisible="1"/> <!-- Drives the partner_email related field and is a dependency of the _compute_link -->
+                        <field name="partner_email" invisible="1"/> <!-- Related to partner_id; drives the no_partner_email warning banner modifier above -->
                         <field name="amount"/>
-                        <field name="warning_message" invisible="1"/>
-                        <field name="currency_id" invisible="1"/>
+                        <field name="warning_message" invisible="1"/> <!-- Shown via the warning banner div above; also drives the link button disabled modifier -->
+                        <field name="currency_id" invisible="1"/> <!-- currency_field for the monetary amount; needed to render its currency -->
                     </group>
                 </group>
                 <footer>

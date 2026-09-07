@@ -28,7 +28,7 @@
                 </group>
                 <field name="combo_item_ids">
                     <list editable="bottom">
-                        <field name="currency_id" column_invisible="True"/>
+                        <field name="currency_id" column_invisible="True"/> <!-- needed by the monetary widget on lst_price/extra_price below -->
                         <field name="product_id"/>
                         <field
                             name="lst_price"
@@ -51,7 +51,7 @@
         <field name="model">product.combo</field>
         <field name="arch" type="xml">
             <list string="Combo Choices">
-                <field name="currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/> <!-- needed by the monetary widget on base_price below -->
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
