@@ -273,6 +273,8 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
         date_deadline = self.order_id.commitment_date or self._expected_date()
+        if self.order_id.picking_policy == 'one':
+            date_deadline = self.order_id.commitment_date or self.order_id.expected_date
         date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'origin': self.order_id.name,
