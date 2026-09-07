@@ -29,6 +29,15 @@ patch(PosOrderline.prototype, {
         return super.isValidForRefund && !this.isDiscountLine;
     },
 
+    constructFullProductName(opts = {}) {
+        const { discount = true } = opts;
+        let fullName = super.constructFullProductName(...arguments);
+        if (discount && this.isDiscountLine && this.order_id.globalDiscountPc.type === "percent") {
+            fullName = `${fullName} (-${this.order_id.globalDiscountPc.value}%)`;
+        }
+        return fullName;
+    },
+
     isServiceFeeApplicable() {
         if (!this.isDiscountLine) {
             return super.isServiceFeeApplicable();
