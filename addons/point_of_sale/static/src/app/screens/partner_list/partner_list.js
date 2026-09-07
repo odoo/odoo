@@ -85,18 +85,25 @@ export class PartnerList extends Component {
         const isSearchWordNumber = /^[0-9]+$/.test(numberString);
 
         const patternBase = isSearchWordNumber ? numberString : searchWord;
-        // Build a RegExp that mimics SQL ILIKE behavior:
+        // Build one RegExp per word that mimics SQL ILIKE behavior:
         // 1) Escape all RegExp metacharacters so user input is treated literally
         //    (e.g. '.', '+', '[', ']' should not change regex meaning or cause errors)
         // 2) Replace SQL wildcard '%' with RegExp wildcard '.*'
-        const regex = new RegExp(
-            patternBase
-                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&") // escape regex special characters
-                .replace(/%/g, ".*") // convert SQL wildcard to regex wildcard
-        );
+        const regexes = patternBase
+            .split(/\s+/)
+            .filter(Boolean)
+            .map(
+                (word) =>
+                    new RegExp(word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/%/g, ".*"))
+            );
 
         const availablePartners = searchWord
-            ? partners.filter((p) => regex.test(unaccent(p.searchString))).slice(0, 200)
+            ? partners
+                  .filter((p) => {
+                      const searchString = unaccent(p.searchString);
+                      return regexes.every((regex) => regex.test(searchString));
+                  })
+                  .slice(0, 200)
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
