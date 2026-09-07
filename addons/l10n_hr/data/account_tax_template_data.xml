@@ -1,1009 +1,1789 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="rrif_pdv_25" model="account.tax.template">
-        <field name="description">PDV 25%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
+<!-- SALES -->
+<!-- TAX report section I -->
+    <!-- 0% reverse charge I.1-->
+    <record id="VAT_S_reverse_O" model="account.tax.template">
+        <field name="sequence">21</field>
+        <field name="description">0% Domestic Reverse charge</field><!-- Tuzemni PPO -->
+        <field name="name">0% HR RC</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="10"/>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_1_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_1_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% carried another member state I.2-->
+    <record id="VAT_S_carried_other_state_O" model="account.tax.template">
+        <field name="sequence">22</field>
+        <field name="description">0% Deliveries in another EU member state</field>
+        <field name="name">0% EU M</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="10"/>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_2_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_2_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% EU goods I.3-->
+    <record id="VAT_S_EU_Goods" model="account.tax.template">
+        <field name="sequence">20</field>
+        <field name="description">0% Sale goods in EU</field>
+        <field name="name">0% EU G</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="10"/>
+        <field name="tax_scope">consu</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_3_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_3_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% EU service I.4 -->
+    <record id="VAT_S_EU_Service" model="account.tax.template">
+        <field name="sequence">20</field>
+        <field name="description">0% Sale service in EU</field>
+        <field name="name">0% EU S</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="10"/>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_4_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_4_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% supplies to Non residents I.5-->
+    <record id="VAT_S_non_resident_O" model="account.tax.template">
+        <field name="sequence">25</field>
+        <field name="description">0% Deliveries to non residents</field>
+        <field name="name">0% BS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_5_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_5_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% installed and assembled goods in another state I.6-->
+    <record id="VAT_P_install_assemb_goods_O" model="account.tax.template">
+        <field name="sequence">25</field>
+        <field name="description">0% install and assemble in EU state</field>
+        <field name="name">0% EU SiP</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_6_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_6_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% supplies of new Vehicles to another state I.7-->
+    <record id="VAT_S_new_transport_other_state_O" model="account.tax.template">
+        <field name="sequence">25</field>
+        <field name="description">0% delivery of new vehicles to EU</field>
+        <field name="name">0% EU T</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_7_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_7_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% in domestic deliveries with 0 tax I.8-->
+    <record id="VAT_S_domestic_0" model="account.tax.template">
+        <field name="sequence">29</field>
+        <field name="description">0% Domestic deliveries</field>
+        <field name="name">0% HR EX</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_8_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_8_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% EXport  I.9-->
+    <record id="VAT_S_Export_O" model="account.tax.template">
+        <field name="sequence">20</field>
+        <field name="description">0% Export deliveries</field>
+        <field name="name">0% EXP</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_9_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_9_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+    <!-- 0% other exempt I.10-->
+    <record id="VAT_S_other_exempt_O" model="account.tax.template">
+        <field name="sequence">25</field>
+        <field name="description">0% Other exempt</field>
+        <field name="name">0% EXP</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_10_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_I_10_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                    }),
+                ]"/>
+    </record>
+<!-- TAX REPORT section II (sale)-->
+    <!-- sale 5% TAX REPORT position II-1 -->
+    <!-- 5% in country II.1 is not enough !-->
+    <record id="VAT_S_5_goods" model="account.tax.template">
+        <field name="description">5% PDV</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">5% PDV</field><!-- 5% PDV na Dobra -->
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_scope">consu</field><!-- curently no 5% on services -->
+        <field name="sequence" eval="3"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_II_1_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240010'),
+                        'plus_report_expression_ids': [ref('tax_report_line_II_1_tax')],
+                    }),
+                    ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('l10n_hr.tax_report_line_II_1_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240010'),
+                        'minus_report_expression_ids': [ref('l10n_hr.tax_report_line_II_1_tax')],
+                    }),
+                ]"/>
+    </record>
+    <record id="VAT_S_5_service" model="account.tax.template">
+        <field name="description">5% Tax on services</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">5% PDV</field><!-- 5% PDV na Dobra -->
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_scope">service</field><!-- curently no 5% on services -->
+        <field name="sequence" eval="3"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_II_1_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240010'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_1_tax')],
+            }),
+            ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('l10n_hr.tax_report_line_II_1_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240010'),
+                'minus_report_expression_ids': [ref('l10n_hr.tax_report_line_II_1_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="VAT_S_5_advance" model="account.tax.template">
+        <field name="description">5% advance payment</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">5% ADV</field><!--5% PDV na Predujam-->
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="50"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_II_1_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240020'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_1_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_II_1_base')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240020'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_1_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- sale 13% TAX REPORT position II-2 -->
+    <!-- 13% in country II.2 is not enough! -->
+    <record id="VAT_S_13_goods" model="account.tax.template">
+        <field name="description">13% Tax on goods</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">13% PDV</field><!-- 13% PDV Dobra -->
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_scope">consu</field>
+        <field name="sequence" eval="2"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_II_2_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240011'),
+                        'plus_report_expression_ids': [ref('tax_report_line_II_2_tax')],
+                    }),
+                    ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_II_2_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240011'),
+                        'plus_report_expression_ids': [ref('tax_report_line_II_2_tax')],
+                    }),
+                ]"/>
+    </record>
+    <record id="VAT_S_13_service" model="account.tax.template">
+        <field name="description">13% tax on services</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">13% PDV</field><!--13% PDV Usluge -->
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_scope">service</field>
+        <field name="sequence" eval="2"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_II_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240011'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_2_tax')],
+            }),
+            ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_II_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240011'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_2_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="VAT_S_13_advance" model="account.tax.template">
+        <field name="description">13% advance payment</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">13% ADV</field><!--13% PDV na Predujam-->
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="50"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_II_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240021'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_2_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_II_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240021'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_2_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- sale 25% TAX REPORT position II-3 -->
+    <!-- 25% in country II.3 is not enough-->
+    <record id="VAT_S_25_goods" model="account.tax.template">
+        <field name="description">25% Tax on Goods</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">25% PDV</field><!-- 25% PDV na Dobra -->
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="1"/>
+        <field name="tax_scope">consu</field>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_II_3_base')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('hr_240012'),
+                    'plus_report_expression_ids': [ref('tax_report_line_II_3_tax')],
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'plus_report_expression_ids': [ref('tax_report_line_II_3_base')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('hr_240012'),
+                    'plus_report_expression_ids': [ref('tax_report_line_II_3_tax')],
+                }),
+            ]"/>
+    </record>
+    <record id="VAT_S_25_service" model="account.tax.template">
+        <field name="description">25% Tax on services</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">25% PDV</field><!-- 25% PDV na Usluge -->
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_scope">service</field>
+        <field name="sequence" eval="1"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240012'),
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_tax')],
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240012'),
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_base')],
+                    }),
+                ]"/>
+    </record>
+    <record id="VAT_S_25_advance" model="account.tax.template">
+        <field name="description">25% advance payment</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">25% ADV</field><!-- 25% PDV na Predujam-->
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="sequence" eval="50"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240022'),
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_tax')],
+                    }),
+                ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'base',
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_base')],
+                    }),
+                    (0,0, {
+                        'factor_percent': 100,
+                        'repartition_type': 'tax',
+                        'account_id': ref('hr_240022'),
+                        'plus_report_expression_ids': [ref('tax_report_line_II_3_tax')],
+                    }),
+                ]"/>
+    </record>
+<!-- PURCHASES -->
+<!-- TAX REPORT section II + III (purchase)-->
+    <!-- purchase 5% TAX REPORT position III-1 --><!-- 5% in country III.1 not enough !-->
+    <record id="VAT_P_5_goods" model="account.tax.template">
+        <field name="description">Purchase 5% </field><!--PPDV 5% na Dobra-->
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">5% PDV</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="3"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140010'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140010'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="VAT_P_5_advance" model="account.tax.template">
+        <field name="description">Purchase 5% advance payment</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">5% PDV</field>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="50"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140020'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_base')],
+            }),
+            (0,0, {
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140020'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_1_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- purchase 13% TAX REPORT position III-2 --><!-- 13% in country III.2 is not enough!-->
+    <record id="VAT_P_13_goods" model="account.tax.template">
+        <field name="description">Purchase 13% goods</field><!--PPDV 13% na Dobra-->
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">13% PDV</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="sequence" eval="2"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140011'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_base')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140011'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="VAT_P_13_service" model="account.tax.template">
+        <field name="description">Purchase 13% services</field><!--PPDV 13% Usluge-->
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">13% PDV</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="sequence" eval="2"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140011'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140011'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="VAT_P_13_advance" model="account.tax.template">
+        <field name="description">Purchase 13% advance payment</field><!--PPDV 13% na Predujam-->
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">13% PDV</field>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="50"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140021'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_2_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_expression_ids': [ref('tax_report_line_III_2_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140021'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_2_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- purchase 25% TAX REPORT covering position III-3 --><!-- 25% in country III.3  not enough!-->
+    <record id="VAT_P_25_goods" model="account.tax.template">
+        <field name="description">Purchase 25% goods</field><!--PPDV 25% na Dobra-->
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
         <field name="name">25% PDV</field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="sequence" eval="1"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140012'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140012'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="VAT_P_25_service" model="account.tax.template">
+        <field name="description">Purchase 25% services</field><!--PPDV 25% Usluge-->
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">25% PDV</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="sequence" eval="1"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140012'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140012'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_tax')],
+            }),
+        ]"/>
+    </record>
+    <record id="VAT_P_25_advance" model="account.tax.template">
+        <field name="description">Purchase 25% advance payment</field><!--PPDV 25% na Predujam-->
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">25% ADV</field>
+        <field name="amount">50</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="sequence" eval="50"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140022'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140022'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_3_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- reverse charge III.4 - II.4  -->
+    <record id="VAT_P_reverse_charge" model="account.tax.template">
+        <field name="sequence">30</field>
+        <field name="description">Purchase 25% RH reverse charge</field>
+        <field name="name">25% RC</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_4_base'),ref('tax_report_line_II_4_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140100'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_4_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240100'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_4_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_4_base'), ref('tax_report_line_II_4_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240100'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_4_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140100'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_4_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- 5% goods in EU III.5 - II.5 -->
+    <record id="VAT_P_5_EU_goods" model="account.tax.template">
+        <field name="sequence">41</field>
+        <field name="description">Purchase goods 5% in EU</field>
+        <field name="name">5% EU G</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_scope">consu</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_5_base'), ref('tax_report_line_II_5_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140200'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_5_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240200'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_5_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_5_base'), ref('tax_report_line_III_5_tax')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240200'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_5_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140200'),
+                'minus_report_expression_ids': [],
+            }),
+        ]"/>
+    </record>
+    <!-- 13% goods in EU III.6 - II.6 -->
+    <record id="VAT_P_13_EU_goods" model="account.tax.template">
+        <field name="sequence">41</field>
+        <field name="description">Purchase goods 13% in EU</field>
+        <field name="name">13% EU G</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_6_base'), ref('tax_report_line_II_6_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140210'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_6_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240210'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_6_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_6_base'), ref('tax_report_line_II_6_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240210'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_6_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140210'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_6_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- 25% goods in EU III.7 + II.7 -->
+    <record id="VAT_P_25_EU_goods" model="account.tax.template">
+        <field name="sequence">40</field>
+        <field name="description">Purchase goods 25% in EU</field>
+        <field name="name">25% EU G</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">consu</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_7_base'), ref('tax_report_line_II_7_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140220'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_7_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240220'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_7_tax')],
+            }),
+            
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_7_base'), ref('tax_report_line_II_7_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240220'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_7_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140220'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_7_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- 5% service in EU III.8 - II.8 -->
+    <record id="VAT_P_5_EU_service" model="account.tax.template">
+        <field name="sequence">42</field>
+        <field name="description">Purchase service 5% in EU</field>
+        <field name="name">5% EU S</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="tax_scope">service</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_8_base'), ref('tax_report_line_II_8_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140300'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_8_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240300'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_8_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_8_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240300'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_8_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140300'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_8_tax'), ref('tax_report_line_II_8_base')],
+            }),
+        ]"/>
+    </record>
+    <!-- 13% services in EU II.9 + III.9 -->
+    <record id="VAT_P_13_EU_service" model="account.tax.template">
+        <field name="sequence">41</field>
+        <field name="description">Purchase service 13% in EU</field>
+        <field name="name">13% EU S</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_9_base'),ref('tax_report_line_II_9_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140310'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_9_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240310'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_9_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_9_base'), ref('tax_report_line_II_9_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240310'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_9_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140310'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_9_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- 25% services in EU III.10 - II.10-->
+    <record id="VAT_P_25_EU_service" model="account.tax.template">
+        <field name="sequence">40</field>
+        <field name="description">Purchase service 25% in EU</field>
+        <field name="name">25% EU S</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_10_base'), ref('tax_report_line_II_10_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140320'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_10_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240320'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_10_tax')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_10_base'), ref('tax_report_line_II_10_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240320'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_10_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140320'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_10_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- Tax Non Resident 5% III.11 - II.11 -->
+    <record id="VAT_P_5_non_resident" model="account.tax.template">
+        <field name="sequence">42</field>
+        <field name="description">Purchase 5% Non Resident</field>
+        <field name="name">5% BS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_5"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_11_base'), ref('tax_report_line_II_11_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140400'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_11_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240400'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_11_tax')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_11_base'), ref('tax_report_line_II_11_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240400'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_11_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140400'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_11_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- Tax Non Resident 13% III.12 - II.12 -->
+    <record id="VAT_P_13_non_resident" model="account.tax.template">
+        <field name="sequence">41</field>
+        <field name="description">13% Non Resident</field>
+        <field name="name">13% BS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_12_base'), ref('tax_report_line_III_12_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140410'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_12_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240410'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_12_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_12_base'), ref('tax_report_line_III_12_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240410'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_12_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140410'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_12_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- Tax Non Resident 25% III.13 - II.13 -->
+    <record id="VAT_P_25_non_resident" model="account.tax.template">
+        <field name="sequence">40</field>
+        <field name="description">25% Non resident purchase </field>
+        <field name="name">25% BS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_13_base'), ref('tax_report_line_II_13_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140420'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_13_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240420'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_13_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_13_base'), ref('tax_report_line_II_13_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240420'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_13_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140420'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_13_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- 25% not in EU III.14 - II.15 -->
+    <record id="VAT_P_25_import" model="account.tax.template">
+        <field name="sequence">40</field>
+        <field name="description">Purchase 25% not in EU</field>
+        <field name="name">25% IMP</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_25"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_base'), ref('tax_report_line_II_15_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140500'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240500'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_15_tax')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_base'), ref('tax_report_line_II_15_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240500'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_15_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140500'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_14_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- 13% not in EU II.15 + III.14 -->
+    <record id="VAT_P_13_import" model="account.tax.template">
+        <field name="sequence">41</field>
+        <field name="description">Purchase 13% not in EU</field>
+        <field name="name">13% IMP</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">13</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_base'), ref('tax_report_line_II_15_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140500'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240500'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_15_tax')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_base'), ref('tax_report_line_II_15_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240500'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_15_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140500'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_14_tax')],
+            }),
+        ]"/>
+    </record>
+    <!-- 5% not in EU II.15 + III.14 -->
+    <record id="VAT_P_5_import" model="account.tax.template">
+        <field name="sequence">42</field>
+        <field name="description">Purchase 5% not in EU</field>
+        <field name="name">5% IMP</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">5</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_13"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_base'), ref('tax_report_line_II_15_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140500'),
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240500'),
+                'minus_report_expression_ids': [ref('tax_report_line_II_15_tax')],
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_expression_ids': [ref('tax_report_line_III_14_base'), ref('tax_report_line_II_15_base')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_240500'),
+                'plus_report_expression_ids': [ref('tax_report_line_II_15_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('hr_140500'),
+                'minus_report_expression_ids': [ref('tax_report_line_III_14_tax')],
+            }),
+        ]"/>
+    </record>
+<!-- ZERO TAX or not in VAT -->
+    <record id="VAT_P_zero_rate" model="account.tax.template">
+        <field name="description">0% Excepted</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">0% OSL</field>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
         <field name="sequence" eval="10"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24003'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24003'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_25usl" model="account.tax.template">
-        <field name="description">PDV 25% Usluge</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% PDV usluge</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24003'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24003'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_10" model="account.tax.template">
-        <field name="description">PDV 10%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">10% PDV</field>
-        <field name="amount">10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24000'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24000'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_0" model="account.tax.template">
-        <field name="description">PDV  0%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% PDV</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
         <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
     </record>
-    <record id="rrif_pdv_avans_25" model="account.tax.template">
-        <field name="description">PDV za predujam 25%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% PDV (za predujam)</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24013'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24013'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_avans_10" model="account.tax.template">
-        <field name="description">PDV za predujam 10%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">10% PDV (za predujam)</field>
-        <field name="amount">10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24010'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24010'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_avans_0" model="account.tax.template">
-        <field name="description">PDV za predujam 0%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% PDV (za predujam)</field>
+    <record id="VAT_P_not_in_VAT" model="account.tax.template">
+        <field name="description">Not in VAT</field>
+        <field name="chart_template_id" ref="l10n_hr_chart_template"/>
+        <field name="name">NO</field>
         <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_nezar_isp_25" model="account.tax.template">
-        <field name="description">PDV po nezaračunanim isporukama 25%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% PDV za nezaračunane isp.</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24033'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24033'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_25_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_nezar_isp_10" model="account.tax.template">
-        <field name="description">PDV po nezaračunanim isporukama 10%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">10% PDV za nezaračunane isp.</field>
-        <field name="amount">10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24030'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif24030'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izdani_racuni_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_nezar_isp_0" model="account.tax.template">
-        <field name="description">PDV po nezaračunanim isporukama 0%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% PDV za nezaračunane isp.</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_po_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_nepod_0" model="account.tax.template">
-        <field name="description">1. KOJE NE PODLIJEŽU OPOREZIVANJU (čl. 2. u svezi s čl. 5 i čl. 8 st. 7 Zakona)</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% Ne podliježe op.</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_koje_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_koje_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_osl_izvoz_0" model="account.tax.template">
-        <field name="description">2.1. IZVOZNE - s pravom na odbitak pretporeza (čl. 13. st. 1. toč. 1. i čl. 14. Zakona)</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% osl. izvozne</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izvozne_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_izvozne_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_osl_medpri_0" model="account.tax.template">
-        <field name="description">2.2. U VEZI S MEĐUNARODNIM PRIJEVOZOM  (čl. 13.b Zakona)</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% osl. međ. prijevoz</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_isporuke_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_osl_tuz_0" model="account.tax.template">
-        <field name="description">2.3. TUZEMNE - bez prava na odbitak pretporeza (čl. 11. i čl. 11a Zakona)</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% osl tuzemne</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_tuzemne_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_tuzemne_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pdv_osl_ost_0" model="account.tax.template">
-        <field name="description">2.4. OSTALO (čl. 13. st. 1. toč. 2. I čl. 13a Zakona) </field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% osl. ostalo</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_ostale_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_ostale_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pp_25" model="account.tax.template">
-        <field name="description">Pretporez 25% PDV</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% PDV pretporez</field>
-        <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="sequence" eval="10"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14003'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14003'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_25usl" model="account.tax.template">
-        <field name="description">Pretporez 25% PDV Usluge</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% PDV pretporez usluge</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14003'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14003'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_10" model="account.tax.template">
-        <field name="description">Pretporez 10% PDV</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">10% PDV pretporez</field>
-        <field name="amount">10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="10"/>
-        <field name="tax_group_id" ref="tax_group_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14000'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14000'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_10_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_0" model="account.tax.template">
-        <field name="description">Pretporez 0% PDV</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% PDV pretporez</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
         <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+            ]"/>
     </record>
-    <record id="rrif_pp_avans_25" model="account.tax.template">
-        <field name="description">Pretporez za predujam 25% PDV</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% PDV pretporez za predujam</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14013'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14013'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_avans_0" model="account.tax.template">
-        <field name="description">Pretporez za predujam 0% PDV</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% PDV pretporez za predujam</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_0_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pp_uvoz_25" model="account.tax.template">
-        <field name="description">Plaćeni PDV 25% pri uvozu dobara</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% uvoz dobara</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14023'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14023'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_uvoz_10" model="account.tax.template">
-        <field name="description">Plaćeni PDV 10% pri uvozu dobara</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">10% uvoz dobara</field>
-        <field name="amount">10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="10"/>
-        <field name="tax_group_id" ref="tax_group_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14020'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14020'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_uvoz_0" model="account.tax.template">
-        <field name="description">Plaćeni PDV 0% pri uvozu dobara</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">0% uvoz dobara</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_0"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {'repartition_type': 'tax'}),
-        ]"/>
-    </record>
-    <record id="rrif_pp_ino_25" model="account.tax.template">
-        <field name="description">Plaćeni PDV 25% na usluge inozemnih poduzetnika</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% ino. usluge</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14033'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14033'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_25_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_ino_10" model="account.tax.template">
-        <field name="description">Plaćeni PDV 10% na usluge inozemnih poduzetnika</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">10% ino. usluge</field>
-        <field name="amount">10</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_10"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14030'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_uvozu_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14030'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_placeni_usluge_10_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_ppr2_25" model="account.tax.template">
-        <field name="description">25% R-2 dobavljač</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">25% R-2 dobavljač</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif1409'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif1409'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_uvoz_samopdv_25" model="account.tax.template">
-        <field name="description">Samo PDV kod uvoza 25%</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">Samo PDV kod uvoza 25%</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_25_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_25_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_pp_uvoz_samopdv_25usl" model="account.tax.template">
-        <field name="description">Samo PDV kod uvoza 25% usluge</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">Samo PDV kod uvoza 25% usluge</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_usluge_25_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_other_tag')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_usluge_25_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_ppdnp1_3070_1" model="account.tax.template">
-        <field name="description">pp 30% Nepriznat 70% Priznat</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">pp 30% Nepriznat 70% Priznat</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14002'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14002'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_ppdnp1_7030_1" model="account.tax.template">
-        <field name="description">pp 70% Nepriznat 30% Priznat</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">pp 70% Nepriznat 30% Priznat</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14002'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif14002'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_tax_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_ppdnp1_3070_1_r2" model="account.tax.template">
-        <field name="description">R2 pp 30% Nepriznat 70% Priznat</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">R2 pp 30% Nepriznat 70% Priznat</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif1408'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif1408'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-    </record>
-    <record id="rrif_ppdnp1_7030_1_r2" model="account.tax.template">
-        <field name="description">R2 pp 70% Nepriznat 30% Priznat</field>
-        <field name="chart_template_id" ref="l10n_hr_chart_template_rrif"/>
-        <field name="name">R2 pp 70% Nepriznat 30% Priznat</field>
-        <field name="amount">25</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="sequence" eval="100"/>
-        <field name="tax_group_id" ref="tax_group_25"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif1408'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'plus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_70_tag'), ref('l10n_hr.account_tax_report_line_pretporez_25_30_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 30,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif1408'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_pretporez_koji_neplaceni_tag')],
-            }),
-            (0,0, {
-                'factor_percent': 70,
-                'repartition_type': 'tax',
-                'account_id': ref('kp_rrif4199'),
-                'minus_report_expression_ids': [ref('l10n_hr.account_tax_report_line_nepriznati_pretporez_25_tax_tag')],
-            }),
-        ]"/>
-    </record>
+
 </odoo>
