@@ -1,5 +1,6 @@
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { serializeDateTime } from "@web/core/l10n/dates";
 import { proxy } from "@odoo/owl";
 
 export class StockReportSearchPanel extends SearchPanel {
@@ -36,7 +37,7 @@ export class StockReportSearchPanel extends SearchPanel {
 
     onDateApply(date) {
         this.dateState.inventoryDate = date;
-        const isoDate = date ? date.toUTC().toFormat("yyyy-MM-dd HH:mm:ss") : false;
+        const isoDate = date ? serializeDateTime(date) : false;
         this.env.searchModel.applyDateContext(isoDate);
     }
 
