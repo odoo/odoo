@@ -7,8 +7,9 @@
                 <label class="small fw-semibold text-muted mb-1">
                     Check In
                 </label>
-                <DateTimeField name="'check_in'" record="this.props.record"
-                    readonly="!this.props.record.data.can_edit" showSeconds="false" rounding="1"/>
+                <Field name="'check_in'" record="this.props.record"
+                    fieldInfo="this.props.record.activeFields.check_in"
+                    readonly="!this.props.record.data.can_edit" class="'d-block'"/>
                 <div class="small text-muted text-break" t-if="this.props.record.data.in_location">
                     <t t-out="this.props.record.data.in_location"/>
                 </div>
@@ -31,7 +32,7 @@
                     readonly="!this.props.record.data.can_edit" class="'w-100'"/>
             </div>
         </div>
-        <div t-if="this.isDirty" class="d-flex justify-content-end gap-2 mt-2">
+        <div class="d-flex gap-2 mt-2">
             <button type="button" class="btn btn-sm btn-primary"
                 t-on-click="() => this.props.onSave(this.props.record)">
                 Save
