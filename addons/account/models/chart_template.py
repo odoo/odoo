@@ -717,8 +717,8 @@ class AccountChartTemplate(models.AbstractModel):
                         del record_vals[key]
 
                 # Manage ids given as database id or xml_id
-                if isinstance(xml_id, str) and (record := self.ref(xml_id, raise_if_not_found=False)):
-                    xml_id = record.id
+                # if isinstance(xml_id, str) and (record := self.ref(xml_id, raise_if_not_found=False)):
+                #     xml_id = record.id
 
                 if isinstance(xml_id, int):
                     record_vals['id'] = xml_id
