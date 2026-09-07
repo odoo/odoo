@@ -429,8 +429,8 @@ class PaymentProvider(models.Model):
 
     @api.constrains("capture_manually")
     def _check_manual_capture_supported_by_payment_methods(self):
-        if self.capture_manually:
-            incompatible_pms = self.payment_method_ids.filtered(
+        for provider in self.filtered("capture_manually"):
+            incompatible_pms = provider.payment_method_ids.filtered(
                 lambda method: (
                     method.active
                     and not method.primary_payment_method_id
@@ -540,15 +540,73 @@ class PaymentProvider(models.Model):
     def copy(self, default=None):
         """Override of `base` to copy the payment methods linked to the providers."""
         new_providers = super().copy(default=default)
-        for src_provider, new_provider in zip(self, new_providers):
-            src_primary_pms = src_provider.payment_method_ids.filtered("is_primary")
-            new_primary_pms = src_primary_pms.copy({"provider_id": new_provider.id})
-            for src_primary_pm, new_primary_pm in zip(src_primary_pms, new_primary_pms):
-                src_primary_pm.brand_ids.copy({
-                    "provider_id": new_provider.id,
+        self._copy_payment_methods(dict(zip(self, new_providers)))
+        return new_providers
+
+    def _copy_for_companies(self, companies):
+        """Copy the providers and their payment methods to `companies` in batches.
+
+        :param res.company companies: The companies to copy the providers to
+        :return: The new providers
+        :rtype: payment.provider
+        """
+        # Build the create values of one copy of each provider per company
+        create_vals_list = []
+        for company in companies:
+            create_vals_list.extend(self.copy_data({"company_id": company.id}))
+        if not create_vals_list:
+            return self.browse()
+
+        # Create the new providers, then copy the payment methods onto them
+        new_providers = self.create(create_vals_list)
+        self._copy_payment_methods({
+            provider: new_providers[index :: len(self)] for index, provider in enumerate(self)
+        })  # `new_providers` repeats the provider list once per company in the same order as `self`
+        return new_providers
+
+    def _copy_payment_methods(self, new_providers_by_source_provider):
+        """Copy the payment methods of the providers to their copies.
+
+        The primary payment methods of all the providers are created in one batch, then their brands
+        in another.
+
+        :param dict new_providers_by_source_provider: The copies of each provider, as a mapping of
+                                                      `payment.provider` records
+        :return: The new primary and brand payment methods
+        :rtype: payment.method
+        """
+        PaymentMethod = self.env["payment.method"]
+
+        # Build the create values of the new primary payment methods, keeping their sources in the
+        # same order to pair them with the created records
+        source_primary_pms = []
+        primary_payment_method_vals_list = []
+        for source_provider in self:
+            new_providers = new_providers_by_source_provider[source_provider]
+            for source_primary_pm in source_provider.payment_method_ids.filtered("is_primary"):
+                for new_provider in new_providers:
+                    create_vals = source_primary_pm.copy_data({"provider_id": new_provider.id})[0]
+                    source_primary_pms.append(source_primary_pm)
+                    primary_payment_method_vals_list.append(create_vals)
+
+        if not primary_payment_method_vals_list:
+            return PaymentMethod
+
+        new_primary_pms = PaymentMethod.create(primary_payment_method_vals_list)
+
+        # Build the create values of the brands of each new primary payment method
+        brand_vals_list = []
+        for source_primary_pm, new_primary_pm in zip(source_primary_pms, new_primary_pms):
+            for source_brand in source_primary_pm.brand_ids:
+                create_vals = source_brand.copy_data()[0]
+                create_vals.update({
+                    "provider_id": new_primary_pm.provider_id.id,
                     "primary_payment_method_id": new_primary_pm.id,
                 })
-        return new_providers
+                brand_vals_list.append(create_vals)
+        new_brands = PaymentMethod.create(brand_vals_list) if brand_vals_list else PaymentMethod
+
+        return new_primary_pms + new_brands
 
     def copy_data(self, default=None):
         default = dict(default or {})
