@@ -19,7 +19,7 @@ declare module "services" {
     import { sortableService } from "@web/core/utils/sortable_plugin";
     import { publicInteractionService } from "@web/public/interaction_service";
     import { viewService } from "@web/views/view_service";
-    import { actionService } from "@web/webclient/actions/action_service";
+    import { actionService } from "@web/webclient/actions/action_plugin";
     import { profilingService } from "@web/webclient/debug/profiling/profiling_service";
     import { menuService } from "@web/webclient/menus/menu_service";
     import { lazySession } from "@web/webclient/session_service";

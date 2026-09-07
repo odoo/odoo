@@ -5,7 +5,7 @@ import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useSetupAction } from "@web/search/action_hook";
 import { Layout } from "@web/search/layout";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 function processLine(line, lines=[], keepFolded=true) {
     return { ...line, lines: lines, isFolded: keepFolded };
