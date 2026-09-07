@@ -65,7 +65,7 @@
                 </group>
                 <notebook colspan="4">
                     <page string="Products" name="products">
-                      <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" create="not is_refund" mode="list,kanban">
+                      <field name="lines" widget="product_label_section_and_note_field_o2m" colspan="4" nolabel="1" readonly="state != 'draft'" create="not is_refund" mode="list,kanban">
                             <kanban class="o_kanban_mobile">
                                 <t t-name="card" class="row g-0">
                                     <aside class="col-2 pe-3">
@@ -86,9 +86,9 @@
                                 </t>
                             </kanban>
                             <list name="order_line_list" string="Order lines" editable="bottom">
-                                <field name="name" column_invisible="True"/>
+                                <field name="name"/>
                                 <field name="full_product_name" optional="hide" readonly="1"/>
-                                <field name="product_id" widget="product_label_section_and_note_field" readonly="parent.is_refund"/>
+                                <field name="product_id" widget="pos_product_many2one" readonly="parent.is_refund"/>
                                 <field name="is_edited" readonly="1" />
                                 <field name="qty"/>
                                 <field name="customer_note" optional="hide"/>
@@ -105,6 +105,7 @@
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
                                 <field name="currency_id" column_invisible="True"/>
                                 <field name="refunded_qty" optional="hide" />
+                                <field name="custom_attribute_value_ids" optional="hide" readonly="1" widget="many2many_tags"/>
                             </list>
                             <form string="Order lines">
                                 <group col="4">

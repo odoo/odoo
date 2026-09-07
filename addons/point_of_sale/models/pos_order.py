@@ -1222,8 +1222,7 @@ class PosOrder(models.Model):
         product_id = product.id if product else False
         if product:
             desc = product.description_sale
-            name = f"{product.display_name} {desc}" if desc else product.display_name
-
+            name = base_line.get('name') or (f"{product.display_name} {desc}" if desc else product.display_name)
         if self.config_id._is_quantities_set():
             quantity = base_line['_aggregated_quantity']
             price_unit = base_line['price_unit'] / quantity if quantity else base_line['price_unit']
@@ -1315,7 +1314,7 @@ class PosOrder(models.Model):
                 })
             elif line.product_id.type != 'combo':
                 desc = product.description_sale
-                name = f"{product.display_name} {desc}" if desc else product.display_name
+                name = base_line.get('name') or (f"{product.display_name} {desc}" if desc else product.display_name)
                 to_create.append({
                     'account.move.line': {
                         'name': name,
