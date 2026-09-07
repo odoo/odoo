@@ -1,6 +1,7 @@
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.tests.common import new_test_user
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.sale_project.tests.common import TestSaleProjectCommon
@@ -195,3 +196,64 @@ class TestSaleProjectServices(TestSaleProjectCommon):
             offered_to(self.partner_a),
             "An unrelated customer's items must not leak into the picker.",
         )
+
+    def test_sales_order_items_sits_in_the_project_top_bar(self):
+        """The top bar must offer Sales Order Items beside Sales Orders.
+
+        The bar already cross-navigates a project's Sales Orders, Invoices and
+        Vendor Bills from both the task view and the dashboard; the sales order
+        items were reachable only from the project form's stat button
+        (``models/project_project.py``), so reaching them meant leaving
+        whichever list the user was already in.
+        """
+        salesman = new_test_user(
+            self.env,
+            login="sale_project_salesman",
+            groups="base.group_user,project.group_project_manager"
+            ",sales_team.group_sale_salesman_all_leads",
+        )
+        parent_actions = (
+            "project.act_project_project_2_project_task_all",
+            "project.project_update_all_action",
+        )
+
+        def visible_methods(user, project, parent_action):
+            bar = (
+                self.env["ir.embedded.actions"]
+                .with_user(user)
+                .with_context(active_id=project.id, active_model="project.project")
+                .search(
+                    [
+                        ("parent_res_model", "=", "project.project"),
+                        ("parent_action_id", "=", self.env.ref(parent_action).id),
+                    ]
+                )
+            )
+            return bar.filtered("is_visible").mapped("python_method")
+
+        for parent_action in parent_actions:
+            methods = visible_methods(salesman, self.project_global, parent_action)
+            # Anchor: the neighbour entries are visible, so a miss below means
+            # the new entry is absent -- not that the whole bar is hidden.
+            self.assertIn("action_view_sos", methods)
+            self.assertIn(
+                "action_view_sols",
+                methods,
+                "Sales Order Items must be in the bar of %s." % parent_action,
+            )
+
+        # The entry is gated, like its neighbours: not on a non-billable
+        # project, and not for a user outside the sales group.
+        non_billable = self.env["project.project"].create(
+            {"name": "Not billable", "allow_billable": False}
+        )
+        plain = new_test_user(
+            self.env,
+            login="sale_project_plain",
+            groups="base.group_user,project.group_project_manager",
+        )
+        for user, project in ((salesman, non_billable), (plain, self.project_global)):
+            self.assertNotIn(
+                "action_view_sols",
+                visible_methods(user, project, parent_actions[0]),
+            )
