@@ -319,6 +319,38 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             .mapped('peppol_message_uuid')
         )
 
+    def _peppol_ack_messages(self, message_uuids):
+        if message_uuids:
+            self._call_peppol_proxy(
+                endpoint=self._get_peppol_proxy_endpoint('1/ack'),
+                params={'message_uuids': message_uuids},
+            )
+
+    def _filter_duplicate_messages(self, received_messages):
+        self.ensure_one()
+
+        # Edge case: self-addressed messages (sender == receiver), i.e. a company genuinely
+        # invoicing itself. The outgoing invoice already carries the message UUID, so the
+        # duplicate check would wrongly discard the incoming document.
+        # Exclude those messages from the check so the vendor bill can still be created.
+        uuids_to_check = [
+            message['uuid'] for message in received_messages
+            if message.get('sender') and message['sender'] != message['receiver']
+        ]
+        # Acknowledge the duplicates on IAP side.
+        if duplicate_message_uuids := self._peppol_get_duplicate_message_uuids(uuids_to_check):
+            self._peppol_ack_messages(list(duplicate_message_uuids))
+            _logger.info(
+                "Messages with UUID %s could not be imported because they are identified as duplicates",
+                ', '.join(duplicate_message_uuids)
+            )
+
+        # Remove the duplicates
+        return [
+            message['uuid'] for message in received_messages
+            if message['uuid'] not in duplicate_message_uuids
+        ]
+
     def _peppol_get_new_documents(self, skip_no_journal=False):
         # Context added to not break stable policy: useful to tweak on databases processing large invoices
         job_count = self.env.context.get('peppol_crons_job_count') or BATCH_SIZE
@@ -353,30 +385,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
             received_messages = messages.get('messages', [])
             has_more = messages.get('has_more', False)
-            # Edge case: self-addressed messages (sender == receiver), i.e. a company genuinely
-            # invoicing itself. The outgoing invoice already carries the message UUID, so the
-            # duplicate check would wrongly discard the incoming document.
-            # Exclude those messages from the check so the vendor bill can still be created.
-            uuids_to_check = [
-                message['uuid'] for message in received_messages
-                if message.get('sender') and message['sender'] != message['receiver']
-            ]
-            # Acknowledge the duplicates on IAP side.
-            if duplicate_message_uuids := edi_user._peppol_get_duplicate_message_uuids(uuids_to_check):
-                edi_user._call_peppol_proxy(
-                    endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
-                    params={'message_uuids': list(duplicate_message_uuids)},
-                )
-                _logger.info(
-                    "Messages with UUID %s could not be imported because they are identified as duplicates",
-                    ', '.join(duplicate_message_uuids)
-                )
-
-            # Remove the duplicates
-            message_uuids = [
-                message['uuid'] for message in received_messages
-                if message['uuid'] not in duplicate_message_uuids
-            ]
+            message_uuids = edi_user._filter_duplicate_messages(received_messages)
             if not message_uuids:
                 continue
 
@@ -397,10 +406,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             if not (modules.module.current_test or tools.config['test_enable']):
                 self.env.cr.commit()
             if processed_uuids:
-                edi_user._call_peppol_proxy(
-                    endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
-                    params={'message_uuids': processed_uuids},
-                )
+                edi_user._peppol_ack_messages(processed_uuids)
                 edi_user._peppol_post_process_new_messages(moves)
 
         if need_retrigger:
@@ -414,25 +420,31 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         document_content = content["document"]
         return self._decrypt_data(document_content, enc_key)
 
+    def _create_peppol_attachment(self, content):
+        fileextension, mimetype = self._peppol_get_filetype(content)
+        filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+        return self.env["ir.attachment"].create({
+            "name": f"{filename}.{fileextension}",
+            "raw": self._peppol_get_decoded_document(content),
+            "type": "binary",
+            "mimetype": mimetype,
+        })
+
     def _peppol_process_new_messages(self, messages):
         self.ensure_one()
         processed_uuids = []
         moves = self.env['account.move']
         for uuid, content in messages.items():
-            fileextension, mimetype = self._peppol_get_filetype(content)
-            filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
-            decoded_document = self._peppol_get_decoded_document(content)
-            attachment = self.env["ir.attachment"].create({
-                "name": f"{filename}.{fileextension}",
-                "raw": decoded_document,
-                "type": "binary",
-                "mimetype": mimetype,
-            })
+            attachment = self._create_peppol_attachment(content)
             try:
                 if uuid_move := self.with_context(peppol_sender_identifier=content.get('sender'))._peppol_import_invoice(attachment, content['state'], uuid):
                     # Only acknowledge when we saved the document somewhere
                     processed_uuids.append(uuid)
-                    moves += uuid_move.get('move', self.env['account.move'])
+                    if move := uuid_move.get('move'):
+                        moves += move
+                        error = content.get('error')
+                        if error and error.get('code') != 702:
+                            move._message_log(body=self._peppol_get_message_status_error_body(move, error))
             except Exception as e:  # noqa: BLE001
                 _logger.error('Error while processing the Peppol document with uuid %s: %s', uuid, e)
         return processed_uuids, moves
@@ -461,12 +473,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             )
 
             processed_message_uuids = edi_user._peppol_process_messages_status(messages_to_process, uuid_to_record)
+            edi_user._peppol_ack_messages(processed_message_uuids)
 
-            if processed_message_uuids:
-                edi_user._call_peppol_proxy(
-                    endpoint=edi_user._get_peppol_proxy_endpoint('1/ack'),
-                    params={'message_uuids': processed_message_uuids},
-                )
         if need_retrigger:
             self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(
                 fields.Datetime.add(fields.Datetime.now(), minutes=5),
