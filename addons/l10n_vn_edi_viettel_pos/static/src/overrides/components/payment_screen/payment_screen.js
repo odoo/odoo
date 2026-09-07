@@ -7,15 +7,6 @@ import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 
 patch(PaymentScreen.prototype, {
-    onMounted() {
-        super.onMounted(...arguments);
-        // The base onMounted auto-enables invoice for refund orders when the original
-        // order was invoiced. We need to reset it here so the
-        // user will manually enable it and provide a reason.
-        if (this.pos.isVietnamCompany() && this.currentOrder.isRefund) {
-            this.currentOrder.setToInvoice(false);
-        }
-    },
     async toggleIsToInvoice() {
         if (
             this.pos.isVietnamCompany() &&
@@ -32,5 +23,14 @@ patch(PaymentScreen.prototype, {
             }
         }
         super.toggleIsToInvoice(...arguments);
+    },
+    shouldInvoiceRefund(order) {
+        // The base onMounted auto-enables invoice for refund orders when the original
+        // order was invoiced. We need to reset it here so the
+        // user will manually enable it and provide a reason.
+        if (this.pos.isVietnamCompany() && order.isRefund) {
+            return false;
+        }
+        return super.shouldInvoiceRefund(order);
     },
 });
