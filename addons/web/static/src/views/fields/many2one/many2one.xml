@@ -32,7 +32,7 @@
                 <div class="o_field_many2one_selection" t-ref="this.rootRef">
                     <Many2XAutocomplete t-props="this.many2XAutocompleteProps"/>
                     <t t-if="this.hasLinkButton">
-                        <button class="o_external_button btn btn-link text-action px-1 py-0" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')">
+                        <button class="o_external_button btn btn-light btn-sm d-inline-flex align-items-center py-0 ms-1" draggable="false" tabindex="-1" type="button" aria-label="Internal link" data-tooltip="Internal link" t-custom-click="(_, isMiddleClick) => this.openRecord(isMiddleClick ? 'tab' : this.env.inDialog ? 'dialog' : 'action')">
                             <i class="oi" t-att-data-icon="this.env.inDialog ? 'open_in_browser' : 'east'"/>
                         </button>
                     </t>
