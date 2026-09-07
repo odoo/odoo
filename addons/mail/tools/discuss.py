@@ -224,6 +224,7 @@ class Store:
         self._internal_store = None
         self.__version = None
         self._auto_send = True
+        self._target_reads = None
         self.__try_update_version_from_records(bus_channel)
         assert bus_channel is not None or not (notification_payload or notification_type), (
             "Notification parameters only make sense when a bus channel is passed."
@@ -267,8 +268,9 @@ class Store:
         if not records:
             return self
         # call _format_fields before checking identifier to always compare the final shape
-        field_list = self._format_fields(fields, records, fields_params)
-        identifier = Store._deep_freeze((records.env, records, field_list, as_thread))
+        field_list, identifier = self._format_fields_with_identity(
+            fields, records, fields_params, as_thread,
+        )
         if identifier in self.already_done:
             return self
         self.already_done.add(identifier)
@@ -449,6 +451,48 @@ class Store:
             raise TypeError(f"unexpected fields format: '{fields}' for records: '{records}'")
         return field_list
 
+    def _format_fields_with_identity(self, fields, records, fields_params, as_thread):
+        """Return the expanded field list and the identity used to deduplicate `add` calls.
+
+        Both are reused between the stores of the same bus batch when the same records and
+        fields are sent to several targets, which is what a fan out on `_bus_channels()` does.
+        A field list may depend on its target, so a candidate is only reused when every target
+        value it read while being built has the same value for the current store.
+        """
+        cache = records.env.cr.precommit.data.get("mail.store.field_lists")
+        key = None
+        if cache is not None and isinstance(fields, str):
+            key = (
+                records.env,
+                records,
+                fields,
+                Store._deep_freeze(fields_params),
+                as_thread,
+                self._internal_store is not None,
+            )
+            if candidates := cache.get(key):
+                probe = Store.FieldList(self, records)
+                for target_reads, field_list, identity in candidates:
+                    if all(read(probe) == value for read, value in target_reads):
+                        return field_list, identity
+        previous_reads, self._target_reads = self._target_reads, {}
+        try:
+            field_list = self._format_fields(fields, records, fields_params)
+            identity = Store._deep_freeze((records.env, records, field_list, as_thread))
+            target_reads = tuple(self._target_reads.items())
+        finally:
+            self._target_reads = previous_reads
+        if key is not None:
+            cache.setdefault(key, []).append((target_reads, field_list, identity))
+        return field_list, identity
+
+    def _record_target_read(self, read, value):
+        """Remember that a field list called `read` on the target while being built, so that
+        `_format_fields_with_identity` knows what to compare before reusing it."""
+        if self._target_reads is not None:
+            self._target_reads[read] = value
+        return value
+
     @staticmethod
     def _get_fields_method(records, method_name):
         if (
@@ -481,7 +525,7 @@ class Store:
                 if isinstance(field, dict):
                     data_list.append(field)
                 elif not field.predicate or field.predicate(record):
-                    data_list.append({field.field_name: field._get_value(record)})
+                    data_list.append({field.field_name: field._get_value(record, store=self)})
 
     def _get_record_index(self, model_name, data_list):
         # regroup indentifying fields into values as they might be spread accross data_list entries
@@ -584,7 +628,7 @@ class Store:
             self.sudo = sudo
             self.value = value
 
-        def _get_value(self, record):
+        def _get_value(self, record, *, store=None):
             if self.value is NO_VALUE and record is not None and self.field_name in record._fields:
                 return (record.sudo() if self.sudo else record)[self.field_name]
             if callable(self.value):
@@ -648,22 +692,28 @@ class Store:
                 self.fields = self.store._format_fields(self.fields, self.records, self.fields_params)
                 self.fields_params = None
 
-        def _get_value(self, record):
+        def _get_value(self, record, *, store=None):
             records = super()._get_value(record)
             if records is None and self.value is NO_VALUE:
                 res_model_field = "res_model" if "res_model" in record._fields else "model"
                 if self.field_name == "thread" and "thread" not in record._fields:
                     if (res_model := record[res_model_field]) and (res_id := record["res_id"]):
                         records = record.env[res_model].browse(res_id)
-            return self._copy_with_records(records, calling_record=record)
+            return self._copy_with_records(records, calling_record=record, store=store)
 
-        def _copy_with_records(self, records, calling_record):
-            """Returns a new relation with the given records instead of the field name."""
+        def _copy_with_records(self, records, calling_record, store=None):
+            """Returns a new relation with the given records instead of the field name.
+
+            ``store`` is the store the relation is being added to, which is not the store the
+            relation was built for when the field list is reused across the bus targets of a
+            batch.
+            """
+            store = store or self.store
             assert self.field_name and self.records is None
             assert not self.dynamic_fields or calling_record
             is_fake_field = self.value is not NO_VALUE and not isinstance(records, models.Model)
             if not is_fake_field and records:
-                field_list = self.store._format_fields(self.fields, records, self.fields_params)
+                field_list = store._format_fields(self.fields, records, self.fields_params)
                 if self.dynamic_fields:
                     if (
                         isinstance(self.dynamic_fields, str)
@@ -678,7 +728,7 @@ class Store:
             else:
                 field_list = []  # avoid calling field methods (which potentially does queries) on empty records
             return self.__class__(
-                self.store,
+                store,
                 None if is_fake_field else records,
                 field_list,
                 as_thread=self.as_thread,
@@ -781,10 +831,10 @@ class Store:
             self.mode = mode
             self.sort = sort
 
-        def _copy_with_records(self, records, calling_record):
+        def _copy_with_records(self, records, calling_record, store=None):
             if records is None:
                 records = []
-            res = super()._copy_with_records(records, calling_record)
+            res = super()._copy_with_records(records, calling_record, store)
             res.mode = self.mode
             res.sort = self.sort
             return res
@@ -896,20 +946,33 @@ class Store:
         def is_for_current_user(self):
             """Return whether the current target is the current user or guest of the given env.
             If there is no target at all, this is always True."""
+            return self.store._record_target_read(
+                Store.FieldList._is_for_current_user, self._is_for_current_user(),
+            )
+
+        def _is_for_current_user(self):
             if self.target.channel is None and self.target.subchannel is None:
                 return True
             env = self.records.env
-            user = self.target_user()
-            guest = self.target_guest()
-            return self.target.subchannel is None and (
-                (user and user == env.user and not env.user._is_public())
-                or (guest and guest == env["mail.guest"]._get_guest_from_context())
+            user = self._target_user()
+            guest = self._target_guest()
+            return bool(
+                self.target.subchannel is None
+                and (
+                    (user and user == env.user and not env.user._is_public())
+                    or (guest and guest == env["mail.guest"]._get_guest_from_context())
+                ),
             )
 
         def is_for_internal_users(self):
             """Return whether the current target implies the information will only be sent to
             internal users. If there is no target at all, the check is based on the current
             user of the env."""
+            return self.store._record_target_read(
+                Store.FieldList._is_for_internal_users, self._is_for_internal_users(),
+            )
+
+        def _is_for_internal_users(self):
             env = self.records.env
             bus_record = self.target.channel
             if bus_record is None and self.target.subchannel is None:
@@ -937,6 +1000,11 @@ class Store:
             bus is actually targetting a guest, or the current guest from env if there is no bus
             target at all but there is a guest in the env.
             """
+            return self.store._record_target_read(
+                Store.FieldList._target_guest, self._target_guest(),
+            )
+
+        def _target_guest(self):
             env = self.records.env
             records = self.target.channel
             if self.target.channel is None and self.target.subchannel is None:
@@ -947,6 +1015,11 @@ class Store:
             """Return target user (if any). Target user is either the current bus target if the
             bus is actually targetting a user, or the current user from env if there is no bus
             target at all but there is a user in the env."""
+            return self.store._record_target_read(
+                Store.FieldList._target_user, self._target_user(),
+            )
+
+        def _target_user(self):
             env = self.records.env
             records = self.target.channel
             if self.target.channel is None and self.target.subchannel is None:
