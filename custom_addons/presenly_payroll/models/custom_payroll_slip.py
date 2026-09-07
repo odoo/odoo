@@ -61,18 +61,26 @@ class CustomPayrollSlip(models.Model):
         return records
 
     def _presenly_overtime_domain(self):
-        """Periode payroll: tgl-1 .. akhir bulan (calendar)."""
+        """Periode payroll: tgl-1 .. akhir bulan (calendar).
+
+        Jika slip punya work_location_id, filter hanya request di lokasi tsb
+        (mendukung slip multi-lokasi). Jika null, agregat semua lokasi.
+        """
+        self.ensure_one()
         year = self.payroll_batch_id.periode_tahun
         month = int(self.payroll_batch_id.periode_bulan)
         start = f'{year}-{month:02d}-01'
         end_day = calendar.monthrange(year, month)[1]
         end = f'{year}-{month:02d}-{end_day:02d}'
-        return [
+        domain = [
             ('employee_id', '=', self.employee_id.id),
             ('state', '=', 'approved'),
             ('date', '>=', start),
             ('date', '<=', end),
         ]
+        if self.work_location_id:
+            domain.append(('work_location_id', '=', self.work_location_id.id))
+        return domain
 
     @api.depends('presenly_approved_hours', 'overtime_override')
     def _compute_attendance_overtime(self):

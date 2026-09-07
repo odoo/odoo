@@ -43,6 +43,10 @@ class CustomPayrollSlipDetail(models.Model):
     )
     description = fields.Char(string='Description')
     currency_id = fields.Many2one(related='slip_gaji_id.currency_id', string='Currency')
+    work_location_id = fields.Many2one(
+        related='slip_gaji_id.work_location_id',
+        string='Work Location', index=True, readonly=True,
+    )
 
     @api.onchange('component_type', 'slip_gaji_id')
     def _onchange_overtime(self):

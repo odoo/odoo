@@ -31,10 +31,13 @@
                         <span>Employees to Process</span>
                     </div>
                     <field name="preview_line_ids" nolabel="1" readonly="1" colspan="2">
-                        <list string="Preview" decoration-muted="will_skip == True">
+                        <list string="Preview" decoration-muted="will_skip == True"
+                              decoration-info="work_location_count > 1">
                             <field name="employee_id"/>
-                            <field name="department_id"/>
-                            <field name="job_id"/>
+                            <field name="work_location_id"/>
+                            <field name="work_location_count" string="Locs"/>
+                            <field name="department_id" optional="hide"/>
+                            <field name="job_id" optional="hide"/>
                             <field name="contract_wage" widget="monetary"/>
                             <field name="will_skip" string="Will Skip"/>
                             <field name="currency_id" column_invisible="1"/>
