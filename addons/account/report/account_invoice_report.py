@@ -5,6 +5,14 @@ from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 from functools import lru_cache
 
+MOVE_TYPES = [
+    ("out_invoice", "Customer Invoice"),
+    ("in_invoice", "Vendor Bill"),
+    ("out_refund", "Customer Credit Note"),
+    ("in_refund", "Vendor Credit Note"),
+    ("out_receipt", "Sales Receipt"),
+    ("in_receipt", "Purchase Receipt"),
+]
 
 class AccountInvoiceReport(models.Model):
     _name = "account.invoice.report"
@@ -22,12 +30,7 @@ class AccountInvoiceReport(models.Model):
     commercial_partner_id = fields.Many2one('res.partner', string='Main Partner')
     country_id = fields.Many2one('res.country', string="Country")
     invoice_user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
-    move_type = fields.Selection([
-        ('out_invoice', 'Customer Invoice'),
-        ('in_invoice', 'Vendor Bill'),
-        ('out_refund', 'Customer Credit Note'),
-        ('in_refund', 'Vendor Credit Note'),
-        ], readonly=True)
+    move_type = fields.Selection(MOVE_TYPES, readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('posted', 'Open'),
@@ -141,8 +144,8 @@ class AccountInvoiceReport(models.Model):
 
     @api.model
     def _where(self):
-        return '''
-            WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
+        return f'''
+            WHERE move.move_type IN ({','.join(f"'{t[0]}'" for t in MOVE_TYPES)})
                 AND line.account_id IS NOT NULL
                 AND line.display_type = 'product'
         '''
