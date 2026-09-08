@@ -868,9 +868,23 @@ export class TicketScreen extends Component {
             .map((info) => info[0]);
 
         if (idsNotInCacheOrOutdated.length > 0) {
+<<<<<<< 63b7407b3cb02603e9d0f57b9f336c1c9af3074d
             await this.pos.data.loadServerOrders([
                 ["id", "in", Array.from(new Set(idsNotInCacheOrOutdated))],
             ]);
+||||||| 42730b1c5edecce1f9094a388f6b0765db9dff6e
+            await this.pos.data.callRelated("pos.order", "get_ticket_screen_order_data", [
+                Array.from(new Set(idsNotInCacheOrOutdated)),
+            ]);
+=======
+            const records = await this.pos.data.callRelated(
+                "pos.order",
+                "get_ticket_screen_order_data",
+                [Array.from(new Set(idsNotInCacheOrOutdated))]
+            );
+            // Reloaded variants come back with available_in_pos = true.
+            await this.pos.processProductAttributesByProducts(records["product.product"]);
+>>>>>>> cdf2eff2357358f11b07c7b50ccb6824c394c1b0
         }
     }
     //#endregion
