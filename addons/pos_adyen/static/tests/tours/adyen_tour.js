@@ -5,6 +5,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
+
 const response_from_adyen_on_pos_webhook = (session, ServiceID) => ({
     SaleToPOIResponse: {
         MessageHeader: {
@@ -111,4 +112,107 @@ registry.category("web_tour.tours").add("PosAdyenTour", {
 
             ReceiptScreen.isShown(),
         ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosAdyenCancelFailTour", {
+    steps: () => {
+        let originalServiceId;
+        return [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Adyen"),
+            {
+                content: "Waiting for Adyen payment to be processed",
+                trigger: ".electronic_status:contains('Waiting for card')",
+                run: () => {
+                    originalServiceId = posmodel.getPendingPaymentLine("adyen").terminalServiceId;
+                },
+            },
+            ...PaymentScreen.clickCancelButton(),
+            {
+                content: "The terminal rejected the abort: the line must stay open, not be dropped",
+                trigger: ".electronic_status:contains('Waiting for card')",
+            },
+            Dialog.confirm(),
+            {
+                content: "Adyen eventually confirms the payment that could not be cancelled",
+                trigger: ".electronic_status:contains('Waiting for card')",
+                run: async () => {
+                    const resp = await fetch("/pos_adyen/notification", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(
+                            response_from_adyen_on_pos_webhook(
+                                posmodel.config.current_session_id.id,
+                                originalServiceId
+                            )
+                        ),
+                    });
+                    if (!resp.ok) {
+                        throw new Error("Failed to notify Adyen webhook");
+                    }
+                },
+            },
+            ReceiptScreen.isShown(),
+        ].flat();
+    },
+});
+
+registry.category("web_tour.tours").add("PosAdyenOrphanNotificationTour", {
+    steps: () => {
+        let originalServiceId;
+        return [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Adyen"),
+            {
+                content: "Waiting for Adyen payment to be processed",
+                trigger: ".electronic_status:contains('Waiting for card')",
+                run: () => {
+                    originalServiceId = posmodel.getPendingPaymentLine("adyen").terminalServiceId;
+                },
+            },
+            // Cancel succeeds this time (terminal accepts the abort): the
+            // line is now unreachable for any future Adyen result.
+            ...PaymentScreen.clickCancelButton(),
+            {
+                content: "the line is now marked as cancelled",
+                trigger: ".electronic_status:contains('Transaction cancelled')",
+            },
+            {
+                content: "delete the now-unreachable payment line",
+                trigger: ".paymentlines .paymentline .delete-button",
+                run: "click",
+            },
+            {
+                content: "the payment line is gone",
+                trigger: ".paymentlines-empty",
+            },
+            {
+                content: "Adyen confirms the payment that was in fact never cancelled",
+                trigger: ".paymentlines-empty",
+                run: async () => {
+                    const resp = await fetch("/pos_adyen/notification", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(
+                            response_from_adyen_on_pos_webhook(
+                                posmodel.config.current_session_id.id,
+                                originalServiceId
+                            )
+                        ),
+                    });
+                    if (!resp.ok) {
+                        throw new Error("Failed to notify Adyen webhook");
+                    }
+                },
+            },
+            Dialog.is({ title: "Unmatched Adyen payment" }),
+            Dialog.confirm(),
+        ].flat();
+    },
 });
