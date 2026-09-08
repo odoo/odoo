@@ -134,7 +134,7 @@ export class LeaveStatsComponent extends Component {
             "hr.work.entry.type",
             "get_allocation_data_request",
             [this.state.date_from],
-            { context: { employee_id: employee.id } }
+            { context: { employee_id: employee.id }, same_year_only: true }
         );
         this.state.rawAllocationData = Object.fromEntries(
             allocation_data.map(([, vals, , id]) => [id, vals])

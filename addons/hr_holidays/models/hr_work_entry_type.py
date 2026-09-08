@@ -485,7 +485,7 @@ been taken for this time off type. Changing it now would affect existing employe
         ], limit=1))
 
     @api.model
-    def get_allocation_data_request(self, target_date=None, hidden_allocations=True):
+    def get_allocation_data_request(self, target_date=None, hidden_allocations=True, same_year_only=False):
         employee = self.env["hr.employee"]._get_contextual_employee()
         if not employee:
             return defaultdict(list)
@@ -493,7 +493,7 @@ been taken for this time off type. Changing it now would affect existing employe
         if not hidden_allocations:
             domain.append(('hide_on_dashboard', '=', False))
         work_entry_types = self.search(domain, order='id')
-        employee_work_entry_type_infos = work_entry_types.get_allocation_data(employee, target_date)[
+        employee_work_entry_type_infos = work_entry_types.get_allocation_data(employee, target_date, same_year_only=same_year_only)[
             employee
         ]
         # We only need to filter allocation_data for the dashboard
@@ -506,7 +506,7 @@ been taken for this time off type. Changing it now would affect existing employe
         ]
         return filtered_employee_work_entry_type_infos
 
-    def get_allocation_data(self, employees, target_date=None):
+    def get_allocation_data(self, employees, target_date=None, same_year_only=False):
         allocation_data = defaultdict(list)
         if target_date and isinstance(target_date, str):
             target_date = datetime.fromisoformat(target_date).date()
@@ -517,7 +517,7 @@ been taken for this time off type. Changing it now would affect existing employe
 
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
-        )._get_consumed_leaves(self, target_date)
+        )._get_consumed_leaves(self, target_date, same_year_only=same_year_only)
 
         today = fields.Date.context_today(self)
         for employee in employees:
@@ -583,6 +583,8 @@ been taken for this time off type. Changing it now would affect existing employe
                         if allocation.date_from > target_date:
                             continue
                         if allocation.date_to and allocation.date_to < target_date:
+                            continue
+                        if same_year_only and allocation.date_from.year != target_date.year:
                             continue
                     lt_info[1]['remaining_leaves'] += data[f'{primary_unit}_remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data[f'{primary_unit}_virtual_remaining_leaves']
