@@ -939,6 +939,11 @@ class AccountEdiCii(models.AbstractModel):
         if narration := ''.join(f'<p>{note}</p>' for note in notes):
             collected_values['to_write']['narration'] = narration
 
+    def _import_cii_invoice_add_payment_reference(self, collected_values):
+        tree = collected_values['tree']
+        if payment_reference := tree.findtext('.//{*}ApplicableHeaderTradeSettlement/{*}PaymentReference'):
+            collected_values['to_write']['payment_reference'] = payment_reference
+
     def _import_cii_invoice_add_customer_values(self, collected_values):
         customer_values = collected_values['customer_values'] = {}
         odoo_document_type = collected_values['odoo_document_type']
@@ -1487,13 +1492,14 @@ class AccountEdiCii(models.AbstractModel):
 
         self._import_cii_invoice_add_partner_bank_values(collected_values)
 
-        # invoice ref / invoice_origin / date / date_due / delivery_date / narration
+        # invoice ref / invoice_origin / date / date_due / delivery_date / narration / payment_reference
         self._import_cii_invoice_add_ref(collected_values)
         self._import_cii_invoice_add_invoice_origin(collected_values)
         self._import_cii_invoice_add_issue_date(collected_values)
         self._import_cii_invoice_add_date_due(collected_values)
         self._import_cii_invoice_add_invoice_delivery_date(collected_values)
         self._import_cii_invoice_add_narration(collected_values)
+        self._import_cii_invoice_add_payment_reference(collected_values)
 
         # customer
         self._import_cii_invoice_add_customer_values(collected_values)
