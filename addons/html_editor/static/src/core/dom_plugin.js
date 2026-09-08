@@ -456,10 +456,11 @@ export class DomPlugin extends Plugin {
 
     /**
      * Insert a list of nodes at the given position and return what was
-     * inserted.
+     * inserted. Some of the nodes can be document fragment, to signal that they
+     * were previously unwrapped.
      *
      * @see insert
-     * @param {Node[]} nodes
+     * @param {(Node | DocumentFragment)[]} nodes
      * @param {Node} targetNode
      * @param {number} targetOffset
      * @returns {Node[]}
@@ -468,13 +469,11 @@ export class DomPlugin extends Plugin {
         const marker = createMarkerNode(targetNode, targetOffset);
         const insertedContent = [];
         for (const [index, item] of nodes.entries()) {
-            const insertedNodes = [];
             const previousItem = index > 0 && nodes[index - 1];
             const itemNodes = isFragment(item) ? childNodes(item) : [item];
             for (const [nodeIndex, node] of itemNodes.entries()) {
                 if (!nodeIndex && isFragment(previousItem) && !isBlock(item) && isVisible(item)) {
-                    const addedNodes = this.splitBeforeInsertion(marker);
-                    insertedNodes.push(...addedNodes);
+                    insertedContent.push(...this.splitBeforeInsertion(marker));
                 }
                 if (marker.isConnected) {
                     const next = marker.nextSibling;
@@ -483,7 +482,7 @@ export class DomPlugin extends Plugin {
                     const target = isNodeBlock ? this.getBlockInsertTarget(node, marker) : marker;
                     if (target) {
                         target.before(node);
-                        insertedNodes.push(node);
+                        insertedContent.push(node);
                         if (isBlock(target) && isEmptyBlock(target)) {
                             target.before(marker);
                             target.remove();
@@ -496,7 +495,6 @@ export class DomPlugin extends Plugin {
                     }
                 }
             }
-            insertedContent.push(...insertedNodes);
         }
         marker.remove();
 
