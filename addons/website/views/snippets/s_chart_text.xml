@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_chart_text" name="Chart - Text">
+    <section class="s_chart_text pt80 pb80">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 pt40 pb40 border rounded">
+                    <div class="s_chart" data-snippet="s_chart" data-name="Chart" data-type="line" data-legend-position="none" data-stacked="false" data-border-width="2" data-ticks-max="25" data-data='{"labels":["First","Second","Third","Fourth","Fifth"],"datasets":[{"label":"One","data":["6","12","9","16","22"],"backgroundColor":"o-color-1","borderColor":"o-color-1"}]}'>
+                        <canvas height="0" role="img"/>
+                    </div>
+                    <!-- Placeholder chart, to be displayed in the preview modal -->
+                    <svg class="s_dialog_preview d-block mx-auto" width="450" height="230" viewBox="0 0 100 55" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="var(--o-color-1)" stroke-width="0.4" opacity="0.25">
+                            <line x1="5" y1="45" x2="95" y2="45"/>
+                            <line x1="5" y1="37" x2="95" y2="37"/>
+                            <line x1="5" y1="29" x2="95" y2="29"/>
+                            <line x1="5" y1="21" x2="95" y2="21"/>
+                            <line x1="5" y1="13" x2="95" y2="13"/>
+                            <line x1="5" y1="5" x2="95" y2="5"/>
+                            <line x1="5" y1="5" x2="5" y2="45"/>
+                            <line x1="27.5" y1="5" x2="27.5" y2="45"/>
+                            <line x1="50" y1="5" x2="50" y2="45"/>
+                            <line x1="72.5" y1="5" x2="72.5" y2="45"/>
+                            <line x1="95" y1="5" x2="95" y2="45"/>
+                        </g>
+                        <polyline points="5,35.4 27.5,25.8 50,30.6 72.5,19.4 95,9.8" fill="none" stroke="var(--o-color-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <!-- End of placeholder -->
+                    <p><br/></p>
+                    <p class="o_small-fs text-600" style="text-align: center;">Steady year-over-year growth driven by continuous product improvements.</p>
+                </div>
+                <div class="col-lg-6 offset-lg-1 pt16 pb16">
+                    <h2>Discover new opportunities</h2>
+                    <p>Write one or two paragraphs describing your product or services. To be successful your content needs to be useful to your readers.</p>
+                    <p>Start with the customer – find out what they want and give it to them.</p>
+                    <p><a href="#" class="btn btn-secondary o_translate_inline">Learn more</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>
