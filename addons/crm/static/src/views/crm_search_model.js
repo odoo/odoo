@@ -81,7 +81,11 @@ export class CrmSearchModel extends SearchModel {
      * Also ensure that only stages related to the selected team are displayed (see _read_group_stage_ids).
      */
     _getContext() {
-        const context = super._getContext();
+        const context = {
+            ...super._getContext(),
+            // for view rendering
+            team_switcher_enabled: this.isTeamSwitcherEnabled,
+        };
         if (!this.state.switcherTeamId) {
             return context;
         }
@@ -153,7 +157,11 @@ export class CrmSearchModel extends SearchModel {
             teamId = undefined;
         }
         if (teamId === this.state.switcherTeamId) {
-            // Already current one, nothing to do
+            // Already the current one: nothing to update.
+            // If already loaded, notify as switcherAvailable or switcherTeams have changed.
+            if (loaded) {
+                this._notify();
+            }
             return;
         }
         // Update the selected team
