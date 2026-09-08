@@ -432,7 +432,7 @@ test("Title show some member seen info (partial seen), click show dialog with fu
     await start();
     await openDiscuss(channelId);
     await contains("[title='Seen by User 0, User 1, User 2 and 8 others']");
-    await click(".o-mail-MessageSeenIndicator");
+    await click(".o-mail-Message .o-mail-MessageSeenIndicator");
     await contains("li", { count: 11 });
     for (let i = 0; i < 11; i++) {
         await contains(`li:text('User ${i}')`); // Not checking datetime because HOOT mocking of tz do not work
