@@ -72,8 +72,35 @@ $o-grays: (
     900: $o-gray-900,
 ) !default;
 
-$o-colors: #a2a2a2, #ee2d2d, #dc8534, #e8bb1d, #5794dd, #9f628f, #db8865,
-           #41a9a2, #304be0, #ee2f8a, #61c36e, #9872e6 !default;
+// UI colour palette (kanban stripes, tags, badges, colorlist)
+//
+// One LIGHTNESS per row keeps any colour from looking louder than the rest.
+// CHROMA as high as the hue can reach, capped at the row's ceiling
+//
+//   row              lightness   chroma ceiling
+//   $o-colors            0.64          0.17      solid: stripes, borders, swatches
+//   $o-colors-bg         0.87          0.11      tinted background for tags/badges
+//   $o-colors-text       0.44          0.10      text on that tint
+//
+// TO ADD A COLOUR - one hue rendered six times (three rows x light and dark themes)
+//
+//   1. pick a hue 25deg clear of every colour here
+//        2:red 21    3:orange 71  4:yellow 96  5:blue 245   6:purple 331
+//        7:salmon 46 8:teal 189   9:navy 270  10:pink 356  11:green 148
+//       12:violet 295
+//
+//   2. in an OKLCH picker, set L exactly at the row's, C at its ceiling - if it says
+//      out of gamut, lower C just until it is in, no further
+//
+//   3. paste each hex into its row in both light and dark files
+$o-colors: #8c8c8c, #e0585d, #bd7d18, #a38b18, #1b93e2, #c55fba, #dc6318, #1da099, #6582f2, #d8588f,
+    #27a74b, #9572e7 !default;
+
+$o-colors-bg: #d4d4d4, #fdc4c1, #fdca8c, #e9d47d, #b1dafd, #fdbbf4, #fdc6ad, #73ece3, #c5d3fd,
+    #fdc1d5, #a2e9ab, #d7ccfd !default;
+
+$o-colors-text: #525252, #81393a, #71490a, #61520a, #145786, #713c6b, #7e3e1c, #0d5f5a, #3d4e89,
+    #7c3854, #246131, #574683 !default;
 
 $o-colors-ui: () !default;
 @for $index from 1 through length($o-colors) {
