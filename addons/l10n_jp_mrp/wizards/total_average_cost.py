@@ -66,6 +66,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
         of it their BoM assigns them.
         """
         values = super()._get_production_move_values(moves)
+        period_end = self._get_period_bounds()[1]
 
         def allocate(order_moves, value):
             # the order is valued once and spread over all it produced, not per period
@@ -84,7 +85,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             )
             finished_qty = sum(finished_moves.mapped('quantity_product_uom'))
             total_cost = abs(sum(production.move_raw_ids.mapped('value')))
-            total_cost += production.workorder_ids._cal_cost()
+            # only the time the period itself paid for, like every other input
+            total_cost += production.workorder_ids._cal_cost(period_end)
             total_cost += production.extra_cost * finished_qty
             byproduct_share = sum(
                 product_moves[0].cost_share for product_moves in byproducts_by_product.values()
