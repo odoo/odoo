@@ -1,27 +1,17 @@
-import { assertType, Component, t, useProps, whenReady } from "@odoo/owl";
+import { assertType, onWillStart, Plugin, t, usePlugin, whenReady } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { _t } from "@web/core/l10n/translation";
+import { EffectPlugin } from "@web/core/effects/effect_plugin";
+import { ORM } from "@web/core/orm_plugin";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { services } from "@web/core/services";
 import { redirect } from "@web/core/utils/urls";
+import { useEnv } from "@web/owl2/utils";
 import { session } from "@web/session";
-import {
-    TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY,
-    tourRecorderState,
-} from "@web_tour/tour_recorder/tour_recorder_state";
+import { TourRecorderPlugin } from "@web_tour/tour_recorder/tour_recorder_plugin";
 import { tourState } from "@web_tour/tour_state";
-
-class OnboardingItem extends Component {
-    static components = { DropdownItem };
-    static template = "web_tour.OnboardingItem";
-    props = useProps({
-        toursEnabled: t.boolean(),
-        toggleItem: t.function(),
-    });
-    setup() {}
-}
+import { OnboardingItem } from "@web_tour/widgets/onboarding_item";
 
 const stepSchema = {
     trigger: t.string(),
@@ -68,18 +58,21 @@ const tourSchema = {
 const tourRegistry = registry.category("web_tour.tours");
 tourRegistry.addValidation(t.strictObject(tourSchema));
 
-export class TourService {
-    /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {import("services").ServiceFactories} services
-     */
-    constructor(env, services) {
-        this.env = env;
-        this.orm = services["orm"];
-        this.effect = services["effect"];
-        this.overlay = services["overlay"];
-        this.toursEnabled = session?.tour_enabled;
-        this.removeTourRecorder = () => {};
+export class TourPlugin extends Plugin {
+    env = useEnv();
+    orm = usePlugin(ORM);
+    effect = usePlugin(EffectPlugin);
+    overlay = usePlugin(OverlayPlugin);
+    recorder = usePlugin(TourRecorderPlugin);
+
+    toursEnabled = session?.tour_enabled;
+
+    setup() {
+        onWillStart(() => this.bootstrap());
+    }
+
+    async bootstrap() {
+        await whenReady();
         this.addOnboardingItemInDebugMenu();
 
         if (window.frameElement) {
@@ -105,13 +98,6 @@ export class TourService {
                 rainbowManMessage: session.current_tour.rainbowManMessage,
             });
         }
-
-        if (
-            browser.localStorage.getItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY) &&
-            !session.is_public
-        ) {
-            this.addTourRecorderToOverlay();
-        }
     }
 
     addOnboardingItemInDebugMenu() {
@@ -132,33 +118,6 @@ export class TourService {
             sequence: 500,
             section: "testing",
         }));
-    }
-
-    /**
-     * Add tour recorder component in overlay container.
-     */
-    async addTourRecorderToOverlay() {
-        if (!odoo.loader.modules.get("@web_tour/tour_recorder/tour_recorder")) {
-            await loadBundle("web_tour.recorder");
-        }
-        const { TourRecorder } = odoo.loader.modules.get("@web_tour/tour_recorder/tour_recorder");
-        const remove = this.overlay.add(
-            TourRecorder,
-            {
-                onClose: () => {
-                    remove();
-                    browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
-                    tourRecorderState.clear();
-                },
-            },
-            { sequence: 99999 }
-        );
-
-        this.removeTourRecorder = () => {
-            remove();
-            browser.localStorage.removeItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY);
-            tourRecorderState.clear();
-        };
     }
 
     /**
@@ -283,7 +242,7 @@ export class TourService {
      * human. Useful to test that onboarding tours' pointer resolves correctly.
      */
     async startTour(name, options = {}) {
-        this.removeTourRecorder();
+        this.recorder.removeTourRecorder();
 
         if (
             !session.is_public &&
@@ -317,13 +276,6 @@ export class TourService {
         }
     }
 
-    async startTourRecorder() {
-        if (!browser.localStorage.getItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY)) {
-            await this.addTourRecorderToOverlay();
-        }
-        browser.localStorage.setItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, "1");
-    }
-
     /**
      * Validate a step according to {@link stepSchema}.
      * @param {Object} step - The step object to validate.
@@ -349,30 +301,22 @@ export class TourService {
     }
 }
 
-registry.category("services").add("tour_service", {
+services.add(TourPlugin);
+
+/**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the tour_service service are removed
+ * -----------------------------------------------------------------------------
+ */
+export const tourService = {
     // localization dependency to make sure translations used by tours are loaded
     dependencies: ["orm", "effect", "overlay", "localization"],
-    async start(env, services) {
-        await whenReady();
-        const service = new TourService(env, services);
+    start() {
+        const service = usePlugin(TourPlugin);
         odoo.startTour = service.startTour.bind(service);
         odoo.isTourReady = service.isTourReady.bind(service);
         return service;
     },
-});
-
-registry.category("command_provider").add("tour_recorder", {
-    provide: (env, options) => {
-        const tour = useService("tour_service");
-        const result = [];
-        if (options.searchValue.toLowerCase() === "record") {
-            result.push({
-                action() {
-                    tour.startTourRecorder();
-                },
-                name: _t("Enable the tour recorder"),
-            });
-        }
-        return result;
-    },
-});
+};
+registry.category("services").add("tour_service", tourService);
