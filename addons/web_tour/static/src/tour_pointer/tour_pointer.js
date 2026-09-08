@@ -1,5 +1,13 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, useProps, proxy, signal, t } from "@odoo/owl";
+import {
+    Component,
+    useProps,
+    proxy,
+    signal,
+    t,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+} from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
@@ -206,37 +214,49 @@ export class TourPointer extends Component {
         };
         useBus(uiService.bus, "active-element-changed", onActiveElementChanged);
 
-        useLayoutEffect(
-            () => {
-                const trigger = this.trigger;
-                if (!trigger) {
-                    return;
-                }
+        let cleanup;
+        let lastTrigger;
+        const applyTriggerEffect = () => {
+            const trigger = this.trigger;
+            if (!trigger) {
+                return;
+            }
 
-                onActiveElementChanged();
-                this.popover.close();
-                if (this.props.pointerState.isZone && this.dropzoneRef()) {
-                    const triggerRect = this.trigger.getBoundingClientRect();
-                    this.dropzoneRef().style.width = `${triggerRect.width}px`;
-                    this.dropzoneRef().style.height = `${triggerRect.height}px`;
-                }
-                this.state.scrollParent = getScrollParent(trigger);
-                this.anchorUsePosition.unlock();
-                this.pointerUsePosition.unlock();
+            onActiveElementChanged();
+            this.popover.close();
+            if (this.props.pointerState.isZone && this.dropzoneRef()) {
+                const triggerRect = this.trigger.getBoundingClientRect();
+                this.dropzoneRef().style.width = `${triggerRect.width}px`;
+                this.dropzoneRef().style.height = `${triggerRect.height}px`;
+            }
+            this.state.scrollParent = getScrollParent(trigger);
+            this.anchorUsePosition.unlock();
+            this.pointerUsePosition.unlock();
 
-                const openContentHandler = () => this.openContent();
-                const closeContentHandler = () => this.closeContent();
+            const openContentHandler = () => this.openContent();
+            const closeContentHandler = () => this.closeContent();
 
-                trigger.addEventListener("mouseenter", openContentHandler);
-                trigger.addEventListener("mouseleave", closeContentHandler);
+            trigger.addEventListener("mouseenter", openContentHandler);
+            trigger.addEventListener("mouseleave", closeContentHandler);
 
-                return () => {
-                    trigger.removeEventListener("mouseenter", openContentHandler);
-                    trigger.removeEventListener("mouseleave", closeContentHandler);
-                };
-            },
-            () => [this.props.pointerState.trigger]
-        );
+            return () => {
+                trigger.removeEventListener("mouseenter", openContentHandler);
+                trigger.removeEventListener("mouseleave", closeContentHandler);
+            };
+        };
+        onMounted(() => {
+            lastTrigger = this.props.pointerState.trigger;
+            cleanup = applyTriggerEffect();
+        });
+        onPatched(() => {
+            const trigger = this.props.pointerState.trigger;
+            if (trigger !== lastTrigger) {
+                lastTrigger = trigger;
+                cleanup?.();
+                cleanup = applyTriggerEffect();
+            }
+        });
+        onWillUnmount(() => cleanup?.());
 
         const popoverOptions = {
             setActiveElement: false,
