@@ -71,31 +71,39 @@ class HrApplicant(models.Model):
     @api.depends_context("matching_job_id")
     @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
     def _compute_matching_score(self):
-        matching_job_id = self.env.context.get("matching_job_id")
-        matching_job = self.env["hr.job"].browse(matching_job_id)
+        matching_job = self.env["hr.job"].browse(self.env.context.get('matching_job_id'))[:1]
         for applicant in self:
             job = matching_job or applicant.job_id
-            if not job or not (job.job_skill_ids or job.expected_degree):
-                applicant.matching_score = False
-                applicant.degree_score = False
-                applicant.skills_score = False
-                continue
-            job_skills = job.job_skill_ids
-            job_degree = job.expected_degree.sudo().score * 100
-            job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
+            applicant.degree_score, applicant.skills_score, applicant.matching_score = (
+                applicant._get_matching_scores(job)
+            )
 
-            matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
-                lambda a: a.skill_id in job_skill_map,
-            )
-            applicant_degree = applicant.type_id.score * 100 if job_degree > 1 else 0
-            skills_total = sum(
-                min(skill.level_progress, job_skill_map[skill.skill_id] * 2)
-                for skill in matching_applicant_skills
-            )
-            job_total = sum(job_skills.mapped("level_progress")) + job_degree
-            applicant.degree_score = round((100 * applicant_degree) / job_total) if job_total else 0
-            applicant.skills_score = round((100 * skills_total) / job_total) if job_total else 0
-            applicant.matching_score = applicant.degree_score + applicant.skills_score
+    def _get_matching_scores(self, job):
+        self.ensure_one()
+        if not job or not (job.job_skill_ids or job.expected_degree):
+            return 0, 0, 0
+
+        job_skills = job.job_skill_ids
+        job_degree = job.expected_degree.sudo().score * 100
+        job_total = sum(job_skills.mapped("level_progress")) + job_degree
+
+        if not job_total:
+            return 0, 0, 0
+
+        job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
+        matching_skills = self.current_applicant_skill_ids.filtered(
+            lambda a: a.skill_id in job_skill_map,
+        )
+        applicant_degree = self.type_id.score * 100 if job_degree > 1 else 0
+        skills_total = sum(
+            min(skill.level_progress, job_skill_map[skill.skill_id] * 2)
+            for skill in matching_skills
+        )
+
+        degree_score = round((100 * applicant_degree) / job_total)
+        skills_score = round((100 * skills_total) / job_total)
+        matching_score = degree_score + skills_score
+        return degree_score, skills_score, matching_score
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
@@ -208,15 +216,22 @@ class HrApplicant(models.Model):
     def _compute_display_name(self):
         super()._compute_display_name()
         if self.env.context.get("show_matching_score_in_name", False):
+            job = self.env["hr.job"].browse(self.env.context.get('matching_job_id'))[:1]
             for applicant in self:
-                if applicant.matching_score:
-                    name = f"{applicant.display_name or applicant.name} \t --{applicant.matching_score:.0f}%--"
+                score = applicant._get_matching_scores(job)[2] if job else applicant.matching_score
+                if score:
+                    name = f"{applicant.display_name or applicant.name} \t --{score:.0f}%--"
                     applicant.display_name = name.strip()
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         show_matching_score_in_name = self.env.context.get('show_matching_score_in_name', False)
         if show_matching_score_in_name:
-            records = self.search(domain).sorted(lambda a: a.matching_score, reverse=True)[:limit]
+            job = self.env["hr.job"].browse(self.env.context.get('matching_job_id'))[:1]
+            search_domain = ([(self._rec_name, operator, name)] if name else []) + (domain or [])
+            records = self.search(search_domain).sorted(
+                key=lambda a: a._get_matching_scores(job)[2] if job else a.matching_score,
+                reverse=True,
+            )[:limit]
             return [(r.id, r.display_name) for r in records]
         return super().name_search(name=name, domain=domain if domain else None, operator=operator, limit=limit)
