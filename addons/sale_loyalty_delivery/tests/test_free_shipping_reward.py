@@ -83,7 +83,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         delivery_wizard = Form(
             self.env["choose.delivery.carrier"].with_context({
                 "default_order_id": order.id,
-                "default_carrier_id": self.env["delivery.carrier"].search([])[1],
+                "default_carrier_id": self.carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -187,13 +187,13 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             0,
         )
         self.assertEqual(order.amount_total, 960 * 0.9)
-        order.carrier_id = self.env["delivery.carrier"].search([])[1]
+        order.carrier_id = self.carrier.id
 
         # I add delivery cost in Sales order
         delivery_wizard = Form(
             self.env["choose.delivery.carrier"].with_context({
                 "default_order_id": order.id,
-                "default_carrier_id": self.env["delivery.carrier"].search([])[1],
+                "default_carrier_id": self.carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
@@ -210,7 +210,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         delivery_wizard = Form(
             self.env["choose.delivery.carrier"].with_context({
                 "default_order_id": order.id,
-                "default_carrier_id": self.env["delivery.carrier"].search([])[1],
+                "default_carrier_id": self.carrier.id,
             })
         )
         choose_delivery_carrier = delivery_wizard.save()
