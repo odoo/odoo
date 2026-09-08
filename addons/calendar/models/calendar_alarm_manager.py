@@ -61,12 +61,27 @@ class AlarmManager(models.AbstractModel):
         # Upper bound on first_alarm of requested events
         first_alarm_max_value = ""
         if seconds is None:
+            if partners:
+                tuple_params += (tuple(partners.ids), )
+                where_clause = """
+                -- match the base_request filter on partner_id and active.
+                INNER JOIN calendar_event_res_partner_rel AS part_rel
+                        ON part_rel.calendar_event_id = cal.id
+                       AND part_rel.res_partner_id IN %s
+                     WHERE cal.active = True
+                       AND cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
+                """
+            else:
+                where_clause = """
+                WHERE cal.active = True
+                  AND cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
+                """
             # first alarm in the future + 3 minutes if there is one, now otherwise
-            first_alarm_max_value = """
+            first_alarm_max_value = f"""
                 COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
                 FROM calendar_event cal
                 RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
-                WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
+                {where_clause}
             ) + interval '3' minute, now() at time zone 'utc')"""
         else:
             # now + given seconds
@@ -114,22 +129,22 @@ class AlarmManager(models.AbstractModel):
         """
         result = []
         # TODO: remove event_maxdelta and if using it
-        past = one_date - timedelta(minutes=(missing * event_maxdelta))
+        earliest_notify_at = one_date - timedelta(minutes=event_maxdelta)
         future = fields.Datetime.now() + timedelta(seconds=in_the_next_X_seconds)
-        if future <= past:
+        if future <= earliest_notify_at:
             return result
         for alarm in event.alarm_ids:
             if alarm.alarm_type != alarm_type:
                 continue
+            # if checking missing, consider an alarm is only passed if the whole event is passed
             past = one_date - timedelta(minutes=(missing * alarm.duration_minutes))
-            if future <= past:
-                continue
-            if after and past <= fields.Datetime.from_string(after):
+            notify_at = one_date - timedelta(minutes=alarm.duration_minutes)
+            if future <= notify_at or (after and past <= fields.Datetime.from_string(after)):
                 continue
             result.append({
                 'alarm_id': alarm.id,
                 'event_id': event.id,
-                'notify_at': one_date - timedelta(minutes=alarm.duration_minutes),
+                'notify_at': notify_at,
             })
         return result
 
