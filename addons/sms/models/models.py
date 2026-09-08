@@ -77,7 +77,6 @@ class BaseModel(models.AbstractModel):
                     "field_store": field_store,
                 }
             elif all_partners and partner_fallback:
-                partner = self.env["res.partner"]
                 partner_phone = self.env["phone.number"]
                 for partner in all_partners:
                     partner_phone = partner._phone_get_number("mobile", "whatsapp")
