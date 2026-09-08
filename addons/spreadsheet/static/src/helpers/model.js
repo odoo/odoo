@@ -316,11 +316,11 @@ function odooChartToImage(model, figure, chartId) {
     div.append(canvas);
     canvas.setAttribute("width", figure.width);
     canvas.setAttribute("height", figure.height);
-    // we have to add the canvas to the DOM otherwise it won't be rendered
-    document.body.append(div);
     if (!("chartJsConfig" in runtime)) {
         return "";
     }
+    // we have to add the canvas to the DOM otherwise it won't be rendered
+    document.body.append(div);
     runtime.chartJsConfig.plugins = [backgroundColorPlugin];
     // @ts-ignore
     const chart = new Chart(canvas, runtime.chartJsConfig);
