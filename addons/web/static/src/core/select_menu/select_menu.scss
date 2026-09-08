@@ -76,11 +76,13 @@
     }
 
     .o_select_menu-choices {
+        padding: var(--SelectMenu-padding, 0);
+
         > *:first-child {
-            margin-top: 0.5rem;
+            margin-top: var(--SelectMenuItem-margin-y, 0.5rem);
         }
         > *:last-child {
-            margin-bottom: 0.5rem;
+            margin-bottom: var(--SelectMenuItem-margin-y, 0.5rem);
         }
     }
 

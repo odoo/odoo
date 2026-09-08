@@ -193,7 +193,7 @@ export class Store extends BaseStore {
     discussDropdownMenuClass(ctx) {
         const simulateDarkTheme = this.shouldSimulateDarkTheme(ctx);
         return attClassObjectToString({
-            "o-discuss-dropdownMenu d-flex flex-column border-secondary px-1": true,
+            "o-discuss-dropdownMenu d-flex flex-column": true,
             "o-simulateDarkTheme": simulateDarkTheme,
         });
     }

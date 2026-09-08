@@ -71,6 +71,8 @@ $o-bubble-colors: (
 .o-discuss-dropdownMenu {
     --Dropdown_menu-margin-y: 0;
 
+    padding: $dropdown-padding-y $dropdown-padding-x;
+
     &.o-simulateDarkTheme {
         background-color: $gray-800;
         border-color: $gray-700 !important;
@@ -94,13 +96,26 @@ $o-bubble-colors: (
         }
     }
 
-    &:not(.o-simulateDarkTheme) {
-        background-color: $o-view-background-color;
-    }
-
     .o_bottom_sheet_sheet:has(&) {
         background-color: $gray-100;
         box-shadow: unset !important;
+    }
+
+    .popover-arrow {
+        --position-max: calc(100% - #{map-get($spacers, 4)});
+    }
+
+    .dropdown-item {
+        --#{$prefix}dropdown-item-padding-y: #{$dropdown-item-padding-y};
+        --#{$prefix}dropdown-item-padding-x: #{$dropdown-item-padding-x};
+        --#{$prefix}dropdown-item-border-radius: calc(#{$dropdown-border-radius - $dropdown-padding-x});
+        --#{$prefix}gradient: 0;
+
+        font-size: $dropdown-font-size;
+
+        &:hover {
+            background-color: $dropdown-link-hover-bg;
+        }
     }
 }
 
