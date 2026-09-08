@@ -1016,7 +1016,7 @@ class AccountTax(models.Model):
         taxes, company = self.env['account.tax'], company_id
         while not taxes and company:
             taxes = self.filtered(lambda t: t.company_id == company)
-            company = company.parent_id
+            company = company._accessible_branches()[:1].parent_id
         return taxes
 
     @api.model

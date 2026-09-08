@@ -7,6 +7,7 @@ from functools import partial
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged, users
+from odoo.tools.safe_eval import expr_eval
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -29,7 +30,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         cls.root_company = cls.company_data['company']
         cls.branch_a, cls.branch_b = cls.root_company.child_ids
 
-        cls.branch_user = cls.env['res.users'].create({
+        cls.branch_user, cls.only_branch_user = cls.env['res.users'].create([{
             'name': 'Branch user',
             'login': 'branch_user',
             'company_id': cls.branch_a.id,
@@ -39,7 +40,16 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                 cls.env.ref('base.group_user').id,
                 cls.env.ref('account.group_account_invoice').id,
             ])],
-        })
+        }, {
+            'name': 'Only Branch user',
+            'login': 'only_branch_user',
+            'company_id': cls.branch_a.id,
+            'company_ids': [Command.set([cls.branch_a.id])],
+            'groups_id': [Command.set([
+                cls.env.ref('base.group_user').id,
+                cls.env.ref('account.group_account_manager').id
+            ])],
+        }])
 
     def test_chart_template_loading(self):
         # Some company params have to be the same
@@ -367,3 +377,26 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         })
 
         self.assertTrue(statement_line)
+
+    def test_user_can_create_product_in_branch(self):
+        """A Branch User with product create powers needs to be able to create a product
+        in the branch company even without having permission to access the main company"""
+
+        action = self.env.ref('product.product_template_action_all').read()[0]
+        context = action.get('context', {})
+        if isinstance(context, str):
+            context = expr_eval(context)
+
+        model_env = self.env['product.template'].with_user(self.only_branch_user).with_company(self.branch_a.id).with_context(**context)
+
+        self.branch_a.parent_id.invalidate_recordset(fnames=['parent_id'])
+
+        view_id = action.get('views')[0][0]
+
+        form = Form(model_env, view=view_id)
+
+        form.name = "product"
+        form.detailed_type = 'consu'
+        product = form.save()
+
+        self.assertEqual(product.name, "product")
