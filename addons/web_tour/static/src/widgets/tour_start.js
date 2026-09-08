@@ -1,7 +1,7 @@
-import { useProps, t } from "@odoo/owl";
+import { useProps, t, usePlugin } from "@odoo/owl";
 import { charField, CharField, charFieldProps } from "@web/views/fields/char/char_field";
-import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { TourPlugin } from "@web_tour/tour_plugin";
 
 export class TourStartWidget extends CharField {
     static template = "web_tour.TourStartWidget";
@@ -11,7 +11,7 @@ export class TourStartWidget extends CharField {
     });
 
     setup() {
-        this.tour = useService("tour_service");
+        this.tour = usePlugin(TourPlugin);
     }
 
     get tourData() {
