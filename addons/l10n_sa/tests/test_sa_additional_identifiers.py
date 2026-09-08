@@ -1,5 +1,5 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.exceptions import ValidationError
 
 
@@ -69,3 +69,8 @@ class TestL10nSaAdditionalIdentifiers(AccountTestInvoicingCommon):
         })
 
         self.assertNotIn('OTHER', self.partner_a.available_additional_identifiers_metadata)
+
+    def test_populate_sa_tin_without_vat(self):
+        partner = Form(self.partner_sa)
+        partner.additional_identifiers = {'SA_TIN': ''}
+        self.assertEqual(partner.additional_identifiers.get('SA_TIN'), '')
