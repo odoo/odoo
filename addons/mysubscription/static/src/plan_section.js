@@ -1,5 +1,4 @@
-import { Component, computed, usePlugin, useProps, t } from "@odoo/owl";
-import { DashboardPlugin } from "./dashboard_plugin";
+import { Component, computed, useProps, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { DashboardBlock } from "./components/dashboard_block";
 import { PlanBox } from "./components/plan_box"
@@ -11,11 +10,11 @@ export class PlanSection extends Component {
 
     props = useProps({
         hasSubscription: t.boolean(),
+        enterpriseCode: t.string().optional(),
     });
 
     setup() {
         this.dialog = useService("dialog");
-        this.dashboardState = usePlugin(DashboardPlugin).state;
         this.hasEnterpriseAccess = "enterprise_subscription" in this.env.services;
 
         this.hrefCommunityPlan = "https://www.odoo.com/page/editions";
@@ -93,7 +92,7 @@ export class PlanSection extends Component {
 
     openSubscriptionDialog() {
         this.dialog.add(SubscriptionDialog, {
-            placeholder: this.dashboardState.enterpriseCode,
+            placeholder: this.props.enterpriseCode,
         });
     }
 }

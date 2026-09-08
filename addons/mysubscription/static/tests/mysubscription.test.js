@@ -14,10 +14,10 @@ import { MySubscriptionNavBar } from "@mysubscription/components/navbar";
 
 /**
  * @param {Object} [options]
- * @param {string|false} [options.enterpriseCode]
- * @param {string|false} [options.expirationDate]
+ * @param {string} [options.enterpriseCode]
+ * @param {boolean} [options.hasSubscription]
  */
-function mockDashboardData({ enterpriseCode = "123-456-789", expirationDate = "2999-01-01" } = {}) {
+function mockDashboardData({ enterpriseCode = "123-456-789", hasSubscription = false } = {}) {
     // Required by DatabaseSection's onWillStart.
     patchWithCleanup(user, { hasGroup: () => Promise.resolve(false) });
     onRpc("/web/database/list", () => ["test_db"]);
@@ -25,14 +25,13 @@ function mockDashboardData({ enterpriseCode = "123-456-789", expirationDate = "2
     onRpc("mysubscription.mysubscription", "get_dashboard_data", () => ({
         enterprise_code: enterpriseCode,
         base_url: "http://localhost:8069",
-        expiration_reason: false,
-        expiration_date: expirationDate,
+        has_subscription: hasSubscription,
     }));
 }
 
 test("active subscription: Enterprise plan is current and the upgrade link targets the on-premise flow", async () => {
     mockEnterprise();
-    mockDashboardData({ enterpriseCode: "123-456-789", expirationDate: "2999-01-01" });
+    mockDashboardData({ enterpriseCode: "123-456-789", hasSubscription: true });
     await mountWithCleanup(MySubscriptionDashboard);
 
     expect(".card:eq(0)").not.toHaveClass("border-primary", { message: "Community plan is not current" });
@@ -43,7 +42,7 @@ test("active subscription: Enterprise plan is current and the upgrade link targe
 });
 
 test("active subscription without the Enterprise webclient: falls back to the Switch button", async () => {
-    mockDashboardData({ enterpriseCode: "123-456-789", expirationDate: "2999-01-01" });
+    mockDashboardData({ enterpriseCode: "123-456-789", hasSubscription: true });
     await mountWithCleanup(MySubscriptionDashboard);
 
     expect(".card:eq(1)").toHaveClass("border-primary", { message: "Enterprise plan is still current" });
@@ -53,21 +52,13 @@ test("active subscription without the Enterprise webclient: falls back to the Sw
 });
 
 test("no subscription: Community plan is current and the upgrade link targets the pricing page", async () => {
-    mockDashboardData({ enterpriseCode: false, expirationDate: false });
+    mockDashboardData({ enterpriseCode: "", hasSubscription: false });
     await mountWithCleanup(MySubscriptionDashboard);
 
     expect(".card:eq(0)").toHaveClass("border-primary", { message: "Community plan is current" });
     expect(".card:eq(1)").not.toHaveClass("border-primary", { message: "Enterprise plan is not current" });
     expect(".card:eq(1) a:contains('Switch')").toHaveCount(1);
     expect("a:contains('Upgrade')").toHaveAttribute("href", "https://www.odoo.com/pricing");
-});
-
-test("expired subscription: behaves the same as having no subscription", async () => {
-    mockDashboardData({ enterpriseCode: "123-456-789", expirationDate: "2000-01-01" });
-    await mountWithCleanup(MySubscriptionDashboard);
-
-    expect(".card:eq(0)").toHaveClass("border-primary", { message: "Community plan is current" });
-    expect(".card:eq(1) a:contains('Switch')").toHaveCount(1);
 });
 
 function mountNavBar(props = {}) {

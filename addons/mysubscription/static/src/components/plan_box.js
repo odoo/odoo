@@ -1,5 +1,4 @@
-import { Component, computed, usePlugin, useProps, t } from "@odoo/owl";
-import { DashboardPlugin } from "../dashboard_plugin";
+import { Component, computed, useProps, t } from "@odoo/owl";
 
 export class PlanBox extends Component {
     static template = "mysubscription.PlanBox";
@@ -24,10 +23,6 @@ export class PlanBox extends Component {
         }),
         onClickPlan: t.function(),
     });
-
-    setup() {
-        this.dashboardState = usePlugin(DashboardPlugin).state;
-    };
 
     isCurrentPlan = computed(() => {
         const currentPlan = this.props.hasSubscription
