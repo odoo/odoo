@@ -1,5 +1,5 @@
 import { getSectionRecords } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { onWillStart, asyncComputed, proxy } from "@odoo/owl";
 import {
     SaleOrderLineListRenderer,
     SaleOrderLineOne2Many,
@@ -31,24 +31,19 @@ patch(SaleOrderLineOne2Many.prototype, {
 
         onWillStart(async () => {
             if (this.canCreate) {
-                await this.loadSectionTemplates();
+                await this.state.sectionTemplates.currentPromise();
             }
         });
 
-        onWillUpdateProps(async (nextProps) => {
-            // reload section templates if the company has changed
-            if (this.props.record.data.company_id.id !== nextProps.record.data.company_id.id) {
-                await this.loadSectionTemplates(nextProps.record.data.company_id.id);
-            }
+        this.state.sectionTemplates = asyncComputed(async () => {
+            return this.orm.call(
+                "sale.order.template",
+                "get_section_templates",
+                [this.props.record.data.company_id.id]
+            );
+        }, {
+            initial: [],
         });
-    },
-
-    async loadSectionTemplates(companyId = this.props.record.data.company_id.id) {
-        this.state.sectionTemplates = await this.orm.call(
-            "sale.order.template",
-            "get_section_templates",
-            [companyId]
-        );
     },
 
     /**
@@ -100,7 +95,7 @@ patch(SaleOrderLineOne2Many.prototype, {
 
     async deleteSectionTemplate(templateId) {
         await this.orm.call("sale.order.template", "unlink_section_template", [templateId]);
-        await this.loadSectionTemplates();
+        await this.state.sectionTemplates.currentPromise();
     },
 
     /**
@@ -142,21 +137,18 @@ patch(SaleOrderLineOne2Many.prototype, {
             sectionRecord.resId,
         ]);
 
-        const templateIndex = this.state.sectionTemplates.findIndex(
+        const existed = this.state.sectionTemplates().some(
             (template) => template.id === result.id
         );
 
-        // Add new template or update existing one if found in state
-        let successMessage = "";
-        if (templateIndex === -1) {
-            this.state.sectionTemplates.push(result);
-            successMessage = _t("Section template %s created successfully", result.name);
-        } else {
-            this.state.sectionTemplates[templateIndex] = result;
-            successMessage = _t("Section template %s updated successfully", result.name);
-        }
+        await this.state.sectionTemplates.currentPromise();
 
-        this.notificationService.add(successMessage, { type: "success" });
+        this.notificationService.add(
+            existed
+                ? _t("Section template %s updated successfully", result.name)
+                : _t("Section template %s created successfully", result.name),
+            { type: "success" }
+        );
     },
 
     canBeSavedAsTemplate(sectionRecord) {
