@@ -41,7 +41,7 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
-    def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
+    def search_for_channel_invite(self, search_term, channel_id=None, limit=30, with_portal_users=False):
         """Returns partners matching search_term that can be invited to a channel.
 
         - If `channel_id` is specified, only partners that can actually be invited to the channel
@@ -51,9 +51,18 @@ class ResPartner(models.Model):
           then the method may return `selectable_email` as a fallback direct email invite, provided that
           the channel allows invites by email.
 
+        :param with_portal_users: whether portal users may be included in the results. Should
+            only be set when the channel configuration actually allows portal users to be
+            invited (e.g. a "group" channel), as including them is significantly more expensive.
         """
         store = Store()
-        partner_ids = self._search_for_channel_invite(store, search_term, channel_id, limit)
+        partner_ids = self._search_for_channel_invite(
+            store,
+            search_term,
+            channel_id,
+            limit,
+            with_portal_users,
+        )
         selectable_email = None
         email_already_sent = None
         if not partner_ids and single_email_re.match(search_term):
@@ -91,7 +100,7 @@ class ResPartner(models.Model):
         }
 
     @api.model
-    def _get_channel_invite_domain(self, channel):
+    def _get_channel_invite_domain(self, channel, with_portal_users=False):
         """Returns the domain of the partners that may be invited to ``channel``.
 
         Shared by the Discuss invitation panel and the back-end channel form, so
@@ -100,14 +109,17 @@ class ResPartner(models.Model):
         :param channel: channel to invite to, empty recordset to only apply the
             channel independent conditions.
         :type channel: discuss.channel
+        :param with_portal_users: whether portal users may be included in the results.
         """
         domain = Domain.AND(
             [
                 [("active", "=", True)],
                 [("user_ids", "!=", False)],
                 [("user_ids.active", "=", True)],
-            ]
+            ],
         )
+        if not with_portal_users:
+            domain &= Domain("user_ids.share", "=", False)
         if channel:
             domain &= Domain("channel_ids", "not in", channel.id)
             if channel.group_public_id:
@@ -116,11 +128,18 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
-    def _search_for_channel_invite(self, store: Store, search_term, channel_id=None, limit=30):
+    def _search_for_channel_invite(
+        self,
+        store: Store,
+        search_term,
+        channel_id=None,
+        limit=30,
+        with_portal_users=False,
+    ):
         channel = self.env["discuss.channel"]
         if channel_id:
             channel = self.env["discuss.channel"].search([("id", "=", int(channel_id))])
-        domain = self._get_channel_invite_domain(channel) & Domain.AND(
+        domain = self._get_channel_invite_domain(channel, with_portal_users) & Domain.AND(
             [
                 Domain("name", "ilike", search_term) | Domain("email", "ilike", search_term),
                 [('id', '!=', self.env.user.partner_id.id)],

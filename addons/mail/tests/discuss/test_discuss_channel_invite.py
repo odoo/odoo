@@ -360,3 +360,16 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
             )
         with self.mock_mail_gateway():
             self.assertNoMail(self.env["res.partner"], email_to="alfred@test.com")
+
+    def test_12_search_for_channel_invite_excludes_portal_users_unless_requested(self):
+        bob = new_test_user(self.env, "bob", groups="base.group_user")
+        joel = new_test_user(
+            self.env, "joel", groups="base.group_portal", email="joel@test.com", name="Joel Willis"
+        )
+        group_chat = self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
+        result = self.env["res.partner"].search_for_channel_invite("Joel", channel_id=group_chat.id)
+        self.assertFalse(result["partner_ids"])
+        result = self.env["res.partner"].search_for_channel_invite(
+            "Joel", channel_id=group_chat.id, with_portal_users=True
+        )
+        self.assertEqual(result["partner_ids"], joel.partner_id.ids)
