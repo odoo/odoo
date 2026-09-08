@@ -9,7 +9,7 @@ class ResUsersSettingsEmbeddedAction(models.Model):
     user_setting_id = fields.Many2one('res.users.settings', required=True, ondelete='cascade', index='btree_not_null', export_string_translation=False)
     action_id = fields.Many2one('ir.actions.act_window', required=True, ondelete='cascade', export_string_translation=False)
     res_model = fields.Char(required=True, export_string_translation=False)
-    res_id = fields.Integer(export_string_translation=False)
+    res_id = fields.Integer(export_string_translation=False, bigint=True)
     embedded_actions_order = fields.Char('List order of embedded action ids', export_string_translation=False)
     embedded_actions_visibility = fields.Char('List visibility of embedded actions ids', export_string_translation=False)
     embedded_visibility = fields.Boolean('Is top bar visible', export_string_translation=False)

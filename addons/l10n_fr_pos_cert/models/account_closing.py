@@ -26,7 +26,7 @@ class AccountSaleClosing(models.Model):
     frequency = fields.Selection(string='Closing Type', selection=[('daily', 'Daily'), ('monthly', 'Monthly'), ('annually', 'Annual')], readonly=True, required=True)
     total_interval = fields.Monetary(string="Period Total", help='Total in receivable accounts during the interval, excluding overlapping periods', readonly=True, required=True)
     cumulative_total = fields.Monetary(string="Cumulative Grand Total", help='Total in receivable accounts since the beginnig of times', readonly=True, required=True)
-    sequence_number = fields.Integer('Sequence #', readonly=True, required=True)
+    sequence_number = fields.Integer('Sequence #', readonly=True, required=True, bigint=True)
     last_order_id = fields.Many2one('pos.order', string='Last Pos Order', help='Last Pos order included in the grand total', readonly=True)
     last_order_hash = fields.Char(string='Last Order entry\'s inalteralbility hash', readonly=True)
     currency_id = fields.Many2one('res.currency', string='Currency', help="The company's currency", readonly=True, related='company_id.currency_id', store=True)
@@ -42,7 +42,7 @@ class AccountSaleClosing(models.Model):
             JOIN account_move m ON m.id = aml.move_id
             JOIN res_company move_company ON move_company.id = m.company_id
             WHERE j.type = 'sale'
-                AND SPLIT_PART(move_company.parent_path, '/', 1)::int = %(company_id)s
+                AND SPLIT_PART(move_company.parent_path, '/', 1)::bigint = %(company_id)s
                 AND m.state = 'posted'
                 AND acc.account_type = 'asset_receivable' '''
 

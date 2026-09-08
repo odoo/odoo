@@ -107,7 +107,7 @@ class CloudStorageAttachmentMigration(models.Model):
         # check ir_attachment records which are used by any mail_message.attachment_ids
         query = SQL("""
             WITH last_attachment AS (
-                SELECT value::integer AS id
+                SELECT value::bigint AS id
                 FROM ir_config_parameter
                 WHERE key = 'cloud_storage_migration_min_attachment_id'
                 LIMIT 1

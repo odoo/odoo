@@ -37,7 +37,7 @@ class SnailmailLetter(models.Model):
 
     user_id = fields.Many2one('res.users', 'Sent by')
     model = fields.Char('Model', required=True)
-    res_id = fields.Integer('Document ID', required=True)
+    res_id = fields.Integer('Document ID', required=True, bigint=True)
     partner_id = fields.Many2one('res.partner', string='Recipient', required=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
         default=lambda self: self.env.company.id)

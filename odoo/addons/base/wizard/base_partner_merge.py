@@ -23,7 +23,7 @@ class BasePartnerMergeLine(models.TransientModel):
     _order = 'min_id asc'
 
     wizard_id = fields.Many2one('base.partner.merge.automatic.wizard', 'Wizard')
-    min_id = fields.Integer('MinID')
+    min_id = fields.Integer('MinID', bigint=True)
     aggr_ids = fields.Char('Ids', required=True)
 
 

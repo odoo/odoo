@@ -178,6 +178,18 @@ class TestSchema(common.TransactionCase):
             'udt_schema': 'pg_catalog',
         } | (override or {})
 
+    def _expected_id_column_data(self, override=None):
+        """ Expected data for a column holding record ids; its width follows
+        the one the database was created with. """
+        big = self.env.registry.id_column_type[0] == 'int8'
+        return self._expected_column_data(override={
+            'data_type': 'bigint' if big else 'integer',
+            'numeric_precision': 64 if big else 32,
+            'numeric_precision_radix': 2,
+            'numeric_scale': 0,
+            'udt_name': 'int8' if big else 'int4',
+        } | (override or {}))
+
     def test_table(self):
         table = self.env['test_orm.schema_table']._table
 
@@ -336,14 +348,9 @@ class TestSchema(common.TransactionCase):
     def test_id_field(self):
         self.assertEqual(
             self.columns_data.get('id'),
-            self._expected_column_data(override={
+            self._expected_id_column_data(override={
                 'column_default': "nextval('test_orm_schema_id_seq'::regclass)",
-                'data_type': 'integer',
                 'is_nullable': 'NO',
-                'numeric_precision': 32,
-                'numeric_precision_radix': 2,
-                'numeric_scale': 0,
-                'udt_name': 'int4',
             }),
         )
 
@@ -386,25 +393,13 @@ class TestSchema(common.TransactionCase):
     def test_many2one_reference_field(self):
         self.assertEqual(
             self.columns_data.get('many2one_reference'),
-            self._expected_column_data(override={
-                'data_type': 'integer',
-                'numeric_precision': 32,
-                'numeric_precision_radix': 2,
-                'numeric_scale': 0,
-                'udt_name': 'int4',
-            }),
+            self._expected_id_column_data(),
         )
 
     def test_many2one_field(self):
         self.assertEqual(
            self.columns_data.get('many2one_id'),
-            self._expected_column_data(override={
-                'data_type': 'integer',
-                'numeric_precision': 32,
-                'numeric_precision_radix': 2,
-                'numeric_scale': 0,
-                'udt_name': 'int4',
-            }),
+            self._expected_id_column_data(),
         )
 
         self.assertEqual(
@@ -436,14 +431,7 @@ class TestSchema(common.TransactionCase):
         for column, model in ((join_table.column1, self.model._table), (join_table.column2, comodel._table)):
             self.assertEqual(
                 join_table_columns_data.get(column),
-                self._expected_column_data(override={
-                    'data_type': 'integer',
-                    'is_nullable': 'NO',
-                    'numeric_precision': 32,
-                    'numeric_precision_radix': 2,
-                    'numeric_scale': 0,
-                    'udt_name': 'int4',
-                }),
+                self._expected_id_column_data(override={'is_nullable': 'NO'}),
             )
 
             self.assertEqual(

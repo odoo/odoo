@@ -30,7 +30,7 @@ class ResDeviceLog(models.Model):
 
     # Fields that identify a session
     session_identifier = fields.Char('Session Identifier', required=True, index='btree')
-    user_id = fields.Integer(string='User', required=True, index='btree')
+    user_id = fields.Integer(string='User', required=True, index='btree', bigint=True)
     # Note:
     # `user_id` is an Integer to keep a reference to the user even when the user
     # is deleted. This avoids having a foreign key.
