@@ -1,9 +1,19 @@
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe, animationFrame } from "@odoo/hoot";
 import { click, manuallyDispatchProgrammaticEvent, queryOne } from "@odoo/hoot-dom";
-import { deleteBackward, pasteText } from "@html_editor/../tests/_helpers/user_actions";
+import {
+    pasteText,
+    deleteBackward,
+    deleteForward,
+} from "@html_editor/../tests/_helpers/user_actions";
 import { nodeSize } from "@html_editor/utils/position";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
+import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { testEditor } from "@html_editor/../tests/_helpers/editor";
+import { unformat } from "@html_editor/../tests/_helpers/format";
+import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -111,4 +121,86 @@ test("should keep only digits, dot, and comma when pasting into a monetary field
 
     pasteText(editor, "Text: ,25");
     expect(monetaryField).toHaveText("1.234.567.891,25");
+});
+
+test("should make a span inside a monetary field be unremovable (1)", async () => {
+    defineMailModels();
+    await testEditor({
+        contentBefore: unformat(`
+            <p>
+                <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable">
+                    $&nbsp;
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="">[]\u200b</span>
+                </span>
+            </p>
+        `),
+        contentBeforeEdit: unformat(`
+                <p>
+                    <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable" contenteditable="false">
+                        $&nbsp;
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="" contenteditable="true">[]\u200b</span>
+                    </span>
+                </p>
+            `),
+        stepFunction: deleteBackward,
+        contentAfterEdit: unformat(`
+            <p>
+                <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable" contenteditable="false">
+                    $&nbsp;
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="" contenteditable="true">[\u200b]</span>
+                </span>
+            </p>
+        `),
+        contentAfter: unformat(`
+                <p>
+                    <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable">
+                        $&nbsp;
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[\u200b]</span>
+                    </span>
+                </p>
+            `),
+        config: {
+            Plugins: [...MAIN_PLUGINS, MonetaryFieldPlugin, BuilderContentEditablePlugin],
+            cleanEmptyStructuralContainers: false,
+        },
+    });
+});
+
+test("should make a span inside a monetary field be unremovable (2)", async () => {
+    defineMailModels();
+    await testEditor({
+        contentBefore: unformat(`
+            <p>
+                <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable">
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="">\u200b[]</span>$&nbsp;
+                </span>
+            </p>
+        `),
+        contentBeforeEdit: unformat(`
+                <p>
+                    <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable" contenteditable="false">
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="" contenteditable="true">\u200b[]</span>$&nbsp;
+                    </span>
+                </p>
+            `),
+        stepFunction: deleteForward,
+        contentAfterEdit: unformat(`
+            <p>
+                <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable" contenteditable="false">
+                    <span class="oe_currency_value" data-oe-zws-empty-inline="" contenteditable="true">[\u200b]</span>$&nbsp;
+                </span>
+            </p>
+        `),
+        contentAfter: unformat(`
+                <p>
+                    <span data-oe-type="monetary" data-oe-field="list_price" class="o_savable">
+                        <span class="oe_currency_value" data-oe-zws-empty-inline="">[\u200b]</span>$&nbsp;
+                    </span>
+                </p>
+            `),
+        config: {
+            Plugins: [...MAIN_PLUGINS, MonetaryFieldPlugin, BuilderContentEditablePlugin],
+            cleanEmptyStructuralContainers: false,
+        },
+    });
 });
