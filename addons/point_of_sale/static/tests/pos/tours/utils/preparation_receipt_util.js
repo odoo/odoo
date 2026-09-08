@@ -39,7 +39,13 @@ async function generateFireCourseReceipts() {
 
 // Return rendered order change receipts that will be printed when clicking "Order" button
 export async function generatePreparationReceipts(opts = {}) {
-    return await generateReceiptsToPrint(posmodel.getOrder(), opts);
+    const order = posmodel.getOrder();
+    if (opts.reprint) {
+        order.uiState.isReprinting = true;
+    }
+    const receipts = await generateReceiptsToPrint(order, opts);
+    order.uiState.isReprinting = false;
+    return receipts;
 }
 
 export function checkPreparationTicketData(
@@ -50,6 +56,7 @@ export function checkPreparationTicketData(
         lineOrder: [],
         fireCourse: false,
         cancelled: false,
+        reprint: false,
     }
 ) {
     const check = async () => {
@@ -58,7 +65,10 @@ export function checkPreparationTicketData(
         if (opts.fireCourse) {
             tickets = await generateFireCourseReceipts();
         } else {
-            tickets = await generatePreparationReceipts({ cancelled: opts.cancelled });
+            tickets = await generatePreparationReceipts({
+                cancelled: opts.cancelled,
+                reprint: opts.reprint,
+            });
         }
 
         if (

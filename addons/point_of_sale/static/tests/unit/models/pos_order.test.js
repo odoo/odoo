@@ -22,6 +22,7 @@ test("uiState", async () => {
         tip: { type: false, value: false },
         last_general_customer_note: "",
         last_internal_note: "",
+        isReprinting: false,
     });
 });
 

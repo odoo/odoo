@@ -846,3 +846,27 @@ class TestFrontend(TestFrontendCommon):
         })
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('ServiceFeeRefundTour', login="pos_admin")
+
+    def test_preparation_printer_for_reprint_order(self):
+        printer_drinks = self.env['pos.printer'].create({
+            'name': 'Printer drinks',
+            'printer_ip': '127.0.0.1',
+            'printer_type': 'epson_epos',
+            'product_categories_ids': self.coca_cola_test.pos_categ_ids.ids,  # Drinks category
+            'use_type': 'preparation',
+        })
+        printer_food_and_drinks = self.env['pos.printer'].create({
+            'name': 'Printer food and drinks',
+            'printer_ip': '127.0.0.1',
+            'printer_type': 'epson_epos',
+            'product_categories_ids': self.coca_cola_test.pos_categ_ids.ids + self.bruschetta.pos_categ_ids.ids,  # Breads category
+            'use_type': 'preparation',
+        })
+        self.pos_config.write({
+            'use_order_printer': True,
+            'preparation_printer_ids': [(6, 0, [printer_drinks.id])],
+        })
+        self.pos_config.open_ui()
+        self.start_pos_tour('test_preparation_printer_for_reprint_order_only_drink_printer', login='pos_user')
+        self.pos_config.preparation_printer_ids = [(6, 0, [printer_food_and_drinks.id])]
+        self.start_pos_tour('test_preparation_printer_for_reprint_order_food_and_drinks_printer', login='pos_user')
