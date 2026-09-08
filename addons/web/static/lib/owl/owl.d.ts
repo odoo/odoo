@@ -695,6 +695,9 @@ export declare function useOnChange<T extends unknown[]>(dependencies: () => [
  * it `this` is the event target, not the calling component. Wrap a method in an
  * arrow function (or bind it) if it relies on `this`.
  *
+ * An event already being dispatched when the listener is attached is never
+ * delivered to `handler` (see `currentEvent`).
+ *
  * Example — close a menu when the user clicks anywhere on `window`:
  *   useListener(window, "click", () => this.close());
  */
@@ -953,6 +956,7 @@ export interface AppConfig extends TemplateSetConfig {
 export interface Root<T extends ComponentConstructor> {
 	promise: Promise<ComponentInstance<T>>;
 	readonly prepared: boolean;
+	readonly destroyed: boolean;
 	prepare(): Promise<void>;
 	mount(target: MountTarget, options?: MountOptions): Promise<ComponentInstance<T>>;
 	destroy(): void;
