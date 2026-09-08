@@ -226,6 +226,7 @@ export function clickPartnerButton() {
         },
     ];
 }
+<<<<<<< de5ae017c2345c60d21001eeb69d9a0f72f91909
 
 export function createPartner(partnerData = {}) {
     const steps = [
@@ -264,6 +265,11 @@ export function createPartner(partnerData = {}) {
     return steps;
 }
 export function clickCustomer(name, pressEnter = false) {
+||||||| 8624078aea26a078531789d04832f9d676b49861
+export function clickCustomer(name, pressEnter = false) {
+=======
+export function clickCustomer(name, pressEnter = true) {
+>>>>>>> b1fbd96f876102d3cfa71a90400bbf8982d342eb
     return [
         ...PartnerList.searchCustomerValue(name, pressEnter),
         PartnerList.clickPartner(name),
