@@ -649,35 +649,24 @@ export class ClipboardPlugin extends Plugin {
         const odooEditorHtml = ev.dataTransfer.getData("application/vnd.odoo.odoo-editor");
         const fileTransferItems = !odooEditorHtml && getImageFiles(dataTransfer);
         const htmlTransferItem = [...dataTransfer.items].find((item) => item.type === "text/html");
-        if (fileTransferItems.length || htmlTransferItem || odooEditorHtml) {
-            const deleteAndSetSelection = (offsetNode, offset) => {
-                if (offsetNode.nodeType === Node.ELEMENT_NODE && offset > 1) {
-                    // Store number of children before deleting selection
-                    // Deleting the selection may remove one or more child nodes,
-                    // which shifts the indices of remaining children. To keep the
-                    // caret at the intended position, we subtract the number of
-                    // removed children from the original offset.
-                    const initialLength = offsetNode.childNodes.length;
-                    this.dependencies.delete.deleteSelection();
-                    const removedCount = initialLength - offsetNode.childNodes.length;
-                    offset -= removedCount;
-                } else {
-                    // For TEXT_NODEs, offset remains valid; just delete selection
-                    this.dependencies.delete.deleteSelection();
-                }
-
-                this.dependencies.selection.setSelection({
-                    anchorNode: offsetNode,
-                    anchorOffset: offset,
-                });
-            };
-
+        if (fileTransferItems.length || htmlTransferItem) {
+            let dropRange;
             if (this.document.caretPositionFromPoint) {
-                const range = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
-                deleteAndSetSelection(range.offsetNode, range.offset);
+                const caretPosition = this.document.caretPositionFromPoint(ev.clientX, ev.clientY);
+                if (caretPosition) {
+                    dropRange = this.document.createRange();
+                    dropRange.setStart(caretPosition.offsetNode, caretPosition.offset);
+                }
             } else if (this.document.caretRangeFromPoint) {
-                const range = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
-                deleteAndSetSelection(range.startContainer, range.startOffset);
+                dropRange = this.document.caretRangeFromPoint(ev.clientX, ev.clientY);
+            }
+
+            if (dropRange) {
+                this.dependencies.delete.deleteSelection();
+                this.dependencies.selection.setSelection({
+                    anchorNode: dropRange.startContainer,
+                    anchorOffset: dropRange.startOffset,
+                });
             }
         }
         if (
